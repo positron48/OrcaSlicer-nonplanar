@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "units": "mm",
+  "status": "GEOMETRY_FIXTURE_DEFINITIONS_ONLY",
+  "models": [
+    {
+      "id": "flat_block",
+      "shape": "flat",
+      "extent_xy_mm": [
+        30,
+        20
+      ],
+      "grid_xy": [
+        4,
+        4
+      ],
+      "parameters": {
+        "height_mm": 4
+      },
+      "top_formula": "f=4",
+      "domain": "centered XY rectangle; solid 0 <= z <= f(x,y)",
+      "intended_use": "planar baseline and exact volume",
+      "printability": "NOT_EVALUATED_REQUIRES_MEASURED_PROFILE_AND_SLICER"
+    },
+    {
+      "id": "wedge_5deg",
+      "shape": "wedge",
+      "extent_xy_mm": [
+        32,
+        20
+      ],
+      "grid_xy": [
+        16,
+        8
+      ],
+      "parameters": {
+        "height_mm": 4,
+        "angle_deg": 5
+      },
+      "top_formula": "f=4+tan(5deg)*(x+16)",
+      "domain": "centered XY rectangle; solid 0 <= z <= f(x,y)",
+      "intended_use": "shallow slope, up/down and transverse paths",
+      "printability": "NOT_EVALUATED_REQUIRES_MEASURED_PROFILE_AND_SLICER"
+    },
+    {
+      "id": "wedge_10deg",
+      "shape": "wedge",
+      "extent_xy_mm": [
+        32,
+        20
+      ],
+      "grid_xy": [
+        16,
+        8
+      ],
+      "parameters": {
+        "height_mm": 4,
+        "angle_deg": 10
+      },
+      "top_formula": "f=4+tan(10deg)*(x+16)",
+      "domain": "centered XY rectangle; solid 0 <= z <= f(x,y)",
+      "intended_use": "slope sweep with independently compatible tool",
+      "printability": "NOT_EVALUATED_REQUIRES_MEASURED_PROFILE_AND_SLICER"
+    },
+    {
+      "id": "wedge_30deg",
+      "shape": "wedge",
+      "extent_xy_mm": [
+        32,
+        20
+      ],
+      "grid_xy": [
+        16,
+        8
+      ],
+      "parameters": {
+        "height_mm": 4,
+        "angle_deg": 30
+      },
+      "top_formula": "f=4+tan(30deg)*(x+16)",
+      "domain": "centered XY rectangle; solid 0 <= z <= f(x,y)",
+      "intended_use": "rejection/partial-patch case for a restrictive tool",
+      "printability": "NOT_EVALUATED_REQUIRES_MEASURED_PROFILE_AND_SLICER"
+    },
+    {
+      "id": "cylinder_roof",
+      "shape": "cylinder",
+      "extent_xy_mm": [
+        24,
+        20
+      ],
+      "grid_xy": [
+        32,
+        24
+      ],
+      "parameters": {
+        "height_mm": 6,
+        "radius_mm": 45
+      },
+      "top_formula": "f=6+sqrt(45^2-x^2)-45",
+      "domain": "centered XY rectangle; solid 0 <= z <= f(x,y)",
+      "intended_use": "curvature in one direction",
+      "printability": "NOT_EVALUATED_REQUIRES_MEASURED_PROFILE_AND_SLICER"
+    },
+    {
+      "id": "shallow_sphere",
+      "shape": "sphere",
+      "extent_xy_mm": [
+        24,
+        24
+      ],
+      "grid_xy": [
+        40,
+        40
+      ],
+      "parameters": {
+        "height_mm": 8,
+        "radius_mm": 120
+      },
+      "top_formula": "f=8+sqrt(120^2-x^2-y^2)-120",
+      "domain": "centered XY rectangle; solid 0 <= z <= f(x,y)",
+      "intended_use": "gentle two-direction curvature and top ROI",
+      "printability": "NOT_EVALUATED_REQUIRES_MEASURED_PROFILE_AND_SLICER"
+    },
+    {
+      "id": "tall_dome",
+      "shape": "dome",
+      "extent_xy_mm": [
+        36,
+        36
+      ],
+      "grid_xy": [
+        48,
+        48
+      ],
+      "parameters": {
+        "height_mm": 4,
+        "radius_mm": 15
+      },
+      "top_formula": "f=4+sqrt(max(0,15^2-x^2-y^2))",
+      "domain": "centered XY rectangle; solid 0 <= z <= f(x,y)",
+      "intended_use": "accessible crown only; nonsmooth steep base transition",
+      "printability": "NOT_EVALUATED_REQUIRES_MEASURED_PROFILE_AND_SLICER"
+    },
+    {
+      "id": "saddle",
+      "shape": "saddle",
+      "extent_xy_mm": [
+        32,
+        24
+      ],
+      "grid_xy": [
+        32,
+        24
+      ],
+      "parameters": {
+        "height_mm": 6,
+        "coefficient_per_mm": 0.0025
+      },
+      "top_formula": "f=6+0.0025*(x^2-y^2)",
+      "domain": "centered XY rectangle; solid 0 <= z <= f(x,y)",
+      "intended_use": "curvature sign changes",
+      "printability": "NOT_EVALUATED_REQUIRES_MEASURED_PROFILE_AND_SLICER"
+    },
+    {
+      "id": "sine_roof",
+      "shape": "sine",
+      "extent_xy_mm": [
+        40,
+        30
+      ],
+      "grid_xy": [
+        40,
+        30
+      ],
+      "parameters": {
+        "height_mm": 6,
+        "amplitude_mm": 0.6
+      },
+      "top_formula": "f=6+0.6*sin(2*pi*x/40)*cos(2*pi*y/30)",
+      "domain": "centered XY rectangle; solid 0 <= z <= f(x,y)",
+      "intended_use": "alternating uphill/downhill",
+      "printability": "NOT_EVALUATED_REQUIRES_MEASURED_PROFILE_AND_SLICER"
+    },
+    {
+      "id": "double_bump",
+      "shape": "double_bump",
+      "extent_xy_mm": [
+        50,
+        26
+      ],
+      "grid_xy": [
+        50,
+        26
+      ],
+      "parameters": {
+        "height_mm": 5,
+        "amplitude_mm": 1.2,
+        "sigma_mm": 6,
+        "center_offset_mm": 10
+      },
+      "top_formula": "f=5+1.2*sum(exp(-((x-c)^2+y^2)/6^2), c=-10,+10)",
+      "domain": "centered XY rectangle; solid 0 <= z <= f(x,y)",
+      "intended_use": "multiple upper patches/order; not a complete tall-wall collision scene",
+      "printability": "NOT_EVALUATED_REQUIRES_MEASURED_PROFILE_AND_SLICER"
+    }
+  ]
+}

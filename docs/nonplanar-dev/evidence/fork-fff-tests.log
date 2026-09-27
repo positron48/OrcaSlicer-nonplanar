@@ -1,0 +1,140 @@
+Test project /Users/antonfilatov/www/my/orca-nonplanar/build/arm64
+      Start 136: Initial layer height is honored
+ 1/37 Test #136: Initial layer height is honored ..........................................................................   Passed    0.53 sec
+      Start 137: Scenario: PrintGCode basic functionality
+ 2/37 Test #137: Scenario: PrintGCode basic functionality .................................................................   Passed    1.20 sec
+      Start 138: Scenario: TriangleMeshSlicer: Cut behavior.
+ 3/37 Test #138: Scenario: TriangleMeshSlicer: Cut behavior. ..............................................................   Passed    0.03 sec
+      Start 139: Scenario: Print: Brim generation
+ 4/37 Test #139: Scenario: Print: Brim generation .........................................................................   Passed    0.04 sec
+      Start 140: Scenario: Print: Skirt generation
+ 5/37 Test #140: Scenario: Print: Skirt generation ........................................................................   Passed    0.03 sec
+      Start 141: Skirt height is honored
+ 6/37 Test #141: Skirt height is honored ..................................................................................   Passed    0.12 sec
+      Start 142: Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal.
+ 7/37 Test #142: Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal. ...   Passed    0.05 sec
+      Start 143: Scenario: PrintObject: object layer heights
+ 8/37 Test #143: Scenario: PrintObject: object layer heights ..............................................................   Passed    0.05 sec
+      Start 144: SupportMaterial: Three raft layers created
+ 9/37 Test #144: SupportMaterial: Three raft layers created ...............................................................   Passed    0.04 sec
+      Start 145: Scenario: make_xxx functions produce meshes.
+10/37 Test #145: Scenario: make_xxx functions produce meshes. .............................................................   Passed    0.04 sec
+      Start 146: Scenario: set_speed emits values with fixed-point output.
+11/37 Test #146: Scenario: set_speed emits values with fixed-point output. ................................................   Passed    0.03 sec
+      Start 147: Scenario: TriangleMesh: split functionality.
+12/37 Test #147: Scenario: TriangleMesh: split functionality. .............................................................   Passed    0.03 sec
+      Start 148: Scenario: ExtrusionEntityCollection: Polygon flattening
+13/37 Test #148: Scenario: ExtrusionEntityCollection: Polygon flattening ..................................................   Passed    0.03 sec
+      Start 149: Scenario: z_hop lifts the nozzle when a lift is requested
+14/37 Test #149: Scenario: z_hop lifts the nozzle when a lift is requested ................................................   Passed    0.03 sec
+      Start 150: Scenario: Model construction
+15/37 Test #150: Scenario: Model construction .............................................................................   Passed    0.06 sec
+      Start 151: Scenario: Origin manipulation
+16/37 Test #151: Scenario: Origin manipulation ............................................................................   Passed    0.03 sec
+      Start 152: Trailing tool change at end of file is drained, not dropped
+17/37 Test #152: Trailing tool change at end of file is drained, not dropped ..............................................   Passed    0.03 sec
+      Start 153: Scenario: TriangleMesh: Basic mesh statistics
+18/37 Test #153: Scenario: TriangleMesh: Basic mesh statistics ............................................................   Passed    0.03 sec
+      Start 154: Filament-change time is attributed to tool-change moves, not extrusion roles
+19/37 Test #154: Filament-change time is attributed to tool-change moves, not extrusion roles .............................   Passed    0.03 sec
+      Start 155: Back-to-back tool changes buffer then merge into one tool-change block
+20/37 Test #155: Back-to-back tool changes buffer then merge into one tool-change block ...................................   Passed    0.03 sec
+      Start 156: Fill: Pattern Path Length
+21/37 Test #156: Fill: Pattern Path Length ................................................................................   Passed    0.03 sec
+      Start 157: Carried-forward tool-change delay reaches the total without polluting roles
+22/37 Test #157: Carried-forward tool-change delay reaches the total without polluting roles ..............................   Passed    0.03 sec
+      Start 158: Print: {first_object_name} is not replaced by the saved-project file name
+23/37 Test #158: Print: {first_object_name} is not replaced by the saved-project file name ................................   Passed    0.03 sec
+      Start 159: Scenario: Skirt and brim generation
+24/37 Test #159: Scenario: Skirt and brim generation ......................................................................   Passed    0.17 sec
+      Start 160: Scenario: Flow: Flow math for bridges
+25/37 Test #160: Scenario: Flow: Flow math for bridges ....................................................................   Passed    0.03 sec
+      Start 161: Sequential printing follows model order
+26/37 Test #161: Sequential printing follows model order ..................................................................   Passed    0.08 sec
+      Start 162: Scenario: TriangleMesh: Transformation functions affect mesh as expected.
+27/37 Test #162: Scenario: TriangleMesh: Transformation functions affect mesh as expected. ................................   Passed    0.03 sec
+      Start 163: SupportMaterial: enforced support layers are generated
+28/37 Test #163: SupportMaterial: enforced support layers are generated ...................................................   Passed    0.04 sec
+      Start 164: Scenario: TriangleMesh: slice behavior.
+29/37 Test #164: Scenario: TriangleMesh: slice behavior. ..................................................................   Passed    0.03 sec
+      Start 165: Print: {first_object_name} names the first printable object on the plate
+30/37 Test #165: Print: {first_object_name} names the first printable object on the plate .................................   Passed    0.03 sec
+      Start 166: Scenario: SupportMaterial: support_layers_z and contact_distance
+31/37 Test #166: Scenario: SupportMaterial: support_layers_z and contact_distance .........................................   Passed    0.10 sec
+      Start 167: Scenario: TriangleMesh: Mesh merge functions
+32/37 Test #167: Scenario: TriangleMesh: Mesh merge functions .............................................................   Passed    0.03 sec
+      Start 168: export_gcode writes G-code without a result pointer
+33/37 Test #168: export_gcode writes G-code without a result pointer ......................................................   Passed    0.10 sec
+      Start 169: Scenario: init_print functionality
+34/37 Test #169: Scenario: init_print functionality .......................................................................   Passed    0.07 sec
+      Start 170: Scenario: PrintObject: Perimeter generation
+35/37 Test #170: Scenario: PrintObject: Perimeter generation ..............................................................   Passed    0.04 sec
+      Start 171: Filament-change time is not dropped when few motion blocks precede the change
+36/37 Test #171: Filament-change time is not dropped when few motion blocks precede the change ............................   Passed    0.03 sec
+      Start 172: Scenario: Flow: Flow math for non-bridges
+37/37 Test #172: Scenario: Flow: Flow math for non-bridges ................................................................   Passed    0.03 sec
+
+100% tests passed, 0 tests failed out of 37
+
+Label Time Summary:
+ExtrusionEntity    =   0.03 sec*proc (1 test)
+Fill               =   0.03 sec*proc (1 test)
+Flow               =   0.05 sec*proc (2 tests)
+GCode              =   0.03 sec*proc (1 test)
+GCodeTiming        =   0.15 sec*proc (5 tests)
+GCodeWriter        =   0.05 sec*proc (2 tests)
+Model              =   0.06 sec*proc (1 test)
+NotWorking         =   1.48 sec*proc (3 tests)
+Print              =   0.19 sec*proc (5 tests)
+PrintGCode         =   1.92 sec*proc (4 tests)
+PrintObject        =   0.09 sec*proc (2 tests)
+SkirtBrim          =   0.28 sec*proc (2 tests)
+SupportMaterial    =   0.18 sec*proc (3 tests)
+export_gcode       =   0.10 sec*proc (1 test)
+test_data          =   0.07 sec*proc (1 test)
+
+Total Test time (real) =   3.35 sec
+{
+  "tests_discovered": 37,
+  "tests_executed": 37,
+  "test_names": [
+    "Initial layer height is honored",
+    "Scenario: PrintGCode basic functionality",
+    "Scenario: TriangleMeshSlicer: Cut behavior.",
+    "Scenario: Print: Brim generation",
+    "Scenario: Print: Skirt generation",
+    "Skirt height is honored",
+    "Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal.",
+    "Scenario: PrintObject: object layer heights",
+    "SupportMaterial: Three raft layers created",
+    "Scenario: make_xxx functions produce meshes.",
+    "Scenario: set_speed emits values with fixed-point output.",
+    "Scenario: TriangleMesh: split functionality.",
+    "Scenario: ExtrusionEntityCollection: Polygon flattening",
+    "Scenario: z_hop lifts the nozzle when a lift is requested",
+    "Scenario: Model construction",
+    "Scenario: Origin manipulation",
+    "Trailing tool change at end of file is drained, not dropped",
+    "Scenario: TriangleMesh: Basic mesh statistics",
+    "Filament-change time is attributed to tool-change moves, not extrusion roles",
+    "Back-to-back tool changes buffer then merge into one tool-change block",
+    "Fill: Pattern Path Length",
+    "Carried-forward tool-change delay reaches the total without polluting roles",
+    "Print: {first_object_name} is not replaced by the saved-project file name",
+    "Scenario: Skirt and brim generation",
+    "Scenario: Flow: Flow math for bridges",
+    "Sequential printing follows model order",
+    "Scenario: TriangleMesh: Transformation functions affect mesh as expected.",
+    "SupportMaterial: enforced support layers are generated",
+    "Scenario: TriangleMesh: slice behavior.",
+    "Print: {first_object_name} names the first printable object on the plate",
+    "Scenario: SupportMaterial: support_layers_z and contact_distance",
+    "Scenario: TriangleMesh: Mesh merge functions",
+    "export_gcode writes G-code without a result pointer",
+    "Scenario: init_print functionality",
+    "Scenario: PrintObject: Perimeter generation",
+    "Filament-change time is not dropped when few motion blocks precede the change",
+    "Scenario: Flow: Flow math for non-bridges"
+  ],
+  "status": "PASS"
+}

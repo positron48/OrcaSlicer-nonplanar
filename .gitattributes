@@ -1,2 +1,7 @@
 # Set the default behavior, in case people don't have core.autocrlf set.
 * text=auto
+
+# Preserve exact bytes covered by the specification and baseline SHA-256 manifests.
+/docs/nonplanar/** -text
+/docs/nonplanar-dev/evidence/** -text
+/tests/nonplanar/data/stock-v2.4.2/** -text

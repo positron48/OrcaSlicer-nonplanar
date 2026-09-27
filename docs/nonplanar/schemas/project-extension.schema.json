@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "document_example",
+    "mode",
+    "job_revision",
+    "source_geometry_sha256",
+    "profile_id",
+    "toolhead_profile_file",
+    "selected_patch_ids",
+    "policy",
+    "export_status",
+    "notes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-draft"
+    },
+    "document_example": {
+      "type": "boolean"
+    },
+    "mode": {
+      "enum": [
+        "off",
+        "native_zaa",
+        "guarded_hybrid"
+      ]
+    },
+    "job_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source_geometry_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "profile_id": {
+      "type": "string"
+    },
+    "toolhead_profile_file": {
+      "type": "string"
+    },
+    "selected_patch_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "policy": {
+      "enum": [
+        "strict_nonplanar",
+        "safe_hybrid"
+      ]
+    },
+    "export_status": {
+      "enum": [
+        "BLOCK",
+        "ALLOW"
+      ]
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "document_example": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "export_status": {
+            "const": "BLOCK"
+          }
+        }
+      }
+    }
+  ],
+  "$comment": "Source fingerprint must match actual model; references must stay inside trusted project container. Semantic checks are not replaced by JSON Schema."
+}

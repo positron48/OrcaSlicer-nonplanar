@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "upstream_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "branch": "feature/nonplanar-bootstrap",
+  "fork_commit": "SELF",
+  "fork_commit_resolution": "git log -1 --format=%H -- docs/nonplanar-dev/status.json",
+  "delivery": "COMMITTED_LOCALLY_NOT_PUSHED",
+  "gate_a": "IN_PROGRESS",
+  "tasks": {
+    "A01": "MACOS_NATIVE_BUILD_TESTS_ISOLATED_CLI_COMPLETE_GUI_LINUX_NOT_RUN",
+    "A02": "SOURCE_AUDIT_AND_SIX_STOCK_FORK_BASELINES_PASS",
+    "A03": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
+    "A04_A08": "SCOPED_NOT_STARTED"
+  },
+  "executed_checks": {
+    "ORC-01": "PASS",
+    "ORC-31": "PASS",
+    "ORC-02": "PASS_THREE_OFF_FIXTURES",
+    "ORC-03": "PASS_THREE_ZAA_FIXTURES",
+    "ORC-05": "PASS_ANALYTICAL_TYPES",
+    "VOL-01": "PASS_AFFINE_PRIMITIVE_ONLY",
+    "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
+    "stock_native_fff": 37,
+    "fork_native_fff": 37,
+    "new_native_cases": 7,
+    "bootstrap_python_tests": 15,
+    "original_package_helpers": 25,
+    "other_upstream_tests_not_run": 156
+  },
+  "platforms": {
+    "macos_arm64": "BUILT_AND_TESTED",
+    "linux_x86_64": "NOT_RUN"
+  },
+  "physical": {
+    "machine": "Snapmaker U1",
+    "configuration": "UNCONFIRMED",
+    "measurements": "NOT_RUN",
+    "printing": "NOT_RUN"
+  },
+  "gui_coexistence": "NOT_RUN",
+  "ci": "NOT_RUN",
+  "evidence_directory": "docs/nonplanar-dev/evidence",
+  "raw_directory": "build/nonplanar-evidence",
+  "next_step": "A04 continuous analytical tool/scene geometry; A07 operator evidence later."
+}

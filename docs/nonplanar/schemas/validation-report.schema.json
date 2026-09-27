@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "document_example",
+    "job_id",
+    "job_revision",
+    "overall_status",
+    "export_decision",
+    "gcode_sha256",
+    "mandatory_check_ids",
+    "checks",
+    "assumptions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-draft"
+    },
+    "document_example": {
+      "type": "boolean"
+    },
+    "job_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "job_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "overall_status": {
+      "enum": [
+        "PASS",
+        "WARN",
+        "FAIL",
+        "UNKNOWN"
+      ]
+    },
+    "export_decision": {
+      "enum": [
+        "ALLOW",
+        "BLOCK"
+      ]
+    },
+    "gcode_sha256": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      ]
+    },
+    "mandatory_check_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "mandatory",
+          "status",
+          "execution",
+          "reason"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "mandatory": {
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "WARN",
+              "FAIL",
+              "UNKNOWN"
+            ]
+          },
+          "execution": {
+            "enum": [
+              "RUN",
+              "NOT_RUN",
+              "SKIPPED",
+              "ERROR"
+            ]
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "document_example": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "export_decision": {
+            "const": "BLOCK"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "export_decision": {
+            "const": "ALLOW"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "document_example": {
+            "const": false
+          },
+          "gcode_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "overall_status": {
+            "enum": [
+              "PASS",
+              "WARN"
+            ]
+          },
+          "checks": {
+            "items": {
+              "if": {
+                "properties": {
+                  "mandatory": {
+                    "const": true
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "PASS",
+                      "WARN"
+                    ]
+                  },
+                  "execution": {
+                    "const": "RUN"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$comment": "Missing mandatory IDs, physical state and geometric correctness require runtime semantic validation, independent of schema."
+}

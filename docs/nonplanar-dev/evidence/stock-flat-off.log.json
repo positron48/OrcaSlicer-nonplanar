@@ -1,0 +1,32 @@
+{
+  "command": [
+    "env",
+    "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-runtime/tmp/",
+    "sandbox-exec",
+    "-f",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-runtime/offline.sb",
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+    "--datadir",
+    "build/nonplanar-runtime/data",
+    "--load-settings",
+    "tests/nonplanar/data/baseline/machine.json;tests/nonplanar/data/baseline/process-off.json",
+    "--load-filaments",
+    "tests/nonplanar/data/baseline/filament.json",
+    "--arrange",
+    "1",
+    "--orient",
+    "0",
+    "--outputdir",
+    "build/nonplanar-runtime/output/flat-off",
+    "--export-settings",
+    "build/nonplanar-runtime/output/flat-off-resolved.json",
+    "--slice",
+    "0",
+    "docs/nonplanar/fixtures/models/flat_block.stl"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-09-27T17:50:02.467776+00:00",
+  "status": "COMPLETED",
+  "exit_code": -6,
+  "elapsed_seconds": 0.262
+}

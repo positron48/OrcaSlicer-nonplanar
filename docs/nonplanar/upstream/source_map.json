@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "scope": "SELECTED_FILES_WEB_REVIEW_NOT_BUILD_OR_FULL_AUDIT",
+  "files": [
+    {
+      "source_id": "O04",
+      "path": "src/libslic3r/ContourZ.cpp",
+      "markers": [
+        "contour_extrusion_path"
+      ],
+      "purpose": "Штатный ZAA; отдельный baseline, не новый planner",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/src/libslic3r/ContourZ.cpp"
+    },
+    {
+      "source_id": "O05",
+      "path": "src/libslic3r/ExtrusionEntity.hpp",
+      "markers": [
+        "Polyline3",
+        "z_contoured"
+      ],
+      "purpose": "Текущие типы путей; проверить scaled coordinates и consumers",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/src/libslic3r/ExtrusionEntity.hpp"
+    },
+    {
+      "source_id": "O06",
+      "path": "src/libslic3r/GCode.cpp",
+      "markers": [
+        "extrusion_ratio",
+        "m_nominal_z"
+      ],
+      "purpose": "ZAA-сериализация, реальные координаты/экструзия и downstream filters",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/src/libslic3r/GCode.cpp"
+    },
+    {
+      "source_id": "O07",
+      "path": "src/libslic3r/Format/STEP.cpp",
+      "markers": [
+        "STEPCAFControl_Reader"
+      ],
+      "purpose": "Существующий OCCT-импорт и точность тесселяции",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/src/libslic3r/Format/STEP.cpp"
+    },
+    {
+      "source_id": "O08",
+      "path": "CMakeLists.txt",
+      "markers": [
+        "CMAKE_CXX_STANDARD 17",
+        "BUILD_TESTS"
+      ],
+      "purpose": "Флаги сборки и платформенные ограничения",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/CMakeLists.txt"
+    },
+    {
+      "source_id": "O09",
+      "path": "tests/CMakeLists.txt",
+      "markers": [
+        "catch_discover_tests"
+      ],
+      "purpose": "Catch2/CTest integration",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/tests/CMakeLists.txt"
+    },
+    {
+      "source_id": "O10",
+      "path": "src/slic3r/GUI/BackgroundSlicingProcess.cpp",
+      "markers": [
+        "prepare_upload",
+        "export_gcode"
+      ],
+      "purpose": "Финализация, публикация и отправка",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/src/slic3r/GUI/BackgroundSlicingProcess.cpp"
+    },
+    {
+      "source_id": "O11",
+      "path": "src/libslic3r/Format/bbs_3mf.cpp",
+      "markers": [],
+      "purpose": "3MF project persistence; namespaced extension предложено",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/src/libslic3r/Format/bbs_3mf.cpp"
+    },
+    {
+      "source_id": "O12",
+      "path": "src/slic3r/GUI/GCodeViewer.cpp",
+      "markers": [],
+      "purpose": "Нативный preview и привязка к конечным движениям",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/src/slic3r/GUI/GCodeViewer.cpp"
+    },
+    {
+      "source_id": "O13",
+      "path": "src/libslic3r/PrintConfig.cpp",
+      "markers": [],
+      "purpose": "Регистрация конфигурации и resolved policy",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/src/libslic3r/PrintConfig.cpp"
+    },
+    {
+      "source_id": "O14",
+      "path": "src/libslic3r/Print.cpp",
+      "markers": [],
+      "purpose": "Slicing/export orchestration; точный hook требует local audit",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/src/libslic3r/Print.cpp"
+    },
+    {
+      "source_id": "O15",
+      "path": "src/libslic3r/PrintObject.cpp",
+      "markers": [],
+      "purpose": "Объектные steps, shell/regions и invalidation",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/src/libslic3r/PrintObject.cpp"
+    },
+    {
+      "source_id": "O16",
+      "path": "src/slic3r/GUI/Tab.cpp",
+      "markers": [],
+      "purpose": "Нативные параметры/панели",
+      "evidence_url": "https://github.com/OrcaSlicer/OrcaSlicer/blob/8500fcdccaa10b5099ac20d252af3a7c560046f1/src/slic3r/GUI/Tab.cpp"
+    }
+  ]
+}

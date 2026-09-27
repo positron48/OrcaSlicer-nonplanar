@@ -1,0 +1,23 @@
+{
+  "command": [
+    "cmake",
+    "-S",
+    ".",
+    "-B",
+    "build/arm64",
+    "-G",
+    "Ninja Multi-Config",
+    "-DORCA_TOOLS=ON",
+    "-DBUILD_TESTS=ON",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DCMAKE_OSX_ARCHITECTURES=arm64",
+    "-DCMAKE_OSX_DEPLOYMENT_TARGET=11.3",
+    "-DCMAKE_IGNORE_PREFIX_PATH=/opt/local:/usr/local:/opt/homebrew",
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-09-27T17:39:05.731003+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 1.978
+}

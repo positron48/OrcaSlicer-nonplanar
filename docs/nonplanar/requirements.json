@@ -1,0 +1,885 @@
+{
+  "schema_version": 1,
+  "requirements": [
+    {
+      "id": "R001",
+      "title": "Назначение и определение результата",
+      "spec_section": 1,
+      "mandatory": true,
+      "test_ids": [
+        "ORC-01",
+        "ORC-02",
+        "DOC-01"
+      ],
+      "task_ids": [
+        "A01"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R002",
+      "title": "Границы первой законченной версии",
+      "spec_section": 2,
+      "mandatory": true,
+      "test_ids": [
+        "ORC-04",
+        "ORC-23",
+        "DOC-01"
+      ],
+      "task_ids": [
+        "B01"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R003",
+      "title": "Исходные инженерные решения",
+      "spec_section": 3,
+      "mandatory": true,
+      "test_ids": [
+        "SYS-03",
+        "ORC-01",
+        "ORC-02",
+        "ORC-03",
+        "ORC-04",
+        "ORC-31",
+        "ORC-32",
+        "ORC-33"
+      ],
+      "task_ids": [
+        "A01",
+        "A02",
+        "C10"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R004",
+      "title": "Термины, координаты, единицы и численная модель",
+      "spec_section": 4,
+      "mandatory": true,
+      "test_ids": [
+        "IMP-01",
+        "IMP-02",
+        "GEO-01",
+        "GEO-07",
+        "VOL-02",
+        "GCD-05",
+        "GCD-06",
+        "PROP-02",
+        "PROP-03",
+        "PROP-04",
+        "ORC-05",
+        "ORC-06",
+        "GCD-10"
+      ],
+      "task_ids": [
+        "A03",
+        "B02"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R005",
+      "title": "Импорт модели",
+      "spec_section": 5,
+      "mandatory": true,
+      "test_ids": [
+        "IMP-01",
+        "IMP-02",
+        "IMP-03",
+        "IMP-04",
+        "IMP-05",
+        "IMP-06",
+        "ORC-16",
+        "ORC-19",
+        "ORC-30"
+      ],
+      "task_ids": [
+        "B02",
+        "C01"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R006",
+      "title": "Профиль принтера",
+      "spec_section": 6,
+      "mandatory": true,
+      "test_ids": [
+        "GEO-05",
+        "PRF-01",
+        "PRF-05",
+        "MOV-02",
+        "MOV-03",
+        "ORC-37",
+        "ORC-38",
+        "PRF-06",
+        "PRF-07"
+      ],
+      "task_ids": [
+        "A04",
+        "A07",
+        "C03"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R007",
+      "title": "Геометрия сопла и головы",
+      "spec_section": 7,
+      "mandatory": true,
+      "test_ids": [
+        "GEO-01",
+        "GEO-02",
+        "GEO-03",
+        "GEO-05",
+        "GEO-06",
+        "PRF-01",
+        "PRF-02",
+        "PRF-04",
+        "PRF-05",
+        "CAP-12",
+        "MAT-04",
+        "PHY-01",
+        "ORC-37",
+        "ORC-38",
+        "PRF-06"
+      ],
+      "task_ids": [
+        "A04",
+        "A07",
+        "B08",
+        "C03"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R008",
+      "title": "Печатные измерительные шаблоны",
+      "spec_section": 8,
+      "mandatory": true,
+      "test_ids": [
+        "PRF-02",
+        "PRF-03",
+        "PRF-04",
+        "PHY-01",
+        "ORC-38"
+      ],
+      "task_ids": [
+        "A07",
+        "C04"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R009",
+      "title": "Настройки интерфейса",
+      "spec_section": 9,
+      "mandatory": true,
+      "test_ids": [
+        "CAP-03",
+        "CAP-06",
+        "SYS-07",
+        "ORC-04",
+        "ORC-10",
+        "ORC-13",
+        "ORC-29",
+        "ORC-35"
+      ],
+      "task_ids": [
+        "B01",
+        "B14",
+        "C05"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R010",
+      "title": "Выделение доступных верхних поверхностей",
+      "spec_section": 10,
+      "mandatory": true,
+      "test_ids": [
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-04",
+        "CAP-05",
+        "CAP-06",
+        "CAP-07",
+        "CAP-08",
+        "CAP-09",
+        "CAP-10",
+        "CAP-11",
+        "CAP-12",
+        "CAP-13",
+        "CAP-14",
+        "ORC-09",
+        "ORC-19"
+      ],
+      "task_ids": [
+        "B03",
+        "B07",
+        "C02"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R011",
+      "title": "Разделение тела и непланарной оболочки",
+      "spec_section": 11,
+      "mandatory": true,
+      "test_ids": [
+        "CAP-06",
+        "CAP-11",
+        "CAP-14",
+        "INT-02",
+        "INT-04",
+        "INT-06",
+        "SYS-05",
+        "ORC-09",
+        "ORC-30"
+      ],
+      "task_ids": [
+        "A05",
+        "B04",
+        "C02"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R012",
+      "title": "Переход от ступенчатой основы к криволинейным слоям",
+      "spec_section": 12,
+      "mandatory": true,
+      "test_ids": [
+        "CAP-01",
+        "CAP-02",
+        "CAP-05",
+        "CAP-06",
+        "CAP-07",
+        "INT-01",
+        "INT-02",
+        "INT-03",
+        "INT-05",
+        "INT-06",
+        "VOL-02",
+        "ORC-09"
+      ],
+      "task_ids": [
+        "A05",
+        "B04",
+        "B06",
+        "C02"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R013",
+      "title": "Генерация непланарных дорожек",
+      "spec_section": 13,
+      "mandatory": true,
+      "test_ids": [
+        "CAP-01",
+        "CAP-02",
+        "CAP-04",
+        "CAP-05",
+        "CAP-08",
+        "CAP-11",
+        "MOV-05",
+        "ORC-08"
+      ],
+      "task_ids": [
+        "A05",
+        "B03",
+        "B06",
+        "B07",
+        "C02"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R014",
+      "title": "Напечатанный материал и модель осаждения",
+      "spec_section": 14,
+      "mandatory": true,
+      "test_ids": [
+        "CAP-09",
+        "INT-02",
+        "INT-04",
+        "MAT-01",
+        "MAT-02",
+        "MAT-03",
+        "MAT-04",
+        "ORC-08",
+        "ORC-28",
+        "GCD-09",
+        "GCD-11"
+      ],
+      "task_ids": [
+        "A03",
+        "B05",
+        "B08",
+        "C07"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R015",
+      "title": "Коллизии и зазор у торца сопла",
+      "spec_section": 15,
+      "mandatory": true,
+      "test_ids": [
+        "GEO-02",
+        "GEO-03",
+        "GEO-04",
+        "GEO-05",
+        "GEO-06",
+        "GEO-07",
+        "GEO-08",
+        "CAP-03",
+        "CAP-07",
+        "CAP-10",
+        "CAP-12",
+        "INT-03",
+        "MAT-01",
+        "MAT-02",
+        "MAT-03",
+        "MAT-04",
+        "MOV-01",
+        "MOV-02",
+        "PROP-04",
+        "ORC-27"
+      ],
+      "task_ids": [
+        "A04",
+        "B05",
+        "B08",
+        "B12"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R016",
+      "title": "Порядок печати, входы, выходы и переезды",
+      "spec_section": 16,
+      "mandatory": true,
+      "test_ids": [
+        "CAP-09",
+        "CAP-10",
+        "MAT-02",
+        "MOV-01",
+        "MOV-02",
+        "MOV-03",
+        "MOV-06",
+        "ORC-08",
+        "ORC-34",
+        "ORC-36",
+        "GCD-11"
+      ],
+      "task_ids": [
+        "B09",
+        "C02"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R017",
+      "title": "Экструзия и объём",
+      "spec_section": 17,
+      "mandatory": true,
+      "test_ids": [
+        "CAP-05",
+        "INT-06",
+        "VOL-01",
+        "VOL-02",
+        "VOL-03",
+        "GCD-03",
+        "GCD-08",
+        "ORC-07",
+        "ORC-28",
+        "GCD-09"
+      ],
+      "task_ids": [
+        "A03",
+        "A05",
+        "B06",
+        "B07",
+        "B10",
+        "B12",
+        "C07"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R018",
+      "title": "Скорости и ограничения Klipper",
+      "spec_section": 18,
+      "mandatory": true,
+      "test_ids": [
+        "CAP-08",
+        "VOL-03",
+        "MOV-03",
+        "MOV-04",
+        "MOV-05",
+        "GCD-03",
+        "GCD-08",
+        "ORC-11",
+        "PRF-07"
+      ],
+      "task_ids": [
+        "B09",
+        "B10",
+        "B12"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R019",
+      "title": "Диалект G-code, состояние и преобразования",
+      "spec_section": 19,
+      "mandatory": true,
+      "test_ids": [
+        "MOV-06",
+        "GCD-01",
+        "GCD-02",
+        "GCD-03",
+        "GCD-04",
+        "GCD-05",
+        "GCD-06",
+        "GCD-08",
+        "SYS-02",
+        "ORC-06",
+        "ORC-11",
+        "ORC-24",
+        "ORC-25",
+        "ORC-36",
+        "ORC-39",
+        "GCD-09",
+        "GCD-10",
+        "GCD-11",
+        "PRF-07"
+      ],
+      "task_ids": [
+        "A03",
+        "A06",
+        "B11",
+        "B12",
+        "C09"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R020",
+      "title": "Независимый валидатор",
+      "spec_section": 20,
+      "mandatory": true,
+      "test_ids": [
+        "GEO-07",
+        "GEO-08",
+        "PRF-01",
+        "PRF-04",
+        "MOV-06",
+        "GCD-01",
+        "GCD-02",
+        "GCD-06",
+        "GCD-07",
+        "SYS-01",
+        "SYS-05",
+        "SYS-06",
+        "ORC-06",
+        "ORC-07",
+        "ORC-11",
+        "ORC-20",
+        "ORC-21",
+        "ORC-22",
+        "ORC-26",
+        "ORC-27",
+        "ORC-28",
+        "ORC-34",
+        "ORC-36",
+        "ORC-38",
+        "GCD-09",
+        "GCD-10",
+        "GCD-11",
+        "SYS-10",
+        "PRF-06"
+      ],
+      "task_ids": [
+        "A06",
+        "B12",
+        "B13",
+        "C07"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R021",
+      "title": "Интерфейс и наблюдаемость",
+      "spec_section": 21,
+      "mandatory": true,
+      "test_ids": [
+        "SYS-06",
+        "SYS-07",
+        "ORC-12",
+        "ORC-20",
+        "ORC-34"
+      ],
+      "task_ids": [
+        "B14",
+        "C05"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R022",
+      "title": "CLI, 3MF и результаты",
+      "spec_section": 22,
+      "mandatory": true,
+      "test_ids": [
+        "GCD-07",
+        "SYS-02",
+        "SYS-04",
+        "SYS-05",
+        "ORC-15",
+        "ORC-16",
+        "ORC-17",
+        "ORC-18",
+        "ORC-19",
+        "ORC-21",
+        "ORC-22",
+        "ORC-24",
+        "ORC-27",
+        "ORC-28",
+        "ORC-30",
+        "SYS-09"
+      ],
+      "task_ids": [
+        "A03",
+        "B11",
+        "B13",
+        "B14",
+        "C01",
+        "C06",
+        "C07"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R023",
+      "title": "Автоматические тесты",
+      "spec_section": 23,
+      "mandatory": true,
+      "test_ids": [
+        "PROP-01",
+        "PROP-02",
+        "PROP-03",
+        "PROP-04",
+        "PROP-05",
+        "SYS-03",
+        "SYS-07",
+        "ORC-31",
+        "ORC-32",
+        "DOC-01"
+      ],
+      "task_ids": [
+        "C08"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R024",
+      "title": "Критерии приёмки и численные цели",
+      "spec_section": 24,
+      "mandatory": true,
+      "test_ids": [
+        "IMP-06",
+        "CAP-02",
+        "CAP-04",
+        "SYS-07",
+        "PHY-04",
+        "ORC-02",
+        "ORC-05",
+        "DOC-02"
+      ],
+      "task_ids": [
+        "B15",
+        "C08",
+        "C11",
+        "C12"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R025",
+      "title": "Физическая программа испытаний",
+      "spec_section": 25,
+      "mandatory": true,
+      "test_ids": [
+        "PHY-01",
+        "PHY-02",
+        "PHY-03",
+        "PHY-04",
+        "PRF-06",
+        "PRF-07",
+        "DOC-02"
+      ],
+      "task_ids": [
+        "A07",
+        "B15",
+        "C04",
+        "C12"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R026",
+      "title": "Производительность и эксплуатационные ограничения",
+      "spec_section": 26,
+      "mandatory": true,
+      "test_ids": [
+        "MOV-05",
+        "SYS-01",
+        "SYS-05",
+        "SYS-08",
+        "ORC-12",
+        "ORC-13",
+        "ORC-14",
+        "ORC-15",
+        "ORC-39",
+        "SYS-09",
+        "SYS-10"
+      ],
+      "task_ids": [
+        "A08",
+        "B13",
+        "C09",
+        "C11"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R027",
+      "title": "Безопасность приложения и границы доверия",
+      "spec_section": 27,
+      "mandatory": true,
+      "test_ids": [
+        "IMP-04",
+        "GCD-04",
+        "SYS-04",
+        "ORC-10",
+        "ORC-14",
+        "ORC-17",
+        "ORC-20",
+        "ORC-21",
+        "ORC-22",
+        "ORC-23",
+        "ORC-25",
+        "ORC-29",
+        "ORC-35",
+        "ORC-39",
+        "GCD-10"
+      ],
+      "task_ids": [
+        "B02",
+        "B13",
+        "C09"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R028",
+      "title": "План работ, трудозатраты и контрольные точки",
+      "spec_section": 28,
+      "mandatory": true,
+      "test_ids": [
+        "ORC-31",
+        "ORC-32",
+        "ORC-33",
+        "ORC-37",
+        "DOC-01",
+        "DOC-02"
+      ],
+      "task_ids": [
+        "A01",
+        "A08",
+        "B15",
+        "C10",
+        "C13"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R029",
+      "title": "Организация разработки с Codex",
+      "spec_section": 29,
+      "mandatory": true,
+      "test_ids": [
+        "ORC-33",
+        "DOC-01"
+      ],
+      "task_ids": [
+        "A08",
+        "C08",
+        "C13"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R030",
+      "title": "Состав передачи",
+      "spec_section": 30,
+      "mandatory": true,
+      "test_ids": [
+        "SYS-03",
+        "ORC-14",
+        "ORC-32",
+        "DOC-01",
+        "DOC-02"
+      ],
+      "task_ids": [
+        "C10",
+        "C13"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R031",
+      "title": "Основные риски и способы ограничения",
+      "spec_section": 31,
+      "mandatory": true,
+      "test_ids": [
+        "ORC-33"
+      ],
+      "task_ids": [
+        "A08",
+        "C13"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R032",
+      "title": "Источники и статус утверждений",
+      "spec_section": 32,
+      "mandatory": true,
+      "test_ids": [
+        "ORC-01",
+        "ORC-37",
+        "DOC-01"
+      ],
+      "task_ids": [
+        "A01",
+        "C03"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R033",
+      "title": "Нативная интеграция и режимы Orca",
+      "spec_section": 33,
+      "mandatory": true,
+      "test_ids": [
+        "ORC-01",
+        "ORC-02",
+        "ORC-03",
+        "ORC-04",
+        "ORC-05",
+        "ORC-06",
+        "ORC-07",
+        "ORC-08",
+        "ORC-09",
+        "ORC-13",
+        "ORC-30",
+        "ORC-34",
+        "ORC-36"
+      ],
+      "task_ids": [
+        "A02",
+        "A06",
+        "B01",
+        "B04",
+        "B11"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R034",
+      "title": "Снимки, кэши и обязательная граница экспорта",
+      "spec_section": 34,
+      "mandatory": true,
+      "test_ids": [
+        "ORC-11",
+        "ORC-12",
+        "ORC-13",
+        "ORC-15",
+        "ORC-18",
+        "ORC-19",
+        "ORC-20",
+        "ORC-21",
+        "ORC-22",
+        "ORC-23",
+        "ORC-24",
+        "ORC-25",
+        "ORC-26",
+        "ORC-27",
+        "ORC-30",
+        "ORC-39",
+        "SYS-09",
+        "SYS-10"
+      ],
+      "task_ids": [
+        "B13",
+        "C06",
+        "C09"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R035",
+      "title": "Совместимость и изоляция пользовательской установки",
+      "spec_section": 35,
+      "mandatory": true,
+      "test_ids": [
+        "ORC-02",
+        "ORC-03",
+        "ORC-04",
+        "ORC-10",
+        "ORC-14",
+        "ORC-16",
+        "ORC-17",
+        "ORC-18",
+        "ORC-23",
+        "ORC-25",
+        "ORC-29",
+        "ORC-33",
+        "ORC-35"
+      ],
+      "task_ids": [
+        "A01",
+        "A02",
+        "B01",
+        "C06",
+        "C10"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    },
+    {
+      "id": "R036",
+      "title": "Трассировка требований и доказательства выполнения",
+      "spec_section": 36,
+      "mandatory": true,
+      "test_ids": [
+        "ORC-26",
+        "ORC-31",
+        "ORC-32",
+        "DOC-01",
+        "DOC-02"
+      ],
+      "task_ids": [
+        "C08",
+        "C13"
+      ],
+      "status": "PLANNED_NOT_IMPLEMENTED"
+    }
+  ]
+}

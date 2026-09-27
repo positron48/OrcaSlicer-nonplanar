@@ -1,0 +1,119 @@
+[
+  {
+    "command": [
+      "git",
+      "rev-parse",
+      "HEAD"
+    ],
+    "exit_code": 0,
+    "stdout": "8500fcdccaa10b5099ac20d252af3a7c560046f1\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "submodule",
+      "status"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "status",
+      "--short"
+    ],
+    "exit_code": 0,
+    "stdout": " M AGENTS.md\n?? docs/\n?? scripts/nonplanar/\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "config",
+      "user.name"
+    ],
+    "exit_code": 0,
+    "stdout": "Filatov Anton\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "config",
+      "user.email"
+    ],
+    "exit_code": 0,
+    "stdout": "positron48@gmail.com\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "uname",
+      "-m"
+    ],
+    "exit_code": 0,
+    "stdout": "arm64\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "sw_vers"
+    ],
+    "exit_code": 0,
+    "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.5.1\nBuildVersion:\t\t25F80\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "clang++",
+      "--version"
+    ],
+    "exit_code": 0,
+    "stdout": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "--show-sdk-version"
+    ],
+    "exit_code": 0,
+    "stdout": "26.5\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "cmake",
+      "--version"
+    ],
+    "exit_code": 0,
+    "stdout": "cmake version 4.3.1\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "ninja",
+      "--version"
+    ],
+    "exit_code": 0,
+    "stdout": "1.13.2\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "brew",
+      "list",
+      "--versions",
+      "texinfo",
+      "automake",
+      "libtool"
+    ],
+    "exit_code": 0,
+    "stdout": "automake 1.18.1\nlibtool 2.5.4\ntexinfo 7.3_1\n",
+    "stderr": ""
+  }
+]

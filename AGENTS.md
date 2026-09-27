@@ -1,5 +1,13 @@
 # CLAUDE.md
 
+## Nonplanar Top Lab
+
+For Nonplanar Top Lab work, read `docs/nonplanar/AGENTS.md` and its normative
+documents before editing C++ or build files. The original specification bundle
+is preserved in `docs/nonplanar/`; execution records and implementation decisions
+live in `docs/nonplanar-dev/`. Never use `codex/` branch names or add AI
+co-authorship; preserve the configured Git author.
+
 OrcaSlicer — open-source C++17 3D slicer. wxWidgets GUI, CMake build system.
 
 ## Build Commands

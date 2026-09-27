@@ -1,0 +1,97 @@
+{
+  "schema_version": "0.1.0-draft",
+  "profile_id": "generic_conservative_unverified",
+  "usage_scope": "simulation_only",
+  "confirmation_status": "unverified",
+  "units": "mm",
+  "description": "Синтетический пример, все размеры условные. Не профиль реального принтера. Экспорт для печати запрещён.",
+  "coordinate_frame": {
+    "origin": "nozzle_orifice_center_at_tip_plane",
+    "positive_z": "towards_hotend",
+    "orientation": "fixed_machine_axes"
+  },
+  "nozzle": {
+    "orifice_diameter_mm": 0.4,
+    "tip_outer_diameter_mm": 1.0,
+    "radial_outer_profile_z_r_mm": [
+      [
+        0,
+        0.5
+      ],
+      [
+        1,
+        0.5
+      ],
+      [
+        5,
+        3.0
+      ],
+      [
+        8,
+        3.0
+      ]
+    ],
+    "deposition_contact_model": "UNQUALIFIED"
+  },
+  "components": [
+    {
+      "id": "heater_and_sock_envelope",
+      "shape": "box",
+      "center_mm": [
+        0,
+        0,
+        13
+      ],
+      "size_mm": [
+        24,
+        24,
+        10
+      ],
+      "interaction": "rigid_forbidden"
+    },
+    {
+      "id": "duct_envelope",
+      "shape": "box",
+      "center_mm": [
+        0,
+        0,
+        28
+      ],
+      "size_mm": [
+        70,
+        65,
+        20
+      ],
+      "interaction": "rigid_forbidden"
+    },
+    {
+      "id": "mount_envelope",
+      "shape": "box",
+      "center_mm": [
+        0,
+        0,
+        59
+      ],
+      "size_mm": [
+        75,
+        70,
+        42
+      ],
+      "interaction": "rigid_forbidden"
+    }
+  ],
+  "coverage": {
+    "represented_up_to_local_z_mm": 80,
+    "simulation_max_model_height_mm": 40,
+    "unmodelled_parts_policy": "BLOCK_OUTSIDE_DECLARED_DOMAIN"
+  },
+  "uncertainty": {
+    "geometry_measurement_mm": 0.2,
+    "positioning_mm": 0.1,
+    "body_clearance_mm": 0.3,
+    "near_nozzle_clearance_mm": 0.05,
+    "numbers_are_assumptions": true
+  },
+  "measurement_evidence": [],
+  "confirmation": null
+}

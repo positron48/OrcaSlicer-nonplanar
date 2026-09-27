@@ -1,0 +1,40 @@
+Test project /Users/antonfilatov/www/my/orca-nonplanar/build/arm64
+    Start 194: VOL-01 XY integral preserves volume on sloped surfaces without a second correction
+1/7 Test #194: VOL-01 XY integral preserves volume on sloped surfaces without a second correction ....   Passed    0.00 sec
+    Start 195: ORC-05 rejects stale scale nonfinite and out of domain coordinates
+2/7 Test #195: ORC-05 rejects stale scale nonfinite and out of domain coordinates ....................   Passed    0.00 sec
+    Start 196: Numeric budgets charge each component and reject missing invalid or exceeded bounds
+3/7 Test #196: Numeric budgets charge each component and reject missing invalid or exceeded bounds ...   Passed    0.00 sec
+    Start 197: VOL-01 invalid deposition dimensions reject instead of producing volume
+4/7 Test #197: VOL-01 invalid deposition dimensions reject instead of producing volume ...............   Passed    0.00 sec
+    Start 198: ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales
+5/7 Test #198: ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales ........   Passed    0.00 sec
+    Start 199: IR deposition travel and retraction carry different measures
+6/7 Test #199: IR deposition travel and retraction carry different measures ..........................   Passed    0.00 sec
+    Start 200: VOL-02 vertical and normal gaps obey independent plane distance
+7/7 Test #200: VOL-02 vertical and normal gaps obey independent plane distance .......................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 7
+
+Label Time Summary:
+IR           =   0.01 sec*proc (2 tests)
+Nonplanar    =   0.02 sec*proc (7 tests)
+ORC-05       =   0.01 sec*proc (2 tests)
+VOL-01       =   0.01 sec*proc (2 tests)
+VOL-02       =   0.00 sec*proc (1 test)
+
+Total Test time (real) =   0.03 sec
+{
+  "tests_discovered": 7,
+  "tests_executed": 7,
+  "test_names": [
+    "VOL-01 XY integral preserves volume on sloped surfaces without a second correction",
+    "ORC-05 rejects stale scale nonfinite and out of domain coordinates",
+    "Numeric budgets charge each component and reject missing invalid or exceeded bounds",
+    "VOL-01 invalid deposition dimensions reject instead of producing volume",
+    "ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales",
+    "IR deposition travel and retraction carry different measures",
+    "VOL-02 vertical and normal gaps obey independent plane distance"
+  ],
+  "status": "PASS"
+}

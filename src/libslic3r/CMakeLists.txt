@@ -21,6 +21,8 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared libs" OFF)
 
 set(lisbslic3r_sources
+    Nonplanar/Contracts.cpp
+    Nonplanar/Contracts.hpp
     AABBMesh.cpp
     AABBMesh.hpp
     AABBTreeIndirect.hpp

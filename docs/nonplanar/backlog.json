@@ -1,0 +1,833 @@
+{
+  "schema_version": 1,
+  "status": "PLANNED_NOT_IMPLEMENTED",
+  "tasks": [
+    {
+      "id": "A01",
+      "stage": "P0",
+      "name": "Закрепить и собрать stock Orca",
+      "dependencies": [],
+      "requirement_ids": [
+        "R001",
+        "R003",
+        "R028",
+        "R032",
+        "R035"
+      ],
+      "test_ids": [
+        "ORC-01",
+        "ORC-31"
+      ],
+      "deliverable": "Локальный SHA audit; build logs; непустой CTest; изолированная dev-установка",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "A02",
+      "stage": "P0",
+      "name": "Карта конвейера и baseline OFF/ZAA",
+      "dependencies": [
+        "A01"
+      ],
+      "requirement_ids": [
+        "R003",
+        "R033",
+        "R035"
+      ],
+      "test_ids": [
+        "ORC-02",
+        "ORC-03"
+      ],
+      "deliverable": "Документированный call graph, immutable stock test data и semantic diff",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "A03",
+      "stage": "P0",
+      "name": "Математические контракты и typed IR",
+      "dependencies": [
+        "A01"
+      ],
+      "requirement_ids": [
+        "R004",
+        "R014",
+        "R017",
+        "R019",
+        "R022"
+      ],
+      "test_ids": [
+        "ORC-05",
+        "VOL-01",
+        "VOL-02"
+      ],
+      "deliverable": "ADR координат/толщин/объёма/материала; типы, analytic tests",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "A04",
+      "stage": "P0",
+      "name": "Tool geometry и аналитический sweep",
+      "dependencies": [
+        "A03"
+      ],
+      "requirement_ids": [
+        "R006",
+        "R007",
+        "R015"
+      ],
+      "test_ids": [
+        "GEO-01",
+        "GEO-02",
+        "GEO-03",
+        "GEO-04",
+        "GEO-05",
+        "GEO-07",
+        "GEO-08"
+      ],
+      "deliverable": "Конечный торец, асимметрия, continuous bound; positive/negative oracles",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "A05",
+      "stage": "P0",
+      "name": "Spike переходной области",
+      "dependencies": [
+        "A03",
+        "A04"
+      ],
+      "requirement_ids": [
+        "R011",
+        "R012",
+        "R013",
+        "R017"
+      ],
+      "test_ids": [
+        "INT-01",
+        "INT-02",
+        "INT-03",
+        "VOL-01"
+      ],
+      "deliverable": "Допустимый/недопустимый переход; proof of volume budget, без печати",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "A06",
+      "stage": "P0",
+      "name": "Spike native serialization и parser",
+      "dependencies": [
+        "A02",
+        "A03"
+      ],
+      "requirement_ids": [
+        "R019",
+        "R020",
+        "R033"
+      ],
+      "test_ids": [
+        "ORC-06",
+        "ORC-07",
+        "GCD-01"
+      ],
+      "deliverable": "Round-trip маленького IR, independent parser, no ZAA reuse shortcut",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "A07",
+      "stage": "P0",
+      "name": "Протокол измерений и первый scene contract",
+      "dependencies": [
+        "A03"
+      ],
+      "requirement_ids": [
+        "R006",
+        "R007",
+        "R008",
+        "R025"
+      ],
+      "test_ids": [
+        "PRF-01",
+        "ORC-38",
+        "PRF-06"
+      ],
+      "deliverable": "Simulation-only profile, перечень неизвестных измерений, операторская инструкция",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "A08",
+      "stage": "P0",
+      "name": "Gate A review и benchmark",
+      "dependencies": [
+        "A04",
+        "A05",
+        "A06",
+        "A07"
+      ],
+      "requirement_ids": [
+        "R026",
+        "R028",
+        "R029",
+        "R031"
+      ],
+      "test_ids": [
+        "SYS-08",
+        "DOC-01"
+      ],
+      "deliverable": "Измерения CPU/memory, открытые риски, выбор native hooks, пересчитанный бюджет",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B01",
+      "stage": "P1",
+      "name": "Режим, policy и resolved configuration",
+      "dependencies": [
+        "A08"
+      ],
+      "requirement_ids": [
+        "R002",
+        "R009",
+        "R033",
+        "R035"
+      ],
+      "test_ids": [
+        "ORC-04",
+        "ORC-10",
+        "ORC-35"
+      ],
+      "deliverable": "Namespaced config; mutual exclusion; immutable policy snapshot",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B02",
+      "stage": "P1",
+      "name": "STL validation и source preservation",
+      "dependencies": [
+        "B01"
+      ],
+      "requirement_ids": [
+        "R004",
+        "R005",
+        "R027"
+      ],
+      "test_ids": [
+        "IMP-01",
+        "IMP-03",
+        "IMP-04",
+        "ORC-30"
+      ],
+      "deliverable": "Импорт через Orca, отчёт ограниченного repair, исходник неизменён",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B03",
+      "stage": "P1",
+      "name": "Выделение одной верхней области",
+      "dependencies": [
+        "B02",
+        "A04"
+      ],
+      "requirement_ids": [
+        "R010",
+        "R013"
+      ],
+      "test_ids": [
+        "CAP-01",
+        "CAP-02",
+        "CAP-03",
+        "CAP-04",
+        "CAP-05",
+        "CAP-13",
+        "CAP-14"
+      ],
+      "deliverable": "ROI, наклон/кривизна, объяснимый отказ и площадь обработки",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B04",
+      "stage": "P1",
+      "name": "Body/cap partition и native planar adapter",
+      "dependencies": [
+        "B03",
+        "A05"
+      ],
+      "requirement_ids": [
+        "R011",
+        "R012",
+        "R033"
+      ],
+      "test_ids": [
+        "ORC-09",
+        "INT-04",
+        "INT-06"
+      ],
+      "deliverable": "Body создан Orca; нет повторного top fill; dense interface и semantic paths",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B05",
+      "stage": "P1",
+      "name": "Последовательная модель материала",
+      "dependencies": [
+        "B04"
+      ],
+      "requirement_ids": [
+        "R014",
+        "R015"
+      ],
+      "test_ids": [
+        "MAT-01",
+        "MAT-02",
+        "MAT-03",
+        "MAT-04",
+        "GCD-09"
+      ],
+      "deliverable": "D_nominal/upper/lower; previous/current segments; bounded contact model",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B06",
+      "stage": "P1",
+      "name": "Transition solver",
+      "dependencies": [
+        "B05",
+        "A05"
+      ],
+      "requirement_ids": [
+        "R012",
+        "R013",
+        "R017"
+      ],
+      "test_ids": [
+        "INT-01",
+        "INT-02",
+        "INT-03",
+        "INT-05",
+        "INT-06"
+      ],
+      "deliverable": "Реальная ступенчатая опора, thickness limits, шов, отказ без опоры",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B07",
+      "stage": "P1",
+      "name": "Непланарные контуры и infill",
+      "dependencies": [
+        "B06"
+      ],
+      "requirement_ids": [
+        "R010",
+        "R013",
+        "R017"
+      ],
+      "test_ids": [
+        "CAP-02",
+        "CAP-04",
+        "CAP-05",
+        "VOL-02"
+      ],
+      "deliverable": "Конечный след, adaptive segmentation и направление проходов",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B08",
+      "stage": "P1",
+      "name": "Непрерывные collisions для полных путей",
+      "dependencies": [
+        "B05",
+        "B07",
+        "A04"
+      ],
+      "requirement_ids": [
+        "R007",
+        "R014",
+        "R015"
+      ],
+      "test_ids": [
+        "GEO-03",
+        "GEO-04",
+        "GEO-05",
+        "GEO-06",
+        "GEO-07",
+        "GEO-08",
+        "MAT-02",
+        "MAT-03"
+      ],
+      "deliverable": "Голова/сцена/материал, witness, bound budget, fail-closed",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B09",
+      "stage": "P1",
+      "name": "Order, travel, entry/exit и парковка",
+      "dependencies": [
+        "B08"
+      ],
+      "requirement_ids": [
+        "R016",
+        "R018"
+      ],
+      "test_ids": [
+        "MOV-01",
+        "MOV-02",
+        "MOV-03",
+        "MOV-06",
+        "ORC-08",
+        "ORC-36"
+      ],
+      "deliverable": "Полный порядок без downstream reordering; проверенные переезды",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B10",
+      "stage": "P1",
+      "name": "Объём, flow и motion limits",
+      "dependencies": [
+        "B07",
+        "B09"
+      ],
+      "requirement_ids": [
+        "R017",
+        "R018"
+      ],
+      "test_ids": [
+        "VOL-01",
+        "VOL-02",
+        "VOL-03",
+        "MOV-04",
+        "MOV-05",
+        "ORC-07"
+      ],
+      "deliverable": "Однозначный V→E, full Z/axis/Q bounds, firmware constraints",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B11",
+      "stage": "P1",
+      "name": "Нативный exporter и финальные фильтры",
+      "dependencies": [
+        "B10",
+        "A06"
+      ],
+      "requirement_ids": [
+        "R019",
+        "R022",
+        "R033"
+      ],
+      "test_ids": [
+        "ORC-06",
+        "ORC-07",
+        "ORC-11",
+        "ORC-36",
+        "GCD-06",
+        "GCD-08"
+      ],
+      "deliverable": "Конечный candidate; no double Z/E, no hidden wipe/reset",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B12",
+      "stage": "P1",
+      "name": "Независимый verifier",
+      "dependencies": [
+        "B11"
+      ],
+      "requirement_ids": [
+        "R015",
+        "R017",
+        "R018",
+        "R019",
+        "R020"
+      ],
+      "test_ids": [
+        "GCD-01",
+        "GCD-02",
+        "GCD-03",
+        "GCD-04",
+        "GCD-05",
+        "GCD-06",
+        "GCD-07",
+        "GCD-09",
+        "GCD-10",
+        "GCD-11",
+        "ORC-27"
+      ],
+      "deliverable": "Parser/replay последнего текста, material/limits checks, independent oracles",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B13",
+      "stage": "P1",
+      "name": "Единый gate и immutable job state",
+      "dependencies": [
+        "B12",
+        "B01"
+      ],
+      "requirement_ids": [
+        "R020",
+        "R022",
+        "R026",
+        "R027",
+        "R034"
+      ],
+      "test_ids": [
+        "SYS-01",
+        "SYS-02",
+        "SYS-05",
+        "ORC-12",
+        "ORC-13",
+        "ORC-15",
+        "ORC-20",
+        "ORC-21",
+        "ORC-23",
+        "ORC-25",
+        "ORC-26",
+        "ORC-39"
+      ],
+      "deliverable": "Нет обхода file/CLI; cancellation/stale, network off, snapshot/hash binding",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B14",
+      "stage": "P1",
+      "name": "Минимальный нативный UI и CLI",
+      "dependencies": [
+        "B13"
+      ],
+      "requirement_ids": [
+        "R009",
+        "R021",
+        "R022"
+      ],
+      "test_ids": [
+        "SYS-06",
+        "SYS-07",
+        "ORC-20",
+        "ORC-21"
+      ],
+      "deliverable": "Управляемый сквозной путь в Orca, diagnostics и replay по движению",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "B15",
+      "stage": "P1",
+      "name": "Операторские первые испытания и Gate B",
+      "dependencies": [
+        "B14",
+        "A07"
+      ],
+      "requirement_ids": [
+        "R024",
+        "R025",
+        "R028"
+      ],
+      "test_ids": [
+        "PHY-01",
+        "PHY-02",
+        "PHY-03",
+        "PRF-07"
+      ],
+      "deliverable": "Измеренный профиль и validated файл; клин/пологий купол; протокол, не автозапуск",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C01",
+      "stage": "P2",
+      "name": "STEP units/accuracy/assemblies",
+      "dependencies": [
+        "B14"
+      ],
+      "requirement_ids": [
+        "R005",
+        "R022"
+      ],
+      "test_ids": [
+        "IMP-02",
+        "IMP-05",
+        "IMP-06",
+        "ORC-19"
+      ],
+      "deliverable": "Квалифицированный native STEP, chord budget и invalidation",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C02",
+      "stage": "P2",
+      "name": "Несколько крышек и сложные границы",
+      "dependencies": [
+        "B14"
+      ],
+      "requirement_ids": [
+        "R010",
+        "R011",
+        "R012",
+        "R013",
+        "R016"
+      ],
+      "test_ids": [
+        "CAP-06",
+        "CAP-07",
+        "CAP-08",
+        "CAP-09",
+        "CAP-10",
+        "CAP-11",
+        "CAP-12",
+        "CAP-14"
+      ],
+      "deliverable": "Купола/стена/отверстие/седло; геометрия сохранена, порядок проверен",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C03",
+      "stage": "P2",
+      "name": "Полные профили и audited reference CAD",
+      "dependencies": [
+        "B14",
+        "A07"
+      ],
+      "requirement_ids": [
+        "R006",
+        "R007",
+        "R032"
+      ],
+      "test_ids": [
+        "PRF-01",
+        "PRF-05",
+        "PRF-06",
+        "ORC-37",
+        "ORC-38"
+      ],
+      "deliverable": "Параметрический профиль, provenance/coverage и проверенный CAD reference; без фиктивных измерений",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C04",
+      "stage": "P2",
+      "name": "Генератор STL/SVG калибров",
+      "dependencies": [
+        "C03"
+      ],
+      "requirement_ids": [
+        "R008",
+        "R025"
+      ],
+      "test_ids": [
+        "PRF-02",
+        "PRF-03",
+        "PRF-04",
+        "PHY-01"
+      ],
+      "deliverable": "Сечения/рамка, scales, fit budget и hash; холодная примерка",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C05",
+      "stage": "P2",
+      "name": "Полный GUI и sequential preview",
+      "dependencies": [
+        "C02",
+        "C04"
+      ],
+      "requirement_ids": [
+        "R009",
+        "R021"
+      ],
+      "test_ids": [
+        "SYS-06",
+        "SYS-07",
+        "ORC-12",
+        "ORC-34"
+      ],
+      "deliverable": "Native panels, head/material/witness views, exported path identity",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C06",
+      "stage": "P2",
+      "name": "3MF persistence/migration и payload gate",
+      "dependencies": [
+        "C01",
+        "C03"
+      ],
+      "requirement_ids": [
+        "R022",
+        "R034",
+        "R035"
+      ],
+      "test_ids": [
+        "ORC-16",
+        "ORC-17",
+        "ORC-18",
+        "ORC-19",
+        "ORC-22"
+      ],
+      "deliverable": "Round-trip, unknown schema, reload, no unsafe embedded G-code",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C07",
+      "stage": "P2",
+      "name": "Точная sidecar и verifier consistency",
+      "dependencies": [
+        "C02",
+        "B12"
+      ],
+      "requirement_ids": [
+        "R014",
+        "R017",
+        "R020",
+        "R022"
+      ],
+      "test_ids": [
+        "ORC-28",
+        "ORC-26",
+        "ORC-27"
+      ],
+      "deliverable": "Независимая сверка volume/width/gap, schema and mandatory registry",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C08",
+      "stage": "P2",
+      "name": "Полная аналитическая/negative/property матрица",
+      "dependencies": [
+        "C01",
+        "C02",
+        "C06",
+        "C07"
+      ],
+      "requirement_ids": [
+        "R023",
+        "R024",
+        "R029",
+        "R036"
+      ],
+      "test_ids": [
+        "PROP-01",
+        "PROP-02",
+        "PROP-03",
+        "PROP-04",
+        "PROP-05",
+        "DOC-01"
+      ],
+      "deliverable": "Fixtures/oracles/mutations; без all-reject; evidence всех test IDs",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C09",
+      "stage": "P2",
+      "name": "Ресурсы, кэш, атаки и atomic recovery",
+      "dependencies": [
+        "C06",
+        "C07"
+      ],
+      "requirement_ids": [
+        "R019",
+        "R026",
+        "R027",
+        "R034"
+      ],
+      "test_ids": [
+        "SYS-01",
+        "SYS-02",
+        "SYS-04",
+        "SYS-05",
+        "SYS-09",
+        "SYS-10",
+        "ORC-24",
+        "ORC-25",
+        "ORC-39"
+      ],
+      "deliverable": "Memory/cancel/security tests, commit marker и финальные hashes",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C10",
+      "stage": "P2",
+      "name": "Сборки/изоляция/лицензии и upstream discipline",
+      "dependencies": [
+        "C05",
+        "C06",
+        "C09"
+      ],
+      "requirement_ids": [
+        "R003",
+        "R028",
+        "R030",
+        "R035"
+      ],
+      "test_ids": [
+        "SYS-03",
+        "ORC-14",
+        "ORC-29",
+        "ORC-31",
+        "ORC-32",
+        "ORC-33"
+      ],
+      "deliverable": "Две native платформы, отдельный config, release packaging и notices",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C11",
+      "stage": "P2",
+      "name": "Performance и точность на большом примере",
+      "dependencies": [
+        "C08",
+        "C09"
+      ],
+      "requirement_ids": [
+        "R024",
+        "R026"
+      ],
+      "test_ids": [
+        "SYS-08",
+        "PROP-04"
+      ],
+      "deliverable": "Измеренный benchmark с полным verifier и численным бюджетом",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C12",
+      "stage": "P2",
+      "name": "Физическая квалификация серии",
+      "dependencies": [
+        "B15",
+        "C02",
+        "C04",
+        "C07"
+      ],
+      "requirement_ids": [
+        "R024",
+        "R025"
+      ],
+      "test_ids": [
+        "PHY-02",
+        "PHY-03",
+        "PHY-04"
+      ],
+      "deliverable": "Три формы × три последовательных успеха; baseline OFF/ZAA/hybrid и размеры",
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "C13",
+      "stage": "P2",
+      "name": "Gate C и комплект передачи",
+      "dependencies": [
+        "C08",
+        "C10",
+        "C11",
+        "C12"
+      ],
+      "requirement_ids": [
+        "R028",
+        "R029",
+        "R030",
+        "R031",
+        "R036"
+      ],
+      "test_ids": [
+        "DOC-01",
+        "DOC-02"
+      ],
+      "deliverable": "Все обязательные evidence, известные ограничения, исходники/сборки/доки/профили",
+      "status": "NOT_STARTED"
+    }
+  ]
+}

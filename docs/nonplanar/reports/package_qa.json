@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "checked_on": "2026-09-27",
+  "scope": "DOCUMENTATION_AND_HELPER_SCRIPTS_ONLY",
+  "status": "PASS_FOR_THIS_SCOPE",
+  "environment": {
+    "python": "3.13.5",
+    "platform": "Linux",
+    "jsonschema": "4.26.0",
+    "git": "git version 2.47.3"
+  },
+  "helper_tests": {
+    "command": "python3 -m unittest discover -s scripts -p 'test_*.py' -v",
+    "run": 25,
+    "passed": 25,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "log": "helper_tests.txt",
+    "source_audit_test_scope": "TEMPORARY_SYNTHETIC_GIT_REPOSITORIES_NOT_REAL_ORCA"
+  },
+  "package_integrity": {
+    "validator": "scripts/validate_package.py",
+    "result": "PASS_DOCUMENTATION_PACKAGE_ONLY",
+    "checks": [
+      "36 numbered spec sections",
+      "bidirectional requirement-task-test references",
+      "acyclic task dependencies",
+      "125 planned tests explicitly NOT_IMPLEMENTED_NOT_RUN",
+      "36 tasks explicitly NOT_STARTED",
+      "strict JSON parsing",
+      "Python syntax",
+      "3 self-contained draft 2020-12 schemas and matching example payloads",
+      "simulation-only unverified toolhead example",
+      "example export blocked",
+      "STL manifests and binary lengths",
+      "local Markdown links",
+      "complete SHA256SUMS inventory",
+      "no executable print G-code included"
+    ]
+  },
+  "analytic_fixtures": {
+    "count": 10,
+    "checks": [
+      "closed two-manifold edge incidence",
+      "opposite oriented shared edges",
+      "finite unit normals",
+      "positive signed mesh volume",
+      "analytic flat/wedge volume agreement",
+      "binary STL roundtrip and length",
+      "deterministic generation",
+      "reproduced distributed hashes"
+    ],
+    "limitations": "These checks do not establish printability, nozzle clearance, whole-mesh error bounds, valid toolpaths or physical safety."
+  },
+  "upstream_review": {
+    "baseline": "v2.4.2",
+    "commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+    "selected_sources": "WEB_REVIEW_ONLY",
+    "local_real_checkout_audit": "NOT_RUN",
+    "orca_build": "NOT_RUN",
+    "orca_runtime": "NOT_RUN"
+  },
+  "system_execution": {
+    "slicer_implementation": "NOT_INCLUDED",
+    "planned_slicer_tests": "NOT_IMPLEMENTED_NOT_RUN",
+    "physical_print_tests": "NOT_RUN",
+    "qualified_real_toolhead_profile": "NOT_INCLUDED"
+  },
+  "interpretation": "PASS refers only to the documentation bundle and its helper scripts. It is not a certification of a slicer, toolhead or printer."
+}

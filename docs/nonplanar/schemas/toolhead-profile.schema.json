@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Draft toolhead contract; schema validity is not print approval",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile_id",
+    "usage_scope",
+    "confirmation_status",
+    "units",
+    "description",
+    "coordinate_frame",
+    "nozzle",
+    "components",
+    "coverage",
+    "uncertainty",
+    "measurement_evidence",
+    "confirmation"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-draft"
+    },
+    "profile_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9_-]+$"
+    },
+    "usage_scope": {
+      "enum": [
+        "simulation_only",
+        "reference_only",
+        "operator_measured"
+      ]
+    },
+    "confirmation_status": {
+      "enum": [
+        "unverified",
+        "operator_confirmed"
+      ]
+    },
+    "units": {
+      "const": "mm"
+    },
+    "description": {
+      "type": "string"
+    },
+    "coordinate_frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin",
+        "positive_z",
+        "orientation"
+      ],
+      "properties": {
+        "origin": {
+          "const": "nozzle_orifice_center_at_tip_plane"
+        },
+        "positive_z": {
+          "const": "towards_hotend"
+        },
+        "orientation": {
+          "const": "fixed_machine_axes"
+        }
+      }
+    },
+    "nozzle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "orifice_diameter_mm",
+        "tip_outer_diameter_mm",
+        "radial_outer_profile_z_r_mm",
+        "deposition_contact_model"
+      ],
+      "properties": {
+        "orifice_diameter_mm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "tip_outer_diameter_mm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "radial_outer_profile_z_r_mm": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "items": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "deposition_contact_model": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "shape",
+          "center_mm",
+          "size_mm",
+          "interaction"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "shape": {
+            "const": "box"
+          },
+          "center_mm": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "number"
+            }
+          },
+          "size_mm": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 3,
+            "items": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "interaction": {
+            "const": "rigid_forbidden"
+          }
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "represented_up_to_local_z_mm",
+        "simulation_max_model_height_mm",
+        "unmodelled_parts_policy"
+      ],
+      "properties": {
+        "represented_up_to_local_z_mm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "simulation_max_model_height_mm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "unmodelled_parts_policy": {
+          "const": "BLOCK_OUTSIDE_DECLARED_DOMAIN"
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "geometry_measurement_mm",
+        "positioning_mm",
+        "body_clearance_mm",
+        "near_nozzle_clearance_mm",
+        "numbers_are_assumptions"
+      ],
+      "properties": {
+        "geometry_measurement_mm": {
+          "type": "number",
+          "minimum": 0
+        },
+        "positioning_mm": {
+          "type": "number",
+          "minimum": 0
+        },
+        "body_clearance_mm": {
+          "type": "number",
+          "minimum": 0
+        },
+        "near_nozzle_clearance_mm": {
+          "type": "number",
+          "minimum": 0
+        },
+        "numbers_are_assumptions": {
+          "type": "boolean"
+        }
+      }
+    },
+    "measurement_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "confirmation": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "geometry_sha256",
+            "operator",
+            "confirmed_at"
+          ],
+          "properties": {
+            "geometry_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "operator": {
+              "type": "string",
+              "minLength": 1
+            },
+            "confirmed_at": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "confirmation_status": {
+            "const": "operator_confirmed"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "usage_scope": {
+            "const": "operator_measured"
+          },
+          "measurement_evidence": {
+            "minItems": 1
+          },
+          "confirmation": {
+            "type": "object"
+          },
+          "uncertainty": {
+            "properties": {
+              "numbers_are_assumptions": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$comment": "Limited schema for current examples: nozzle axisymmetric profile + box components. Production schema must add typed primitives/mesh references in B/C tasks; not a ready runtime validator."
+}

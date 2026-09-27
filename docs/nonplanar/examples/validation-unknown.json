@@ -1,0 +1,40 @@
+{
+  "schema_version": "0.1.0-draft",
+  "document_example": true,
+  "job_id": "DOCUMENTATION-EXAMPLE-NOT-A-RUN",
+  "job_revision": 1,
+  "overall_status": "UNKNOWN",
+  "export_decision": "BLOCK",
+  "gcode_sha256": null,
+  "mandatory_check_ids": [
+    "profile_complete",
+    "continuous_geometry",
+    "independent_replay"
+  ],
+  "checks": [
+    {
+      "id": "profile_complete",
+      "mandatory": true,
+      "status": "FAIL",
+      "execution": "RUN",
+      "reason": "Example profile is simulation_only, not measured."
+    },
+    {
+      "id": "continuous_geometry",
+      "mandatory": true,
+      "status": "UNKNOWN",
+      "execution": "NOT_RUN",
+      "reason": "Slicer/geometry verifier not implemented in this package."
+    },
+    {
+      "id": "independent_replay",
+      "mandatory": true,
+      "status": "UNKNOWN",
+      "execution": "NOT_RUN",
+      "reason": "No G-code candidate exists."
+    }
+  ],
+  "assumptions": [
+    "No physical printer or installed head has been qualified."
+  ]
+}

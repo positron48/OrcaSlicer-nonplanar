@@ -1,0 +1,49 @@
+test_ORC02_ORC03_modal_replay_preserves_xyz_e_feed_order (test_baselines.BaselineTests.test_ORC02_ORC03_modal_replay_preserves_xyz_e_feed_order) ... ok
+test_ORC02_normalization_only_removes_timestamp (test_baselines.BaselineTests.test_ORC02_normalization_only_removes_timestamp) ... ok
+test_ORC03_mutations_change_replay (test_baselines.BaselineTests.test_ORC03_mutations_change_replay) ... ok
+test_unsupported_or_empty_replay_rejects (test_baselines.BaselineTests.test_unsupported_or_empty_replay_rejects) ... ok
+test_ORC01_mismatched_lock_rejected (test_checkout.CheckoutTests.test_ORC01_mismatched_lock_rejected) ... ok
+test_ORC01_missing_commit_rejected (test_checkout.CheckoutTests.test_ORC01_missing_commit_rejected) ... ok
+test_ORC01_missing_history_rejected (test_checkout.CheckoutTests.test_ORC01_missing_history_rejected) ... ok
+test_ORC01_real_pinned_sources (test_checkout.CheckoutTests.test_ORC01_real_pinned_sources) ... ok
+test_ORC31_disabled_rejected (test_ctest_gate.CTestGateTests.test_ORC31_disabled_rejected) ... ok
+test_ORC31_empty_rejected (test_ctest_gate.CTestGateTests.test_ORC31_empty_rejected) ... ok
+test_ORC31_failure_rejected (test_ctest_gate.CTestGateTests.test_ORC31_failure_rejected) ... Test project /var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/tmp5z6att6u/build
+    Start 1: failure
+1/1 Test #1: failure ..........................***Failed    0.00 sec
+
+
+0% tests passed, 1 tests failed out of 1
+
+Total Test time (real) =   0.01 sec
+
+The following tests FAILED:
+	  1 - failure (Failed)
+Errors while running CTest
+ok
+test_ORC31_nonmatching_selection_rejected (test_ctest_gate.CTestGateTests.test_ORC31_nonmatching_selection_rejected) ... ok
+test_ORC31_positive_executes_test (test_ctest_gate.CTestGateTests.test_ORC31_positive_executes_test) ... Test project /var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/tmp1dq4wu1h/build
+    Start 1: compare
+1/1 Test #1: compare ..........................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.01 sec
+ok
+test_ORC31_skip_rejected (test_ctest_gate.CTestGateTests.test_ORC31_skip_rejected) ... Test project /var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/tmp43j662ec/build
+    Start 1: skip
+1/1 Test #1: skip .............................***Skipped   0.00 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.00 sec
+
+The following tests did not run:
+	  1 - skip (Skipped)
+ok
+test_ORC31_unbuilt_rejected (test_ctest_gate.CTestGateTests.test_ORC31_unbuilt_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.656s
+
+OK
