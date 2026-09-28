@@ -15,3 +15,9 @@ recorded separately; a workflow file or push alone does not count as a pass.
 Local target-selection harness validation: 8 Python tests passed using real
 CMake/CTest, including missing/empty targets, disabled tests, failures and skips.
 These are harness tests, not a native Linux slicer result.
+
+First remote run 36401877948 stopped at the source audit (exit 2); no build
+ran. The default shallow checkout cannot satisfy the audit's baseline commit
+and ancestry checks. Fetch full history, create evidence before the audit, and
+retain its output on failure. Public API annotations confirm the failed step;
+raw remote logs require authentication and were not available.
