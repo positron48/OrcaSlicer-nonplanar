@@ -203,7 +203,23 @@ const std::map<std::string, NeutralTransformRule> &neutral_transform_policy()
         {"filament_shrinkage_compensation_z", {coPercents, 100}},
         {"xy_hole_compensation", {coFloat, 0}},
         {"xy_contour_compensation", {coFloat, 0}},
-        {"elefant_foot_compensation", {coFloat, 0}}
+        {"elefant_foot_compensation", {coFloat, 0}},
+        {"filament_flow_ratio", {coFloats, 1}},
+        {"print_flow_ratio", {coFloat, 1}},
+        {"bridge_flow", {coFloat, 1}},
+        {"internal_bridge_flow", {coFloat, 1}},
+        {"top_solid_infill_flow_ratio", {coFloat, 1}},
+        {"bottom_solid_infill_flow_ratio", {coFloat, 1}},
+        {"first_layer_flow_ratio", {coFloat, 1}},
+        {"outer_wall_flow_ratio", {coFloat, 1}},
+        {"inner_wall_flow_ratio", {coFloat, 1}},
+        {"overhang_flow_ratio", {coFloat, 1}},
+        {"sparse_infill_flow_ratio", {coFloat, 1}},
+        {"internal_solid_infill_flow_ratio", {coFloat, 1}},
+        {"gap_fill_flow_ratio", {coFloat, 1}},
+        {"support_flow_ratio", {coFloat, 1}},
+        {"support_interface_flow_ratio", {coFloat, 1}},
+        {"brim_flow_ratio", {coFloat, 1}}
     };
     return rules;
 }

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/validate_stl_audit_cli.py", line 143, in <module>
+    print(json.dumps(validate(args.executable, args.output_dir), indent=2))
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/validate_stl_audit_cli.py", line 75, in validate
+    assert upper["area_lower_mm2"] <= 600 <= upper["area_upper_mm2"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

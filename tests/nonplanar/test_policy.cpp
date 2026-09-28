@@ -550,7 +550,7 @@ TEST_CASE("B01 unqualified flow and geometry compensators fail preflight", "[Non
 }
 TEST_CASE("B01 neutral values require native types exact numbers and every vector entry", "[Nonplanar][B01][B01Transforms]")
 {
-    REQUIRE(neutral_transform_policy().size() == 11);
+    REQUIRE(neutral_transform_policy().size() == 27);
     for (const auto &[key, rule] : neutral_transform_policy()) {
         REQUIRE(print_config_def.get(key) != nullptr);
         REQUIRE(print_config_def.get(key)->type == rule.type);
@@ -598,6 +598,57 @@ TEST_CASE("B01 native region override cannot hide an unqualified compensator", "
     print.apply(model,config);
     REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("small_area_infill_flow_compensation"));
     REQUIRE_THROWS(print.process());
+    config.set_deserialize_strict("nptop_mode","off");
+    print.apply(model,config);
+    REQUIRE(print.nonplanar_block_reason().empty());
+}
+TEST_CASE("B01 native extrusion multipliers require exact neutral captured values", "[Nonplanar][B01][B01Flow]")
+{
+    const std::vector<std::string> keys={"filament_flow_ratio","print_flow_ratio","bridge_flow","internal_bridge_flow",
+        "top_solid_infill_flow_ratio","bottom_solid_infill_flow_ratio","first_layer_flow_ratio","outer_wall_flow_ratio",
+        "inner_wall_flow_ratio","overhang_flow_ratio","sparse_infill_flow_ratio","internal_solid_infill_flow_ratio",
+        "gap_fill_flow_ratio","support_flow_ratio","support_interface_flow_ratio","brim_flow_ratio"};
+    REQUIRE(resolve_policy(eligible(),1,1).passes_config_preflight());
+    for (const auto &key : keys) {
+        INFO(key);
+        for (double value : {0.,0.95,1.05,std::nextafter(1.,2.),std::numeric_limits<double>::quiet_NaN(),
+                             std::numeric_limits<double>::infinity()}) {
+            auto config=eligible();
+            if (key=="filament_flow_ratio") config.set_key_value(key,new ConfigOptionFloats{value});
+            else config.set_key_value(key,new ConfigOptionFloat(value));
+            const auto before=ResolvedConfigSnapshot(config).fingerprint();
+            const auto policy=resolve_policy(config,1,1);
+            CHECK_FALSE(policy.passes_config_preflight());
+            if (!policy.conflicts.empty()) CHECK(policy.conflicts.front().key==key);
+            CHECK(ResolvedConfigSnapshot(config).fingerprint()==before);
+            const auto conflict=input_policy_conflict(Model{},config);
+            CHECK(conflict);
+            if (conflict) CHECK(conflict->key==key);
+            config.set_deserialize_strict("nptop_mode","off");
+            CHECK(resolve_policy(config,1,1).conflicts.empty());
+            CHECK_FALSE(input_policy_conflict(Model{},config));
+        }
+        auto config=eligible(); config.erase(key);
+        CHECK_FALSE(resolve_policy(config,1,1).passes_config_preflight());
+        config.set_key_value(key,new ConfigOptionString("1"));
+        CHECK_FALSE(resolve_policy(config,1,1).passes_config_preflight());
+    }
+}
+TEST_CASE("B01 every filament flow entry and resolved role override remains unqualified", "[Nonplanar][B01][B01Flow]")
+{
+    for (const auto &values : std::vector<std::vector<double>>{{},{1.,0.95},{1.,std::nextafter(1.,2.)}}) {
+        auto config=eligible(); config.set_key_value("filament_flow_ratio",new ConfigOptionFloats(values));
+        CHECK_FALSE(resolve_policy(config,1,1).passes_config_preflight());
+        CHECK(input_policy_conflict(Model{},config));
+    }
+    Print print; print.is_BBL_printer()=false; Model model;
+    auto config=eligible(); Test::init_print({Test::TestMesh::cube_20x20x20},print,model,config);
+    model.objects.front()->config.set_key_value("top_solid_infill_flow_ratio",new ConfigOptionFloat(1.05));
+    const auto value=model.objects.front()->config.opt_float("top_solid_infill_flow_ratio");
+    print.apply(model,config);
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("top_solid_infill_flow_ratio"));
+    REQUIRE_THROWS(print.process());
+    REQUIRE(model.objects.front()->config.opt_float("top_solid_infill_flow_ratio")==value);
     config.set_deserialize_strict("nptop_mode","off");
     print.apply(model,config);
     REQUIRE(print.nonplanar_block_reason().empty());
