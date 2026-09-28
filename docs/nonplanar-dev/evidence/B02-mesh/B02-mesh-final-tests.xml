@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="54" hostname="tbd" time="0.001" timestamp="2026-09-28T10:27:11Z">
+    <properties>
+      <property name="random-seed" value="1554916135"/>
+      <property name="filters" value="[MeshAudit]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B02 exact vertex normalization changes only the owned derived mesh" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 mesh audit rejects missing faces duplicates orientation and invalid coordinates" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 mesh audit preserves source and accepts a bounded native cube geometry" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 mesh audit fails closed on units cancellation and finite work limits" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 closed connected bowtie prism is rejected for self intersection" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 separate and overlapping closed shells are not silently united" time="0.000" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
