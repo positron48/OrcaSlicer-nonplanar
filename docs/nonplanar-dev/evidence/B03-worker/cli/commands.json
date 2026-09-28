@@ -1,0 +1,463 @@
+[
+  {
+    "case": "flat_block",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl"
+    ],
+    "exit_code": 0,
+    "report": {
+      "export_allowed": false,
+      "faces": 96,
+      "kind": "stl_geometry_audit",
+      "peak_rss_bytes": 11927552,
+      "reason": "CLOSED_ORIENTED_SINGLE_COMPONENT",
+      "revision": 1,
+      "schema_version": 1,
+      "source_error_upper_mm": 0.0,
+      "source_sha256": "2006064a6ca57fe1da6c1f6a9ae6a0c8abbc4d543de38379f073c47890730b46",
+      "status": "VALID_GEOMETRY",
+      "units": "mm",
+      "volume_lower_mm3": 2399.999999999968,
+      "volume_upper_mm3": 2400.000000000031
+    }
+  },
+  {
+    "case": "flat_block-upper",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "--upper",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl"
+    ],
+    "exit_code": 0,
+    "report": {
+      "export_allowed": false,
+      "faces": 96,
+      "frame": "source_model",
+      "kind": "stl_upper_audit",
+      "peak_rss_bytes": 12025856,
+      "reason": "NOMINAL_UPPER_PROJECTION_ONLY",
+      "revision": 1,
+      "schema_version": 1,
+      "scope": "nominal_geometry_only",
+      "source_error_upper_mm": 0.0,
+      "source_sha256": "2006064a6ca57fe1da6c1f6a9ae6a0c8abbc4d543de38379f073c47890730b46",
+      "status": "NOMINAL_HEIGHTFIELD",
+      "units": "mm",
+      "upper": {
+        "affine_patches": 1,
+        "area_lower_mm2": 599.9999999999981,
+        "area_upper_mm2": 600.0000000000019,
+        "creases": 0,
+        "holes": 0,
+        "maximum_z_mm": 4.0,
+        "minimum_z_mm": 4.0,
+        "patches": 1,
+        "selected_area_lower_mm2": 599.9999999999981,
+        "selected_area_upper_mm2": 600.0000000000019,
+        "selected_faces": 32,
+        "selected_slope_upper": 0.0,
+        "slope_limit": 0.2,
+        "upward_faces": 32
+      },
+      "volume_lower_mm3": 2399.999999999968,
+      "volume_upper_mm3": 2400.000000000031
+    }
+  },
+  {
+    "case": "wedge_5deg",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/wedge_5deg.stl"
+    ],
+    "exit_code": 0,
+    "report": {
+      "export_allowed": false,
+      "faces": 608,
+      "kind": "stl_geometry_audit",
+      "peak_rss_bytes": 12615680,
+      "reason": "CLOSED_ORIENTED_SINGLE_COMPONENT",
+      "revision": 1,
+      "schema_version": 1,
+      "source_error_upper_mm": 0.0,
+      "source_sha256": "18cd080c4ea30ee4800e4efc08c93ed78daddc4a83b5308c9f9766a43f7524a6",
+      "status": "VALID_GEOMETRY",
+      "units": "mm",
+      "volume_lower_mm3": 3455.883913039935,
+      "volume_upper_mm3": 3455.8839130403853
+    }
+  },
+  {
+    "case": "wedge_5deg-upper",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "--upper",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/wedge_5deg.stl"
+    ],
+    "exit_code": 0,
+    "report": {
+      "export_allowed": false,
+      "faces": 608,
+      "frame": "source_model",
+      "kind": "stl_upper_audit",
+      "peak_rss_bytes": 12910592,
+      "reason": "NOMINAL_UPPER_PROJECTION_ONLY",
+      "revision": 1,
+      "schema_version": 1,
+      "scope": "nominal_geometry_only",
+      "source_error_upper_mm": 0.0,
+      "source_sha256": "18cd080c4ea30ee4800e4efc08c93ed78daddc4a83b5308c9f9766a43f7524a6",
+      "status": "NOMINAL_HEIGHTFIELD",
+      "units": "mm",
+      "upper": {
+        "affine_patches": 0,
+        "area_lower_mm2": 639.9999999999862,
+        "area_upper_mm2": 640.0000000000138,
+        "creases": 16,
+        "holes": 0,
+        "maximum_z_mm": 6.799637317657471,
+        "minimum_z_mm": 4.0,
+        "patches": 1,
+        "selected_area_lower_mm2": 639.9999999999862,
+        "selected_area_upper_mm2": 640.0000000000138,
+        "selected_faces": 256,
+        "selected_slope_upper": 0.08748888969421403,
+        "slope_limit": 0.2,
+        "upward_faces": 256
+      },
+      "volume_lower_mm3": 3455.883913039935,
+      "volume_upper_mm3": 3455.8839130403853
+    }
+  },
+  {
+    "case": "steep-upper-no-selection",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "--upper",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/wedge_30deg.stl"
+    ],
+    "exit_code": 0,
+    "report": {
+      "export_allowed": false,
+      "faces": 608,
+      "frame": "source_model",
+      "kind": "stl_upper_audit",
+      "peak_rss_bytes": 12861440,
+      "reason": "NOMINAL_UPPER_PROJECTION_ONLY",
+      "revision": 1,
+      "schema_version": 1,
+      "scope": "nominal_geometry_only",
+      "source_error_upper_mm": 0.0,
+      "source_sha256": "fd069ac04949dedd6fc27e99f230fda1b598c81a42761983757b37334349e1ee",
+      "status": "NOMINAL_HEIGHTFIELD",
+      "units": "mm",
+      "upper": {
+        "affine_patches": 0,
+        "area_lower_mm2": 639.9999999999862,
+        "area_upper_mm2": 640.0000000000138,
+        "creases": 0,
+        "holes": 0,
+        "maximum_z_mm": 22.475208282470703,
+        "minimum_z_mm": 4.0,
+        "patches": 0,
+        "selected_area_lower_mm2": 0.0,
+        "selected_area_upper_mm2": 0.0,
+        "selected_faces": 0,
+        "selected_slope_upper": 0.0,
+        "slope_limit": 0.2,
+        "upward_faces": 256
+      },
+      "volume_lower_mm3": 8472.066802977952,
+      "volume_upper_mm3": 8472.066802979083
+    }
+  },
+  {
+    "case": "sphere-over-facet-limit",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/shallow_sphere.stl"
+    ],
+    "exit_code": 2,
+    "report": {
+      "export_allowed": false,
+      "faces": 0,
+      "kind": "stl_geometry_audit",
+      "peak_rss_bytes": 12156928,
+      "reason": "STL_PARSE_OR_RESOURCE_REJECTION",
+      "revision": 1,
+      "schema_version": 1,
+      "source_error_upper_mm": null,
+      "source_sha256": "d20628c0607c601c447364316c5c158718965de21d3eb41f57efcb02e5126916",
+      "status": "UNKNOWN",
+      "units": "mm",
+      "volume_lower_mm3": 0.0,
+      "volume_upper_mm3": 0.0
+    }
+  },
+  {
+    "case": "small-sphere",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "build/nonplanar-evidence/b03-worker-cli-final/generated/shallow_sphere_grid20.stl"
+    ],
+    "exit_code": 0,
+    "report": {
+      "export_allowed": false,
+      "faces": 1760,
+      "kind": "stl_geometry_audit",
+      "peak_rss_bytes": 13565952,
+      "reason": "CLOSED_ORIENTED_SINGLE_COMPONENT",
+      "revision": 1,
+      "schema_version": 1,
+      "source_error_upper_mm": 0.0,
+      "source_sha256": "7f9e0fdd0d334b2f64cd745362805a3660bcbd5cbe80255092f9600e0aba93d1",
+      "status": "VALID_GEOMETRY",
+      "units": "mm",
+      "volume_lower_mm3": 4375.8996650974605,
+      "volume_upper_mm3": 4375.899665099025
+    }
+  },
+  {
+    "case": "malformed",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "/var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/nptop-cli-xt79es09/malformed.stl"
+    ],
+    "exit_code": 2,
+    "report": {
+      "export_allowed": false,
+      "faces": 0,
+      "kind": "stl_geometry_audit",
+      "peak_rss_bytes": 10452992,
+      "reason": "STL_PARSE_OR_RESOURCE_REJECTION",
+      "revision": 1,
+      "schema_version": 1,
+      "source_error_upper_mm": null,
+      "source_sha256": "7d9b5f70d6d43e9a04c48f7def6022eb6c9ecf87d648256ec9c54c5b348286f6",
+      "status": "UNKNOWN",
+      "units": "mm",
+      "volume_lower_mm3": 0.0,
+      "volume_upper_mm3": 0.0
+    }
+  },
+  {
+    "case": "malformed-upper",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "--upper",
+      "/var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/nptop-cli-xt79es09/malformed.stl"
+    ],
+    "exit_code": 2,
+    "report": {
+      "export_allowed": false,
+      "faces": 0,
+      "frame": "source_model",
+      "kind": "stl_upper_audit",
+      "peak_rss_bytes": 10452992,
+      "reason": "STL_PARSE_OR_RESOURCE_REJECTION",
+      "revision": 1,
+      "schema_version": 1,
+      "scope": "nominal_geometry_only",
+      "source_error_upper_mm": null,
+      "source_sha256": "7d9b5f70d6d43e9a04c48f7def6022eb6c9ecf87d648256ec9c54c5b348286f6",
+      "status": "UNKNOWN",
+      "units": "mm",
+      "upper": null,
+      "volume_lower_mm3": 0.0,
+      "volume_upper_mm3": 0.0
+    }
+  },
+  {
+    "case": "hidden-shelf-geometry",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "build/nonplanar-evidence/b03-worker-cli-final/hidden-shelf.stl"
+    ],
+    "exit_code": 0,
+    "report": {
+      "export_allowed": false,
+      "faces": 28,
+      "kind": "stl_geometry_audit",
+      "peak_rss_bytes": 11714560,
+      "reason": "CLOSED_ORIENTED_SINGLE_COMPONENT",
+      "revision": 1,
+      "schema_version": 1,
+      "source_error_upper_mm": 0.0,
+      "source_sha256": "cf6252e796a55b8a6e98ec4d6a802d7abbb5211cbe841c3da1b230f449cfe095",
+      "status": "VALID_GEOMETRY",
+      "units": "mm",
+      "volume_lower_mm3": 1099.9999999999898,
+      "volume_upper_mm3": 1100.0000000000102
+    }
+  },
+  {
+    "case": "hidden-shelf-upper",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "--upper",
+      "build/nonplanar-evidence/b03-worker-cli-final/hidden-shelf.stl"
+    ],
+    "exit_code": 2,
+    "report": {
+      "export_allowed": false,
+      "faces": 28,
+      "frame": "source_model",
+      "kind": "stl_upper_audit",
+      "peak_rss_bytes": 11845632,
+      "reason": "OVERLAPPING_UPWARD_PROJECTIONS",
+      "revision": 1,
+      "schema_version": 1,
+      "scope": "nominal_geometry_only",
+      "source_error_upper_mm": 0.0,
+      "source_sha256": "cf6252e796a55b8a6e98ec4d6a802d7abbb5211cbe841c3da1b230f449cfe095",
+      "status": "UNKNOWN",
+      "units": "mm",
+      "upper": null,
+      "volume_lower_mm3": 1099.9999999999898,
+      "volume_upper_mm3": 1100.0000000000102
+    }
+  },
+  {
+    "case": "oversized",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "/var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/nptop-cli-xt79es09/oversized.stl"
+    ],
+    "exit_code": 2,
+    "report": {
+      "export_allowed": false,
+      "faces": 0,
+      "kind": "stl_geometry_audit",
+      "peak_rss_bytes": 0,
+      "reason": "SOURCE_BYTE_LIMIT",
+      "revision": 1,
+      "schema_version": 1,
+      "source_error_upper_mm": null,
+      "source_sha256": null,
+      "status": "UNKNOWN",
+      "units": "mm",
+      "volume_lower_mm3": 0.0,
+      "volume_upper_mm3": 0.0
+    }
+  },
+  {
+    "case": "missing",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "/var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/nptop-cli-xt79es09/absent.stl"
+    ],
+    "exit_code": 2,
+    "report": {
+      "export_allowed": false,
+      "faces": 0,
+      "kind": "stl_geometry_audit",
+      "peak_rss_bytes": 0,
+      "reason": "SOURCE_IO_OR_CALLBACK_FAILURE",
+      "revision": 1,
+      "schema_version": 1,
+      "source_error_upper_mm": null,
+      "source_sha256": null,
+      "status": "UNKNOWN",
+      "units": "mm",
+      "volume_lower_mm3": 0.0,
+      "volume_upper_mm3": 0.0
+    }
+  },
+  {
+    "case": "directory",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "/var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/nptop-cli-xt79es09"
+    ],
+    "exit_code": 2,
+    "report": {
+      "export_allowed": false,
+      "faces": 0,
+      "kind": "stl_geometry_audit",
+      "peak_rss_bytes": 0,
+      "reason": "SOURCE_IO_OR_CALLBACK_FAILURE",
+      "revision": 1,
+      "schema_version": 1,
+      "source_error_upper_mm": null,
+      "source_sha256": null,
+      "status": "UNKNOWN",
+      "units": "mm",
+      "volume_lower_mm3": 0.0,
+      "volume_upper_mm3": 0.0
+    }
+  },
+  {
+    "case": "open-boundary",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "/var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/nptop-cli-xt79es09/open.stl"
+    ],
+    "exit_code": 2,
+    "report": {
+      "export_allowed": false,
+      "faces": 0,
+      "kind": "stl_geometry_audit",
+      "peak_rss_bytes": 10682368,
+      "reason": "OPEN_OR_NONMANIFOLD_EDGE",
+      "revision": 1,
+      "schema_version": 1,
+      "source_error_upper_mm": null,
+      "source_sha256": "c51771ff1b71de521f55daf3feb9fd926f89dc77cd0de36c6c95918a6e613b39",
+      "status": "INVALID",
+      "units": "mm",
+      "volume_lower_mm3": 0.0,
+      "volume_upper_mm3": 0.0
+    }
+  },
+  {
+    "case": "undeclared-units",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "/var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/nptop-cli-xt79es09/malformed.stl"
+    ],
+    "exit_code": 64
+  },
+  {
+    "case": "upper-undeclared-units",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--upper",
+      "/var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/nptop-cli-xt79es09/malformed.stl"
+    ],
+    "exit_code": 64
+  },
+  {
+    "case": "upper-invalid-option",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "--unsafe",
+      "/var/folders/rr/0zjdr8mn2qg1lxdm61990fn40000gn/T/nptop-cli-xt79es09/malformed.stl"
+    ],
+    "exit_code": 64
+  },
+  {
+    "case": "upper-missing-source",
+    "command": [
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit",
+      "--millimeters",
+      "--upper"
+    ],
+    "exit_code": 64
+  }
+]

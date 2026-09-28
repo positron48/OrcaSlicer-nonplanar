@@ -1,0 +1,23 @@
+{
+  "base_commit": "6ca3d7d842076aec14bc40bd0ccaa25d3fa29f1e",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-worker.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/StlWorker.hpp": "a6fd0ecf796a335e7b853d92284370f0d4cccb9ae849f3fe7b4a8bdf30b3e9c5",
+    "src/libslic3r/Nonplanar/StlWorker.cpp": "e32f4bbd9d95c3854b8b98f0cc4c01ae583970e8a0f8f0e7f708ec0c7fc468a6",
+    "src/nonplanar_import/main.cpp": "348064024c736d2c90d05d1f9588ac1a2403ae32e4b1d893de5b46640ea3d2cd",
+    "src/nonplanar_import/audit.cpp": "552869bfb23eb07adc700b152ed331aaa7b4597736605b9d52c46654f583dcac",
+    "src/nonplanar_import/UpperSummary.hpp": "91d0c043c66bbd66f0c7435f3d126670b41a70b2529e1f0461c7b506a8d936cc",
+    "tests/nonplanar/test_stl_worker.cpp": "b95056804363a9eb278253225ec5cde52ceb1ce6f5332c9ca99898cfa8720b78",
+    "tests/nonplanar/worker_probe.cpp": "730be16a75ff106ec175f5fe0315755af29f3b00426f0ab58febf463146ee852",
+    "scripts/nonplanar/validate_stl_audit_cli.py": "09131262675f5bb36703a67c79dcf4e878e170fa7246ca67f943e88f80bf9cec"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "4455fc20f0635bc8e3e654133ab0b11f7e6cf278af800a9d2c417ab0b4186c79",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "551b3e9daeeb27c1ca4b755e3d193b2b1e5af22e47d77dabfe415c7749ca0c66",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "489b21a10fd1b7beaec758596de0af3694ef88596955a69900da875a33b154a9",
+    "build/arm64/src/nonplanar_import/Release/nonplanar_import_worker": "5252db7c78c64022fbd77a63357ec0a97b0a6cb4b26d50bbaf67f43ae55c65eb",
+    "build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit": "12ce6bfcdbabd468a02c059babd4a9736a985761d42c872b14c275f95a1e68e8"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin"
+}

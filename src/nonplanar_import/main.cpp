@@ -1,4 +1,6 @@
 #include <libslic3r/Nonplanar/StlWorker.hpp>
+#include <libslic3r/Nonplanar/UpperProjection.hpp>
+#include "UpperSummary.hpp"
 #include <boost/log/core.hpp>
 #include <nlohmann/json.hpp>
 #include <charconv>
@@ -89,7 +91,8 @@ int main(int argc,char **argv)
 #endif
     boost::log::core::get()->set_logging_enabled(false);
     uint64_t revision=0;
-    if (argc!=3 || std::strcmp(argv[1],"--millimeters")!=0) return 64;
+    const bool upper=argc==4 && std::strcmp(argv[3],"--upper")==0;
+    if ((argc!=3 && !upper) || std::strcmp(argv[1],"--millimeters")!=0) return 64;
     const auto end=argv[2]+std::strlen(argv[2]);
     const auto parsed=std::from_chars(argv[2],end,revision);
     if (parsed.ec!=std::errc{} || parsed.ptr!=end || revision==0) return 64;
@@ -107,11 +110,40 @@ int main(int argc,char **argv)
         const auto status=imported.geometry.status;
         nlohmann::json report{
             {"protocol",stl_worker_protocol},{"revision",revision},{"source_sha256",imported.source->sha256},
+            {"analysis",upper ? "upper" : "geometry"},{"upper",nullptr},
             {"status",status==MeshAuditStatus::ValidGeometry ? "VALID_GEOMETRY" : status==MeshAuditStatus::Invalid ? "INVALID" : "UNKNOWN"},
             {"reason",imported.geometry.reason},{"faces",imported.geometry.normalized ? imported.geometry.normalized->facets_count() : size_t(0)},
             {"volume_lower_mm3",imported.geometry.volume_lower_mm3},{"volume_upper_mm3",imported.geometry.volume_upper_mm3},
             {"source_error_upper_mm",imported.source_error_upper_mm ? nlohmann::json(*imported.source_error_upper_mm) : nlohmann::json(nullptr)}
         };
+        if (upper && status==MeshAuditStatus::ValidGeometry) {
+            UpperProjectionLimits limits;
+            limits.max_slope=stl_worker_upper_slope_limit;
+            const auto analyzed=analyze_upper_projection(*imported.geometry.normalized,true,revision,limits);
+            report["upper"]={{"status","UNKNOWN"},{"reason",analyzed.reason}};
+            if (analyzed.status==UpperProjectionStatus::NominalHeightfield && analyzed.snapshot) {
+                const auto &snapshot=*analyzed.snapshot;
+                StlUpperSummary summary;
+                summary.upward_faces=snapshot.upward_facets.size();
+                for (const auto &facet : snapshot.upward_facets) if (facet.within_slope_limit) {
+                    ++summary.selected_faces;
+                    summary.selected_slope_upper=std::max(summary.selected_slope_upper,facet.slope_upper);
+                }
+                summary.patches=snapshot.slope_patches.size();
+                for (const auto &patch : snapshot.slope_patches) {
+                    for (const auto &boundary : patch.boundaries) if (boundary.hole) ++summary.holes;
+                    summary.creases+=patch.creases.size();
+                    if (patch.nominal_curvature_upper_mm_inv==0) ++summary.affine_patches;
+                }
+                summary.area_lower_mm2=snapshot.xy_area_lower_mm2;
+                summary.area_upper_mm2=snapshot.xy_area_upper_mm2;
+                summary.selected_area_lower_mm2=snapshot.filtered_area_lower_mm2;
+                summary.selected_area_upper_mm2=snapshot.filtered_area_upper_mm2;
+                summary.minimum_z_mm=snapshot.minimum_z_mm; summary.maximum_z_mm=snapshot.maximum_z_mm;
+                report["upper"]["status"]="NOMINAL_HEIGHTFIELD";
+                report["upper"]["summary"]=upper_summary_json(summary);
+            }
+        }
         emit(std::move(report));
     } catch (const std::exception &) { return 70; }
 }

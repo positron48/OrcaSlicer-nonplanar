@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "units": "mm",
+  "status": "GEOMETRY_FIXTURE_DEFINITIONS_ONLY",
+  "models": [
+    {
+      "id": "shallow_sphere_grid20",
+      "shape": "sphere",
+      "extent_xy_mm": [
+        24,
+        24
+      ],
+      "grid_xy": [
+        20,
+        20
+      ],
+      "parameters": {
+        "height_mm": 8,
+        "radius_mm": 120
+      },
+      "top_formula": "f=8+sqrt(120^2-x^2-y^2)-120",
+      "domain": "centered XY rectangle; solid 0 <= z <= f(x,y)",
+      "intended_use": "gentle two-direction curvature and top ROI",
+      "printability": "NOT_EVALUATED_REQUIRES_MEASURED_PROFILE_AND_SLICER"
+    }
+  ]
+}

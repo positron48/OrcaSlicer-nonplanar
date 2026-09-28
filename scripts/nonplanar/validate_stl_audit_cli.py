@@ -3,10 +3,30 @@
 import argparse
 import hashlib
 import json
+import math
 import struct
 import subprocess
 import tempfile
 from pathlib import Path
+
+
+def hidden_shelf(path):
+    """Independent 28-triangle C extrusion: closed solid, two upward sheets."""
+    section = [(0, 0), (20, 0), (20, 10), (0, 10), (0, 8), (15, 8), (15, 2), (0, 2)]
+    vertices = [(x, y, z) for y in (0, 10) for x, z in section]
+    front = [(0, 1, 6), (0, 6, 7), (1, 2, 5), (1, 5, 6), (2, 3, 4), (2, 4, 5)]
+    faces = front + [(c + 8, b + 8, a + 8) for a, b, c in front]
+    for a in range(8):
+        b = (a + 1) % 8
+        faces.extend([(a, a + 8, b + 8), (a, b + 8, b)])
+    data = bytearray(b"Nonplanar diagnostic hidden shelf".ljust(80, b"\0") + struct.pack("<I", len(faces)))
+    for ids in faces:
+        a, b, c = [vertices[i] for i in ids]
+        u, v = [b[i] - a[i] for i in range(3)], [c[i] - a[i] for i in range(3)]
+        normal = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]]
+        length = math.sqrt(sum(n * n for n in normal))
+        data.extend(struct.pack("<12fH", *[n / length for n in normal], *a, *b, *c, 0))
+    path.write_bytes(data)
 
 
 def validate(executable, output):
@@ -15,7 +35,7 @@ def validate(executable, output):
     output.mkdir(parents=True, exist_ok=False)
     records = []
 
-    def run(name, args, code, status=None, reason=None):
+    def run(name, args, code, status=None, reason=None, kind="stl_geometry_audit"):
         command = [str(executable.resolve()), *map(str, args)]
         completed = subprocess.run(command, capture_output=True, text=True, timeout=10)
         (output / (name + ".stdout.txt")).write_text(completed.stdout)
@@ -25,7 +45,7 @@ def validate(executable, output):
         assert completed.returncode == code, record
         if status is not None:
             report = json.loads(completed.stdout)
-            assert report["kind"] == "stl_geometry_audit" and report["schema_version"] == 1, report
+            assert report["kind"] == kind and report["schema_version"] == 1, report
             assert report["status"] == status and report["export_allowed"] is False, report
             assert report["revision"] == 1, report
             if reason is not None:
@@ -45,6 +65,24 @@ def validate(executable, output):
             assert report["source_error_upper_mm"] >= 0
             if name == "flat_block":
                 assert report["volume_lower_mm3"] <= 2400 <= report["volume_upper_mm3"]
+            report = run(name + "-upper", ["--millimeters", "--upper", source], 0,
+                         "NOMINAL_HEIGHTFIELD", "NOMINAL_UPPER_PROJECTION_ONLY", "stl_upper_audit")
+            assert report["source_sha256"] == before == hashlib.sha256(source.read_bytes()).hexdigest()
+            assert report["frame"] == "source_model" and report["scope"] == "nominal_geometry_only"
+            upper = report["upper"]
+            assert upper["patches"] == 1 and upper["holes"] == 0
+            assert upper["upward_faces"] == upper["selected_faces"]
+            expected_area = 600 if name == "flat_block" else 640
+            assert upper["area_lower_mm2"] <= expected_area <= upper["area_upper_mm2"]
+            assert upper["area_upper_mm2"] - upper["area_lower_mm2"] < 1e-8
+            assert 0 <= upper["selected_slope_upper"] <= upper["slope_limit"] == 0.2
+            if name == "flat_block":
+                assert upper["selected_faces"] == 32 and upper["affine_patches"] == 1 and upper["creases"] == 0
+                assert upper["minimum_z_mm"] == upper["maximum_z_mm"] == 4
+        report = run("steep-upper-no-selection", ["--millimeters", "--upper", fixtures / "wedge_30deg.stl"], 0,
+                     "NOMINAL_HEIGHTFIELD", "NOMINAL_UPPER_PROJECTION_ONLY", "stl_upper_audit")
+        assert report["upper"]["upward_faces"] > 0 and report["upper"]["selected_faces"] == 0
+        assert report["upper"]["patches"] == 0 and report["upper"]["selected_area_upper_mm2"] == 0
         with tempfile.TemporaryDirectory(prefix="nptop-cli-") as temporary:
             temporary = Path(temporary)
             sphere = fixtures / "shallow_sphere.stl"
@@ -71,6 +109,18 @@ def validate(executable, output):
             malformed = temporary / "malformed.stl"
             malformed.write_bytes(b"not a mesh")
             run("malformed", ["--millimeters", malformed], 2, "UNKNOWN", "STL_PARSE_OR_RESOURCE_REJECTION")
+            report = run("malformed-upper", ["--millimeters", "--upper", malformed], 2,
+                         "UNKNOWN", "STL_PARSE_OR_RESOURCE_REJECTION", "stl_upper_audit")
+            assert report["upper"] is None
+            shelf = output / "hidden-shelf.stl"
+            hidden_shelf(shelf)
+            before = hashlib.sha256(shelf.read_bytes()).hexdigest()
+            report = run("hidden-shelf-geometry", ["--millimeters", shelf], 0, "VALID_GEOMETRY")
+            assert report["faces"] == 28 and report["volume_lower_mm3"] <= 1100 <= report["volume_upper_mm3"]
+            report = run("hidden-shelf-upper", ["--millimeters", "--upper", shelf], 2,
+                         "UNKNOWN", "OVERLAPPING_UPWARD_PROJECTIONS", "stl_upper_audit")
+            assert report["upper"] is None and report["faces"] == 28
+            assert report["source_sha256"] == before == hashlib.sha256(shelf.read_bytes()).hexdigest()
             oversized = temporary / "oversized.stl"
             oversized.write_bytes(b"x" * (2 * 1024 * 1024 + 1))
             run("oversized", ["--millimeters", oversized], 2, "UNKNOWN", "SOURCE_BYTE_LIMIT")
@@ -83,6 +133,9 @@ def validate(executable, output):
             report = run("open-boundary", ["--millimeters", open_mesh], 2, "INVALID")
             assert report["faces"] == 0 and report["source_error_upper_mm"] is None
             run("undeclared-units", [malformed], 64)
+            run("upper-undeclared-units", ["--upper", malformed], 64)
+            run("upper-invalid-option", ["--millimeters", "--unsafe", malformed], 64)
+            run("upper-missing-source", ["--millimeters", "--upper"], 64)
         return {"status": "PASS", "cases": len(records), "records": records}
     finally:
         (output / "commands.json").write_text(json.dumps(records, indent=2) + "\n")

@@ -2,6 +2,7 @@
 #include <libslic3r/Nonplanar/StlWorker.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/nowide/fstream.hpp>
+#include <cfenv>
 
 using namespace Slic3r::nptop;
 namespace {
@@ -89,4 +90,89 @@ TEST_CASE("B02 worker failure invalid protocol wrong identity and oversized repo
         if (std::string(scenario)=="hash") REQUIRE(result.reason=="WORKER_SOURCE_MISMATCH");
     }
     REQUIRE(run_stl_worker((probes.root/"missing-worker").string(),"abc",true,11).status==MeshAuditStatus::Unknown);
+}
+TEST_CASE("B03 isolated upper analysis binds captured bytes options and nominal bounds", "[Nonplanar][B03][UpperWorker]")
+{
+    auto bytes=fixture(); const auto original=bytes;
+    StlWorkerOptions options; options.analyze_upper=true;
+    options.cancelled=[&] { bytes="changed"; options.analyze_upper=false; return false; };
+    const auto result=run_stl_worker(NPTOP_WORKER_PATH,bytes,true,53,options);
+    INFO(result.reason); INFO(result.upper_reason);
+    REQUIRE(result.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(result.source->bytes==original);
+    REQUIRE(result.upper);
+    REQUIRE(result.upper_reason=="NOMINAL_UPPER_PROJECTION_ONLY");
+    REQUIRE(result.upper->upward_faces==32);
+    REQUIRE(result.upper->selected_faces==32);
+    REQUIRE(result.upper->patches==1);
+    REQUIRE(result.upper->affine_patches==1);
+    REQUIRE(result.upper->holes==0);
+    REQUIRE(result.upper->creases==0);
+    REQUIRE(result.upper->area_lower_mm2<=600);
+    REQUIRE(result.upper->area_upper_mm2>=600);
+    REQUIRE(result.upper->area_upper_mm2-result.upper->area_lower_mm2<1e-8);
+    REQUIRE(result.upper->minimum_z_mm==4);
+    REQUIRE(result.upper->maximum_z_mm==4);
+    REQUIRE(result.upper->selected_slope_upper==0);
+    const auto geometry_only=run_stl_worker(NPTOP_WORKER_PATH,original,true,53);
+    REQUIRE(geometry_only.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE_FALSE(geometry_only.upper);
+}
+TEST_CASE("B03 upper worker validates the exact summary schema and request kind", "[Nonplanar][B03][UpperWorker]")
+{
+    Probes probes;
+    StlWorkerOptions options; options.analyze_upper=true;
+    // The deliberately synthetic protocol control proves the negative probes
+    // reach summary validation, rather than failing unrelated source identity.
+    const auto control=run_stl_worker(probes.program("upper-control"),"abc",true,11,options);
+    REQUIRE(control.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(control.upper);
+    REQUIRE(control.upper->upward_faces==2);
+    for (const auto *scenario : {"upper-count","upper-type","upper-area","upper-range","upper-affine",
+                                "upper-slope","upper-field","upper-null","upper-mode","upper-old"}) {
+        const auto result=run_stl_worker(probes.program(scenario),"abc",true,11,options);
+        INFO(scenario); INFO(result.reason);
+        REQUIRE(result.status==MeshAuditStatus::Unknown);
+        REQUIRE_FALSE(result.upper);
+        REQUIRE(result.faces==0);
+        REQUIRE_FALSE(result.source_error_upper_mm);
+        if (std::string(scenario)=="upper-mode") REQUIRE(result.reason=="WORKER_ANALYSIS_MISMATCH");
+        else if (std::string(scenario)=="upper-old") REQUIRE(result.reason=="WORKER_IDENTITY_MISMATCH");
+        else REQUIRE(result.reason=="WORKER_PROTOCOL_OR_LAUNCH_FAILURE");
+    }
+    const auto unknown=run_stl_worker(probes.program("upper-unknown"),"abc",true,11,options);
+    REQUIRE(unknown.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE_FALSE(unknown.upper);
+    REQUIRE(unknown.upper_reason=="OVERLAPPING_UPWARD_PROJECTIONS");
+}
+TEST_CASE("B03 upper worker publishes no partial result after cancellation staleness or rounding changes", "[Nonplanar][B03][UpperWorker]")
+{
+    const auto bytes=fixture();
+    StlWorkerOptions options; options.analyze_upper=true;
+    size_t polls=0;
+    options.is_current=[&](uint64_t) { ++polls; return true; };
+    REQUIRE(run_stl_worker(NPTOP_WORKER_PATH,bytes,true,11,options).upper);
+    REQUIRE(polls>=4);
+    // Child timing is variable, so count the deterministic callbacks by using
+    // an immediately cancelled/stale request as well as a callback mutation.
+    for (const bool stale : {false,true}) {
+        options.cancelled=[=] { return !stale; };
+        options.is_current=[=](uint64_t) { return !stale; };
+        const auto result=run_stl_worker(NPTOP_WORKER_PATH,bytes,true,11,options);
+        REQUIRE(result.status==MeshAuditStatus::Unknown);
+        REQUIRE_FALSE(result.upper);
+        REQUIRE(result.reason==(stale ? "STALE_REVISION" : "CANCELLED"));
+    }
+    struct Rounding { int mode=std::fegetround(); ~Rounding() { std::fesetround(mode); } } restore;
+    options.is_current={};
+    options.cancelled=[] { std::fesetround(FE_UPWARD); return false; };
+    const auto rounding=run_stl_worker(NPTOP_WORKER_PATH,bytes,true,11,options);
+    std::fesetround(restore.mode);
+    REQUIRE(rounding.status==MeshAuditStatus::Unknown);
+    REQUIRE_FALSE(rounding.upper);
+    REQUIRE(rounding.reason=="WORKER_PROTOCOL_OR_LAUNCH_FAILURE");
+    options.cancelled={}; options.max_peak_rss_bytes=1;
+    const auto memory=run_stl_worker(NPTOP_WORKER_PATH,bytes,true,11,options);
+    REQUIRE(memory.reason=="WORKER_MEMORY_BUDGET");
+    REQUIRE_FALSE(memory.upper);
 }

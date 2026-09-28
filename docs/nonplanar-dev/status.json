@@ -17,7 +17,7 @@
     "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_SPHERE_COUPON_PREPARATION_COMPLETE_INDEPENDENT_REVIEW_PENDING",
     "B01": "PREFLIGHT_REGISTRIES_OWNED_CONFIG_AND_EXACT_FINGERPRINT_PASS_FULL_COMPATIBILITY_AND_JOB_SNAPSHOT_PENDING",
     "B02": "BOUNDED_IMPORT_FILE_CLI_AND_NATIVE_MODEL_CHAIN_PASS_PLATE_JOB_GUI_HARD_LIMITS_PENDING",
-    "B03": "BOUNDED_NOMINAL_MASKS_FOOTPRINT_AND_AFFINE_CURVATURE_PASS_CURVED_SURFACES_TOOL_ROI_AND_PLANNING_PENDING"
+    "B03": "BOUNDED_NOMINAL_MASKS_FOOTPRINT_AFFINE_CURVATURE_AND_ISOLATED_CLI_PASS_CURVED_SURFACES_TOOL_ROI_AND_PLANNING_PENDING"
   },
   "executed_checks": {
     "ORC-01": "PASS",
@@ -29,7 +29,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 155,
+    "new_native_cases": 158,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -45,8 +45,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 192,
-    "final_ctest_executed": 192,
+    "final_ctest_discovered": 195,
+    "final_ctest_executed": 195,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -143,8 +143,8 @@
     "B03_projection_assertions": 103,
     "B03_projection_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B03_patches_cases": 4,
-    "B03_current_cases": 19,
-    "B03_current_assertions": 420,
+    "B03_current_cases": 22,
+    "B03_current_assertions": 509,
     "B03_patches_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B03_footprint_cases": 5,
     "B03_footprint_rectangle_oracles": 120,
@@ -167,7 +167,12 @@
     "B01_fingerprint_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B01_hook_type_cases": 1,
     "B01_hook_types_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
-    "B01_hook_type_regression": "RED_34_SERIALIZER_EXCEPTIONS_AND_17_CALL_CHECKS_THEN_ZERO_SERIALIZATION_FOR_WRONG_TYPES"
+    "B01_hook_type_regression": "RED_34_SERIALIZER_EXCEPTIONS_AND_17_CALL_CHECKS_THEN_ZERO_SERIALIZATION_FOR_WRONG_TYPES",
+    "B03_worker_cases": 3,
+    "B03_worker_combined_cases": 7,
+    "B03_worker_combined_assertions": 134,
+    "B03_worker_cli_cases": 19,
+    "B03_worker_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -224,7 +229,8 @@
     "A04_annulus_box": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A04-annulus-box.md",
     "A07_travel": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A07-travel.md",
     "B01_fingerprint": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-fingerprint.md",
-    "B01_hook_types": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-hook-types.md"
+    "B01_hook_types": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-hook-types.md",
+    "B03_worker": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-worker.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -260,5 +266,6 @@
   "A04_annulus_box_evidence": "docs/nonplanar-dev/evidence/A04-annulus-box/source-manifest.json",
   "A07_travel_evidence": "docs/nonplanar-dev/evidence/A07-travel/source-manifest.json",
   "B01_fingerprint_evidence": "docs/nonplanar-dev/evidence/B01-fingerprint/source-manifest.json",
-  "B01_hook_types_evidence": "docs/nonplanar-dev/evidence/B01-hook-types/source-manifest.json"
+  "B01_hook_types_evidence": "docs/nonplanar-dev/evidence/B01-hook-types/source-manifest.json",
+  "B03_worker_evidence": "docs/nonplanar-dev/evidence/B03-worker/source-manifest.json"
 }
