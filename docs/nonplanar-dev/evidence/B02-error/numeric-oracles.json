@@ -1,0 +1,77 @@
+{
+  "status": "PASS_EXACT_NUMERIC_ORACLE_CONSTANTS_ONLY",
+  "cases": [
+    {
+      "decimal": "0.1",
+      "binary32_bits": "3dcccccd",
+      "exact_error_mm": "1/671088640",
+      "upper_power_of_two": -29
+    },
+    {
+      "decimal": "-0.1",
+      "binary32_bits": "bdcccccd",
+      "exact_error_mm": "1/671088640",
+      "upper_power_of_two": -29
+    },
+    {
+      "decimal": "0.5",
+      "binary32_bits": "3f000000",
+      "exact_error_mm": "0",
+      "upper_power_of_two": null
+    },
+    {
+      "decimal": "-1.25e2",
+      "binary32_bits": "c2fa0000",
+      "exact_error_mm": "0",
+      "upper_power_of_two": null
+    },
+    {
+      "decimal": "1e-45",
+      "binary32_bits": "00000001",
+      "exact_error_mm": "8139299826752337010897719417109/20282409603651670423947251286016000000000000000000000000000000000000000000000",
+      "upper_power_of_two": -150
+    },
+    {
+      "decimal": "1e-100",
+      "binary32_bits": "00000000",
+      "exact_error_mm": "1/10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "upper_power_of_two": -332
+    },
+    {
+      "decimal": "1.000000059604644775390625",
+      "binary32_bits": "3f800000",
+      "exact_error_mm": "1/16777216",
+      "upper_power_of_two": -24
+    },
+    {
+      "decimal": "10000.0001",
+      "binary32_bits": "461c4000",
+      "exact_error_mm": "1/10000",
+      "upper_power_of_two": -13
+    },
+    {
+      "decimal": "0.1000000000000000000000000001",
+      "binary32_bits": "3dcccccd",
+      "exact_error_mm": "14901161193847656249/10000000000000000000000000000",
+      "upper_power_of_two": -29
+    },
+    {
+      "decimal": "0.0000000001",
+      "binary32_bits": "2edbe6ff",
+      "exact_error_mm": "1879047/1407374883553280000000000",
+      "upper_power_of_two": -59
+    },
+    {
+      "decimal": "1.401298464324817e-45",
+      "binary32_bits": "00000001",
+      "exact_error_mm": "43899662293301802984607121/618970019642690137449562112000000000000000000000000000000000000000000000000000000000000",
+      "upper_power_of_two": -203
+    },
+    {
+      "decimal": "-0",
+      "binary32_bits": "80000000",
+      "exact_error_mm": "0",
+      "upper_power_of_two": null
+    }
+  ]
+}

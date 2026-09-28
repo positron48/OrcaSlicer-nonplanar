@@ -2,8 +2,9 @@
 
 Implementation follow-up: B02-mesh.md and B02-snapshot.md now record bounded
 native topology/self-intersection checks, owned source bytes, SHA-256, pre-repair
-geometry and exact repair comparison. File-descriptor capture, decimal conversion
-error and worker resource isolation remain pending. The findings below describe
+geometry and exact repair comparison. B02-error.md establishes bounded decimal
+conversion error. File capture, job budget integration and worker resource
+isolation remain pending. The findings below describe
 the pinned import path that motivated those changes.
 
 Pinned native entry: Format/STL.cpp load_stl -> TriangleMesh::ReadSTLFile ->

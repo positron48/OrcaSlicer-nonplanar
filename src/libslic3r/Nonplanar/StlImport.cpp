@@ -1,4 +1,5 @@
 #include "StlImport.hpp"
+#include "StlImportError.hpp"
 #include <openssl/evp.h>
 
 namespace Slic3r::nptop {
@@ -55,6 +56,12 @@ StlImportResult import_stl_snapshot(std::string_view bytes, bool millimeters_dec
         TriangleMesh parsed;
         if (!parsed.from_stl(original, false)) { result.geometry.reason = "NATIVE_IMPORT_FAILURE"; return result; }
         result.parsed = std::make_shared<const TriangleMesh>(std::move(parsed));
+        try {
+            result.source_error_upper_mm=detail::stl_source_error_upper(result.source->bytes,original,stop);
+        } catch (const std::exception &) {
+            if (result.geometry.reason.empty()) result.geometry.reason="SOURCE_ERROR_UNKNOWN";
+            return result;
+        }
         auto remaining = limits;
         remaining.timeout -= std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
         if (remaining.timeout.count() <= 0) { result.geometry.reason = "DEADLINE"; return result; }

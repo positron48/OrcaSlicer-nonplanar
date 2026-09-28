@@ -62,6 +62,8 @@ TEST_CASE("B02 ASCII and binary snapshots preserve bytes and native geometry", "
         REQUIRE(result.native_repair.facets_removed==0);
         REQUIRE(result.native_repair.facets_reversed==0);
         REQUIRE(result.native_geometry_unchanged);
+        REQUIRE(result.source_error_upper_mm);
+        REQUIRE(*result.source_error_upper_mm==0);
         REQUIRE(same_oriented_triangles(cube.its,result.parsed->its));
         REQUIRE(same_oriented_triangles(cube.its,result.geometry.normalized->its));
         REQUIRE(result.geometry.volume_lower_mm3<=400);
@@ -173,4 +175,29 @@ TEST_CASE("B02 callback cannot relax captured geometry or import limits", "[Nonp
     CHECK(imported.geometry.status==MeshAuditStatus::Unknown);
     CHECK(imported.geometry.reason=="COORDINATE_DOMAIN");
     CHECK_FALSE(imported.geometry.normalized);
+}
+TEST_CASE("B02 import reports actual decimal conversion error and rejects unbounded syntax", "[Nonplanar][B02][StlImport][StlError]")
+{
+    const auto original=ascii_stl(make_cube(20,10,2));
+    auto decimal=original;
+    size_t offset=0;
+    while ((offset=decimal.find("vertex 0 ",offset))!=std::string::npos) {
+        decimal.replace(offset,9,"vertex 0.1 "); offset+=11;
+    }
+    const auto imported=import_stl_snapshot(decimal,true);
+    INFO(imported.geometry.reason);
+    REQUIRE(imported.geometry.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(imported.source_error_upper_mm);
+    REQUIRE(*imported.source_error_upper_mm==std::nextafter(std::ldexp(1.,-29),std::numeric_limits<double>::infinity()));
+    REQUIRE(imported.native_geometry_unchanged);
+    auto hex=original;
+    offset=0;
+    while ((offset=hex.find("vertex 0 ",offset))!=std::string::npos) {
+        hex.replace(offset,9,"vertex 0x1p0 "); offset+=13;
+    }
+    const auto unsupported=import_stl_snapshot(hex,true);
+    REQUIRE(unsupported.geometry.status==MeshAuditStatus::Unknown);
+    REQUIRE(unsupported.geometry.reason=="SOURCE_ERROR_UNKNOWN");
+    REQUIRE_FALSE(unsupported.source_error_upper_mm);
+    REQUIRE_FALSE(unsupported.geometry.normalized);
 }

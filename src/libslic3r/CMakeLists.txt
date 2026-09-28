@@ -31,6 +31,8 @@ set(lisbslic3r_sources
     Nonplanar/MeshAudit.hpp
     Nonplanar/StlImport.cpp
     Nonplanar/StlImport.hpp
+    Nonplanar/StlImportError.cpp
+    Nonplanar/StlImportError.hpp
     Nonplanar/Contracts.cpp
     Nonplanar/Contracts.hpp
     Nonplanar/Collision.cpp
@@ -651,11 +653,11 @@ endif()
 
 # Outward interval operations must not be reassociated or contracted. Restrict
 # these options to the new primitive queries; stock slicing flags stay unchanged.
-set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 if(MSVC)
-    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 else()
-    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
+    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
 endif()
 
 if (SLIC3R_PCH AND NOT SLIC3R_SYNTAXONLY)
