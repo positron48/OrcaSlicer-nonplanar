@@ -1,0 +1,16 @@
+{
+  "command": [
+    "cmake",
+    "--build",
+    "build/arm64",
+    "--config",
+    "Release",
+    "--target",
+    "nonplanar_tests",
+    "--parallel",
+    "4"
+  ],
+  "exit_code": 1,
+  "reason": "NanoSVG symbols missing from lightweight target",
+  "raw_log": "build/nonplanar-evidence/A06-build-initial.log"
+}

@@ -58,3 +58,12 @@ ORC-05/VOL-01/VOL-02. Package helper tests do not satisfy these IDs.
 Linux x86_64, printer measurements and physical tests remain NOT_RUN until
 their actual environment/operator evidence is available. Stock application
 launches must use an explicitly isolated data directory; never use user presets.
+
+## A06 continuation
+
+`A06.md` and ADR-0008 record a bounded native GCodeWriter adapter and independent
+STL-only text replay. Six new cases pass (1342 assertions, including 100 shifted
+round-trips); selected fresh native CTest executes 72/72 cases with no skips.
+The implementation revision resolves via the command in `A06.md`. No production export or safety
+approval is introduced. A07/A08 remain next; detailed failures and limitations
+are retained under `evidence/A06/`.

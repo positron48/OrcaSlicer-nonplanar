@@ -21,6 +21,8 @@ endif()
 option(BUILD_SHARED_LIBS "Build shared libs" OFF)
 
 set(lisbslic3r_sources
+    Nonplanar/GCodeAdapter.cpp
+    Nonplanar/GCodeAdapter.hpp
     Nonplanar/Contracts.cpp
     Nonplanar/Contracts.hpp
     Nonplanar/Collision.cpp

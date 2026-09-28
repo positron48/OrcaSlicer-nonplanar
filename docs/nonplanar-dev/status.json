@@ -4,7 +4,7 @@
   "branch": "feature/nonplanar-bootstrap",
   "fork_commit": "SELF",
   "fork_commit_resolution": "git log -1 --format=%H -- docs/nonplanar-dev/status.json",
-  "delivery": "PUSHED_TO_USER_FORK",
+  "delivery": "A06_LOCAL_WORKING_TREE_PRIOR_MILESTONES_PUSHED",
   "gate_a": "IN_PROGRESS",
   "tasks": {
     "A01": "MACOS_NATIVE_BUILD_TESTS_ISOLATED_CLI_COMPLETE_GUI_LINUX_NOT_RUN",
@@ -12,7 +12,8 @@
     "A03": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A04": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A05": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
-    "A06_A08": "SCOPED_NOT_STARTED"
+    "A06": "BOUNDED_NATIVE_SERIALIZATION_REPLAY_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
+    "A07_A08": "SCOPED_NOT_STARTED"
   },
   "executed_checks": {
     "ORC-01": "PASS",
@@ -24,7 +25,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 29,
+    "new_native_cases": 35,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 156,
@@ -40,12 +41,18 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 66,
-    "final_ctest_executed": 66,
+    "final_ctest_discovered": 72,
+    "final_ctest_executed": 72,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
-    "object_label_followup": "FIXED_POISONED_ID_TEST_AND_SIX_FINAL_BASELINES_PASS"
+    "object_label_followup": "FIXED_POISONED_ID_TEST_AND_SIX_FINAL_BASELINES_PASS",
+    "A06_native_cases": 6,
+    "A06_native_assertions": 1342,
+    "ORC-06": "PASS_A06_IDENTITY_FIRMWARE_SPIKE_ONLY",
+    "ORC-07": "PASS_A06_ANALYTIC_E_SPIKE_ONLY",
+    "GCD-01": "PASS_A06_LIMITED_TEXT_REPLAY_ONLY",
+    "A06_fresh_OFF_ZAA_capture": "NOT_RUN_SHARED_WRITER_AND_SLICING_UNCHANGED"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -61,7 +68,7 @@
   "ci": "NOT_CHECKED",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "A06 native serialization and independent parser/replay spike; A07 operator evidence and A08 review remain open.",
+  "next_step": "A07 versioned simulation profile/scene contract; A08 independent review and benchmarks. Operator measurement remains required.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -71,5 +78,6 @@
     "A02_object_labels": "091c64617940122a80db8f5273e77b4786916861",
     "A05": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/Transition.cpp"
   },
-  "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json"
+  "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
+  "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json"
 }
