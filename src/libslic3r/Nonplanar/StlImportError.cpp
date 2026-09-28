@@ -87,6 +87,7 @@ double stl_source_error_upper(std::string_view bytes, const stl_file &parsed,
     require_interval_environment();
     check(bytes.size()<=2*1024*1024 && parsed.facet_start.size()<=5000 && !parsed.facet_start.empty());
     if (cancelled && cancelled()) throw std::runtime_error("cancelled STL error bound");
+    require_interval_environment();
     // The bounded native binary reader copies the actual IEEE binary32 values;
     // no decimal surface, unit scaling or tessellation is inferred from them.
     if (parsed.stats.type==binary) return 0;
@@ -95,6 +96,7 @@ double stl_source_error_upper(std::string_view bytes, const stl_file &parsed,
     double maximum=0;
     while (offset<bytes.size()) {
         if (cancelled && cancelled()) throw std::runtime_error("cancelled STL error bound");
+        require_interval_environment();
         auto end=bytes.find('\n',offset);
         if (end==std::string_view::npos) end=bytes.size();
         const auto line=bytes.substr(offset,end-offset);

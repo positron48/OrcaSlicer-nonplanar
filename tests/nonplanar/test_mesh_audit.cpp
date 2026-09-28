@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <libslic3r/Nonplanar/MeshAudit.hpp>
 #include <limits>
+#include <cfenv>
 
 using namespace Slic3r;
 using namespace Slic3r::nptop;
@@ -108,4 +109,18 @@ TEST_CASE("B02 closed connected bowtie prism is rejected for self intersection",
     REQUIRE(result.volume_lower_mm3>0);
     REQUIRE(result.reason=="SELF_INTERSECTION");
     REQUIRE_FALSE(result.normalized);
+}
+TEST_CASE("B02 geometry callbacks cannot change the declared interval arithmetic environment", "[Nonplanar][B02][NumericCallback]")
+{
+    const auto mesh=make_cube(20,10,2);
+    for (int mode : {FE_UPWARD,FE_DOWNWARD}) {
+        struct Restore { int mode=std::fegetround(); ~Restore() { std::fesetround(mode); } } restore;
+        MeshAuditLimits limits;
+        int called=0;
+        limits.cancelled=[&] { ++called; std::fesetround(mode); return false; };
+        const auto result=audit_mesh(mesh,true,limits);
+        REQUIRE(called>0);
+        CHECK(result.status==MeshAuditStatus::Unknown);
+        CHECK_FALSE(result.normalized);
+    }
 }

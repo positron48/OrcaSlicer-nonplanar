@@ -3,6 +3,8 @@
 #include <cstring>
 #include <cmath>
 #include <limits>
+#include <cfenv>
+#include <boost/nowide/fstream.hpp>
 
 using namespace Slic3r::nptop;
 TEST_CASE("B02 decimal conversion bounds match independent exact rational oracles", "[Nonplanar][B02][StlError]")
@@ -39,4 +41,23 @@ TEST_CASE("B02 unbounded or unsupported numeric syntax cannot claim zero convers
     }
     REQUIRE_THROWS(detail::decimal_float_error_upper("1",std::numeric_limits<float>::infinity()));
     REQUIRE_THROWS(detail::decimal_float_error_upper("1",std::numeric_limits<float>::quiet_NaN()));
+}
+TEST_CASE("B02 source error callbacks cannot bypass the declared arithmetic environment", "[Nonplanar][B02][NumericCallback]")
+{
+    boost::nowide::ifstream input(NPTOP_STL_FIXTURE_PATH,std::ios::binary);
+    REQUIRE(input);
+    const std::string binary(std::istreambuf_iterator<char>(input),{});
+    const std::string ascii="solid triangle\nfacet normal 0 0 1\nouter loop\nvertex 0.1 0 0\nvertex 1 0 0\nvertex 0 1 0\nendloop\nendfacet\nendsolid triangle\n";
+    for (const auto &bytes : {binary,ascii}) {
+        stl_file parsed;
+        REQUIRE(stl_open_from_memory(&parsed,bytes,5000));
+        for (int mode : {FE_UPWARD,FE_DOWNWARD}) {
+            struct Restore { int mode=std::fegetround(); ~Restore() { std::fesetround(mode); } } restore;
+            int called=0;
+            CHECK_THROWS(detail::stl_source_error_upper(bytes,parsed,[&] {
+                ++called; std::fesetround(mode); return false;
+            }));
+            REQUIRE(called>0);
+        }
+    }
 }

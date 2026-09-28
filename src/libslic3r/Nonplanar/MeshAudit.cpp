@@ -44,6 +44,7 @@ MeshAuditResult audit_mesh(const TriangleMesh &source, bool millimeters_declared
     const auto started=std::chrono::steady_clock::now();
     auto stop = [&] {
         if (limits.cancelled && limits.cancelled()) { result.reason="CANCELLED"; return true; }
+        detail::require_interval_environment();
         if (std::chrono::steady_clock::now()-started >= limits.timeout) { result.reason="DEADLINE"; return true; }
         return false;
     };

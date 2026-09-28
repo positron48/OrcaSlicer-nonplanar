@@ -1,0 +1,16 @@
+{
+  "base_commit": "f57f467bb14e460fcbc5515ce47f4efadf727af6",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B02-callback.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/MeshAudit.cpp": "2384f1b31a0f5fea43a56ec6a12adab6770a6f6884e22c1d057b82aaf3f03e8e",
+    "src/libslic3r/Nonplanar/StlImportError.cpp": "2032801db2d9abd9278526c7b146f3fe6f0ba7b8f68ff6e6403fb09f4b1b6487",
+    "tests/nonplanar/test_mesh_audit.cpp": "8ee10ba2a964615404f916d031be7835659dd3ba06b3fc5690cd4339af3122a1",
+    "tests/nonplanar/test_stl_import_error.cpp": "0f3bc1a220b404cfd82dec96c62d412a2e16e9587cd561870596ed9b9d73028e"
+  },
+  "native_binary_sha256": {
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "ae8a82af4ded942854403823f32aefa1d10e0f777ceddad62da5f3acb310b8f1",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "2b62b35af2793244e752ad1ddc11c139f1a161f606353bd02eefb4afe97364af",
+    "build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit": "285b510ad3057b000d81db6f925ad2b7afb4348974aaa4643ce09310d16c8cc2",
+    "build/arm64/src/nonplanar_import/Release/nonplanar_import_worker": "5f56e77a6486aa0a2115d045cece789481f65a64b87595cf6e59a128b68c93e7"
+  }
+}
