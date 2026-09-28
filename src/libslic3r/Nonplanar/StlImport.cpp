@@ -20,6 +20,13 @@ std::string sha256(const std::string &bytes)
     return result;
 }
 }
+std::shared_ptr<const StlSourceSnapshot> capture_stl_snapshot(std::string_view bytes, bool millimeters_declared)
+{
+    if (bytes.size()>2*1024*1024) throw std::length_error("STL source byte limit");
+    std::string owned(bytes);
+    auto hash=sha256(owned);
+    return std::make_shared<const StlSourceSnapshot>(StlSourceSnapshot{std::move(owned),std::move(hash),millimeters_declared});
+}
 StlImportResult import_stl_snapshot(std::string_view bytes, bool millimeters_declared, const MeshAuditLimits &requested_limits)
 {
     const MeshAuditLimits limits = requested_limits;
@@ -32,9 +39,7 @@ StlImportResult import_stl_snapshot(std::string_view bytes, bool millimeters_dec
     };
     if (bytes.size() > 2 * 1024 * 1024) { result.geometry.reason = "SOURCE_BYTE_LIMIT"; return result; }
     try {
-        std::string owned(bytes);
-        auto hash = sha256(owned);
-        result.source = std::make_shared<const StlSourceSnapshot>(StlSourceSnapshot{std::move(owned), std::move(hash), millimeters_declared});
+        result.source = capture_stl_snapshot(bytes,millimeters_declared);
         if (!millimeters_declared) { result.geometry.reason = "UNCONFIRMED_UNITS"; return result; }
         if (!limits.valid()) {
             result.geometry.reason = "INVALID_LIMITS"; return result;

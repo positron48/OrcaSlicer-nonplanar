@@ -9,6 +9,7 @@ struct StlSourceSnapshot {
     const std::string sha256;
     const bool millimeters_declared;
 };
+std::shared_ptr<const StlSourceSnapshot> capture_stl_snapshot(std::string_view bytes, bool millimeters_declared);
 struct StlImportResult {
     std::shared_ptr<const StlSourceSnapshot> source;
     std::shared_ptr<const TriangleMesh> parsed;

@@ -1,0 +1,24 @@
+{
+  "base_commit": "1a2b6c40517f50c42ca7c4e2ae637916739fde4c",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/StlWorker.cpp",
+  "sha256": {
+    ".github/workflows/nonplanar-native.yml": "75d1934a086865f609800523a1b37a8157a5d4a6051bf86e9f83434b49eb1e1d",
+    "src/CMakeLists.txt": "5f377fc03ff1f1b106b4fd752ccd2b551de87fed94b33af92e7725e391e3651d",
+    "src/libslic3r/CMakeLists.txt": "6c73c3480f92947f6dde984a75bcd69ab78465ef2a1edb834f8c9eb17af3d00c",
+    "src/libslic3r/Nonplanar/StlImport.cpp": "67eb69308d26e0ea9415b26f0480dd4bfbbf31efbab0af4adf8d379e7bb4091a",
+    "src/libslic3r/Nonplanar/StlImport.hpp": "06cc968a50bfa534f3d9f2e7b44239343d4831294677ff000f18858494dc7645",
+    "src/libslic3r/Nonplanar/StlWorker.cpp": "1c80990d920b09733ef99d44ad592a3f78f509bd8518fce69b184e106e218f0e",
+    "src/libslic3r/Nonplanar/StlWorker.hpp": "04047b30f9de2c32d99894d0512be7361b5cc31a4ce7087fc4359f4812a4ad17",
+    "src/nonplanar_import/main.cpp": "0014b9d9c1a3d623ebf99db08a2c69ff7c3de252d7ee5b8670ebec17b38d6e13",
+    "src/nonplanar_import/CMakeLists.txt": "4d77f37b77e9c479587380102298885762cba4229d97324b0776ba65ca97e7c7",
+    "tests/nonplanar/CMakeLists.txt": "d42567b7bd20285d542d4bee4cba1308fb099ddba8047bbb4bd6356e738e15c1",
+    "tests/nonplanar/test_stl_worker.cpp": "bc86962b1447e5d381631239e70951907be77a6b97e74ea37f07c014d6054273",
+    "tests/nonplanar/worker_probe.cpp": "7e3a786d399f5c34c316c870df4c5688c793233792346957fe4a94fa380140e8"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/nonplanar_import/Release/nonplanar_import_worker": "142ede9cc7da56483929d0586da30e250fa517cf0bee333f889ffdfe4c37db70",
+    "build/arm64/tests/nonplanar/Release/nonplanar_worker_probe": "44780e9e89cf28db88e9060b6611cb07f2fae3b96e5f88f349babe0a57bf2147",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "3eec1a563f2ee6ad67e32955e9f2670ed5f2e96cf792c3189384a7427734fe3d",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "2b62b35af2793244e752ad1ddc11c139f1a161f606353bd02eefb4afe97364af"
+  }
+}

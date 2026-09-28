@@ -93,8 +93,9 @@ and independent review. Operator data and physical qualification remain absent.
 mode preflight and native/CLI/archive output blocks; the full compatibility
 registry is still pending. `B02-parser.md`, `B02-mesh.md` and `B02-snapshot.md`
 record bounded STL metadata, parsed geometry checks and immutable source-byte
-provenance. `B02-error.md` adds bounded decimal conversion error. Latest selected
-CTest executes 110/110; the six B02-snapshot OFF/ZAA comparisons pass. Applying
-the full job error budget, isolated import work, whole-job
-snapshots and a successful hybrid pipeline remain unimplemented. Gate A still
+provenance. `B02-error.md` adds bounded decimal conversion error; `B02-worker.md`
+adds supervised native analysis bound to source bytes and revision. Latest selected
+CTest executes 114/114; the six B02-snapshot OFF/ZAA comparisons pass. Source-file
+capture, hard memory containment, the full job error budget, whole-job snapshots
+and a successful hybrid pipeline remain unimplemented. Gate A still
 requires independent review; digital coupon preparation is not physical proof.
