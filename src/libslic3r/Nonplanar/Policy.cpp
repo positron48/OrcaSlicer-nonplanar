@@ -169,7 +169,15 @@ const std::map<std::string, DiscreteRule> &discrete_policy()
         {"enable_prime_tower", {coBool, 0, "0"}},
         {"enable_filament_dynamic_map", {coBool, 0, "0"}},
         {"has_filament_switcher", {coBool, 0, "0"}},
-        {"filament_map_mode", {coEnum, int(fmmManual), "Manual"}}
+        {"filament_map_mode", {coEnum, int(fmmManual), "Manual"}},
+        {"print_sequence", {coEnum, int(PrintSequence::ByLayer), "by layer"}},
+        {"sparse_infill_pattern", {coEnum, int(ipRectilinear), "rectilinear"}},
+        {"internal_solid_infill_pattern", {coEnum, int(ipRectilinear), "rectilinear"}},
+        {"top_surface_pattern", {coEnum, int(ipRectilinear), "rectilinear"}},
+        {"bottom_surface_pattern", {coEnum, int(ipRectilinear), "rectilinear"}},
+        {"infill_combination", {coBool, 0, "0"}},
+        {"detect_thin_wall", {coBool, 0, "0"}},
+        {"gap_fill_target", {coEnum, int(gftNowhere), "nowhere"}}
     };
     return rules;
 }

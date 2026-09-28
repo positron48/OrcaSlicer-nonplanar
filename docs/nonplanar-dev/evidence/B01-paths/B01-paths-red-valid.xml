@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="18" skipped="0" tests="46" hostname="tbd" time="0.025" timestamp="2026-09-28T16:16:24Z">
+    <properties>
+      <property name="random-seed" value="1024993162"/>
+      <property name="filters" value="[B01Paths]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B01 native path overrides invalidate cached exports without replacing user choices" time="0.007" status="run">
+      <failure message="print.nonplanar_block_reason(), Catch::Matchers::ContainsSubstring(&quot;sparse_infill_pattern&quot;)" type="CHECK_THAT">
+FAILED:
+  CHECK_THAT( print.nonplanar_block_reason(), Catch::Matchers::ContainsSubstring("sparse_infill_pattern") )
+with expansion:
+  "Nonplanar Top Lab: guarded slicing and export are not implemented" contains:
+  "sparse_infill_pattern"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:437
+      </failure>
+      <failure message="model_policy_conflict(model)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model) )
+with expansion:
+  {?}
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:441
+      </failure>
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 basic native paths reject unqualified patterns ordering and variable layers" time="0.018" status="run">
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+print_sequence
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:416
+      </failure>
+      <failure message="conflict" type="CHECK">
+FAILED:
+  CHECK( conflict )
+with expansion:
+  {?}
+print_sequence
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:419
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+sparse_infill_pattern
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:416
+      </failure>
+      <failure message="conflict" type="CHECK">
+FAILED:
+  CHECK( conflict )
+with expansion:
+  {?}
+sparse_infill_pattern
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:419
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+internal_solid_infill_pattern
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:416
+      </failure>
+      <failure message="conflict" type="CHECK">
+FAILED:
+  CHECK( conflict )
+with expansion:
+  {?}
+internal_solid_infill_pattern
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:419
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+top_surface_pattern
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:416
+      </failure>
+      <failure message="conflict" type="CHECK">
+FAILED:
+  CHECK( conflict )
+with expansion:
+  {?}
+top_surface_pattern
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:419
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+bottom_surface_pattern
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:416
+      </failure>
+      <failure message="conflict" type="CHECK">
+FAILED:
+  CHECK( conflict )
+with expansion:
+  {?}
+bottom_surface_pattern
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:419
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+infill_combination
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:416
+      </failure>
+      <failure message="conflict" type="CHECK">
+FAILED:
+  CHECK( conflict )
+with expansion:
+  {?}
+infill_combination
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:419
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+detect_thin_wall
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:416
+      </failure>
+      <failure message="conflict" type="CHECK">
+FAILED:
+  CHECK( conflict )
+with expansion:
+  {?}
+detect_thin_wall
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:419
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+gap_fill_target
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:416
+      </failure>
+      <failure message="conflict" type="CHECK">
+FAILED:
+  CHECK( conflict )
+with expansion:
+  {?}
+gap_fill_target
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:419
+      </failure>
+    </testcase>
+    <system-out>
+st=1,
+    </system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>

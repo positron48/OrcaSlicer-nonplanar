@@ -39,7 +39,11 @@ DynamicPrintConfig eligible()
       {"seam_slope_type","none"},{"post_process",""},
       {"single_extruder_multi_material",false},{"manual_filament_change",false},
       {"enable_prime_tower",false},{"enable_filament_dynamic_map",false},
-      {"has_filament_switcher",false},{"filament_map_mode","Manual"}});
+      {"has_filament_switcher",false},{"filament_map_mode","Manual"},
+      {"print_sequence","by layer"},{"sparse_infill_pattern","rectilinear"},
+      {"internal_solid_infill_pattern","rectilinear"},{"top_surface_pattern","rectilinear"},
+      {"bottom_surface_pattern","rectilinear"},{"infill_combination",false},
+      {"detect_thin_wall",false},{"gap_fill_target","nowhere"}});
     for (const auto &key : custom_code_hooks) {
         if (c.option(key)->type() == coStrings)
             c.set_key_value(key, new ConfigOptionStrings{});
@@ -350,7 +354,7 @@ TEST_CASE("B01 resolved snapshot owns every native value without a mutable confi
 }
 TEST_CASE("B01 discrete constraints reject textual substitutes for native settings", "[Nonplanar][B01][B01Discrete]")
 {
-    REQUIRE(discrete_policy().size() == 16);
+    REQUIRE(discrete_policy().size() == 24);
     for (const auto &[key, rule] : discrete_policy()) {
         REQUIRE(print_config_def.get(key)->type == rule.type);
         if (rule.type == coEnum) REQUIRE(print_config_def.get(key)->enum_keys_map->at(rule.label) == rule.required);
@@ -385,7 +389,9 @@ TEST_CASE("B01 discrete source and invalid enum values fail without unsafe seria
 }
 TEST_CASE("B01 discrete enum constraints use native values rather than borrowed labels", "[Nonplanar][B01][B01Discrete]")
 {
-    for (const auto *key : {"gcode_flavor","wall_generator","fuzzy_skin","ironing_type","seam_slope_type","filament_map_mode"}) {
+    for (const auto *key : {"gcode_flavor","wall_generator","fuzzy_skin","ironing_type","seam_slope_type","filament_map_mode",
+                          "print_sequence","sparse_infill_pattern","internal_solid_infill_pattern",
+                          "top_surface_pattern","bottom_surface_pattern","gap_fill_target"}) {
         INFO(key);
         auto config=eligible();
         const auto label=config.opt_serialize(key);
@@ -396,6 +402,49 @@ TEST_CASE("B01 discrete enum constraints use native values rather than borrowed 
         CHECK_FALSE(policy.passes_config_preflight());
         if (!policy.conflicts.empty()) CHECK(policy.conflicts.front().key == key);
     }
+}
+TEST_CASE("B01 basic native paths reject unqualified patterns ordering and variable layers", "[Nonplanar][B01][B01Paths]")
+{
+    REQUIRE(resolve_policy(eligible(),1,1).passes_config_preflight());
+    for (const auto &[key,value] : std::vector<std::pair<std::string,std::string>>{
+        {"print_sequence","by object"},{"sparse_infill_pattern","grid"},
+        {"internal_solid_infill_pattern","monotonic"},{"top_surface_pattern","concentric"},
+        {"bottom_surface_pattern","monotonic"},{"infill_combination","1"},
+        {"detect_thin_wall","1"},{"gap_fill_target","everywhere"}}) {
+        INFO(key);
+        auto config=eligible(); config.set_deserialize_strict(key,value);
+        const auto before=ResolvedConfigSnapshot(config).fingerprint();
+        const auto policy=resolve_policy(config,1,1);
+        CHECK_FALSE(policy.passes_config_preflight());
+        if (!policy.conflicts.empty()) CHECK(policy.conflicts.front().key==key);
+        const auto conflict=input_policy_conflict(Model{},config);
+        CHECK(conflict);
+        if (conflict) CHECK(conflict->key==key);
+        CHECK(ResolvedConfigSnapshot(config).fingerprint()==before);
+        config.set_deserialize_strict("nptop_mode","off");
+        CHECK(resolve_policy(config,1,1).conflicts.empty());
+        CHECK_FALSE(input_policy_conflict(Model{},config));
+    }
+}
+TEST_CASE("B01 native path overrides invalidate cached exports without replacing user choices", "[Nonplanar][B01][B01Paths]")
+{
+    CachedPrint print; print.is_BBL_printer()=false; Model model;
+    auto config=eligible(); Test::init_print({Test::TestMesh::cube_20x20x20},print,model,config);
+    print.apply(model,config);
+    print.set_started(psGCodeExport); print.set_done(psGCodeExport);
+    auto *object=model.objects.front();
+    object->volumes.front()->config.set_key_value("sparse_infill_pattern",new ConfigOptionEnum<InfillPattern>(ipGrid));
+    print.apply(model,config);
+    CHECK_FALSE(print.is_step_done(psGCodeExport));
+    CHECK_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("sparse_infill_pattern"));
+    CHECK(object->volumes.front()->config.get().option<ConfigOptionEnum<InfillPattern>>("sparse_infill_pattern")->value==ipGrid);
+    object->volumes.front()->config.erase("sparse_infill_pattern");
+    object->layer_config_ranges[{0.,1.}].set_key_value("infill_combination",new ConfigOptionBool(true));
+    CHECK(model_policy_conflict(model));
+    if (const auto conflict=model_policy_conflict(model)) CHECK(conflict->key=="infill_combination");
+    config.set_deserialize_strict("nptop_mode","off");
+    print.apply(model,config);
+    CHECK(print.nonplanar_block_reason().empty());
 }
 TEST_CASE("B01 mode routing rejects a non-string OFF or guarded-mode lookalike", "[Nonplanar][B01][B01Discrete]")
 {
