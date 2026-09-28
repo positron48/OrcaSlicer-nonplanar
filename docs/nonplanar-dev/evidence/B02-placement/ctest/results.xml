@@ -1,0 +1,1479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="125"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="5"
+	timestamp="2026-09-28T14:57:47"
+	>
+	<testcase name="Fill: Pattern Path Length" classname="Fill: Pattern Path Length" time="0.0340757" status="run">
+		<properties>
+			<property name="cmake_labels" value="Fill"/>
+		</properties>
+		<system-out>Filters: "Fill: Pattern Path Length"
+Randomness seeded to: 832762742
+===============================================================================
+All tests passed (56 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="export_gcode writes G-code without a result pointer" classname="export_gcode writes G-code without a result pointer" time="0.10428" status="run">
+		<properties>
+			<property name="cmake_labels" value="PrintGCode;export_gcode"/>
+		</properties>
+		<system-out>Filters: "export_gcode writes G-code without a result pointer"
+Randomness seeded to: 3397309626
+st=1, 
+[2026-09-28 14:57:47.933167] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+st=1, 
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Back-to-back tool changes buffer then merge into one tool-change block" classname="Back-to-back tool changes buffer then merge into one tool-change block" time="0.0318183" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeTiming"/>
+		</properties>
+		<system-out>Filters: "Back-to-back tool changes buffer then merge into one tool-change block"
+Randomness seeded to: 1398038586
+[2026-09-28 14:57:48.001555] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (9 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B01 default OFF remains stock and object region overrides cannot enable export" classname="B01 default OFF remains stock and object region overrides cannot enable export" time="0.034235" status="run">
+		<properties>
+			<property name="cmake_labels" value="B01;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B01 default OFF remains stock and object region overrides cannot enable export"
+Randomness seeded to: 612231757
+st=1, 
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: PrintGCode basic functionality" classname="Scenario: PrintGCode basic functionality" time="1.22071" status="run">
+		<properties>
+			<property name="cmake_labels" value="NotWorking;PrintGCode"/>
+		</properties>
+		<system-out>Filters: "Scenario: PrintGCode basic functionality"
+Randomness seeded to: 3408717184
+st=1, 
+[2026-09-28 14:57:48.105493] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=2, 
+===============================================================================
+All tests passed (51 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="INT-02 lower support excludes the bead shoulders endpoints and gaps" classname="INT-02 lower support excludes the bead shoulders endpoints and gaps" time="0.0286202" status="run">
+		<properties>
+			<property name="cmake_labels" value="A05;INT-02;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "INT-02 lower support excludes the bead shoulders endpoints and gaps"
+Randomness seeded to: 1557952262
+===============================================================================
+All tests passed (8 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B01 native paths block guarded mode before any output file or cached result" classname="B01 native paths block guarded mode before any output file or cached result" time="0.0332704" status="run">
+		<properties>
+			<property name="cmake_labels" value="B01;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B01 native paths block guarded mode before any output file or cached result"
+Randomness seeded to: 337423078
+st=1, 
+===============================================================================
+All tests passed (9 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMesh: Mesh merge functions" classname="Scenario: TriangleMesh: Mesh merge functions" time="0.0300086" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMesh: Mesh merge functions"
+Randomness seeded to: 1376333926
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="A08 serialization rejects feed rounded outside the replay domain" classname="A08 serialization rejects feed rounded outside the replay domain" time="0.029348" status="run">
+		<properties>
+			<property name="cmake_labels" value="A06;A08;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "A08 serialization rejects feed rounded outside the replay domain"
+Randomness seeded to: 1387284852
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: PrintObject: Perimeter generation" classname="Scenario: PrintObject: Perimeter generation" time="0.0424858" status="run">
+		<properties>
+			<property name="cmake_labels" value="PrintObject"/>
+		</properties>
+		<system-out>Filters: "Scenario: PrintObject: Perimeter generation"
+Randomness seeded to: 3394377247
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (200 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Print: Skirt generation" classname="Scenario: Print: Skirt generation" time="0.0374923" status="run">
+		<properties>
+			<property name="cmake_labels" value="Print"/>
+		</properties>
+		<system-out>Filters: "Scenario: Print: Skirt generation"
+Randomness seeded to: 3960654196
+st=1, 
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GCD-01 replay exposes XYZ E feed and rounding mutations" classname="GCD-01 replay exposes XYZ E feed and rounding mutations" time="0.0307781" status="run">
+		<properties>
+			<property name="cmake_labels" value="A06;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GCD-01 replay exposes XYZ E feed and rounding mutations"
+Randomness seeded to: 402783525
+===============================================================================
+All tests passed (9 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B01 policy rejects conflicting resolved transforms and missing settings" classname="B01 policy rejects conflicting resolved transforms and missing settings" time="0.0323429" status="run">
+		<properties>
+			<property name="cmake_labels" value="B01;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B01 policy rejects conflicting resolved transforms and missing settings"
+Randomness seeded to: 3879777860
+===============================================================================
+All tests passed (23 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Print: {first_object_name} is not replaced by the saved-project file name" classname="Print: {first_object_name} is not replaced by the saved-project file name" time="0.0333985" status="run">
+		<properties>
+			<property name="cmake_labels" value="Print"/>
+		</properties>
+		<system-out>Filters: "Print: {first_object_name} is not replaced by the saved-project file name"
+Randomness seeded to: 4209945784
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="INT-01 native reserved body supports an affine first pass" classname="INT-01 native reserved body supports an affine first pass" time="0.0353523" status="run">
+		<properties>
+			<property name="cmake_labels" value="A05;INT-01;Nonplanar;VOL-01"/>
+		</properties>
+		<system-out>Filters: "INT-01 native reserved body supports an affine first pass"
+Randomness seeded to: 3217497898
+st=1, 
+===============================================================================
+All tests passed (23 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B01 publication detects unresolved volume and layer overrides" classname="B01 publication detects unresolved volume and layer overrides" time="0.0359678" status="run">
+		<properties>
+			<property name="cmake_labels" value="B01;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B01 publication detects unresolved volume and layer overrides"
+Randomness seeded to: 1736135661
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: ExtrusionEntityCollection: Polygon flattening" classname="Scenario: ExtrusionEntityCollection: Polygon flattening" time="0.0291743" status="run">
+		<properties>
+			<property name="cmake_labels" value="ExtrusionEntity"/>
+		</properties>
+		<system-out>Filters: "Scenario: ExtrusionEntityCollection: Polygon flattening"
+Randomness seeded to: 3500866320
+===============================================================================
+All tests passed (23 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMesh: Basic mesh statistics" classname="Scenario: TriangleMesh: Basic mesh statistics" time="0.0293557" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMesh: Basic mesh statistics"
+Randomness seeded to: 1235288153
+===============================================================================
+All tests passed (45 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="INT-01 affine footprint and volume use all corners" classname="INT-01 affine footprint and volume use all corners" time="0.0289337" status="run">
+		<properties>
+			<property name="cmake_labels" value="A05;INT-01;Nonplanar;VOL-01"/>
+		</properties>
+		<system-out>Filters: "INT-01 affine footprint and volume use all corners"
+Randomness seeded to: 388778953
+===============================================================================
+All tests passed (7 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: PrintObject: object layer heights" classname="Scenario: PrintObject: object layer heights" time="0.0495618" status="run">
+		<properties>
+			<property name="cmake_labels" value="PrintObject"/>
+		</properties>
+		<system-out>Filters: "Scenario: PrintObject: object layer heights"
+Randomness seeded to: 2348067847
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (18 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Flow: Flow math for bridges" classname="Scenario: Flow: Flow math for bridges" time="0.0284792" status="run">
+		<properties>
+			<property name="cmake_labels" value="Flow"/>
+		</properties>
+		<system-out>Filters: "Scenario: Flow: Flow math for bridges"
+Randomness seeded to: 546012841
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal." classname="Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal." time="0.0537706" status="run">
+		<properties>
+			<property name="cmake_labels" value="Print"/>
+		</properties>
+		<system-out>Filters: "Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal."
+Randomness seeded to: 1058677754
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B01 mode changes invalidate a cached export and preserve unknown serialized modes" classname="B01 mode changes invalidate a cached export and preserve unknown serialized modes" time="0.0321395" status="run">
+		<properties>
+			<property name="cmake_labels" value="B01;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B01 mode changes invalidate a cached export and preserve unknown serialized modes"
+Randomness seeded to: 130546262
+st=1, 
+===============================================================================
+All tests passed (5 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="ORC-07 native E applies compensation once without slope correction" classname="ORC-07 native E applies compensation once without slope correction" time="0.0290197" status="run">
+		<properties>
+			<property name="cmake_labels" value="A06;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "ORC-07 native E applies compensation once without slope correction"
+Randomness seeded to: 149268028
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="A08 bounded 10000 move candidate roundtrip preserves endpoint and total E" classname="A08 bounded 10000 move candidate roundtrip preserves endpoint and total E" time="0.0512907" status="run">
+		<properties>
+			<property name="cmake_labels" value="A08;A08Stress;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "A08 bounded 10000 move candidate roundtrip preserves endpoint and total E"
+Randomness seeded to: 2805075464
+===============================================================================
+All tests passed (7 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B01 embedded G-code rejects guarded mode without touching existing files" classname="B01 embedded G-code rejects guarded mode without touching existing files" time="0.0354986" status="run">
+		<properties>
+			<property name="cmake_labels" value="B01;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B01 embedded G-code rejects guarded mode without touching existing files"
+Randomness seeded to: 947345640
+st=1, 
+[2026-09-28 14:57:49.994080] [0x00000001f419de80] [error]   Nonplanar Top Lab: embedded G-code export is not implemented
+[2026-09-28 14:57:49.994136] [0x00000001f419de80] [error]   Nonplanar Top Lab: embedded G-code export is not implemented
+===============================================================================
+All tests passed (47 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Filament-change time is attributed to tool-change moves, not extrusion roles" classname="Filament-change time is attributed to tool-change moves, not extrusion roles" time="0.0296589" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeTiming"/>
+		</properties>
+		<system-out>Filters: "Filament-change time is attributed to tool-change moves\, not extrusion roles"
+Randomness seeded to: 2039714382
+[2026-09-28 14:57:50.028105] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (12 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Initial layer height is honored" classname="Initial layer height is honored" time="0.0679927" status="run">
+		<properties>
+			<property name="cmake_labels" value="PrintGCode"/>
+		</properties>
+		<system-out>Filters: "Initial layer height is honored"
+Randomness seeded to: 4284844672
+st=1, 
+[2026-09-28 14:57:50.094263] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Skirt height is honored" classname="Skirt height is honored" time="0.117875" status="run">
+		<properties>
+			<property name="cmake_labels" value="NotWorking;SkirtBrim"/>
+		</properties>
+		<system-out>Filters: "Skirt height is honored"
+Randomness seeded to: 3571588793
+st=1, 
+[2026-09-28 14:57:50.157830] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+st=1, 
+st=2, 
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: SupportMaterial: support_layers_z and contact_distance" classname="Scenario: SupportMaterial: support_layers_z and contact_distance" time="0.109265" status="run">
+		<properties>
+			<property name="cmake_labels" value="SupportMaterial"/>
+		</properties>
+		<system-out>Filters: "Scenario: SupportMaterial: support_layers_z and contact_distance"
+Randomness seeded to: 2325056227
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Skirt and brim generation" classname="Scenario: Skirt and brim generation" time="0.161448" status="run">
+		<properties>
+			<property name="cmake_labels" value="NotWorking;SkirtBrim"/>
+		</properties>
+		<system-out>Filters: "Scenario: Skirt and brim generation"
+Randomness seeded to: 2901862738
+st=1, 
+[2026-09-28 14:57:50.356449] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_deretraction_speed not found, skipping
+[2026-09-28 14:57:50.356459] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_long_retractions_when_cut not found, skipping
+[2026-09-28 14:57:50.356463] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9945: option filament_retract_before_wipe not found, skipping
+[2026-09-28 14:57:50.356465] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_above not found, skipping
+[2026-09-28 14:57:50.356468] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_below not found, skipping
+[202...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="A06 native roundtrip bounds cover negative coordinates and travel between beads" classname="A06 native roundtrip bounds cover negative coordinates and travel between beads" time="0.0292652" status="run">
+		<properties>
+			<property name="cmake_labels" value="A06;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "A06 native roundtrip bounds cover negative coordinates and travel between beads"
+Randomness seeded to: 1206357893
+===============================================================================
+All tests passed (1300 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z" classname="ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z" time="0.0282295" status="run">
+		<properties>
+			<property name="cmake_labels" value="A06;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z"
+Randomness seeded to: 1680813403
+===============================================================================
+All tests passed (5 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="INT-02 native lower stair support rejects the unchanged upper candidate" classname="INT-02 native lower stair support rejects the unchanged upper candidate" time="0.0369569" status="run">
+		<properties>
+			<property name="cmake_labels" value="A05;INT-02;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "INT-02 native lower stair support rejects the unchanged upper candidate"
+Randomness seeded to: 3440847151
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Print: {first_object_name} names the first printable object on the plate" classname="Print: {first_object_name} names the first printable object on the plate" time="0.0359536" status="run">
+		<properties>
+			<property name="cmake_labels" value="Print"/>
+		</properties>
+		<system-out>Filters: "Print: {first_object_name} names the first printable object on the plate"
+Randomness seeded to: 2308173964
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: make_xxx functions produce meshes." classname="Scenario: make_xxx functions produce meshes." time="0.0423853" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: make_xxx functions produce meshes."
+Randomness seeded to: 2068437533
+===============================================================================
+All tests passed (11 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="INT-03 uncertainty never creates support or increases nominal volume" classname="INT-03 uncertainty never creates support or increases nominal volume" time="0.0285979" status="run">
+		<properties>
+			<property name="cmake_labels" value="A05;INT-03;Nonplanar;VOL-01"/>
+		</properties>
+		<system-out>Filters: "INT-03 uncertainty never creates support or increases nominal volume"
+Randomness seeded to: 334027349
+===============================================================================
+All tests passed (12 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Sequential printing follows model order" classname="Sequential printing follows model order" time="0.0894505" status="run">
+		<properties>
+			<property name="cmake_labels" value="PrintGCode"/>
+		</properties>
+		<system-out>Filters: "Sequential printing follows model order"
+Randomness seeded to: 1781414530
+st=1, 
+st=2, 
+[2026-09-28 14:57:50.774961] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="SupportMaterial: Three raft layers created" classname="SupportMaterial: Three raft layers created" time="0.0382137" status="run">
+		<properties>
+			<property name="cmake_labels" value="SupportMaterial"/>
+		</properties>
+		<system-out>Filters: "SupportMaterial: Three raft layers created"
+Randomness seeded to: 1768095564
+st=1, 
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Origin manipulation" classname="Scenario: Origin manipulation" time="0.0308213" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCode"/>
+		</properties>
+		<system-out>Filters: "Scenario: Origin manipulation"
+Randomness seeded to: 3846012157
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMeshSlicer: Cut behavior." classname="Scenario: TriangleMeshSlicer: Cut behavior." time="0.028775" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMeshSlicer: Cut behavior."
+Randomness seeded to: 3025985123
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="INT-01 native support is invariant under reversal and explicit translation" classname="INT-01 native support is invariant under reversal and explicit translation" time="0.0282557" status="run">
+		<properties>
+			<property name="cmake_labels" value="A05;INT-01;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "INT-01 native support is invariant under reversal and explicit translation"
+Randomness seeded to: 1903232016
+===============================================================================
+All tests passed (13 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: init_print functionality" classname="Scenario: init_print functionality" time="0.0732692" status="run">
+		<properties>
+			<property name="cmake_labels" value="test_data"/>
+		</properties>
+		<system-out>Filters: "Scenario: init_print functionality"
+Randomness seeded to: 1513272937
+st=1, 
+st=1, 
+st=1, 
+[2026-09-28 14:57:50.976780] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Object labels have stable IDs with exclusion enabled or disabled" classname="Object labels have stable IDs with exclusion enabled or disabled" time="0.068172" status="run">
+		<properties>
+			<property name="cmake_labels" value="ObjectLabels;PrintGCode"/>
+		</properties>
+		<system-out>Filters: "Object labels have stable IDs with exclusion enabled or disabled"
+Randomness seeded to: 2931355041
+st=1, 
+st=2, 
+[2026-09-28 14:57:51.027600] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+st=1, 
+st=2, 
+===============================================================================
+All tests passed (8 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: set_speed emits values with fixed-point output." classname="Scenario: set_speed emits values with fixed-point output." time="0.0296741" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeWriter"/>
+		</properties>
+		<system-out>Filters: "Scenario: set_speed emits values with fixed-point output."
+Randomness seeded to: 2228555235
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMesh: slice behavior." classname="Scenario: TriangleMesh: slice behavior." time="0.0305307" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMesh: slice behavior."
+Randomness seeded to: 2398050927
+===============================================================================
+All tests passed (28 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Filament-change time is not dropped when few motion blocks precede the change" classname="Filament-change time is not dropped when few motion blocks precede the change" time="0.030707" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeTiming"/>
+		</properties>
+		<system-out>Filters: "Filament-change time is not dropped when few motion blocks precede the change"
+Randomness seeded to: 26862657
+[2026-09-28 14:57:51.138287] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="A06 candidate rejects broken order continuity and unsupported events" classname="A06 candidate rejects broken order continuity and unsupported events" time="0.0291173" status="run">
+		<properties>
+			<property name="cmake_labels" value="A06;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "A06 candidate rejects broken order continuity and unsupported events"
+Randomness seeded to: 2566477311
+===============================================================================
+All tests passed (8 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Carried-forward tool-change delay reaches the total without polluting roles" classname="Carried-forward tool-change delay reaches the total without polluting roles" time="0.0304532" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeTiming"/>
+		</properties>
+		<system-out>Filters: "Carried-forward tool-change delay reaches the total without polluting roles"
+Randomness seeded to: 1122374945
+[2026-09-28 14:57:51.198331] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (7 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GCD-01 parser fails closed on unsupported modal state and grammar" classname="GCD-01 parser fails closed on unsupported modal state and grammar" time="0.029735" status="run">
+		<properties>
+			<property name="cmake_labels" value="A06;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GCD-01 parser fails closed on unsupported modal state and grammar"
+Randomness seeded to: 175549380
+===============================================================================
+All tests passed (18 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Print: Brim generation" classname="Scenario: Print: Brim generation" time="0.0440936" status="run">
+		<properties>
+			<property name="cmake_labels" value="Print"/>
+		</properties>
+		<system-out>Filters: "Scenario: Print: Brim generation"
+Randomness seeded to: 4015238081
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="INT-02 unsupported native paths cannot masquerade as planar support" classname="INT-02 unsupported native paths cannot masquerade as planar support" time="0.0298411" status="run">
+		<properties>
+			<property name="cmake_labels" value="A05;INT-02;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "INT-02 unsupported native paths cannot masquerade as planar support"
+Randomness seeded to: 73892332
+===============================================================================
+All tests passed (14 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Trailing tool change at end of file is drained, not dropped" classname="Trailing tool change at end of file is drained, not dropped" time="0.0296695" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeTiming"/>
+		</properties>
+		<system-out>Filters: "Trailing tool change at end of file is drained\, not dropped"
+Randomness seeded to: 1021228401
+[2026-09-28 14:57:51.332555] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (5 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="INT-03 offset mutations recheck gap and volume without auto lifting" classname="INT-03 offset mutations recheck gap and volume without auto lifting" time="0.0283966" status="run">
+		<properties>
+			<property name="cmake_labels" value="A05;INT-03;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "INT-03 offset mutations recheck gap and volume without auto lifting"
+Randomness seeded to: 2281968963
+===============================================================================
+All tests passed (17 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMesh: split functionality." classname="Scenario: TriangleMesh: split functionality." time="0.0282822" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMesh: split functionality."
+Randomness seeded to: 658183678
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: z_hop lifts the nozzle when a lift is requested" classname="Scenario: z_hop lifts the nozzle when a lift is requested" time="0.027957" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeWriter"/>
+		</properties>
+		<system-out>Filters: "Scenario: z_hop lifts the nozzle when a lift is requested"
+Randomness seeded to: 3827142671
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="SupportMaterial: enforced support layers are generated" classname="SupportMaterial: enforced support layers are generated" time="0.0447121" status="run">
+		<properties>
+			<property name="cmake_labels" value="SupportMaterial"/>
+		</properties>
+		<system-out>Filters: "SupportMaterial: enforced support layers are generated"
+Randomness seeded to: 3229372122
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="INT-03 invalid cells budgets and stale scales stay unknown" classname="INT-03 invalid cells budgets and stale scales stay unknown" time="0.0297554" status="run">
+		<properties>
+			<property name="cmake_labels" value="A05;INT-03;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "INT-03 invalid cells budgets and stale scales stay unknown"
+Randomness seeded to: 3886710456
+===============================================================================
+All tests passed (9 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Flow: Flow math for non-bridges" classname="Scenario: Flow: Flow math for non-bridges" time="0.0282653" status="run">
+		<properties>
+			<property name="cmake_labels" value="Flow"/>
+		</properties>
+		<system-out>Filters: "Scenario: Flow: Flow math for non-bridges"
+Randomness seeded to: 1860623790
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="ORC-10 policy diagnoses an incompatible resolved region override" classname="ORC-10 policy diagnoses an incompatible resolved region override" time="0.0319555" status="run">
+		<properties>
+			<property name="cmake_labels" value="B01;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "ORC-10 policy diagnoses an incompatible resolved region override"
+Randomness seeded to: 3396771763
+st=1, 
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B01 policy copies resolved values and accepts only supported planning modes" classname="B01 policy copies resolved values and accepts only supported planning modes" time="0.0301808" status="run">
+		<properties>
+			<property name="cmake_labels" value="B01;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B01 policy copies resolved values and accepts only supported planning modes"
+Randomness seeded to: 3673245087
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Model construction" classname="Scenario: Model construction" time="0.0686091" status="run">
+		<properties>
+			<property name="cmake_labels" value="Model"/>
+		</properties>
+		<system-out>Filters: "Scenario: Model construction"
+Randomness seeded to: 3612350446
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+[2026-09-28 14:57:51.651881] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (15 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMesh: Transformation functions affect mesh as expected." classname="Scenario: TriangleMesh: Transformation functions affect mesh as expected." time="0.029808" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMesh: Transformation functions affect mesh as expected."
+Randomness seeded to: 2426765737
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 parent terminates an unresponsive worker on deadline cancellation and stale revision" classname="B02 parent terminates an unresponsive worker on deadline cancellation and stale revision" time="0.0522904" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;Worker"/>
+		</properties>
+		<system-out>Filters: "B02 parent terminates an unresponsive worker on deadline cancellation and stale revision"
+Randomness seeded to: 4183812207
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 ASCII and binary snapshots preserve bytes and native geometry" classname="B02 ASCII and binary snapshots preserve bytes and native geometry" time="0.00815012" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;StlImport"/>
+		</properties>
+		<system-out>Filters: "B02 ASCII and binary snapshots preserve bytes and native geometry"
+Randomness seeded to: 3973761937
+===============================================================================
+All tests passed (33 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 strict ASCII records reject missing values and unconsumed source data" classname="B02 strict ASCII records reject missing values and unconsumed source data" time="0.00785058" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;StlImport"/>
+		</properties>
+		<system-out>Filters: "B02 strict ASCII records reject missing values and unconsumed source data"
+Randomness seeded to: 535127789
+===============================================================================
+All tests passed (25 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 decimal conversion bounds match independent exact rational oracles" classname="B02 decimal conversion bounds match independent exact rational oracles" time="0.00586904" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;StlError"/>
+		</properties>
+		<system-out>Filters: "B02 decimal conversion bounds match independent exact rational oracles"
+Randomness seeded to: 347905690
+===============================================================================
+All tests passed (13 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 binary STL metadata reads exactly the bounded header" classname="B02 binary STL metadata reads exactly the bounded header" time="0.00608417" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;stl"/>
+		</properties>
+		<system-out>Filters: "B02 binary STL metadata reads exactly the bounded header"
+Randomness seeded to: 3451707446
+===============================================================================
+All tests passed (14 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 source topology is checked before native repair can hide it" classname="B02 source topology is checked before native repair can hide it" time="0.00617329" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;StlImport"/>
+		</properties>
+		<system-out>Filters: "B02 source topology is checked before native repair can hide it"
+Randomness seeded to: 575206101
+===============================================================================
+All tests passed (15 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-04 sweep agrees with an independent slab intersection oracle" classname="GEO-04 sweep agrees with an independent slab intersection oracle" time="0.00910571" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-04;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-04 sweep agrees with an independent slab intersection oracle"
+Randomness seeded to: 1632162506
+===============================================================================
+All tests passed (629 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="PRF-06 confirmation flags cannot qualify synthetic geometry" classname="PRF-06 confirmation flags cannot qualify synthetic geometry" time="0.00568317" status="run">
+		<properties>
+			<property name="cmake_labels" value="A07;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "PRF-06 confirmation flags cannot qualify synthetic geometry"
+Randomness seeded to: 491909751
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 exact vertex normalization changes only the owned derived mesh" classname="B02 exact vertex normalization changes only the owned derived mesh" time="0.00552175" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;MeshAudit;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B02 exact vertex normalization changes only the owned derived mesh"
+Randomness seeded to: 3583653990
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-09 axial sphere oracle checks translation uncertainty and unsupported pairs" classname="GEO-09 axial sphere oracle checks translation uncertainty and unsupported pairs" time="0.00603175" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-09;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-09 axial sphere oracle checks translation uncertainty and unsupported pairs"
+Randomness seeded to: 4223108086
+===============================================================================
+All tests passed (30 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 placement detects an unsupported arithmetic mode introduced by a callback" classname="B02 placement detects an unsupported arithmetic mode introduced by a callback" time="0.00675667" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;Placement"/>
+		</properties>
+		<system-out>Filters: "B02 placement detects an unsupported arithmetic mode introduced by a callback"
+Randomness seeded to: 1966758782
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 native STL metadata bounds preserve geometry for long and malformed headers" classname="B02 native STL metadata bounds preserve geometry for long and malformed headers" time="0.0074245" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;stl"/>
+		</properties>
+		<system-out>Filters: "B02 native STL metadata bounds preserve geometry for long and malformed headers"
+Randomness seeded to: 3674015270
+===============================================================================
+All tests passed (136 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-03 transverse slope collides along a constant Z path" classname="GEO-03 transverse slope collides along a constant Z path" time="0.00585604" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-03;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-03 transverse slope collides along a constant Z path"
+Randomness seeded to: 30904059
+===============================================================================
+All tests passed (5 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-08 unsupported queries and exhausted limits stay unknown" classname="GEO-08 unsupported queries and exhausted limits stay unknown" time="0.00540317" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-08;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-08 unsupported queries and exhausted limits stay unknown"
+Randomness seeded to: 1484078951
+===============================================================================
+All tests passed (9 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 unbounded or unsupported numeric syntax cannot claim zero conversion error" classname="B02 unbounded or unsupported numeric syntax cannot claim zero conversion error" time="0.00593167" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;StlError"/>
+		</properties>
+		<system-out>Filters: "B02 unbounded or unsupported numeric syntax cannot claim zero conversion error"
+Randomness seeded to: 1213818847
+===============================================================================
+All tests passed (14 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 mesh audit preserves source and accepts a bounded native cube geometry" classname="B02 mesh audit preserves source and accepts a bounded native cube geometry" time="0.00574525" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;MeshAudit;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B02 mesh audit preserves source and accepts a bounded native cube geometry"
+Randomness seeded to: 3697845690
+===============================================================================
+All tests passed (9 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-01 asymmetric tool axes stay fixed when the path turns" classname="GEO-01 asymmetric tool axes stay fixed when the path turns" time="0.00554033" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-01;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-01 asymmetric tool axes stay fixed when the path turns"
+Randomness seeded to: 2723361811
+===============================================================================
+All tests passed (5 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 mesh audit rejects missing faces duplicates orientation and invalid coordinates" classname="B02 mesh audit rejects missing faces duplicates orientation and invalid coordinates" time="0.00562708" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;MeshAudit;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B02 mesh audit rejects missing faces duplicates orientation and invalid coordinates"
+Randomness seeded to: 1868498877
+===============================================================================
+All tests passed (20 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 source file capture preserves bytes and analysis does not reopen a replaced pathname" classname="B02 source file capture preserves bytes and analysis does not reopen a replaced pathname" time="0.384911" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;SourceFile"/>
+		</properties>
+		<system-out>Filters: "B02 source file capture preserves bytes and analysis does not reopen a replaced pathname"
+Randomness seeded to: 1181097600
+===============================================================================
+All tests passed (15 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-04 entering contact does not starve a later penetration" classname="GEO-04 entering contact does not starve a later penetration" time="0.00998867" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-04;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-04 entering contact does not starve a later penetration"
+Randomness seeded to: 3493050985
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 import reports actual decimal conversion error and rejects unbounded syntax" classname="B02 import reports actual decimal conversion error and rejects unbounded syntax" time="0.00983054" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;StlError;StlImport"/>
+		</properties>
+		<system-out>Filters: "B02 import reports actual decimal conversion error and rejects unbounded syntax"
+Randomness seeded to: 2080742679
+===============================================================================
+All tests passed (8 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="IR deposition travel and retraction carry different measures" classname="IR deposition travel and retraction carry different measures" time="0.00764108" status="run">
+		<properties>
+			<property name="cmake_labels" value="IR;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "IR deposition travel and retraction carry different measures"
+Randomness seeded to: 2290905148
+===============================================================================
+All tests passed (8 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 mesh audit fails closed on units cancellation and finite work limits" classname="B02 mesh audit fails closed on units cancellation and finite work limits" time="0.00725304" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;MeshAudit;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B02 mesh audit fails closed on units cancellation and finite work limits"
+Randomness seeded to: 2710584475
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 placement bounds actual native float rounding and enforces the measured allowance" classname="B02 placement bounds actual native float rounding and enforces the measured allowance" time="0.008578" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;Placement"/>
+		</properties>
+		<system-out>Filters: "B02 placement bounds actual native float rounding and enforces the measured allowance"
+Randomness seeded to: 3310219276
+===============================================================================
+All tests passed (11 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-05 duct collision is independent of nozzle clearance" classname="GEO-05 duct collision is independent of nozzle clearance" time="0.00672346" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-05;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-05 duct collision is independent of nozzle clearance"
+Randomness seeded to: 1467645935
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="ORC-05 rejects stale scale nonfinite and out of domain coordinates" classname="ORC-05 rejects stale scale nonfinite and out of domain coordinates" time="0.00630387" status="run">
+		<properties>
+			<property name="cmake_labels" value="Nonplanar;ORC-05"/>
+		</properties>
+		<system-out>Filters: "ORC-05 rejects stale scale nonfinite and out of domain coordinates"
+Randomness seeded to: 529808853
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 source limits units cancellation and malformed binary reject" classname="B02 source limits units cancellation and malformed binary reject" time="0.00679708" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;StlImport"/>
+		</properties>
+		<system-out>Filters: "B02 source limits units cancellation and malformed binary reject"
+Randomness seeded to: 3687702540
+===============================================================================
+All tests passed (36 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-09 finite annulus distinguishes a sphere in the opening from rim contact" classname="GEO-09 finite annulus distinguishes a sphere in the opening from rim contact" time="0.00594933" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-09;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-09 finite annulus distinguishes a sphere in the opening from rim contact"
+Randomness seeded to: 3006132050
+===============================================================================
+All tests passed (12 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="ORC-38 missing head dimensions inventory and moving envelope reject" classname="ORC-38 missing head dimensions inventory and moving envelope reject" time="0.00558379" status="run">
+		<properties>
+			<property name="cmake_labels" value="A07;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "ORC-38 missing head dimensions inventory and moving envelope reject"
+Randomness seeded to: 865654990
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 placement rejects missing provenance unsupported matrices and collapsed native topology" classname="B02 placement rejects missing provenance unsupported matrices and collapsed native topology" time="0.00770721" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;Placement"/>
+		</properties>
+		<system-out>Filters: "B02 placement rejects missing provenance unsupported matrices and collapsed native topology"
+Randomness seeded to: 3098969887
+===============================================================================
+All tests passed (47 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 file capture refuses special paths missing units and oversized input" classname="B02 file capture refuses special paths missing units and oversized input" time="0.00842454" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;SourceFile"/>
+		</properties>
+		<system-out>Filters: "B02 file capture refuses special paths missing units and oversized input"
+Randomness seeded to: 804142193
+===============================================================================
+All tests passed (14 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="VOL-01 XY integral preserves volume on sloped surfaces without a second correction" classname="VOL-01 XY integral preserves volume on sloped surfaces without a second correction" time="0.00580529" status="run">
+		<properties>
+			<property name="cmake_labels" value="Nonplanar;VOL-01"/>
+		</properties>
+		<system-out>Filters: "VOL-01 XY integral preserves volume on sloped surfaces without a second correction"
+Randomness seeded to: 529031452
+===============================================================================
+All tests passed (7 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="PRF-01 complete synthetic scene is usable only for simulation" classname="PRF-01 complete synthetic scene is usable only for simulation" time="0.00553742" status="run">
+		<properties>
+			<property name="cmake_labels" value="A07;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "PRF-01 complete synthetic scene is usable only for simulation"
+Randomness seeded to: 1948822851
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 file capture freezes timeout options and rechecks revision after hashing" classname="B02 file capture freezes timeout options and rechecks revision after hashing" time="0.0119391" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;SourceFile"/>
+		</properties>
+		<system-out>Filters: "B02 file capture freezes timeout options and rechecks revision after hashing"
+Randomness seeded to: 1149816749
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 source capture cancellation staleness deadline and callback failure discard partial bytes" classname="B02 source capture cancellation staleness deadline and callback failure discard partial bytes" time="0.0122103" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;SourceFile"/>
+		</properties>
+		<system-out>Filters: "B02 source capture cancellation staleness deadline and callback failure discard partial bytes"
+Randomness seeded to: 2597730116
+===============================================================================
+All tests passed (9 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-08 malformed geometry and numeric environment fail closed" classname="GEO-08 malformed geometry and numeric environment fail closed" time="0.005903" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-08;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-08 malformed geometry and numeric environment fail closed"
+Randomness seeded to: 1392896123
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 caller mutation cannot replace the captured STL during callbacks" classname="B02 caller mutation cannot replace the captured STL during callbacks" time="0.00616246" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;StlImport"/>
+		</properties>
+		<system-out>Filters: "B02 caller mutation cannot replace the captured STL during callbacks"
+Randomness seeded to: 983825944
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 placement propagates source uncertainty through nonuniform scale without double counting" classname="B02 placement propagates source uncertainty through nonuniform scale without double counting" time="0.00716517" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;Placement"/>
+		</properties>
+		<system-out>Filters: "B02 placement propagates source uncertainty through nonuniform scale without double counting"
+Randomness seeded to: 3642880773
+===============================================================================
+All tests passed (11 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 nested native STL imports retain metadata belonging to each file" classname="B02 nested native STL imports retain metadata belonging to each file" time="0.00653817" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;stl"/>
+		</properties>
+		<system-out>Filters: "B02 nested native STL imports retain metadata belonging to each file"
+Randomness seeded to: 1246470302
+===============================================================================
+All tests passed (25 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-09 continuous annulus sweep detects a sphere between free endpoints" classname="GEO-09 continuous annulus sweep detects a sphere between free endpoints" time="0.00556933" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-09;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-09 continuous annulus sweep detects a sphere between free endpoints"
+Randomness seeded to: 3031158422
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 placement owns callback inputs and cannot accept cancelled stale or late work" classname="B02 placement owns callback inputs and cannot accept cancelled stale or late work" time="0.0140401" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;Placement"/>
+		</properties>
+		<system-out>Filters: "B02 placement owns callback inputs and cannot accept cancelled stale or late work"
+Randomness seeded to: 135888475
+===============================================================================
+All tests passed (19 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 closed connected bowtie prism is rejected for self intersection" classname="B02 closed connected bowtie prism is rejected for self intersection" time="0.00585204" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;MeshAudit;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B02 closed connected bowtie prism is rejected for self intersection"
+Randomness seeded to: 3608106511
+===============================================================================
+All tests passed (5 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 native repair comparison preserves oriented triangle multisets" classname="B02 native repair comparison preserves oriented triangle multisets" time="0.00547046" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;StlImport"/>
+		</properties>
+		<system-out>Filters: "B02 native repair comparison preserves oriented triangle multisets"
+Randomness seeded to: 3839905092
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="A07 analytic Minkowski bounds include uncertainty at coverage boundaries" classname="A07 analytic Minkowski bounds include uncertainty at coverage boundaries" time="0.00528046" status="run">
+		<properties>
+			<property name="cmake_labels" value="A07;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "A07 analytic Minkowski bounds include uncertainty at coverage boundaries"
+Randomness seeded to: 697044539
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 callback cannot relax captured geometry or import limits" classname="B02 callback cannot relax captured geometry or import limits" time="0.00583438" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;LimitSnapshot;Nonplanar;StlImport"/>
+		</properties>
+		<system-out>Filters: "B02 callback cannot relax captured geometry or import limits"
+Randomness seeded to: 1018077004
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 worker rejects malformed source units and exceeded observed memory budget" classname="B02 worker rejects malformed source units and exceeded observed memory budget" time="0.0208131" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;Worker"/>
+		</properties>
+		<system-out>Filters: "B02 worker rejects malformed source units and exceeded observed memory budget"
+Randomness seeded to: 1749789019
+===============================================================================
+All tests passed (8 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-04 translation reversal and envelope growth preserve clearance decisions" classname="GEO-04 translation reversal and envelope growth preserve clearance decisions" time="0.00566379" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-04;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-04 translation reversal and envelope growth preserve clearance decisions"
+Randomness seeded to: 2995518111
+===============================================================================
+All tests passed (7 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="A07 full head and omitted upper parts must fit declared scene coverage" classname="A07 full head and omitted upper parts must fit declared scene coverage" time="0.00547129" status="run">
+		<properties>
+			<property name="cmake_labels" value="A07;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "A07 full head and omitted upper parts must fit declared scene coverage"
+Randomness seeded to: 2538696068
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="VOL-01 invalid deposition dimensions reject instead of producing volume" classname="VOL-01 invalid deposition dimensions reject instead of producing volume" time="0.00556475" status="run">
+		<properties>
+			<property name="cmake_labels" value="Nonplanar;VOL-01"/>
+		</properties>
+		<system-out>Filters: "VOL-01 invalid deposition dimensions reject instead of producing volume"
+Randomness seeded to: 3064093653
+===============================================================================
+All tests passed (7 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales" classname="ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales" time="0.00530817" status="run">
+		<properties>
+			<property name="cmake_labels" value="Nonplanar;ORC-05"/>
+		</properties>
+		<system-out>Filters: "ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales"
+Randomness seeded to: 52493887
+===============================================================================
+All tests passed (2012 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 native worker binds geometry to the immutable source and revision" classname="B02 native worker binds geometry to the immutable source and revision" time="0.0131325" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;Worker"/>
+		</properties>
+		<system-out>Filters: "B02 native worker binds geometry to the immutable source and revision"
+Randomness seeded to: 3124631493
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="A07 malformed versions identities chronology and numeric state fail closed" classname="A07 malformed versions identities chronology and numeric state fail closed" time="0.00569871" status="run">
+		<properties>
+			<property name="cmake_labels" value="A07;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "A07 malformed versions identities chronology and numeric state fail closed"
+Randomness seeded to: 2793719863
+===============================================================================
+All tests passed (8 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="VOL-02 vertical and normal gaps obey independent plane distance" classname="VOL-02 vertical and normal gaps obey independent plane distance" time="0.00560133" status="run">
+		<properties>
+			<property name="cmake_labels" value="Nonplanar;VOL-02"/>
+		</properties>
+		<system-out>Filters: "VOL-02 vertical and normal gaps obey independent plane distance"
+Randomness seeded to: 4214296046
+===============================================================================
+All tests passed (5 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 worker failure invalid protocol wrong identity and oversized reports fail closed" classname="B02 worker failure invalid protocol wrong identity and oversized reports fail closed" time="0.937496" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;Worker"/>
+		</properties>
+		<system-out>Filters: "B02 worker failure invalid protocol wrong identity and oversized reports fail closed"
+Randomness seeded to: 2031247906
+===============================================================================
+All tests passed (21 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-04 continuous sweep catches a wall between free endpoints" classname="GEO-04 continuous sweep catches a wall between free endpoints" time="0.0127495" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-04;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-04 continuous sweep catches a wall between free endpoints"
+Randomness seeded to: 2693624937
+===============================================================================
+All tests passed (14 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 separate and overlapping closed shells are not silently united" classname="B02 separate and overlapping closed shells are not silently united" time="0.009191" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;MeshAudit;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "B02 separate and overlapping closed shells are not silently united"
+Randomness seeded to: 1089637370
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-07 uncertain clearance never passes at the boundary" classname="GEO-07 uncertain clearance never passes at the boundary" time="0.00836733" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-07;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-07 uncertain clearance never passes at the boundary"
+Randomness seeded to: 960863762
+===============================================================================
+All tests passed (33 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 native placement preserves the imported source and proves affine block volume and bounds" classname="B02 native placement preserves the imported source and proves affine block volume and bounds" time="0.00960454" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;Placement"/>
+		</properties>
+		<system-out>Filters: "B02 native placement preserves the imported source and proves affine block volume and bounds"
+Randomness seeded to: 1261643862
+===============================================================================
+All tests passed (16 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-04 bounded subdivision proves a diagonal sweep clear" classname="GEO-04 bounded subdivision proves a diagonal sweep clear" time="0.00728271" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-04;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-04 bounded subdivision proves a diagonal sweep clear"
+Randomness seeded to: 3172210983
+===============================================================================
+All tests passed (8 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="GEO-02 finite outer tip uses full plane gradient" classname="GEO-02 finite outer tip uses full plane gradient" time="0.0069635" status="run">
+		<properties>
+			<property name="cmake_labels" value="GEO-02;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "GEO-02 finite outer tip uses full plane gradient"
+Randomness seeded to: 211557184
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="B02 file capture rejects observed mutation and pathname replacement during reading" classname="B02 file capture rejects observed mutation and pathname replacement during reading" time="0.00813092" status="run">
+		<properties>
+			<property name="cmake_labels" value="B02;Nonplanar;SourceFile"/>
+		</properties>
+		<system-out>Filters: "B02 file capture rejects observed mutation and pathname replacement during reading"
+Randomness seeded to: 1366165451
+===============================================================================
+All tests passed (9 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Numeric budgets charge each component and reject missing invalid or exceeded bounds" classname="Numeric budgets charge each component and reject missing invalid or exceeded bounds" time="0.00676383" status="run">
+		<properties>
+			<property name="cmake_labels" value="IR;Nonplanar"/>
+		</properties>
+		<system-out>Filters: "Numeric budgets charge each component and reject missing invalid or exceeded bounds"
+Randomness seeded to: 2448956290
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+</testsuite>

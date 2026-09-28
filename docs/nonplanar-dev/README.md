@@ -96,8 +96,9 @@ record bounded STL metadata, parsed geometry checks and immutable source-byte
 provenance. `B02-error.md` adds bounded decimal conversion error; `B02-worker.md`
 adds supervised native analysis bound to source bytes and revision. `B02-file.md`
 adds bounded source-file capture and the actual native diagnostic CLI. Latest
-selected CTest executes 119/119; all ten CLI cases pass expected outcomes. The six
-B02-snapshot OFF/ZAA comparisons pass. Hard memory/I/O containment, model transforms,
+selected CTest executes 125/125 after the native placement-bound addition
+(`B02-placement.md`, ADR-0012); all ten CLI cases pass expected outcomes. The six
+B02-snapshot OFF/ZAA comparisons pass. Hard memory/I/O containment, native Model/plate transform provenance,
 the full job error budget, whole-job snapshots and a successful hybrid pipeline
 remain unimplemented. Gate A still
 requires independent review; digital coupon preparation is not physical proof.

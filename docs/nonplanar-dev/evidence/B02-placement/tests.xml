@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="110" hostname="tbd" time="0.012" timestamp="2026-09-28T11:57:47Z">
+    <properties>
+      <property name="random-seed" value="2656489000"/>
+      <property name="filters" value="[Placement]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B02 placement bounds actual native float rounding and enforces the measured allowance" time="0.002" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 placement propagates source uncertainty through nonuniform scale without double counting" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 native placement preserves the imported source and proves affine block volume and bounds" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 placement detects an unsupported arithmetic mode introduced by a callback" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 placement rejects missing provenance unsupported matrices and collapsed native topology" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 placement owns callback inputs and cannot accept cancelled stale or late work" time="0.007" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
