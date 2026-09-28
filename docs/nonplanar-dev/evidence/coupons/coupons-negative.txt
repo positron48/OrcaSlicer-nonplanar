@@ -1,0 +1,8 @@
+Truncated STL under python -O: exit 1
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/validate_coupons.py", line 25, in <module>
+    check(len(payload) == 84+50*count)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/validate_coupons.py", line 14, in check
+    raise ValueError("coupon geometry validation failed")
+ValueError: coupon geometry validation failed
