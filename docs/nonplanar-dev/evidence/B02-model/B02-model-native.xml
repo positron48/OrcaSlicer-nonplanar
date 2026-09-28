@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="227" hostname="tbd" time="0.017" timestamp="2026-09-28T13:52:56Z">
+    <properties>
+      <property name="random-seed" value="2937049640"/>
+      <property name="filters" value="[Placement],[Centering],[ModelPlacement]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B02 native placement preserves the imported source and proves affine block volume and bounds" time="0.002" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 model placement reproduces native volume then instance geometry in an explicit plate frame" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 actual native STL to ModelVolume path matches the captured original source" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 centered source capture rejects altered geometry offsets units and volume roles" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 placement propagates source uncertainty through nonuniform scale without double counting" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 model placement propagates prior error through every native stage" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 placement owns callback inputs and cannot accept cancelled stale or late work" time="0.007" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 centered volume is frozen before callbacks and stale results cannot accept geometry" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 placement bounds actual native float rounding and enforces the measured allowance" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 model placement rejects ambiguous selection and unsupported native transforms" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 centered native volume retains source provenance and independent rounding allowance" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 placement rejects missing provenance unsupported matrices and collapsed native topology" time="0.002" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 model placement freezes matrices frame and source before callbacks" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 placement detects an unsupported arithmetic mode introduced by a callback" time="0.001" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

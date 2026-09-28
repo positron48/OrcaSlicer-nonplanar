@@ -121,6 +121,99 @@ TEST_CASE("B02 actual native STL to ModelVolume path matches the captured origin
     source.source_error_upper_mm.reset();
     REQUIRE(capture_centered_volume(source,*volume,1).geometry.reason=="MISSING_IMPORT_PROVENANCE");
 }
+TEST_CASE("B02 model placement reproduces native volume then instance geometry in an explicit plate frame", "[Nonplanar][B02][ModelPlacement]")
+{
+    const auto cube=make_cube(20,10,2);
+    const auto source=import_stl_snapshot(binary_stl(cube),true);
+    Model model; auto *object=model.add_object("source","",cube);
+    object->volumes.front()->scale(Vec3d(2,1,1));
+    auto *instance=object->add_instance();
+    instance->set_offset(Vec3d(100,80,3));
+    instance->set_rotation(Vec3d(0,0,0.3));
+    instance->set_scaling_factor(Vec3d(2,3,1));
+    const PlateFrame plate{7,Vec3d(50,40,0)};
+    auto expected=model.mesh();
+    Transform3d world_to_plate=Transform3d::Identity(); world_to_plate.translation()=-plate.world_origin_mm;
+    expected.transform(world_to_plate,false);
+    const auto result=capture_model_placement(source,model,plate,21);
+    INFO(result.geometry.reason);
+    REQUIRE(result.geometry.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(result.snapshot);
+    REQUIRE(result.snapshot->centered->revision==21);
+    REQUIRE(result.snapshot->plate.index==7);
+    REQUIRE(result.snapshot->volume_to_object.matrix()==object->volumes.front()->get_matrix().matrix());
+    REQUIRE(result.snapshot->instance_to_world.matrix()==instance->get_matrix().matrix());
+    REQUIRE(same_oriented_triangles(result.geometry.normalized->its,expected.its));
+    REQUIRE(result.total_error_upper_mm);
+    REQUIRE(*result.total_error_upper_mm<1e-4);
+    REQUIRE(result.native_transform_errors_upper_mm);
+    REQUIRE(result.centering_error_upper_mm);
+}
+TEST_CASE("B02 model placement propagates prior error through every native stage", "[Nonplanar][B02][ModelPlacement]")
+{
+    const auto cube=make_cube(20,10,2);
+    auto source=import_stl_snapshot(binary_stl(cube),true);
+    source.source_error_upper_mm=0.0001;
+    Model model; auto *object=model.add_object("source","",cube);
+    object->volumes.front()->scale(2);
+    auto *instance=object->add_instance(); instance->set_scaling_factor(Vec3d(3,3,3));
+    const auto result=capture_model_placement(source,model,PlateFrame{},1);
+    INFO(result.geometry.reason);
+    REQUIRE(result.geometry.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(*result.total_error_upper_mm>=0.0006);
+    REQUIRE(*result.total_error_upper_mm<0.00060000001);
+    MeshPlacementLimits limits; limits.max_error_upper_mm=0.0003;
+    const auto refused=capture_model_placement(source,model,PlateFrame{},1,limits);
+    REQUIRE(refused.geometry.status!=MeshAuditStatus::ValidGeometry);
+    REQUIRE_FALSE(refused.geometry.normalized);
+    REQUIRE_FALSE(refused.total_error_upper_mm);
+}
+TEST_CASE("B02 model placement rejects ambiguous selection and unsupported native transforms", "[Nonplanar][B02][ModelPlacement]")
+{
+    const auto cube=make_cube(20,10,2);
+    const auto source=import_stl_snapshot(binary_stl(cube),true);
+    for (int mutation=0; mutation<8; ++mutation) {
+        INFO(mutation);
+        Model model; auto *object=model.add_object("source","",cube);
+        auto *instance=object->add_instance(); PlateFrame plate;
+        if (mutation==0) model.add_object("other","",cube);
+        if (mutation==1) object->add_volume(cube);
+        if (mutation==2) object->add_instance();
+        if (mutation==3) object->clear_instances();
+        if (mutation==4) instance->printable=false;
+        if (mutation==5) instance->set_scaling_factor(Vec3d(0,1,1));
+        if (mutation==6) object->volumes.front()->mirror(X);
+        if (mutation==7) plate.world_origin_mm.x()=std::numeric_limits<double>::quiet_NaN();
+        const auto result=capture_model_placement(source,model,plate,1);
+        REQUIRE(result.geometry.status!=MeshAuditStatus::ValidGeometry);
+        REQUIRE_FALSE(result.geometry.normalized);
+        REQUIRE_FALSE(result.total_error_upper_mm);
+    }
+}
+TEST_CASE("B02 model placement freezes matrices frame and source before callbacks", "[Nonplanar][B02][ModelPlacement]")
+{
+    const auto cube=make_cube(20,10,2);
+    auto source=import_stl_snapshot(binary_stl(cube),true);
+    Model model; auto *object=model.add_object("source","",cube); object->add_instance();
+    const auto expected=model.mesh(); PlateFrame plate;
+    MeshPlacementLimits limits;
+    limits.geometry.cancelled=[&] {
+        model.clear_objects(); source.geometry={}; plate.world_origin_mm=Vec3d(999,999,999);
+        limits.max_error_upper_mm=-1; return false;
+    };
+    const auto result=capture_model_placement(source,model,plate,11,limits);
+    INFO(result.geometry.reason);
+    REQUIRE(result.geometry.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(result.snapshot->plate.world_origin_mm==Vec3d::Zero());
+    REQUIRE(same_oriented_triangles(result.geometry.normalized->its,expected.its));
+    Model stable; stable.add_object("source","",cube)->add_instance();
+    source=import_stl_snapshot(binary_stl(cube),true); plate={}; limits={};
+    int polls=0; limits.is_current=[&](uint64_t) { return ++polls<40; };
+    const auto stale=capture_model_placement(source,stable,plate,11,limits);
+    REQUIRE(stale.geometry.status!=MeshAuditStatus::ValidGeometry);
+    REQUIRE_FALSE(stale.geometry.normalized);
+    REQUIRE_FALSE(stale.total_error_upper_mm);
+}
 TEST_CASE("B02 centered source capture rejects altered geometry offsets units and volume roles", "[Nonplanar][B02][Centering]")
 {
     const auto cube=make_cube(20,10,2);

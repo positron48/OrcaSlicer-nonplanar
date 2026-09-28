@@ -102,11 +102,10 @@ Interval determinant(const Transform3d &matrix)
            m(0,1)*(m(1,0)*m(2,2)-m(1,2)*m(2,0))+
            m(0,2)*(m(1,0)*m(2,1)-m(1,1)*m(2,0));
 }
-}
-MeshPlacementResult place_imported_mesh(const StlImportResult &requested_source, const Transform3d &requested_matrix,
-                                        uint64_t revision, const MeshPlacementLimits &requested_limits)
+MeshPlacementResult place_source_geometry(std::shared_ptr<const StlSourceSnapshot> source, MeshAuditResult input_geometry,
+                                          std::optional<double> source_error, const Transform3d &requested_matrix,
+                                          uint64_t revision, const MeshPlacementLimits &requested_limits)
 {
-    const auto source=requested_source;
     const auto matrix=requested_matrix;
     const auto limits=requested_limits;
     MeshPlacementResult result;
@@ -124,12 +123,12 @@ MeshPlacementResult place_imported_mesh(const StlImportResult &requested_source,
             limits.max_error_upper_mm<0 || limits.max_error_upper_mm>0.05) {
             result.geometry.reason="INVALID_PLACEMENT_LIMITS"; return result;
         }
-        if (!source.source || !source.source->millimeters_declared || !source.native_geometry_unchanged ||
-            source.geometry.status!=MeshAuditStatus::ValidGeometry || !source.geometry.normalized ||
-            !source.source_error_upper_mm || !std::isfinite(*source.source_error_upper_mm) || *source.source_error_upper_mm<0) {
+        if (!source || !source->millimeters_declared ||
+            input_geometry.status!=MeshAuditStatus::ValidGeometry || !input_geometry.normalized ||
+            !source_error || !std::isfinite(*source_error) || *source_error<0) {
             result.geometry.reason="MISSING_IMPORT_PROVENANCE"; return result;
         }
-        const auto &input=*source.geometry.normalized;
+        const auto &input=*input_geometry.normalized;
         if (input.its.vertices.size()>limits.geometry.max_vertices || input.its.indices.size()>limits.geometry.max_faces) {
             result.geometry.reason="RESOURCE_LIMIT"; return result;
         }
@@ -142,10 +141,10 @@ MeshPlacementResult place_imported_mesh(const StlImportResult &requested_source,
             result.geometry.reason="UNSUPPORTED_OR_UNRESOLVED_AFFINE_MAP"; return result;
         }
         result.snapshot=std::make_shared<const MeshPlacementSnapshot>(MeshPlacementSnapshot{
-            source.source,source.geometry.normalized,matrix,revision});
+            source,input_geometry.normalized,matrix,revision});
         if (stop()) return result;
-        const double imported=*source.source_error_upper_mm==0 ? 0 :
-            (Interval(*source.source_error_upper_mm)*Interval(matrix_norm_upper(matrix))).hi;
+        const double imported=*source_error==0 ? 0 :
+            (Interval(*source_error)*Interval(matrix_norm_upper(matrix))).hi;
         if (imported>limits.max_error_upper_mm) { result.geometry.reason="PLACEMENT_ERROR_BUDGET"; return result; }
         TriangleMesh placed(input);
         placed.transform(matrix,false);
@@ -177,6 +176,83 @@ MeshPlacementResult place_imported_mesh(const StlImportResult &requested_source,
         result.total_error_upper_mm=total;
     } catch (const std::exception &) {
         result.geometry={}; result.geometry.reason="PLACEMENT_EXCEPTION";
+    }
+    return result;
+}
+}
+
+MeshPlacementResult place_imported_mesh(const StlImportResult &source, const Transform3d &matrix,
+                                        uint64_t revision, const MeshPlacementLimits &limits)
+{
+    if (!source.native_geometry_unchanged) {
+        MeshPlacementResult result; result.geometry.reason="MISSING_IMPORT_PROVENANCE"; return result;
+    }
+    return place_source_geometry(source.source,source.geometry,source.source_error_upper_mm,matrix,revision,limits);
+}
+
+ModelPlacementResult capture_model_placement(const StlImportResult &requested_source, const Model &model,
+                                             const PlateFrame &requested_plate, uint64_t revision,
+                                             const MeshPlacementLimits &requested_limits)
+{
+    const auto source=requested_source;
+    const auto plate=requested_plate;
+    const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    ModelPlacementResult result;
+    auto stop=[&] {
+        if (limits.geometry.cancelled && limits.geometry.cancelled()) { result.geometry.reason="CANCELLED"; return true; }
+        if (limits.is_current && !limits.is_current(revision)) { result.geometry.reason="STALE_REVISION"; return true; }
+        detail::require_interval_environment();
+        if (std::chrono::steady_clock::now()-started>=limits.geometry.timeout) { result.geometry.reason="DEADLINE"; return true; }
+        return false;
+    };
+    const auto remaining_limits=[&] {
+        auto remaining=limits;
+        remaining.geometry.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        return remaining;
+    };
+    try {
+        detail::require_interval_environment();
+        if (model.objects.size()!=1 || !model.objects.front() || !model.objects.front()->printable ||
+            model.objects.front()->volumes.size()!=1 || !model.objects.front()->volumes.front() ||
+            model.objects.front()->instances.size()!=1 || !model.objects.front()->instances.front() ||
+            !model.objects.front()->instances.front()->is_printable()) {
+            result.geometry.reason="REQUIRES_ONE_PRINTABLE_OBJECT_VOLUME_INSTANCE"; return result;
+        }
+        if (!plate.world_origin_mm.allFinite() || plate.world_origin_mm.cwiseAbs().maxCoeff()>10000) {
+            result.geometry.reason="PLATE_FRAME_DOMAIN"; return result;
+        }
+        const auto *object=model.objects.front();
+        const auto *volume=object->volumes.front();
+        const Transform3d volume_matrix=volume->get_matrix(), instance_matrix=object->instances.front()->get_matrix();
+        // Capture matrices before the centering helper's first callback. That
+        // helper owns the mesh before any callback may mutate/delete the Model.
+        const auto centered=capture_centered_volume(source,*volume,revision,remaining_limits());
+        if (centered.geometry.status!=MeshAuditStatus::ValidGeometry) { result.geometry=centered.geometry; return result; }
+        result.snapshot=std::make_shared<const ModelPlacementSnapshot>(ModelPlacementSnapshot{
+            centered.snapshot,volume_matrix,instance_matrix,plate});
+        Transform3d world_to_plate=Transform3d::Identity(); world_to_plate.translation()=-plate.world_origin_mm;
+        const std::array<Transform3d,3> matrices{volume_matrix,instance_matrix,world_to_plate};
+        auto geometry=centered.geometry;
+        auto error=centered.total_error_upper_mm;
+        std::array<double,3> roundings{};
+        for (size_t stage=0; stage<matrices.size(); ++stage) {
+            if (stop()) return result;
+            // Match ModelObject::raw_mesh then ModelInstance::transform_mesh:
+            // separate native binary32 writes, not a fused double matrix.
+            auto placed=place_source_geometry(source.source,geometry,error,matrices[stage],revision,remaining_limits());
+            if (placed.geometry.status!=MeshAuditStatus::ValidGeometry) { result.geometry=std::move(placed.geometry); return result; }
+            geometry=std::move(placed.geometry);
+            error=placed.total_error_upper_mm;
+            roundings[stage]=*placed.native_transform_error_upper_mm;
+        }
+        if (stop()) return result;
+        result.geometry=std::move(geometry);
+        result.centering_error_upper_mm=centered.centering_error_upper_mm;
+        result.native_transform_errors_upper_mm=roundings;
+        result.total_error_upper_mm=error;
+    } catch (const std::exception &) {
+        result.geometry={}; result.geometry.reason="MODEL_PLACEMENT_EXCEPTION";
     }
     return result;
 }

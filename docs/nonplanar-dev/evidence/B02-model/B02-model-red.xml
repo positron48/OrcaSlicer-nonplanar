@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="3" skipped="0" tests="27" hostname="tbd" time="0.003" timestamp="2026-09-28T13:51:44Z">
+    <properties>
+      <property name="random-seed" value="2379004893"/>
+      <property name="filters" value="[ModelPlacement]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B02 model placement reproduces native volume then instance geometry in an explicit plate frame" time="0.000" status="run">
+      <failure message="result.geometry.status==MeshAuditStatus::ValidGeometry" type="REQUIRE">
+FAILED:
+  REQUIRE( result.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  2 == 0
+
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:140
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B02 model placement rejects ambiguous selection and unsupported native transforms" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 model placement freezes matrices frame and source before callbacks" time="0.000" status="run">
+      <failure message="result.geometry.status==MeshAuditStatus::ValidGeometry" type="REQUIRE">
+FAILED:
+  REQUIRE( result.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  2 == 0
+
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:206
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B02 model placement propagates prior error through every native stage" time="0.000" status="run">
+      <failure message="result.geometry.status==MeshAuditStatus::ValidGeometry" type="REQUIRE">
+FAILED:
+  REQUIRE( result.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  2 == 0
+
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:162
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

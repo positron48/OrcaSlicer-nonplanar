@@ -143,3 +143,8 @@ overrides while preserving OFF inputs. Twenty-six B01 cases/2940 assertions,
 its STL source after centering, including an independent rounding-error oracle.
 Four cases/70 assertions, 149/149 selected CTest and six fresh OFF/ZAA comparisons
 pass. The remaining transform chain and whole-job integration are still open.
+
+`B02-model.md` and ADR-0015 add sequential native Model transform capture and
+error propagation. Fourteen placement/centering/model cases/227 assertions,
+153/153 selected CTest and six fresh OFF/ZAA comparisons pass. GUI plate binding,
+whole-job/worker integration and the hybrid pipeline remain open.
