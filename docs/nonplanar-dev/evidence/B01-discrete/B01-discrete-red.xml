@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="20" skipped="0" tests="25" hostname="tbd" time="0.013" timestamp="2026-09-28T13:17:19Z">
+    <properties>
+      <property name="random-seed" value="2356239394"/>
+      <property name="filters" value="[B01Discrete]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B01 mode routing rejects a non-string OFF or guarded-mode lookalike" time="0.002" status="run">
+      <failure message="requests_guarded_mode(config)" type="CHECK">
+FAILED:
+  CHECK( requests_guarded_mode(config) )
+with expansion:
+  false
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:104
+      </failure>
+      <failure message="policy.mode == Mode::Invalid" type="CHECK">
+FAILED:
+  CHECK( policy.mode == Mode::Invalid )
+with expansion:
+  0 == 3
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:106
+      </failure>
+      <failure message="policy.mode == Mode::Invalid" type="CHECK">
+FAILED:
+  CHECK( policy.mode == Mode::Invalid )
+with expansion:
+  1 == 3
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:106
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:107
+      </failure>
+      <failure message="policy.mode == Mode::Invalid" type="CHECK">
+FAILED:
+  CHECK( policy.mode == Mode::Invalid )
+with expansion:
+  2 == 3
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:106
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:107
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 discrete constraints reject textual substitutes for native settings" time="0.007" status="run">
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+zaa_enabled
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:81
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+spiral_mode
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:81
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+enable_arc_fitting
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:81
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+enable_support
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:81
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+raft_layers
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:81
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+wall_generator
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:81
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+fuzzy_skin
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:81
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+ironing_type
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:81
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+seam_slope_type
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:81
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 discrete enum constraints use native values rather than borrowed labels" time="0.004" status="run">
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+gcode_flavor
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:95
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+wall_generator
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:95
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+fuzzy_skin
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:95
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+ironing_type
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:95
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+seam_slope_type
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:95
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

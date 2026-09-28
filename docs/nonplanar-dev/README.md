@@ -129,3 +129,8 @@ stock executable stayed unchanged. No OS protection bypass was attempted.
 generic enum dictionaries. Nineteen B01 cases/2845 assertions, 138/138 selected
 CTest cases and six fresh OFF/ZAA comparisons pass. Whole-job provenance and
 fingerprints remain pending.
+
+`B01-discrete.md` replaces string equivalence with native type/value rules for
+ten compatibility fields and requires a scalar-string mode. Twenty-three B01
+cases/2906 assertions, 142/142 selected CTest and six fresh OFF/ZAA comparisons
+pass; full compatibility remains open.

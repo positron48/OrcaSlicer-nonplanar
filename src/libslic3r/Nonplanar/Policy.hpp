@@ -11,6 +11,8 @@ bool requests_guarded_mode(const ConfigBase &);
 // Conservatively includes overrides before resolution, for cached publication.
 bool requests_guarded_mode(const Model &, const ConfigBase &);
 enum class Mode { Off, SafeHybrid, StrictNonplanar, Invalid };
+struct DiscreteRule { ConfigOptionType type; int required; const char *label; };
+const std::map<std::string, DiscreteRule> &discrete_policy();
 // Explicit subset of the compatibility registry: no imported code is an
 // approved prologue/epilogue. Post-process lists must contain no entries.
 struct CustomCodeRule { ConfigOptionType type; bool empty_list = false; };

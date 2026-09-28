@@ -68,6 +68,66 @@ TEST_CASE("B01 resolved snapshot owns every native value without a mutable confi
     config=eligible(); config.set_deserialize_strict("nptop_mode","off");
     REQUIRE_FALSE(resolve_policy(config,1,1).native_config.has_value());
 }
+TEST_CASE("B01 discrete constraints reject textual substitutes for native settings", "[Nonplanar][B01][B01Discrete]")
+{
+    REQUIRE(discrete_policy().size() == 10);
+    for (const auto &[key, rule] : discrete_policy()) {
+        REQUIRE(print_config_def.get(key)->type == rule.type);
+        if (rule.type == coEnum) REQUIRE(print_config_def.get(key)->enum_keys_map->at(rule.label) == rule.required);
+    }
+    for (const auto *key : {"zaa_enabled","gcode_flavor","spiral_mode","enable_arc_fitting",
+                           "enable_support","raft_layers","wall_generator","fuzzy_skin",
+                           "ironing_type","seam_slope_type"}) {
+        INFO(key);
+        auto config=eligible();
+        const auto text=config.opt_serialize(key);
+        config.set_key_value(key,new ConfigOptionString(text));
+        const auto policy=resolve_policy(config,1,1);
+        CHECK_FALSE(policy.passes_config_preflight());
+        if (!policy.conflicts.empty()) CHECK(policy.conflicts.front().key == key);
+    }
+}
+TEST_CASE("B01 discrete source and invalid enum values fail without unsafe serialization", "[Nonplanar][B01][B01Discrete]")
+{
+    auto config=eligible();
+    config.set_key_value("fuzzy_skin",new ConfigOptionEnum<FuzzySkinType>(static_cast<FuzzySkinType>(-1)));
+    const auto policy=resolve_policy(config,1,1);
+    REQUIRE_FALSE(policy.passes_config_preflight());
+    REQUIRE(policy.conflicts.front().key == "fuzzy_skin");
+    REQUIRE(policy.conflicts.front().value == "-1");
+    Model model; auto *object=model.add_object();
+    object->config.set_key_value("raft_layers",new ConfigOptionString("0"));
+    const auto conflict=model_policy_conflict(model);
+    REQUIRE(conflict.has_value());
+    REQUIRE(conflict->key == "raft_layers");
+    object->config.set_key_value("raft_layers",new ConfigOptionInt(0));
+    REQUIRE_FALSE(model_policy_conflict(model).has_value());
+}
+TEST_CASE("B01 discrete enum constraints use native values rather than borrowed labels", "[Nonplanar][B01][B01Discrete]")
+{
+    for (const auto *key : {"gcode_flavor","wall_generator","fuzzy_skin","ironing_type","seam_slope_type"}) {
+        INFO(key);
+        auto config=eligible();
+        const auto label=config.opt_serialize(key);
+        const int required=config.option(key)->getInt();
+        t_config_enum_values misleading{{label,required+1}};
+        config.set_key_value(key,new ConfigOptionEnumGeneric(&misleading,required+1));
+        const auto policy=resolve_policy(config,1,1);
+        CHECK_FALSE(policy.passes_config_preflight());
+        if (!policy.conflicts.empty()) CHECK(policy.conflicts.front().key == key);
+    }
+}
+TEST_CASE("B01 mode routing rejects a non-string OFF or guarded-mode lookalike", "[Nonplanar][B01][B01Discrete]")
+{
+    for (const auto *text : {"off","safe_hybrid","strict_nonplanar"}) {
+        auto config=eligible();
+        config.set_key_value("nptop_mode",new ConfigOptionStrings{text});
+        CHECK(requests_guarded_mode(config));
+        const auto policy=resolve_policy(config,1,1);
+        CHECK(policy.mode == Mode::Invalid);
+        CHECK_FALSE(policy.passes_config_preflight());
+    }
+}
 TEST_CASE("B01 resolved snapshot preserves exact numeric nullable and nested values", "[Nonplanar][B01][B01Snapshot]")
 {
     const double precise=std::nextafter(0.2,1.);

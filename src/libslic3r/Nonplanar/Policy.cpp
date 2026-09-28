@@ -45,6 +45,23 @@ const ConfigOption *ResolvedConfigSnapshot::optptr(const t_config_option_key &ke
 
 t_config_option_keys ResolvedConfigSnapshot::keys() const { return m_storage->values.keys(); }
 
+const std::map<std::string, DiscreteRule> &discrete_policy()
+{
+    static const std::map<std::string, DiscreteRule> rules = {
+        {"zaa_enabled", {coBool, 0, "0"}},
+        {"gcode_flavor", {coEnum, gcfKlipper, "klipper"}},
+        {"spiral_mode", {coBool, 0, "0"}},
+        {"enable_arc_fitting", {coBool, 0, "0"}},
+        {"enable_support", {coBool, 0, "0"}},
+        {"raft_layers", {coInt, 0, "0"}},
+        {"wall_generator", {coEnum, int(PerimeterGeneratorType::Classic), "classic"}},
+        {"fuzzy_skin", {coEnum, int(FuzzySkinType::Disabled_fuzzy), "disabled_fuzzy"}},
+        {"ironing_type", {coEnum, int(IroningType::NoIroning), "no ironing"}},
+        {"seam_slope_type", {coEnum, int(SeamScarfType::None), "none"}}
+    };
+    return rules;
+}
+
 const std::map<std::string, CustomCodeRule> &custom_code_policy()
 {
     static const std::map<std::string, CustomCodeRule> rules = {
@@ -80,6 +97,23 @@ const std::map<std::string, NeutralTransformRule> &neutral_transform_policy()
 }
 
 namespace {
+std::optional<PolicyConflict> discrete_conflict(const std::string &key, const ConfigOption *option)
+{
+    const auto rule = discrete_policy().find(key);
+    if (rule == discrete_policy().end()) return {};
+    std::optional<int> value;
+    if (option && option->type() == rule->second.type) {
+        if (const auto *flag = dynamic_cast<const ConfigOptionBool *>(option)) value = flag->value ? 1 : 0;
+        else if (option->type() == coInt || option->type() == coEnum) value = option->getInt();
+    }
+    if (value && *value == rule->second.required) return {};
+    // Do not serialize an unchecked enum: typed native serializers index their
+    // name tables, and generic dictionaries may not match the numeric meaning.
+    const auto actual = value ? std::to_string(*value) : option ?
+        "<wrong-native-type:" + std::to_string(int(option->type())) + ">" : "<missing>";
+    return PolicyConflict{key, actual, std::string("Requires native type and value ") + rule->second.label};
+}
+
 bool is_neutral(double value, double expected)
 {
     static_assert(sizeof(double) == sizeof(uint64_t) && std::numeric_limits<double>::is_iec559);
@@ -163,6 +197,7 @@ std::optional<PolicyConflict> model_policy_conflict(const Model &model)
                                   std::to_string(custom.gcodes.size()), "Custom plate actions are unqualified"};
     const auto inspect = [](const ConfigBase &source) -> std::optional<PolicyConflict> {
         for (const auto &key : source.keys()) {
+            if (auto conflict = discrete_conflict(key, source.option(key))) return conflict;
             if (auto conflict = custom_code_conflict(key, source.option(key))) return conflict;
             if (auto conflict = neutral_transform_conflict(key, source.option(key))) return conflict;
         }
@@ -183,7 +218,8 @@ std::optional<PolicyConflict> model_policy_conflict(const Model &model)
 bool requests_guarded_mode(const ConfigBase &config)
 {
     const auto *option = config.option("nptop_mode");
-    return option && (option->is_nil() || option->serialize() != "off");
+    const auto *mode = dynamic_cast<const ConfigOptionString *>(option);
+    return option && (!mode || option->type() != coString || mode->value != "off");
 }
 
 bool requests_guarded_mode(const Model &model, const ConfigBase &config)
@@ -214,9 +250,13 @@ PolicySnapshot resolve_policy(const ConfigBase &source, size_t objects, size_t i
         resolved.emplace(key, value);
         return value;
     };
-    const auto value = read("nptop_mode");
+    const auto *mode_option = config.option("nptop_mode");
+    const auto *mode_string = dynamic_cast<const ConfigOptionString *>(mode_option);
+    const std::string value = mode_string && mode_option->type() == coString ? mode_string->value :
+        mode_option ? "<wrong-native-type>" : "<missing>";
+    resolved.emplace("nptop_mode", value);
     // Absence is the legacy OFF default. Unknown explicit values fail closed.
-    const Mode mode = value == "off" || config.option("nptop_mode") == nullptr ? Mode::Off :
+    const Mode mode = value == "off" || mode_option == nullptr ? Mode::Off :
         value == "safe_hybrid" ? Mode::SafeHybrid :
         value == "strict_nonplanar" ? Mode::StrictNonplanar : Mode::Invalid;
     if (mode == Mode::Off) return {mode, std::move(resolved), {}, std::nullopt};
@@ -225,17 +265,13 @@ PolicySnapshot resolve_policy(const ConfigBase &source, size_t objects, size_t i
 
     // Bounded configuration preflight. Scene/material/firmware qualification
     // and the remaining trajectory transforms must precede any export gate.
-    const std::pair<const char *, const char *> requirements[] = {
-        {"zaa_enabled", "0"}, {"gcode_flavor", "klipper"},
-        {"spiral_mode", "0"}, {"enable_arc_fitting", "0"},
-        {"enable_support", "0"}, {"raft_layers", "0"},
-        {"wall_generator", "classic"}, {"fuzzy_skin", "disabled_fuzzy"},
-        {"ironing_type", "no ironing"}, {"seam_slope_type", "none"}
-    };
-    for (const auto &requirement : requirements) {
-        const auto actual = read(requirement.first);
-        if (actual != requirement.second)
-            conflicts.push_back({requirement.first, actual, std::string("Requires ") + requirement.second});
+    for (const auto &[key, rule] : discrete_policy()) {
+        if (auto conflict = discrete_conflict(key, config.option(key))) {
+            resolved.emplace(key, conflict->value);
+            conflicts.push_back(std::move(*conflict));
+        } else {
+            resolved.emplace(key, rule.label);
+        }
     }
     for (const auto &entry : neutral_transform_policy()) {
         if (auto conflict = neutral_transform_conflict(entry.first, config.option(entry.first))) {
