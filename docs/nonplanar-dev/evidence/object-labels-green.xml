@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="0" skipped="0" tests="121" hostname="tbd" time="0.107" timestamp="2026-09-28T07:50:41Z">
+    <properties>
+      <property name="random-seed" value="4705"/>
+      <property name="filters" value="[A05],[ObjectLabels]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="INT-03 invalid cells budgets and stale scales stay unknown" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-01 native support is invariant under reversal and explicit translation" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-01 affine footprint and volume use all corners" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-03 uncertainty never creates support or increases nominal volume" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-02 native lower stair support rejects the unchanged upper candidate" time="0.020" status="run">
+      <system-out>
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="INT-01 native reserved body supports an affine first pass" time="0.003" status="run">
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Object labels have stable IDs with exclusion enabled or disabled" time="0.036" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Object labels have stable IDs with exclusion enabled or disabled/exclude_object=0" time="0.047" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Object labels have stable IDs with exclusion enabled or disabled/exclude_object=1" time="0.036" status="run">
+      <system-out>
+st=1, 
+st=2, 
+st=1, 
+st=2,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="INT-02 lower support excludes the bead shoulders endpoints and gaps" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-03 offset mutations recheck gap and volume without auto lifting" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-03 offset mutations recheck gap and volume without auto lifting/offset -0.15" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-03 offset mutations recheck gap and volume without auto lifting/offset 0" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-03 offset mutations recheck gap and volume without auto lifting/offset 0.15" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-02 unsupported native paths cannot masquerade as planar support" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-02 unsupported native paths cannot masquerade as planar support/mutation 0" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-02 unsupported native paths cannot masquerade as planar support/mutation 1" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-02 unsupported native paths cannot masquerade as planar support/mutation 2" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-02 unsupported native paths cannot masquerade as planar support/mutation 3" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-02 unsupported native paths cannot masquerade as planar support/mutation 4" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-02 unsupported native paths cannot masquerade as planar support/mutation 5" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="INT-02 unsupported native paths cannot masquerade as planar support/mutation 6" time="0.000" status="run"/>
+    <system-out>
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=2, 
+st=1, 
+st=2,
+    </system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>

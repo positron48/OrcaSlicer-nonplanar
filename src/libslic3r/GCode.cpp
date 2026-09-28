@@ -2693,7 +2693,10 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
 
     file.write_format("; EXECUTABLE_BLOCK_START\n");
 
-    // SoftFever
+    // Object labels use these IDs even when exclusion commands are disabled.
+    size_t object_id = 0;
+    for (PrintObject *object : print.objects())
+        object->set_id(object_id++);
     if( m_enable_exclude_object)
         file.write(set_object_info(&print));
 
@@ -8069,15 +8072,13 @@ inline std::string polygon_to_string(const Polygon &polygon, Print *print, bool 
     gcode << "]";
     return gcode.str();
 }
-// this function iterator PrintObject and assign a seqential id to each object.
-// this id is used to generate unique object id for each object.
+// Emit exclusion metadata using the IDs assigned before object serialization.
 std::string GCode::set_object_info(Print *print) {
     const auto gflavor = print->config().gcode_flavor.value;
     if (print->is_BBL_printer() ||
         (gflavor != gcfKlipper && gflavor != gcfMarlinLegacy && gflavor != gcfMarlinFirmware && gflavor != gcfRepRapFirmware))
         return "";
     std::ostringstream gcode;
-    size_t object_id = 0;
     // Orca: check if we are in pa calib mode
     if (print->calib_mode() == CalibMode::Calib_PA_Line || print->calib_mode() == CalibMode::Calib_PA_Pattern) {
         BoundingBoxf bbox_bed(print->config().printable_area.values);
@@ -8093,7 +8094,6 @@ std::string GCode::set_object_info(Print *print) {
     } else {
         size_t unique_id = 0;
         for (PrintObject* object : print->objects()) {
-            object->set_id(object_id++);
             size_t inst_id = 0;
             for (PrintInstance& inst : object->instances()) {
                 inst.unique_id = unique_id++;

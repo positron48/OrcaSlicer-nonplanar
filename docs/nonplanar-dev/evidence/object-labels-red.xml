@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="6" hostname="tbd" time="0.050" timestamp="2026-09-28T07:45:56Z">
+    <properties>
+      <property name="random-seed" value="3947743402"/>
+      <property name="filters" value="[ObjectLabels]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="Object labels have stable IDs with exclusion enabled or disabled" time="0.022" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Object labels have stable IDs with exclusion enabled or disabled/exclude_object=0" time="0.028" status="run">
+      <failure message="starts == expected" type="REQUIRE">
+FAILED:
+  REQUIRE( starts == expected )
+with expansion:
+  { "4242" } == { "0", "1" }
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/fff_print/test_printgcode.cpp:279
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Object labels have stable IDs with exclusion enabled or disabled/exclude_object=1" time="0.022" status="run">
+      <system-out>
+st=1, 
+st=2, 
+st=1, 
+st=2,
+      </system-out>
+    </testcase>
+    <system-out>
+st=1, 
+st=2, 
+st=1, 
+st=2,
+    </system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>

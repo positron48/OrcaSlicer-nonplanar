@@ -257,6 +257,36 @@ TEST_CASE("export_gcode writes G-code without a result pointer", "[PrintGCode][e
     REQUIRE_FALSE(gcode.empty());
 }
 
+TEST_CASE("Object labels have stable IDs with exclusion enabled or disabled", "[PrintGCode][ObjectLabels]")
+{
+    for (bool exclude : {false, true}) {
+        DYNAMIC_SECTION("exclude_object=" << exclude) {
+            Print print;
+            print.is_BBL_printer() = false; // supplied by the CLI/GUI owner in production
+            Model model;
+            Test::init_print({make_cube(10,8,1), make_cube(8,10,1)}, print, model, {
+                {"gcode_flavor", "klipper"}, {"gcode_label_objects", true}, {"exclude_object", exclude}
+            });
+            REQUIRE(print.objects().size() == 2);
+            // Force stale IDs deterministically instead of depending on the
+            // allocator contents that exposed the uninitialized member in CLI.
+            for (auto *object : print.objects()) object->set_id(4242);
+            const std::string output = Test::gcode(print);
+            std::set<std::string> starts, ends;
+            const boost::regex labels("; (stop )?printing object [^\\n]+ id:([0-9]+) copy [0-9]+");
+            for (boost::sregex_iterator i(output.begin(), output.end(), labels), end; i != end; ++i)
+                ((*i)[1].matched ? ends : starts).insert((*i)[2].str());
+            const std::set<std::string> expected{"0", "1"};
+            REQUIRE(starts == expected);
+            REQUIRE(ends == expected);
+            const auto command = output.find("\nEXCLUDE_OBJECT_DEFINE ");
+            INFO("exclude config=" << print.config().exclude_object.value << ", BBL=" << print.is_BBL_printer());
+            INFO("command context=" << (command == std::string::npos ? "absent" : output.substr(command,160)));
+            REQUIRE((command != std::string::npos) == exclude);
+        }
+    }
+}
+
 TEST_CASE("Initial layer height is honored", "[PrintGCode]")
 {
     const std::string gcode = Slic3r::Test::slice({TestMesh::cube_20x20x20}, {
