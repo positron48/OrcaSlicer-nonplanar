@@ -1,0 +1,21 @@
+{
+  "base_commit": "9ccff8276f53df24b5a9a5a80d0983c908648002",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/StlFile.cpp",
+  "sha256": {
+    ".github/workflows/nonplanar-native.yml": "8980412cb41b8d299b0d4de5b0dd48e48f381a9b63723595a328dd6bf689d6bc",
+    "src/libslic3r/CMakeLists.txt": "4d07e6a2d6bd93c9d5530f02f8ec9388cf6ad69b5589cab1e05e568ce55c302b",
+    "src/libslic3r/Nonplanar/StlFile.cpp": "becec4700fe93ca010e2013ad81d15ad2a5c72d60b18a55263575c74a746a85c",
+    "src/libslic3r/Nonplanar/StlFile.hpp": "c9a92c7a7ae6a3d0e94122c41e7428292c6352ac7760a7691905b1ad005e008b",
+    "src/nonplanar_import/CMakeLists.txt": "2c4585afeae69cd1f8c6a8bc69404eeff3bf8e2546b3360b7fe92d016ec7db77",
+    "src/nonplanar_import/audit.cpp": "d197f9e0234b9c52ee3ee17db0d84e51a3c8c16f95216bb13695b26fdbd7ad68",
+    "tests/nonplanar/CMakeLists.txt": "39205bf64112387a41d9a8a09b8ac40f7cc7a8fa5be23b93c6e710b47cde4e2d",
+    "tests/nonplanar/test_stl_file.cpp": "37d3528d388bd1bfdf8d5a9e0ad832c9cbe1583c83002ce372df68fb5cf113ac",
+    "scripts/nonplanar/validate_stl_audit_cli.py": "7e78c931da3d61bd9085101e62346c39180b29d6c2d9d23863d1678bf63a3731"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/nonplanar_import/Release/nonplanar_import_worker": "142ede9cc7da56483929d0586da30e250fa517cf0bee333f889ffdfe4c37db70",
+    "build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit": "73570512dc174581f69677d7b8d173ce16a95c3a663fa673bfe6ef8cf33138cf",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "dd678571078ec86da3d331068a5d13986186d765c0ba1111dc28613556b5f3db",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "2b62b35af2793244e752ad1ddc11c139f1a161f606353bd02eefb4afe97364af"
+  }
+}

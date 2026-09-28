@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/validate_stl_audit_cli.py", line 75, in <module>
+    print(json.dumps(validate(args.executable, args.output_dir), indent=2))
+                     ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/validate_stl_audit_cli.py", line 41, in validate
+    report = run(name, ["--millimeters", source], 0, "VALID_GEOMETRY")
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/validate_stl_audit_cli.py", line 25, in run
+    assert completed.returncode == code, record
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'case': 'shallow_sphere', 'command': ['/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_stl_audit', '--millimeters', '/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/shallow_sphere.stl'], 'exit_code': 2}

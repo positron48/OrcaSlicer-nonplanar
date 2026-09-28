@@ -35,6 +35,8 @@ set(lisbslic3r_sources
     Nonplanar/StlImportError.hpp
     Nonplanar/StlWorker.cpp
     Nonplanar/StlWorker.hpp
+    Nonplanar/StlFile.cpp
+    Nonplanar/StlFile.hpp
     Nonplanar/Contracts.cpp
     Nonplanar/Contracts.hpp
     Nonplanar/Collision.cpp

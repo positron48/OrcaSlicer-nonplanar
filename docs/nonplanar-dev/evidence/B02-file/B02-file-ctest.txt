@@ -1,0 +1,417 @@
+Test project /Users/antonfilatov/www/my/orca-nonplanar/build/arm64
+        Start 136: ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z
+  1/119 Test #136: ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z ............................   Passed    0.03 sec
+        Start 137: Scenario: TriangleMesh: split functionality.
+  2/119 Test #137: Scenario: TriangleMesh: split functionality. .............................................................   Passed    0.03 sec
+        Start 138: Scenario: Model construction
+  3/119 Test #138: Scenario: Model construction .............................................................................   Passed    0.07 sec
+        Start 139: GCD-01 replay exposes XYZ E feed and rounding mutations
+  4/119 Test #139: GCD-01 replay exposes XYZ E feed and rounding mutations ..................................................   Passed    0.03 sec
+        Start 140: Object labels have stable IDs with exclusion enabled or disabled
+  5/119 Test #140: Object labels have stable IDs with exclusion enabled or disabled .........................................   Passed    0.07 sec
+        Start 141: Scenario: PrintGCode basic functionality
+  6/119 Test #141: Scenario: PrintGCode basic functionality .................................................................   Passed    1.21 sec
+        Start 142: Filament-change time is attributed to tool-change moves, not extrusion roles
+  7/119 Test #142: Filament-change time is attributed to tool-change moves, not extrusion roles .............................   Passed    0.03 sec
+        Start 143: INT-01 native reserved body supports an affine first pass
+  8/119 Test #143: INT-01 native reserved body supports an affine first pass ................................................   Passed    0.03 sec
+        Start 144: Scenario: Print: Skirt generation
+  9/119 Test #144: Scenario: Print: Skirt generation ........................................................................   Passed    0.04 sec
+        Start 145: Back-to-back tool changes buffer then merge into one tool-change block
+ 10/119 Test #145: Back-to-back tool changes buffer then merge into one tool-change block ...................................   Passed    0.03 sec
+        Start 146: Scenario: TriangleMesh: Mesh merge functions
+ 11/119 Test #146: Scenario: TriangleMesh: Mesh merge functions .............................................................   Passed    0.03 sec
+        Start 147: SupportMaterial: enforced support layers are generated
+ 12/119 Test #147: SupportMaterial: enforced support layers are generated ...................................................   Passed    0.04 sec
+        Start 148: INT-03 uncertainty never creates support or increases nominal volume
+ 13/119 Test #148: INT-03 uncertainty never creates support or increases nominal volume .....................................   Passed    0.03 sec
+        Start 149: A08 serialization rejects feed rounded outside the replay domain
+ 14/119 Test #149: A08 serialization rejects feed rounded outside the replay domain .........................................   Passed    0.03 sec
+        Start 150: Scenario: Skirt and brim generation
+ 15/119 Test #150: Scenario: Skirt and brim generation ......................................................................   Passed    0.16 sec
+        Start 151: GCD-01 parser fails closed on unsupported modal state and grammar
+ 16/119 Test #151: GCD-01 parser fails closed on unsupported modal state and grammar ........................................   Passed    0.03 sec
+        Start 152: Scenario: TriangleMesh: slice behavior.
+ 17/119 Test #152: Scenario: TriangleMesh: slice behavior. ..................................................................   Passed    0.03 sec
+        Start 153: Fill: Pattern Path Length
+ 18/119 Test #153: Fill: Pattern Path Length ................................................................................   Passed    0.03 sec
+        Start 154: Scenario: make_xxx functions produce meshes.
+ 19/119 Test #154: Scenario: make_xxx functions produce meshes. .............................................................   Passed    0.04 sec
+        Start 155: INT-02 lower support excludes the bead shoulders endpoints and gaps
+ 20/119 Test #155: INT-02 lower support excludes the bead shoulders endpoints and gaps ......................................   Passed    0.03 sec
+        Start 156: INT-01 affine footprint and volume use all corners
+ 21/119 Test #156: INT-01 affine footprint and volume use all corners .......................................................   Passed    0.03 sec
+        Start 157: Scenario: TriangleMeshSlicer: Cut behavior.
+ 22/119 Test #157: Scenario: TriangleMeshSlicer: Cut behavior. ..............................................................   Passed    0.03 sec
+        Start 158: Carried-forward tool-change delay reaches the total without polluting roles
+ 23/119 Test #158: Carried-forward tool-change delay reaches the total without polluting roles ..............................   Passed    0.03 sec
+        Start 159: export_gcode writes G-code without a result pointer
+ 24/119 Test #159: export_gcode writes G-code without a result pointer ......................................................   Passed    0.10 sec
+        Start 160: ORC-07 native E applies compensation once without slope correction
+ 25/119 Test #160: ORC-07 native E applies compensation once without slope correction .......................................   Passed    0.03 sec
+        Start 161: A06 candidate rejects broken order continuity and unsupported events
+ 26/119 Test #161: A06 candidate rejects broken order continuity and unsupported events .....................................   Passed    0.03 sec
+        Start 162: Print: {first_object_name} names the first printable object on the plate
+ 27/119 Test #162: Print: {first_object_name} names the first printable object on the plate .................................   Passed    0.03 sec
+        Start 163: Scenario: Flow: Flow math for non-bridges
+ 28/119 Test #163: Scenario: Flow: Flow math for non-bridges ................................................................   Passed    0.03 sec
+        Start 164: Skirt height is honored
+ 29/119 Test #164: Skirt height is honored ..................................................................................   Passed    0.11 sec
+        Start 165: Scenario: ExtrusionEntityCollection: Polygon flattening
+ 30/119 Test #165: Scenario: ExtrusionEntityCollection: Polygon flattening ..................................................   Passed    0.03 sec
+        Start 166: Scenario: init_print functionality
+ 31/119 Test #166: Scenario: init_print functionality .......................................................................   Passed    0.07 sec
+        Start 167: B01 embedded G-code rejects guarded mode without touching existing files
+ 32/119 Test #167: B01 embedded G-code rejects guarded mode without touching existing files .................................   Passed    0.04 sec
+        Start 168: B01 policy rejects conflicting resolved transforms and missing settings
+ 33/119 Test #168: B01 policy rejects conflicting resolved transforms and missing settings ..................................   Passed    0.03 sec
+        Start 169: INT-03 invalid cells budgets and stale scales stay unknown
+ 34/119 Test #169: INT-03 invalid cells budgets and stale scales stay unknown ...............................................   Passed    0.03 sec
+        Start 170: Print: {first_object_name} is not replaced by the saved-project file name
+ 35/119 Test #170: Print: {first_object_name} is not replaced by the saved-project file name ................................   Passed    0.03 sec
+        Start 171: Scenario: Print: Brim generation
+ 36/119 Test #171: Scenario: Print: Brim generation .........................................................................   Passed    0.04 sec
+        Start 172: A06 native roundtrip bounds cover negative coordinates and travel between beads
+ 37/119 Test #172: A06 native roundtrip bounds cover negative coordinates and travel between beads ..........................   Passed    0.03 sec
+        Start 173: B01 policy copies resolved values and accepts only supported planning modes
+ 38/119 Test #173: B01 policy copies resolved values and accepts only supported planning modes ..............................   Passed    0.03 sec
+        Start 174: INT-02 unsupported native paths cannot masquerade as planar support
+ 39/119 Test #174: INT-02 unsupported native paths cannot masquerade as planar support ......................................   Passed    0.03 sec
+        Start 175: SupportMaterial: Three raft layers created
+ 40/119 Test #175: SupportMaterial: Three raft layers created ...............................................................   Passed    0.04 sec
+        Start 176: INT-03 offset mutations recheck gap and volume without auto lifting
+ 41/119 Test #176: INT-03 offset mutations recheck gap and volume without auto lifting ......................................   Passed    0.03 sec
+        Start 177: ORC-10 policy diagnoses an incompatible resolved region override
+ 42/119 Test #177: ORC-10 policy diagnoses an incompatible resolved region override .........................................   Passed    0.03 sec
+        Start 178: B01 publication detects unresolved volume and layer overrides
+ 43/119 Test #178: B01 publication detects unresolved volume and layer overrides ............................................   Passed    0.03 sec
+        Start 179: Filament-change time is not dropped when few motion blocks precede the change
+ 44/119 Test #179: Filament-change time is not dropped when few motion blocks precede the change ............................   Passed    0.03 sec
+        Start 180: Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal.
+ 45/119 Test #180: Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal. ...   Passed    0.05 sec
+        Start 181: Scenario: z_hop lifts the nozzle when a lift is requested
+ 46/119 Test #181: Scenario: z_hop lifts the nozzle when a lift is requested ................................................   Passed    0.03 sec
+        Start 182: B01 native paths block guarded mode before any output file or cached result
+ 47/119 Test #182: B01 native paths block guarded mode before any output file or cached result ..............................   Passed    0.03 sec
+        Start 183: INT-02 native lower stair support rejects the unchanged upper candidate
+ 48/119 Test #183: INT-02 native lower stair support rejects the unchanged upper candidate ..................................   Passed    0.03 sec
+        Start 184: INT-01 native support is invariant under reversal and explicit translation
+ 49/119 Test #184: INT-01 native support is invariant under reversal and explicit translation ...............................   Passed    0.03 sec
+        Start 185: Sequential printing follows model order
+ 50/119 Test #185: Sequential printing follows model order ..................................................................   Passed    0.09 sec
+        Start 186: Scenario: TriangleMesh: Basic mesh statistics
+ 51/119 Test #186: Scenario: TriangleMesh: Basic mesh statistics ............................................................   Passed    0.03 sec
+        Start 187: B01 default OFF remains stock and object region overrides cannot enable export
+ 52/119 Test #187: B01 default OFF remains stock and object region overrides cannot enable export ...........................   Passed    0.03 sec
+        Start 188: Scenario: PrintObject: Perimeter generation
+ 53/119 Test #188: Scenario: PrintObject: Perimeter generation ..............................................................   Passed    0.04 sec
+        Start 189: Trailing tool change at end of file is drained, not dropped
+ 54/119 Test #189: Trailing tool change at end of file is drained, not dropped ..............................................   Passed    0.03 sec
+        Start 190: Scenario: PrintObject: object layer heights
+ 55/119 Test #190: Scenario: PrintObject: object layer heights ..............................................................   Passed    0.05 sec
+        Start 191: Scenario: TriangleMesh: Transformation functions affect mesh as expected.
+ 56/119 Test #191: Scenario: TriangleMesh: Transformation functions affect mesh as expected. ................................   Passed    0.03 sec
+        Start 192: B01 mode changes invalidate a cached export and preserve unknown serialized modes
+ 57/119 Test #192: B01 mode changes invalidate a cached export and preserve unknown serialized modes ........................   Passed    0.03 sec
+        Start 193: Scenario: Origin manipulation
+ 58/119 Test #193: Scenario: Origin manipulation ............................................................................   Passed    0.03 sec
+        Start 194: Scenario: SupportMaterial: support_layers_z and contact_distance
+ 59/119 Test #194: Scenario: SupportMaterial: support_layers_z and contact_distance .........................................   Passed    0.10 sec
+        Start 195: Initial layer height is honored
+ 60/119 Test #195: Initial layer height is honored ..........................................................................   Passed    0.07 sec
+        Start 196: A08 bounded 10000 move candidate roundtrip preserves endpoint and total E
+ 61/119 Test #196: A08 bounded 10000 move candidate roundtrip preserves endpoint and total E ................................   Passed    0.05 sec
+        Start 197: Scenario: Flow: Flow math for bridges
+ 62/119 Test #197: Scenario: Flow: Flow math for bridges ....................................................................   Passed    0.03 sec
+        Start 198: Scenario: set_speed emits values with fixed-point output.
+ 63/119 Test #198: Scenario: set_speed emits values with fixed-point output. ................................................   Passed    0.03 sec
+        Start 220: B02 unbounded or unsupported numeric syntax cannot claim zero conversion error
+ 64/119 Test #220: B02 unbounded or unsupported numeric syntax cannot claim zero conversion error ...........................   Passed    0.01 sec
+        Start 221: VOL-01 XY integral preserves volume on sloped surfaces without a second correction
+ 65/119 Test #221: VOL-01 XY integral preserves volume on sloped surfaces without a second correction .......................   Passed    0.01 sec
+        Start 222: B02 ASCII and binary snapshots preserve bytes and native geometry
+ 66/119 Test #222: B02 ASCII and binary snapshots preserve bytes and native geometry ........................................   Passed    0.01 sec
+        Start 223: B02 mesh audit preserves source and accepts a bounded native cube geometry
+ 67/119 Test #223: B02 mesh audit preserves source and accepts a bounded native cube geometry ...............................   Passed    0.01 sec
+        Start 224: VOL-02 vertical and normal gaps obey independent plane distance
+ 68/119 Test #224: VOL-02 vertical and normal gaps obey independent plane distance ..........................................   Passed    0.01 sec
+        Start 225: B02 parent terminates an unresponsive worker on deadline cancellation and stale revision
+ 69/119 Test #225: B02 parent terminates an unresponsive worker on deadline cancellation and stale revision .................   Passed    0.05 sec
+        Start 226: A07 analytic Minkowski bounds include uncertainty at coverage boundaries
+ 70/119 Test #226: A07 analytic Minkowski bounds include uncertainty at coverage boundaries .................................   Passed    0.01 sec
+        Start 227: GEO-04 translation reversal and envelope growth preserve clearance decisions
+ 71/119 Test #227: GEO-04 translation reversal and envelope growth preserve clearance decisions .............................   Passed    0.01 sec
+        Start 228: B02 callback cannot relax captured geometry or import limits
+ 72/119 Test #228: B02 callback cannot relax captured geometry or import limits .............................................   Passed    0.01 sec
+        Start 229: PRF-06 confirmation flags cannot qualify synthetic geometry
+ 73/119 Test #229: PRF-06 confirmation flags cannot qualify synthetic geometry ..............................................   Passed    0.01 sec
+        Start 230: GEO-09 finite annulus distinguishes a sphere in the opening from rim contact
+ 74/119 Test #230: GEO-09 finite annulus distinguishes a sphere in the opening from rim contact .............................   Passed    0.01 sec
+        Start 231: GEO-09 continuous annulus sweep detects a sphere between free endpoints
+ 75/119 Test #231: GEO-09 continuous annulus sweep detects a sphere between free endpoints ..................................   Passed    0.01 sec
+        Start 232: IR deposition travel and retraction carry different measures
+ 76/119 Test #232: IR deposition travel and retraction carry different measures .............................................   Passed    0.01 sec
+        Start 233: GEO-02 finite outer tip uses full plane gradient
+ 77/119 Test #233: GEO-02 finite outer tip uses full plane gradient .........................................................   Passed    0.01 sec
+        Start 234: B02 caller mutation cannot replace the captured STL during callbacks
+ 78/119 Test #234: B02 caller mutation cannot replace the captured STL during callbacks .....................................   Passed    0.01 sec
+        Start 235: Numeric budgets charge each component and reject missing invalid or exceeded bounds
+ 79/119 Test #235: Numeric budgets charge each component and reject missing invalid or exceeded bounds ......................   Passed    0.01 sec
+        Start 236: B02 file capture rejects observed mutation and pathname replacement during reading
+ 80/119 Test #236: B02 file capture rejects observed mutation and pathname replacement during reading .......................   Passed    0.01 sec
+        Start 237: B02 worker rejects malformed source units and exceeded observed memory budget
+ 81/119 Test #237: B02 worker rejects malformed source units and exceeded observed memory budget ............................   Passed    0.02 sec
+        Start 238: B02 source limits units cancellation and malformed binary reject
+ 82/119 Test #238: B02 source limits units cancellation and malformed binary reject .........................................   Passed    0.01 sec
+        Start 239: B02 closed connected bowtie prism is rejected for self intersection
+ 83/119 Test #239: B02 closed connected bowtie prism is rejected for self intersection ......................................   Passed    0.01 sec
+        Start 240: B02 strict ASCII records reject missing values and unconsumed source data
+ 84/119 Test #240: B02 strict ASCII records reject missing values and unconsumed source data ................................   Passed    0.01 sec
+        Start 241: GEO-03 transverse slope collides along a constant Z path
+ 85/119 Test #241: GEO-03 transverse slope collides along a constant Z path .................................................   Passed    0.01 sec
+        Start 242: GEO-05 duct collision is independent of nozzle clearance
+ 86/119 Test #242: GEO-05 duct collision is independent of nozzle clearance .................................................   Passed    0.01 sec
+        Start 243: B02 binary STL metadata reads exactly the bounded header
+ 87/119 Test #243: B02 binary STL metadata reads exactly the bounded header .................................................   Passed    0.01 sec
+        Start 244: B02 file capture refuses special paths missing units and oversized input
+ 88/119 Test #244: B02 file capture refuses special paths missing units and oversized input .................................   Passed    0.01 sec
+        Start 245: VOL-01 invalid deposition dimensions reject instead of producing volume
+ 89/119 Test #245: VOL-01 invalid deposition dimensions reject instead of producing volume ..................................   Passed    0.01 sec
+        Start 246: B02 worker failure invalid protocol wrong identity and oversized reports fail closed
+ 90/119 Test #246: B02 worker failure invalid protocol wrong identity and oversized reports fail closed .....................   Passed    0.93 sec
+        Start 247: B02 source capture cancellation staleness deadline and callback failure discard partial bytes
+ 91/119 Test #247: B02 source capture cancellation staleness deadline and callback failure discard partial bytes ............   Passed    0.02 sec
+        Start 248: B02 file capture freezes timeout options and rechecks revision after hashing
+ 92/119 Test #248: B02 file capture freezes timeout options and rechecks revision after hashing .............................   Passed    0.02 sec
+        Start 249: GEO-04 bounded subdivision proves a diagonal sweep clear
+ 93/119 Test #249: GEO-04 bounded subdivision proves a diagonal sweep clear .................................................   Passed    0.01 sec
+        Start 250: B02 native STL metadata bounds preserve geometry for long and malformed headers
+ 94/119 Test #250: B02 native STL metadata bounds preserve geometry for long and malformed headers ..........................   Passed    0.01 sec
+        Start 251: B02 decimal conversion bounds match independent exact rational oracles
+ 95/119 Test #251: B02 decimal conversion bounds match independent exact rational oracles ...................................   Passed    0.01 sec
+        Start 252: B02 mesh audit fails closed on units cancellation and finite work limits
+ 96/119 Test #252: B02 mesh audit fails closed on units cancellation and finite work limits .................................   Passed    0.01 sec
+        Start 253: GEO-09 axial sphere oracle checks translation uncertainty and unsupported pairs
+ 97/119 Test #253: GEO-09 axial sphere oracle checks translation uncertainty and unsupported pairs ..........................   Passed    0.01 sec
+        Start 254: A07 full head and omitted upper parts must fit declared scene coverage
+ 98/119 Test #254: A07 full head and omitted upper parts must fit declared scene coverage ...................................   Passed    0.01 sec
+        Start 255: B02 nested native STL imports retain metadata belonging to each file
+ 99/119 Test #255: B02 nested native STL imports retain metadata belonging to each file .....................................   Passed    0.01 sec
+        Start 256: B02 import reports actual decimal conversion error and rejects unbounded syntax
+100/119 Test #256: B02 import reports actual decimal conversion error and rejects unbounded syntax ..........................   Passed    0.01 sec
+        Start 257: GEO-07 uncertain clearance never passes at the boundary
+101/119 Test #257: GEO-07 uncertain clearance never passes at the boundary ..................................................   Passed    0.01 sec
+        Start 258: B02 mesh audit rejects missing faces duplicates orientation and invalid coordinates
+102/119 Test #258: B02 mesh audit rejects missing faces duplicates orientation and invalid coordinates ......................   Passed    0.01 sec
+        Start 259: B02 source topology is checked before native repair can hide it
+103/119 Test #259: B02 source topology is checked before native repair can hide it ..........................................   Passed    0.01 sec
+        Start 260: GEO-08 malformed geometry and numeric environment fail closed
+104/119 Test #260: GEO-08 malformed geometry and numeric environment fail closed ............................................   Passed    0.01 sec
+        Start 261: GEO-04 sweep agrees with an independent slab intersection oracle
+105/119 Test #261: GEO-04 sweep agrees with an independent slab intersection oracle .........................................   Passed    0.01 sec
+        Start 262: B02 exact vertex normalization changes only the owned derived mesh
+106/119 Test #262: B02 exact vertex normalization changes only the owned derived mesh .......................................   Passed    0.01 sec
+        Start 263: GEO-08 unsupported queries and exhausted limits stay unknown
+107/119 Test #263: GEO-08 unsupported queries and exhausted limits stay unknown .............................................   Passed    0.01 sec
+        Start 264: PRF-01 complete synthetic scene is usable only for simulation
+108/119 Test #264: PRF-01 complete synthetic scene is usable only for simulation ............................................   Passed    0.01 sec
+        Start 265: B02 native repair comparison preserves oriented triangle multisets
+109/119 Test #265: B02 native repair comparison preserves oriented triangle multisets .......................................   Passed    0.01 sec
+        Start 266: GEO-04 entering contact does not starve a later penetration
+110/119 Test #266: GEO-04 entering contact does not starve a later penetration ..............................................   Passed    0.01 sec
+        Start 267: ORC-38 missing head dimensions inventory and moving envelope reject
+111/119 Test #267: ORC-38 missing head dimensions inventory and moving envelope reject ......................................   Passed    0.01 sec
+        Start 268: A07 malformed versions identities chronology and numeric state fail closed
+112/119 Test #268: A07 malformed versions identities chronology and numeric state fail closed ...............................   Passed    0.01 sec
+        Start 269: B02 native worker binds geometry to the immutable source and revision
+113/119 Test #269: B02 native worker binds geometry to the immutable source and revision ....................................   Passed    0.02 sec
+        Start 270: GEO-04 continuous sweep catches a wall between free endpoints
+114/119 Test #270: GEO-04 continuous sweep catches a wall between free endpoints ............................................   Passed    0.01 sec
+        Start 271: B02 separate and overlapping closed shells are not silently united
+115/119 Test #271: B02 separate and overlapping closed shells are not silently united .......................................   Passed    0.01 sec
+        Start 272: GEO-01 asymmetric tool axes stay fixed when the path turns
+116/119 Test #272: GEO-01 asymmetric tool axes stay fixed when the path turns ...............................................   Passed    0.01 sec
+        Start 273: B02 source file capture preserves bytes and analysis does not reopen a replaced pathname
+117/119 Test #273: B02 source file capture preserves bytes and analysis does not reopen a replaced pathname .................   Passed    0.01 sec
+        Start 274: ORC-05 rejects stale scale nonfinite and out of domain coordinates
+118/119 Test #274: ORC-05 rejects stale scale nonfinite and out of domain coordinates .......................................   Passed    0.01 sec
+        Start 275: ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales
+119/119 Test #275: ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales ...........................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 119
+
+Label Time Summary:
+A05                =   0.27 sec*proc (9 tests)
+A06                =   0.20 sec*proc (7 tests)
+A07                =   0.04 sec*proc (6 tests)
+A08                =   0.08 sec*proc (2 tests)
+A08Stress          =   0.05 sec*proc (1 test)
+B01                =   0.25 sec*proc (8 tests)
+B02                =   1.22 sec*proc (28 tests)
+ExtrusionEntity    =   0.03 sec*proc (1 test)
+Fill               =   0.03 sec*proc (1 test)
+Flow               =   0.06 sec*proc (2 tests)
+GCode              =   0.03 sec*proc (1 test)
+GCodeTiming        =   0.15 sec*proc (5 tests)
+GCodeWriter        =   0.06 sec*proc (2 tests)
+GEO-01             =   0.01 sec*proc (1 test)
+GEO-02             =   0.01 sec*proc (1 test)
+GEO-03             =   0.01 sec*proc (1 test)
+GEO-04             =   0.04 sec*proc (5 tests)
+GEO-05             =   0.01 sec*proc (1 test)
+GEO-07             =   0.01 sec*proc (1 test)
+GEO-08             =   0.01 sec*proc (2 tests)
+GEO-09             =   0.02 sec*proc (3 tests)
+INT-01             =   0.09 sec*proc (3 tests)
+INT-02             =   0.09 sec*proc (3 tests)
+INT-03             =   0.09 sec*proc (3 tests)
+IR                 =   0.01 sec*proc (2 tests)
+LimitSnapshot      =   0.01 sec*proc (1 test)
+MeshAudit          =   0.04 sec*proc (6 tests)
+Model              =   0.07 sec*proc (1 test)
+Nonplanar          =   2.17 sec*proc (81 tests)
+NotWorking         =   1.48 sec*proc (3 tests)
+ORC-05             =   0.01 sec*proc (2 tests)
+ObjectLabels       =   0.07 sec*proc (1 test)
+Print              =   0.19 sec*proc (5 tests)
+PrintGCode         =   1.53 sec*proc (5 tests)
+PrintObject        =   0.09 sec*proc (2 tests)
+SkirtBrim          =   0.27 sec*proc (2 tests)
+SourceFile         =   0.06 sec*proc (5 tests)
+StlError           =   0.02 sec*proc (3 tests)
+StlImport          =   0.05 sec*proc (8 tests)
+SupportMaterial    =   0.19 sec*proc (3 tests)
+VOL-01             =   0.10 sec*proc (5 tests)
+VOL-02             =   0.01 sec*proc (1 test)
+Worker             =   1.02 sec*proc (4 tests)
+export_gcode       =   0.10 sec*proc (1 test)
+stl                =   0.02 sec*proc (3 tests)
+test_data          =   0.07 sec*proc (1 test)
+
+Total Test time (real) =   5.17 sec
+{
+  "tests_discovered": 119,
+  "tests_executed": 119,
+  "test_names": [
+    "ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z",
+    "Scenario: TriangleMesh: split functionality.",
+    "Scenario: Model construction",
+    "GCD-01 replay exposes XYZ E feed and rounding mutations",
+    "Object labels have stable IDs with exclusion enabled or disabled",
+    "Scenario: PrintGCode basic functionality",
+    "Filament-change time is attributed to tool-change moves, not extrusion roles",
+    "INT-01 native reserved body supports an affine first pass",
+    "Scenario: Print: Skirt generation",
+    "Back-to-back tool changes buffer then merge into one tool-change block",
+    "Scenario: TriangleMesh: Mesh merge functions",
+    "SupportMaterial: enforced support layers are generated",
+    "INT-03 uncertainty never creates support or increases nominal volume",
+    "A08 serialization rejects feed rounded outside the replay domain",
+    "Scenario: Skirt and brim generation",
+    "GCD-01 parser fails closed on unsupported modal state and grammar",
+    "Scenario: TriangleMesh: slice behavior.",
+    "Fill: Pattern Path Length",
+    "Scenario: make_xxx functions produce meshes.",
+    "INT-02 lower support excludes the bead shoulders endpoints and gaps",
+    "INT-01 affine footprint and volume use all corners",
+    "Scenario: TriangleMeshSlicer: Cut behavior.",
+    "Carried-forward tool-change delay reaches the total without polluting roles",
+    "export_gcode writes G-code without a result pointer",
+    "ORC-07 native E applies compensation once without slope correction",
+    "A06 candidate rejects broken order continuity and unsupported events",
+    "Print: {first_object_name} names the first printable object on the plate",
+    "Scenario: Flow: Flow math for non-bridges",
+    "Skirt height is honored",
+    "Scenario: ExtrusionEntityCollection: Polygon flattening",
+    "Scenario: init_print functionality",
+    "B01 embedded G-code rejects guarded mode without touching existing files",
+    "B01 policy rejects conflicting resolved transforms and missing settings",
+    "INT-03 invalid cells budgets and stale scales stay unknown",
+    "Print: {first_object_name} is not replaced by the saved-project file name",
+    "Scenario: Print: Brim generation",
+    "A06 native roundtrip bounds cover negative coordinates and travel between beads",
+    "B01 policy copies resolved values and accepts only supported planning modes",
+    "INT-02 unsupported native paths cannot masquerade as planar support",
+    "SupportMaterial: Three raft layers created",
+    "INT-03 offset mutations recheck gap and volume without auto lifting",
+    "ORC-10 policy diagnoses an incompatible resolved region override",
+    "B01 publication detects unresolved volume and layer overrides",
+    "Filament-change time is not dropped when few motion blocks precede the change",
+    "Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal.",
+    "Scenario: z_hop lifts the nozzle when a lift is requested",
+    "B01 native paths block guarded mode before any output file or cached result",
+    "INT-02 native lower stair support rejects the unchanged upper candidate",
+    "INT-01 native support is invariant under reversal and explicit translation",
+    "Sequential printing follows model order",
+    "Scenario: TriangleMesh: Basic mesh statistics",
+    "B01 default OFF remains stock and object region overrides cannot enable export",
+    "Scenario: PrintObject: Perimeter generation",
+    "Trailing tool change at end of file is drained, not dropped",
+    "Scenario: PrintObject: object layer heights",
+    "Scenario: TriangleMesh: Transformation functions affect mesh as expected.",
+    "B01 mode changes invalidate a cached export and preserve unknown serialized modes",
+    "Scenario: Origin manipulation",
+    "Scenario: SupportMaterial: support_layers_z and contact_distance",
+    "Initial layer height is honored",
+    "A08 bounded 10000 move candidate roundtrip preserves endpoint and total E",
+    "Scenario: Flow: Flow math for bridges",
+    "Scenario: set_speed emits values with fixed-point output.",
+    "B02 unbounded or unsupported numeric syntax cannot claim zero conversion error",
+    "VOL-01 XY integral preserves volume on sloped surfaces without a second correction",
+    "B02 ASCII and binary snapshots preserve bytes and native geometry",
+    "B02 mesh audit preserves source and accepts a bounded native cube geometry",
+    "VOL-02 vertical and normal gaps obey independent plane distance",
+    "B02 parent terminates an unresponsive worker on deadline cancellation and stale revision",
+    "A07 analytic Minkowski bounds include uncertainty at coverage boundaries",
+    "GEO-04 translation reversal and envelope growth preserve clearance decisions",
+    "B02 callback cannot relax captured geometry or import limits",
+    "PRF-06 confirmation flags cannot qualify synthetic geometry",
+    "GEO-09 finite annulus distinguishes a sphere in the opening from rim contact",
+    "GEO-09 continuous annulus sweep detects a sphere between free endpoints",
+    "IR deposition travel and retraction carry different measures",
+    "GEO-02 finite outer tip uses full plane gradient",
+    "B02 caller mutation cannot replace the captured STL during callbacks",
+    "Numeric budgets charge each component and reject missing invalid or exceeded bounds",
+    "B02 file capture rejects observed mutation and pathname replacement during reading",
+    "B02 worker rejects malformed source units and exceeded observed memory budget",
+    "B02 source limits units cancellation and malformed binary reject",
+    "B02 closed connected bowtie prism is rejected for self intersection",
+    "B02 strict ASCII records reject missing values and unconsumed source data",
+    "GEO-03 transverse slope collides along a constant Z path",
+    "GEO-05 duct collision is independent of nozzle clearance",
+    "B02 binary STL metadata reads exactly the bounded header",
+    "B02 file capture refuses special paths missing units and oversized input",
+    "VOL-01 invalid deposition dimensions reject instead of producing volume",
+    "B02 worker failure invalid protocol wrong identity and oversized reports fail closed",
+    "B02 source capture cancellation staleness deadline and callback failure discard partial bytes",
+    "B02 file capture freezes timeout options and rechecks revision after hashing",
+    "GEO-04 bounded subdivision proves a diagonal sweep clear",
+    "B02 native STL metadata bounds preserve geometry for long and malformed headers",
+    "B02 decimal conversion bounds match independent exact rational oracles",
+    "B02 mesh audit fails closed on units cancellation and finite work limits",
+    "GEO-09 axial sphere oracle checks translation uncertainty and unsupported pairs",
+    "A07 full head and omitted upper parts must fit declared scene coverage",
+    "B02 nested native STL imports retain metadata belonging to each file",
+    "B02 import reports actual decimal conversion error and rejects unbounded syntax",
+    "GEO-07 uncertain clearance never passes at the boundary",
+    "B02 mesh audit rejects missing faces duplicates orientation and invalid coordinates",
+    "B02 source topology is checked before native repair can hide it",
+    "GEO-08 malformed geometry and numeric environment fail closed",
+    "GEO-04 sweep agrees with an independent slab intersection oracle",
+    "B02 exact vertex normalization changes only the owned derived mesh",
+    "GEO-08 unsupported queries and exhausted limits stay unknown",
+    "PRF-01 complete synthetic scene is usable only for simulation",
+    "B02 native repair comparison preserves oriented triangle multisets",
+    "GEO-04 entering contact does not starve a later penetration",
+    "ORC-38 missing head dimensions inventory and moving envelope reject",
+    "A07 malformed versions identities chronology and numeric state fail closed",
+    "B02 native worker binds geometry to the immutable source and revision",
+    "GEO-04 continuous sweep catches a wall between free endpoints",
+    "B02 separate and overlapping closed shells are not silently united",
+    "GEO-01 asymmetric tool axes stay fixed when the path turns",
+    "B02 source file capture preserves bytes and analysis does not reopen a replaced pathname",
+    "ORC-05 rejects stale scale nonfinite and out of domain coordinates",
+    "ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales"
+  ],
+  "status": "PASS"
+}

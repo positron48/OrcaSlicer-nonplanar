@@ -16,7 +16,7 @@
     "A07": "SIMULATION_CONTRACT_NATIVE_TESTS_PASS_OPERATOR_EVIDENCE_NOT_RUN_REVIEW_PENDING",
     "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_SPHERE_COUPON_PREPARATION_COMPLETE_INDEPENDENT_REVIEW_PENDING",
     "B01": "BOUNDED_NATIVE_MODE_PREFLIGHT_AND_OUTPUT_BLOCKS_PASS_COMPATIBILITY_REGISTRY_PENDING",
-    "B02": "GEOMETRY_SNAPSHOT_CONVERSION_AND_SUPERVISED_WORKER_PASS_FILE_CAPTURE_HARD_RSS_AND_INTEGRATION_PENDING"
+    "B02": "GEOMETRY_SNAPSHOT_CONVERSION_WORKER_FILE_CAPTURE_AND_DIAGNOSTIC_CLI_PASS_JOB_GUI_HARD_LIMITS_PENDING"
   },
   "executed_checks": {
     "ORC-01": "PASS",
@@ -28,7 +28,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 77,
+    "new_native_cases": 82,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -44,8 +44,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 114,
-    "final_ctest_executed": 114,
+    "final_ctest_discovered": 119,
+    "final_ctest_executed": 119,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -96,7 +96,12 @@
     "B02_error_OFF_ZAA": "NOT_RUN_STOCK_PATHS_UNCHANGED_SNAPSHOT_BASELINES_RETAINED",
     "B02_worker_cases": 4,
     "B02_worker_assertions": 45,
-    "B02_worker_OFF_ZAA": "NOT_RUN_NO_PRODUCTION_CALLER_STOCK_PATHS_UNCHANGED_SNAPSHOT_BASELINES_RETAINED"
+    "B02_worker_OFF_ZAA": "NOT_RUN_NO_PRODUCTION_CALLER_STOCK_PATHS_UNCHANGED_SNAPSHOT_BASELINES_RETAINED",
+    "B02_file_cases": 5,
+    "B02_file_assertions": 53,
+    "B02_diagnostic_cli_cases": 10,
+    "B02_file_OFF_ZAA": "NOT_RUN_STOCK_PATHS_UNCHANGED_SNAPSHOT_BASELINES_RETAINED",
+    "B02_normative_sphere": "UNKNOWN_6720_FACES_EXCEED_5000_LIMIT_SMALL_SEPARATE_1760_FACE_FIXTURE_PASSES"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -113,7 +118,7 @@
   "ci": "RUN_36402596420_BUILD_PASS_TEST_GATE_EXIT_2_LOGS_AUTH_REQUIRED_RUN_36413130735_IN_PROGRESS",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Capture bounded source files; expose Linux test failure diagnostics; finish B01 full compatibility policy and whole-job snapshots. Independent review and physical qualification remain pending.",
+  "next_step": "Complete source/model transform provenance and whole-job snapshots; finish B01 compatibility registry. Linux detailed diagnostics, independent review and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -134,7 +139,8 @@
     "B02_mesh": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/MeshAudit.cpp",
     "B02_snapshot": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/StlImport.cpp",
     "B02_error": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/StlImportError.cpp",
-    "B02_worker": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/StlWorker.cpp"
+    "B02_worker": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/StlWorker.cpp",
+    "B02_file": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/StlFile.cpp"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -148,5 +154,6 @@
   "B02_mesh_evidence": "docs/nonplanar-dev/evidence/B02-mesh/source-manifest.json",
   "B02_snapshot_evidence": "docs/nonplanar-dev/evidence/B02-snapshot/source-manifest.json",
   "B02_error_evidence": "docs/nonplanar-dev/evidence/B02-error/source-manifest.json",
-  "B02_worker_evidence": "docs/nonplanar-dev/evidence/B02-worker/source-manifest.json"
+  "B02_worker_evidence": "docs/nonplanar-dev/evidence/B02-worker/source-manifest.json",
+  "B02_file_evidence": "docs/nonplanar-dev/evidence/B02-file/source-manifest.json"
 }

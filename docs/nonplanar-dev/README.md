@@ -94,8 +94,10 @@ mode preflight and native/CLI/archive output blocks; the full compatibility
 registry is still pending. `B02-parser.md`, `B02-mesh.md` and `B02-snapshot.md`
 record bounded STL metadata, parsed geometry checks and immutable source-byte
 provenance. `B02-error.md` adds bounded decimal conversion error; `B02-worker.md`
-adds supervised native analysis bound to source bytes and revision. Latest selected
-CTest executes 114/114; the six B02-snapshot OFF/ZAA comparisons pass. Source-file
-capture, hard memory containment, the full job error budget, whole-job snapshots
-and a successful hybrid pipeline remain unimplemented. Gate A still
+adds supervised native analysis bound to source bytes and revision. `B02-file.md`
+adds bounded source-file capture and the actual native diagnostic CLI. Latest
+selected CTest executes 119/119; all ten CLI cases pass expected outcomes. The six
+B02-snapshot OFF/ZAA comparisons pass. Hard memory/I/O containment, model transforms,
+the full job error budget, whole-job snapshots and a successful hybrid pipeline
+remain unimplemented. Gate A still
 requires independent review; digital coupon preparation is not physical proof.
