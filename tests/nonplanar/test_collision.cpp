@@ -273,3 +273,59 @@ TEST_CASE("GEO-04 sweep agrees with an independent slab intersection oracle", "[
     REQUIRE(clear_count > 50);
     REQUIRE(hit_count > 50);
 }
+
+TEST_CASE("GEO-09 finite annulus distinguishes a sphere in the opening from rim contact", "[Nonplanar][GEO-09]")
+{
+    SceneObstacle sphere{40,SphereObstacle{PhysicalPosition(0,0,0),Length(.1)}};
+    const auto stationary = motion({0,0,0},{0,0,0});
+    auto gap = query_clearance(stationary,tip(),sphere,policy(.05));
+    REQUIRE(gap.status == ClearanceStatus::Pass);
+    contains(gap,.1); // Opening radius .2 minus sphere radius .1.
+    sphere.geometry = SphereObstacle{PhysicalPosition(.3,0,0),Length(.1)};
+    auto hit = query_clearance(stationary,tip(),sphere,policy());
+    REQUIRE(hit.status == ClearanceStatus::Fail);
+    contains(hit,-.1); // Sphere centre lies on the solid annulus.
+    sphere.geometry = SphereObstacle{PhysicalPosition(3.5,0,4),Length(1)};
+    auto diagonal = query_clearance(stationary,tip(),sphere,policy(3.9));
+    REQUIRE(diagonal.status == ClearanceStatus::Pass);
+    contains(diagonal,4); // Independent 3-4-5 distance to outer rim minus 1.
+}
+
+TEST_CASE("GEO-09 continuous annulus sweep detects a sphere between free endpoints", "[Nonplanar][GEO-09]")
+{
+    SceneObstacle sphere{41,SphereObstacle{PhysicalPosition(.3,0,0),Length(.1)}};
+    for (double z : {-1.,1.})
+        REQUIRE(query_clearance(motion({0,0,z},{0,0,z}),tip(),sphere,policy()).status == ClearanceStatus::Pass);
+    auto result = query_clearance(motion({0,0,-1},{0,0,1}),tip(),sphere,policy());
+    REQUIRE(result.status == ClearanceStatus::Fail);
+    contains(result,-.1);
+    REQUIRE(result.witness.has_value());
+    REQUIRE(result.witness->parameter > .45);
+    REQUIRE(result.witness->parameter < .55);
+    // An off-midpoint sphere is also detected without relying on endpoint sampling.
+    sphere.geometry = SphereObstacle{PhysicalPosition(.3,0,.234),Length(.001)};
+    REQUIRE(query_clearance(motion({0,0,0},{0,0,1}),tip(),sphere,policy()).status == ClearanceStatus::Fail);
+}
+
+TEST_CASE("GEO-09 axial sphere oracle checks translation uncertainty and unsupported pairs", "[Nonplanar][GEO-09]")
+{
+    for (double shift : {0.,100.}) {
+        SceneObstacle sphere{42,SphereObstacle{PhysicalPosition(shift,shift,shift),Length(.5)}};
+        for (double z : {.3,.6,1.}) {
+            const auto path = motion({shift,shift,shift+z},{shift,shift,shift+z+.1});
+            // Closest annular point is at the inner radius; min axial height is z.
+            const double expected = std::hypot(.2,path.start.z()-shift)-.5;
+            auto result = query_clearance(path,tip(),sphere,policy());
+            REQUIRE(result.status == (expected>0 ? ClearanceStatus::Pass : ClearanceStatus::Fail));
+            contains(result,expected);
+        }
+        auto uncertain = query_clearance(motion({shift,shift,shift+.6},{shift,shift,shift+.6}),tip(),sphere,policy(.13,.01));
+        REQUIRE(uncertain.status == ClearanceStatus::Unknown);
+        REQUIRE(query_clearance(motion({0,0,1},{0,0,2}),box(),sphere,policy()).reason == ClearanceReason::UnsupportedPair);
+    }
+    SceneObstacle invalid{43,SphereObstacle{PhysicalPosition(0,0,0),Length(0)}};
+    REQUIRE(query_clearance(motion({0,0,1},{0,0,2}),tip(),invalid,policy()).status == ClearanceStatus::Unknown);
+    invalid.geometry = SphereObstacle{PhysicalPosition(0,0,0),Length(1)};
+    QueryLimits none; none.max_evaluations=0;
+    REQUIRE(query_clearance(motion({0,0,1},{0,0,2}),tip(),invalid,policy(),none).reason == ClearanceReason::WorkLimit);
+}

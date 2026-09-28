@@ -43,6 +43,17 @@ Interval tip_plane(const MotionEvent &motion, const FiniteTip &tip, const PlaneO
     return (p[2] - a*p[0] - b*p[1] - Interval(plane.intercept_mm) -
             Interval(tip.outer_radius.value()) * root(slope_squared)) / root(Interval(1) + slope_squared);
 }
+Interval tip_sphere(const MotionEvent &motion, const FiniteTip &tip, const SphereObstacle &sphere, Interval t)
+{
+    auto p = position(motion,t);
+    const auto offset = xyz(tip.center), center = xyz(sphere.center);
+    for (size_t i = 0; i < 3; ++i) p[i] = p[i] + Interval(offset[i]) - Interval(center[i]);
+    const Interval radial = root(square(p[0]) + square(p[1]));
+    // Distance to the horizontal annulus, including its empty opening.
+    const Interval radial_gap = maximum(Interval(0), maximum(Interval(tip.opening_radius.value())-radial,
+                                                            radial-Interval(tip.outer_radius.value())));
+    return root(square(radial_gap) + square(p[2])) - Interval(sphere.radius.value());
+}
 Interval box_box(const MotionEvent &motion, const ToolBox &tool, const SceneBox &scene, Interval t)
 {
     const auto p = position(motion,t);
@@ -81,10 +92,16 @@ ClearanceResult query_clearance(const MotionEvent &motion, const ToolComponent &
         const auto *box = std::get_if<ToolBox>(&tool.geometry);
         const auto *plane = std::get_if<PlaneObstacle>(&scene.geometry);
         const auto *wall = std::get_if<SceneBox>(&scene.geometry);
+        const auto *sphere = std::get_if<SphereObstacle>(&scene.geometry);
         if (tip) {
             validate_position(tip->center);
             require(tip->outer_radius.value() > tip->opening_radius.value() &&
                     tip->outer_radius.value() <= NativeScale::max_coordinate_mm, "invalid annular tip");
+        }
+        if (sphere) {
+            validate_position(sphere->center);
+            require(sphere->radius.value() > 0 && sphere->radius.value() <= NativeScale::max_coordinate_mm,
+                    "invalid sphere radius");
         }
         if (box) validate_box(*box);
         if (wall) validate_box(*wall);
@@ -92,7 +109,7 @@ ClearanceResult query_clearance(const MotionEvent &motion, const ToolComponent &
                            std::isfinite(plane->intercept_mm), "nonfinite plane");
         if (tool.interaction != InteractionClass::RigidForbidden)
             throw QueryFailure{ClearanceReason::UnsupportedContact};
-        if (!(tip && plane) && !(box && wall)) throw QueryFailure{ClearanceReason::UnsupportedPair};
+        if (!(tip && plane) && !(box && wall) && !(tip && sphere)) throw QueryFailure{ClearanceReason::UnsupportedPair};
         auto check_deadline = [&] {
             if (std::chrono::steady_clock::now() >= limits.deadline)
                 throw QueryFailure{ClearanceReason::Timeout};
@@ -131,8 +148,11 @@ ClearanceResult query_clearance(const MotionEvent &motion, const ToolComponent &
             return result;
         }
 
+        const auto distance = [&](Interval t) {
+            return sphere ? tip_sphere(motion,*tip,*sphere,t) : box_box(motion,*box,*wall,t);
+        };
         evaluation();
-        const Interval whole = box_box(motion,*box,*wall,Interval(0,1));
+        const Interval whole = distance(Interval(0,1));
         bounds(whole.lo,whole.hi);
         struct Node { double begin, end, lower; };
         // Visit the least-clear bound first: a tangent subinterval must not
@@ -152,7 +172,7 @@ ClearanceResult query_clearance(const MotionEvent &motion, const ToolComponent &
             }
             const double middle = node.begin + (node.end-node.begin)/2;
             evaluation();
-            const Interval sample = box_box(motion,*box,*wall,Interval(middle));
+            const Interval sample = distance(Interval(middle));
             if (sample.hi <= best_upper) {
                 best_upper = sample.hi;
                 witness(middle);
@@ -167,9 +187,9 @@ ClearanceResult query_clearance(const MotionEvent &motion, const ToolComponent &
             if (stationary || middle == node.begin || middle == node.end)
                 throw QueryFailure{ClearanceReason::UncertainBoundary};
             evaluation();
-            const Interval left = box_box(motion,*box,*wall,Interval(node.begin,middle));
+            const Interval left = distance(Interval(node.begin,middle));
             evaluation();
-            const Interval right = box_box(motion,*box,*wall,Interval(middle,node.end));
+            const Interval right = distance(Interval(middle,node.end));
             pending.push({middle,node.end,right.lo});
             pending.push({node.begin,middle,left.lo});
         }

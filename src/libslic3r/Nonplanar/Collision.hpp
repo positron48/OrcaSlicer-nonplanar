@@ -7,7 +7,7 @@
 
 namespace Slic3r::nptop {
 
-inline constexpr unsigned geometry_contract_version = 1;
+inline constexpr unsigned geometry_contract_version = 2;
 using ToolPosition = Position<Frame::ToolLocal>;
 
 struct FiniteTip {
@@ -18,6 +18,7 @@ struct ToolBox { ToolPosition min, max; };
 struct SceneBox { PhysicalPosition min, max; };
 // Solid z <= gradient_x*x + gradient_y*y + intercept_mm, in physical space.
 struct PlaneObstacle { double gradient_x, gradient_y, intercept_mm; };
+struct SphereObstacle { PhysicalPosition center; Length radius; };
 enum class InteractionClass { RigidForbidden, DepositionContact };
 struct ToolComponent {
     uint64_t id;
@@ -26,7 +27,7 @@ struct ToolComponent {
 };
 struct SceneObstacle {
     uint64_t id;
-    std::variant<PlaneObstacle, SceneBox> geometry;
+    std::variant<PlaneObstacle, SceneBox, SphereObstacle> geometry;
 };
 
 struct ClearancePolicy {

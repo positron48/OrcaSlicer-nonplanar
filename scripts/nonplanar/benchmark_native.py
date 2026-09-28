@@ -83,7 +83,7 @@ def main():
         executables[target] = str(path.resolve())
     args.output_dir.mkdir(parents=True, exist_ok=False)
     output = args.output_dir.resolve()
-    workloads = [("contracts_geometry", "nonplanar", "[Nonplanar]~[A07]", 19),
+    workloads = [("contracts_geometry", "nonplanar", "[Nonplanar]~[A07]", 22),
                  ("native_transition", "fff_print", "[A05]", 9),
                  ("serialization_replay", "fff_print", "[A06]", 7),
                  ("simulation_scene", "nonplanar", "[A07]", 6),
