@@ -16,7 +16,8 @@
     "A07": "SIMULATION_CONTRACT_NATIVE_TESTS_PASS_OPERATOR_EVIDENCE_NOT_RUN_REVIEW_PENDING",
     "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_SPHERE_COUPON_PREPARATION_COMPLETE_INDEPENDENT_REVIEW_PENDING",
     "B01": "PREFLIGHT_REGISTRIES_AND_OWNED_NATIVE_CONFIG_PASS_FULL_COMPATIBILITY_AND_JOB_SNAPSHOT_PENDING",
-    "B02": "BOUNDED_IMPORT_FILE_CLI_AND_NATIVE_MODEL_CHAIN_PASS_PLATE_JOB_GUI_HARD_LIMITS_PENDING"
+    "B02": "BOUNDED_IMPORT_FILE_CLI_AND_NATIVE_MODEL_CHAIN_PASS_PLATE_JOB_GUI_HARD_LIMITS_PENDING",
+    "B03": "BOUNDED_NOMINAL_UPPER_PROJECTION_PASS_CURVATURE_PATCHES_TOOL_ROI_AND_PLANNING_PENDING"
   },
   "executed_checks": {
     "ORC-01": "PASS",
@@ -28,7 +29,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 121,
+    "new_native_cases": 127,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -44,8 +45,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 158,
-    "final_ctest_executed": 158,
+    "final_ctest_discovered": 164,
+    "final_ctest_executed": 164,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -137,7 +138,10 @@
     "B01_single_tool_cases": 5,
     "B01_single_tool_registry_keys": 14,
     "B01_single_tool_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
-    "B01_pre_normalization_cache": "RED_EXTRUDER_ASSIGNMENT_LEFT_EXPORT_DONE_THEN_NATIVE_INVALIDATION_AND_OWNED_DIAGNOSTIC_PASS"
+    "B01_pre_normalization_cache": "RED_EXTRUDER_ASSIGNMENT_LEFT_EXPORT_DONE_THEN_NATIVE_INVALIDATION_AND_OWNED_DIAGNOSTIC_PASS",
+    "B03_projection_cases": 6,
+    "B03_projection_assertions": 103,
+    "B03_projection_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -151,10 +155,10 @@
     "coupon_geometry": "PREPARED_AND_VALIDATED_DIGITALLY_ONLY"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "RUN_36413130735_1A2B6C40_NATIVE_BUILD_PASS_TEST_STEP_FAILED_RUN_36422010850_042A11AC_BUILDING_APP_TESTS",
+  "ci": "RUN_36422010850_042A11AC_CANCELLED_TWO_HOUR_TIMEOUT_TESTS_NOT_RUN_PRIOR_TEST_STEP_FAILURES_UNRESOLVED",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Wire captured native config/model data to actual plate/job/worker ownership; finish compatibility coverage and begin upper-surface analysis. Linux test diagnostics, independent review and physical qualification remain pending.",
+  "next_step": "Continue B03 patch/curvature/inset and tool-accessibility checks; bind captured inputs to actual plate/job/worker ownership and complete compatibility. Independent review and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -186,7 +190,8 @@
     "B01_layering": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-layering.md",
     "B02_centering": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B02-centering.md",
     "B02_model": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B02-model.md",
-    "B01_single_tool": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-single-tool.md"
+    "B01_single_tool": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-single-tool.md",
+    "B03_projection": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-projection.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -213,5 +218,6 @@
   "B01_layering_evidence": "docs/nonplanar-dev/evidence/B01-layering/source-manifest.json",
   "B02_centering_evidence": "docs/nonplanar-dev/evidence/B02-centering/source-manifest.json",
   "B02_model_evidence": "docs/nonplanar-dev/evidence/B02-model/source-manifest.json",
-  "B01_single_tool_evidence": "docs/nonplanar-dev/evidence/B01-single-tool/source-manifest.json"
+  "B01_single_tool_evidence": "docs/nonplanar-dev/evidence/B01-single-tool/source-manifest.json",
+  "B03_projection_evidence": "docs/nonplanar-dev/evidence/B03-projection/source-manifest.json"
 }

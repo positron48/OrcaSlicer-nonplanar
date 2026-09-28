@@ -1,0 +1,21 @@
+{
+  "base_commit": "01865dcf0fb6324b6e8ec70d5d056be506aa1bf6",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-projection.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/UpperProjection.hpp": "dd94405cf8e74f008ff078e7406f7816ac33da2a5104b0f1a733e1750fb7bade",
+    "src/libslic3r/Nonplanar/UpperProjection.cpp": "bbf6c35efe09ba9229cf2a125ffd33c7d131a78070d1f6c210c91d47eb1b3ea7",
+    "src/libslic3r/Nonplanar/UpperProjectionPredicates.hpp": "cc21bae21a1894d18e933ab66aafe49b51860f836d626788dc6a9c84be240813",
+    "src/libslic3r/Nonplanar/UpperProjectionPredicates.cpp": "cfef895c05761c662e2696dcac2dcd8f52e6de5fd2bdc9629a8972a3cd09af2d",
+    "src/libslic3r/CMakeLists.txt": "065a0dfbc3bf49b7afa36e2d1a7c6759402244c11a4c088f974dadb3cadca45c",
+    "tests/nonplanar/CMakeLists.txt": "9f104877d037c5ddf69bc3092e77b3fb81bdb4d5d0393b9b2c180a84bd9bd131",
+    "tests/nonplanar/test_upper_projection.cpp": "901a3ac232ecb8ade639ae548f4ef59204acf1b863c376b26701df37a3fd9060",
+    "tests/nonplanar/test_stl_import.cpp": "9b86191e315da6cfc37373cdb44b31389bcb5fd59869de7a1afb4768da79294e"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "4ed142bbd12f7b4a2bed10d7702124a7dd255bb975e70354ee7ca8dd251ab051",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "f8a6e63ad649beedb88d3b96d3095cf0ea860fcda9f5eac97f80d0e6fb44d669",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "78690bff2c69ab0c61c06762f96183f806b329c438ee7bd97e4cb7f619ad2852"
+  },
+  "platform": "Darwin positroid-mac.local 25.5.0 Darwin Kernel Version 25.5.0: Mon Apr 27 20:39:42 PDT 2026; root:xnu-12377.121.6~2/RELEASE_ARM64_T6031 arm64",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin"
+}

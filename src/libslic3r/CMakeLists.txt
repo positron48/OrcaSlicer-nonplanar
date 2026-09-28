@@ -39,6 +39,8 @@ set(lisbslic3r_sources
     Nonplanar/StlFile.hpp
     Nonplanar/MeshPlacement.cpp
     Nonplanar/MeshPlacement.hpp
+    Nonplanar/UpperProjection.hpp
+    Nonplanar/UpperProjection.cpp
     Nonplanar/Contracts.cpp
     Nonplanar/Contracts.hpp
     Nonplanar/Collision.cpp
@@ -531,6 +533,7 @@ add_library(libslic3r_cgal STATIC
     MeshBoolean.hpp MeshBoolean.cpp
     TryCatchSignal.hpp TryCatchSignal.cpp
     Triangulation.hpp Triangulation.cpp
+    Nonplanar/UpperProjectionPredicates.hpp Nonplanar/UpperProjectionPredicates.cpp
 )
 target_include_directories(libslic3r_cgal PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -659,11 +662,11 @@ endif()
 
 # Outward interval operations must not be reassociated or contracted. Restrict
 # these options to the new primitive queries; stock slicing flags stay unchanged.
-set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+set_source_files_properties(Nonplanar/UpperProjection.cpp Nonplanar/UpperProjectionPredicates.cpp Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 if(MSVC)
-    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+    set_source_files_properties(Nonplanar/UpperProjection.cpp Nonplanar/UpperProjectionPredicates.cpp Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 else()
-    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
+    set_source_files_properties(Nonplanar/UpperProjection.cpp Nonplanar/UpperProjectionPredicates.cpp Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
 endif()
 
 if (SLIC3R_PCH AND NOT SLIC3R_SYNTAXONLY)

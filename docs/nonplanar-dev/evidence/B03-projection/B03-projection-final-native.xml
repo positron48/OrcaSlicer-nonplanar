@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="97" hostname="tbd" time="0.008" timestamp="2026-09-28T14:38:18Z">
+    <properties>
+      <property name="random-seed" value="2388134231"/>
+      <property name="filters" value="[UpperProjection]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B03 native STL Model placement feeds a subdivided nominal upper projection" time="0.000" status="run">
+      <failure message="s.minimum_z_mm==8" type="REQUIRE">
+FAILED:
+  REQUIRE( s.minimum_z_mm==8 )
+with expansion:
+  10.0 == 8
+CLOSED_ORIENTED_SINGLE_COMPONENT
+NOMINAL_UPPER_PROJECTION_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:179
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B03 invalid units mesh budgets and stale callbacks never publish a partial mask" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 late staleness and elapsed deadline discard an otherwise complete mask" time="0.005" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 hidden shelf cannot become a visible upper candidate" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 nominal slope exclusion reports area without changing the source" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 nominal upper projection retains the full predefined flat and wedge masks" time="0.000" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

@@ -1,4 +1,4 @@
-add_executable(nonplanar_tests test_contracts.cpp test_collision.cpp test_profile_scene.cpp test_stl_metadata.cpp test_mesh_audit.cpp test_stl_import.cpp test_stl_import_error.cpp test_stl_worker.cpp test_stl_file.cpp test_mesh_placement.cpp)
+add_executable(nonplanar_tests test_contracts.cpp test_collision.cpp test_profile_scene.cpp test_stl_metadata.cpp test_mesh_audit.cpp test_stl_import.cpp test_stl_import_error.cpp test_stl_worker.cpp test_stl_file.cpp test_mesh_placement.cpp test_upper_projection.cpp)
 add_executable(nonplanar_worker_probe worker_probe.cpp)
 target_link_libraries(nonplanar_worker_probe Threads::Threads)
 set_target_properties(nonplanar_worker_probe PROPERTIES MACOSX_BUNDLE FALSE)

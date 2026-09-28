@@ -8,6 +8,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <libslic3r/Nonplanar/StlImport.hpp>
 #include <libslic3r/Nonplanar/MeshPlacement.hpp>
+#include <libslic3r/Nonplanar/UpperProjection.hpp>
 #include <libslic3r/Model.hpp>
 #include <libslic3r/Format/STL.hpp>
 #include <boost/nowide/fstream.hpp>
@@ -148,6 +149,41 @@ TEST_CASE("B02 model placement reproduces native volume then instance geometry i
     REQUIRE(*result.total_error_upper_mm<1e-4);
     REQUIRE(result.native_transform_errors_upper_mm);
     REQUIRE(result.centering_error_upper_mm);
+}
+TEST_CASE("B03 native STL Model placement feeds a subdivided nominal upper projection", "[Nonplanar][B03][UpperProjection]")
+{
+    boost::nowide::ifstream input(NPTOP_STL_FIXTURE_PATH,std::ios::binary);
+    REQUIRE(input);
+    const std::string bytes(std::istreambuf_iterator<char>(input),{});
+    const auto imported=import_stl_snapshot(bytes,true);
+    REQUIRE(imported.geometry.status==MeshAuditStatus::ValidGeometry);
+    Model model; REQUIRE(load_stl(NPTOP_STL_FIXTURE_PATH,&model));
+    auto *object=model.objects.front();
+    REQUIRE(object->volumes.front()->source.mesh_offset.z()==2);
+    REQUIRE(object->volumes.front()->get_offset().z()==2);
+    object->volumes.front()->scale(Vec3d(2,1,1));
+    object->add_instance()->set_offset(Vec3d(60,70,6));
+    const auto placed=capture_model_placement(imported,model,PlateFrame{2,Vec3d(20,30,0)},73);
+    INFO(placed.geometry.reason);
+    REQUIRE(placed.geometry.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(placed.total_error_upper_mm);
+    const auto projection=analyze_upper_projection(*placed.geometry.normalized,true,73);
+    INFO(projection.reason);
+    REQUIRE(projection.status==UpperProjectionStatus::NominalHeightfield);
+    REQUIRE(projection.snapshot);
+    const auto &s=*projection.snapshot;
+    REQUIRE(s.revision==placed.snapshot->centered->revision);
+    REQUIRE(s.upward_facets.size()==32);
+    REQUIRE(s.xy_area_lower_mm2<=1200);
+    REQUIRE(s.xy_area_upper_mm2>=1200);
+    REQUIRE(s.xy_area_upper_mm2-s.xy_area_lower_mm2<1e-8);
+    REQUIRE(s.filtered_area_lower_mm2>1199.999999);
+    // Native volume placement restores the centering shift. Original top 4
+    // plus instance translation 6 is 10, not centered-local top 2 plus 6.
+    REQUIRE(s.minimum_z_mm==10);
+    REQUIRE(s.maximum_z_mm==10);
+    REQUIRE(same_oriented_triangles(s.geometry->its,placed.geometry.normalized->its));
+    REQUIRE(imported.source->bytes==bytes);
 }
 TEST_CASE("B02 model placement propagates prior error through every native stage", "[Nonplanar][B02][ModelPlacement]")
 {
