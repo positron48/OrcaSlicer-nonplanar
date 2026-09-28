@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="(empty)"
+	tests="37"
+	failures="0"
+	disabled="0"
+	skipped="0"
+	hostname=""
+	time="3"
+	timestamp="2026-09-28T10:40:24"
+	>
+	<testcase name="Scenario: SupportMaterial: support_layers_z and contact_distance" classname="Scenario: SupportMaterial: support_layers_z and contact_distance" time="0.117079" status="run">
+		<properties>
+			<property name="cmake_labels" value="SupportMaterial"/>
+		</properties>
+		<system-out>Filters: "Scenario: SupportMaterial: support_layers_z and contact_distance"
+Randomness seeded to: 3511699769
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="SupportMaterial: Three raft layers created" classname="SupportMaterial: Three raft layers created" time="0.0387062" status="run">
+		<properties>
+			<property name="cmake_labels" value="SupportMaterial"/>
+		</properties>
+		<system-out>Filters: "SupportMaterial: Three raft layers created"
+Randomness seeded to: 1440744862
+st=1, 
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal." classname="Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal." time="0.052184" status="run">
+		<properties>
+			<property name="cmake_labels" value="Print"/>
+		</properties>
+		<system-out>Filters: "Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal."
+Randomness seeded to: 3888022186
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: ExtrusionEntityCollection: Polygon flattening" classname="Scenario: ExtrusionEntityCollection: Polygon flattening" time="0.0297122" status="run">
+		<properties>
+			<property name="cmake_labels" value="ExtrusionEntity"/>
+		</properties>
+		<system-out>Filters: "Scenario: ExtrusionEntityCollection: Polygon flattening"
+Randomness seeded to: 796685379
+===============================================================================
+All tests passed (23 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMesh: split functionality." classname="Scenario: TriangleMesh: split functionality." time="0.0323875" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMesh: split functionality."
+Randomness seeded to: 940965707
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: init_print functionality" classname="Scenario: init_print functionality" time="0.0768459" status="run">
+		<properties>
+			<property name="cmake_labels" value="test_data"/>
+		</properties>
+		<system-out>Filters: "Scenario: init_print functionality"
+Randomness seeded to: 3828150981
+st=1, 
+st=1, 
+st=1, 
+[2026-09-28 10:40:24.981412] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMesh: Mesh merge functions" classname="Scenario: TriangleMesh: Mesh merge functions" time="0.0310004" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMesh: Mesh merge functions"
+Randomness seeded to: 212419057
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: PrintObject: object layer heights" classname="Scenario: PrintObject: object layer heights" time="0.0579971" status="run">
+		<properties>
+			<property name="cmake_labels" value="PrintObject"/>
+		</properties>
+		<system-out>Filters: "Scenario: PrintObject: object layer heights"
+Randomness seeded to: 2395088828
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (18 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Sequential printing follows model order" classname="Sequential printing follows model order" time="0.0956226" status="run">
+		<properties>
+			<property name="cmake_labels" value="PrintGCode"/>
+		</properties>
+		<system-out>Filters: "Sequential printing follows model order"
+Randomness seeded to: 400383535
+st=1, 
+st=2, 
+[2026-09-28 10:40:25.166085] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Filament-change time is attributed to tool-change moves, not extrusion roles" classname="Filament-change time is attributed to tool-change moves, not extrusion roles" time="0.0316555" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeTiming"/>
+		</properties>
+		<system-out>Filters: "Filament-change time is attributed to tool-change moves\, not extrusion roles"
+Randomness seeded to: 475880627
+[2026-09-28 10:40:25.200343] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (12 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Flow: Flow math for bridges" classname="Scenario: Flow: Flow math for bridges" time="0.0299212" status="run">
+		<properties>
+			<property name="cmake_labels" value="Flow"/>
+		</properties>
+		<system-out>Filters: "Scenario: Flow: Flow math for bridges"
+Randomness seeded to: 2523651414
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: z_hop lifts the nozzle when a lift is requested" classname="Scenario: z_hop lifts the nozzle when a lift is requested" time="0.030979" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeWriter"/>
+		</properties>
+		<system-out>Filters: "Scenario: z_hop lifts the nozzle when a lift is requested"
+Randomness seeded to: 4045424070
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Print: {first_object_name} is not replaced by the saved-project file name" classname="Print: {first_object_name} is not replaced by the saved-project file name" time="0.0317179" status="run">
+		<properties>
+			<property name="cmake_labels" value="Print"/>
+		</properties>
+		<system-out>Filters: "Print: {first_object_name} is not replaced by the saved-project file name"
+Randomness seeded to: 2369362905
+===============================================================================
+All tests passed (1 assertion in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMesh: slice behavior." classname="Scenario: TriangleMesh: slice behavior." time="0.0309235" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMesh: slice behavior."
+Randomness seeded to: 2516838528
+===============================================================================
+All tests passed (28 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Skirt height is honored" classname="Skirt height is honored" time="0.118601" status="run">
+		<properties>
+			<property name="cmake_labels" value="NotWorking;SkirtBrim"/>
+		</properties>
+		<system-out>Filters: "Skirt height is honored"
+Randomness seeded to: 284346948
+st=1, 
+[2026-09-28 10:40:25.386464] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+st=1, 
+st=2, 
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: PrintObject: Perimeter generation" classname="Scenario: PrintObject: Perimeter generation" time="0.0411875" status="run">
+		<properties>
+			<property name="cmake_labels" value="PrintObject"/>
+		</properties>
+		<system-out>Filters: "Scenario: PrintObject: Perimeter generation"
+Randomness seeded to: 3091190236
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (200 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Filament-change time is not dropped when few motion blocks precede the change" classname="Filament-change time is not dropped when few motion blocks precede the change" time="0.0311652" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeTiming"/>
+		</properties>
+		<system-out>Filters: "Filament-change time is not dropped when few motion blocks precede the change"
+Randomness seeded to: 3247907317
+[2026-09-28 10:40:25.516873] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Skirt and brim generation" classname="Scenario: Skirt and brim generation" time="0.159382" status="run">
+		<properties>
+			<property name="cmake_labels" value="NotWorking;SkirtBrim"/>
+		</properties>
+		<system-out>Filters: "Scenario: Skirt and brim generation"
+Randomness seeded to: 3999036504
+st=1, 
+[2026-09-28 10:40:25.547355] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9917: option filament_deretraction_speed not found, skipping
+[2026-09-28 10:40:25.547365] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9980: option filament_long_retractions_when_cut not found, skipping
+[2026-09-28 10:40:25.547369] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9938: option filament_retract_before_wipe not found, skipping
+[2026-09-28 10:40:25.547372] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9917: option filament_retract_lift_above not found, skipping
+[2026-09-28 10:40:25.547374] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9917: option filament_retract_lift_below not found, skipping
+[202...
+[This part of the test output was removed since it exceeds the threshold of 1024 bytes.]
+</system-out>
+	</testcase>
+	<testcase name="SupportMaterial: enforced support layers are generated" classname="SupportMaterial: enforced support layers are generated" time="0.0453423" status="run">
+		<properties>
+			<property name="cmake_labels" value="SupportMaterial"/>
+		</properties>
+		<system-out>Filters: "SupportMaterial: enforced support layers are generated"
+Randomness seeded to: 125452378
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: set_speed emits values with fixed-point output." classname="Scenario: set_speed emits values with fixed-point output." time="0.0299647" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeWriter"/>
+		</properties>
+		<system-out>Filters: "Scenario: set_speed emits values with fixed-point output."
+Randomness seeded to: 612760130
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Back-to-back tool changes buffer then merge into one tool-change block" classname="Back-to-back tool changes buffer then merge into one tool-change block" time="0.0305211" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeTiming"/>
+		</properties>
+		<system-out>Filters: "Back-to-back tool changes buffer then merge into one tool-change block"
+Randomness seeded to: 791440310
+[2026-09-28 10:40:25.782436] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (9 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Print: Skirt generation" classname="Scenario: Print: Skirt generation" time="0.036997" status="run">
+		<properties>
+			<property name="cmake_labels" value="Print"/>
+		</properties>
+		<system-out>Filters: "Scenario: Print: Skirt generation"
+Randomness seeded to: 2251533450
+st=1, 
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="export_gcode writes G-code without a result pointer" classname="export_gcode writes G-code without a result pointer" time="0.102584" status="run">
+		<properties>
+			<property name="cmake_labels" value="PrintGCode;export_gcode"/>
+		</properties>
+		<system-out>Filters: "export_gcode writes G-code without a result pointer"
+Randomness seeded to: 3915641763
+st=1, 
+[2026-09-28 10:40:25.886507] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+st=1, 
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: PrintGCode basic functionality" classname="Scenario: PrintGCode basic functionality" time="1.22195" status="run">
+		<properties>
+			<property name="cmake_labels" value="NotWorking;PrintGCode"/>
+		</properties>
+		<system-out>Filters: "Scenario: PrintGCode basic functionality"
+Randomness seeded to: 3930898831
+st=1, 
+[2026-09-28 10:40:25.988771] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=2, 
+===============================================================================
+All tests passed (51 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMeshSlicer: Cut behavior." classname="Scenario: TriangleMeshSlicer: Cut behavior." time="0.0295982" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMeshSlicer: Cut behavior."
+Randomness seeded to: 1391077093
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Origin manipulation" classname="Scenario: Origin manipulation" time="0.0297064" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCode"/>
+		</properties>
+		<system-out>Filters: "Scenario: Origin manipulation"
+Randomness seeded to: 3667830826
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Trailing tool change at end of file is drained, not dropped" classname="Trailing tool change at end of file is drained, not dropped" time="0.0303355" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeTiming"/>
+		</properties>
+		<system-out>Filters: "Trailing tool change at end of file is drained\, not dropped"
+Randomness seeded to: 754882094
+[2026-09-28 10:40:27.235336] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (5 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Print: {first_object_name} names the first printable object on the plate" classname="Print: {first_object_name} names the first printable object on the plate" time="0.0342908" status="run">
+		<properties>
+			<property name="cmake_labels" value="Print"/>
+		</properties>
+		<system-out>Filters: "Print: {first_object_name} names the first printable object on the plate"
+Randomness seeded to: 1584658189
+===============================================================================
+All tests passed (4 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Print: Brim generation" classname="Scenario: Print: Brim generation" time="0.0443125" status="run">
+		<properties>
+			<property name="cmake_labels" value="Print"/>
+		</properties>
+		<system-out>Filters: "Scenario: Print: Brim generation"
+Randomness seeded to: 2300552099
+st=1, 
+st=1, 
+===============================================================================
+All tests passed (2 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMesh: Transformation functions affect mesh as expected." classname="Scenario: TriangleMesh: Transformation functions affect mesh as expected." time="0.0301123" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMesh: Transformation functions affect mesh as expected."
+Randomness seeded to: 2856807912
+===============================================================================
+All tests passed (10 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: TriangleMesh: Basic mesh statistics" classname="Scenario: TriangleMesh: Basic mesh statistics" time="0.0287029" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: TriangleMesh: Basic mesh statistics"
+Randomness seeded to: 1601483557
+===============================================================================
+All tests passed (45 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Carried-forward tool-change delay reaches the total without polluting roles" classname="Carried-forward tool-change delay reaches the total without polluting roles" time="0.0301873" status="run">
+		<properties>
+			<property name="cmake_labels" value="GCodeTiming"/>
+		</properties>
+		<system-out>Filters: "Carried-forward tool-change delay reaches the total without polluting roles"
+Randomness seeded to: 2697084145
+[2026-09-28 10:40:27.403812] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (7 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: make_xxx functions produce meshes." classname="Scenario: make_xxx functions produce meshes." time="0.0405512" status="run">
+		<properties/>
+		<system-out>Filters: "Scenario: make_xxx functions produce meshes."
+Randomness seeded to: 1525020095
+===============================================================================
+All tests passed (11 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Fill: Pattern Path Length" classname="Fill: Pattern Path Length" time="0.0329697" status="run">
+		<properties>
+			<property name="cmake_labels" value="Fill"/>
+		</properties>
+		<system-out>Filters: "Fill: Pattern Path Length"
+Randomness seeded to: 64147096
+===============================================================================
+All tests passed (56 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Initial layer height is honored" classname="Initial layer height is honored" time="0.0697755" status="run">
+		<properties>
+			<property name="cmake_labels" value="PrintGCode"/>
+		</properties>
+		<system-out>Filters: "Initial layer height is honored"
+Randomness seeded to: 3133420972
+st=1, 
+[2026-09-28 10:40:27.545710] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (3 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Model construction" classname="Scenario: Model construction" time="0.0673611" status="run">
+		<properties>
+			<property name="cmake_labels" value="Model"/>
+		</properties>
+		<system-out>Filters: "Scenario: Model construction"
+Randomness seeded to: 1756744720
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+[2026-09-28 10:40:27.615166] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+===============================================================================
+All tests passed (15 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+	<testcase name="Scenario: Flow: Flow math for non-bridges" classname="Scenario: Flow: Flow math for non-bridges" time="0.0298836" status="run">
+		<properties>
+			<property name="cmake_labels" value="Flow"/>
+		</properties>
+		<system-out>Filters: "Scenario: Flow: Flow math for non-bridges"
+Randomness seeded to: 4038160806
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+
+</system-out>
+	</testcase>
+</testsuite>

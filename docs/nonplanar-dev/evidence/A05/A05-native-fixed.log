@@ -1,0 +1,31 @@
+Filters: [A05],[ObjectLabels]
+Randomness seeded to: 4705
+st=1, 
+st=1, 
+st=1, 
+[2026-09-28 10:46:58.845696] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Object labels have stable IDs with exclusion enabled or disabled
+  exclude_object=0
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/fff_print/test_printgcode.cpp:263
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/fff_print/test_printgcode.cpp:281: FAILED:
+  REQUIRE( (output.find("EXCLUDE_OBJECT_DEFINE") != std::string::npos) == exclude )
+with expansion:
+  true == false
+
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+===============================================================================
+test cases:  10 |   9 passed | 1 failed
+assertions: 121 | 120 passed | 1 failed
+

@@ -1,0 +1,29 @@
+{"command": ["env", "MallocPreScribble=1", "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/stock/tmp/", "sandbox-exec", "-f", "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/offline.sb", "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-dev/NonplanarTopLab.app/Contents/MacOS/NonplanarTopLabCore", "--datadir", "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/stock/data", "--debug", "2", "--load-settings", "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-off.json", "--load-filaments", "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json", "--arrange", "1", "--orient", "0", "--outputdir", "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/stock/output", "--export-settings", "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/stock/resolved.json", "--slice", "0", "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/shallow_sphere.stl"], "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/stock", "started_utc": "2026-09-28T07:42:49.452127+00:00", "status": "COMPLETED", "exit_code": 0, "elapsed_seconds": 0.161}
+{"command": ["env", "MallocPreScribble=1", "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/fork/tmp/", "sandbox-exec", "-f", "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/offline.sb", "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer", "--datadir", "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/fork/data", "--debug", "2", "--load-settings", "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-off.json", "--load-filaments", "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json", "--arrange", "1", "--orient", "0", "--outputdir", "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/fork/output", "--export-settings", "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/fork/resolved.json", "--slice", "0", "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/shallow_sphere.stl"], "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A05-label-diagnostic/fork", "started_utc": "2026-09-28T07:42:49.749494+00:00", "status": "COMPLETED", "exit_code": 0, "elapsed_seconds": 0.94}
+{
+  "status": "DIAGNOSTIC_ONLY_NOT_A_GATE",
+  "runs": [
+    {
+      "name": "stock",
+      "binary_sha256": "9ad1c83ac5f72d1215336a8af53b008e93e29fd4a148d90a3a57cada356600f8",
+      "strict_timestamp_only_match": true,
+      "changed_comment_lines": 0,
+      "object_ids": [
+        "0"
+      ],
+      "modal_moves_match": true,
+      "resolved_settings_match": true
+    },
+    {
+      "name": "fork",
+      "binary_sha256": "d434d879e4ff85c54117fef6cd8329927bf49374991ec818a7458f2298b15c41",
+      "strict_timestamp_only_match": true,
+      "changed_comment_lines": 0,
+      "object_ids": [
+        "0"
+      ],
+      "modal_moves_match": true,
+      "resolved_settings_match": true
+    }
+  ]
+}

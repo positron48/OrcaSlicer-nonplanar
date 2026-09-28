@@ -1,0 +1,28 @@
+Filters: [ObjectLabels]
+Randomness seeded to: 3947743402
+[2026-09-28 10:45:56.098933] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Object labels have stable IDs with exclusion enabled or disabled
+  exclude_object=0
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/fff_print/test_printgcode.cpp:263
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/fff_print/test_printgcode.cpp:279: FAILED:
+  REQUIRE( starts == expected )
+with expansion:
+  { "4242" } == { "0", "1" }
+
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 6 | 5 passed | 1 failed
+

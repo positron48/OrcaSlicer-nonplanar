@@ -1,0 +1,27 @@
+Filters: [A05]
+Randomness seeded to: 4705
+st=1, 
+st=1, 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+INT-01 native reserved body supports an affine first pass
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_transition.cpp:83
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_transition.cpp:35: FAILED:
+  REQUIRE( range.lower <= expected )
+with expansion:
+  0.32000000000000284 <= 0.32000000000000001
+with message:
+  result.reason := 0
+
+st=1, 
+===============================================================================
+test cases:   9 |   8 passed | 1 failed
+assertions: 109 | 108 passed | 1 failed
+

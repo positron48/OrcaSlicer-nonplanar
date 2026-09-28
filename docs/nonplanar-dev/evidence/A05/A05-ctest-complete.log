@@ -1,0 +1,244 @@
+Test project /Users/antonfilatov/www/my/orca-nonplanar/build/arm64
+      Start 136: Scenario: init_print functionality
+ 1/66 Test #136: Scenario: init_print functionality .......................................................................   Passed    0.10 sec
+      Start 137: SupportMaterial: enforced support layers are generated
+ 2/66 Test #137: SupportMaterial: enforced support layers are generated ...................................................   Passed    0.06 sec
+      Start 138: Scenario: TriangleMeshSlicer: Cut behavior.
+ 3/66 Test #138: Scenario: TriangleMeshSlicer: Cut behavior. ..............................................................   Passed    0.03 sec
+      Start 139: Scenario: TriangleMesh: Basic mesh statistics
+ 4/66 Test #139: Scenario: TriangleMesh: Basic mesh statistics ............................................................   Passed    0.03 sec
+      Start 140: Scenario: Flow: Flow math for non-bridges
+ 5/66 Test #140: Scenario: Flow: Flow math for non-bridges ................................................................   Passed    0.03 sec
+      Start 141: Filament-change time is not dropped when few motion blocks precede the change
+ 6/66 Test #141: Filament-change time is not dropped when few motion blocks precede the change ............................   Passed    0.03 sec
+      Start 142: SupportMaterial: Three raft layers created
+ 7/66 Test #142: SupportMaterial: Three raft layers created ...............................................................   Passed    0.05 sec
+      Start 143: Scenario: z_hop lifts the nozzle when a lift is requested
+ 8/66 Test #143: Scenario: z_hop lifts the nozzle when a lift is requested ................................................   Passed    0.03 sec
+      Start 144: Scenario: Model construction
+ 9/66 Test #144: Scenario: Model construction .............................................................................   Passed    0.08 sec
+      Start 145: Print: {first_object_name} names the first printable object on the plate
+10/66 Test #145: Print: {first_object_name} names the first printable object on the plate .................................   Passed    0.04 sec
+      Start 146: Sequential printing follows model order
+11/66 Test #146: Sequential printing follows model order ..................................................................   Passed    0.10 sec
+      Start 147: INT-02 unsupported native paths cannot masquerade as planar support
+12/66 Test #147: INT-02 unsupported native paths cannot masquerade as planar support ......................................   Passed    0.03 sec
+      Start 148: Scenario: Skirt and brim generation
+13/66 Test #148: Scenario: Skirt and brim generation ......................................................................   Passed    0.21 sec
+      Start 149: Scenario: Print: Skirt generation
+14/66 Test #149: Scenario: Print: Skirt generation ........................................................................   Passed    0.04 sec
+      Start 150: Scenario: TriangleMesh: Mesh merge functions
+15/66 Test #150: Scenario: TriangleMesh: Mesh merge functions .............................................................   Passed    0.03 sec
+      Start 151: INT-01 affine footprint and volume use all corners
+16/66 Test #151: INT-01 affine footprint and volume use all corners .......................................................   Passed    0.03 sec
+      Start 152: INT-01 native support is invariant under reversal and explicit translation
+17/66 Test #152: INT-01 native support is invariant under reversal and explicit translation ...............................   Passed    0.03 sec
+      Start 153: Scenario: PrintObject: Perimeter generation
+18/66 Test #153: Scenario: PrintObject: Perimeter generation ..............................................................   Passed    0.05 sec
+      Start 154: Scenario: TriangleMesh: split functionality.
+19/66 Test #154: Scenario: TriangleMesh: split functionality. .............................................................   Passed    0.03 sec
+      Start 155: Carried-forward tool-change delay reaches the total without polluting roles
+20/66 Test #155: Carried-forward tool-change delay reaches the total without polluting roles ..............................   Passed    0.03 sec
+      Start 156: Back-to-back tool changes buffer then merge into one tool-change block
+21/66 Test #156: Back-to-back tool changes buffer then merge into one tool-change block ...................................   Passed    0.03 sec
+      Start 157: Scenario: Flow: Flow math for bridges
+22/66 Test #157: Scenario: Flow: Flow math for bridges ....................................................................   Passed    0.03 sec
+      Start 158: INT-02 lower support excludes the bead shoulders endpoints and gaps
+23/66 Test #158: INT-02 lower support excludes the bead shoulders endpoints and gaps ......................................   Passed    0.03 sec
+      Start 159: Scenario: Print: Brim generation
+24/66 Test #159: Scenario: Print: Brim generation .........................................................................   Passed    0.06 sec
+      Start 160: INT-03 invalid cells budgets and stale scales stay unknown
+25/66 Test #160: INT-03 invalid cells budgets and stale scales stay unknown ...............................................   Passed    0.03 sec
+      Start 161: Scenario: set_speed emits values with fixed-point output.
+26/66 Test #161: Scenario: set_speed emits values with fixed-point output. ................................................   Passed    0.03 sec
+      Start 162: Scenario: PrintGCode basic functionality
+27/66 Test #162: Scenario: PrintGCode basic functionality .................................................................   Passed    1.73 sec
+      Start 163: Initial layer height is honored
+28/66 Test #163: Initial layer height is honored ..........................................................................   Passed    0.08 sec
+      Start 164: Scenario: Origin manipulation
+29/66 Test #164: Scenario: Origin manipulation ............................................................................   Passed    0.03 sec
+      Start 165: INT-03 uncertainty never creates support or increases nominal volume
+30/66 Test #165: INT-03 uncertainty never creates support or increases nominal volume .....................................   Passed    0.03 sec
+      Start 166: Scenario: ExtrusionEntityCollection: Polygon flattening
+31/66 Test #166: Scenario: ExtrusionEntityCollection: Polygon flattening ..................................................   Passed    0.03 sec
+      Start 167: Scenario: SupportMaterial: support_layers_z and contact_distance
+32/66 Test #167: Scenario: SupportMaterial: support_layers_z and contact_distance .........................................   Passed    0.15 sec
+      Start 168: INT-03 offset mutations recheck gap and volume without auto lifting
+33/66 Test #168: INT-03 offset mutations recheck gap and volume without auto lifting ......................................   Passed    0.03 sec
+      Start 169: Trailing tool change at end of file is drained, not dropped
+34/66 Test #169: Trailing tool change at end of file is drained, not dropped ..............................................   Passed    0.03 sec
+      Start 170: INT-01 native reserved body supports an affine first pass
+35/66 Test #170: INT-01 native reserved body supports an affine first pass ................................................   Passed    0.04 sec
+      Start 171: Scenario: TriangleMesh: Transformation functions affect mesh as expected.
+36/66 Test #171: Scenario: TriangleMesh: Transformation functions affect mesh as expected. ................................   Passed    0.03 sec
+      Start 172: export_gcode writes G-code without a result pointer
+37/66 Test #172: export_gcode writes G-code without a result pointer ......................................................   Passed    0.13 sec
+      Start 173: Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal.
+38/66 Test #173: Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal. ...   Passed    0.06 sec
+      Start 174: Skirt height is honored
+39/66 Test #174: Skirt height is honored ..................................................................................   Passed    0.13 sec
+      Start 175: Print: {first_object_name} is not replaced by the saved-project file name
+40/66 Test #175: Print: {first_object_name} is not replaced by the saved-project file name ................................   Passed    0.03 sec
+      Start 176: Scenario: TriangleMesh: slice behavior.
+41/66 Test #176: Scenario: TriangleMesh: slice behavior. ..................................................................   Passed    0.03 sec
+      Start 177: Filament-change time is attributed to tool-change moves, not extrusion roles
+42/66 Test #177: Filament-change time is attributed to tool-change moves, not extrusion roles .............................   Passed    0.03 sec
+      Start 178: Scenario: make_xxx functions produce meshes.
+43/66 Test #178: Scenario: make_xxx functions produce meshes. .............................................................   Passed    0.04 sec
+      Start 179: Object labels have stable IDs with exclusion enabled or disabled
+44/66 Test #179: Object labels have stable IDs with exclusion enabled or disabled .........................................   Passed    0.08 sec
+      Start 180: Fill: Pattern Path Length
+45/66 Test #180: Fill: Pattern Path Length ................................................................................   Passed    0.03 sec
+      Start 181: Scenario: PrintObject: object layer heights
+46/66 Test #181: Scenario: PrintObject: object layer heights ..............................................................   Passed    0.06 sec
+      Start 182: INT-02 native lower stair support rejects the unchanged upper candidate
+47/66 Test #182: INT-02 native lower stair support rejects the unchanged upper candidate ..................................   Passed    0.04 sec
+      Start 204: GEO-02 finite outer tip uses full plane gradient
+48/66 Test #204: GEO-02 finite outer tip uses full plane gradient .........................................................   Passed    0.00 sec
+      Start 205: ORC-05 rejects stale scale nonfinite and out of domain coordinates
+49/66 Test #205: ORC-05 rejects stale scale nonfinite and out of domain coordinates .......................................   Passed    0.00 sec
+      Start 206: GEO-08 unsupported queries and exhausted limits stay unknown
+50/66 Test #206: GEO-08 unsupported queries and exhausted limits stay unknown .............................................   Passed    0.00 sec
+      Start 207: VOL-01 XY integral preserves volume on sloped surfaces without a second correction
+51/66 Test #207: VOL-01 XY integral preserves volume on sloped surfaces without a second correction .......................   Passed    0.00 sec
+      Start 208: GEO-03 transverse slope collides along a constant Z path
+52/66 Test #208: GEO-03 transverse slope collides along a constant Z path .................................................   Passed    0.00 sec
+      Start 209: VOL-02 vertical and normal gaps obey independent plane distance
+53/66 Test #209: VOL-02 vertical and normal gaps obey independent plane distance ..........................................   Passed    0.00 sec
+      Start 210: VOL-01 invalid deposition dimensions reject instead of producing volume
+54/66 Test #210: VOL-01 invalid deposition dimensions reject instead of producing volume ..................................   Passed    0.00 sec
+      Start 211: ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales
+55/66 Test #211: ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales ...........................   Passed    0.00 sec
+      Start 212: Numeric budgets charge each component and reject missing invalid or exceeded bounds
+56/66 Test #212: Numeric budgets charge each component and reject missing invalid or exceeded bounds ......................   Passed    0.00 sec
+      Start 213: GEO-01 asymmetric tool axes stay fixed when the path turns
+57/66 Test #213: GEO-01 asymmetric tool axes stay fixed when the path turns ...............................................   Passed    0.00 sec
+      Start 214: GEO-04 translation reversal and envelope growth preserve clearance decisions
+58/66 Test #214: GEO-04 translation reversal and envelope growth preserve clearance decisions .............................   Passed    0.01 sec
+      Start 215: GEO-04 continuous sweep catches a wall between free endpoints
+59/66 Test #215: GEO-04 continuous sweep catches a wall between free endpoints ............................................   Passed    0.01 sec
+      Start 216: GEO-07 uncertain clearance never passes at the boundary
+60/66 Test #216: GEO-07 uncertain clearance never passes at the boundary ..................................................   Passed    0.01 sec
+      Start 217: GEO-08 malformed geometry and numeric environment fail closed
+61/66 Test #217: GEO-08 malformed geometry and numeric environment fail closed ............................................   Passed    0.01 sec
+      Start 218: GEO-04 bounded subdivision proves a diagonal sweep clear
+62/66 Test #218: GEO-04 bounded subdivision proves a diagonal sweep clear .................................................   Passed    0.01 sec
+      Start 219: GEO-04 entering contact does not starve a later penetration
+63/66 Test #219: GEO-04 entering contact does not starve a later penetration ..............................................   Passed    0.01 sec
+      Start 220: GEO-04 sweep agrees with an independent slab intersection oracle
+64/66 Test #220: GEO-04 sweep agrees with an independent slab intersection oracle .........................................   Passed    0.01 sec
+      Start 221: IR deposition travel and retraction carry different measures
+65/66 Test #221: IR deposition travel and retraction carry different measures .............................................   Passed    0.01 sec
+      Start 222: GEO-05 duct collision is independent of nozzle clearance
+66/66 Test #222: GEO-05 duct collision is independent of nozzle clearance .................................................   Passed    0.01 sec
+
+100% tests passed, 0 tests failed out of 66
+
+Label Time Summary:
+A05                =   0.29 sec*proc (9 tests)
+ExtrusionEntity    =   0.03 sec*proc (1 test)
+Fill               =   0.03 sec*proc (1 test)
+Flow               =   0.06 sec*proc (2 tests)
+GCode              =   0.03 sec*proc (1 test)
+GCodeTiming        =   0.16 sec*proc (5 tests)
+GCodeWriter        =   0.07 sec*proc (2 tests)
+GEO-01             =   0.00 sec*proc (1 test)
+GEO-02             =   0.00 sec*proc (1 test)
+GEO-03             =   0.00 sec*proc (1 test)
+GEO-04             =   0.03 sec*proc (5 tests)
+GEO-05             =   0.01 sec*proc (1 test)
+GEO-07             =   0.01 sec*proc (1 test)
+GEO-08             =   0.01 sec*proc (2 tests)
+INT-01             =   0.10 sec*proc (3 tests)
+INT-02             =   0.10 sec*proc (3 tests)
+INT-03             =   0.09 sec*proc (3 tests)
+IR                 =   0.01 sec*proc (2 tests)
+Model              =   0.08 sec*proc (1 test)
+Nonplanar          =   0.39 sec*proc (28 tests)
+NotWorking         =   2.07 sec*proc (3 tests)
+ORC-05             =   0.01 sec*proc (2 tests)
+ObjectLabels       =   0.08 sec*proc (1 test)
+Print              =   0.22 sec*proc (5 tests)
+PrintGCode         =   2.11 sec*proc (5 tests)
+PrintObject        =   0.11 sec*proc (2 tests)
+SkirtBrim          =   0.34 sec*proc (2 tests)
+SupportMaterial    =   0.26 sec*proc (3 tests)
+VOL-01             =   0.10 sec*proc (5 tests)
+VOL-02             =   0.00 sec*proc (1 test)
+export_gcode       =   0.13 sec*proc (1 test)
+test_data          =   0.10 sec*proc (1 test)
+
+Total Test time (real) =   4.27 sec
+{
+  "tests_discovered": 66,
+  "tests_executed": 66,
+  "test_names": [
+    "Scenario: init_print functionality",
+    "SupportMaterial: enforced support layers are generated",
+    "Scenario: TriangleMeshSlicer: Cut behavior.",
+    "Scenario: TriangleMesh: Basic mesh statistics",
+    "Scenario: Flow: Flow math for non-bridges",
+    "Filament-change time is not dropped when few motion blocks precede the change",
+    "SupportMaterial: Three raft layers created",
+    "Scenario: z_hop lifts the nozzle when a lift is requested",
+    "Scenario: Model construction",
+    "Print: {first_object_name} names the first printable object on the plate",
+    "Sequential printing follows model order",
+    "INT-02 unsupported native paths cannot masquerade as planar support",
+    "Scenario: Skirt and brim generation",
+    "Scenario: Print: Skirt generation",
+    "Scenario: TriangleMesh: Mesh merge functions",
+    "INT-01 affine footprint and volume use all corners",
+    "INT-01 native support is invariant under reversal and explicit translation",
+    "Scenario: PrintObject: Perimeter generation",
+    "Scenario: TriangleMesh: split functionality.",
+    "Carried-forward tool-change delay reaches the total without polluting roles",
+    "Back-to-back tool changes buffer then merge into one tool-change block",
+    "Scenario: Flow: Flow math for bridges",
+    "INT-02 lower support excludes the bead shoulders endpoints and gaps",
+    "Scenario: Print: Brim generation",
+    "INT-03 invalid cells budgets and stale scales stay unknown",
+    "Scenario: set_speed emits values with fixed-point output.",
+    "Scenario: PrintGCode basic functionality",
+    "Initial layer height is honored",
+    "Scenario: Origin manipulation",
+    "INT-03 uncertainty never creates support or increases nominal volume",
+    "Scenario: ExtrusionEntityCollection: Polygon flattening",
+    "Scenario: SupportMaterial: support_layers_z and contact_distance",
+    "INT-03 offset mutations recheck gap and volume without auto lifting",
+    "Trailing tool change at end of file is drained, not dropped",
+    "INT-01 native reserved body supports an affine first pass",
+    "Scenario: TriangleMesh: Transformation functions affect mesh as expected.",
+    "export_gcode writes G-code without a result pointer",
+    "Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal.",
+    "Skirt height is honored",
+    "Print: {first_object_name} is not replaced by the saved-project file name",
+    "Scenario: TriangleMesh: slice behavior.",
+    "Filament-change time is attributed to tool-change moves, not extrusion roles",
+    "Scenario: make_xxx functions produce meshes.",
+    "Object labels have stable IDs with exclusion enabled or disabled",
+    "Fill: Pattern Path Length",
+    "Scenario: PrintObject: object layer heights",
+    "INT-02 native lower stair support rejects the unchanged upper candidate",
+    "GEO-02 finite outer tip uses full plane gradient",
+    "ORC-05 rejects stale scale nonfinite and out of domain coordinates",
+    "GEO-08 unsupported queries and exhausted limits stay unknown",
+    "VOL-01 XY integral preserves volume on sloped surfaces without a second correction",
+    "GEO-03 transverse slope collides along a constant Z path",
+    "VOL-02 vertical and normal gaps obey independent plane distance",
+    "VOL-01 invalid deposition dimensions reject instead of producing volume",
+    "ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales",
+    "Numeric budgets charge each component and reject missing invalid or exceeded bounds",
+    "GEO-01 asymmetric tool axes stay fixed when the path turns",
+    "GEO-04 translation reversal and envelope growth preserve clearance decisions",
+    "GEO-04 continuous sweep catches a wall between free endpoints",
+    "GEO-07 uncertain clearance never passes at the boundary",
+    "GEO-08 malformed geometry and numeric environment fail closed",
+    "GEO-04 bounded subdivision proves a diagonal sweep clear",
+    "GEO-04 entering contact does not starve a later penetration",
+    "GEO-04 sweep agrees with an independent slab intersection oracle",
+    "IR deposition travel and retraction carry different measures",
+    "GEO-05 duct collision is independent of nozzle clearance"
+  ],
+  "status": "PASS"
+}

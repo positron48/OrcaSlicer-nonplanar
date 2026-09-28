@@ -1,0 +1,85 @@
+      |                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:523:10: note: in instantiation of function template specialization 'std::__allocator_destroy<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, std::reverse_iterator<Slic3r::Polygon *>, std::reverse_iterator<Slic3r::Polygon *>>' requested here
+  523 |     std::__allocator_destroy(__alloc_, std::reverse_iterator<_Iter>(__last_), std::reverse_iterator<_Iter>(__first_));
+      |          ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__utility/exception_guard.h:136:10: note: in instantiation of member function 'std::__exception_guard_exceptions<std::_AllocatorDestroyRangeReverse<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, Slic3r::Polygon *>>::~__exception_guard_exceptions' requested here
+  136 |   return __exception_guard<_Rollback>(std::move(__rollback));
+      |          ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:582:33: note: in instantiation of function template specialization 'std::__uninitialized_allocator_copy_impl<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, const Slic3r::Polygon *, const Slic3r::Polygon *, Slic3r::Polygon *>' requested here
+  582 |   auto __result          = std::__uninitialized_allocator_copy_impl(
+      |                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:945:22: note: in instantiation of function template specialization 'std::__uninitialized_allocator_copy<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>, Slic3r::Polygon *>' requested here
+  945 |   __tx.__pos_ = std::__uninitialized_allocator_copy(this->__alloc_, std::move(__first), std::move(__last), __tx.__pos_);
+      |                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:1338:11: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::__construct_at_end<std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>>' requested here
+ 1338 |           __construct_at_end(__m, __last, __n - __dx);
+      |           ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:515:12: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::__insert_with_size<std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>>' requested here
+  515 |     return __insert_with_size(__position, __first, __last, std::distance(__first, __last));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Polygon.hpp:148:71: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::insert<std::__wrap_iter<const Slic3r::Polygon *>, 0>' requested here
+  148 | inline void polygons_append(Polygons &dst, const Polygons &src) { dst.insert(dst.end(), src.begin(), src.end()); }
+      |                                                                       ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/oneapi/tbb/scalable_allocator.h:254:35: note: qualify call to silence this warning
+  254 |     void destroy(pointer p) { p->~value_type(); }
+      |                                   ^
+14 warnings generated.
+[785/797] Building CXX object tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/test_print.cpp.o
+[786/797] Building CXX object tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/test_printobject.cpp.o
+[787/797] Building CXX object tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/test_skirt_brim.cpp.o
+[788/797] Building CXX object tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/test_printgcode.cpp.o
+[789/797] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_contracts.cpp.o
+[790/797] Linking CXX executable src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer; Symlinking the resources directory into the build tree
+ld: warning: ignoring duplicate libraries: '-lc++', '-lm', '/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/lib/libjpeg.a', '/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/lib/libpng.a', 'deps_src/libnest2d/Release/liblibnest2d.a', 'src/libslic3r/Release/liblibslic3r.a'
+[791/797] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_collision.cpp.o
+[792/797] Building CXX object tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/test_trianglemesh.cpp.o
+[793/797] Linking CXX executable tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests
+ld: warning: ignoring duplicate libraries: '-lc++', '-lm', 'deps_src/libnest2d/Release/liblibnest2d.a', 'src/libslic3r/Release/liblibslic3r.a'
+[794/797] Building CXX object tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/test_support_material.cpp.o
+[795/797] Building CXX object tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_transition.cpp.o
+FAILED: [code=1] tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_transition.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"e8ddab22\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_transition.cpp.o -MF tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_transition.cpp.o.d -o tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_transition.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_transition.cpp
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_transition.cpp:6:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:61:11: error: unknown type name 'indexed_triangle_set'
+   61 |     const indexed_triangle_set       &mesh,
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:68:11: error: unknown type name 'indexed_triangle_set'
+   68 |     const indexed_triangle_set       &mesh,
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:73:11: error: unknown type name 'indexed_triangle_set'
+   73 |     const indexed_triangle_set       &mesh,
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:79:11: error: unknown type name 'indexed_triangle_set'
+   79 |     const indexed_triangle_set       &mesh,
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:87:11: error: unknown type name 'indexed_triangle_set'
+   87 |     const indexed_triangle_set       &mesh,
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:104:11: error: unknown type name 'indexed_triangle_set'
+  104 |     const indexed_triangle_set       &mesh,
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:115:11: error: unknown type name 'indexed_triangle_set'
+  115 |     const indexed_triangle_set       &mesh,
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:123:11: error: unknown type name 'indexed_triangle_set'
+  123 |     const indexed_triangle_set       &mesh,
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:128:11: error: unknown type name 'indexed_triangle_set'
+  128 |     const indexed_triangle_set      &mesh,
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:130:5: error: unknown type name 'indexed_triangle_set'
+  130 |     indexed_triangle_set            *upper,
+      |     ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:131:5: error: unknown type name 'indexed_triangle_set'
+  131 |     indexed_triangle_set            *lower,
+      |     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_transition.cpp:89:5: error: no matching function for call to 'cut_mesh'
+   89 |     cut_mesh(original.its,1.f,&upper,&lower);
+      |     ^~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/TriangleMeshSlicer.hpp:127:6: note: candidate function not viable: no known conversion from 'indexed_triangle_set' to 'const int' for 1st argument
+  127 | void cut_mesh(
+      |      ^
+  128 |     const indexed_triangle_set      &mesh,
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+12 errors generated.
+ninja: build stopped: subcommand failed.

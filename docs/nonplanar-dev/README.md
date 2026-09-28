@@ -16,7 +16,7 @@ revision resolves with the included Git command.
 Follow `../nonplanar/prompts/01_bootstrap.md`: A01–A03, then concrete A04–A08
 tasks. Native macOS stock/fork builds, 37 FFF tests, seven analytical C++ tests
 and six OFF/ZAA differential cases passed. See bootstrap-report.md. Gate A as
-a whole is IN_PROGRESS: A05-A08 and independent critical review remain ahead.
+a whole is IN_PROGRESS: A06-A08 and independent critical review remain ahead.
 
 ## A04 continuation
 
@@ -28,11 +28,25 @@ captures match stock. The ordinary 37-case FFF CTest baseline passes, while a
 separate NoAssertions run diagnoses four empty sections in two unchanged
 upstream cases. That stricter run is retained as a failure, not hidden.
 Evidence and the source fingerprint are under `evidence/A04/`.
-Next: A05 transition/body reservation experiment. No new export path exists.
+No new export path exists.
 
-Allowed changes: documentation/evidence, isolated build/test tooling, then a
-small typed IR module and its analytical tests after studying native types.
-Do not modify stock slicing or ZAA behavior in the bootstrap patch.
+## A05 continuation
+
+`A05.md` and ADR-0007 record native body reservation, reconstruction of the flat
+core of actual planar paths and bounded affine first-pass gap/volume checks.
+Nine new cases pass; complete CTest executes 66 cases without skips. Six final
+OFF/ZAA captures match the unchanged stock baseline. The stricter randomized
+FFF run passes 45/47 cases and retains the two existing empty-section failures.
+
+The differential gate found an uninitialized object-label ID in inherited
+G-code code. `091c6461` fixes it separately; `A02-object-labels.md` records the
+negative test and diagnostics. Failed runs and source fingerprints are preserved
+under `evidence/A05/`. Next: A06 serialization/parser spike. No production hybrid
+export, complete transition solver or physical qualification is claimed.
+
+Allowed changes are defined in each milestone report: isolated Nonplanar
+primitives, native integration tests and evidence. The shared stock-path label
+correction is explicitly documented; stock slicing/ZAA algorithms are unchanged.
 
 Invariants: exact upstream revision; native ARM64 tests actually execute;
 absolute physical XYZ never enter relative ZAA offsets; deposition volume,

@@ -1,4 +1,5 @@
 #include "Collision.hpp"
+#include "Interval.hpp"
 #include <algorithm>
 #include <array>
 #include <cfenv>
@@ -8,46 +9,8 @@
 namespace Slic3r::nptop {
 namespace {
 
-// These bounds require IEEE binary64 without fast math or contraction. Keep
-// each rounded operation separate; do not replace this with point estimates.
+using namespace detail;
 struct QueryFailure { ClearanceReason reason; };
-constexpr double infinity = std::numeric_limits<double>::infinity();
-double down(double value) { return std::nextafter(value, -infinity); }
-double up(double value) { return std::nextafter(value, infinity); }
-struct Interval {
-    double lo, hi;
-    Interval(double a, double b) : lo(a), hi(b)
-    {
-        if (!std::isfinite(a) || !std::isfinite(b) || a > b)
-            throw QueryFailure{ClearanceReason::NumericalFailure};
-    }
-    explicit Interval(double value) : Interval(value, value) {}
-};
-Interval operator+(Interval a, Interval b) { return {down(a.lo+b.lo), up(a.hi+b.hi)}; }
-Interval operator-(Interval a, Interval b) { return {down(a.lo-b.hi), up(a.hi-b.lo)}; }
-Interval operator*(Interval a, Interval b)
-{
-    const std::array<double,4> products{a.lo*b.lo, a.lo*b.hi, a.hi*b.lo, a.hi*b.hi};
-    return {down(*std::min_element(products.begin(), products.end())),
-            up(*std::max_element(products.begin(), products.end()))};
-}
-Interval operator/(Interval a, Interval b)
-{
-    if (b.lo <= 0) throw QueryFailure{ClearanceReason::NumericalFailure};
-    return a * Interval(down(1/b.hi), up(1/b.lo));
-}
-Interval minimum(Interval a, Interval b) { return {std::min(a.lo,b.lo), std::min(a.hi,b.hi)}; }
-Interval maximum(Interval a, Interval b) { return {std::max(a.lo,b.lo), std::max(a.hi,b.hi)}; }
-Interval square(Interval a)
-{
-    const double low = a.lo <= 0 && a.hi >= 0 ? 0 : std::min(a.lo*a.lo, a.hi*a.hi);
-    return {std::max(0., down(low)), up(std::max(a.lo*a.lo, a.hi*a.hi))};
-}
-Interval root(Interval a)
-{
-    if (a.hi < 0) throw QueryFailure{ClearanceReason::NumericalFailure};
-    return {std::max(0., down(std::sqrt(std::max(0.,a.lo)))), up(std::sqrt(a.hi))};
-}
 
 template<Frame F> std::array<double,3> xyz(const Position<F> &p) { return {p.x(),p.y(),p.z()}; }
 template<Frame F> void validate_position(const Position<F> &p)
@@ -106,14 +69,7 @@ ClearanceResult query_clearance(const MotionEvent &motion, const ToolComponent &
                            motion.event_id, motion.sequence_index, tool.id, scene.id,
                            tool.interaction, policy.required.value()};
     try {
-        if (!std::numeric_limits<double>::is_iec559 || std::fegetround() != FE_TONEAREST)
-            throw QueryFailure{ClearanceReason::NumericalFailure};
-        // The thread may inherit a flush-to-zero mode from unrelated code.
-        // Outward bounds also require gradual underflow, not just nearest rounding.
-        volatile double minimum_normal = std::numeric_limits<double>::min();
-        volatile double minimum_subnormal = std::numeric_limits<double>::denorm_min();
-        if (minimum_normal/2 == 0 || minimum_subnormal+minimum_subnormal == 0)
-            throw QueryFailure{ClearanceReason::NumericalFailure};
+        require_interval_environment();
         validate_event(motion);
         validate_position(motion.start);
         validate_position(motion.end);
@@ -221,6 +177,8 @@ ClearanceResult query_clearance(const MotionEvent &motion, const ToolComponent &
         check_deadline();
         result.status = ClearanceStatus::Pass;
         result.reason = ClearanceReason::Separated;
+    } catch (const std::overflow_error &) {
+        result.reason = ClearanceReason::NumericalFailure;
     } catch (const std::invalid_argument &) {
         result.reason = ClearanceReason::InvalidInput;
     } catch (const QueryFailure &failure) {

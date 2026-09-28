@@ -1,0 +1,26 @@
+{
+  "command": [
+    "env",
+    "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-runtime/tmp/",
+    "sandbox-exec",
+    "-f",
+    "build/nonplanar-runtime/offline.sb",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+    "[A05],[ObjectLabels]",
+    "--order",
+    "rand",
+    "--rng-seed",
+    "4705",
+    "--warn",
+    "NoAssertions",
+    "--reporter",
+    "console",
+    "--reporter",
+    "junit::out=build/nonplanar-evidence/A05-native-complete.xml"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-09-28T07:47:51.806701+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 0.11
+}

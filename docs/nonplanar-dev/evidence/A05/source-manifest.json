@@ -1,0 +1,55 @@
+{
+  "base_commit": "e8ddab22e3209b438e3ce7968af9f28c86f45728",
+  "companion_commit": "091c64617940122a80db8f5273e77b4786916861",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/Transition.cpp",
+  "tested_worktree_note": "Built before commits; source hashes identify the final tested implementation, including companion label fix. No pristine intermediate-commit rebuild claimed.",
+  "generated_utc": "2026-09-28T07:54:16.094162+00:00",
+  "platform": "macOS 26.5.1 ARM64",
+  "compiler": "Apple Clang 21.0.0",
+  "configuration": "Release C++17",
+  "interval_compile_options": [
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "SKIP_PRECOMPILE_HEADERS=ON"
+  ],
+  "source_sha256": {
+    "src/libslic3r/Nonplanar/Contracts.hpp": "743a1bee26714390baa2a33883272049b039faafc6356dc988d3a29a5cca123a",
+    "src/libslic3r/Nonplanar/Contracts.cpp": "95fdcb573526d65e6b7d28a9d7046571c5d7ed3c65f5c4e42082ea11989daf0b",
+    "src/libslic3r/Nonplanar/Interval.hpp": "3ededa7187b1db3a1c4c141b337a495f6e2aceabd9a334e09db3c609767e875e",
+    "src/libslic3r/Nonplanar/Collision.hpp": "e5678f34f448b5d8e1ef941039b92f770c52b55a8fe63230da5fd605bc86a1e7",
+    "src/libslic3r/Nonplanar/Collision.cpp": "fc0eb05c49b7b2147d211bd2d1bf4f9a955ab0df1bbbaa6ef4e7d063245572cb",
+    "src/libslic3r/Nonplanar/Transition.hpp": "805e6fe044df8d665c7cad2d94cdcc8914cd4f3abcdfac6e1a884d8429adf8c2",
+    "src/libslic3r/Nonplanar/Transition.cpp": "4afc4574d1baa75ff90a89a90d34dcfbba8e47cfbed1d4208644392bac23dc35",
+    "src/libslic3r/GCode.cpp": "91164bf357678642c2fa530986864dd7dc161278fa8116345f039fab374254d0",
+    "src/libslic3r/CMakeLists.txt": "a8f324d60314dc5838a033701ba9b847884a269d22926429e62033bd4cd3ea03",
+    "tests/fff_print/CMakeLists.txt": "74c3c80892a08f347848d32c9429decf5fe073d0dccd4d2c29403d5638c0e589",
+    "tests/fff_print/test_printgcode.cpp": "cacba272b98ad9d5ee329c1f12b560a415cd6a20d4aa8aad095c56dacf895d79",
+    "tests/nonplanar/test_transition.cpp": "9cb5d0eb0b6e7c3738e13ab5535f1f9a278459d4682b84a1b2537038f89e2d49",
+    "tests/nonplanar/test_collision.cpp": "fb69303bf1d183c8b03a5567d25364e002492e3b22b30672a2a70382515e2627",
+    "docs/nonplanar-dev/evidence/A05/diagnose_object_labels.py": "bafc7a9843fd6619265a512d48328485a88d00b7076e42ce81d02b41a19e530f"
+  },
+  "A05_native_cases": 9,
+  "A05_native_assertions": 113,
+  "A03_A04_native_cases": 19,
+  "A03_A04_native_assertions": 2789,
+  "label_regression_cases": 1,
+  "label_assertions": 8,
+  "ctest_discovered": 66,
+  "ctest_executed": 66,
+  "native_seeds": [
+    4704,
+    4705
+  ],
+  "fff_strict_no_assertions": {
+    "cases": 47,
+    "passed": 45,
+    "failed": 2,
+    "status": "FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS"
+  },
+  "final_off_zaa_pairs": 6,
+  "final_off_zaa_status": "PASS_TIMESTAMP_ONLY_NORMALIZATION",
+  "first_off_zaa_status": "FAIL_OBJECT_LABELS_FIXED_IN_COMPANION_COMMIT",
+  "independent_review": "PENDING",
+  "linux_windows_gui_physical": "NOT_RUN",
+  "ci": "NOT_CHECKED"
+}

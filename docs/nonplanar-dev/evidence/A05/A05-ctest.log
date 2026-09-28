@@ -1,0 +1,114 @@
+Test project /Users/antonfilatov/www/my/orca-nonplanar/build/arm64
+      Start 136: INT-03 offset mutations recheck gap and volume without auto lifting
+ 1/28 Test #136: INT-03 offset mutations recheck gap and volume without auto lifting ...................   Passed    0.03 sec
+      Start 141: INT-02 native lower stair support rejects the unchanged upper candidate
+ 2/28 Test #141: INT-02 native lower stair support rejects the unchanged upper candidate ...............   Passed    0.04 sec
+      Start 145: INT-02 unsupported native paths cannot masquerade as planar support
+ 3/28 Test #145: INT-02 unsupported native paths cannot masquerade as planar support ...................   Passed    0.03 sec
+      Start 160: INT-03 invalid cells budgets and stale scales stay unknown
+ 4/28 Test #160: INT-03 invalid cells budgets and stale scales stay unknown ............................   Passed    0.03 sec
+      Start 164: INT-01 native support is invariant under reversal and explicit translation
+ 5/28 Test #164: INT-01 native support is invariant under reversal and explicit translation ............   Passed    0.03 sec
+      Start 165: INT-01 native reserved body supports an affine first pass
+ 6/28 Test #165: INT-01 native reserved body supports an affine first pass .............................   Passed    0.03 sec
+      Start 175: INT-03 uncertainty never creates support or increases nominal volume
+ 7/28 Test #175: INT-03 uncertainty never creates support or increases nominal volume ..................   Passed    0.03 sec
+      Start 178: INT-02 lower support excludes the bead shoulders endpoints and gaps
+ 8/28 Test #178: INT-02 lower support excludes the bead shoulders endpoints and gaps ...................   Passed    0.03 sec
+      Start 179: INT-01 affine footprint and volume use all corners
+ 9/28 Test #179: INT-01 affine footprint and volume use all corners ....................................   Passed    0.03 sec
+      Start 203: GEO-08 malformed geometry and numeric environment fail closed
+10/28 Test #203: GEO-08 malformed geometry and numeric environment fail closed .........................   Passed    0.01 sec
+      Start 204: GEO-04 bounded subdivision proves a diagonal sweep clear
+11/28 Test #204: GEO-04 bounded subdivision proves a diagonal sweep clear ..............................   Passed    0.00 sec
+      Start 205: IR deposition travel and retraction carry different measures
+12/28 Test #205: IR deposition travel and retraction carry different measures ..........................   Passed    0.00 sec
+      Start 206: Numeric budgets charge each component and reject missing invalid or exceeded bounds
+13/28 Test #206: Numeric budgets charge each component and reject missing invalid or exceeded bounds ...   Passed    0.00 sec
+      Start 207: GEO-04 sweep agrees with an independent slab intersection oracle
+14/28 Test #207: GEO-04 sweep agrees with an independent slab intersection oracle ......................   Passed    0.01 sec
+      Start 208: GEO-08 unsupported queries and exhausted limits stay unknown
+15/28 Test #208: GEO-08 unsupported queries and exhausted limits stay unknown ..........................   Passed    0.00 sec
+      Start 209: GEO-04 continuous sweep catches a wall between free endpoints
+16/28 Test #209: GEO-04 continuous sweep catches a wall between free endpoints .........................   Passed    0.00 sec
+      Start 210: GEO-07 uncertain clearance never passes at the boundary
+17/28 Test #210: GEO-07 uncertain clearance never passes at the boundary ...............................   Passed    0.00 sec
+      Start 211: GEO-02 finite outer tip uses full plane gradient
+18/28 Test #211: GEO-02 finite outer tip uses full plane gradient ......................................   Passed    0.00 sec
+      Start 212: GEO-04 entering contact does not starve a later penetration
+19/28 Test #212: GEO-04 entering contact does not starve a later penetration ...........................   Passed    0.00 sec
+      Start 213: GEO-03 transverse slope collides along a constant Z path
+20/28 Test #213: GEO-03 transverse slope collides along a constant Z path ..............................   Passed    0.00 sec
+      Start 214: VOL-02 vertical and normal gaps obey independent plane distance
+21/28 Test #214: VOL-02 vertical and normal gaps obey independent plane distance .......................   Passed    0.00 sec
+      Start 215: GEO-01 asymmetric tool axes stay fixed when the path turns
+22/28 Test #215: GEO-01 asymmetric tool axes stay fixed when the path turns ............................   Passed    0.00 sec
+      Start 216: ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales
+23/28 Test #216: ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales ........   Passed    0.00 sec
+      Start 217: GEO-04 translation reversal and envelope growth preserve clearance decisions
+24/28 Test #217: GEO-04 translation reversal and envelope growth preserve clearance decisions ..........   Passed    0.00 sec
+      Start 218: ORC-05 rejects stale scale nonfinite and out of domain coordinates
+25/28 Test #218: ORC-05 rejects stale scale nonfinite and out of domain coordinates ....................   Passed    0.00 sec
+      Start 219: VOL-01 invalid deposition dimensions reject instead of producing volume
+26/28 Test #219: VOL-01 invalid deposition dimensions reject instead of producing volume ...............   Passed    0.00 sec
+      Start 220: GEO-05 duct collision is independent of nozzle clearance
+27/28 Test #220: GEO-05 duct collision is independent of nozzle clearance ..............................   Passed    0.00 sec
+      Start 221: VOL-01 XY integral preserves volume on sloped surfaces without a second correction
+28/28 Test #221: VOL-01 XY integral preserves volume on sloped surfaces without a second correction ....   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 28
+
+Label Time Summary:
+A05          =   0.28 sec*proc (9 tests)
+GEO-01       =   0.00 sec*proc (1 test)
+GEO-02       =   0.00 sec*proc (1 test)
+GEO-03       =   0.00 sec*proc (1 test)
+GEO-04       =   0.03 sec*proc (5 tests)
+GEO-05       =   0.00 sec*proc (1 test)
+GEO-07       =   0.00 sec*proc (1 test)
+GEO-08       =   0.01 sec*proc (2 tests)
+INT-01       =   0.09 sec*proc (3 tests)
+INT-02       =   0.10 sec*proc (3 tests)
+INT-03       =   0.09 sec*proc (3 tests)
+IR           =   0.01 sec*proc (2 tests)
+Nonplanar    =   0.37 sec*proc (28 tests)
+ORC-05       =   0.01 sec*proc (2 tests)
+VOL-01       =   0.10 sec*proc (5 tests)
+VOL-02       =   0.00 sec*proc (1 test)
+
+Total Test time (real) =   0.38 sec
+{
+  "tests_discovered": 28,
+  "tests_executed": 28,
+  "test_names": [
+    "INT-03 offset mutations recheck gap and volume without auto lifting",
+    "INT-02 native lower stair support rejects the unchanged upper candidate",
+    "INT-02 unsupported native paths cannot masquerade as planar support",
+    "INT-03 invalid cells budgets and stale scales stay unknown",
+    "INT-01 native support is invariant under reversal and explicit translation",
+    "INT-01 native reserved body supports an affine first pass",
+    "INT-03 uncertainty never creates support or increases nominal volume",
+    "INT-02 lower support excludes the bead shoulders endpoints and gaps",
+    "INT-01 affine footprint and volume use all corners",
+    "GEO-08 malformed geometry and numeric environment fail closed",
+    "GEO-04 bounded subdivision proves a diagonal sweep clear",
+    "IR deposition travel and retraction carry different measures",
+    "Numeric budgets charge each component and reject missing invalid or exceeded bounds",
+    "GEO-04 sweep agrees with an independent slab intersection oracle",
+    "GEO-08 unsupported queries and exhausted limits stay unknown",
+    "GEO-04 continuous sweep catches a wall between free endpoints",
+    "GEO-07 uncertain clearance never passes at the boundary",
+    "GEO-02 finite outer tip uses full plane gradient",
+    "GEO-04 entering contact does not starve a later penetration",
+    "GEO-03 transverse slope collides along a constant Z path",
+    "VOL-02 vertical and normal gaps obey independent plane distance",
+    "GEO-01 asymmetric tool axes stay fixed when the path turns",
+    "ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales",
+    "GEO-04 translation reversal and envelope growth preserve clearance decisions",
+    "ORC-05 rejects stale scale nonfinite and out of domain coordinates",
+    "VOL-01 invalid deposition dimensions reject instead of producing volume",
+    "GEO-05 duct collision is independent of nozzle clearance",
+    "VOL-01 XY integral preserves volume on sloped surfaces without a second correction"
+  ],
+  "status": "PASS"
+}

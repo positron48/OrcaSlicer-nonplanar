@@ -1,0 +1,22 @@
+{
+  "command": [
+    "env",
+    "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-runtime/tmp/",
+    "sandbox-exec",
+    "-f",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-runtime/offline.sb",
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "scripts/nonplanar/ctest_gate.py",
+    "--build-dir",
+    "build/arm64",
+    "--output-dir",
+    "build/nonplanar-evidence/A05-fff-ctest",
+    "--regex",
+    "^(Trailing\\ tool\\ change\\ at\\ end\\ of\\ file\\ is\\ drained,\\ not\\ dropped|Scenario:\\ PrintObject:\\ Perimeter\\ generation|Scenario:\\ Skirt\\ and\\ brim\\ generation|Scenario:\\ Model\\ construction|Scenario:\\ set_speed\\ emits\\ values\\ with\\ fixed\\-point\\ output\\.|Scenario:\\ Print:\\ Changing\\ number\\ of\\ solid\\ shell\\ layers\\ does\\ not\\ cause\\ all\\ surfaces\\ to\\ become\\ internal\\.|Skirt\\ height\\ is\\ honored|Scenario:\\ Origin\\ manipulation|Sequential\\ printing\\ follows\\ model\\ order|Print:\\ \\{first_object_name\\}\\ names\\ the\\ first\\ printable\\ object\\ on\\ the\\ plate|export_gcode\\ writes\\ G\\-code\\ without\\ a\\ result\\ pointer|Filament\\-change\\ time\\ is\\ attributed\\ to\\ tool\\-change\\ moves,\\ not\\ extrusion\\ roles|Fill:\\ Pattern\\ Path\\ Length|Scenario:\\ TriangleMesh:\\ Mesh\\ merge\\ functions|Scenario:\\ make_xxx\\ functions\\ produce\\ meshes\\.|Filament\\-change\\ time\\ is\\ not\\ dropped\\ when\\ few\\ motion\\ blocks\\ precede\\ the\\ change|Scenario:\\ PrintObject:\\ object\\ layer\\ heights|Carried\\-forward\\ tool\\-change\\ delay\\ reaches\\ the\\ total\\ without\\ polluting\\ roles|Scenario:\\ TriangleMesh:\\ Transformation\\ functions\\ affect\\ mesh\\ as\\ expected\\.|Back\\-to\\-back\\ tool\\ changes\\ buffer\\ then\\ merge\\ into\\ one\\ tool\\-change\\ block|Scenario:\\ PrintGCode\\ basic\\ functionality|Scenario:\\ init_print\\ functionality|Scenario:\\ SupportMaterial:\\ support_layers_z\\ and\\ contact_distance|Scenario:\\ Print:\\ Brim\\ generation|Scenario:\\ Flow:\\ Flow\\ math\\ for\\ non\\-bridges|Scenario:\\ TriangleMesh:\\ slice\\ behavior\\.|Scenario:\\ TriangleMesh:\\ Basic\\ mesh\\ statistics|Print:\\ \\{first_object_name\\}\\ is\\ not\\ replaced\\ by\\ the\\ saved\\-project\\ file\\ name|Scenario:\\ ExtrusionEntityCollection:\\ Polygon\\ flattening|SupportMaterial:\\ enforced\\ support\\ layers\\ are\\ generated|Initial\\ layer\\ height\\ is\\ honored|Scenario:\\ z_hop\\ lifts\\ the\\ nozzle\\ when\\ a\\ lift\\ is\\ requested|Scenario:\\ Flow:\\ Flow\\ math\\ for\\ bridges|Scenario:\\ TriangleMesh:\\ split\\ functionality\\.|SupportMaterial:\\ Three\\ raft\\ layers\\ created|Scenario:\\ Print:\\ Skirt\\ generation|Scenario:\\ TriangleMeshSlicer:\\ Cut\\ behavior\\.)$"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-09-28T07:40:24.548254+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 3.106
+}
