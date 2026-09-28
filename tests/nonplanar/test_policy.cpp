@@ -128,6 +128,65 @@ TEST_CASE("B01 mode routing rejects a non-string OFF or guarded-mode lookalike",
         CHECK_FALSE(policy.passes_config_preflight());
     }
 }
+TEST_CASE("B01 uniform-layer domain rejects owned custom height profiles without rewriting them", "[Nonplanar][B01][B01Layering]")
+{
+    Model model; auto *object=model.add_object();
+    REQUIRE_FALSE(model_policy_conflict(model).has_value());
+    // Even a flat custom profile needs its own qualification; this initial
+    // domain uses the ordinary native uniform-layer generator only.
+    for (const auto &profile : std::vector<std::vector<double>>{
+        {0.,0.2,20.,0.3},{0.,0.2,20.,0.2},{0.,-1.}}) {
+        object->layer_height_profile.set(profile);
+        const auto conflict=model_policy_conflict(model);
+        REQUIRE(conflict.has_value());
+        REQUIRE_THAT(conflict->key,Catch::Matchers::ContainsSubstring("layer_height_profile"));
+        REQUIRE(object->layer_height_profile.get() == profile);
+        object->layer_height_profile.clear();
+        REQUIRE_FALSE(model_policy_conflict(model).has_value());
+    }
+}
+TEST_CASE("B01 uniform-layer domain rejects layer-height range overrides before normalization", "[Nonplanar][B01][B01Layering]")
+{
+    Model model; auto *object=model.add_object();
+    auto &range=object->layer_config_ranges[{0.,1.}];
+    range.set_key_value("wall_loops",new ConfigOptionInt(3));
+    REQUIRE_FALSE(model_policy_conflict(model).has_value());
+    for (double height : {0.1,0.2,std::numeric_limits<double>::quiet_NaN()}) {
+        range.set_key_value("layer_height",new ConfigOptionFloat(height));
+        const auto conflict=model_policy_conflict(model);
+        REQUIRE(conflict.has_value());
+        REQUIRE_THAT(conflict->key,Catch::Matchers::ContainsSubstring("layer_config_ranges"));
+        REQUIRE(range.has("layer_height"));
+        range.erase("layer_height");
+        REQUIRE_FALSE(model_policy_conflict(model).has_value());
+    }
+}
+TEST_CASE("B01 native height edits invalidate cached output and OFF preserves the source profile", "[Nonplanar][B01][B01Layering]")
+{
+    CachedPrint print; print.is_BBL_printer()=false; Model model;
+    auto config=eligible(); Test::init_print({Test::TestMesh::cube_20x20x20},print,model,config);
+    auto *object=model.objects.front();
+    const std::vector<double> profile{0.,0.2,20.,0.3};
+    object->layer_height_profile.set(profile);
+    print.set_started(psGCodeExport); print.set_done(psGCodeExport);
+    print.apply(model,config);
+    REQUIRE_FALSE(print.is_step_done(psGCodeExport));
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("layer_height_profile"));
+    REQUIRE_THROWS(print.process());
+    config.set_deserialize_strict("nptop_mode","off");
+    print.apply(model,config);
+    REQUIRE(print.nonplanar_block_reason().empty());
+    REQUIRE(object->layer_height_profile.get() == profile);
+    object->layer_height_profile.clear();
+    object->layer_config_ranges[{0.,1.}].set_key_value("layer_height",new ConfigOptionFloat(0.1));
+    config.set_deserialize_strict("nptop_mode","safe_hybrid");
+    print.set_started(psGCodeExport); print.set_done(psGCodeExport);
+    print.apply(model,config);
+    REQUIRE_FALSE(print.is_step_done(psGCodeExport));
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("layer_config_ranges"));
+    object->layer_config_ranges.clear(); print.apply(model,config);
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("not implemented"));
+}
 TEST_CASE("B01 resolved snapshot preserves exact numeric nullable and nested values", "[Nonplanar][B01][B01Snapshot]")
 {
     const double precise=std::nextafter(0.2,1.);

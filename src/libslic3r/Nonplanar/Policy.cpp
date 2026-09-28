@@ -205,12 +205,24 @@ std::optional<PolicyConflict> model_policy_conflict(const Model &model)
     };
     for (const auto &material : model.materials)
         if (auto conflict = inspect(material.second->config.get())) return conflict;
-    for (const auto *object : model.objects) {
+    for (size_t index = 0; index < model.objects.size(); ++index) {
+        const auto *object = model.objects[index];
         if (auto conflict = inspect(object->config.get())) return conflict;
         for (const auto *volume : object->volumes)
             if (auto conflict = inspect(volume->config.get())) return conflict;
         for (const auto &range : object->layer_config_ranges)
             if (auto conflict = inspect(range.second.get())) return conflict;
+        // These source controls live outside the resolved PrintRegionConfig.
+        // Do not let native profile fallback/normalization qualify an input
+        // whose custom layer generation has not been audited for this mode.
+        const auto prefix = "objects[" + std::to_string(index) + "].";
+        if (!object->layer_height_profile.empty())
+            return PolicyConflict{prefix + "layer_height_profile", "present",
+                                  "Custom layer-height profiles are outside the uniform-layer domain"};
+        for (const auto &range : object->layer_config_ranges)
+            if (range.second.has("layer_height"))
+                return PolicyConflict{prefix + "layer_config_ranges", std::to_string(object->layer_config_ranges.size()),
+                                      "Layer-height range overrides are outside the uniform-layer domain"};
     }
     return {};
 }

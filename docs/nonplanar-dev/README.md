@@ -134,3 +134,7 @@ fingerprints remain pending.
 ten compatibility fields and requires a scalar-string mode. Twenty-three B01
 cases/2906 assertions, 142/142 selected CTest and six fresh OFF/ZAA comparisons
 pass; full compatibility remains open.
+
+`B01-layering.md` rejects custom source layer-height profiles and height-range
+overrides while preserving OFF inputs. Twenty-six B01 cases/2940 assertions,
+145/145 selected CTest and six fresh OFF/ZAA comparisons pass.

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="3" skipped="0" tests="6" hostname="tbd" time="0.005" timestamp="2026-09-28T13:24:18Z">
+    <properties>
+      <property name="random-seed" value="28905591"/>
+      <property name="filters" value="[B01Layering]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B01 uniform-layer domain rejects layer-height range overrides before normalization" time="0.000" status="run">
+      <failure message="conflict.has_value()" type="REQUIRE">
+FAILED:
+  REQUIRE( conflict.has_value() )
+with expansion:
+  false
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:157
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 uniform-layer domain rejects owned custom height profiles without rewriting them" time="0.000" status="run">
+      <failure message="conflict.has_value()" type="REQUIRE">
+FAILED:
+  REQUIRE( conflict.has_value() )
+with expansion:
+  false
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:141
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 native height edits invalidate cached output and OFF preserves the source profile" time="0.000" status="run">
+      <failure message="print.nonplanar_block_reason(), Catch::Matchers::ContainsSubstring(&quot;layer_height_profile&quot;)" type="REQUIRE_THAT">
+FAILED:
+  REQUIRE_THAT( print.nonplanar_block_reason(), Catch::Matchers::ContainsSubstring("layer_height_profile") )
+with expansion:
+  "Nonplanar Top Lab: guarded slicing and export are not implemented" contains:
+  "layer_height_profile"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:174
+      </failure>
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <system-out>
+st=1,
+    </system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>
