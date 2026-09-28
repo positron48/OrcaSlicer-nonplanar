@@ -61,6 +61,15 @@ class CTestGateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "every selected test"):
             self.gate()
 
+    def test_target_selection_requires_every_requested_executable(self):
+        self.configure('add_test(NAME one COMMAND ${CMAKE_COMMAND} -E true)\n')
+        result = run(self.build, self.root / "selected", target_executables=["cmake"])
+        self.assertEqual(result["tests_executed"], 1)
+        with self.assertRaisesRegex(ValueError, "Missing requested"):
+            run(self.build, self.root / "missing", target_executables=["cmake", "absent"])
+        with self.assertRaisesRegex(ValueError, "empty"):
+            run(self.build, self.root / "empty", target_executables=["absent"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,52 @@
+name: Nonplanar native Linux evidence
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/nonplanar-bootstrap]
+    paths:
+      - '.github/workflows/nonplanar-native.yml'
+      - 'src/libslic3r/**'
+      - 'src/nonplanar_verify/**'
+      - 'tests/nonplanar/**'
+      - 'tests/fff_print/**'
+      - 'scripts/nonplanar/**'
+permissions:
+  contents: read
+concurrency:
+  group: nonplanar-native-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    env:
+      CMAKE_BUILD_PARALLEL_LEVEL: '2'
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - name: Pinned source and normative package
+        run: |
+          python3 docs/nonplanar/scripts/audit_orca_checkout.py --repo .
+          python3 docs/nonplanar/scripts/validate_package.py
+          mkdir -p build/nonplanar-evidence/linux
+          uname -a > build/nonplanar-evidence/linux/platform.txt
+      - name: System dependencies on disposable runner
+        run: sudo ./build_linux.sh -ur
+      - name: Build pinned dependency sources
+        run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/deps.log -- ./build_linux.sh -drlL -j 2
+      - name: Build native application and tests
+        run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/build.log -- ./build_linux.sh -strlL -j 2
+      - name: Execute nonempty selected native suites
+        run: |
+          clang++ --version > build/nonplanar-evidence/linux/compiler.txt
+          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/tests.log -- python3 scripts/nonplanar/ctest_gate.py --build-dir build --output-dir build/nonplanar-evidence/linux/ctest --target-executable nonplanar_tests --target-executable fff_print_tests
+      - name: Preserve observed results even on failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: nonplanar-linux-${{ github.sha }}
+          path: |
+            build/nonplanar-evidence/linux/
+            build/CMakeCache.txt
+          if-no-files-found: error
