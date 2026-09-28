@@ -29,7 +29,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 154,
+    "new_native_cases": 155,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -45,8 +45,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 191,
-    "final_ctest_executed": 191,
+    "final_ctest_discovered": 192,
+    "final_ctest_executed": 192,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -113,8 +113,8 @@
     "A01_current_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "A01_gui": "ISOLATED_IMPORT_SLICE_PREVIEW_AND_QUIT_PASS",
     "B01_custom_hook_cases": 5,
-    "B01_current_cases": 36,
-    "B01_current_assertions": 3355,
+    "B01_current_cases": 37,
+    "B01_current_assertions": 3559,
     "B01_custom_hook_registry_keys": 17,
     "B01_hooks_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B01_transform_cases": 3,
@@ -164,7 +164,10 @@
     "A07_travel_coverage_regression": "RED_TEN_ASSERTIONS_THEN_ALL_CALLER_BUDGETS_AND_REQUIRED_CLEARANCE_INCLUDED",
     "B01_fingerprint_cases": 5,
     "B01_fingerprint_cross_language_oracles": 2,
-    "B01_fingerprint_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
+    "B01_fingerprint_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B01_hook_type_cases": 1,
+    "B01_hook_types_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B01_hook_type_regression": "RED_34_SERIALIZER_EXCEPTIONS_AND_17_CALL_CHECKS_THEN_ZERO_SERIALIZATION_FOR_WRONG_TYPES"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -220,7 +223,8 @@
     "B03_curvature": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-curvature.md",
     "A04_annulus_box": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A04-annulus-box.md",
     "A07_travel": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A07-travel.md",
-    "B01_fingerprint": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-fingerprint.md"
+    "B01_fingerprint": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-fingerprint.md",
+    "B01_hook_types": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-hook-types.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -255,5 +259,6 @@
   "B03_curvature_evidence": "docs/nonplanar-dev/evidence/B03-curvature/source-manifest.json",
   "A04_annulus_box_evidence": "docs/nonplanar-dev/evidence/A04-annulus-box/source-manifest.json",
   "A07_travel_evidence": "docs/nonplanar-dev/evidence/A07-travel/source-manifest.json",
-  "B01_fingerprint_evidence": "docs/nonplanar-dev/evidence/B01-fingerprint/source-manifest.json"
+  "B01_fingerprint_evidence": "docs/nonplanar-dev/evidence/B01-fingerprint/source-manifest.json",
+  "B01_hook_types_evidence": "docs/nonplanar-dev/evidence/B01-hook-types/source-manifest.json"
 }

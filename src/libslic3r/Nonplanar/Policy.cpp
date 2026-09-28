@@ -358,17 +358,21 @@ std::optional<PolicyConflict> custom_code_conflict(const std::string &key, const
             return PolicyConflict{key, option->serialize(), "Unknown custom code field requires compatibility audit"};
         return {};
     }
-    bool empty = false;
-    if (option && !option->is_nil() && option->type() == rule->second.type) {
-        if (const auto *text = dynamic_cast<const ConfigOptionString *>(option))
-            empty = text->value.empty();
-        else if (const auto *list = dynamic_cast<const ConfigOptionStrings *>(option))
-            empty = rule->second.empty_list ? list->values.empty() :
-                std::all_of(list->values.begin(), list->values.end(), [](const std::string &s) { return s.empty(); });
-    }
-    if (!empty)
-        return PolicyConflict{key, option && !option->is_nil() ? option->serialize() : "<missing>",
-                              "Custom code is unqualified; requires an empty native field"};
+    const auto reject=[&](std::string value) {
+        return PolicyConflict{key,std::move(value),"Custom code is unqualified; requires an empty native field"};
+    };
+    if (!option) return reject("<missing>");
+    // An unchecked enum serializer may index outside its name table. Validate
+    // both native tag and representation before diagnostic formatting.
+    if (option->type()!=rule->second.type)
+        return reject("<wrong-native-type:"+std::to_string(int(option->type()))+">");
+    const auto *text=dynamic_cast<const ConfigOptionString *>(option);
+    const auto *list=dynamic_cast<const ConfigOptionStrings *>(option);
+    if (option->nullable() || (rule->second.type==coString ? !text : !list))
+        return reject("<unsupported-native-representation>");
+    const bool empty=text ? text->value.empty() : rule->second.empty_list ? list->values.empty() :
+        std::all_of(list->values.begin(),list->values.end(),[](const std::string &s) { return s.empty(); });
+    if (!empty) return reject(option->serialize());
     return {};
 }
 
@@ -504,9 +508,12 @@ PolicySnapshot resolve_policy(const ConfigBase &source, size_t objects, size_t i
         }
     }
     for (const auto &entry : custom_code_policy()) {
-        read(entry.first);
-        if (auto conflict = custom_code_conflict(entry.first, config.option(entry.first)))
+        if (auto conflict = custom_code_conflict(entry.first, config.option(entry.first))) {
+            resolved.emplace(entry.first,conflict->value);
             conflicts.push_back(std::move(*conflict));
+        } else {
+            read(entry.first);
+        }
     }
     // This detects new textual code hooks in a resolved config. It is not a
     // complete audit of arbitrary new geometry-affecting settings, nor of keys
@@ -514,7 +521,7 @@ PolicySnapshot resolve_policy(const ConfigBase &source, size_t objects, size_t i
     for (const auto &key : native_config->keys()) {
         if (custom_code_policy().count(key) == 0)
             if (auto conflict = custom_code_conflict(key, config.option(key))) {
-                read(key);
+                resolved.emplace(key,conflict->value);
                 conflicts.push_back(std::move(*conflict));
             }
     }

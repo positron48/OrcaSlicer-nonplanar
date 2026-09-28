@@ -155,6 +155,39 @@ TEST_CASE("B01 canonical config rejects unsupported native representations and b
     for (int i=0; i<4097; ++i) source.set_key_value(std::to_string(i),new ConfigOptionInt(i));
     REQUIRE_THROWS_AS(ResolvedConfigSnapshot(source).fingerprint(),std::length_error);
 }
+TEST_CASE("B01 wrong custom-code types reject before their native serializers run", "[Nonplanar][B01][B01HookTypes]")
+{
+    struct UnserializableCode : ConfigOptionInt {
+        size_t *attempts;
+        explicit UnserializableCode(size_t &count) : ConfigOptionInt(999),attempts(&count) {}
+        ConfigOptionType type() const override { return coEnum; }
+        ConfigOption *clone() const override { return new UnserializableCode(*this); }
+        std::string serialize() const override { ++*attempts; throw std::runtime_error("unchecked native enum serializer"); }
+    };
+    for (const auto &key : custom_code_hooks) {
+        INFO(key);
+        size_t attempts=0;
+        auto config=eligible(); config.set_key_value(key,new UnserializableCode(attempts));
+        Model model;
+        CHECK_NOTHROW([&] {
+            const auto conflict=input_policy_conflict(model,config);
+            REQUIRE(conflict);
+            CHECK(conflict->key==key);
+            CHECK(conflict->value=="<wrong-native-type:9>");
+        }());
+        CHECK_NOTHROW([&] {
+            const auto resolved=resolve_policy(config,1,1);
+            CHECK_FALSE(resolved.passes_config_preflight());
+            REQUIRE_FALSE(resolved.conflicts.empty());
+            CHECK(resolved.conflicts.front().key==key);
+            CHECK(resolved.resolved.at(key)=="<wrong-native-type:9>");
+        }());
+        CHECK(attempts==0);
+        config.set_deserialize_strict("nptop_mode","off");
+        CHECK_FALSE(input_policy_conflict(model,config));
+        CHECK(resolve_policy(config,1,1).mode==Mode::Off);
+    }
+}
 TEST_CASE("B01 single tool rejects extra diameters maps offsets and malformed native values", "[Nonplanar][B01][B01SingleTool]")
 {
     REQUIRE(resolve_policy(eligible(),1,1).passes_config_preflight());
