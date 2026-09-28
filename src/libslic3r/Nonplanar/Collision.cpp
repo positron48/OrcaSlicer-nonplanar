@@ -107,7 +107,8 @@ ClearanceResult query_clearance(const MotionEvent &motion, const ToolComponent &
         require(tool.id != 0 && scene.id != 0, "missing geometry identity");
         require(limits.max_evaluations <= 65535, "query work limit outside domain");
         const double uncertainty = (Interval(policy.numeric.total_mm()) + Interval(policy.tool_measurement.value()) +
-                                    Interval(policy.positioning.value()) + Interval(policy.material.value())).hi;
+                                    Interval(policy.positioning.value()) + Interval(policy.material.value()) +
+                                    Interval(policy.scene_geometry.value())).hi;
         const auto *tip = std::get_if<FiniteTip>(&tool.geometry);
         const auto *box = std::get_if<ToolBox>(&tool.geometry);
         const auto *plane = std::get_if<PlaneObstacle>(&scene.geometry);

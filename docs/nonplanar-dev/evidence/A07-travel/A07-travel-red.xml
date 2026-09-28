@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="3" skipped="0" tests="5" hostname="tbd" time="0.000" timestamp="2026-09-28T15:26:25Z">
+    <properties>
+      <property name="random-seed" value="340538625"/>
+      <property name="filters" value="[SimulationTravel]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="A07 complete travel checks every declared component obstacle and event" time="0.000" status="run">
+      <failure message="result.applicability==SceneApplicability::SimulationOnly" type="REQUIRE">
+FAILED:
+  REQUIRE( result.applicability==SceneApplicability::SimulationOnly )
+with expansion:
+  1 == 0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:128
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="A07 travel charges both scene envelopes and rejects unsupported material state" time="0.000" status="run">
+      <failure message="uncertain.limiting_check" type="REQUIRE">
+FAILED:
+  REQUIRE( uncertain.limiting_check )
+with expansion:
+  {?}
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:177
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="A07 whole-head travel detects a duct collision between clear endpoint poses" time="0.000" status="run">
+      <failure message="check_simulation_travel(scene,fixed,travel_policy()).status==ClearanceStatus::Pass" type="REQUIRE">
+FAILED:
+  REQUIRE( check_simulation_travel(scene,fixed,travel_policy()).status==ClearanceStatus::Pass )
+with expansion:
+  2 == 0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:158
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

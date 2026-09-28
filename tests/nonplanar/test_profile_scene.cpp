@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <libslic3r/Nonplanar/ProfileScene.hpp>
 #include <cfenv>
+#include <thread>
 using namespace Slic3r::nptop;
 namespace {
 SimulationScene fixture()
@@ -104,4 +105,154 @@ TEST_CASE("A07 analytic Minkowski bounds include uncertainty at coverage boundar
     REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::SimulationOnly);
     s.unmodelled_parts_min_local_z=Length(29.09);
     REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage);
+}
+
+namespace {
+SimulationScene travel_scene()
+{
+    auto scene=fixture();
+    for (auto &part : scene.head) part.outer={{-.25,-.25,.1},{.25,.25,.5}};
+    scene.head[3].outer={{2,-.5,.1},{4,.5,2}};
+    // .25 lower Z leaves .05 beyond the .1 geometry + .1 clearance hull.
+    scene.obstacles={{{1,1,.25},{30,30,.5}},{{30,30,1},{31,31,2}}};
+    return scene;
+}
+std::vector<MotionEvent> travel_events()
+{ return {{1,0,0,{11,10,2},{11,20,2},Speed(10),Acceleration(100),Travel{},0}}; }
+ClearancePolicy travel_policy()
+{ return {Length(.1),NumericBudget(0,0,0,0),Length(0),Length(0),Length(0)}; }
+}
+TEST_CASE("A07 complete travel checks every declared component obstacle and event", "[Nonplanar][A07][SimulationTravel]")
+{
+    auto scene=travel_scene();
+    const auto result=check_simulation_travel(scene,travel_events(),travel_policy());
+    REQUIRE(result.applicability==SceneApplicability::SimulationOnly);
+    REQUIRE(result.status==ClearanceStatus::Pass);
+    REQUIRE(result.required_pairs==14);
+    REQUIRE(result.checked_pairs==14);
+    REQUIRE(result.tip_component_id==7);
+    REQUIRE(result.profile_id==scene.profile_id);
+    REQUIRE(result.revision==scene.revision);
+    REQUIRE(result.limiting_check);
+    REQUIRE(result.limiting_check->bounds->lower_mm>.1);
+    REQUIRE(result.limiting_check->bounds->bound_error_mm>=.2);
+    auto events=travel_events();
+    auto second=events.front(); second.start=events.front().end; second.end=events.front().start;
+    second.event_id=2; second.sequence_index=1; events.push_back(second);
+    const auto complete=check_simulation_travel(scene,events,travel_policy());
+    REQUIRE(complete.status==ClearanceStatus::Pass);
+    REQUIRE(complete.checked_pairs==28);
+    scene.obstacles.clear();
+    const auto empty=check_simulation_travel(scene,events,travel_policy());
+    REQUIRE(empty.status==ClearanceStatus::Pass);
+    REQUIRE(empty.checked_pairs==0);
+    REQUIRE_FALSE(empty.limiting_check);
+    scene.obstacle_inventory_complete=false;
+    REQUIRE(check_simulation_travel(scene,events,travel_policy()).status==ClearanceStatus::Unknown);
+}
+TEST_CASE("A07 whole-head travel detects a duct collision between clear endpoint poses", "[Nonplanar][A07][SimulationTravel]")
+{
+    auto scene=travel_scene(); scene.obstacles.push_back({{14,14,2.25},{14.5,16,3}});
+    const auto events=travel_events();
+    for (auto point : {events.front().start,events.front().end}) {
+        auto fixed=events; fixed.front().start=point; fixed.front().end=point;
+        REQUIRE(check_simulation_travel(scene,fixed,travel_policy()).status==ClearanceStatus::Pass);
+    }
+    REQUIRE(query_clearance(events.front(),{7,scene.tip},{3,scene.obstacles.back()},travel_policy()).status==ClearanceStatus::Pass);
+    const auto result=check_simulation_travel(scene,events,travel_policy());
+    REQUIRE(result.status==ClearanceStatus::Fail);
+    REQUIRE(result.limiting_check);
+    REQUIRE(result.limiting_check->component_id==scene.head[3].id);
+    REQUIRE(result.limiting_check->obstacle_id==3);
+    REQUIRE(result.limiting_check->event_id==1);
+    REQUIRE(result.limiting_check->witness);
+    REQUIRE(result.checked_pairs<result.required_pairs);
+}
+TEST_CASE("A07 travel charges both scene envelopes and rejects unsupported material state", "[Nonplanar][A07][SimulationTravel]")
+{
+    auto scene=travel_scene(); scene.obstacles[0].max=PhysicalPosition(30,30,1.75);
+    const auto events=travel_events();
+    REQUIRE(query_clearance(events.front(),{7,scene.tip},{1,scene.obstacles.front()},travel_policy()).status==ClearanceStatus::Pass);
+    const auto uncertain=check_simulation_travel(scene,events,travel_policy());
+    REQUIRE(uncertain.status==ClearanceStatus::Unknown);
+    REQUIRE(uncertain.limiting_check);
+    REQUIRE(uncertain.limiting_check->bounds->bound_error_mm>=.2);
+    scene.uncertainty=Length(0);
+    REQUIRE(check_simulation_travel(scene,events,travel_policy()).status==ClearanceStatus::Pass);
+    auto changed=events; changed.front().end=changed.front().start;
+    changed.front().payload=Retraction{FilamentLength(1),RetractionState::Ready,RetractionState::Retracted};
+    REQUIRE(check_simulation_travel(scene,changed,travel_policy()).status==ClearanceStatus::Unknown);
+    scene=travel_scene(); scene.operator_confirmed_claim=true;
+    REQUIRE(check_simulation_travel(scene,events,travel_policy()).status==ClearanceStatus::Unknown);
+    scene=travel_scene(); scene.head.pop_back();
+    REQUIRE(check_simulation_travel(scene,events,travel_policy()).status==ClearanceStatus::Unknown);
+}
+TEST_CASE("A07 travel budgets must fit declared scene coverage even with no obstacles", "[Nonplanar][A07][SimulationTravel][SimulationCoverageBudget]")
+{
+    auto scene=travel_scene(); scene.obstacles.clear();
+    REQUIRE(check_simulation_travel(scene,travel_events(),travel_policy()).status==ClearanceStatus::Pass);
+    // Negative X extent becomes 10 - .25 - .1 - 10 = -.35, outside [0,40].
+    for (int term=0; term<6; ++term) {
+        auto policy=travel_policy();
+        if (term==0) policy.numeric.import_mm=10;
+        if (term==1) policy.tool_measurement=Length(10);
+        if (term==2) policy.positioning=Length(10);
+        if (term==3) policy.material=Length(10);
+        if (term==4) policy.scene_geometry=Length(10);
+        if (term==5) policy.required=Length(10);
+        const auto result=check_simulation_travel(scene,travel_events(),policy);
+        CHECK(result.status==ClearanceStatus::Unknown);
+        CHECK(result.applicability==SceneApplicability::OutsideCoverage);
+    }
+}
+
+TEST_CASE("A07 travel owns callback inputs and never publishes cancelled stale or exhausted work", "[Nonplanar][A07][SimulationTravel]")
+{
+    auto scene=travel_scene(); auto events=travel_events(); auto policy=travel_policy();
+    SimulationTravelLimits limits; limits.max_pairs=13;
+    REQUIRE(check_simulation_travel(scene,events,policy,limits).reason=="PAIR_LIMIT");
+    limits={}; limits.max_evaluations_per_pair=0;
+    const auto exhausted=check_simulation_travel(scene,events,policy,limits);
+    REQUIRE(exhausted.status==ClearanceStatus::Unknown);
+    REQUIRE(exhausted.limiting_check->reason==ClearanceReason::WorkLimit);
+    limits={}; limits.timeout=std::chrono::milliseconds(0);
+    REQUIRE(check_simulation_travel(scene,events,policy,limits).reason=="INVALID_LIMITS");
+    limits={}; limits.timeout=std::chrono::milliseconds(60001);
+    REQUIRE(check_simulation_travel(scene,events,policy,limits).reason=="INVALID_LIMITS");
+    limits={}; size_t calls=0;
+    limits.is_current=[&](uint64_t id,uint64_t rev) { REQUIRE(id==1); REQUIRE(rev==1); ++calls; return true; };
+    REQUIRE(check_simulation_travel(scene,events,policy,limits).status==ClearanceStatus::Pass);
+    const auto final_call=calls; REQUIRE(final_call>14); calls=0;
+    limits.is_current=[&](uint64_t,uint64_t) { return ++calls<final_call; };
+    const auto stale=check_simulation_travel(scene,events,policy,limits);
+    REQUIRE(stale.status==ClearanceStatus::Unknown);
+    REQUIRE(stale.reason=="STALE_REVISION");
+    REQUIRE(stale.checked_pairs==14);
+    limits={}; calls=0; limits.cancelled=[&] { return ++calls==final_call; };
+    const auto cancelled=check_simulation_travel(scene,events,policy,limits);
+    REQUIRE(cancelled.status==ClearanceStatus::Unknown);
+    REQUIRE(cancelled.reason=="CANCELLED");
+    limits={}; limits.timeout=std::chrono::milliseconds(1);
+    limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(3)); return false; };
+    REQUIRE(check_simulation_travel(scene,events,policy,limits).reason=="DEADLINE");
+    limits={}; limits.cancelled=[]() -> bool { throw std::runtime_error("cancel failure"); };
+    REQUIRE(check_simulation_travel(scene,events,policy,limits).status==ClearanceStatus::Unknown);
+    struct RestoreRounding { ~RestoreRounding() { std::fesetround(FE_TONEAREST); } } restore;
+    limits={}; limits.is_current=[](uint64_t,uint64_t) { std::fesetround(FE_DOWNWARD); return true; };
+    REQUIRE(check_simulation_travel(scene,events,policy,limits).status==ClearanceStatus::Unknown);
+    std::fesetround(FE_TONEAREST);
+    limits={}; bool mutated=false;
+    limits.cancelled=[&] {
+        if (!mutated) {
+            mutated=true; scene.head.clear(); scene.obstacles.clear(); events.clear();
+            policy.required=Length(1000); limits.timeout=std::chrono::milliseconds(0);
+            limits.is_current=[](uint64_t,uint64_t) { return false; };
+        }
+        return false;
+    };
+    const auto owned=check_simulation_travel(scene,events,policy,limits);
+    REQUIRE(owned.status==ClearanceStatus::Pass);
+    REQUIRE(owned.checked_pairs==14);
+    REQUIRE(mutated);
+    REQUIRE(events.empty());
 }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="10" skipped="0" tests="11" hostname="tbd" time="0.000" timestamp="2026-09-28T15:29:04Z">
+    <properties>
+      <property name="random-seed" value="496933122"/>
+      <property name="filters" value="[SimulationCoverageBudget]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="A07 travel budgets must fit declared scene coverage even with no obstacles" time="0.000" status="run">
+      <failure message="result.status==ClearanceStatus::Unknown" type="CHECK">
+FAILED:
+  CHECK( result.status==ClearanceStatus::Unknown )
+with expansion:
+  0 == 2
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:202
+      </failure>
+      <failure message="result.applicability==SceneApplicability::OutsideCoverage" type="CHECK">
+FAILED:
+  CHECK( result.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  0 == 5
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:203
+      </failure>
+      <failure message="result.status==ClearanceStatus::Unknown" type="CHECK">
+FAILED:
+  CHECK( result.status==ClearanceStatus::Unknown )
+with expansion:
+  0 == 2
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:202
+      </failure>
+      <failure message="result.applicability==SceneApplicability::OutsideCoverage" type="CHECK">
+FAILED:
+  CHECK( result.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  0 == 5
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:203
+      </failure>
+      <failure message="result.status==ClearanceStatus::Unknown" type="CHECK">
+FAILED:
+  CHECK( result.status==ClearanceStatus::Unknown )
+with expansion:
+  0 == 2
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:202
+      </failure>
+      <failure message="result.applicability==SceneApplicability::OutsideCoverage" type="CHECK">
+FAILED:
+  CHECK( result.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  0 == 5
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:203
+      </failure>
+      <failure message="result.status==ClearanceStatus::Unknown" type="CHECK">
+FAILED:
+  CHECK( result.status==ClearanceStatus::Unknown )
+with expansion:
+  0 == 2
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:202
+      </failure>
+      <failure message="result.applicability==SceneApplicability::OutsideCoverage" type="CHECK">
+FAILED:
+  CHECK( result.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  0 == 5
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:203
+      </failure>
+      <failure message="result.status==ClearanceStatus::Unknown" type="CHECK">
+FAILED:
+  CHECK( result.status==ClearanceStatus::Unknown )
+with expansion:
+  0 == 2
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:202
+      </failure>
+      <failure message="result.applicability==SceneApplicability::OutsideCoverage" type="CHECK">
+FAILED:
+  CHECK( result.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  0 == 5
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:203
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

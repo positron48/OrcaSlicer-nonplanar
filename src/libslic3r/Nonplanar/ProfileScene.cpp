@@ -96,4 +96,98 @@ SceneApplicability assess_simulation_scene(const SimulationScene &s, const std::
     } catch (const std::invalid_argument &) { return Result::InvalidInput; }
       catch (const std::overflow_error &) { return Result::NumericalFailure; }
 }
+SimulationTravelResult check_simulation_travel(const SimulationScene &source, const std::vector<MotionEvent> &source_events,
+    const ClearancePolicy &source_policy, const SimulationTravelLimits &requested_limits)
+{
+    SimulationTravelResult result;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        // Bound allocation before making the owned copies. The caller keeps
+        // source state stable for capture; no callback has run at this point.
+        if (source.head.size()>64 || source.obstacles.size()>10000 || source_events.size()>10000) {
+            result.reason="INPUT_SIZE_LIMIT"; return result;
+        }
+        SimulationScene scene=source;
+        const auto events=source_events;
+        const auto limits=requested_limits;
+        auto policy=source_policy;
+        result.profile_id=scene.profile_id; result.revision=scene.revision;
+        const auto stop=[&] {
+            if (limits.cancelled && limits.cancelled()) { result.reason="CANCELLED"; return true; }
+            if (limits.is_current && !limits.is_current(scene.profile_id,scene.revision)) {
+                result.reason="STALE_REVISION"; return true;
+            }
+            detail::require_interval_environment();
+            if (std::chrono::steady_clock::now()-started>=limits.timeout) { result.reason="DEADLINE"; return true; }
+            return false;
+        };
+        if (limits.max_pairs>1000000 || limits.max_evaluations_per_pair>65535 ||
+            limits.timeout.count()<=0 || limits.timeout.count()>60000) {
+            result.reason="INVALID_LIMITS"; return result;
+        }
+        if (stop()) return result;
+        const double scene_error=scene.uncertainty.value();
+        detail::Interval coverage_error(scene_error);
+        // A caller's full relative budget on each covered envelope is
+        // conservative. Also keep the required-clearance neighborhood inside
+        // the declared inventory; a positive pair gap alone cannot prove this.
+        for (double term : {policy.numeric.total_mm(),policy.tool_measurement.value(),policy.positioning.value(),
+                            policy.material.value(),policy.scene_geometry.value(),policy.required.value()})
+            if (term!=0) coverage_error=coverage_error+detail::Interval(term);
+        scene.uncertainty=Length(coverage_error.hi);
+        result.applicability=assess_simulation_scene(scene,events);
+        if (stop()) return result;
+        if (result.applicability!=SceneApplicability::SimulationOnly) {
+            result.reason="SCENE_NOT_APPLICABLE"; return result;
+        }
+        for (const auto &event : events)
+            if (!std::holds_alternative<Travel>(event.payload)) {
+                result.reason="UNSUPPORTED_MATERIAL_STATE"; return result;
+            }
+        const size_t component_count=scene.head.size()+1;
+        if (scene.obstacles.size()>limits.max_pairs/component_count) { result.reason="PAIR_LIMIT"; return result; }
+        const size_t pairs_per_event=scene.obstacles.size()*component_count;
+        if (pairs_per_event && events.size()>limits.max_pairs/pairs_per_event) {
+            result.reason="PAIR_LIMIT"; return result;
+        }
+        result.required_pairs=events.size()*pairs_per_event;
+        std::set<uint64_t> ids;
+        for (const auto &part : scene.head) ids.insert(part.id);
+        result.tip_component_id=1;
+        while (ids.count(result.tip_component_id)) ++result.tip_component_id;
+        std::vector<ToolComponent> components{{result.tip_component_id,scene.tip}};
+        for (const auto &part : scene.head) components.push_back({part.id,part.outer});
+        // Coverage inflated both objects separately. Charge their combined
+        // relative geometry error here without losing any caller budget term.
+        if (scene_error!=0) {
+            const detail::Interval error(scene_error);
+            policy.scene_geometry=Length((detail::Interval(policy.scene_geometry.value())+error+error).hi);
+        }
+        const QueryLimits query_limits{limits.max_evaluations_per_pair,started+limits.timeout};
+        for (const auto &event : events)
+            for (const auto &component : components)
+                for (size_t index=0; index<scene.obstacles.size(); ++index) {
+                    if (stop()) return result;
+                    auto check=query_clearance(event,component,{uint64_t(index)+1,scene.obstacles[index]},policy,query_limits);
+                    ++result.checked_pairs;
+                    if (stop()) return result;
+                    if (check.status!=ClearanceStatus::Pass) {
+                        result.limiting_check=std::move(check);
+                        result.status=result.limiting_check->status;
+                        result.reason="SCENE_CLEARANCE_BLOCKED";
+                        return result;
+                    }
+                    if (!check.bounds) { result.reason="MISSING_PAIR_BOUND"; return result; }
+                    if (!result.limiting_check || check.bounds->lower_mm<result.limiting_check->bounds->lower_mm)
+                        result.limiting_check=std::move(check);
+                }
+        if (stop()) return result;
+        result.status=ClearanceStatus::Pass;
+        result.reason="SIMULATION_TRAVEL_ONLY";
+    } catch (...) {
+        result.status=ClearanceStatus::Unknown;
+        result.reason="TRAVEL_CHECK_EXCEPTION";
+    }
+    return result;
+}
 }

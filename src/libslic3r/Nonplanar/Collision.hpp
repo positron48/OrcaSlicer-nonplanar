@@ -7,7 +7,7 @@
 
 namespace Slic3r::nptop {
 
-inline constexpr unsigned geometry_contract_version = 3;
+inline constexpr unsigned geometry_contract_version = 4;
 using ToolPosition = Position<Frame::ToolLocal>;
 
 struct FiniteTip {
@@ -34,6 +34,7 @@ struct ClearancePolicy {
     Length required;
     NumericBudget numeric;
     Length tool_measurement, positioning, material;
+    Length scene_geometry{0}; // Combined relative envelope uncertainty, mm.
 };
 struct QueryLimits {
     size_t max_evaluations = 4095;
