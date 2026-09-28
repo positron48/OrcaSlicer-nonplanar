@@ -1,6 +1,7 @@
 #pragma once
 #include "../Config.hpp"
 #include <map>
+#include <memory>
 #include <optional>
 #include <string>
 #include <vector>
@@ -20,10 +21,24 @@ struct PolicyConflict { std::string key, value, reason; };
 // Covers sparse source overrides and plate actions that are not necessarily
 // present in the resolved native PrintRegionConfig.
 std::optional<PolicyConflict> model_policy_conflict(const Model &);
+// An owned copy of all present native options, including unknown keys. The
+// caller must keep the source stable while capturing it. This is not a whole
+// job snapshot or a canonical fingerprint. No mutable DynamicConfig escapes.
+class ResolvedConfigSnapshot final : public ConfigOptionResolver {
+public:
+    explicit ResolvedConfigSnapshot(const ConfigBase &);
+    const ConfigOption *optptr(const t_config_option_key &) const override;
+    t_config_option_keys keys() const;
+private:
+    struct Storage;
+    std::shared_ptr<const Storage> m_storage;
+};
 struct PolicySnapshot {
     const Mode mode;
     const std::map<std::string,std::string> resolved;
     const std::vector<PolicyConflict> conflicts;
+    // OFF keeps the upstream path and does not capture settings.
+    const std::optional<ResolvedConfigSnapshot> native_config;
     bool passes_config_preflight() const { return mode != Mode::Off && mode != Mode::Invalid && conflicts.empty(); }
 };
 // Configuration preflight only: no profile qualification or export approval.

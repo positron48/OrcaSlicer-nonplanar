@@ -10,6 +10,8 @@
 #include <boost/filesystem.hpp>
 #include <cmath>
 #include <limits>
+#include <cstring>
+#include <type_traits>
 using namespace Slic3r;
 using namespace Slic3r::nptop;
 namespace {
@@ -40,6 +42,91 @@ DynamicPrintConfig eligible()
     }
     return c;
 }
+}
+TEST_CASE("B01 resolved snapshot owns every native value without a mutable configuration API", "[Nonplanar][B01][B01Snapshot]")
+{
+    static_assert(std::is_same_v<decltype(std::declval<const ResolvedConfigSnapshot &>().option("x")), const ConfigOption *>);
+    static_assert(!std::is_base_of_v<ConfigBase, ResolvedConfigSnapshot>);
+    auto config=eligible();
+    const auto snapshot=resolve_policy(config,1,1);
+    REQUIRE(snapshot.passes_config_preflight());
+    REQUIRE(snapshot.native_config.has_value());
+    const auto &copy=*snapshot.native_config;
+    REQUIRE(copy.keys() == config.keys());
+    for (const auto &key : config.keys()) {
+        INFO(key);
+        REQUIRE(copy.option(key) != config.option(key));
+        REQUIRE(copy.option(key)->type() == config.option(key)->type());
+        REQUIRE(copy.option(key)->nullable() == config.option(key)->nullable());
+        REQUIRE(*copy.option(key) == *config.option(key));
+    }
+    config.option<ConfigOptionFloat>("layer_height")->value=0.77;
+    REQUIRE(copy.option<ConfigOptionFloat>("layer_height")->value != 0.77);
+    config.clear();
+    REQUIRE(copy.option<ConfigOptionString>("nptop_mode")->value == "safe_hybrid");
+    REQUIRE(snapshot.passes_config_preflight());
+    config=eligible(); config.set_deserialize_strict("nptop_mode","off");
+    REQUIRE_FALSE(resolve_policy(config,1,1).native_config.has_value());
+}
+TEST_CASE("B01 resolved snapshot preserves exact numeric nullable and nested values", "[Nonplanar][B01][B01Snapshot]")
+{
+    const double precise=std::nextafter(0.2,1.);
+    const double nil=ConfigOptionFloatsNullable::nil_value();
+    DynamicConfig source;
+    source.set_key_value("future_number",new ConfigOptionFloatOrPercent(precise,true));
+    source.set_key_value("future_vector",new ConfigOptionFloatsNullable{precise,nil,-0.});
+    source.set_key_value("future_text",new ConfigOptionStrings{"alpha","beta"});
+    source.set_key_value("future_points",new ConfigOptionPointsGroups{{Vec2d(precise,3),Vec2d(4,5)}});
+    const ResolvedConfigSnapshot snapshot(source);
+    source.option<ConfigOptionFloatOrPercent>("future_number")->value=1;
+    source.option<ConfigOptionFloatsNullable>("future_vector")->values.clear();
+    source.option<ConfigOptionStrings>("future_text")->values[1]="changed";
+    source.option<ConfigOptionPointsGroups>("future_points")->values.front().front().x()=9;
+    source.clear();
+    const auto *number=snapshot.option<ConfigOptionFloatOrPercent>("future_number");
+    REQUIRE(number->value == precise);
+    REQUIRE(number->percent);
+    const auto *vector=dynamic_cast<const ConfigOptionFloatsNullable *>(snapshot.option("future_vector"));
+    REQUIRE(vector != nullptr);
+    REQUIRE(vector->values.size() == 3);
+    REQUIRE(std::memcmp(&vector->values[0],&precise,sizeof(double)) == 0);
+    REQUIRE(std::isnan(vector->values[1]));
+    REQUIRE(std::signbit(vector->values[2]));
+    REQUIRE(snapshot.option<ConfigOptionStrings>("future_text")->values[1] == "beta");
+    REQUIRE(snapshot.option<ConfigOptionPointsGroups>("future_points")->values.front().front().x() == precise);
+    REQUIRE(snapshot.option("absent") == nullptr);
+}
+TEST_CASE("B01 resolved snapshot owns generic enum dictionaries as well as values", "[Nonplanar][B01][B01Snapshot]")
+{
+    const auto snapshot=[] {
+        t_config_enum_values names{{"alpha",0},{"beta",1}};
+        DynamicConfig source;
+        source.set_key_value("scalar",new ConfigOptionEnumGeneric(&names,1));
+        source.set_key_value("vector",new ConfigOptionEnumsGeneric(&names,2,0));
+        source.set_key_value("nullable",new ConfigOptionEnumsGenericNullable(&names,2,1));
+        const ResolvedConfigSnapshot captured(source);
+        names={{"changed",0},{"changed_too",1}};
+        CHECK(captured.option("scalar")->serialize() == "beta");
+        CHECK(captured.option("vector")->serialize() == "alpha,alpha");
+        CHECK(captured.option("nullable")->serialize() == "beta,beta");
+        // A copied snapshot must outlive its original handle, source values
+        // and enum maps without borrowing any of them.
+        return ResolvedConfigSnapshot(captured);
+    }();
+    CHECK(snapshot.option("scalar")->serialize() == "beta");
+    CHECK(snapshot.option("vector")->serialize() == "alpha,alpha");
+    CHECK(snapshot.option("nullable")->serialize() == "beta,beta");
+    DynamicConfig invalid;
+    invalid.set_key_value("enum",new ConfigOptionEnumGeneric{});
+    REQUIRE_THROWS_AS(ResolvedConfigSnapshot(invalid),ConfigurationError);
+    DynamicConfig unmapped;
+    unmapped.set_key_value("vector",new ConfigOptionEnumsGeneric{0,1});
+    unmapped.set_key_value("nullable",new ConfigOptionEnumsGenericNullable{1,0});
+    const ResolvedConfigSnapshot null_maps(unmapped);
+    REQUIRE(null_maps.option<ConfigOptionEnumsGeneric>("vector")->keys_map == nullptr);
+    REQUIRE(null_maps.option<ConfigOptionEnumsGeneric>("vector")->values == std::vector<int>{0,1});
+    REQUIRE(dynamic_cast<const ConfigOptionEnumsGenericNullable *>(null_maps.option("nullable"))->keys_map == nullptr);
+    REQUIRE(null_maps.option<ConfigOptionEnumsGenericNullable>("nullable")->values == std::vector<int>{1,0});
 }
 TEST_CASE("B01 unqualified flow and geometry compensators fail preflight", "[Nonplanar][B01][B01Transforms]")
 {

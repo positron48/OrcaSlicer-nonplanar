@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="3" skipped="0" tests="2460" hostname="tbd" time="0.002" timestamp="2026-09-28T13:10:36Z">
+    <properties>
+      <property name="random-seed" value="2039524052"/>
+      <property name="filters" value="[B01Snapshot]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B01 resolved snapshot preserves exact numeric nullable and nested values" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B01 resolved snapshot owns generic enum dictionaries as well as values" time="0.000" status="run">
+      <failure message="snapshot.option(&quot;scalar&quot;)->serialize() == &quot;beta&quot;" type="CHECK">
+FAILED:
+  CHECK( snapshot.option("scalar")->serialize() == "beta" )
+with expansion:
+  "changed_too" == "beta"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:109
+      </failure>
+      <failure message="snapshot.option(&quot;vector&quot;)->serialize() == &quot;alpha,alpha&quot;" type="CHECK">
+FAILED:
+  CHECK( snapshot.option("vector")->serialize() == "alpha,alpha" )
+with expansion:
+  "changed,changed" == "alpha,alpha"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:110
+      </failure>
+      <failure message="snapshot.option(&quot;nullable&quot;)->serialize() == &quot;beta,beta&quot;" type="CHECK">
+FAILED:
+  CHECK( snapshot.option("nullable")->serialize() == "beta,beta" )
+with expansion:
+  "changed_too,changed_too" == "beta,beta"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:111
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 resolved snapshot owns every native value without a mutable configuration API" time="0.001" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

@@ -124,3 +124,8 @@ are rejected before lossy or invalid native serialization.
 automation failed, and a disposable app copy was rejected during launch with
 a failing signature check. All test processes were stopped; the installed
 stock executable stayed unchanged. No OS protection bypass was attempted.
+
+`B01-snapshot.md` and ADR-0013 add owned native resolved settings, including
+generic enum dictionaries. Nineteen B01 cases/2845 assertions, 138/138 selected
+CTest cases and six fresh OFF/ZAA comparisons pass. Whole-job provenance and
+fingerprints remain pending.

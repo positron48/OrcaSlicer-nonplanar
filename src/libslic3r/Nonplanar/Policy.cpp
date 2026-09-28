@@ -9,6 +9,42 @@
 #include <sstream>
 
 namespace Slic3r::nptop {
+struct ResolvedConfigSnapshot::Storage {
+    explicit Storage(const ConfigBase &source) : values(source)
+    {
+        for (const auto &key : values.keys()) {
+            // Native clone() owns option values but generic enums borrow their
+            // dictionaries. Freeze those too before the source can disappear.
+            const auto freeze_dictionary = [&](auto *option) {
+                if (!option || !option->keys_map) return;
+                option->keys_map = &enum_maps.emplace(key, *option->keys_map).first->second;
+            };
+            auto *option = values.option(key);
+            auto *scalar = dynamic_cast<ConfigOptionEnumGeneric *>(option);
+            if (scalar && !scalar->keys_map)
+                throw ConfigurationError("Nonplanar config snapshot: missing scalar enum dictionary for " + key);
+            freeze_dictionary(scalar);
+            // Native vector enums permit a null map (e.g. extruder_type in
+            // FullPrintConfig); preserve that state and its raw integer values.
+            freeze_dictionary(dynamic_cast<ConfigOptionEnumsGeneric *>(option));
+            freeze_dictionary(dynamic_cast<ConfigOptionEnumsGenericNullable *>(option));
+        }
+    }
+    // Storage is constructed const and never shared through a mutable alias.
+    std::map<std::string, t_config_enum_values> enum_maps;
+    DynamicConfig values;
+};
+
+ResolvedConfigSnapshot::ResolvedConfigSnapshot(const ConfigBase &source)
+    : m_storage(std::make_shared<const Storage>(source)) {}
+
+const ConfigOption *ResolvedConfigSnapshot::optptr(const t_config_option_key &key) const
+{
+    return m_storage->values.option(key);
+}
+
+t_config_option_keys ResolvedConfigSnapshot::keys() const { return m_storage->values.keys(); }
+
 const std::map<std::string, CustomCodeRule> &custom_code_policy()
 {
     static const std::map<std::string, CustomCodeRule> rules = {
@@ -165,8 +201,11 @@ bool requests_guarded_mode(const Model &model, const ConfigBase &config)
     return false;
 }
 
-PolicySnapshot resolve_policy(const ConfigBase &config, size_t objects, size_t instances)
+PolicySnapshot resolve_policy(const ConfigBase &source, size_t objects, size_t instances)
 {
+    std::optional<ResolvedConfigSnapshot> native_config;
+    if (requests_guarded_mode(source)) native_config.emplace(source);
+    const ConfigOptionResolver &config = native_config ? static_cast<const ConfigOptionResolver &>(*native_config) : source;
     std::map<std::string, std::string> resolved;
     std::vector<PolicyConflict> conflicts;
     auto read = [&](const std::string &key) {
@@ -180,7 +219,7 @@ PolicySnapshot resolve_policy(const ConfigBase &config, size_t objects, size_t i
     const Mode mode = value == "off" || config.option("nptop_mode") == nullptr ? Mode::Off :
         value == "safe_hybrid" ? Mode::SafeHybrid :
         value == "strict_nonplanar" ? Mode::StrictNonplanar : Mode::Invalid;
-    if (mode == Mode::Off) return {mode, std::move(resolved), {}};
+    if (mode == Mode::Off) return {mode, std::move(resolved), {}, std::nullopt};
     if (mode == Mode::Invalid)
         conflicts.push_back({"nptop_mode", value, "Unknown nonplanar mode"});
 
@@ -216,7 +255,7 @@ PolicySnapshot resolve_policy(const ConfigBase &config, size_t objects, size_t i
     // This detects new textual code hooks in a resolved config. It is not a
     // complete audit of arbitrary new geometry-affecting settings, nor of keys
     // discarded earlier by an importer's forward-compatibility substitution.
-    for (const auto &key : config.keys()) {
+    for (const auto &key : native_config->keys()) {
         if (custom_code_policy().count(key) == 0)
             if (auto conflict = custom_code_conflict(key, config.option(key))) {
                 read(key);
@@ -227,6 +266,6 @@ PolicySnapshot resolve_policy(const ConfigBase &config, size_t objects, size_t i
     resolved.emplace("instance_count", std::to_string(instances));
     if (objects != 1) conflicts.push_back({"object_count", std::to_string(objects), "Requires one object"});
     if (instances != 1) conflicts.push_back({"instance_count", std::to_string(instances), "Requires one instance"});
-    return {mode, std::move(resolved), std::move(conflicts)};
+    return {mode, std::move(resolved), std::move(conflicts), std::move(native_config)};
 }
 }
