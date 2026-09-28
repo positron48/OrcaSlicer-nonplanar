@@ -1,9 +1,21 @@
 import unittest
-from compare_baselines import normalized, replay
+from compare_baselines import normalized, replay, same_settings
 
 
 class BaselineTests(unittest.TestCase):
     sample = 'G90\nG21\nM83\nG1 X10 Y20 Z3 F600\nG1 X12 Z3.2 E.4\nG1 E-.8\nG1 E.8\n'
+
+    def test_B01_only_explicit_additive_off_default_is_allowed(self):
+        before = b'{\n\t"flow": 1\n}\n'
+        after = b'{\n\t"nptop_mode": "off",\n\t"flow": 1\n}\n'
+        self.assertTrue(same_settings(before, before))
+        self.assertFalse(same_settings(before, after))
+        self.assertTrue(same_settings(before, after, True))
+        for changed in [after.replace(b'off', b'safe_hybrid'), after.replace(b'off', b'future_mode'),
+                        after.replace(b'1', b'2'), after.replace(b'"flow"', b'"new_motion_setting"'),
+                        after.replace(b'{', b'{\n\t"extra": 0,'), after.replace(b'\t"flow"', b' "flow"')]:
+            self.assertFalse(same_settings(before, changed, True))
+        self.assertFalse(same_settings(after, before, True))
 
     def test_ORC02_ORC03_modal_replay_preserves_xyz_e_feed_order(self):
         moves = replay(self.sample)

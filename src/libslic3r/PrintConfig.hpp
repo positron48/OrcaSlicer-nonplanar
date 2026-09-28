@@ -1241,6 +1241,9 @@ PRINT_CONFIG_CLASS_DEFINE(
     ((ConfigOptionFloat,                scarf_joint_flow_ratio))
     ((ConfigOptionPercent,              scarf_overhang_threshold))
     
+    // Experimental Nonplanar Top Lab: unknown modes are rejected by policy.
+    ((ConfigOptionString, nptop_mode))
+
     // Orca: Z Anti-Aliasing (aka Z Contouring)
     ((ConfigOptionBool, zaa_enabled))
     ((ConfigOptionBool, zaa_dont_alternate_fill_direction))

@@ -16,6 +16,7 @@
 #include "GCode/WipeTower2.hpp"
 #include "Utils.hpp"
 #include "PrintConfig.hpp"
+#include "Nonplanar/Policy.hpp"
 #include "MaterialType.hpp"
 #include "Model.hpp"
 #include "format.hpp"
@@ -1257,10 +1258,36 @@ StringObjectException Print::check_multi_filament_valid(const Print& print)
     return ret;
 }
 
+std::string Print::nonplanar_block_reason() const
+{
+    if (!nptop::requests_guarded_mode(model(), full_print_config())) return {};
+    const auto conflict_reason = [&](const ConfigBase &config) -> std::string {
+        const auto policy = nptop::resolve_policy(config, m_objects.size(), num_object_instances());
+        if (policy.conflicts.empty()) return {};
+        const auto &conflict = policy.conflicts.front();
+        return "Nonplanar Top Lab: " + conflict.key + " = " + conflict.value + ": " + conflict.reason;
+    };
+    // Diagnose the actual object/region configuration, not only the preset.
+    for (const auto *object : m_objects)
+        for (const PrintRegion &region : object->all_regions()) {
+            auto resolved = full_print_config();
+            resolved.apply(object->config());
+            resolved.apply(region.config());
+            // An OFF override cannot silently downgrade an explicitly enabled job.
+            if (nptop::requests_guarded_mode(full_print_config()) && !nptop::requests_guarded_mode(resolved))
+                resolved.set_key_value("nptop_mode", full_print_config().option("nptop_mode")->clone());
+            if (const auto reason = conflict_reason(resolved); !reason.empty()) return reason;
+        }
+    if (m_objects.empty())
+        if (const auto reason = conflict_reason(full_print_config()); !reason.empty()) return reason;
+    return "Nonplanar Top Lab: guarded slicing and export are not implemented";
+}
+
 // Precondition: Print::validate() requires the Print::apply() to be called its invocation.
 //BBS: refine seq-print validation logic.....FIXME:StringObjectException *warning can only contain one warning, but there might be many warnings, need a vector<StringObjectException>
 StringObjectException Print::validate(StringObjectException *warning, Polygons* collison_polygons, std::vector<std::pair<Polygon, float>>* height_polygons) const
 {
+    if (const auto reason = nonplanar_block_reason(); !reason.empty()) return {reason};
     std::vector<unsigned int> extruders = this->extruders();
     unsigned int nozzles = m_config.nozzle_diameter.size();
 
@@ -2174,6 +2201,7 @@ std::map<ObjectID, unsigned int> getObjectExtruderMap(const Print& print) {
 // Slicing process, running at a background thread.
 void Print::process(long long *time_cost_with_cache, bool use_cache)
 {
+    if (const auto reason = nonplanar_block_reason(); !reason.empty()) throw SlicingError(reason);
     long long start_time = 0, end_time = 0;
     if (time_cost_with_cache)
         *time_cost_with_cache = 0;
@@ -2617,6 +2645,7 @@ void Print::process(long long *time_cost_with_cache, bool use_cache)
 // It is up to the caller to show an error message.
 std::string Print::export_gcode(const std::string& path_template, GCodeProcessorResult* result, ThumbnailsGeneratorCallback thumbnail_cb)
 {
+    if (const auto reason = nonplanar_block_reason(); !reason.empty()) throw SlicingError(reason);
     // output everything to a G-code file
     // The following call may die if the filename_format template substitution fails.
     std::string path = this->output_filepath(path_template);
@@ -3756,6 +3785,7 @@ void Print::set_gcode_file_invalidated()
 //BBS: add gcode file preload logic
 void Print::export_gcode_from_previous_file(const std::string& file, GCodeProcessorResult* result, ThumbnailsGeneratorCallback thumbnail_cb)
 {
+    if (const auto reason = nonplanar_block_reason(); !reason.empty()) throw SlicingError(reason);
     try {
         GCodeProcessor processor;
         GCodeProcessor::s_IsBBLPrinter = is_BBL_printer();

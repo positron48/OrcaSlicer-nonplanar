@@ -4375,6 +4375,13 @@ void PrintConfigDef::init_fff_params()
     def->mode     = comExpert;
     def->set_default_value(new ConfigOptionFloat(0));
 
+    def = this->add("nptop_mode", coString);
+    def->label = L("Nonplanar Top Lab mode");
+    def->category = L("Quality");
+    def->tooltip = L("Experimental mode. Guarded slicing and export remain blocked until the nonplanar pipeline is implemented.");
+    def->mode = comExpert;
+    def->set_default_value(new ConfigOptionString("off"));
+
     def = this->add("zaa_enabled", coBool);
     def->label    = L("Z contouring enabled");
     def->category = L("Quality");

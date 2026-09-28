@@ -1,6 +1,7 @@
 #include "../libslic3r.h"
 #include "../Exception.hpp"
 #include "../Model.hpp"
+#include "../Nonplanar/Policy.hpp"
 #include "../Preset.hpp"
 #include "../Utils.hpp"
 #include "../LocalesUtils.hpp"
@@ -5939,6 +5940,21 @@ void PlateData::parse_filament_info(GCodeProcessorResult *result)
         m_skip_auxiliary = store_params.strategy & SaveStrategy::SkipAuxiliary;
         m_share_mesh       = store_params.strategy & SaveStrategy::ShareMesh;
         m_from_backup_save = store_params.strategy & SaveStrategy::Backup;
+
+        const DynamicPrintConfig empty_config;
+        const bool guarded = nptop::requests_guarded_mode(*store_params.model,
+                store_params.config ? *store_params.config : empty_config) ||
+            std::any_of(store_params.plate_data_list.begin(), store_params.plate_data_list.end(),
+                [](const PlateData *plate) { return plate && nptop::requests_guarded_mode(plate->config); });
+        if (m_save_gcode && guarded) {
+            if (m_from_backup_save) {
+                // Preserve source autosave, but never embed an unchecked payload.
+                m_save_gcode = false;
+            } else {
+                add_error("Nonplanar Top Lab: embedded G-code export is not implemented");
+                return false;
+            }
+        }
 
         m_use_loaded_id = store_params.strategy & SaveStrategy::UseLoadedId;
 

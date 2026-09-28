@@ -2029,6 +2029,7 @@ WipeTowerType GCode::wipe_tower_type()
 
 void GCode::do_export(Print* print, const char* path, GCodeProcessorResult* result, ThumbnailsGeneratorCallback thumbnail_cb)
 {
+    if (const auto reason = print->nonplanar_block_reason(); !reason.empty()) throw SlicingError(reason);
     PROFILE_CLEAR();
 
     // BBS
@@ -5633,6 +5634,9 @@ void GCode::append_full_config(const Print &print, std::string &str)
     };
     std::ostringstream ss;
     for (const std::string& key : cfg.keys()) {
+        // Preserve the pinned stock OFF/ZAA output, including config comments.
+        // Project/config serialization still retains the namespaced option.
+        if (key == "nptop_mode" && cfg.opt_serialize(key) == "off") continue;
         if (!is_banned(key) && !cfg.option(key)->is_nil()) {
             if (key == "wipe_tower_x" || key == "wipe_tower_y") {
                 ss << std::fixed << std::setprecision(3) << "; " << key << " = " << dynamic_cast<const ConfigOptionFloats*>(cfg.option(key))->get_at(print.get_plate_index()) << "\n";

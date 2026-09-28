@@ -1,5 +1,6 @@
 #include "Plater.hpp"
 #include "libslic3r/Config.hpp"
+#include "libslic3r/Nonplanar/Policy.hpp"
 #include "libslic3r_version.h"
 
 #include <cstddef>
@@ -10306,6 +10307,11 @@ int Plater::priv::update_print_required_data(Slic3r::DynamicPrintConfig config, 
 
 void Plater::priv::on_action_send_to_printer(bool isall)
 {
+    if (nptop::requests_guarded_mode(model, wxGetApp().preset_bundle->full_config())) {
+        GUI::show_error(q, _L("Nonplanar Top Lab: network sending is disabled for guarded mode."));
+        return;
+    }
+
 	if (!m_send_to_sdcard_dlg) m_send_to_sdcard_dlg = new SendToPrinterDialog(q);
     if (isall) {
         m_send_to_sdcard_dlg->prepare(PLATE_ALL_IDX);
@@ -16106,6 +16112,11 @@ void Plater::reslice_SLA_until_step(SLAPrintObjectStep step, const ModelObject &
 }
 void Plater::send_gcode_legacy(int plate_idx, Export3mfProgressFn proFn)
 {
+    if (nptop::requests_guarded_mode(p->model, wxGetApp().preset_bundle->full_config())) {
+        GUI::show_error(this, _L("Nonplanar Top Lab: network sending is disabled for guarded mode."));
+        return;
+    }
+
     // if physical_printer is selected, send gcode for this printer
     // DynamicPrintConfig* physical_printer_config = wxGetApp().preset_bundle->physical_printers.get_selected_printer_config();
     DynamicPrintConfig* physical_printer_config = &Slic3r::GUI::wxGetApp().preset_bundle->printers.get_edited_preset().config;

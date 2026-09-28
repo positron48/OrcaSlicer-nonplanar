@@ -1,0 +1,25 @@
+{
+  "base_commit": "6ffcd91f90bded7c6ccbf62890843f4668a45932",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/Policy.cpp",
+  "sha256": {
+    "scripts/nonplanar/compare_baselines.py": "73e84ca13f46bc22fe14deaa02a97490bfc2a019f3547e648aa497cb591b2f18",
+    "scripts/nonplanar/test_baselines.py": "bf03b16b49abd4e6eb0fa8ff6a7d013a34977f461ca0c01bc3e431b40cad557c",
+    "src/libslic3r/CMakeLists.txt": "42d4224019681c30d15664af472e6d98560074f1422423d899763cf3fa84ae83",
+    "src/libslic3r/Format/bbs_3mf.cpp": "1036b5aa3f0272cd28bf2c336bb9d533756e258b637feda1702f85644176df74",
+    "src/libslic3r/GCode.cpp": "8e99e79c16c3596820d440850075cf786e62494947917e9789ec414880a2bc31",
+    "src/libslic3r/Print.cpp": "a13f9d84211cfcdf34f366fee7039b6b8f6d843c84ad5557942c54aa95aee2e3",
+    "src/libslic3r/Print.hpp": "9616a48bc374fc34337311dfa5958a5fa73a3295dbe3782adf7e9a89d487a24d",
+    "src/libslic3r/PrintConfig.cpp": "b4d0263cc14c0cff98ac769cc4c90eb3789b93f3450219b4ebcf9dc4a66f0d1f",
+    "src/libslic3r/PrintConfig.hpp": "0720c2b80dc37cce489ae1d21e2df909e87dc19ce7b2c4c3c6cb64ee1b6ac67d",
+    "src/slic3r/GUI/Plater.cpp": "f601d6ef779da9e5c5c1b3c901d6954d6b8e4bd0edde6393f9989fa5eeb625da",
+    "tests/fff_print/CMakeLists.txt": "696fa2022b94c127ca5d23cadbfab0275c9f5a591f19825716c3f33a162d6ca3",
+    "src/libslic3r/Nonplanar/Policy.cpp": "9ed0cab4d643c3e013a9e15f6a70833f10e4bc76a59ba718fcbc248e8283f2e8",
+    "src/libslic3r/Nonplanar/Policy.hpp": "4d01576df5523fdd1603b2c5d913f7104f2c2b9b3d174e2e8c7b9198d6d2f38a",
+    "tests/nonplanar/test_policy.cpp": "154ad4b548d7e0dd1f3f216883634fcf21f7ccc5c2e0c5b709e1ba32af505011"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "2bdf33155706147dd94c8fe3fb3f184773c71fa20a5fe827597ead314c3ddf5e",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "34c6a1f421bf7da5353b75d557c85fa0d69e605db681811a8da8cf9977cd16b1",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "3aeaea849625e8ddb9918a9df22e2371b4c2e6b47f4e19077d7faae72869ce56"
+  }
+}

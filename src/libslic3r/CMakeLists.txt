@@ -25,6 +25,8 @@ set(lisbslic3r_sources
     Nonplanar/GCodeAdapter.hpp
     Nonplanar/ProfileScene.cpp
     Nonplanar/ProfileScene.hpp
+    Nonplanar/Policy.cpp
+    Nonplanar/Policy.hpp
     Nonplanar/Contracts.cpp
     Nonplanar/Contracts.hpp
     Nonplanar/Collision.cpp

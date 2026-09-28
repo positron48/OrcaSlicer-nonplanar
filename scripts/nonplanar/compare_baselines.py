@@ -62,7 +62,17 @@ def replay(data):
     return moves
 
 
-def compare(reference, candidate):
+def same_settings(reference, candidate, allow_nptop_off_default=False):
+    if reference == candidate:
+        return True
+    # B01 adds one namespaced default in the resolved-config schema. Keep all
+    # other bytes significant; this exception never touches commands or goldens.
+    line = b'\t"nptop_mode": "off",\n'
+    return (allow_nptop_off_default and b'"nptop_mode"' not in reference and
+            candidate.count(line) == 1 and candidate.replace(line, b'', 1) == reference)
+
+
+def compare(reference, candidate, allow_nptop_off_default=False):
     reference_manifest = json.loads((reference / 'manifest.json').read_text())
     candidate_manifest = json.loads((candidate / 'manifest.json').read_text())
     expected = {(m, mode) for m in ('flat_block', 'wedge_5deg', 'shallow_sphere') for mode in ('off', 'zaa')}
@@ -85,7 +95,9 @@ def compare(reference, candidate):
         b = (candidate / name / 'output/plate_1.gcode').read_text()
         if normalized(a) != normalized(b):
             raise ValueError('G-code difference beyond timestamp: ' + name)
-        if (reference / name / 'resolved.json').read_bytes() != (candidate / name / 'resolved.json').read_bytes():
+        old_settings = (reference / name / 'resolved.json').read_bytes()
+        new_settings = (candidate / name / 'resolved.json').read_bytes()
+        if not same_settings(old_settings, new_settings, allow_nptop_off_default):
             raise ValueError('resolved settings changed: ' + name)
         moves = replay(a)
         if moves != replay(b):
@@ -95,6 +107,7 @@ def compare(reference, candidate):
         if run['mode'] == 'zaa' and run['model'] != 'flat_block' and not sloped:
             raise ValueError('ZAA baseline contains no sloped extrusions')
         rows.append({'fixture': name, 'motion_commands': len(moves), 'sloped_extrusions': sloped,
+                     'resolved_settings': 'IDENTICAL' if old_settings == new_settings else 'ADDED_NPTOP_OFF_DEFAULT_ONLY',
                      'differential': 'PASS', 'safety_verification': 'NOT_RUN'})
     return rows
 
@@ -103,8 +116,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('reference', type=Path)
     parser.add_argument('candidate', type=Path)
+    parser.add_argument('--allow-nptop-off-default', action='store_true',
+                        help='Permit only the exact B01 namespaced OFF default line in resolved.json')
     args = parser.parse_args()
     try:
-        print(json.dumps(compare(args.reference, args.candidate), indent=2))
+        print(json.dumps(compare(args.reference, args.candidate, args.allow_nptop_off_default), indent=2))
     except (ValueError, OSError, KeyError) as error:
         parser.exit(2, str(error) + '\n')

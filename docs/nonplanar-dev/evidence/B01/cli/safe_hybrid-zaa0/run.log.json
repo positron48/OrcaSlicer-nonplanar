@@ -1,0 +1,32 @@
+{
+  "command": [
+    "env",
+    "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B01-cli/safe_hybrid-zaa0/tmp/",
+    "sandbox-exec",
+    "-f",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B01-cli/offline.sb",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+    "--datadir",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B01-cli/safe_hybrid-zaa0/data",
+    "--debug",
+    "2",
+    "--load-settings",
+    "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B01-cli/safe_hybrid-zaa0/process.json",
+    "--load-filaments",
+    "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+    "--arrange",
+    "1",
+    "--orient",
+    "0",
+    "--outputdir",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B01-cli/safe_hybrid-zaa0/output",
+    "--slice",
+    "0",
+    "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B01-cli/safe_hybrid-zaa0",
+  "started_utc": "2026-09-28T09:33:26.576977+00:00",
+  "status": "COMPLETED",
+  "exit_code": 205,
+  "elapsed_seconds": 0.94
+}

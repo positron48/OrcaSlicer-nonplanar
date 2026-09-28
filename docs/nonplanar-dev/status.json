@@ -7,14 +7,16 @@
   "delivery": "USER_FORK_BRANCH",
   "gate_a": "IN_PROGRESS",
   "tasks": {
-    "A01": "MACOS_NATIVE_BUILD_TESTS_ISOLATED_CLI_COMPLETE_GUI_LINUX_NOT_RUN",
+    "A01": "MACOS_NATIVE_BUILD_TESTS_ISOLATED_CLI_COMPLETE_LINUX_CI_RUNNING_GUI_NOT_RUN",
     "A02": "SOURCE_AUDIT_AND_SIX_STOCK_FORK_BASELINES_PASS",
     "A03": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A04": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A05": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A06": "BOUNDED_NATIVE_SERIALIZATION_REPLAY_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A07": "SIMULATION_CONTRACT_NATIVE_TESTS_PASS_OPERATOR_EVIDENCE_NOT_RUN_REVIEW_PENDING",
-    "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_COMPLETE_INDEPENDENT_REVIEW_AND_GATE_FOLLOWUPS_PENDING"
+    "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_SPHERE_COUPON_PREPARATION_COMPLETE_INDEPENDENT_REVIEW_PENDING",
+    "B01": "BOUNDED_NATIVE_MODE_PREFLIGHT_AND_OUTPUT_BLOCKS_PASS_COMPATIBILITY_REGISTRY_PENDING",
+    "B02": "SOURCE_IMPORT_AUDIT_ONLY_IMPLEMENTATION_PENDING"
   },
   "executed_checks": {
     "ORC-01": "PASS",
@@ -26,7 +28,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 43,
+    "new_native_cases": 54,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 156,
@@ -42,8 +44,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 80,
-    "final_ctest_executed": 80,
+    "final_ctest_discovered": 91,
+    "final_ctest_executed": 91,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -66,7 +68,15 @@
     "A08_benchmark_case_executions": 210,
     "SYS-08": "NOT_RUN_FULL_200K_PIPELINE_NOT_IMPLEMENTED",
     "DOC-01": "PACKAGE_GRAPH_CHECK_PASS_INDEPENDENT_COMPLETENESS_REVIEW_PENDING",
-    "A08_rounding_regression": "RED_EXIT_42_THEN_FIXED_PASS"
+    "A08_rounding_regression": "RED_EXIT_42_THEN_FIXED_PASS",
+    "GEO-09": "PASS_CONTINUOUS_TIP_SPHERE_PRIMITIVE_ONLY",
+    "B01_native_cases": 8,
+    "B01_native_assertions": 105,
+    "B01_cli_block_cases": 4,
+    "B01_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_RESOLVED_SCHEMA_ADDS_ONLY_NPTOP_MODE_OFF",
+    "ORC-04": "PASS_NATIVE_AND_SANDBOXED_CLI_MODE_ZAA_REJECTION_GUI_NOT_RUN",
+    "ORC-10": "PASS_NATIVE_RESOLVED_REGION_AND_SOURCE_OVERRIDE_REJECTION",
+    "ORC-35": "NOT_IMPLEMENTED_FULL_COMPATIBILITY_REGISTRY_PENDING"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -76,13 +86,14 @@
     "machine": "Snapmaker U1",
     "configuration": "UNCONFIRMED",
     "measurements": "NOT_RUN",
-    "printing": "NOT_RUN"
+    "printing": "NOT_RUN",
+    "coupon_geometry": "PREPARED_AND_VALIDATED_DIGITALLY_ONLY"
   },
   "gui_coexistence": "NOT_RUN",
-  "ci": "NO_WORKFLOW_RUN_FOR_A06_AT_2026_09_28_CHECK",
+  "ci": "RUN_36402596420_RUNNING_PINNED_DEPENDENCIES_AFTER_SOURCE_AUDIT_AND_SYSTEM_DEPS_PASS",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Gate A follow-ups: analytical sphere oracle/domain, prepared physical coupon/protocol, independent review; no large GUI or production export yet.",
+  "next_step": "Finish B01 compatibility registry and whole resolved policy; implement bounded native STL import validation. Gate A independent approval and all physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -93,15 +104,19 @@
     "A05": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/Transition.cpp",
     "A06": "29fbec039d074af624a5cdca12cd43fc6f09f79b",
     "A07": "c044c4b62d1c36ea7e3cdb382a84fcfc71df6139",
-    "A08": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A08.md"
+    "A08": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A08.md",
+    "sphere": "4d3d0c61",
+    "coupon_preparation": "9897b7f3",
+    "linux_ci": "26317237",
+    "linux_ci_ancestry_fix": "6ffcd91f",
+    "B01": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/Policy.cpp"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
   "A07_evidence": "docs/nonplanar-dev/evidence/A07/source-manifest.json",
   "gate_a_open_items": [
-    "ANALYTICAL_SPHERE_EVIDENCE_NOT_IMPLEMENTED",
-    "PREPARED_PHYSICAL_COUPON_NOT_RECORDED",
     "INDEPENDENT_REVIEW_PENDING"
   ],
-  "A08_evidence": "docs/nonplanar-dev/evidence/A08/source-manifest.json"
+  "A08_evidence": "docs/nonplanar-dev/evidence/A08/source-manifest.json",
+  "B01_evidence": "docs/nonplanar-dev/evidence/B01/source-manifest.json"
 }
