@@ -241,3 +241,126 @@ TEST_CASE("B03 late staleness and elapsed deadline discard an otherwise complete
     REQUIRE(expired.reason=="DEADLINE");
     REQUIRE_FALSE(expired.snapshot);
 }
+
+TEST_CASE("B03 whole footprint fits the predefined block and affine wedge ROI", "[Nonplanar][B03][UpperFootprint]")
+{
+    for (const auto &mesh : {make_cube(20,10,2),wedge()}) {
+        const auto projection=analyze_upper_projection(mesh,true,19);
+        REQUIRE(projection.snapshot);
+        UpperFootprintQuery query{0,{2,2},{18,8},1,0,0};
+        auto result=check_upper_footprint(projection.snapshot,query);
+        INFO(result.reason);
+        REQUIRE(result.status==UpperFootprintStatus::Contained);
+        REQUIRE(result.required_inset_upper_mm==1);
+        std::swap(query.start_mm,query.end_mm);
+        REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Contained);
+        query.xy_radius_mm=2;
+        REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Outside);
+    }
+}
+TEST_CASE("B03 whole footprint cannot jump a hole between individually valid endpoints", "[Nonplanar][B03][UpperFootprint]")
+{
+    const auto projection=analyze_upper_projection(gridded_plate(3,true),true,2);
+    REQUIRE(projection.snapshot);
+    UpperFootprintQuery query{0,{0.5,1.5},{2.5,1.5},0.25,0,0};
+    for (auto point : {query.start_mm,query.end_mm}) {
+        auto endpoint=query; endpoint.start_mm=point; endpoint.end_mm=point;
+        REQUIRE(check_upper_footprint(projection.snapshot,endpoint).status==UpperFootprintStatus::Contained);
+    }
+    REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Outside);
+    query.start_mm.y()=query.end_mm.y()=0.5;
+    REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Contained);
+    query.xy_radius_mm=0.5;
+    REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Outside);
+    query.xy_radius_mm=0.25; query.boundary_uncertainty_mm=0.125; query.transition_inset_mm=0.125;
+    REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Outside);
+    query={0,{1.5,1.5},{1.5,1.5},0.125,0,0};
+    REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Outside);
+    query.start_mm=query.end_mm=Vec2d(-1,1.5);
+    REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Outside);
+}
+TEST_CASE("B03 exact footprint boundary rejects tangency without an arbitrary epsilon", "[Nonplanar][B03][UpperFootprint]")
+{
+    const auto projection=analyze_upper_projection(gridded_plate(3,true),true,3);
+    REQUIRE(projection.snapshot);
+    UpperFootprintQuery query{0,{0.5,0.5},{0.5,0.5},0.5,0,0};
+    REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Outside);
+    query.xy_radius_mm=std::nextafter(0.5,0.);
+    REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Contained);
+    query.xy_radius_mm=std::nextafter(0.5,1.);
+    REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Outside);
+}
+
+TEST_CASE("B03 whole footprint agrees with independent rectangle inequalities", "[Nonplanar][B03][UpperFootprint]")
+{
+    const auto projection=analyze_upper_projection(make_cube(20,10,2),true,4);
+    REQUIRE(projection.snapshot);
+    // A convex rectangle contains a capsule iff both endpoints satisfy all
+    // four strict inset half-planes. This oracle uses no polygon/distance code.
+    for (int seed=0; seed<120; ++seed) {
+        const Vec2d a((seed*7)%24-2,(seed*3)%14-2), b((seed*11)%24-2,(seed*5)%14-2);
+        const double radius=0.25*((seed%8)+1);
+        const auto inside=[&](Vec2d p) {
+            return p.x()>radius && p.x()<20-radius && p.y()>radius && p.y()<10-radius;
+        };
+        const auto result=check_upper_footprint(projection.snapshot,{0,a,b,radius,0,0});
+        INFO(seed);
+        REQUIRE(result.status==(inside(a) && inside(b) ? UpperFootprintStatus::Contained : UpperFootprintStatus::Outside));
+    }
+}
+TEST_CASE("B03 footprint captures ownership and rejects invalid cancelled stale or late queries", "[Nonplanar][B03][UpperFootprint]")
+{
+    auto snapshot=analyze_upper_projection(gridded_plate(3,true),true,5).snapshot;
+    REQUIRE(snapshot);
+    const UpperFootprintQuery valid{0,{0.5,0.5},{2.5,0.5},0.25,0,0};
+    REQUIRE(check_upper_footprint(nullptr,valid).status==UpperFootprintStatus::Unknown);
+    for (double invalid : {-1.,0.,std::numeric_limits<double>::quiet_NaN(),std::numeric_limits<double>::infinity()}) {
+        auto query=valid; query.xy_radius_mm=invalid;
+        REQUIRE(check_upper_footprint(snapshot,query).status==UpperFootprintStatus::Unknown);
+    }
+    for (int field=0; field<5; ++field) {
+        auto query=valid;
+        if (field==0) query.patch=1;
+        if (field==1) query.start_mm.x()=std::numeric_limits<double>::quiet_NaN();
+        if (field==2) query.end_mm.y()=10001;
+        if (field==3) query.boundary_uncertainty_mm=-1;
+        if (field==4) query.transition_inset_mm=std::numeric_limits<double>::infinity();
+        REQUIRE(check_upper_footprint(snapshot,query).status==UpperFootprintStatus::Unknown);
+    }
+    UpperFootprintLimits limits; limits.timeout=std::chrono::milliseconds(0);
+    REQUIRE(check_upper_footprint(snapshot,valid,limits).status==UpperFootprintStatus::Unknown);
+    limits={}; limits.cancelled=[] { return true; };
+    REQUIRE(check_upper_footprint(snapshot,valid,limits).reason=="CANCELLED");
+    limits={}; limits.is_current=[](uint64_t) { return false; };
+    REQUIRE(check_upper_footprint(snapshot,valid,limits).reason=="STALE_REVISION");
+    limits={}; size_t calls=0;
+    limits.is_current=[&](uint64_t revision) { REQUIRE(revision==5); ++calls; return true; };
+    REQUIRE(check_upper_footprint(snapshot,valid,limits).status==UpperFootprintStatus::Contained);
+    const auto final_call=calls; REQUIRE(final_call>1); calls=0;
+    limits.is_current=[&](uint64_t) { return ++calls<final_call; };
+    const auto stale=check_upper_footprint(snapshot,valid,limits);
+    REQUIRE(stale.status==UpperFootprintStatus::Unknown);
+    REQUIRE(stale.reason=="STALE_REVISION");
+    limits={}; limits.timeout=std::chrono::milliseconds(1);
+    limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(3)); return false; };
+    const auto late=check_upper_footprint(snapshot,valid,limits);
+    REQUIRE(late.status==UpperFootprintStatus::Unknown);
+    REQUIRE(late.reason=="DEADLINE");
+    limits={}; limits.cancelled=[]() -> bool { throw std::runtime_error("cancel failure"); };
+    REQUIRE(check_upper_footprint(snapshot,valid,limits).status==UpperFootprintStatus::Unknown);
+    struct RestoreRounding { ~RestoreRounding() { std::fesetround(FE_TONEAREST); } } restore;
+    limits={}; limits.is_current=[](uint64_t) { std::fesetround(FE_UPWARD); return true; };
+    REQUIRE(check_upper_footprint(snapshot,valid,limits).status==UpperFootprintStatus::Unknown);
+    std::fesetround(FE_TONEAREST);
+    limits={}; auto query=valid; bool mutated=false;
+    limits.cancelled=[&] {
+        if (!mutated) {
+            mutated=true; snapshot.reset(); query.xy_radius_mm=10;
+            limits.timeout=std::chrono::milliseconds(0); limits.is_current=[](uint64_t) { return false; };
+        }
+        return false;
+    };
+    REQUIRE(check_upper_footprint(snapshot,query,limits).status==UpperFootprintStatus::Contained);
+    REQUIRE(mutated);
+    REQUIRE_FALSE(snapshot);
+}

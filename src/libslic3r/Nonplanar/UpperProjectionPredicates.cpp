@@ -1,6 +1,9 @@
 #include "UpperProjectionPredicates.hpp"
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 #include <CGAL/Intersections_2/Segment_2_Segment_2.h>
+#include <CGAL/Distance_2/Segment_2_Segment_2.h>
+#include <CGAL/Polygon_2_algorithms.h>
 
 namespace Slic3r::nptop::detail {
 namespace {
@@ -45,5 +48,23 @@ bool projected_boundary_conflict(const Vec3f &a, const Vec3f &b, const Vec3f &c,
     if (pb==pc) return first.has_on(pd) || second.has_on(pa);
     if (pb==pd) return first.has_on(pc) || second.has_on(pa);
     return true;
+}
+int projected_bounded_side(const std::vector<Vec3f> &vertices, const Vec2d &point)
+{
+    std::vector<Kernel::Point_2> polygon;
+    polygon.reserve(vertices.size());
+    for (const auto &v : vertices) polygon.emplace_back(v.x(),v.y());
+    return int(CGAL::bounded_side_2(polygon.begin(),polygon.end(),Kernel::Point_2(point.x(),point.y()),Kernel{}));
+}
+bool projected_clearance_exceeds(const Vec2d &a, const Vec2d &b, const Vec3f &c, const Vec3f &d, double radius)
+{
+    // EPICK's inexact squared-distance construction is insufficient at the
+    // inset boundary. EPECK retains the exact supplied binary coordinates and
+    // radius for both squaring and the complete segment-distance comparison.
+    using Exact = CGAL::Exact_predicates_exact_constructions_kernel;
+    const Exact::Segment_2 motion({a.x(),a.y()},{b.x(),b.y()});
+    const Exact::Segment_2 edge({c.x(),c.y()},{d.x(),d.y()});
+    const Exact::FT r(radius);
+    return CGAL::squared_distance(motion,edge)>r*r;
 }
 }

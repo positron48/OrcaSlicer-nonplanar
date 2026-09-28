@@ -199,9 +199,9 @@ UpperProjectionResult analyze_upper_projection(const TriangleMesh &source, bool 
             }
         auto patches=build_patches(mesh,facets,stop,result.reason);
         if (!patches) return result;
-        auto snapshot=std::make_shared<const UpperProjectionSnapshot>(UpperProjectionSnapshot{
+        auto snapshot=std::shared_ptr<const UpperProjectionSnapshot>(new UpperProjectionSnapshot(
             audited.normalized,revision,std::move(facets),std::max(0.,area.lo),area.hi,
-            std::max(0.,filtered_area.lo),filtered_area.hi,minimum_z,maximum_z,std::move(*patches)});
+            std::max(0.,filtered_area.lo),filtered_area.hi,minimum_z,maximum_z,std::move(*patches)));
         if (stop()) return result;
         result.snapshot=std::move(snapshot);
         result.status=UpperProjectionStatus::NominalHeightfield;
@@ -210,6 +210,70 @@ UpperProjectionResult analyze_upper_projection(const TriangleMesh &source, bool 
         result.snapshot.reset();
         result.status=UpperProjectionStatus::Unknown;
         result.reason="PROJECTION_EXCEPTION";
+    }
+    return result;
+}
+
+UpperFootprintResult check_upper_footprint(std::shared_ptr<const UpperProjectionSnapshot> snapshot,
+    const UpperFootprintQuery &requested_query, const UpperFootprintLimits &requested_limits)
+{
+    const UpperFootprintQuery query=requested_query;
+    const UpperFootprintLimits limits=requested_limits;
+    UpperFootprintResult result;
+    const auto started=std::chrono::steady_clock::now();
+    const auto stop=[&] {
+        if (limits.cancelled && limits.cancelled()) { result.reason="CANCELLED"; return true; }
+        if (limits.is_current && !limits.is_current(snapshot->revision)) { result.reason="STALE_REVISION"; return true; }
+        detail::require_interval_environment();
+        if (std::chrono::steady_clock::now()-started>=limits.timeout) { result.reason="DEADLINE"; return true; }
+        return false;
+    };
+    try {
+        detail::require_interval_environment();
+        const auto bounded=[](double value) { return std::isfinite(value) && std::abs(value)<=10000; };
+        if (!snapshot || query.patch>=snapshot->slope_patches.size() || limits.timeout.count()<=0 ||
+            !bounded(query.start_mm.x()) || !bounded(query.start_mm.y()) ||
+            !bounded(query.end_mm.x()) || !bounded(query.end_mm.y()) ||
+            !bounded(query.xy_radius_mm) || query.xy_radius_mm<=0 ||
+            !bounded(query.boundary_uncertainty_mm) || query.boundary_uncertainty_mm<0 ||
+            !bounded(query.transition_inset_mm) || query.transition_inset_mm<0) {
+            result.reason="INVALID_FOOTPRINT_QUERY"; return result;
+        }
+        detail::Interval inset(query.xy_radius_mm);
+        for (double term : {query.boundary_uncertainty_mm,query.transition_inset_mm})
+            if (term!=0) inset=inset+detail::Interval(term);
+        if (inset.hi>10000) { result.reason="FOOTPRINT_INSET_LIMIT"; return result; }
+        result.required_inset_upper_mm=inset.hi;
+        if (stop()) return result;
+        bool contained=true;
+        const char *reason="NOMINAL_XY_FOOTPRINT_ONLY";
+        for (const auto &boundary : snapshot->slope_patches[query.patch].boundaries) {
+            if (stop()) return result;
+            std::vector<Vec3f> vertices;
+            vertices.reserve(boundary.mesh_vertices.size());
+            for (auto id : boundary.mesh_vertices) vertices.push_back(snapshot->geometry->its.vertices[id]);
+            const int side=detail::projected_bounded_side(vertices,query.start_mm);
+            if (side!=(boundary.hole ? -1 : 1)) {
+                contained=false; reason="CENTER_OUTSIDE_PATCH"; break;
+            }
+            for (size_t i=0; i<vertices.size(); ++i) {
+                if (stop()) return result;
+                if (!detail::projected_clearance_exceeds(query.start_mm,query.end_mm,vertices[i],
+                                                        vertices[(i+1)%vertices.size()],inset.hi)) {
+                    contained=false; reason="FOOTPRINT_REACHES_BOUNDARY"; break;
+                }
+            }
+            if (!contained) break;
+        }
+        // Start membership plus positive whole-segment boundary clearance
+        // implies that the connected capsule stays inside this one patch.
+        if (stop()) return result;
+        result.status=contained ? UpperFootprintStatus::Contained : UpperFootprintStatus::Outside;
+        result.reason=reason;
+    } catch (const std::exception &) {
+        result.reason="FOOTPRINT_EXCEPTION";
+    } catch (...) {
+        result.reason="FOOTPRINT_EXCEPTION";
     }
     return result;
 }

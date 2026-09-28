@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="3" skipped="0" tests="6" hostname="tbd" time="0.001" timestamp="2026-09-28T15:05:26Z">
+    <properties>
+      <property name="random-seed" value="417478149"/>
+      <property name="filters" value="[UpperFootprint]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B03 exact footprint boundary rejects tangency without an arbitrary epsilon" time="0.000" status="run">
+      <failure message="check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Outside" type="REQUIRE">
+FAILED:
+  REQUIRE( check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Outside )
+with expansion:
+  2 == 1
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_upper_projection.cpp:287
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B03 whole footprint fits the predefined block and affine wedge ROI" time="0.000" status="run">
+      <failure message="result.status==UpperFootprintStatus::Contained" type="REQUIRE">
+FAILED:
+  REQUIRE( result.status==UpperFootprintStatus::Contained )
+with expansion:
+  2 == 0
+
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_upper_projection.cpp:253
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B03 whole footprint cannot jump a hole between individually valid endpoints" time="0.000" status="run">
+      <failure message="check_upper_footprint(projection.snapshot,endpoint).status==UpperFootprintStatus::Contained" type="REQUIRE">
+FAILED:
+  REQUIRE( check_upper_footprint(projection.snapshot,endpoint).status==UpperFootprintStatus::Contained )
+with expansion:
+  2 == 0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_upper_projection.cpp:268
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

@@ -4,6 +4,8 @@
 #include <vector>
 
 namespace Slic3r::nptop {
+struct UpperProjectionLimits;
+struct UpperProjectionResult;
 enum class UpperProjectionStatus { NominalHeightfield, Invalid, Unknown };
 struct UpperFacet {
     size_t mesh_face;
@@ -29,6 +31,17 @@ struct UpperProjectionSnapshot {
     const double filtered_area_lower_mm2, filtered_area_upper_mm2;
     const double minimum_z_mm, maximum_z_mm;
     const std::vector<UpperPatch> slope_patches;
+private:
+    // Only audited analysis may create masks consumed by containment queries.
+    UpperProjectionSnapshot(std::shared_ptr<const TriangleMesh> mesh, uint64_t rev,
+        std::vector<UpperFacet> facets, double area_lo, double area_hi,
+        double filtered_lo, double filtered_hi, double z_lo, double z_hi, std::vector<UpperPatch> patches)
+        : geometry(std::move(mesh)), revision(rev), upward_facets(std::move(facets)),
+          xy_area_lower_mm2(area_lo), xy_area_upper_mm2(area_hi),
+          filtered_area_lower_mm2(filtered_lo), filtered_area_upper_mm2(filtered_hi),
+          minimum_z_mm(z_lo), maximum_z_mm(z_hi), slope_patches(std::move(patches)) {}
+    friend UpperProjectionResult analyze_upper_projection(const TriangleMesh &, bool, uint64_t,
+                                                          const UpperProjectionLimits &);
 };
 struct UpperProjectionLimits {
     MeshAuditLimits geometry;
@@ -50,4 +63,27 @@ struct UpperProjectionResult {
 // transitions, physical qualification and export approval are separate checks.
 UpperProjectionResult analyze_upper_projection(const TriangleMesh &, bool millimeters_declared,
                                                uint64_t revision, const UpperProjectionLimits &limits = {});
+
+struct UpperFootprintQuery {
+    size_t patch = 0;
+    Vec2d start_mm{0,0}, end_mm{0,0};
+    double xy_radius_mm = 0;
+    double boundary_uncertainty_mm = 0;
+    double transition_inset_mm = 0;
+};
+struct UpperFootprintLimits {
+    std::chrono::milliseconds timeout{1000};
+    std::function<bool()> cancelled;
+    std::function<bool(uint64_t)> is_current;
+};
+enum class UpperFootprintStatus { Contained, Outside, Unknown };
+struct UpperFootprintResult {
+    UpperFootprintStatus status = UpperFootprintStatus::Unknown;
+    std::string reason;
+    double required_inset_upper_mm = 0;
+};
+// Tests the whole swept disk against one nominal XY patch, preserving holes.
+// This is an implicit inset query, not Z contact, curvature or head clearance.
+UpperFootprintResult check_upper_footprint(std::shared_ptr<const UpperProjectionSnapshot>,
+    const UpperFootprintQuery &, const UpperFootprintLimits &limits = {});
 }
