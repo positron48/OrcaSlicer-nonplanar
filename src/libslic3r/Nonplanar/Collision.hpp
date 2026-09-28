@@ -7,7 +7,7 @@
 
 namespace Slic3r::nptop {
 
-inline constexpr unsigned geometry_contract_version = 2;
+inline constexpr unsigned geometry_contract_version = 3;
 using ToolPosition = Position<Frame::ToolLocal>;
 
 struct FiniteTip {
@@ -40,6 +40,7 @@ struct QueryLimits {
     std::chrono::steady_clock::time_point deadline = std::chrono::steady_clock::time_point::max();
 };
 enum class ClearanceStatus { Pass, Fail, Unknown };
+enum class ClearanceMetric { SignedSeparation, UnsignedGap };
 enum class ClearanceReason {
     Separated, ClearanceViolation, UncertainBoundary, UnsupportedPair,
     UnsupportedContact, InvalidInput, NumericalFailure, WorkLimit, Timeout
@@ -62,6 +63,9 @@ struct ClearanceResult {
     std::optional<ClearanceBounds> bounds;
     std::optional<ClearanceWitness> witness;
     size_t evaluations = 0;
+    // UnsignedGap cannot supply a penetration depth; zero required clearance
+    // at contact is UNKNOWN, never a clearance PASS.
+    ClearanceMetric metric = ClearanceMetric::SignedSeparation;
 };
 
 // A primitive check only: does not establish profile completeness, support or export permission.

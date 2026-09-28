@@ -1,0 +1,16 @@
+{
+  "base_commit": "eae5aa603074f14c19a09210db87df7025bba756",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A04-annulus-box.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/Collision.hpp": "225c14de18e2351744f4d8b7a75af5c4d9b06c1cf564a095d271329309e65315",
+    "src/libslic3r/Nonplanar/Collision.cpp": "e6352ca4564bd1cb2d1aa606157e481374a570fdd595c935fbd91664ea49c2fa",
+    "tests/nonplanar/test_collision.cpp": "61abc4b6d0a4340fbc24c8b211e0db528d7b3eea1e8f9e25d248440fdf4dfa7c"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "4ed142bbd12f7b4a2bed10d7702124a7dd255bb975e70354ee7ca8dd251ab051",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "66d5cb2138adac7a7e21a6feb7f53352d074468802853413584265417734187f",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "78690bff2c69ab0c61c06762f96183f806b329c438ee7bd97e4cb7f619ad2852"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin"
+}

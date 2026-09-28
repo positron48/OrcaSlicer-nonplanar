@@ -151,7 +151,9 @@ TEST_CASE("GEO-08 unsupported queries and exhausted limits stay unknown", "[Nonp
     SceneObstacle plane{30, PlaneObstacle{0,0,0}};
     REQUIRE(query_clearance(path, box(), plane, policy()).reason == ClearanceReason::UnsupportedPair);
     SceneObstacle wall{31, SceneBox{PhysicalPosition(4,-1,0), PhysicalPosition(6,1,1)}};
-    auto unsupported = query_clearance(path, tip(), wall, policy());
+    // Annulus/box is supported by geometry contract v3; box/sphere is not.
+    SceneObstacle sphere{35,SphereObstacle{PhysicalPosition(4,0,0),Length(1)}};
+    auto unsupported = query_clearance(path, box(), sphere, policy());
     REQUIRE(unsupported.status == ClearanceStatus::Unknown);
     REQUIRE_FALSE(unsupported.bounds.has_value());
     auto contact = tip();
@@ -170,6 +172,83 @@ TEST_CASE("GEO-08 unsupported queries and exhausted limits stay unknown", "[Nonp
     auto exhausted = query_clearance(motion({0,0,0},{10,0,0}), box(), wall, policy(), one);
     REQUIRE(exhausted.status == ClearanceStatus::Unknown);
     REQUIRE(exhausted.reason == ClearanceReason::WorkLimit);
+}
+
+TEST_CASE("GEO-10 annular tip box gap preserves the opening and analytic distances", "[Nonplanar][GEO-10]")
+{
+    const auto fixed=motion({0,0,0},{0,0,0});
+    SceneObstacle diagonal{36,SceneBox{{3,4,3},{4,5,4}}};
+    const auto separated=query_clearance(fixed,tip(1),diagonal,policy(4.9));
+    REQUIRE(separated.status==ClearanceStatus::Pass);
+    REQUIRE(separated.metric==ClearanceMetric::UnsignedGap);
+    contains(separated,5);
+    REQUIRE(separated.bounds->lower_mm>4.999999999);
+    ToolComponent annulus{37,FiniteTip{{0,0,0},Length(1),Length(2)}};
+    SceneObstacle pin{38,SceneBox{{-.375,-.5,-.5},{.375,.5,.5}}};
+    const auto opening=query_clearance(fixed,annulus,pin,policy(.3));
+    REQUIRE(opening.status==ClearanceStatus::Pass);
+    contains(opening,.375);
+    auto disk=annulus; std::get<FiniteTip>(disk.geometry).opening_radius=Length(0);
+    const auto solid=query_clearance(fixed,disk,pin,policy(.1));
+    REQUIRE(solid.status==ClearanceStatus::Fail);
+    contains(solid,0);
+    const auto zero=query_clearance(fixed,disk,pin,policy());
+    REQUIRE(zero.status==ClearanceStatus::Unknown);
+    REQUIRE(zero.reason==ClearanceReason::UncertainBoundary);
+    REQUIRE(zero.metric==ClearanceMetric::UnsignedGap);
+    contains(zero,0);
+}
+TEST_CASE("GEO-10 continuous rim collision has clear endpoints and midpoint", "[Nonplanar][GEO-10]")
+{
+    ToolComponent annulus{39,FiniteTip{{0,0,0},Length(1),Length(2)}};
+    SceneObstacle pin{40,SceneBox{{-.125,-.125,-.5},{.125,.125,.5}}};
+    for (double x : {-4.,0.,4.})
+        REQUIRE(query_clearance(motion({x,0,0},{x,0,0}),annulus,pin,policy(.1)).status==ClearanceStatus::Pass);
+    for (bool reverse : {false,true}) {
+        const auto collision=query_clearance(motion({reverse?4.:-4.,0,0},{reverse?-4.:4.,0,0}),annulus,pin,policy(.1));
+        REQUIRE(collision.status==ClearanceStatus::Fail);
+        REQUIRE(collision.witness);
+        contains(collision,0);
+        const auto t=collision.witness->parameter;
+        REQUIRE(((t>.23 && t<.4) || (t>.6 && t<.77)));
+        REQUIRE(collision.metric==ClearanceMetric::UnsignedGap);
+    }
+}
+TEST_CASE("GEO-10 annular box gaps retain uncertainty transforms and work limits", "[Nonplanar][GEO-10]")
+{
+    const auto path=motion({0,0,0},{0,0,0});
+    SceneObstacle wall{41,SceneBox{{1,-.125,-1},{2,.125,1}}};
+    auto result=query_clearance(path,tip(.5),wall,policy(.49));
+    REQUIRE(result.status==ClearanceStatus::Pass);
+    contains(result,.5);
+    REQUIRE(query_clearance(path,tip(.5),wall,policy(.49,.02)).status==ClearanceStatus::Unknown);
+    REQUIRE(query_clearance(path,tip(.75),wall,policy(.49)).status==ClearanceStatus::Fail);
+    const auto translated=motion({100,-50,3},{100,-50,3});
+    SceneObstacle moved{42,SceneBox{{101,-50.125,2},{102,-49.875,4}}};
+    const auto same=query_clearance(translated,tip(.5),moved,policy(.49));
+    REQUIRE(same.status==ClearanceStatus::Pass);
+    contains(same,.5);
+    auto offset=tip(.5); std::get<FiniteTip>(offset.geometry).center=ToolPosition(1,0,0);
+    REQUIRE(query_clearance(path,offset,wall,policy(.1)).status==ClearanceStatus::Fail);
+    QueryLimits none; none.max_evaluations=0;
+    REQUIRE(query_clearance(path,tip(),wall,policy(),none).reason==ClearanceReason::WorkLimit);
+    none={}; none.deadline=std::chrono::steady_clock::now();
+    REQUIRE(query_clearance(path,tip(),wall,policy(),none).reason==ClearanceReason::Timeout);
+}
+TEST_CASE("GEO-10 interval subdivision proves a clear diagonal annulus sweep", "[Nonplanar][GEO-10]")
+{
+    SceneObstacle remote{43,SceneBox{{0,8,-1},{1,9,1}}};
+    const auto result=query_clearance(motion({0,0,0},{10,10,0}),tip(),remote,policy(.1));
+    REQUIRE(result.status==ClearanceStatus::Pass);
+    REQUIRE(result.evaluations>1);
+    REQUIRE(result.bounds->lower_mm>.1);
+    // Independent nearest corner (1,8) has perpendicular distance 7/sqrt(2)
+    // from x=y. The nearest annular rim removes exactly its outer radius .5.
+    contains(result,7/std::sqrt(2.)-.5);
+    QueryLimits one; one.max_evaluations=1;
+    const auto exhausted=query_clearance(motion({0,0,0},{10,10,0}),tip(),remote,policy(.1),one);
+    REQUIRE(exhausted.status==ClearanceStatus::Unknown);
+    REQUIRE(exhausted.reason==ClearanceReason::WorkLimit);
 }
 
 TEST_CASE("GEO-08 malformed geometry and numeric environment fail closed", "[Nonplanar][GEO-08]")

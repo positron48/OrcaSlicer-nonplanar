@@ -54,6 +54,26 @@ Interval tip_sphere(const MotionEvent &motion, const FiniteTip &tip, const Spher
                                                             radial-Interval(tip.outer_radius.value())));
     return root(square(radial_gap) + square(p[2])) - Interval(sphere.radius.value());
 }
+Interval tip_box(const MotionEvent &motion, const FiniteTip &tip, const SceneBox &box, Interval t)
+{
+    auto p=position(motion,t);
+    const auto offset=xyz(tip.center), lo=xyz(box.min), hi=xyz(box.max);
+    for (size_t i=0; i<3; ++i) p[i]=p[i]+Interval(offset[i]);
+    Interval near_squared(0), far_squared(0);
+    for (size_t i=0; i<2; ++i) {
+        const auto lower=Interval(lo[i])-p[i], upper=Interval(hi[i])-p[i];
+        const auto nearest=maximum(Interval(0),maximum(lower,Interval(0)-upper));
+        near_squared=near_squared+square(nearest);
+        far_squared=far_squared+maximum(square(lower),square(upper));
+    }
+    // A connected XY rectangle attains every radial distance between its
+    // nearest point and farthest corner. Keep the annulus opening empty.
+    const auto radial_gap=maximum(Interval(0),maximum(root(near_squared)-Interval(tip.outer_radius.value()),
+                                                     Interval(tip.opening_radius.value())-root(far_squared)));
+    const auto vertical_gap=maximum(Interval(0),maximum(Interval(lo[2])-p[2],p[2]-Interval(hi[2])));
+    // Nonnegative set distance, not a signed penetration-depth construction.
+    return root(square(radial_gap)+square(vertical_gap));
+}
 Interval box_box(const MotionEvent &motion, const ToolBox &tool, const SceneBox &scene, Interval t)
 {
     const auto p = position(motion,t);
@@ -109,7 +129,9 @@ ClearanceResult query_clearance(const MotionEvent &motion, const ToolComponent &
                            std::isfinite(plane->intercept_mm), "nonfinite plane");
         if (tool.interaction != InteractionClass::RigidForbidden)
             throw QueryFailure{ClearanceReason::UnsupportedContact};
-        if (!(tip && plane) && !(box && wall) && !(tip && sphere)) throw QueryFailure{ClearanceReason::UnsupportedPair};
+        if (!(tip && plane) && !(box && wall) && !(tip && sphere) && !(tip && wall))
+            throw QueryFailure{ClearanceReason::UnsupportedPair};
+        if (tip && wall) result.metric=ClearanceMetric::UnsignedGap;
         auto check_deadline = [&] {
             if (std::chrono::steady_clock::now() >= limits.deadline)
                 throw QueryFailure{ClearanceReason::Timeout};
@@ -149,7 +171,9 @@ ClearanceResult query_clearance(const MotionEvent &motion, const ToolComponent &
         }
 
         const auto distance = [&](Interval t) {
-            return sphere ? tip_sphere(motion,*tip,*sphere,t) : box_box(motion,*box,*wall,t);
+            if (sphere) return tip_sphere(motion,*tip,*sphere,t);
+            if (tip) return tip_box(motion,*tip,*wall,t);
+            return box_box(motion,*box,*wall,t);
         };
         evaluation();
         const Interval whole = distance(Interval(0,1));
