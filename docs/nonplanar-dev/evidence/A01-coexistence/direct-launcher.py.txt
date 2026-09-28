@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+import os
+from pathlib import Path
+import sys
+runtime=Path(__file__).resolve().parents[3]/'runtime'
+if any(a.startswith('--datadir') for a in sys.argv[1:]):
+    raise SystemExit('The isolated reference owns its data directory')
+os.chdir(runtime)
+environment=dict(os.environ,TMPDIR=str(runtime/'tmp')+'/',XDG_CACHE_HOME=str(runtime/'cache'))
+os.execve('/usr/bin/sandbox-exec',['sandbox-exec','-f',str(runtime/'offline.sb'),
+    '/Applications/OrcaSlicer.app/Contents/MacOS/OrcaSlicer','--datadir',str(runtime/'data'),*sys.argv[1:]],environment)

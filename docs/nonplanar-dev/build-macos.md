@@ -119,3 +119,9 @@ Later GUI validation is recorded in `A01-gui.md`: fresh labeled bundles, actual
 OS isolation probes and native import/slice/preview pass on 2026-09-28. The
 bootstrap NOT_RUN statement above is historical. Stock coexistence and portable
 release packaging remain unverified; no /Applications installation occurred.
+
+`A01-coexistence.md` records simultaneous isolated native processes on
+2026-09-28. Interactive stock GUI coexistence remains unverified: wrapper
+automation failed, and a disposable app copy was rejected during launch with
+a failing signature check. All test processes were stopped; the installed
+stock executable stayed unchanged. No OS protection bypass was attempted.

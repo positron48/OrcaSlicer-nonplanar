@@ -118,3 +118,9 @@ remain pending.
 and geometry compensators. Current selected CTest executes 135/135; sixteen B01
 cases/377 assertions and six fresh OFF/ZAA comparisons pass. Numeric edge cases
 are rejected before lossy or invalid native serialization.
+
+`A01-coexistence.md` records simultaneous isolated native processes on
+2026-09-28. Interactive stock GUI coexistence remains unverified: wrapper
+automation failed, and a disposable app copy was rejected during launch with
+a failing signature check. All test processes were stopped; the installed
+stock executable stayed unchanged. No OS protection bypass was attempted.

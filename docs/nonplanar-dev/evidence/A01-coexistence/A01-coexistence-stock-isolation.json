@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-dev/stock-reference-2-3-1/runtime/offline.sb",
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-I",
+    "-B",
+    "-c",
+    "import errno,json,socket,sys\nfrom pathlib import Path\nruntime,outside=map(Path,sys.argv[1:]); (runtime/'allowed-probe.txt').write_text('test')\nw=n=False\ntry: outside.write_text('unexpected')\nexcept OSError as e: w=e.errno in (errno.EPERM,errno.EACCES)\ntry:\n with socket.socket() as s: s.settimeout(1);s.connect(('127.0.0.1',9))\nexcept OSError as e: n=e.errno in (errno.EPERM,errno.EACCES)\nprint(json.dumps({'outside_write_denied':w,'network_denied':n}));sys.exit(0 if w and n else 2)\n",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-dev/stock-reference-2-3-1/runtime",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-dev/stock-reference-2-3-1/forbidden-probe.txt"
+  ],
+  "exit_code": 0,
+  "result": {
+    "outside_write_denied": true,
+    "network_denied": true
+  }
+}

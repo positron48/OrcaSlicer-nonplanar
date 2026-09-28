@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+import os
+from pathlib import Path
+import sys
+bundle=Path(__file__).resolve().parents[2]
+runtime=bundle.parent/'runtime'
+if any(a.startswith('--datadir') for a in sys.argv[1:]):
+    raise SystemExit('The isolated reference owns its data directory')
+os.chdir(runtime)
+environment=dict(os.environ,TMPDIR=str(runtime/'tmp')+'/',XDG_CACHE_HOME=str(runtime/'cache'))
+os.execve('/usr/bin/sandbox-exec',['sandbox-exec','-f',str(runtime/'offline.sb'),
+    str(bundle/'Contents/MacOS/StockOrcaCore'),'--datadir',str(runtime/'data'),*sys.argv[1:]],environment)
