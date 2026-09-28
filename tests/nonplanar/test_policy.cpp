@@ -8,6 +8,8 @@
 #include <miniz.h>
 #include "../fff_print/test_data.hpp"
 #include <boost/filesystem.hpp>
+#include <cmath>
+#include <limits>
 using namespace Slic3r;
 using namespace Slic3r::nptop;
 namespace {
@@ -38,6 +40,81 @@ DynamicPrintConfig eligible()
     }
     return c;
 }
+}
+TEST_CASE("B01 unqualified flow and geometry compensators fail preflight", "[Nonplanar][B01][B01Transforms]")
+{
+    REQUIRE(resolve_policy(eligible(),1,1).passes_config_preflight());
+    for (const auto &[key, value] : std::vector<std::pair<std::string,std::string>>{
+        {"adaptive_pressure_advance","1"},{"adaptive_pressure_advance_overhangs","1"},
+        {"adaptive_pressure_advance_bridges","0.02"},{"filament_adaptive_volumetric_speed","1"},
+        {"small_area_infill_flow_compensation","1"},{"max_volumetric_extrusion_rate_slope","10"},
+        {"filament_shrink","99%"},{"filament_shrinkage_compensation_z","99%"},
+        {"xy_hole_compensation","0.1"},{"xy_contour_compensation","-0.1"},
+        {"elefant_foot_compensation","0.2"}}) {
+        INFO(key);
+        auto config=eligible(); config.set_deserialize_strict(key,value);
+        const auto before=config.opt_serialize(key);
+        const auto policy=resolve_policy(config,1,1);
+        REQUIRE_FALSE(policy.passes_config_preflight());
+        REQUIRE(policy.conflicts.front().key == key);
+        REQUIRE(config.opt_serialize(key) == before);
+        config.set_deserialize_strict("nptop_mode","off");
+        REQUIRE(resolve_policy(config,1,1).conflicts.empty());
+    }
+}
+TEST_CASE("B01 neutral values require native types exact numbers and every vector entry", "[Nonplanar][B01][B01Transforms]")
+{
+    REQUIRE(neutral_transform_policy().size() == 11);
+    for (const auto &[key, rule] : neutral_transform_policy()) {
+        REQUIRE(print_config_def.get(key) != nullptr);
+        REQUIRE(print_config_def.get(key)->type == rule.type);
+    }
+    for (int mutation=0; mutation<9; ++mutation) {
+        INFO(mutation);
+        auto config=eligible();
+        std::string key="filament_shrink";
+        if (mutation==0) config.set_key_value(key,new ConfigOptionPercents{100,std::nextafter(100.,101.)});
+        if (mutation==1) config.set_key_value(key,new ConfigOptionPercents{100,std::numeric_limits<double>::quiet_NaN()});
+        if (mutation==2) config.set_key_value(key,new ConfigOptionPercents{});
+        if (mutation==3) config.set_key_value(key,new ConfigOptionFloats{100});
+        if (mutation==4) config.erase(key);
+        if (mutation==5) {
+            key="adaptive_pressure_advance";
+            config.set_key_value(key,new ConfigOptionBools{false,true});
+        }
+        if (mutation==6) {
+            key="filament_adaptive_volumetric_speed";
+            config.set_key_value(key,new ConfigOptionBoolsNullable{static_cast<unsigned char>(0),ConfigOptionBoolsNullable::nil_value()});
+        }
+        if (mutation==7) {
+            key="xy_contour_compensation";
+            config.set_key_value(key,new ConfigOptionFloat(std::numeric_limits<double>::infinity()));
+        }
+        if (mutation==8) {
+            key="xy_contour_compensation";
+            config.set_key_value(key,new ConfigOptionFloat(std::numeric_limits<double>::denorm_min()));
+        }
+        const auto policy=resolve_policy(config,1,1);
+        REQUIRE_FALSE(policy.passes_config_preflight());
+        REQUIRE(policy.conflicts.front().key == key);
+        if (mutation==0)
+            REQUIRE_THAT(policy.conflicts.front().value,Catch::Matchers::ContainsSubstring("100.00000000000001"));
+    }
+    auto config=eligible();
+    config.set_key_value("xy_contour_compensation",new ConfigOptionFloat(-0.));
+    REQUIRE(resolve_policy(config,1,1).passes_config_preflight());
+}
+TEST_CASE("B01 native region override cannot hide an unqualified compensator", "[Nonplanar][B01][B01Transforms]")
+{
+    Print print; print.is_BBL_printer()=false; Model model;
+    auto config=eligible(); Test::init_print({Test::TestMesh::cube_20x20x20},print,model,config);
+    model.objects.front()->config.set_key_value("small_area_infill_flow_compensation",new ConfigOptionBool(true));
+    print.apply(model,config);
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("small_area_infill_flow_compensation"));
+    REQUIRE_THROWS(print.process());
+    config.set_deserialize_strict("nptop_mode","off");
+    print.apply(model,config);
+    REQUIRE(print.nonplanar_block_reason().empty());
 }
 TEST_CASE("B01 every native custom code hook is rejected before compatibility acceptance", "[Nonplanar][B01][B01Hooks]")
 {
@@ -115,14 +192,14 @@ TEST_CASE("B01 source code checks retain sparse override provenance", "[Nonplana
         if (location==2) source=&object->layer_config_ranges[{0.,1.}];
         if (location==3) source=&model.add_material("test")->config;
         REQUIRE(source != nullptr);
-        REQUIRE_FALSE(model_custom_code_conflict(model).has_value());
+        REQUIRE_FALSE(model_policy_conflict(model).has_value());
         source->set_key_value("future_motion_gcode",new ConfigOptionString{});
-        auto conflict=model_custom_code_conflict(model);
+        auto conflict=model_policy_conflict(model);
         REQUIRE(conflict.has_value());
         REQUIRE(conflict->key == "future_motion_gcode");
         source->erase("future_motion_gcode");
         source->set_key_value("filament_end_gcode",new ConfigOptionStrings{"", "G1 Z99"});
-        conflict=model_custom_code_conflict(model);
+        conflict=model_policy_conflict(model);
         REQUIRE(conflict.has_value());
         REQUIRE(conflict->key == "filament_end_gcode");
     }

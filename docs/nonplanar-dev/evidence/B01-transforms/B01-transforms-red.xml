@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="3" skipped="0" tests="4" hostname="tbd" time="0.005" timestamp="2026-09-28T12:44:16Z">
+    <properties>
+      <property name="random-seed" value="2256159375"/>
+      <property name="filters" value="[B01Transforms]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B01 unqualified flow and geometry compensators fail preflight" time="0.000" status="run">
+      <failure message="!(policy.passes_config_preflight())" type="REQUIRE_FALSE">
+FAILED:
+  REQUIRE_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+adaptive_pressure_advance
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:58
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 native region override cannot hide an unqualified compensator" time="0.000" status="run">
+      <failure message="print.nonplanar_block_reason(), Catch::Matchers::ContainsSubstring(&quot;small_area_infill_flow_compensation&quot;)" type="REQUIRE_THAT">
+FAILED:
+  REQUIRE_THAT( print.nonplanar_block_reason(), Catch::Matchers::ContainsSubstring("small_area_infill_flow_compensation") )
+with expansion:
+  "Nonplanar Top Lab: guarded slicing and export are not implemented" contains:
+  "small_area_infill_flow_compensation"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:99
+      </failure>
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 neutral values require native types exact numbers and every vector entry" time="0.000" status="run">
+      <failure message="!(policy.passes_config_preflight())" type="REQUIRE_FALSE">
+FAILED:
+  REQUIRE_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:89
+      </failure>
+    </testcase>
+    <system-out>
+st=1,
+    </system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>

@@ -1,6 +1,12 @@
 #include "Policy.hpp"
 #include "../Model.hpp"
 #include <algorithm>
+#include <array>
+#include <cstring>
+#include <iomanip>
+#include <limits>
+#include <locale>
+#include <sstream>
 
 namespace Slic3r::nptop {
 const std::map<std::string, CustomCodeRule> &custom_code_policy()
@@ -19,7 +25,76 @@ const std::map<std::string, CustomCodeRule> &custom_code_policy()
     return rules;
 }
 
+const std::map<std::string, NeutralTransformRule> &neutral_transform_policy()
+{
+    static const std::map<std::string, NeutralTransformRule> rules = {
+        {"adaptive_pressure_advance", {coBools, 0}},
+        {"adaptive_pressure_advance_overhangs", {coBools, 0}},
+        {"adaptive_pressure_advance_bridges", {coFloats, 0}},
+        {"filament_adaptive_volumetric_speed", {coBools, 0}},
+        {"small_area_infill_flow_compensation", {coBool, 0}},
+        {"max_volumetric_extrusion_rate_slope", {coFloat, 0}},
+        {"filament_shrink", {coPercents, 100}},
+        {"filament_shrinkage_compensation_z", {coPercents, 100}},
+        {"xy_hole_compensation", {coFloat, 0}},
+        {"xy_contour_compensation", {coFloat, 0}},
+        {"elefant_foot_compensation", {coFloat, 0}}
+    };
+    return rules;
+}
+
 namespace {
+bool is_neutral(double value, double expected)
+{
+    static_assert(sizeof(double) == sizeof(uint64_t) && std::numeric_limits<double>::is_iec559);
+    uint64_t value_bits, expected_bits;
+    std::memcpy(&value_bits, &value, sizeof value_bits);
+    std::memcpy(&expected_bits, &expected, sizeof expected_bits);
+    constexpr uint64_t magnitude = 0x7fffffffffffffffULL;
+    // Both signs of zero are neutral. Bit comparison also rejects subnormals
+    // under a caller's flush-to-zero mode without doing floating arithmetic.
+    return value_bits == expected_bits || ((value_bits & magnitude) == 0 && (expected_bits & magnitude) == 0);
+}
+
+std::optional<PolicyConflict> neutral_transform_conflict(const std::string &key, const ConfigOption *option)
+{
+    const auto rule = neutral_transform_policy().find(key);
+    if (rule == neutral_transform_policy().end()) return {};
+    bool neutral = false;
+    std::ostringstream actual;
+    actual.imbue(std::locale::classic());
+    actual << std::setprecision(std::numeric_limits<double>::max_digits10);
+    const auto inspect = [&](const auto &values) {
+        neutral = !values.empty();
+        actual << '[';
+        bool first = true;
+        for (const auto value : values) {
+            if (!first) actual << ',';
+            first = false;
+            actual << static_cast<double>(value);
+            // Raw native values, not rounded serialize() text. NaN, infinity
+            // and nullable sentinels cannot equal these finite neutral values.
+            neutral = neutral && is_neutral(static_cast<double>(value), rule->second.neutral);
+        }
+        actual << ']';
+    };
+    if (option && option->type() == rule->second.type) {
+        if (const auto *scalar = dynamic_cast<const ConfigOptionFloat *>(option))
+            inspect(std::array<double, 1>{scalar->value});
+        else if (const auto *flag = dynamic_cast<const ConfigOptionBool *>(option))
+            inspect(std::array<double, 1>{flag->value ? 1. : 0.});
+        else if (const auto *values = dynamic_cast<const ConfigOptionVector<double> *>(option))
+            inspect(values->values);
+        else if (const auto *flags = dynamic_cast<const ConfigOptionVector<unsigned char> *>(option))
+            inspect(flags->values);
+    }
+    if (!neutral)
+        return PolicyConflict{key, actual.str().empty() ? "<missing-or-wrong-type>" : actual.str(),
+                              "Unqualified transform requires native type and exact neutral value " +
+                                  std::to_string(rule->second.neutral) + " in every entry"};
+    return {};
+}
+
 std::optional<PolicyConflict> custom_code_conflict(const std::string &key, const ConfigOption *option)
 {
     const auto rule = custom_code_policy().find(key);
@@ -44,15 +119,17 @@ std::optional<PolicyConflict> custom_code_conflict(const std::string &key, const
 }
 }
 
-std::optional<PolicyConflict> model_custom_code_conflict(const Model &model)
+std::optional<PolicyConflict> model_policy_conflict(const Model &model)
 {
     for (const auto &[plate, custom] : model.plates_custom_gcodes)
         if (!custom.gcodes.empty())
             return PolicyConflict{"plates_custom_gcodes[" + std::to_string(plate) + "]",
                                   std::to_string(custom.gcodes.size()), "Custom plate actions are unqualified"};
     const auto inspect = [](const ConfigBase &source) -> std::optional<PolicyConflict> {
-        for (const auto &key : source.keys())
+        for (const auto &key : source.keys()) {
             if (auto conflict = custom_code_conflict(key, source.option(key))) return conflict;
+            if (auto conflict = neutral_transform_conflict(key, source.option(key))) return conflict;
+        }
         return {};
     };
     for (const auto &material : model.materials)
@@ -120,6 +197,16 @@ PolicySnapshot resolve_policy(const ConfigBase &config, size_t objects, size_t i
         const auto actual = read(requirement.first);
         if (actual != requirement.second)
             conflicts.push_back({requirement.first, actual, std::string("Requires ") + requirement.second});
+    }
+    for (const auto &entry : neutral_transform_policy()) {
+        if (auto conflict = neutral_transform_conflict(entry.first, config.option(entry.first))) {
+            // Invalid NaN/native values may throw in Orca's serialize(). Keep
+            // a structured rejection and the precise diagnostic value instead.
+            resolved.emplace(entry.first, conflict->value);
+            conflicts.push_back(std::move(*conflict));
+        } else {
+            read(entry.first);
+        }
     }
     for (const auto &entry : custom_code_policy()) {
         read(entry.first);

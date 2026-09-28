@@ -14,10 +14,12 @@ enum class Mode { Off, SafeHybrid, StrictNonplanar, Invalid };
 // approved prologue/epilogue. Post-process lists must contain no entries.
 struct CustomCodeRule { ConfigOptionType type; bool empty_list = false; };
 const std::map<std::string, CustomCodeRule> &custom_code_policy();
+struct NeutralTransformRule { ConfigOptionType type; double neutral; };
+const std::map<std::string, NeutralTransformRule> &neutral_transform_policy();
 struct PolicyConflict { std::string key, value, reason; };
 // Covers sparse source overrides and plate actions that are not necessarily
 // present in the resolved native PrintRegionConfig.
-std::optional<PolicyConflict> model_custom_code_conflict(const Model &);
+std::optional<PolicyConflict> model_policy_conflict(const Model &);
 struct PolicySnapshot {
     const Mode mode;
     const std::map<std::string,std::string> resolved;

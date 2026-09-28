@@ -113,3 +113,8 @@ source checks and guarded plate-action invalidation. Thirteen B01 cases pass
 (286 assertions); current selected CTest executes 132/132 and six fresh OFF/ZAA
 comparisons pass. Full compatibility, whole-job snapshots and hybrid success
 remain pending.
+
+`B01-transforms.md` adds eleven typed neutral-value rules for unqualified flow
+and geometry compensators. Current selected CTest executes 135/135; sixteen B01
+cases/377 assertions and six fresh OFF/ZAA comparisons pass. Numeric edge cases
+are rejected before lossy or invalid native serialization.
