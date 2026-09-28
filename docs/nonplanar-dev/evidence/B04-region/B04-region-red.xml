@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="2" skipped="0" tests="6" hostname="tbd" time="0.008" timestamp="2026-09-28T16:23:44Z">
+    <properties>
+      <property name="random-seed" value="2367759726"/>
+      <property name="filters" value="[PlanarRegion]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B04 planar scaled path preserves the independent three four five oracle" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+NOT_IMPLEMENTED
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_transition.cpp:186
+      </failure>
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B04 planar region captures native hierarchy roles and bounded volume" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+NOT_IMPLEMENTED
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_transition.cpp:152
+      </failure>
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <system-out>
+st=1, 
+st=1,
+    </system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>

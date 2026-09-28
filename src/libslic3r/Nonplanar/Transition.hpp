@@ -3,6 +3,11 @@
 #include "Contracts.hpp"
 #include "../ExtrusionEntity.hpp"
 #include <optional>
+#include <chrono>
+#include <functional>
+#include <memory>
+
+namespace Slic3r { class LayerRegion; }
 
 namespace Slic3r::nptop {
 
@@ -50,5 +55,50 @@ struct TransitionResult {
 
 // Simulation primitive only. A compatible cell is not print/export approval.
 TransitionResult assess_first_pass(const AffineCapCell &, const PlanarSupportCore &, const TransitionPolicy &);
+
+inline constexpr unsigned planar_region_contract_version = 1;
+enum class PlanarEntityKind { Collection, Loop, MultiPath, Path };
+struct PlanarEntityRecord {
+    size_t parent_id; // One-based node indices, zero for each region root.
+    PlanarEntityKind kind;
+    bool can_reverse, can_sort;
+    int native_inset_index;
+    std::optional<ExtrusionLoopRole> loop_role;
+};
+struct PlanarPathRecord {
+    size_t entity_id;
+    ExtrusionRole role;
+    double width_mm, height_mm, mm3_per_mm;
+    Points3 native_points;
+    std::vector<Position<Frame::BuildPlate>> points;
+    double coordinate_error_upper_mm=0;
+    ScalarBounds length_mm{0,0}, native_volume_mm3{0,0};
+};
+struct PlanarRegionLimits {
+    size_t max_entities=20000, max_points=200000, max_depth=32;
+    std::chrono::milliseconds timeout{1000};
+    std::function<bool()> cancelled;
+    std::function<bool(uint64_t)> is_current;
+};
+struct PlanarRegionSnapshot {
+    const uint64_t revision;
+    const size_t native_layer_id;
+    const double native_layer_height_mm, native_print_z_mm;
+    const Position<Frame::BuildPlate> object_origin;
+    const NativeScale native_scale;
+    // Roots 1 and 2 are perimeters and fills, including empty roots.
+    const std::vector<PlanarEntityRecord> entities;
+    const std::vector<PlanarPathRecord> paths;
+    const ScalarBounds native_volume_mm3;
+};
+struct PlanarRegionResult {
+    std::string reason;
+    std::shared_ptr<const PlanarRegionSnapshot> snapshot;
+};
+// Caller synchronizes the native region only during initial bounded capture;
+// no callback runs while reading it. This is unordered nominal path data, not a
+// support/partition proof, whole-job binding, motion plan or export approval.
+PlanarRegionResult capture_planar_region(const LayerRegion &, Position<Frame::BuildPlate> object_origin,
+                                        uint64_t revision, const PlanarRegionLimits &limits = {});
 
 } // namespace Slic3r::nptop

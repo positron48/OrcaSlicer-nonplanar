@@ -1,6 +1,7 @@
 #include "Transition.hpp"
 #include "Interval.hpp"
 #include "../Flow.hpp"
+#include "../Layer.hpp"
 
 namespace Slic3r::nptop {
 namespace {
@@ -132,6 +133,145 @@ TransitionResult assess_first_pass(const AffineCapCell &cell, const PlanarSuppor
         result.reason = TransitionReason::InvalidInput;
     }
     return result;
+}
+
+PlanarRegionResult capture_planar_region(const LayerRegion &region, Position<Frame::BuildPlate> origin,
+                                        uint64_t revision, const PlanarRegionLimits &requested_limits)
+{
+    const PlanarRegionLimits limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    struct Rejection { const char *reason; };
+    const auto reject=[](const char *reason) { throw Rejection{reason}; };
+    const auto deadline=[&] {
+        if (std::chrono::steady_clock::now()-started>=limits.timeout) reject("PLANAR_REGION_DEADLINE");
+    };
+    const auto stop=[&] {
+        if (limits.cancelled && limits.cancelled()) reject("CANCELLED");
+        if (limits.is_current && !limits.is_current(revision)) reject("STALE_REVISION");
+        deadline(); require_interval_environment();
+    };
+    try {
+        if (revision==0 || limits.max_entities<2 || limits.max_entities>20000 || limits.max_points<2 ||
+            limits.max_points>200000 || limits.max_depth==0 || limits.max_depth>32 ||
+            limits.timeout.count()<=0 || limits.timeout>std::chrono::seconds(30)) reject("INVALID_PLANAR_REGION_LIMITS");
+        require_interval_environment();
+        const auto scale=NativeScale::capture();
+        coordinate(origin.x()); coordinate(origin.y()); coordinate(origin.z());
+        const auto *layer=region.layer();
+        if (!layer || layer->slicing_errors) reject("INVALID_NATIVE_LAYER");
+        const size_t layer_id=layer->id();
+        const double layer_z=layer->print_z, layer_height=layer->height;
+        coordinate(layer_z); coordinate(layer_height);
+        if (layer_height<=0) reject("INVALID_NATIVE_LAYER");
+        std::vector<PlanarEntityRecord> entities{
+            {0,PlanarEntityKind::Collection,region.perimeters.can_reverse(),region.perimeters.can_sort(),region.perimeters.inset_idx,{}},
+            {0,PlanarEntityKind::Collection,region.fills.can_reverse(),region.fills.can_sort(),region.fills.inset_idx,{}}};
+        std::vector<PlanarPathRecord> paths;
+        size_t points=0;
+        std::function<void(const ExtrusionEntity &,size_t,size_t)> capture;
+        capture=[&](const ExtrusionEntity &entity,size_t parent,size_t depth) {
+            deadline();
+            if (entities.size()>=limits.max_entities || depth>limits.max_depth) reject("PLANAR_ENTITY_LIMIT");
+            PlanarEntityKind kind;
+            const auto &type=typeid(entity);
+            if (type==typeid(ExtrusionEntityCollection)) kind=PlanarEntityKind::Collection;
+            else if (type==typeid(ExtrusionLoop)) kind=PlanarEntityKind::Loop;
+            else if (type==typeid(ExtrusionMultiPath)) kind=PlanarEntityKind::MultiPath;
+            else if (type==typeid(ExtrusionPath) || type==typeid(ExtrusionPathOriented)) kind=PlanarEntityKind::Path;
+            else throw Rejection{"UNSUPPORTED_PLANAR_ENTITY"};
+            entities.push_back({parent,kind,entity.can_reverse(),entity.can_sort(),entity.inset_idx,{}});
+            if (kind==PlanarEntityKind::Loop) {
+                const auto role=static_cast<const ExtrusionLoop &>(entity).loop_role();
+                if (unsigned(role)&~unsigned(elrHole|elrInternal)) reject("UNSUPPORTED_PLANAR_LOOP_ROLE");
+                entities.back().loop_role=role;
+            }
+            const size_t id=entities.size();
+            if (kind==PlanarEntityKind::Collection) {
+                for (const auto *child : static_cast<const ExtrusionEntityCollection &>(entity).entities) {
+                    if (!child) reject("INVALID_PLANAR_ENTITY");
+                    capture(*child,id,depth+1);
+                }
+            } else if (kind==PlanarEntityKind::Loop || kind==PlanarEntityKind::MultiPath) {
+                const auto &group=kind==PlanarEntityKind::Loop ? static_cast<const ExtrusionLoop &>(entity).paths :
+                                                                static_cast<const ExtrusionMultiPath &>(entity).paths;
+                if (group.empty()) reject("EMPTY_PLANAR_GROUP");
+                for (size_t i=0; i<group.size(); ++i) {
+                    capture(group[i],id,depth+1);
+                    if (group[i].width!=group.front().width || group[i].height!=group.front().height ||
+                        group[i].mm3_per_mm!=group.front().mm3_per_mm) reject("UNSUPPORTED_VARIABLE_WIDTH_GROUP");
+                    if (i && group[i-1].polyline.points.back()!=group[i].polyline.points.front()) reject("DISCONNECTED_PLANAR_GROUP");
+                }
+                if (kind==PlanarEntityKind::Loop && group.back().polyline.points.back()!=group.front().polyline.points.front())
+                    reject("OPEN_PLANAR_LOOP");
+            } else {
+                const auto &path=static_cast<const ExtrusionPath &>(entity);
+                const auto role=path.role();
+                if (role!=erPerimeter && role!=erExternalPerimeter && role!=erInternalInfill &&
+                    role!=erSolidInfill && role!=erTopSolidInfill && role!=erBottomSurface) reject("UNSUPPORTED_PLANAR_ROLE");
+                if (path.z_contoured || path.is_force_no_extrusion() || !path.polyline.fitting_result.empty())
+                    reject("UNSUPPORTED_PLANAR_PATH");
+                if (!std::isfinite(path.width) || !std::isfinite(path.height) || !std::isfinite(path.mm3_per_mm) ||
+                    path.height<=0 || path.width<=path.height || path.width>10000 || path.mm3_per_mm<=0 ||
+                    path.polyline.points.size()<2) reject("INVALID_PLANAR_PATH");
+                if (path.polyline.points.size()>limits.max_points-points) reject("PLANAR_POINT_LIMIT");
+                points+=path.polyline.points.size();
+                paths.push_back({id,role,path.width,path.height,path.mm3_per_mm,path.polyline.points,{}});
+            }
+        };
+        for (const auto *entity : region.perimeters.entities) {
+            if (!entity) reject("INVALID_PLANAR_ENTITY");
+            capture(*entity,1,1);
+        }
+        for (const auto *entity : region.fills.entities) {
+            if (!entity) reject("INVALID_PLANAR_ENTITY");
+            capture(*entity,2,1);
+        }
+        // The native region is no longer read. Callbacks may now invalidate or
+        // destroy it; only bounded owned values enter arithmetic/publication.
+        stop();
+        if (paths.empty()) reject("EMPTY_PLANAR_REGION");
+        Interval total_volume(0);
+        for (auto &path : paths) {
+            stop();
+            Interval length(0);
+            path.points.reserve(path.native_points.size());
+            for (size_t i=0; i<path.native_points.size(); ++i) {
+                if (i%128==0) stop();
+                const auto &point=path.native_points[i];
+                if (point.z()!=0) reject("NONPLANAR_NATIVE_POINT");
+                const auto decoded=from_native_scaled<Frame::ModelLocal>(point,scale);
+                const std::array<double,3> center{decoded.position.x()+origin.x(),decoded.position.y()+origin.y(),layer_z+origin.z()};
+                const Interval decode_error(-decoded.error_mm,decoded.error_mm);
+                const std::array<Interval,3> exact{
+                    Interval(decoded.position.x())+Interval(origin.x())+decode_error,
+                    Interval(decoded.position.y())+Interval(origin.y())+decode_error,
+                    Interval(layer_z)+Interval(origin.z())};
+                Interval error(0);
+                for (size_t axis=0; axis<3; ++axis) {
+                    coordinate(center[axis]); coordinate(exact[axis].lo); coordinate(exact[axis].hi);
+                    const auto delta=exact[axis]-Interval(center[axis]);
+                    error=error+Interval(std::max(std::abs(delta.lo),std::abs(delta.hi)));
+                }
+                path.coordinate_error_upper_mm=std::max(path.coordinate_error_upper_mm,error.hi);
+                path.points.emplace_back(center[0],center[1],center[2]);
+                if (i) {
+                    const auto &previous=path.native_points[i-1];
+                    if (point==previous) reject("ZERO_LENGTH_PLANAR_SEGMENT");
+                    const Interval dx=Interval(double(point.x()-previous.x()))*Interval(scale.mm_per_unit());
+                    const Interval dy=Interval(double(point.y()-previous.y()))*Interval(scale.mm_per_unit());
+                    length=length+root(square(dx)+square(dy));
+                }
+            }
+            const auto volume=length*Interval(path.mm3_per_mm);
+            if (length.lo<=0 || volume.lo<=0) reject("UNRESOLVED_PLANAR_VOLUME");
+            path.length_mm=bounds(length); path.native_volume_mm3=bounds(volume);
+            total_volume=total_volume+volume;
+        }
+        stop();
+        return {"NOMINAL_NATIVE_REGION_ONLY",std::make_shared<const PlanarRegionSnapshot>(PlanarRegionSnapshot{
+            revision,layer_id,layer_height,layer_z,origin,scale,std::move(entities),std::move(paths),bounds(total_volume)})};
+    } catch (const Rejection &rejected) { return {rejected.reason,{}}; }
+    catch (const std::exception &) { return {"PLANAR_REGION_NUMERIC_OR_CAPTURE_FAILURE",{}}; }
 }
 
 } // namespace Slic3r::nptop

@@ -6,6 +6,8 @@
 #include <libslic3r/TriangleMesh.hpp>
 #include <libslic3r/TriangleMeshSlicer.hpp>
 #include "../fff_print/test_data.hpp"
+#include <cfenv>
+#include <thread>
 
 using namespace Slic3r;
 using namespace Slic3r::nptop;
@@ -142,6 +144,176 @@ TEST_CASE("INT-02 native lower stair support rejects the unchanged upper candida
     REQUIRE(rejected.status == TransitionStatus::Rejected);
     REQUIRE(rejected.reason == TransitionReason::GapTooLarge);
     REQUIRE(rejected.gap_mm->lower > .3);
+}
+
+TEST_CASE("B04 planar region captures native hierarchy roles and bounded volume", "[Nonplanar][B04][PlanarRegion]")
+{
+    Print print; Model model; native_body(make_cube(10,8,1),print,model);
+    const auto *region=print.objects().front()->layers().back()->regions().front();
+    const auto result=capture_planar_region(*region,Position<Frame::BuildPlate>(100,100,0),61);
+    INFO(result.reason); REQUIRE(result.snapshot);
+    const auto &snapshot=*result.snapshot;
+    REQUIRE(snapshot.revision==61);
+    REQUIRE(snapshot.native_scale.mm_per_unit()==NativeScale::capture().mm_per_unit());
+    REQUIRE(snapshot.native_layer_id==4);
+    REQUIRE(snapshot.native_print_z_mm==1);
+    REQUIRE(snapshot.entities.size()>snapshot.paths.size());
+    REQUIRE_FALSE(snapshot.paths.empty());
+    bool perimeter=false, solid=false, loop=false;
+    for (const auto &entity : snapshot.entities) if (entity.kind==PlanarEntityKind::Loop) loop=true;
+    for (const auto &path : snapshot.paths) {
+        REQUIRE(path.native_points.size()==path.points.size());
+        REQUIRE(path.entity_id>0);
+        REQUIRE(path.entity_id<=snapshot.entities.size());
+        REQUIRE(path.coordinate_error_upper_mm>0);
+        REQUIRE(path.length_mm.lower>0);
+        REQUIRE(path.native_volume_mm3.lower>0);
+        for (const auto &point : path.points) REQUIRE(point.z()==1);
+        perimeter=perimeter || path.role==erExternalPerimeter;
+        solid=solid || path.role==erTopSolidInfill;
+    }
+    REQUIRE(perimeter); REQUIRE(solid); REQUIRE(loop);
+    REQUIRE(snapshot.native_volume_mm3.lower>0);
+}
+TEST_CASE("B04 planar scaled path preserves the independent three four five oracle", "[Nonplanar][B04][PlanarRegion]")
+{
+    Print print; Model model; native_body(make_cube(10,8,1),print,model);
+    auto *region=print.objects().front()->layers().back()->regions().front();
+    region->perimeters.clear(); region->fills.clear();
+    ExtrusionPath path(erTopSolidInfill,.125,.8f,.2f);
+    path.polyline=Polyline3(Points3{Point3(0,0,0),Point3(3000000,4000000,0)});
+    region->fills.append(path);
+    PlanarRegionLimits limits;
+    limits.cancelled=[&] { region->fills.clear(); region->layer()->print_z=99; return false; };
+    const auto result=capture_planar_region(*region,Position<Frame::BuildPlate>(100,200,3),62,limits);
+    INFO(result.reason); REQUIRE(result.snapshot);
+    REQUIRE(result.snapshot->paths.size()==1);
+    const auto &captured=result.snapshot->paths.front();
+    contains(captured.length_mm,5.);
+    contains(captured.native_volume_mm3,.625);
+    REQUIRE(captured.length_mm.upper-captured.length_mm.lower<1e-10);
+    REQUIRE(captured.points.front().x()==100);
+    REQUIRE(captured.points.back().x()==103);
+    REQUIRE(captured.points.back().y()==204);
+    REQUIRE(captured.points.back().z()==4);
+    REQUIRE(result.snapshot->native_print_z_mm==1);
+    REQUIRE(region->fills.empty());
+}
+TEST_CASE("B04 planar region rejects unsupported roles native Z arc metadata and invalid beads", "[Nonplanar][B04][PlanarRegion]")
+{
+    Print print; Model model; native_body(make_cube(10,8,1),print,model);
+    auto *region=print.objects().front()->layers().back()->regions().front();
+    region->perimeters.clear();
+    const Position<Frame::BuildPlate> origin(0,0,0);
+    for (const auto role : {erBridgeInfill,erInternalBridgeInfill,erOverhangPerimeter,erGapFill,
+                           erSupportMaterial,erSupportMaterialInterface,erIroning,erNone}) {
+        region->fills.clear(); auto path=straight_bead(); path.set_extrusion_role(role); region->fills.append(path);
+        const auto result=capture_planar_region(*region,origin,1);
+        CHECK_FALSE(result.snapshot);
+        CHECK(result.reason=="UNSUPPORTED_PLANAR_ROLE");
+    }
+    for (int mutation=0; mutation<8; ++mutation) {
+        INFO(mutation); region->fills.clear(); auto path=straight_bead();
+        if (mutation==0) path.polyline.points.back().z()=1;
+        if (mutation==1) path.z_contoured=true;
+        if (mutation==2) path.set_force_no_extrusion(true);
+        if (mutation==3) path.polyline.fitting_result.push_back(PathFittingData{0,1,EMovePathType::Arc_move_cw,{}});
+        if (mutation==4) path.polyline.points.back()=path.polyline.points.front();
+        if (mutation==5) path.height=std::numeric_limits<float>::quiet_NaN();
+        if (mutation==6) path.mm3_per_mm=std::numeric_limits<double>::infinity();
+        if (mutation==7) path.width=path.height;
+        region->fills.append(path);
+        CHECK_FALSE(capture_planar_region(*region,origin,1).snapshot);
+    }
+    region->fills.clear(); auto path=straight_bead();
+    ExtrusionPathContoured contoured(Polyline3(path.polyline),path,std::vector<double>{0,0});
+    region->fills.append(contoured);
+    REQUIRE(capture_planar_region(*region,origin,1).reason=="UNSUPPORTED_PLANAR_ENTITY");
+}
+TEST_CASE("B04 planar groups preserve hierarchy and reject variable width disconnected and open paths", "[Nonplanar][B04][PlanarRegion]")
+{
+    Print print; Model model; native_body(make_cube(10,8,1),print,model);
+    auto *region=print.objects().front()->layers().back()->regions().front();
+    region->perimeters.clear(); region->fills.clear();
+    auto path=straight_bead();
+    path.polyline=Polyline3(Points3{Point3(0,0,0),Point3(10000000,0,0),Point3(10000000,10000000,0),
+                                  Point3(0,10000000,0),Point3(0,0,0)});
+    ExtrusionLoop loop(path,elrHole); loop.inset_idx=7;
+    ExtrusionEntityCollection group; group.no_sort=true; group.append(loop);
+    region->perimeters.append(group);
+    const Position<Frame::BuildPlate> origin(0,0,0);
+    auto result=capture_planar_region(*region,origin,1);
+    INFO(result.reason); REQUIRE(result.snapshot);
+    REQUIRE(result.snapshot->entities.size()==5);
+    REQUIRE(result.snapshot->entities[2].parent_id==1);
+    REQUIRE_FALSE(result.snapshot->entities[2].can_sort);
+    REQUIRE(result.snapshot->entities[3].kind==PlanarEntityKind::Loop);
+    REQUIRE(result.snapshot->entities[3].parent_id==3);
+    REQUIRE(result.snapshot->entities[3].native_inset_index==7);
+    REQUIRE(result.snapshot->entities[3].loop_role==elrHole);
+    REQUIRE(result.snapshot->paths.front().entity_id==5);
+    contains(result.snapshot->paths.front().length_mm,40.);
+    region->perimeters.clear();
+    region->fills.append(ExtrusionLoop(path,elrSkirt));
+    REQUIRE(capture_planar_region(*region,origin,1).reason=="UNSUPPORTED_PLANAR_LOOP_ROLE");
+    region->fills.clear();
+    region->fills.append(ExtrusionLoop(straight_bead()));
+    REQUIRE(capture_planar_region(*region,origin,1).reason=="OPEN_PLANAR_LOOP");
+    auto first=straight_bead(), second=first;
+    region->fills.clear(); region->fills.append(ExtrusionMultiPath(ExtrusionPaths{first,second}));
+    REQUIRE(capture_planar_region(*region,origin,1).reason=="DISCONNECTED_PLANAR_GROUP");
+    second.polyline.points.front()=first.polyline.points.back(); second.polyline.points.back().x()+=10000000;
+    region->fills.clear(); region->fills.append(ExtrusionMultiPath(ExtrusionPaths{first,second}));
+    REQUIRE(capture_planar_region(*region,origin,1).snapshot);
+    second.width=std::nextafter(first.width,1.f);
+    region->fills.clear(); region->fills.append(ExtrusionMultiPath(ExtrusionPaths{first,second}));
+    REQUIRE(capture_planar_region(*region,origin,1).reason=="UNSUPPORTED_VARIABLE_WIDTH_GROUP");
+}
+TEST_CASE("B04 planar region limits and late callbacks discard the entire candidate", "[Nonplanar][B04][PlanarRegion]")
+{
+    Print print; Model model; native_body(make_cube(10,8,1),print,model);
+    auto *region=print.objects().front()->layers().back()->regions().front();
+    const Position<Frame::BuildPlate> origin(0,0,0);
+    PlanarRegionLimits limits;
+    limits.max_entities=2;
+    REQUIRE(capture_planar_region(*region,origin,1,limits).reason=="PLANAR_ENTITY_LIMIT");
+    limits={}; limits.max_points=2;
+    REQUIRE(capture_planar_region(*region,origin,1,limits).reason=="PLANAR_POINT_LIMIT");
+    limits={}; limits.max_depth=1;
+    REQUIRE(capture_planar_region(*region,origin,1,limits).reason=="PLANAR_ENTITY_LIMIT");
+    region->perimeters.clear(); region->fills.clear(); region->fills.append(straight_bead());
+    for (bool stale : {false,true}) {
+        size_t calls=0; limits={};
+        if (stale) limits.is_current=[&](uint64_t) { return ++calls<4; };
+        else limits.cancelled=[&] { return ++calls>=4; };
+        const auto result=capture_planar_region(*region,origin,1,limits);
+        REQUIRE(calls==4);
+        REQUIRE_FALSE(result.snapshot);
+        REQUIRE(result.reason==(stale ? "STALE_REVISION" : "CANCELLED"));
+    }
+    limits={}; limits.timeout=std::chrono::milliseconds(2);
+    limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(5)); return false; };
+    REQUIRE(capture_planar_region(*region,origin,1,limits).reason=="PLANAR_REGION_DEADLINE");
+    struct Rounding { int mode=std::fegetround(); ~Rounding() { std::fesetround(mode); } } restore;
+    limits={}; limits.cancelled=[] { std::fesetround(FE_UPWARD); return false; };
+    const auto rounding=capture_planar_region(*region,origin,1,limits);
+    std::fesetround(restore.mode);
+    REQUIRE_FALSE(rounding.snapshot);
+    REQUIRE(rounding.reason=="PLANAR_REGION_NUMERIC_OR_CAPTURE_FAILURE");
+    limits={}; limits.cancelled=[]()->bool { throw std::runtime_error("callback failed"); };
+    REQUIRE_FALSE(capture_planar_region(*region,origin,1,limits).snapshot);
+}
+TEST_CASE("B04 captured region outlives destruction of the entire native print", "[Nonplanar][B04][PlanarRegion]")
+{
+    auto print=std::make_unique<Print>(); Model model; native_body(make_cube(10,8,1),*print,model);
+    const auto *region=print->objects().front()->layers().back()->regions().front();
+    PlanarRegionLimits limits;
+    limits.cancelled=[&] { print.reset(); limits.max_points=0; return false; };
+    const auto result=capture_planar_region(*region,Position<Frame::BuildPlate>(100,100,0),63,limits);
+    INFO(result.reason); REQUIRE(result.snapshot);
+    REQUIRE_FALSE(print);
+    REQUIRE_FALSE(result.snapshot->paths.empty());
+    REQUIRE(result.snapshot->native_print_z_mm==1);
 }
 
 TEST_CASE("INT-01 affine footprint and volume use all corners", "[Nonplanar][A05][INT-01][VOL-01]")
