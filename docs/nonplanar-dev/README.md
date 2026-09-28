@@ -15,7 +15,19 @@ revision resolves with the included Git command.
 Follow `../nonplanar/prompts/01_bootstrap.md`: A01–A03, then concrete A04–A08
 tasks. Native macOS stock/fork builds, 37 FFF tests, seven analytical C++ tests
 and six OFF/ZAA differential cases passed. See bootstrap-report.md. Gate A as
-a whole is IN_PROGRESS: A04-A08 and independent critical review remain ahead.
+a whole is IN_PROGRESS: A05-A08 and independent critical review remain ahead.
+
+## A04 continuation
+
+`A04.md` records the locally committed continuation: continuous primitive
+clearance queries, finite tip/full gradient, fixed asymmetric box sweeps and
+fail-closed numerical/resource limits. Twelve new native cases plus seven A03
+cases pass, including 300 independent slab-oracle scenes; six fresh OFF/ZAA
+captures match stock. The ordinary 37-case FFF CTest baseline passes, while a
+separate NoAssertions run diagnoses four empty sections in two unchanged
+upstream cases. That stricter run is retained as a failure, not hidden.
+Evidence and the source fingerprint are under `evidence/A04/`.
+Next: A05 transition/body reservation experiment. No new export path exists.
 
 Allowed changes: documentation/evidence, isolated build/test tooling, then a
 small typed IR module and its analytical tests after studying native types.

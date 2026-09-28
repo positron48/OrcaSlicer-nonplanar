@@ -10,7 +10,8 @@
     "A01": "MACOS_NATIVE_BUILD_TESTS_ISOLATED_CLI_COMPLETE_GUI_LINUX_NOT_RUN",
     "A02": "SOURCE_AUDIT_AND_SIX_STOCK_FORK_BASELINES_PASS",
     "A03": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
-    "A04_A08": "SCOPED_NOT_STARTED"
+    "A04": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
+    "A05_A08": "SCOPED_NOT_STARTED"
   },
   "executed_checks": {
     "ORC-01": "PASS",
@@ -22,10 +23,20 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 7,
+    "new_native_cases": 19,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
-    "other_upstream_tests_not_run": 156
+    "other_upstream_tests_not_run": 156,
+    "GEO-01": "PASS_A04_PRIMITIVE_DOMAIN_ONLY",
+    "GEO-02": "PASS_A04_PRIMITIVE_DOMAIN_ONLY",
+    "GEO-03": "PASS_A04_PRIMITIVE_DOMAIN_ONLY",
+    "GEO-04": "PASS_A04_PRIMITIVE_DOMAIN_ONLY",
+    "GEO-05": "PASS_A04_PRIMITIVE_DOMAIN_ONLY",
+    "GEO-07": "PASS_A04_PRIMITIVE_DOMAIN_ONLY",
+    "GEO-08": "PASS_A04_PRIMITIVE_DOMAIN_ONLY",
+    "A04_native_cases": 12,
+    "A04_independent_slab_scenes": 300,
+    "fork_native_fff_no_assertions": "35_PASS_2_FAIL_UNCHANGED_UPSTREAM_EMPTY_SECTIONS"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -41,5 +52,6 @@
   "ci": "NOT_RUN",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "A04 continuous analytical tool/scene geometry; A07 operator evidence later."
+  "next_step": "A05 transition experiment and body reservation ADR; A07 operator evidence later.",
+  "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json"
 }

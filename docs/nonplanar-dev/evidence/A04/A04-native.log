@@ -1,0 +1,25 @@
+Randomness seeded to: 4704
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+GEO-04 sweep agrees with an independent slab intersection oracle
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_collision.cpp:214
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_collision.cpp:249: FAILED:
+  REQUIRE( result.status == ClearanceStatus::Fail )
+with expansion:
+  2 == 1
+with messages:
+  trial := 29
+  entry := 0.5
+  exit := 0.818182
+
+===============================================================================
+test cases:   18 |   17 passed | 1 failed
+assertions: 2222 | 2221 passed | 1 failed
+

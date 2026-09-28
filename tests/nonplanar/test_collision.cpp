@@ -1,0 +1,275 @@
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+#include <libslic3r/Nonplanar/Collision.hpp>
+#include <algorithm>
+#include <array>
+#include <cfenv>
+#include <random>
+
+using namespace Slic3r::nptop;
+using Catch::Matchers::WithinAbs;
+
+namespace {
+MotionEvent motion(PhysicalPosition from, PhysicalPosition to)
+{ return {41, 7, 0, from, to, Speed(10), Acceleration(100), Travel{}}; }
+ClearancePolicy policy(double clearance = 0, double error = 0)
+{ return {Length(clearance), NumericBudget(error, 0, 0, 0), Length(0), Length(0), Length(0)}; }
+ToolComponent box()
+{ return {12, ToolBox{ToolPosition(-.5, -.5, 0), ToolPosition(.5, .5, 1)}}; }
+ToolComponent tip(double outer = .5)
+{ return {13, FiniteTip{ToolPosition(0, 0, 0), Length(.2), Length(outer)}}; }
+void contains(const ClearanceResult &result, double expected)
+{
+    REQUIRE(result.bounds.has_value());
+    REQUIRE(result.bounds->lower_mm <= expected);
+    REQUIRE(result.bounds->upper_mm >= expected);
+}
+}
+
+TEST_CASE("GEO-02 finite outer tip uses full plane gradient", "[Nonplanar][GEO-02]")
+{
+    // Gradient (3/4, 0): radius .5 gives vertical loss .375, normalizer 1.25.
+    SceneObstacle plane{21, PlaneObstacle{.75, 0, 0}};
+    const auto path = motion({0, 0, .25}, {0, 10, .25});
+    auto result = query_clearance(path, tip(), plane, policy());
+    REQUIRE(result.status == ClearanceStatus::Fail);
+    contains(result, -.1);
+    auto opening_only = query_clearance(path, tip(.21), plane, policy());
+    REQUIRE(opening_only.status == ClearanceStatus::Pass);
+    auto clear = query_clearance(motion({0, 0, 1}, {4, 0, 4}), tip(), plane, policy(.1));
+    REQUIRE(clear.status == ClearanceStatus::Pass);
+    contains(clear, .5);
+    REQUIRE(clear.bounds->lower_mm > .49);
+}
+
+TEST_CASE("GEO-03 transverse slope collides along a constant Z path", "[Nonplanar][GEO-03]")
+{
+    // (a,b) = (.3,.4) has gradient norm .5, while the path tangent (4,-3,0)
+    // has dot product zero. Height along the centreline is constant.
+    SceneObstacle plane{21, PlaneObstacle{.3, .4, 0}};
+    auto result = query_clearance(motion({0, 0, .2}, {4, -3, .2}), tip(), plane, policy());
+    REQUIRE(result.status == ClearanceStatus::Fail);
+    contains(result, -.05 / std::sqrt(1.25));
+    REQUIRE(result.witness.has_value());
+}
+
+TEST_CASE("GEO-01 asymmetric tool axes stay fixed when the path turns", "[Nonplanar][GEO-01]")
+{
+    ToolComponent duct{14, ToolBox{ToolPosition(2, -.5, 0), ToolPosition(4, .5, 2)}};
+    SceneObstacle wall{22, SceneBox{PhysicalPosition(3, 4, 0), PhysicalPosition(5, 6, 2)}};
+    // At nozzle (0,5,0) the duct still occupies x=[2,4], y=[4.5,5.5].
+    const PhysicalPosition points[] = {{0, 0, 0}, {0, 5, 0}, {-5, 5, 0}};
+    for (size_t i = 1; i < 3; ++i) {
+        auto result = query_clearance(motion(points[i-1], points[i]), duct, wall, policy());
+        REQUIRE(result.status == ClearanceStatus::Fail);
+        REQUIRE(result.component_id == 14);
+    }
+    // No tangent at all is also a supported pose query.
+    REQUIRE(query_clearance(motion(points[1], points[1]), duct, wall, policy()).status == ClearanceStatus::Fail);
+}
+
+TEST_CASE("GEO-04 continuous sweep catches a wall between free endpoints", "[Nonplanar][GEO-04]")
+{
+    SceneObstacle wall{23, SceneBox{PhysicalPosition(4, -1, 0), PhysicalPosition(6, 1, 1)}};
+    for (double x : {0., 10.})
+        REQUIRE(query_clearance(motion({x,0,0}, {x,0,0}), box(), wall, policy()).status == ClearanceStatus::Pass);
+    auto result = query_clearance(motion({0,0,0}, {10,0,0}), box(), wall, policy());
+    REQUIRE(result.status == ClearanceStatus::Fail);
+    contains(result, -1);
+    REQUIRE(result.witness->parameter >= .35);
+    REQUIRE(result.witness->parameter <= .65);
+    REQUIRE(result.event_id == 41);
+    REQUIRE(result.sequence_index == 7);
+    REQUIRE(result.obstacle_id == 23);
+    // Narrow collision away from midpoint; no fixed endpoint/midpoint sampler suffices.
+    ToolComponent tiny{15, ToolBox{ToolPosition(-.001,-.001,0), ToolPosition(.001,.001,.01)}};
+    SceneObstacle thin{24, SceneBox{PhysicalPosition(1.234,-1,0), PhysicalPosition(1.236,1,1)}};
+    auto narrow = query_clearance(motion({0,0,0}, {10,0,0}), tiny, thin, policy());
+    REQUIRE(narrow.status == ClearanceStatus::Fail);
+    REQUIRE(narrow.witness->parameter > .1233);
+    REQUIRE(narrow.witness->parameter < .1237);
+}
+
+TEST_CASE("GEO-05 duct collision is independent of nozzle clearance", "[Nonplanar][GEO-05]")
+{
+    auto path = motion({0,0,0}, {0,10,0});
+    SceneObstacle wall{25, SceneBox{PhysicalPosition(3,4,0), PhysicalPosition(5,6,2)}};
+    REQUIRE(query_clearance(path, box(), wall, policy()).status == ClearanceStatus::Pass);
+    ToolComponent duct{16, ToolBox{ToolPosition(2,-.5,0), ToolPosition(4,.5,2)}};
+    auto result = query_clearance(path, duct, wall, policy());
+    REQUIRE(result.status == ClearanceStatus::Fail);
+    REQUIRE(result.component_id == 16);
+    REQUIRE(result.obstacle_id == 25);
+}
+
+TEST_CASE("GEO-04 bounded subdivision proves a diagonal sweep clear", "[Nonplanar][GEO-04]")
+{
+    // Whole swept AABB overlaps this obstacle; the actual diagonal route does not.
+    SceneObstacle remote{26, SceneBox{PhysicalPosition(0,8,0), PhysicalPosition(1,9,1)}};
+    auto result = query_clearance(motion({0,0,0}, {10,10,0}), box(), remote, policy(.1));
+    REQUIRE(result.status == ClearanceStatus::Pass);
+    REQUIRE(result.bounds->lower_mm > .1);
+    REQUIRE(result.evaluations > 1);
+    // Independent 3-4-5 distance between static box faces.
+    SceneObstacle diagonal{27, SceneBox{PhysicalPosition(3.5,4.5,0), PhysicalPosition(4.5,5.5,1)}};
+    auto fixed = query_clearance(motion({0,0,0}, {0,0,0}), box(), diagonal, policy(4.9));
+    REQUIRE(fixed.status == ClearanceStatus::Pass);
+    contains(fixed, 5);
+    REQUIRE_THAT(fixed.bounds->lower_mm, WithinAbs(5, 1e-10));
+}
+
+TEST_CASE("GEO-07 uncertain clearance never passes at the boundary", "[Nonplanar][GEO-07]")
+{
+    SceneObstacle plane{28, PlaneObstacle{0,0,0}};
+    SceneObstacle block{29, SceneBox{PhysicalPosition(-1,-1,-1), PhysicalPosition(1,1,0)}};
+    for (double z : {.07, .1, .13}) {
+        DYNAMIC_SECTION("clearance at z=" << z) {
+            auto expected = z < .08 ? ClearanceStatus::Fail : z > .12 ? ClearanceStatus::Pass : ClearanceStatus::Unknown;
+            auto path = motion({0,0,z}, {0,0,z});
+            auto a = query_clearance(path, tip(), plane, policy(.1,.02));
+            auto b = query_clearance(path, box(), block, policy(.1,.02));
+            REQUIRE(a.status == expected);
+            REQUIRE(b.status == expected);
+            contains(a,z);
+            contains(b,z);
+        }
+    }
+    REQUIRE(query_clearance(motion({0,0,0},{0,0,0}), tip(), plane, policy()).status == ClearanceStatus::Unknown);
+    auto charged = policy(.1);
+    charged.numeric = NumericBudget(.005,.005,.005,.005);
+    charged.tool_measurement = Length(.01);
+    charged.positioning = Length(.01);
+    charged.material = Length(.01);
+    auto result = query_clearance(motion({0,0,.13},{0,0,.13}), tip(), plane, charged);
+    REQUIRE(result.status == ClearanceStatus::Unknown);
+    REQUIRE(result.bounds->bound_error_mm >= .05);
+}
+
+TEST_CASE("GEO-08 unsupported queries and exhausted limits stay unknown", "[Nonplanar][GEO-08]")
+{
+    auto path = motion({0,0,10}, {1,0,10});
+    SceneObstacle plane{30, PlaneObstacle{0,0,0}};
+    REQUIRE(query_clearance(path, box(), plane, policy()).reason == ClearanceReason::UnsupportedPair);
+    SceneObstacle wall{31, SceneBox{PhysicalPosition(4,-1,0), PhysicalPosition(6,1,1)}};
+    auto unsupported = query_clearance(path, tip(), wall, policy());
+    REQUIRE(unsupported.status == ClearanceStatus::Unknown);
+    REQUIRE_FALSE(unsupported.bounds.has_value());
+    auto contact = tip();
+    contact.interaction = InteractionClass::DepositionContact;
+    REQUIRE(query_clearance(path, contact, plane, policy()).reason == ClearanceReason::UnsupportedContact);
+    QueryLimits none;
+    none.max_evaluations = 0;
+    REQUIRE(query_clearance(path, tip(), plane, policy(), none).reason == ClearanceReason::WorkLimit);
+    QueryLimits expired;
+    expired.deadline = std::chrono::steady_clock::now();
+    auto timeout = query_clearance(path, tip(), plane, policy(), expired);
+    REQUIRE(timeout.status == ClearanceStatus::Unknown);
+    REQUIRE(timeout.reason == ClearanceReason::Timeout);
+    QueryLimits one;
+    one.max_evaluations = 1;
+    auto exhausted = query_clearance(motion({0,0,0},{10,0,0}), box(), wall, policy(), one);
+    REQUIRE(exhausted.status == ClearanceStatus::Unknown);
+    REQUIRE(exhausted.reason == ClearanceReason::WorkLimit);
+}
+
+TEST_CASE("GEO-08 malformed geometry and numeric environment fail closed", "[Nonplanar][GEO-08]")
+{
+    auto path = motion({0,0,10}, {1,0,10});
+    SceneObstacle plane{32, PlaneObstacle{0,0,0}};
+    auto bad_tip = tip(.1);
+    REQUIRE(query_clearance(path, bad_tip, plane, policy()).reason == ClearanceReason::InvalidInput);
+    auto bad_budget = policy();
+    bad_budget.numeric.distance_mm = -1;
+    REQUIRE(query_clearance(path, tip(), plane, bad_budget).status == ClearanceStatus::Unknown);
+    plane.geometry = PlaneObstacle{std::numeric_limits<double>::infinity(),0,0};
+    REQUIRE(query_clearance(path, tip(), plane, policy()).status == ClearanceStatus::Unknown);
+    plane.geometry = PlaneObstacle{1e308,0,0};
+    REQUIRE(query_clearance(path, tip(), plane, policy()).status == ClearanceStatus::Unknown);
+    plane.geometry = PlaneObstacle{0,0,0};
+    struct RestoreRounding { int original = std::fegetround(); ~RestoreRounding() { std::fesetround(original); } } rounding;
+    REQUIRE(std::fesetround(FE_DOWNWARD) == 0);
+    REQUIRE(query_clearance(path, tip(), plane, policy()).reason == ClearanceReason::NumericalFailure);
+}
+
+TEST_CASE("GEO-04 translation reversal and envelope growth preserve clearance decisions", "[Nonplanar][GEO-04]")
+{
+    SceneObstacle wall{33, SceneBox{PhysicalPosition(4,-1,0),PhysicalPosition(6,1,1)}};
+    for (bool reverse : {false,true}) {
+        auto result = query_clearance(motion({reverse?10.:0.,0,0},{reverse?0.:10.,0,0}), box(), wall, policy());
+        REQUIRE(result.status == ClearanceStatus::Fail);
+    }
+    SceneObstacle translated{34, SceneBox{PhysicalPosition(104,-31,20),PhysicalPosition(106,-29,21)}};
+    REQUIRE(query_clearance(motion({100,-30,20},{110,-30,20}), box(), translated, policy()).status == ClearanceStatus::Fail);
+    auto path = motion({0,0,0},{0,0,0});
+    auto small = query_clearance(path, box(), wall, policy(.1));
+    auto big_box = box();
+    big_box.geometry = ToolBox{ToolPosition(-.5,-.5,0),ToolPosition(5,.5,1)};
+    auto big = query_clearance(path, big_box, wall, policy(.1));
+    REQUIRE(small.status == ClearanceStatus::Pass);
+    REQUIRE(big.status == ClearanceStatus::Fail);
+    REQUIRE(big.bounds->upper_mm < small.bounds->lower_mm);
+    REQUIRE(query_clearance(path, box(), wall, policy(4)).status == ClearanceStatus::Fail);
+}
+
+TEST_CASE("GEO-04 entering contact does not starve a later penetration", "[Nonplanar][GEO-04]")
+{
+    // Seed 4704, scene 29. Exact expanded-box slab interval: [1/2,9/11].
+    // A depth-first search of [0,1/2] can get stuck at contact while [1/2,1]
+    // already contains penetration. Keep literal inputs across RNG libraries.
+    ToolComponent asymmetric{17, ToolBox{ToolPosition(-2,-1,0),ToolPosition(3,2,2)}};
+    SceneObstacle fixed{35, SceneBox{PhysicalPosition(-2,-2,-2),PhysicalPosition(2,2,2)}};
+    const auto result = query_clearance(motion({5,5,-1},{3,-6,1}), asymmetric, fixed, policy());
+    REQUIRE(result.status == ClearanceStatus::Fail);
+    REQUIRE(result.witness.has_value());
+    REQUIRE(result.witness->parameter > .5);
+    REQUIRE(result.witness->parameter < 9./11.);
+}
+
+TEST_CASE("GEO-04 sweep agrees with an independent slab intersection oracle", "[Nonplanar][GEO-04]")
+{
+    // Independent Minkowski/slab intersection in long double, not interval
+    // distance evaluation or the production subdivision logic. Integral input
+    // coordinates make all slab numerators exact. Tangencies stay unclassified.
+    std::mt19937 generator(4704);
+    std::uniform_int_distribution<int> coord(-10,10);
+    const std::array<long double,3> low{-2,-1,0}, high{3,2,2};
+    ToolComponent asymmetric{17, ToolBox{ToolPosition(-2,-1,0),ToolPosition(3,2,2)}};
+    SceneObstacle fixed{35, SceneBox{PhysicalPosition(-2,-2,-2),PhysicalPosition(2,2,2)}};
+    unsigned clear_count = 0, hit_count = 0;
+    for (unsigned trial = 0; trial < 300; ++trial) {
+        std::array<double,3> a, b;
+        for (size_t axis = 0; axis < 3; ++axis) { a[axis] = coord(generator); b[axis] = coord(generator); }
+        long double entry = 0, exit = 1;
+        bool parallel_boundary = false;
+        for (size_t axis = 0; axis < 3; ++axis) {
+            const long double left = -2-high[axis], right = 2-low[axis];
+            const long double delta = b[axis]-a[axis];
+            if (delta == 0) {
+                if (a[axis] < left || a[axis] > right) exit = -1;
+                if (a[axis] == left || a[axis] == right) parallel_boundary = true;
+            } else {
+                long double t0 = (left-a[axis])/delta, t1 = (right-a[axis])/delta;
+                if (t0 > t1) std::swap(t0,t1);
+                entry = std::max(entry,t0);
+                exit = std::min(exit,t1);
+            }
+        }
+        CAPTURE(trial,entry,exit);
+        const auto result = query_clearance(motion({a[0],a[1],a[2]},{b[0],b[1],b[2]}), asymmetric, fixed, policy());
+        CAPTURE(a,b,result.reason,result.evaluations);
+        if (exit < entry-1e-6L) {
+            REQUIRE(result.status == ClearanceStatus::Pass);
+            ++clear_count;
+        } else if (!parallel_boundary && exit > entry+1e-6L) {
+            REQUIRE(result.status == ClearanceStatus::Fail);
+            REQUIRE(result.witness.has_value());
+            REQUIRE(result.witness->parameter >= entry);
+            REQUIRE(result.witness->parameter <= exit);
+            ++hit_count;
+        } else {
+            REQUIRE(result.status == ClearanceStatus::Unknown);
+        }
+    }
+    REQUIRE(clear_count > 50);
+    REQUIRE(hit_count > 50);
+}

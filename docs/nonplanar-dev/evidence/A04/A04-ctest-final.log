@@ -1,0 +1,83 @@
+Test project /Users/antonfilatov/www/my/orca-nonplanar/build/arm64
+      Start 194: GEO-07 uncertain clearance never passes at the boundary
+ 1/19 Test #194: GEO-07 uncertain clearance never passes at the boundary ...............................   Passed    0.00 sec
+      Start 195: GEO-04 bounded subdivision proves a diagonal sweep clear
+ 2/19 Test #195: GEO-04 bounded subdivision proves a diagonal sweep clear ..............................   Passed    0.00 sec
+      Start 196: GEO-04 sweep agrees with an independent slab intersection oracle
+ 3/19 Test #196: GEO-04 sweep agrees with an independent slab intersection oracle ......................   Passed    0.01 sec
+      Start 197: VOL-01 invalid deposition dimensions reject instead of producing volume
+ 4/19 Test #197: VOL-01 invalid deposition dimensions reject instead of producing volume ...............   Passed    0.00 sec
+      Start 198: VOL-01 XY integral preserves volume on sloped surfaces without a second correction
+ 5/19 Test #198: VOL-01 XY integral preserves volume on sloped surfaces without a second correction ....   Passed    0.00 sec
+      Start 199: Numeric budgets charge each component and reject missing invalid or exceeded bounds
+ 6/19 Test #199: Numeric budgets charge each component and reject missing invalid or exceeded bounds ...   Passed    0.00 sec
+      Start 200: GEO-01 asymmetric tool axes stay fixed when the path turns
+ 7/19 Test #200: GEO-01 asymmetric tool axes stay fixed when the path turns ............................   Passed    0.00 sec
+      Start 201: GEO-03 transverse slope collides along a constant Z path
+ 8/19 Test #201: GEO-03 transverse slope collides along a constant Z path ..............................   Passed    0.00 sec
+      Start 202: GEO-08 unsupported queries and exhausted limits stay unknown
+ 9/19 Test #202: GEO-08 unsupported queries and exhausted limits stay unknown ..........................   Passed    0.00 sec
+      Start 203: GEO-04 translation reversal and envelope growth preserve clearance decisions
+10/19 Test #203: GEO-04 translation reversal and envelope growth preserve clearance decisions ..........   Passed    0.00 sec
+      Start 204: ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales
+11/19 Test #204: ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales ........   Passed    0.00 sec
+      Start 205: GEO-04 entering contact does not starve a later penetration
+12/19 Test #205: GEO-04 entering contact does not starve a later penetration ...........................   Passed    0.00 sec
+      Start 206: GEO-04 continuous sweep catches a wall between free endpoints
+13/19 Test #206: GEO-04 continuous sweep catches a wall between free endpoints .........................   Passed    0.00 sec
+      Start 207: GEO-08 malformed geometry and numeric environment fail closed
+14/19 Test #207: GEO-08 malformed geometry and numeric environment fail closed .........................   Passed    0.00 sec
+      Start 208: VOL-02 vertical and normal gaps obey independent plane distance
+15/19 Test #208: VOL-02 vertical and normal gaps obey independent plane distance .......................   Passed    0.00 sec
+      Start 209: IR deposition travel and retraction carry different measures
+16/19 Test #209: IR deposition travel and retraction carry different measures ..........................   Passed    0.00 sec
+      Start 210: ORC-05 rejects stale scale nonfinite and out of domain coordinates
+17/19 Test #210: ORC-05 rejects stale scale nonfinite and out of domain coordinates ....................   Passed    0.00 sec
+      Start 211: GEO-05 duct collision is independent of nozzle clearance
+18/19 Test #211: GEO-05 duct collision is independent of nozzle clearance ..............................   Passed    0.00 sec
+      Start 212: GEO-02 finite outer tip uses full plane gradient
+19/19 Test #212: GEO-02 finite outer tip uses full plane gradient ......................................   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 19
+
+Label Time Summary:
+GEO-01       =   0.00 sec*proc (1 test)
+GEO-02       =   0.00 sec*proc (1 test)
+GEO-03       =   0.00 sec*proc (1 test)
+GEO-04       =   0.02 sec*proc (5 tests)
+GEO-05       =   0.00 sec*proc (1 test)
+GEO-07       =   0.00 sec*proc (1 test)
+GEO-08       =   0.01 sec*proc (2 tests)
+IR           =   0.01 sec*proc (2 tests)
+Nonplanar    =   0.08 sec*proc (19 tests)
+ORC-05       =   0.01 sec*proc (2 tests)
+VOL-01       =   0.01 sec*proc (2 tests)
+VOL-02       =   0.00 sec*proc (1 test)
+
+Total Test time (real) =   0.09 sec
+{
+  "tests_discovered": 19,
+  "tests_executed": 19,
+  "test_names": [
+    "GEO-07 uncertain clearance never passes at the boundary",
+    "GEO-04 bounded subdivision proves a diagonal sweep clear",
+    "GEO-04 sweep agrees with an independent slab intersection oracle",
+    "VOL-01 invalid deposition dimensions reject instead of producing volume",
+    "VOL-01 XY integral preserves volume on sloped surfaces without a second correction",
+    "Numeric budgets charge each component and reject missing invalid or exceeded bounds",
+    "GEO-01 asymmetric tool axes stay fixed when the path turns",
+    "GEO-03 transverse slope collides along a constant Z path",
+    "GEO-08 unsupported queries and exhausted limits stay unknown",
+    "GEO-04 translation reversal and envelope growth preserve clearance decisions",
+    "ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales",
+    "GEO-04 entering contact does not starve a later penetration",
+    "GEO-04 continuous sweep catches a wall between free endpoints",
+    "GEO-08 malformed geometry and numeric environment fail closed",
+    "VOL-02 vertical and normal gaps obey independent plane distance",
+    "IR deposition travel and retraction carry different measures",
+    "ORC-05 rejects stale scale nonfinite and out of domain coordinates",
+    "GEO-05 duct collision is independent of nozzle clearance",
+    "GEO-02 finite outer tip uses full plane gradient"
+  ],
+  "status": "PASS"
+}

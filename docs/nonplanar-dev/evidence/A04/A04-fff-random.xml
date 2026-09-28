@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="4" skipped="0" tests="569" hostname="tbd" time="1.784" timestamp="2026-09-28T07:09:54Z">
+    <properties>
+      <property name="random-seed" value="4704"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: slice behavior." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: slice behavior./Given: A 20mm cube with one corner on the origin" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: slice behavior./Given: A 20mm cube with one corner on the origin/When: Cube is sliced with z = [0+EPSILON,2,4,8,6,8,10,12,14,16,18,20]" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: slice behavior./Given: A 20mm cube with one corner on the origin/When: Cube is sliced with z = [0+EPSILON,2,4,8,6,8,10,12,14,16,18,20]/Then: The correct number of polygons are returned per layer." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: slice behavior./Given: A 20mm cube with one corner on the origin/When: Cube is sliced with z = [0+EPSILON,2,4,8,6,8,10,12,14,16,18,20]/Then: The area of the returned polygons is correct." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: slice behavior./Given: A STL with an irregular shape." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: slice behavior./Given: A STL with an irregular shape./When:  a top tangent plane is sliced" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: slice behavior./Given: A STL with an irregular shape./When:  a top tangent plane is sliced/Then: its area is included" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: slice behavior./Given: A STL with an irregular shape./When:  a model that has been transformed is sliced" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: slice behavior./Given: A STL with an irregular shape./When:  a model that has been transformed is sliced/Then: it is sliced properly (mirrored bottom plane area is included)" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMeshSlicer: Cut behavior." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMeshSlicer: Cut behavior./Given: A 20mm cube with one corner on the origin" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMeshSlicer: Cut behavior./Given: A 20mm cube with one corner on the origin/When: Object is cut at the bottom" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMeshSlicer: Cut behavior./Given: A 20mm cube with one corner on the origin/When: Object is cut at the bottom/Then: Upper mesh has all facets except those belonging to the slicing plane." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMeshSlicer: Cut behavior./Given: A 20mm cube with one corner on the origin/When: Object is cut at the bottom/Then: Lower mesh has no facets." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMeshSlicer: Cut behavior./Given: A 20mm cube with one corner on the origin/When: Object is cut at the center" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMeshSlicer: Cut behavior./Given: A 20mm cube with one corner on the origin/When: Object is cut at the center/Then: Upper mesh has 2 external horizontal facets, 3 facets on each side, and 6 facets on the triangulated side (2 + 12 + 6)." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMeshSlicer: Cut behavior./Given: A 20mm cube with one corner on the origin/When: Object is cut at the center/Then: Lower mesh has 2 external horizontal facets, 3 facets on each side, and 6 facets on the triangulated side (2 + 12 + 6)." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Print: {first_object_name} is not replaced by the saved-project file name" time="0.002" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: set_speed emits values with fixed-point output." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: set_speed emits values with fixed-point output./Given: GCodeWriter instance" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: set_speed emits values with fixed-point output./Given: GCodeWriter instance/When: set_speed is called to set speed to 99999.123" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: set_speed emits values with fixed-point output./Given: GCodeWriter instance/When: set_speed is called to set speed to 99999.123/Then: Output string is G1 F99999.123" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: set_speed emits values with fixed-point output./Given: GCodeWriter instance/When: set_speed is called to set speed to 1" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: set_speed emits values with fixed-point output./Given: GCodeWriter instance/When: set_speed is called to set speed to 1/Then: Output string is G1 F1" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: set_speed emits values with fixed-point output./Given: GCodeWriter instance/When: set_speed is called to set speed to 203.200022" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: set_speed emits values with fixed-point output./Given: GCodeWriter instance/When: set_speed is called to set speed to 203.200022/Then: Output string is G1 F203.2" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: set_speed emits values with fixed-point output./Given: GCodeWriter instance/When: set_speed is called to set speed to 203.200522" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: set_speed emits values with fixed-point output./Given: GCodeWriter instance/When: set_speed is called to set speed to 203.200522/Then: Output string is G1 F203.201" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights" time="0.004" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube" time="0.004" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: sliced with a 2mm layer height and a 3mm nozzle" time="0.002" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: sliced with a 2mm layer height and a 3mm nozzle/Then: The output vector has 10 entries" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: sliced with a 2mm layer height and a 3mm nozzle/And: Each layer is approximately 2mm above the previous Z" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: sliced with a 10mm layer height and an 11mm nozzle" time="0.002" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: sliced with a 10mm layer height and an 11mm nozzle/Then: The output vector has 3 entries" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: sliced with a 10mm layer height and an 11mm nozzle/And: Layer 0 is at 2mm" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: sliced with a 10mm layer height and an 11mm nozzle/And: Layer 1 is at 12mm" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: sliced with a 15mm layer height and a 16mm nozzle" time="0.002" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: sliced with a 15mm layer height and a 16mm nozzle/Then: The output vector has 2 entries" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: sliced with a 15mm layer height and a 16mm nozzle/And: Layer 0 is at 2mm" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: sliced with a 15mm layer height and a 16mm nozzle/And: Layer 1 is at 17mm" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: layer height exceeds the nozzle diameter" time="0.004" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: object layer heights/Given: A 20mm cube/When: layer height exceeds the nozzle diameter/Then: Slicing is rejected" time="0.004" status="run">
+      <system-out>
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Scenario: z_hop lifts the nozzle when a lift is requested" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: z_hop lifts the nozzle when a lift is requested/Given: A writer with the nozzle parked at Z = 10" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: z_hop lifts the nozzle when a lift is requested/Given: A writer with the nozzle parked at Z = 10/When: z_hop is 1 and an eager lift is requested" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: z_hop lifts the nozzle when a lift is requested/Given: A writer with the nozzle parked at Z = 10/When: z_hop is 1 and an eager lift is requested/Then: a Z move up by z_hop is emitted" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: z_hop lifts the nozzle when a lift is requested/Given: A writer with the nozzle parked at Z = 10/When: z_hop is 0" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: z_hop lifts the nozzle when a lift is requested/Given: A writer with the nozzle parked at Z = 10/When: z_hop is 0/Then: no lift is emitted" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Basic mesh statistics" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Basic mesh statistics/Given: A 20mm cube, built from constexpr std::array" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Basic mesh statistics/Given: A 20mm cube, built from constexpr std::array/Then: Volume is appropriate for 20mm square cube." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Basic mesh statistics/Given: A 20mm cube, built from constexpr std::array/Then: Vertices array matches input." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Basic mesh statistics/Given: A 20mm cube, built from constexpr std::array/Then: Vertex count matches vertex array size." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Basic mesh statistics/Given: A 20mm cube, built from constexpr std::array/Then: Facet array matches input." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Basic mesh statistics/Given: A 20mm cube, built from constexpr std::array/Then: Facet count matches facet array size." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Basic mesh statistics/Given: A 20mm cube, built from constexpr std::array/Then: center() returns the center of the object." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Basic mesh statistics/Given: A 20mm cube, built from constexpr std::array/Then: Size of cube is (20,20,20)" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Initial layer height is honored" time="0.039" status="run">
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Sequential printing follows model order" time="0.056" status="run">
+      <system-out>
+st=1, 
+st=2,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Scenario: Model construction" time="0.033" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Model construction/Given: A Slic3r Model" time="0.033" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Model construction/Given: A Slic3r Model/When: Model object is added" time="0.032" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Model construction/Given: A Slic3r Model/When: Model object is added/Then: Model object list == 1" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Model construction/Given: A Slic3r Model/When: Model object is added/Then: Model volume list == 1" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Model construction/Given: A Slic3r Model/When: Model object is added/Then: Model volume is a part" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Model construction/Given: A Slic3r Model/When: Model object is added/Then: Mesh is equivalent to input mesh." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Model construction/Given: A Slic3r Model/When: Model object is added/Then: Print works?" time="0.032" status="run">
+      <system-out>
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Filament-change time is attributed to tool-change moves, not extrusion roles" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is scaled 200% uniformly" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is scaled 200% uniformly/Then: The volume is equivalent to 40x40x40 (all dimensions increased by 200%" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The resulting cube is scaled 200% in the X direction" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The resulting cube is scaled 200% in the X direction/Then: The volume is doubled." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The resulting cube is scaled 200% in the X direction/Then: The X coordinate size is 200%." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is scaled 25% in the X direction" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is scaled 25% in the X direction/Then: The volume is 25% of the previous volume." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is scaled 25% in the X direction/Then: The X coordinate size is 25% from previous." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is rotated 45 degrees." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is rotated 45 degrees./Then: The X component of the size is sqrt(2)*20" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is translated (5, 10, 0) units with a Vec3f" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is translated (5, 10, 0) units with a Vec3f/Then: The first vertex is located at 25, 30, 0" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is translated (5, 10, 0) units with 3 doubles" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is translated (5, 10, 0) units with 3 doubles/Then: The first vertex is located at 25, 30, 0" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is translated (5, 10, 0) units and then aligned to origin" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is translated (5, 10, 0) units and then aligned to origin/Then: The third vertex is located at 0,0,0" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Transformation functions affect mesh as expected./Given: A 20mm cube with one corner on the origin/When: The cube is translated (5, 10, 0) units and then aligned to origin/Then: Size is OK" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: Perimeter generation" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: Perimeter generation/Given: 20mm cube and default config" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: Perimeter generation/Given: 20mm cube and default config/When: make_perimeters() is called" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: Perimeter generation/Given: 20mm cube and default config/When: make_perimeters() is called/Then: Every layer in region 0 has 1 island of perimeters" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: Perimeter generation/Given: 20mm cube and default config/When: wall_loops is set to 3" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintObject: Perimeter generation/Given: 20mm cube and default config/When: wall_loops is set to 3/Then: Every layer in region 0 has 3 perimeter loops" time="0.000" status="run">
+      <system-out>
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Carried-forward tool-change delay reaches the total without polluting roles" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Mesh merge functions" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Mesh merge functions/Given: Two 20mm cubes, each with one corner on the origin" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Mesh merge functions/Given: Two 20mm cubes, each with one corner on the origin/When: The two meshes are merged" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: Mesh merge functions/Given: Two 20mm cubes, each with one corner on the origin/When: The two meshes are merged/Then: There are twice as many facets in the merged mesh as the original." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for non-bridges" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for non-bridges/Given: Nozzle Diameter of 0.4, a desired width of 1mm and layer height of 0.5" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for non-bridges/Given: Nozzle Diameter of 0.4, a desired width of 1mm and layer height of 0.5/Then: External perimeter flow has spacing fixed to 1.125 * nozzle_diameter" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for non-bridges/Given: Nozzle Diameter of 0.4, a desired width of 1mm and layer height of 0.5/Then: Internal perimeter flow has spacing fixed to 1.125 * nozzle_diameter" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for non-bridges/Given: Nozzle Diameter of 0.4, a desired width of 1mm and layer height of 0.5/Then: Spacing for supplied width is 0.8927f" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for non-bridges/Given: Nozzle Diameter of 0.25" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for non-bridges/Given: Nozzle Diameter of 0.25/When: layer height is set to 0.2" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for non-bridges/Given: Nozzle Diameter of 0.25/When: layer height is set to 0.2/Then: Max width is set." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for non-bridges/Given: Nozzle Diameter of 0.25/When: Layer height is set to 0.25" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for non-bridges/Given: Nozzle Diameter of 0.25/When: Layer height is set to 0.25/Then: Min width is set." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes." time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cube() function" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cube() function/When: make_cube() is called with arguments 20,20,20" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cube() function/When: make_cube() is called with arguments 20,20,20/Then: The resulting mesh has one and only one vertex at 0,0,0" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cube() function/When: make_cube() is called with arguments 20,20,20/Then: The mesh volume is 20*20*20" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cube() function/When: make_cube() is called with arguments 20,20,20/Then: There are 12 facets." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cylinder() function" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cylinder() function/When: make_cylinder() is called with arguments 10,10, PI / 3" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cylinder() function/When: make_cylinder() is called with arguments 10,10, PI / 3/Then: The resulting mesh has one and only one vertex at 0,0,0" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cylinder() function/When: make_cylinder() is called with arguments 10,10, PI / 3/Then: The resulting mesh has one and only one vertex at 0,0,10" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cylinder() function/When: make_cylinder() is called with arguments 10,10, PI / 3/Then: Resulting mesh has 2 + (2*PI/angle * 2) vertices." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cylinder() function/When: make_cylinder() is called with arguments 10,10, PI / 3/Then: Resulting mesh has 2*PI/angle * 4 facets" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_cylinder() function/When: make_cylinder() is called with arguments 10,10, PI / 3/Then: The mesh volume is approximately 10pi * 10^2" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_sphere() function" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_sphere() function/When: make_sphere() is called with arguments 10, PI / 3" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_sphere() function/When: make_sphere() is called with arguments 10, PI / 3/Then: Resulting mesh has one point at 0,0,-10 and one at 0,0,10" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: make_xxx functions produce meshes./Given: make_sphere() function/When: make_sphere() is called with arguments 10, PI / 3/Then: The mesh volume is approximately 4/3 * pi * 10^3" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: SupportMaterial: support_layers_z and contact_distance" time="0.012" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: SupportMaterial: support_layers_z and contact_distance/Given: A print object having one modelObject" time="0.012" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: SupportMaterial: support_layers_z and contact_distance/Given: A print object having one modelObject/When: Layer height = 0.2 and first layer height = 0.4" time="0.013" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: SupportMaterial: support_layers_z and contact_distance/Given: A print object having one modelObject/When: Layer height = 0.2 and first layer height = 0.4/Then: First layer height is honored" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: SupportMaterial: support_layers_z and contact_distance/Given: A print object having one modelObject/When: Layer height = 0.2 and first layer height = 0.4/Then: No null or negative support layers" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: SupportMaterial: support_layers_z and contact_distance/Given: A print object having one modelObject/When: Layer height = 0.2 and first layer height = 0.4/Then: No layers thicker than nozzle diameter" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: SupportMaterial: support_layers_z and contact_distance/Given: A print object having one modelObject/When: Layer height = 0.2 and first layer height = 0.3" time="0.012" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: SupportMaterial: support_layers_z and contact_distance/Given: A print object having one modelObject/When: Layer height = 0.2 and first layer height = 0.3/Then: First layer height is honored" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: SupportMaterial: support_layers_z and contact_distance/Given: A print object having one modelObject/When: Layer height = 0.2 and first layer height = 0.3/Then: No null or negative support layers" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: SupportMaterial: support_layers_z and contact_distance/Given: A print object having one modelObject/When: Layer height = 0.2 and first layer height = 0.3/Then: No layers thicker than nozzle diameter" time="0.000" status="run">
+      <system-out>
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="SupportMaterial: enforced support layers are generated" time="0.013" status="run">
+      <system-out>
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Fill: Pattern Path Length" time="0.003" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Fill: Pattern Path Length/Square" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Fill: Pattern Path Length/Diamond with endpoints on grid" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Fill: Pattern Path Length/Square with hole" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Fill: Pattern Path Length/Regression: Missing infill segments in some rare circumstances" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Fill: Pattern Path Length/Rotated Square" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Fill: Pattern Path Length/Solid surface fill" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Fill: Pattern Path Length/Solid surface fill" time="0.003" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Brim generation" time="0.006" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Brim generation/Given: 20mm cube and default config, 1mm first layer width" time="0.006" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Brim generation/Given: 20mm cube and default config, 1mm first layer width/When: Brim is set to 6mm" time="0.006" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Brim generation/Given: 20mm cube and default config, 1mm first layer width/When: Brim is set to 6mm/Then: Brim Extrusion collection has 6 loops in it" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Brim generation/Given: 20mm cube and default config, 1mm first layer width/When: Brim is set to 6mm, extrusion width 0.5mm" time="0.006" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Brim generation/Given: 20mm cube and default config, 1mm first layer width/When: Brim is set to 6mm, extrusion width 0.5mm/Then: Brim Extrusion collection has 12 loops in it" time="0.000" status="run">
+      <system-out>
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Skirt generation" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Skirt generation/Given: 20mm cube and default config" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Skirt generation/Given: 20mm cube and default config/When: skirt_loops is set to 2" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Skirt generation/Given: 20mm cube and default config/When: skirt_loops is set to 2/Then: Skirt Extrusion collection has 2 loops in it" time="0.000" status="run">
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Print: {first_object_name} names the first printable object on the plate" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Print: {first_object_name} names the first printable object on the plate/uses the object's name" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Print: {first_object_name} names the first printable object on the plate/picks the first when several objects are printable" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Print: {first_object_name} names the first printable object on the plate/skips objects outside the print volume (e.g. on another plate)" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Print: {first_object_name} names the first printable object on the plate/is empty when the object has no name" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Back-to-back tool changes buffer then merge into one tool-change block" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality" time="0.116" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object" time="0.116" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with no support material" time="0.033" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with no support material/Then: Some text output is generated." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with no support material/Then: Exported text contains extrusion statistics." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with no support material/Then: Exported text does not contain cooling markers (they were consumed)" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with no support material/Then: The config trailer includes print and region settings" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with no support material/Then: Infill is emitted." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with no support material/Then: Perimeters are emitted." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with no support material/Then: Skirt is emitted." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with no support material/Then: final Z height is 20mm" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: output is executed with two objects printed sequentially" time="0.068" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: output is executed with two objects printed sequentially/Then: Some text output is generated." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: output is executed with two objects printed sequentially/Then: Infill is emitted." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: output is executed with two objects printed sequentially/Then: Perimeters are emitted." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: output is executed with two objects printed sequentially/Then: Skirt is emitted." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: output is executed with two objects printed sequentially/Then: Between-object-gcode is emitted." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: output is executed with two objects printed sequentially/Then: final Z height is 20.1mm" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: output is executed with two objects printed sequentially/Then: Z height resets on object change" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with support material" time="0.035" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with support material/Then: Some text output is generated." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with support material/Then: Exported text contains extrusion statistics." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with support material/Then: Raft is emitted." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with a separate first layer extrusion width" time="0.032" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with a separate first layer extrusion width/Then: Some text output is generated." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: the output is executed with a separate first layer extrusion width/Then: Exported text contains extrusion statistics." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: Cooling is enabled and the fan is disabled." time="0.032" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: Cooling is enabled and the fan is disabled./Then: GCode to disable fan is emitted." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: end_gcode exists with layer_num and layer_z" time="0.055" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: end_gcode exists with layer_num and layer_z/Then: layer_num and layer_z are processed in the end gcode" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: current_extruder exists in start_gcode" time="0.039" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: current_extruder exists in start_gcode/Then: current_extruder is processed in the start gcode and set for first extruder" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: layer_num represents the layer's index from z=0" time="0.116" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: PrintGCode basic functionality/Given: A default configuration and a print test object/When: layer_num represents the layer's index from z=0/Then: First and second object last layer is emitted" time="0.000" status="run">
+      <system-out>
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=2,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="SupportMaterial: Three raft layers created" time="0.006" status="run">
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="export_gcode writes G-code without a result pointer" time="0.034" status="run"/>
+    <testcase classname="fff_print_tests.global" name="export_gcode writes G-code without a result pointer/non-BBL printer" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="export_gcode writes G-code without a result pointer/BBL printer" time="0.000" status="run">
+      <system-out>
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Filament-change time is not dropped when few motion blocks precede the change" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal." time="0.009" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal./Given: sliced 20mm cube and config with top_shell_layers = 2 and bottom_shell_layers = 1" time="0.009" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal./Given: sliced 20mm cube and config with top_shell_layers = 2 and bottom_shell_layers = 1/When: Model is re-sliced with top_shell_layers == 3" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal./Given: sliced 20mm cube and config with top_shell_layers = 2 and bottom_shell_layers = 1/When: Model is re-sliced with top_shell_layers == 3/Then: Print object does not have 0 solid bottom layers." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Print: Changing number of solid shell layers does not cause all surfaces to become internal./Given: sliced 20mm cube and config with top_shell_layers = 2 and bottom_shell_layers = 1/When: Model is re-sliced with top_shell_layers == 3/And: Print object has 3 top solid layers" time="0.000" status="run">
+      <system-out>
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation" time="0.041" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration" time="0.041" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Brim width is set to 5" time="0.030" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Brim width is set to 5/Then: Brim is generated" time="0.030" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: brim width to 1 with layer_width of 0.5" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: brim width to 1 with layer_width of 0.5/Then: 2 brim lines" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Object is plated with overhang support and a brim" time="0.025" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Object is plated with overhang support and a brim/Then: Support and brim are both emitted" time="0.025" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: an object with support is surrounded by a skirt" time="0.026" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: an object with support is surrounded by a skirt/Then: the skirt is long enough to enclose the object and its support" time="0.026" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Large minimum skirt length is used." time="0.040" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Large minimum skirt length is used./Then: The skirt is extended to at least the minimum length" time="0.040" status="run">
+      <system-out>
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for bridges" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for bridges/Given: Nozzle Diameter of 0.4, a desired width of 1mm and layer height of 0.5" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for bridges/Given: Nozzle Diameter of 0.4, a desired width of 1mm and layer height of 0.5/When: Flow role is frExternalPerimeter" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for bridges/Given: Nozzle Diameter of 0.4, a desired width of 1mm and layer height of 0.5/When: Flow role is frExternalPerimeter/Then: Bridge width is same as nozzle diameter" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Flow: Flow math for bridges/Given: Nozzle Diameter of 0.4, a desired width of 1mm and layer height of 0.5/When: Flow role is frExternalPerimeter/Then: Bridge spacing is same as nozzle diameter + BRIDGE_EXTRA_SPACING" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Trailing tool change at end of file is drained, not dropped" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: ExtrusionEntityCollection: Polygon flattening" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: ExtrusionEntityCollection: Polygon flattening/Given: A Extrusion Entity Collection with a child that has one child that is marked as no-sort" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: ExtrusionEntityCollection: Polygon flattening/Given: A Extrusion Entity Collection with a child that has one child that is marked as no-sort/When: The EEC is flattened with default options (preserve_order=false)" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: ExtrusionEntityCollection: Polygon flattening/Given: A Extrusion Entity Collection with a child that has one child that is marked as no-sort/When: The EEC is flattened with default options (preserve_order=false)/Then: The output EEC contains no Extrusion Entity Collections" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: ExtrusionEntityCollection: Polygon flattening/Given: A Extrusion Entity Collection with a child that has one child that is marked as no-sort/When: The EEC is flattened with preservation (preserve_order=true)" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: ExtrusionEntityCollection: Polygon flattening/Given: A Extrusion Entity Collection with a child that has one child that is marked as no-sort/When: The EEC is flattened with preservation (preserve_order=true)/Then: The output EECs contains one EEC." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: ExtrusionEntityCollection: Polygon flattening/Given: A Extrusion Entity Collection with a child that has one child that is marked as no-sort/When: The EEC is flattened with preservation (preserve_order=true)/And: The ordered EEC contains the same order of elements than the original" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Skirt height is honored" time="0.052" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Skirt height is honored/printing a single object" time="0.027" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Skirt height is honored/printing multiple objects" time="0.051" status="run">
+      <system-out>
+st=1, 
+st=1, 
+st=2,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: split functionality." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: split functionality./Given: A 20mm cube with one corner on the origin" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: split functionality./Given: A 20mm cube with one corner on the origin/When: The mesh is split into its component parts." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: split functionality./Given: A 20mm cube with one corner on the origin/When: The mesh is split into its component parts./Then:  The bounding box statistics are propagated to the split copies" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: split functionality./Given: Two 20mm cubes, each with one corner on the origin, merged into a single TriangleMesh" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: split functionality./Given: Two 20mm cubes, each with one corner on the origin, merged into a single TriangleMesh/When: The combined mesh is split" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: split functionality./Given: Two 20mm cubes, each with one corner on the origin, merged into a single TriangleMesh/When: The combined mesh is split/Then: Number of faces is 2x the source." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: TriangleMesh: split functionality./Given: Two 20mm cubes, each with one corner on the origin, merged into a single TriangleMesh/When: The combined mesh is split/Then: Two meshes are in the output vector." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: init_print functionality" time="0.035" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: init_print functionality/Given: A default config" time="0.035" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: init_print functionality/Given: A default config/When: init_print is called with a single mesh." time="0.035" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: init_print functionality/Given: A default config/When: init_print is called with a single mesh./Then: One mesh/printobject is in the resulting Print object." time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: init_print functionality/Given: A default config/When: init_print is called with a single mesh./Then: print.process() doesn't crash." time="0.004" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: init_print functionality/Given: A default config/When: init_print is called with a single mesh./Then: Export gcode functions outputs text." time="0.034" status="run">
+      <system-out>
+st=1, 
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Scenario: Origin manipulation" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Origin manipulation/When: set_origin to (10,0)" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Origin manipulation/When: set_origin to (10,0) and translate by (5, 5)" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Origin manipulation/When: set_origin to (10,0) and translate by (5, 5)/Then: origin returns reference to point" time="0.000" status="run"/>
+    <system-out>
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=2, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=2, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=2, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=2, 
+st=1, 
+st=1, 
+st=1,
+    </system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>

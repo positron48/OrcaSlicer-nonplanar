@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="2222" hostname="tbd" time="0.001" timestamp="2026-09-28T07:09:52Z">
+    <properties>
+      <property name="random-seed" value="4704"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="GEO-01 asymmetric tool axes stay fixed when the path turns" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="VOL-01 invalid deposition dimensions reject instead of producing volume" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="IR deposition travel and retraction carry different measures" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="Numeric budgets charge each component and reject missing invalid or exceeded bounds" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="ORC-05 rejects stale scale nonfinite and out of domain coordinates" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-02 finite outer tip uses full plane gradient" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-03 transverse slope collides along a constant Z path" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-04 translation reversal and envelope growth preserve clearance decisions" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-05 duct collision is independent of nozzle clearance" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="VOL-02 vertical and normal gaps obey independent plane distance" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-04 bounded subdivision proves a diagonal sweep clear" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-04 sweep agrees with an independent slab intersection oracle" time="0.000" status="run">
+      <failure message="result.status == ClearanceStatus::Fail" type="REQUIRE">
+FAILED:
+  REQUIRE( result.status == ClearanceStatus::Fail )
+with expansion:
+  2 == 1
+trial := 29
+entry := 0.5
+exit := 0.818182
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_collision.cpp:249
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="GEO-07 uncertain clearance never passes at the boundary" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.07" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.1" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.13" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="VOL-01 XY integral preserves volume on sloped surfaces without a second correction" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-08 unsupported queries and exhausted limits stay unknown" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-08 malformed geometry and numeric environment fail closed" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="GEO-04 continuous sweep catches a wall between free endpoints" time="0.000" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

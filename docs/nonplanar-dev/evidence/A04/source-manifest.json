@@ -1,0 +1,43 @@
+{
+  "base_commit": "1ad7bdadaee803d53e0a517c593ed23ac688d7c3",
+  "implementation": "COMMITTED_LOCALLY_NOT_PUSHED",
+  "platform": "macOS 26.5.1 ARM64",
+  "compiler": "Apple Clang 21.0.0",
+  "configuration": "Release C++17",
+  "geometry_compile_options": [
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "SKIP_PRECOMPILE_HEADERS=ON"
+  ],
+  "generated_utc": "2026-09-28T07:14:53.418359+00:00",
+  "source_sha256": {
+    "src/libslic3r/Nonplanar/Collision.hpp": "e5678f34f448b5d8e1ef941039b92f770c52b55a8fe63230da5fd605bc86a1e7",
+    "src/libslic3r/Nonplanar/Collision.cpp": "09e5dac789739e51dfe06256459db5a83a285abe4212af5ef8a8e380668a301f",
+    "src/libslic3r/CMakeLists.txt": "24526faf681e154f89db0c11aed35b33a1e76444e0f8c88b2a487a24d584b579",
+    "tests/nonplanar/CMakeLists.txt": "6d16c49af31acea590fd3ee3c914ecaf86eef17fdebc2bb95c8111bf0170d763",
+    "tests/nonplanar/test_collision.cpp": "fb69303bf1d183c8b03a5567d25364e002492e3b22b30672a2a70382515e2627"
+  },
+  "native_tests": 19,
+  "native_assertions": 2789,
+  "new_A04_cases": 12,
+  "independent_slab_scenes": 300,
+  "seed": 4704,
+  "off_zaa_pairs": 6,
+  "fff_ctest": {
+    "executed": 37,
+    "status": "PASS_EXISTING_BOOTSTRAP_PROTOCOL"
+  },
+  "fff_random_no_assertions": {
+    "executed": 37,
+    "passed": 35,
+    "failed": 2,
+    "status": "FAIL_EMPTY_UPSTREAM_SECTIONS"
+  },
+  "independent_review": "PENDING",
+  "linux_windows_ci_physical": "NOT_RUN",
+  "fff_sources_match_pinned_upstream": {
+    "tests/fff_print/test_printgcode.cpp": true,
+    "tests/fff_print/test_skirt_brim.cpp": true
+  },
+  "implementation_commit_resolution": "git log -1 --format=%H -- docs/nonplanar-dev/A04.md"
+}
