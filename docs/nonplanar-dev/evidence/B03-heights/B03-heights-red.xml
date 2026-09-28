@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="2" skipped="0" tests="5" hostname="tbd" time="0.001" timestamp="2026-09-28T16:35:34Z">
+    <properties>
+      <property name="random-seed" value="2025205587"/>
+      <property name="filters" value="[UpperHeights]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B03 local affine height selects the actual sheet and never crosses a crease" time="0.000" status="run">
+      <failure message="ramp.nominal_heights" type="REQUIRE">
+FAILED:
+  REQUIRE( ramp.nominal_heights )
+with expansion:
+  {?}
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_upper_projection.cpp:501
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B03 affine endpoint heights and gradients enclose independent dyadic and rational planes" time="0.000" status="run">
+      <failure message="result.nominal_heights" type="REQUIRE">
+FAILED:
+  REQUIRE( result.nominal_heights )
+with expansion:
+  {?}
+NOMINAL_AFFINE_FOOTPRINT_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_upper_projection.cpp:479
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

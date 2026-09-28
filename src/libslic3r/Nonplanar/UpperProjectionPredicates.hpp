@@ -2,6 +2,7 @@
 #include "../Point.hpp"
 #include <array>
 #include <vector>
+#include <optional>
 namespace Slic3r::nptop::detail {
 using ProjectionTriangle = std::array<Vec3f,3>;
 // Exact signs for the XY projection of finite nominal mesh coordinates.
@@ -15,4 +16,8 @@ bool projected_boundary_conflict(const Vec3f &, const Vec3f &, const Vec3f &, co
 int projected_bounded_side(const std::vector<Vec3f> &, const Vec2d &);
 // Exact rational squared-distance comparison for the entire XY segment.
 bool projected_clearance_exceeds(const Vec2d &, const Vec2d &, const Vec3f &, const Vec3f &, double radius);
+struct AffinePlaneBounds { std::array<double,2> start_z, end_z, gradient_x, gradient_y; };
+// Start must lie in this triangle's XY projection. End is evaluated on its
+// affine extension; the caller must first prove whole-footprint affinity.
+std::optional<AffinePlaneBounds> projected_affine_bounds(const ProjectionTriangle &, const Vec2d &, const Vec2d &);
 }

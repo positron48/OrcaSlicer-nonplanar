@@ -448,15 +448,68 @@ TEST_CASE("B03 affine footprint never retains a curvature bound after late inval
     REQUIRE(stale.status==UpperFootprintStatus::Unknown);
     REQUIRE(stale.reason=="STALE_REVISION");
     REQUIRE_FALSE(stale.nominal_curvature_upper_mm_inv);
+    REQUIRE_FALSE(stale.nominal_heights);
     calls=0; limits={}; limits.cancelled=[&] { return ++calls==final_call; };
     const auto cancelled=check_affine_upper_footprint(projection.snapshot,query,limits);
     REQUIRE(cancelled.status==UpperFootprintStatus::Unknown);
     REQUIRE(cancelled.reason=="CANCELLED");
     REQUIRE_FALSE(cancelled.nominal_curvature_upper_mm_inv);
+    REQUIRE_FALSE(cancelled.nominal_heights);
     limits={}; limits.timeout=std::chrono::milliseconds(1);
     limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(3)); return false; };
     const auto expired=check_affine_upper_footprint(projection.snapshot,query,limits);
     REQUIRE(expired.status==UpperFootprintStatus::Unknown);
     REQUIRE(expired.reason=="DEADLINE");
     REQUIRE_FALSE(expired.nominal_curvature_upper_mm_inv);
+    REQUIRE_FALSE(expired.nominal_heights);
+}
+TEST_CASE("B03 affine endpoint heights and gradients enclose independent dyadic and rational planes", "[Nonplanar][B03][UpperHeights]")
+{
+    for (bool rational : {false,true}) {
+        auto source=rational ? make_cube(3,3,2) : wedge();
+        if (rational) for (auto &v : source.its.vertices) if (v.z()>0) v.z()+=v.x()/3;
+        UpperProjectionLimits limits; limits.max_slope=.5;
+        const auto projection=analyze_upper_projection(source,true,72,limits);
+        REQUIRE(projection.snapshot);
+        for (const auto &endpoints : std::vector<std::pair<Vec2d,Vec2d>>{
+            {{.5,.5},{2.5,2.5}},{{2.5,2.5},{.5,.5}},{{1.5,1.5},{1.5,1.5}}}) {
+            const UpperFootprintQuery query{0,endpoints.first,endpoints.second,.125,0,0};
+            const auto result=check_affine_upper_footprint(projection.snapshot,query);
+            INFO(result.reason); REQUIRE(result.status==UpperFootprintStatus::Contained);
+            REQUIRE(result.nominal_heights);
+            const auto &height=*result.nominal_heights;
+            REQUIRE(height.revision==72);
+            REQUIRE(height.reference_mesh_face<projection.snapshot->geometry->its.indices.size());
+            const long double divisor=rational ? 3.L : 8.L;
+            const auto encloses=[](const std::array<double,2> &range,long double expected) {
+                CHECK(range[0]<=expected); CHECK(range[1]>=expected);
+                CHECK(range[1]-range[0]<1e-12);
+            };
+            encloses(height.start_z_mm,2.L+static_cast<long double>(endpoints.first.x())/divisor);
+            encloses(height.end_z_mm,2.L+static_cast<long double>(endpoints.second.x())/divisor);
+            encloses(height.gradient_x,1.L/divisor); encloses(height.gradient_y,0.L);
+            REQUIRE_FALSE(check_upper_footprint(projection.snapshot,query).nominal_heights);
+        }
+    }
+}
+TEST_CASE("B03 local affine height selects the actual sheet and never crosses a crease", "[Nonplanar][B03][UpperHeights]")
+{
+    UpperProjectionLimits limits; limits.max_slope=2;
+    const auto projection=analyze_upper_projection(gridded_plate(3,false,true),true,73,limits);
+    REQUIRE(projection.snapshot);
+    const auto ramp=check_affine_upper_footprint(projection.snapshot,{0,{1.25,.5},{1.75,2.5},.125,0,0});
+    REQUIRE(ramp.nominal_heights);
+    REQUIRE(ramp.nominal_heights->start_z_mm[0]<=2.25);
+    REQUIRE(ramp.nominal_heights->start_z_mm[1]>=2.25);
+    REQUIRE(ramp.nominal_heights->end_z_mm[0]<=2.75);
+    REQUIRE(ramp.nominal_heights->end_z_mm[1]>=2.75);
+    REQUIRE(ramp.nominal_heights->gradient_x[0]<=1);
+    REQUIRE(ramp.nominal_heights->gradient_x[1]>=1);
+    for (const auto &query : {UpperFootprintQuery{0,{.5,1.5},{2.5,1.5},.125,0,0},
+                              UpperFootprintQuery{0,{.5,1.5},{3.,1.5},.125,0,0}}) {
+        const auto result=check_affine_upper_footprint(projection.snapshot,query);
+        REQUIRE(result.status!=UpperFootprintStatus::Contained);
+        REQUIRE_FALSE(result.nominal_heights);
+        REQUIRE_FALSE(result.nominal_curvature_upper_mm_inv);
+    }
 }

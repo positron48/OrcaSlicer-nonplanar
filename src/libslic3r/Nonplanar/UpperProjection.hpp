@@ -89,11 +89,19 @@ struct UpperFootprintLimits {
     std::function<bool(uint64_t)> is_current;
 };
 enum class UpperFootprintStatus { Contained, Outside, Unknown };
+struct UpperAffineHeights {
+    uint64_t revision;
+    size_t reference_mesh_face;
+    std::array<double,2> start_z_mm, end_z_mm, gradient_x, gradient_y;
+};
 struct UpperFootprintResult {
     UpperFootprintStatus status = UpperFootprintStatus::Unknown;
     std::string reason;
     double required_inset_upper_mm = 0;
     std::optional<double> nominal_curvature_upper_mm_inv;
+    // Outward nominal height/gradient bounds in the input snapshot's frame.
+    // Linear interpolation of endpoint intervals bounds the whole centerline.
+    std::optional<UpperAffineHeights> nominal_heights;
 };
 // Tests the whole swept disk against one nominal XY patch, preserving holes.
 // This is an implicit inset query, not Z contact, curvature or head clearance.

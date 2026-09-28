@@ -283,6 +283,7 @@ UpperFootprintResult check_footprint(std::shared_ptr<const UpperProjectionSnapsh
         }
         // Start membership plus positive whole-segment boundary clearance
         // implies that the connected capsule stays inside this one patch.
+        std::optional<UpperAffineHeights> heights;
         if (contained && require_affine) {
             const auto &vertices=snapshot->geometry->its.vertices;
             for (const auto &crease : snapshot->slope_patches[query.patch].creases) {
@@ -293,17 +294,30 @@ UpperFootprintResult check_footprint(std::shared_ptr<const UpperProjectionSnapsh
                     return result;
                 }
             }
+            // The connected capsule avoids every crease, so the reference
+            // plane extends over its full length, including coplanar facets.
+            for (const auto face : snapshot->slope_patches[query.patch].mesh_faces) {
+                if (stop()) return result;
+                const auto &ids=snapshot->geometry->its.indices[face];
+                const detail::ProjectionTriangle triangle{vertices[ids[0]],vertices[ids[1]],vertices[ids[2]]};
+                if (const auto plane=detail::projected_affine_bounds(triangle,query.start_mm,query.end_mm)) {
+                    heights=UpperAffineHeights{snapshot->revision,face,plane->start_z,plane->end_z,plane->gradient_x,plane->gradient_y};
+                    break;
+                }
+            }
+            if (!heights) { result.reason="AFFINE_REFERENCE_FACE_NOT_FOUND"; return result; }
         }
         if (stop()) return result;
-        result.status=contained ? UpperFootprintStatus::Contained : UpperFootprintStatus::Outside;
         result.reason=reason;
         if (contained && require_affine) {
-            result.nominal_curvature_upper_mm_inv=0.;
             result.reason="NOMINAL_AFFINE_FOOTPRINT_ONLY";
+            result.nominal_curvature_upper_mm_inv=0.;
+            result.nominal_heights=std::move(heights);
         }
-    } catch (const std::exception &) {
-        result.reason="FOOTPRINT_EXCEPTION";
+        result.status=contained ? UpperFootprintStatus::Contained : UpperFootprintStatus::Outside;
     } catch (...) {
+        result.status=UpperFootprintStatus::Unknown;
+        result.nominal_curvature_upper_mm_inv.reset(); result.nominal_heights.reset();
         result.reason="FOOTPRINT_EXCEPTION";
     }
     return result;

@@ -30,7 +30,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 168,
+    "new_native_cases": 170,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -46,8 +46,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 205,
-    "final_ctest_executed": 205,
+    "final_ctest_discovered": 207,
+    "final_ctest_executed": 207,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -144,8 +144,8 @@
     "B03_projection_assertions": 103,
     "B03_projection_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B03_patches_cases": 4,
-    "B03_current_cases": 22,
-    "B03_current_assertions": 509,
+    "B03_current_cases": 24,
+    "B03_current_assertions": 630,
     "B03_patches_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B03_footprint_cases": 5,
     "B03_footprint_rectangle_oracles": 120,
@@ -181,11 +181,13 @@
     "B01_paths_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B04_region_cases": 6,
     "B04_region_A05_combined_assertions": 251,
-    "B04_region_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
+    "B04_region_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B03_heights_cases": 2,
+    "B03_heights_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
-    "linux_x86_64": "EARLIER_COMMITS_6FFCD91F_AND_1A2B6C40_NATIVE_BUILD_PASS_SELECTED_TEST_STEP_FAILED_DETAILS_UNAVAILABLE"
+    "linux_x86_64": "01865DCF_NATIVE_BUILD_PASS_SELECTED_CTEST_FAILED_SKIRT_HEIGHT_CLIPPER_RANGE_EXCEPTION_CURRENT_REVISION_NOT_VERIFIED"
   },
   "physical": {
     "machine": "Snapmaker U1",
@@ -195,7 +197,7 @@
     "coupon_geometry": "PREPARED_AND_VALIDATED_DIGITALLY_ONLY"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "RUN_36434944242_01865DCF_DEPENDENCIES_BUILT_AND_SAVED_APP_TEST_BUILD_IN_PROGRESS_CURRENT_TEST_FIRST_WORKFLOW_PENDING",
+  "ci": "RUN_36434944242_01865DCF_DEPENDENCIES_AND_APP_TEST_BUILD_PASS_SKIRT_HEIGHT_NATIVE_TEST_FAILED_COORDINATE_OUTSIDE_ALLOWED_RANGE_CURRENT_REVISION_PENDING",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
   "next_step": "Continue B03 curved-surface/ROI and tool-accessibility checks; bind captured inputs to actual plate/job/worker ownership and complete compatibility. Independent review and physical qualification remain pending.",
@@ -242,7 +244,8 @@
     "B03_worker": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-worker.md",
     "B01_flow": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-flow.md",
     "B01_paths": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-paths.md",
-    "B04_region": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-region.md"
+    "B04_region": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-region.md",
+    "B03_heights": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-heights.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -282,5 +285,6 @@
   "B03_worker_evidence": "docs/nonplanar-dev/evidence/B03-worker/source-manifest.json",
   "B01_flow_evidence": "docs/nonplanar-dev/evidence/B01-flow/source-manifest.json",
   "B01_paths_evidence": "docs/nonplanar-dev/evidence/B01-paths/source-manifest.json",
-  "B04_region_evidence": "docs/nonplanar-dev/evidence/B04-region/source-manifest.json"
+  "B04_region_evidence": "docs/nonplanar-dev/evidence/B04-region/source-manifest.json",
+  "B03_heights_evidence": "docs/nonplanar-dev/evidence/B03-heights/source-manifest.json"
 }

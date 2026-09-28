@@ -74,4 +74,23 @@ bool projected_clearance_exceeds(const Vec2d &a, const Vec2d &b, const Vec3f &c,
     const Exact::FT r(radius);
     return CGAL::squared_distance(motion,edge)>r*r;
 }
+std::optional<AffinePlaneBounds> projected_affine_bounds(const ProjectionTriangle &t, const Vec2d &start, const Vec2d &end)
+{
+    using Exact = CGAL::Exact_predicates_exact_constructions_kernel;
+    const Exact::Triangle_2 xy({t[0].x(),t[0].y()},{t[1].x(),t[1].y()},{t[2].x(),t[2].y()});
+    if (xy.bounded_side({start.x(),start.y()})==CGAL::ON_UNBOUNDED_SIDE) return {};
+    const auto point=[](const Vec3f &v) { return Exact::Point_3(v.x(),v.y(),v.z()); };
+    const Exact::Plane_3 plane(point(t[0]),point(t[1]),point(t[2]));
+    if (plane.c()==0) throw std::runtime_error("vertical affine plane");
+    const auto bound=[](const Exact::FT &value) {
+        const auto range=CGAL::to_interval(value);
+        if (!std::isfinite(range.first) || !std::isfinite(range.second) || range.first>range.second)
+            throw std::runtime_error("unbounded affine plane");
+        return std::array<double,2>{range.first,range.second};
+    };
+    const auto height=[&](const Vec2d &p) {
+        return bound(-(plane.a()*Exact::FT(p.x())+plane.b()*Exact::FT(p.y())+plane.d())/plane.c());
+    };
+    return AffinePlaneBounds{height(start),height(end),bound(-plane.a()/plane.c()),bound(-plane.b()/plane.c())};
+}
 }
