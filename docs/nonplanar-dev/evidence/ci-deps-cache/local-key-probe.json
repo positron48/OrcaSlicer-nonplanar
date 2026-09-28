@@ -1,0 +1,662 @@
+{
+  "key": "nptop-linux-deps-v1-6cd31237caf84650217e6a94171bca56493ee1d8fd6c47dd5946165030a10152",
+  "inputs": {
+    "schema_version": 1,
+    "files": {
+      ".github/workflows/nonplanar-native.yml": {
+        "mode": "100644",
+        "sha256": "94f06430665de631210631e816d9c6cd7ef075376510509a419541bc3b7288f6"
+      },
+      "CMakeLists.txt": {
+        "mode": "100644",
+        "sha256": "0c8a47cf7771482c17d1643f992bc3fd3faf05f0999cedf78c890a9aad465c21"
+      },
+      "build_linux.sh": {
+        "mode": "100755",
+        "sha256": "96ef59f32d0db120decd50c5228651fe4cbb3b73214545aec4436eb4231fc99d"
+      },
+      "cmake/modules/CheckAtomic.cmake": {
+        "mode": "100644",
+        "sha256": "8e909d0557cc559f0902def72b56699375b96b2dc49713d49339f1b66d157b5d"
+      },
+      "cmake/modules/FindAlienWx.cmake": {
+        "mode": "100644",
+        "sha256": "2159f66d80a14c993184e4d7be1517fe66b4b2e3dba45025352721fb6c736fa3"
+      },
+      "cmake/modules/FindCURL.cmake": {
+        "mode": "100644",
+        "sha256": "72a7e550ee1e6c03f7320cec67c4aa239bf7f1bab9c1d5370c1de974cf00758e"
+      },
+      "cmake/modules/FindDBus.cmake": {
+        "mode": "100644",
+        "sha256": "95c4f460b5555a5ab6a7e97bb0bbb06d24f4c8d8b09195d3d4f6fdb45b61a6f8"
+      },
+      "cmake/modules/FindDraco.cmake": {
+        "mode": "100644",
+        "sha256": "020d111709d8cf48e9e93f726462d5eeac4737f9abab1bdaeaa6180adb1579cc"
+      },
+      "cmake/modules/FindGLEW.cmake": {
+        "mode": "100644",
+        "sha256": "52884fbd9dfbf0a8cee790335d5d5a0f7a0e559e0104d0e4a330550cc8a98e23"
+      },
+      "cmake/modules/FindGTK3.cmake": {
+        "mode": "100644",
+        "sha256": "e91f6a769afdcc4ea12d5828edc48cbaf309e34f228df7c00925efa93a65815d"
+      },
+      "cmake/modules/FindNLopt.cmake": {
+        "mode": "100644",
+        "sha256": "d8cc9ff992c77a59bc0dcd51e4395ad064f770ab2433df38fc8b2ffe0552278b"
+      },
+      "cmake/modules/FindOpenVDB.cmake": {
+        "mode": "100644",
+        "sha256": "b2442df4b0581e01ca8fb4537c1bc6127a1c8552e16d09be57347745710dff9f"
+      },
+      "cmake/modules/FindPackageHandleStandardArgs_SLIC3R.cmake": {
+        "mode": "100644",
+        "sha256": "f2dec0610752efa5ee73b8559255f0886084c74b7f5efef88d103a25abfd53f7"
+      },
+      "cmake/modules/FindPackageMessage_SLIC3R.cmake": {
+        "mode": "100644",
+        "sha256": "550554179d50b017e1b4f2a01a28ce657cacaa98468213df63c6ed1e91e80d59"
+      },
+      "cmake/modules/FindPerlEmbed.cmake": {
+        "mode": "100644",
+        "sha256": "dac8147584bb00921df063ce303abfbe738f764a79a5bd508fc41d03752a6286"
+      },
+      "cmake/modules/FindTBB.cmake": {
+        "mode": "100644",
+        "sha256": "eb7bf6602869f7a9b290e739f6e6ae5f3daf859503be80782ed055c664b29938"
+      },
+      "cmake/modules/FindTBB.cmake.in": {
+        "mode": "100644",
+        "sha256": "61f390465462d09e0cd2057549e4dd46fe16fde2b6c3952710ca5273608614bf"
+      },
+      "cmake/modules/Findcereal.cmake": {
+        "mode": "100644",
+        "sha256": "559fd59ad084e2ff23065338d5ae3d81f5ca0fe62d324d5de07d311921949aca"
+      },
+      "cmake/modules/Findlibnoise.cmake": {
+        "mode": "100644",
+        "sha256": "9f9f9f8cb4e133518d77cce32dfc4bac36fdf8d29a219679790db27815b4a2dc"
+      },
+      "cmake/modules/LibFindMacros.cmake": {
+        "mode": "100644",
+        "sha256": "4f0198f04dfc6c6c0d59f5c624e3fe744f13521b28d3d1328d856948b41808cd"
+      },
+      "cmake/modules/MacOSXBundleInfo.plist.in": {
+        "mode": "100644",
+        "sha256": "10fa9e6b12ee46c896cd269aaacba4df2a68ef6fb9d099af961238def66b99f3"
+      },
+      "cmake/modules/OpenVDBUtils.cmake": {
+        "mode": "100644",
+        "sha256": "6be5462a04926d81dbeea62689def644b5ac8d15360b98ca9ff33bcb121e5f5b"
+      },
+      "cmake/modules/PrecompiledHeader.cmake": {
+        "mode": "100644",
+        "sha256": "4be5f6ef125cfb0aff0df43a0b21813c5c2bdcc9276cc5f10647343874af2a7a"
+      },
+      "cmake/modules/SelectLibraryConfigurations_SLIC3R.cmake": {
+        "mode": "100644",
+        "sha256": "49f86768f4f9110dafc16c280091fd26f586c05d19f68e679b668ce8aba21d57"
+      },
+      "cmake/modules/bin2h.cmake": {
+        "mode": "100644",
+        "sha256": "78abe72a0a10f6029e7057678af3461b4a9d25613a0e896c51b6e3bad3fa71ea"
+      },
+      "cmake/msvc/xs.wperl.props.in": {
+        "mode": "100644",
+        "sha256": "64528b15b6cf30425a27fc4f9747d588daa0cba9b91e9f4870d75a04a61c1f3e"
+      },
+      "deps/Blosc/Blosc.cmake": {
+        "mode": "100644",
+        "sha256": "f7944dd0c4dd37da172548a581357aa2d13dc509a48bde94632895acd306dec9"
+      },
+      "deps/Blosc/blosc-mods.patch": {
+        "mode": "100644",
+        "sha256": "b6679630d0849c99d010585f5e587ab8ec6a94fb2258e711c9e7c1c7228ea4ed"
+      },
+      "deps/Boost/0001-Boost-fix.patch": {
+        "mode": "100644",
+        "sha256": "bb2662d0a4c58c43726ec98ef4acf201fcf98719c9bbfd207e2d6cdf695a2093"
+      },
+      "deps/Boost/Boost.cmake": {
+        "mode": "100644",
+        "sha256": "7f6d2cfb4e5e7efc2af2f2147d65b29ccaefabc2348e23d0064efbc5dc4743e9"
+      },
+      "deps/Boost/common.jam": {
+        "mode": "100644",
+        "sha256": "09b1c0c61a94665b4496f7feb6624bd4f7fd19026fc8accf4de892aefc3720aa"
+      },
+      "deps/Boost/user-config.jam": {
+        "mode": "100644",
+        "sha256": "2f613db6925c1555b163b3ce88cad222eb325160df3a0d40bf8f2d4a9964c8ed"
+      },
+      "deps/CGAL/CGAL.cmake": {
+        "mode": "100644",
+        "sha256": "1399ca73237212ce4d35517728fa1a715aeae4fee44eabcbd08706daf5064c28"
+      },
+      "deps/CGAL/cgal/CGALConfigVersion.cmake": {
+        "mode": "100644",
+        "sha256": "f194ffac93ac4878f15edbd28ef6bee2590474d7225cc2e789ad663c86aee73e"
+      },
+      "deps/CMakeLists.txt": {
+        "mode": "100644",
+        "sha256": "c4f1f195f3e163cb3efd423dcd24719b68db0847602cd24b74d192983f125c39"
+      },
+      "deps/CURL/CURL.cmake": {
+        "mode": "100644",
+        "sha256": "e52d856edc2a0c13f193aa8498654cf9f3ff4cf1e5268b3a37500ac28bf1713f"
+      },
+      "deps/Cereal/Cereal.cmake": {
+        "mode": "100644",
+        "sha256": "0750bb65670e8ad74513c1342cfcd0c12f7961b76587226e99beb0bf4ff36eb6"
+      },
+      "deps/Draco/Draco.cmake": {
+        "mode": "100644",
+        "sha256": "935b3b5604a298788e77b863a43ed2f07d9e23e4cc89260fabc3b17032006ced"
+      },
+      "deps/EXPAT/EXPAT.cmake": {
+        "mode": "100644",
+        "sha256": "1f5358e582928902c0f041ab704638586e1edec334412cf92eb6bd0de60ecc0c"
+      },
+      "deps/EXPAT/expat/CMakeLists.txt": {
+        "mode": "100644",
+        "sha256": "17cae58333f58dad8555009570e50968715f239644916a01309f519a17a60751"
+      },
+      "deps/EXPAT/expat/COPYING": {
+        "mode": "100644",
+        "sha256": "122f2c27000472a201d337b9b31f7eb2b52d091b02857061a8880371612d9534"
+      },
+      "deps/EXPAT/expat/ConfigureChecks.cmake": {
+        "mode": "100644",
+        "sha256": "f78709ec4c24402838681ee6ad5bc72944d7fb2f7fdc05bb81e8e19211cb9005"
+      },
+      "deps/EXPAT/expat/README.md": {
+        "mode": "100644",
+        "sha256": "ae9b4fd366c93e7d2ba149d82aeab3ba240d33b2b036842294d78bff44802f78"
+      },
+      "deps/EXPAT/expat/ascii.h": {
+        "mode": "100644",
+        "sha256": "42f8b392c70366743eacbc60ce021389ccaa333598dd49eef6ee5c93698ca205"
+      },
+      "deps/EXPAT/expat/asciitab.h": {
+        "mode": "100644",
+        "sha256": "1cc0ae749019fc0e488cd1cf245f6beaa6d4f7c55a1fc797e5aa40a408bc266b"
+      },
+      "deps/EXPAT/expat/config.cmake.in": {
+        "mode": "100644",
+        "sha256": "3c023385dcaf5442fd6f09b04cae6495c17ff8f72256da8c58cb15009bbd6a85"
+      },
+      "deps/EXPAT/expat/expat.h": {
+        "mode": "100644",
+        "sha256": "f521acdad222644365b0e81a33bcd6939a98c91b225c47582cc84bd73d96febc"
+      },
+      "deps/EXPAT/expat/expat_config.h": {
+        "mode": "100644",
+        "sha256": "50df4158d377d683249688273f34e2f7f9e5af82bf0308e0a84ff6862095a736"
+      },
+      "deps/EXPAT/expat/expat_configure.h.cmake": {
+        "mode": "100644",
+        "sha256": "3954f6a8d773723e99fec76f3c168b5e604e52ca4cd898e0e0b81dc11b8f8c5b"
+      },
+      "deps/EXPAT/expat/expat_external.h": {
+        "mode": "100644",
+        "sha256": "47b7ff4fd27624444818dba5831b64ebe652462f6d152ac9f4f4bc76ace7f12b"
+      },
+      "deps/EXPAT/expat/iasciitab.h": {
+        "mode": "100644",
+        "sha256": "ad8b01e9f323cc4208bcd22241df383d7e8641fe3c8b3415aa513de82531f89f"
+      },
+      "deps/EXPAT/expat/internal.h": {
+        "mode": "100644",
+        "sha256": "d2efe5a1018449968a689f444cca432e3d5875aba6ad08ee18ca235d64f41bb9"
+      },
+      "deps/EXPAT/expat/latin1tab.h": {
+        "mode": "100644",
+        "sha256": "eab66226da100372e01e42e1cbcd8ac2bbbb5c1b5f95d735289cc85c7a8fc2ba"
+      },
+      "deps/EXPAT/expat/nametab.h": {
+        "mode": "100644",
+        "sha256": "67dcf415d37a4b692a6a8bb46f990c02d83f2ef3d01a65cd61c8594a084246f2"
+      },
+      "deps/EXPAT/expat/siphash.h": {
+        "mode": "100644",
+        "sha256": "fbce56cd680e690043bbf572188cc2d0a25dbfc0d47ac8cb98eb3de768d4e694"
+      },
+      "deps/EXPAT/expat/utf8tab.h": {
+        "mode": "100644",
+        "sha256": "8cd26bd461d334d5e1caedb3af4518d401749f2fc66d56208542b29085159c18"
+      },
+      "deps/EXPAT/expat/xmlparse.c": {
+        "mode": "100644",
+        "sha256": "5e5c91ab0f10a41c94e6359947033e43c24615d30921fbbae33e266239568335"
+      },
+      "deps/EXPAT/expat/xmlrole.c": {
+        "mode": "100644",
+        "sha256": "c6c2a7f3f67a1257e7906ed345931a1494330ff85255818ab0bbe61c486c69e4"
+      },
+      "deps/EXPAT/expat/xmlrole.h": {
+        "mode": "100644",
+        "sha256": "2b5d674be6ef20c7e3f69295176d75e68c5616e4dfce0a186fdd5e2ed8315f7a"
+      },
+      "deps/EXPAT/expat/xmltok.c": {
+        "mode": "100644",
+        "sha256": "120ea6433a86c67418e6c06df17c282d7a77c337caf55bf5ea289182b5cb9495"
+      },
+      "deps/EXPAT/expat/xmltok.h": {
+        "mode": "100644",
+        "sha256": "4299a03828b98bfe47ec6809f6e279252954a9a911dc7e0f19551bd74e3af971"
+      },
+      "deps/EXPAT/expat/xmltok_impl.h": {
+        "mode": "100644",
+        "sha256": "f05ad4fe5e98429a7349ff04f57192cac58c324601f2a2e5e697ab0bc05d36d5"
+      },
+      "deps/EXPAT/expat/xmltok_impl.inc": {
+        "mode": "100644",
+        "sha256": "0fbcba7931707c60301305dab78d2298d96447d0a5513926d8b18135228c0818"
+      },
+      "deps/EXPAT/expat/xmltok_ns.inc": {
+        "mode": "100644",
+        "sha256": "6ce6d03193279078d55280150fe91e7370370b504a6c123a79182f28341f3e90"
+      },
+      "deps/Eigen/Eigen.cmake": {
+        "mode": "100644",
+        "sha256": "2c6a9c26ba9a81d44ac7f82f7e6b6ac2d649a418c1f21bc5d9cbb8c8fe1c099f"
+      },
+      "deps/FREETYPE/FREETYPE.cmake": {
+        "mode": "100644",
+        "sha256": "a39b2280da5fa33f180187c05dd38ca9f7c69e64d13abdef7f5a8eb937c2fb86"
+      },
+      "deps/GLEW/GLEW.cmake": {
+        "mode": "100644",
+        "sha256": "0036f15bf783a00b8a25a069398779ea733b05be9d4eb3481c181b8204e1c483"
+      },
+      "deps/GLEW/glew/CMakeLists.txt": {
+        "mode": "100644",
+        "sha256": "7ff539d7cc5fbbff03fc271477ddc8c82f555ba0758cfb72e4a74dcbfb8fdb84"
+      },
+      "deps/GLEW/glew/LICENSE.txt": {
+        "mode": "100644",
+        "sha256": "8991cd11befec7c6a63662700f03c0cc42e864b6e77c7e70b80297c951a7f0ff"
+      },
+      "deps/GLEW/glew/README.md": {
+        "mode": "100644",
+        "sha256": "f327e3627707adee1cecb73a5ebdb3efb31c32f4d205d1e793c9baa47181c1c7"
+      },
+      "deps/GLEW/glew/VERSION": {
+        "mode": "100644",
+        "sha256": "c4a2383a03bdb6739d16a0e24058e4b9c7da4e63d203e0be2f448868cc03c530"
+      },
+      "deps/GLEW/glew/include/GL/eglew.h": {
+        "mode": "100644",
+        "sha256": "ee79be7fd5a4e0cacdf084c0e8b8a91f6d5b584bebea5eb029a6c818bb52e134"
+      },
+      "deps/GLEW/glew/include/GL/glew.h": {
+        "mode": "100644",
+        "sha256": "d3a05edf0b6c45bdbdb5704cacfa68a4666ae682e09b7970bb7310d38cfc3d0e"
+      },
+      "deps/GLEW/glew/include/GL/glxew.h": {
+        "mode": "100644",
+        "sha256": "3636de3f32d25e85d45a7d4e54d82a805a4552f89f58255624efe7357352ec52"
+      },
+      "deps/GLEW/glew/include/GL/wglew.h": {
+        "mode": "100644",
+        "sha256": "f9cca214f4d1937068d42de9be921b37a6d86e90c090b8a1b9649231be053c8d"
+      },
+      "deps/GLEW/glew/src/glew.c": {
+        "mode": "100644",
+        "sha256": "1854f4a3607cc6fa8efdd915a8077c24073d2dd837fccc488af64ac2aafe2ac0"
+      },
+      "deps/GLFW/GLFW.cmake": {
+        "mode": "100644",
+        "sha256": "54ac38a9f130888b13a16bc7b0b968dd75d5ec92b492561906085df2557db151"
+      },
+      "deps/GMP/0001-GMP_GCC15.patch": {
+        "mode": "100644",
+        "sha256": "ace8e93b71a92b0d2e76d64aff6d73f35ba512d2b14610d926467ae6b9181379"
+      },
+      "deps/GMP/GMP.cmake": {
+        "mode": "100644",
+        "sha256": "f77912105468a10276243286a166827691a2a30bdfd509b1290fd90245eeae8d"
+      },
+      "deps/GMP/gmp/gmp.COPYING": {
+        "mode": "100644",
+        "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+      },
+      "deps/GMP/gmp/gmp.README": {
+        "mode": "100644",
+        "sha256": "92903b0c50dab829a85c606ca1617984410f565a76ab160b7a1262fe218f13cc"
+      },
+      "deps/GMP/gmp/include/gmp.h": {
+        "mode": "100644",
+        "sha256": "6b7a4c57b819b6c5af8f8255c6e8800694c1b53b8f8e09c167e7d3779e6d6505"
+      },
+      "deps/GMP/gmp/lib/win-arm64/libgmp-10.dll": {
+        "mode": "100644",
+        "sha256": "bfc6046e374a27838b54bde5602851c7cc426ac9438cb65f019b9e67a961f47c"
+      },
+      "deps/GMP/gmp/lib/win-arm64/libgmp-10.lib": {
+        "mode": "100644",
+        "sha256": "cdd06f164485e6ca4bd826ce5e004aa56fba238e27aaeb65c2648203cc7f3cea"
+      },
+      "deps/GMP/gmp/lib/win-x64/libgmp-10.dll": {
+        "mode": "100644",
+        "sha256": "fec43cb18ce0ec8a5dd6ad1db745747167310ccb92b5acff0d445a8b3013f009"
+      },
+      "deps/GMP/gmp/lib/win-x64/libgmp-10.lib": {
+        "mode": "100644",
+        "sha256": "63fbb59cd3b7879f71cf2d3d9133f6edcd6d6afb122a1fff085afb7c2f486f0f"
+      },
+      "deps/GMP/gmp/lib/win-x86/libgmp-10.dll": {
+        "mode": "100644",
+        "sha256": "9be85bd8468363703304d0bbd059c9709dba270d0ff5a1a94823cb5dbbfa5f20"
+      },
+      "deps/GMP/gmp/lib/win-x86/libgmp-10.lib": {
+        "mode": "100644",
+        "sha256": "9674fa6d52911540f62f332a9791413a6bbbb178769e9138e0013a3bc38fc533"
+      },
+      "deps/JPEG/JPEG.cmake": {
+        "mode": "100644",
+        "sha256": "d599e5e0c68d8c46661c37c0dc3986c5f8ce2d2bd19b6fa54c39d266cff98d9c"
+      },
+      "deps/MPFR/MPFR.cmake": {
+        "mode": "100644",
+        "sha256": "570588bf5fd4a33d9b0d848e400e961763462f9a83a782476ffd6b4100068e2a"
+      },
+      "deps/MPFR/mpfr/include/mpf2mpfr.h": {
+        "mode": "100644",
+        "sha256": "656ee5c68af6e0b76ed08c5c919ab0f51b8670207f4499c30a55fcf04266dacf"
+      },
+      "deps/MPFR/mpfr/include/mpfr.h": {
+        "mode": "100644",
+        "sha256": "05d2d1c356fe541c67ba8660efc0384fe56714149cff2bd896c387e931e7fd95"
+      },
+      "deps/MPFR/mpfr/lib/win-arm64/libmpfr-4.dll": {
+        "mode": "100644",
+        "sha256": "1d40ba1c45f7d50db814dc6a1ddb8bb3d4d50ade6905b77d39bc764f0fe09f12"
+      },
+      "deps/MPFR/mpfr/lib/win-arm64/libmpfr-4.lib": {
+        "mode": "100644",
+        "sha256": "a2aeeae2225c566e80b3ad2a0c4125e149931cdb49b377679488b4790de229a8"
+      },
+      "deps/MPFR/mpfr/lib/win-x64/libmpfr-4.dll": {
+        "mode": "100644",
+        "sha256": "09b3b868b96433991fc15c9c5ae6f9a44c62d2e21194110442607917391ed927"
+      },
+      "deps/MPFR/mpfr/lib/win-x64/libmpfr-4.lib": {
+        "mode": "100644",
+        "sha256": "db89bd46fcbbd99b56197284e5593b3f9ce744ccb8ead9aebee9b714bd2547dc"
+      },
+      "deps/MPFR/mpfr/lib/win-x86/libmpfr-4.dll": {
+        "mode": "100644",
+        "sha256": "5a72d472e892efd7d94ea287eda354637394805c2f445edec051b5c0a3d0f55b"
+      },
+      "deps/MPFR/mpfr/lib/win-x86/libmpfr-4.lib": {
+        "mode": "100644",
+        "sha256": "6f197ddc372b946a4c2ba211406892d355a5cd5e74ee72fe694f8b5d1efe384a"
+      },
+      "deps/MPFR/mpfr/mpfr.COPYING": {
+        "mode": "100644",
+        "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+      },
+      "deps/MPFR/mpfr/mpfr.COPYING.LESSER": {
+        "mode": "100644",
+        "sha256": "a853c2ffec17057872340eee242ae4d96cbf2b520ae27d903e1b2fef1a5f9d1c"
+      },
+      "deps/MPFR/mpfr/mpfr.README": {
+        "mode": "100644",
+        "sha256": "2e6f4a0acca5bdfd450409d294e187db48413bf71ac2b4fec3fe9a3287ac505e"
+      },
+      "deps/NLopt/NLopt.cmake": {
+        "mode": "100644",
+        "sha256": "f42848ba44ce6daf26cf77fea20a33800cde5d987162d12dccf12d7493fd7fb8"
+      },
+      "deps/NanoSVG/NanoSVG.cmake": {
+        "mode": "100644",
+        "sha256": "4121df96b23490ff3aadb614b3487c0c6287f6a5cfe13860651a9399a5cdffe3"
+      },
+      "deps/OCCT/0001-OCCT-fix.patch": {
+        "mode": "100644",
+        "sha256": "19612fa2f76f549ee03699a46963bc81956cd6d8278cd93ad8822729638e22b7"
+      },
+      "deps/OCCT/OCCT.cmake": {
+        "mode": "100644",
+        "sha256": "31c7bd55241e3d2e14b0c1666cf83722245aa73e942db226741339de769940c9"
+      },
+      "deps/OpenCSG/CMakeLists.txt.in": {
+        "mode": "100644",
+        "sha256": "1cf58af74ced28516f41b65d9052a5addeaf8df3328d87a906194c987666f72c"
+      },
+      "deps/OpenCSG/OpenCSG.cmake": {
+        "mode": "100644",
+        "sha256": "bb3dfc8fb15e328985d1fd9966fa0cce763a632e3e1819c7928d374b21083d0b"
+      },
+      "deps/OpenCV/0001-vs.patch": {
+        "mode": "100644",
+        "sha256": "b2a1bcfd5a202e6eb0ca00a973bda1a824ab1e2ec4d49870a03ece26ce442311"
+      },
+      "deps/OpenCV/0002-clang19-macos.patch": {
+        "mode": "100644",
+        "sha256": "f23ed51c11cf879630c4db91d25be73cb5d0fe142d7e42e8ec41e7e4a75eabe2"
+      },
+      "deps/OpenCV/OpenCV.cmake": {
+        "mode": "100644",
+        "sha256": "64438e09ed6c726cd559a0c93aba8ce1013e100856b7c3e1ae370120ae97722f"
+      },
+      "deps/OpenEXR/0001-OpenEXR-GCC13.patch": {
+        "mode": "100644",
+        "sha256": "afe3de675d90107c2084c3f0fff9812463b5c83ecec429b5ef10b794ef4e2941"
+      },
+      "deps/OpenEXR/OpenEXR.cmake": {
+        "mode": "100644",
+        "sha256": "cea0a16b2b6b6ec8059021d7cf17ceba410962ab7fa679b7a1ce81348e8eb3e3"
+      },
+      "deps/OpenEXR/patch_openexr_arm64.cmake": {
+        "mode": "100644",
+        "sha256": "26dbda88f6d2a66e218deee6b5f5ca42fb7ccb67a2b257e1ba1477f0c4adb2a3"
+      },
+      "deps/OpenSSL/OpenSSL.cmake": {
+        "mode": "100644",
+        "sha256": "136df65e59b38888acd36152e7d6bd1f668146cb735833892eaf192387539905"
+      },
+      "deps/OpenSSL/openssl/openssl-config-version.cmake": {
+        "mode": "100644",
+        "sha256": "66ab1f57ab974caf59f4906ef05bec1d824526decb9e46ba7eda100f49d36972"
+      },
+      "deps/OpenSSL/openssl/openssl-config.cmake": {
+        "mode": "100644",
+        "sha256": "8e6d7b1a1e5fb31ceb40efa3bc5210f0e35428cb0108327077f33d55b067f4c0"
+      },
+      "deps/OpenSSL/openssl/openssl-targets-debug.cmake": {
+        "mode": "100644",
+        "sha256": "5b5665b8c1b1319bc53978fc5b8cf1c88da36b6763b39fa76c64eb5cf2d2ae9b"
+      },
+      "deps/OpenSSL/openssl/openssl-targets-release.cmake": {
+        "mode": "100644",
+        "sha256": "71c3f595226c66f21051ce739eb13771d7fc96de89577bddec796c19c9ed47c6"
+      },
+      "deps/OpenSSL/openssl/openssl-targets-relwithdebinfo.cmake": {
+        "mode": "100644",
+        "sha256": "d13f9d707a1e13de167f92f2d2e5975edce75f9202581c8731fc70ea493c47b2"
+      },
+      "deps/OpenSSL/openssl/openssl-targets.cmake": {
+        "mode": "100644",
+        "sha256": "15fcd8f2a392940c950fed88a858cf8659dc170143c9430b77a267875af530d5"
+      },
+      "deps/OpenVDB/0001-clang19.patch": {
+        "mode": "100644",
+        "sha256": "4817da3be903133771fd9543b25fcb94df74fc87cbaa95482930b664998e4128"
+      },
+      "deps/OpenVDB/OpenVDB.cmake": {
+        "mode": "100644",
+        "sha256": "c9d3edea2bf227f1e81f3e4bc6ea310cc441911349dcd331317ed7df9529b876"
+      },
+      "deps/PNG/0002-clang19-macos.patch": {
+        "mode": "100644",
+        "sha256": "dc327589fd8d75b9e89f7a04c7414d8e6fc9bc2c87d087d94cd39325326aa9c5"
+      },
+      "deps/PNG/PNG.cmake": {
+        "mode": "100644",
+        "sha256": "2aac7fc720475df3470ed06912dfcdaf27b8079e3a5b19463677c3ed606327d5"
+      },
+      "deps/PNG/PNG.patch": {
+        "mode": "100644",
+        "sha256": "eb401cb5844af144446da49685f8a799ff9ac1d6b0c3594b4db47ff0294d0b5e"
+      },
+      "deps/PNG/macos-arm64.patch": {
+        "mode": "100644",
+        "sha256": "660de5f6a475fb97d6a392a9509f3baeb31ac8153b93225148b9ca8e649fffbd"
+      },
+      "deps/Qhull/Qhull.cmake": {
+        "mode": "100644",
+        "sha256": "c02ce31cd2ad10f53cd6ac35d910f1dbd3f6b1988fb53e1c43e4e7fe0583d3a3"
+      },
+      "deps/TBB/0001-TBB-GCC13.patch": {
+        "mode": "100644",
+        "sha256": "838bb599196f7182b3bc9c1e33e5fe0ae161fb707f1137092429dd1272ef5406"
+      },
+      "deps/TBB/GNU.cmake": {
+        "mode": "100644",
+        "sha256": "62f49f9c8a0886ef0ce1b7e026dbd5f0eb23cf1ab5882d5e3b62bf392b32ffc7"
+      },
+      "deps/TBB/TBB.cmake": {
+        "mode": "100644",
+        "sha256": "28cc7b024e13a132bed4bb574b7825fa32f3a80dcb2517b50ed92ae58523cea8"
+      },
+      "deps/WebView2/include/WebView2.h": {
+        "mode": "100644",
+        "sha256": "9388685f076cbd43a3020a003855a02fb869385fb5761828a19de4e294ff6f1b"
+      },
+      "deps/WebView2/include/WebView2EnvironmentOptions.h": {
+        "mode": "100644",
+        "sha256": "0504ee85b9020d5f12fa8c89d1a16fc106ccaa5d9d462fc171aae21d0c0e3160"
+      },
+      "deps/WebView2/lib/win-arm64/WebView2Loader.dll": {
+        "mode": "100644",
+        "sha256": "ed612efe24805fd695780a8e36325d97b3ea1a3a4a072faa139aa70e7ce705ba"
+      },
+      "deps/WebView2/lib/win-arm64/WebView2Loader.dll.lib": {
+        "mode": "100644",
+        "sha256": "d70271daa44507865ca0696cd1c1ede5e58e694eec74cb2d06e17dbbe205e9a2"
+      },
+      "deps/WebView2/lib/win-arm64/WebView2LoaderStatic.lib": {
+        "mode": "100644",
+        "sha256": "f7493843cd41033a7a1bddba294af4128802c4b20c09455147f83b39501ca336"
+      },
+      "deps/WebView2/lib/win-x64/WebView2Loader.dll": {
+        "mode": "100644",
+        "sha256": "2d64a312551930dc56612cf358fcfd23133c0596a88c3ec1c467c392ff00b493"
+      },
+      "deps/WebView2/lib/win-x64/WebView2Loader.dll.lib": {
+        "mode": "100644",
+        "sha256": "bfc8ccaaa056be95243a5b66a827e5849d2bb39676fca4dcc2053796d8e15c6d"
+      },
+      "deps/WebView2/lib/win-x64/WebView2LoaderStatic.lib": {
+        "mode": "100644",
+        "sha256": "48d4cbe7da38441950b1f8139aff9dcf95663d497db6f9e2b22d86e4e56b4a25"
+      },
+      "deps/WebView2/lib/win-x86/WebView2Loader.dll": {
+        "mode": "100644",
+        "sha256": "b97b715fa907cfa2a18ad4bae99e1186ee5304e9fa968bf8b9bd3f1e1030b4d7"
+      },
+      "deps/WebView2/lib/win-x86/WebView2Loader.dll.lib": {
+        "mode": "100644",
+        "sha256": "a3ec0ee539d58fe72391f2e89cb814f96fab721c6d8d30953d152ea95dffad49"
+      },
+      "deps/WebView2/lib/win-x86/WebView2LoaderStatic.lib": {
+        "mode": "100644",
+        "sha256": "c4668b7c664768bc34606b8467f8ac5418d2d27ec2b7ba700a7eb97cb130dcf4"
+      },
+      "deps/ZLIB/0001-Respect-BUILD_SHARED_LIBS.patch": {
+        "mode": "100644",
+        "sha256": "947d7f5c0515836e1c06562021125eabacbab523136e262b591f066c51eca9e5"
+      },
+      "deps/ZLIB/ZLIB.cmake": {
+        "mode": "100644",
+        "sha256": "2ea540741bb617f9b590d1bf123bc708a4c092b0a6a1badd418dc6fe4cd73e2b"
+      },
+      "deps/deps-linux.cmake": {
+        "mode": "100644",
+        "sha256": "0d2d02a37b9615126ceaf07d89736b63b21bf40955c62d6ff898cd439589fd5e"
+      },
+      "deps/deps-macos.cmake": {
+        "mode": "100644",
+        "sha256": "1b380adaa6efa7cf3ee185e905197c3edb96f026a495c87bb8e5150b54d3b81d"
+      },
+      "deps/deps-mingw.cmake": {
+        "mode": "100644",
+        "sha256": "6f51b7730d56c945d33844629861b77743876f6b9c103517a96f1485c293096c"
+      },
+      "deps/deps-unix-common.cmake": {
+        "mode": "100644",
+        "sha256": "55b5bc5e8750c909607164aa230575dcc77a806cb52290501a1dace7d0bf1a35"
+      },
+      "deps/deps-windows.cmake": {
+        "mode": "100644",
+        "sha256": "cebda524a07265bbcfd018912f7bc45ad3607149d96cefcc20676dce00dcf404"
+      },
+      "deps/libnoise/libnoise.cmake": {
+        "mode": "100644",
+        "sha256": "3152262d919b254e18a49df2880c2a2df4e416adb4741389e3a9bb5e5636625b"
+      },
+      "deps/wxWidgets/wxWidgets.cmake": {
+        "mode": "100644",
+        "sha256": "a02f9fcff4278d85c44d39f57b6c2ecdaad028eb95ff45c3ce4f23bcb0e92cec"
+      },
+      "docs/nonplanar/upstream/orca.lock.json": {
+        "mode": "100644",
+        "sha256": "ea4f0f51f0530d8c932eae642c4eac631c096790398c8dcaf139b53360c4e807"
+      },
+      "scripts/linux.d/README.md": {
+        "mode": "100644",
+        "sha256": "a983d14348a4a9538903fa6ef0c8257aeb090d1ebdf473efb1ea97d162bc0599"
+      },
+      "scripts/linux.d/arch": {
+        "mode": "100644",
+        "sha256": "6c32127124b74a437c7ad2a8309bfe69f58f02e49107c707fc5fb9c8ed9c8e41"
+      },
+      "scripts/linux.d/cachyos": {
+        "mode": "100644",
+        "sha256": "6bb4709ccdd9b1bb24227153ba11bb619814c2985e03cd37a98f8f44d3a96ce3"
+      },
+      "scripts/linux.d/clear-linux-os": {
+        "mode": "100644",
+        "sha256": "fb8c8a5ba577e8e1b1125ec9e43ef9de97bc66a0716dfe9fb5e7ee0dcdd2edae"
+      },
+      "scripts/linux.d/debian": {
+        "mode": "100644",
+        "sha256": "c343a1c59bc211bae3f1fdd05e176715367d5ce6e37cdd7bc11f43e512bd23b1"
+      },
+      "scripts/linux.d/fedora": {
+        "mode": "100644",
+        "sha256": "5a2e519ecfbb4414a289d1389ecbe4e66440573526260a5c88470a6c55bfacf5"
+      },
+      "scripts/linux.d/gentoo": {
+        "mode": "100644",
+        "sha256": "28abfd6089de44f55941e1fff4764c4bff0298971bee8b573eb8efc674c6cfb7"
+      },
+      "scripts/linux.d/suse": {
+        "mode": "100644",
+        "sha256": "21a2f82f99c7041b9b49f999f9f186ff50bdfeffbd1d58b808c18dba10000890"
+      },
+      "scripts/nonplanar/deps_cache_key.py": {
+        "mode": "100644",
+        "sha256": "e4bac178c1477f0e6c43ab58e38ed328b4698e218a63e22a881d1e86e036af03"
+      },
+      "version.inc": {
+        "mode": "100644",
+        "sha256": "02957b75459a0acb828980236d58660d078e27bb31d414a279b23f776c88d13d"
+      }
+    },
+    "environment": {
+      "validation": "SIMULATED_ENVIRONMENT_IDENTITY_ONLY_NOT_LINUX_EXECUTION"
+    },
+    "build_command": [
+      "./build_linux.sh",
+      "-drlL",
+      "-j",
+      "2"
+    ],
+    "install_prefix": "/Users/antonfilatov/www/my/orca-nonplanar/deps/build/OrcaSlicer_dep/usr/local"
+  }
+}

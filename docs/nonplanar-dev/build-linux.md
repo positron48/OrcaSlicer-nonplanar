@@ -38,3 +38,7 @@ The diagnostic CLI command separately lacked the Release directory selected by
 probe confirms this layout; it is not Linux execution or a fix for the earlier
 selected-test failure, which precedes this CLI step. Evidence is retained under
 `evidence/ci-cli-layout/`.
+
+`ci-deps-cache.md` documents exact installed-dependency reuse for subsequent
+runs. Local key invalidation tests pass; live cache restore/save is unverified.
+The current native-test failure remains separate and unresolved.

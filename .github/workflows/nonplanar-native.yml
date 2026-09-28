@@ -12,6 +12,13 @@ on:
       - 'tests/nonplanar/**'
       - 'tests/fff_print/**'
       - 'scripts/nonplanar/**'
+      - 'deps/**'
+      - 'cmake/**'
+      - 'scripts/linux.d/**'
+      - 'build_linux.sh'
+      - 'CMakeLists.txt'
+      - 'version.inc'
+      - 'docs/nonplanar/upstream/orca.lock.json'
 permissions:
   contents: read
 concurrency:
@@ -37,8 +44,35 @@ jobs:
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/package.log -- python3 docs/nonplanar/scripts/validate_package.py
       - name: System dependencies on disposable runner
         run: sudo ./build_linux.sh -ur
+      - name: Identify exact dependency source and runner environment
+        id: deps_identity
+        run: python3 scripts/nonplanar/deps_cache_key.py --output build/nonplanar-evidence/linux/deps-cache-inputs.json --github-output "$GITHUB_OUTPUT"
+      - name: Restore exact installed dependencies
+        id: deps_cache
+        uses: actions/cache/restore@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: deps/build/OrcaSlicer_dep
+          key: ${{ steps.deps_identity.outputs.key }}
       - name: Build pinned dependency sources
+        if: steps.deps_cache.outputs.cache-hit != 'true'
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/deps.log -- ./build_linux.sh -drlL -j 2
+      # Save after dependency success, even if the later native test gate fails.
+      - name: Preserve completed dependency installation
+        if: steps.deps_cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@caa296126883cff596d87d8935842f9db880ef25 # v5
+        with:
+          path: deps/build/OrcaSlicer_dep
+          key: ${{ steps.deps_identity.outputs.key }}
+      - name: Record dependency reuse separately from a fresh build
+        env:
+          DEPENDENCIES_CACHE_HIT: ${{ steps.deps_cache.outputs.cache-hit }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          state = 'RESTORED_EXACT_CACHE' if os.environ['DEPENDENCIES_CACHE_HIT'] == 'true' else 'BUILT_THIS_RUN'
+          Path('build/nonplanar-evidence/linux/deps-origin.json').write_text(json.dumps({'status': state}) + '\n')
+          PY
       - name: Build native application and tests
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/build.log -- ./build_linux.sh -strlL -j 2
       - name: Execute nonempty selected native suites
