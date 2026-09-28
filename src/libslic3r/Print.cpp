@@ -1261,6 +1261,8 @@ StringObjectException Print::check_multi_filament_valid(const Print& print)
 std::string Print::nonplanar_block_reason() const
 {
     if (!nptop::requests_guarded_mode(model(), full_print_config())) return {};
+    if (const auto conflict = nptop::model_custom_code_conflict(model()))
+        return "Nonplanar Top Lab: " + conflict->key + " = " + conflict->value + ": " + conflict->reason;
     const auto conflict_reason = [&](const ConfigBase &config) -> std::string {
         const auto policy = nptop::resolve_policy(config, m_objects.size(), num_object_instances());
         if (policy.conflicts.empty()) return {};

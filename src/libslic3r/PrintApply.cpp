@@ -1,6 +1,7 @@
 #include "ClipperUtils.hpp"
 #include "Model.hpp"
 #include "Print.hpp"
+#include "Nonplanar/Policy.hpp"
 
 #include <boost/log/trivial.hpp>
 #include <cfloat>
@@ -1320,6 +1321,14 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
                 // There is no change in Tool Changes stored in custom_gcode_per_print_z, therefore there is no need to update Tool Ordering.
                 this->invalidate_step(psGCodeExport));
             m_model.plates_custom_gcodes[m_model.curr_plate_index] = model.get_curr_plate_custom_gcodes();
+        }
+        // The guarded single-plate domain diagnoses all source plate actions,
+        // including inactive ones. Stock synchronization above remains intact.
+        if (nptop::requests_guarded_mode(model, new_full_config) &&
+            m_model.plates_custom_gcodes != model.plates_custom_gcodes) {
+            this->call_cancel_callback();
+            update_apply_status(this->invalidate_step(psGCodeExport));
+            m_model.plates_custom_gcodes = model.plates_custom_gcodes;
         }
         if (model_object_list_equal(m_model, model)) {
             // The object list did not change.

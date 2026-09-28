@@ -15,7 +15,7 @@
     "A06": "BOUNDED_NATIVE_SERIALIZATION_REPLAY_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A07": "SIMULATION_CONTRACT_NATIVE_TESTS_PASS_OPERATOR_EVIDENCE_NOT_RUN_REVIEW_PENDING",
     "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_SPHERE_COUPON_PREPARATION_COMPLETE_INDEPENDENT_REVIEW_PENDING",
-    "B01": "BOUNDED_NATIVE_MODE_PREFLIGHT_AND_OUTPUT_BLOCKS_PASS_COMPATIBILITY_REGISTRY_PENDING",
+    "B01": "NATIVE_PREFLIGHT_OUTPUT_BLOCKS_AND_CODE_HOOK_REGISTRY_PASS_FULL_COMPATIBILITY_PENDING",
     "B02": "BOUNDED_IMPORT_FILE_CLI_AND_NATIVE_PLACEMENT_PASS_MODEL_JOB_GUI_HARD_LIMITS_PENDING"
   },
   "executed_checks": {
@@ -28,7 +28,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 90,
+    "new_native_cases": 95,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -44,8 +44,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 127,
-    "final_ctest_executed": 127,
+    "final_ctest_discovered": 132,
+    "final_ctest_executed": 132,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -110,7 +110,12 @@
     "B02_numeric_callback_assertions": 17,
     "B02_numeric_callback_regression": "RED_EXIT_42_EIGHT_FAILURES_THEN_FIXED_PASS",
     "A01_current_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
-    "A01_gui": "ISOLATED_IMPORT_SLICE_PREVIEW_AND_QUIT_PASS"
+    "A01_gui": "ISOLATED_IMPORT_SLICE_PREVIEW_AND_QUIT_PASS",
+    "B01_custom_hook_cases": 5,
+    "B01_current_cases": 13,
+    "B01_current_assertions": 286,
+    "B01_custom_hook_registry_keys": 17,
+    "B01_hooks_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -151,7 +156,8 @@
     "B02_worker": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/StlWorker.cpp",
     "B02_file": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/StlFile.cpp",
     "B02_placement": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/MeshPlacement.cpp",
-    "B02_numeric_callback": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B02-callback.md"
+    "B02_numeric_callback": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B02-callback.md",
+    "B01_hooks": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-hooks.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -169,5 +175,6 @@
   "B02_file_evidence": "docs/nonplanar-dev/evidence/B02-file/source-manifest.json",
   "B02_placement_evidence": "docs/nonplanar-dev/evidence/B02-placement/source-manifest.json",
   "B02_numeric_callback_evidence": "docs/nonplanar-dev/evidence/B02-callback/source-manifest.json",
-  "A01_gui_evidence": "docs/nonplanar-dev/evidence/A01-gui/source-manifest.json"
+  "A01_gui_evidence": "docs/nonplanar-dev/evidence/A01-gui/source-manifest.json",
+  "B01_hooks_evidence": "docs/nonplanar-dev/evidence/B01-hooks/source-manifest.json"
 }

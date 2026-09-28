@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="0" skipped="0" tests="286" hostname="tbd" time="0.046" timestamp="2026-09-28T12:39:03Z">
+    <properties>
+      <property name="random-seed" value="4158000506"/>
+      <property name="filters" value="[B01]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B01 code registry covers the native definitions and checks every vector entry" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B01 embedded G-code rejects guarded mode without touching existing files" time="0.009" status="run">
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 policy rejects conflicting resolved transforms and missing settings" time="0.003" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B01 source code checks retain sparse override provenance" time="0.006" status="run">
+      <system-out>
+st=1, 
+st=1, 
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 actual resolved hooks and plate actions diagnose guarded publication" time="0.006" status="run">
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 policy copies resolved values and accepts only supported planning modes" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B01 every native custom code hook is rejected before compatibility acceptance" time="0.004" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B01 native paths block guarded mode before any output file or cached result" time="0.003" status="run">
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 mode changes invalidate a cached export and preserve unknown serialized modes" time="0.002" status="run">
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="ORC-10 policy diagnoses an incompatible resolved region override" time="0.003" status="run">
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 default OFF remains stock and object region overrides cannot enable export" time="0.002" status="run">
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 publication detects unresolved volume and layer overrides" time="0.004" status="run">
+      <system-out>
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 custom hook preflight rejects missing wrong typed and future fields" time="0.001" status="run"/>
+    <system-out>
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1,
+    </system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>

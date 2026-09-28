@@ -107,3 +107,9 @@ requires independent review; digital coupon preparation is not physical proof.
 `A01-gui.md` records the fresh full macOS build, six OFF/ZAA comparisons and an
 isolated native GUI import/slice/preview/quit run at `1e0b5b98`. Actual sandbox
 write/network probes pass. Stock coexistence and hybrid GUI remain unverified.
+
+`B01-hooks.md` adds the explicit 17-field native custom-code registry, sparse
+source checks and guarded plate-action invalidation. Thirteen B01 cases pass
+(286 assertions); current selected CTest executes 132/132 and six fresh OFF/ZAA
+comparisons pass. Full compatibility, whole-job snapshots and hybrid success
+remain pending.

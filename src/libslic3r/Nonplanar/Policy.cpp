@@ -1,7 +1,72 @@
 #include "Policy.hpp"
 #include "../Model.hpp"
+#include <algorithm>
 
 namespace Slic3r::nptop {
+const std::map<std::string, CustomCodeRule> &custom_code_policy()
+{
+    static const std::map<std::string, CustomCodeRule> rules = {
+        {"file_start_gcode", {coString}}, {"machine_start_gcode", {coString}},
+        {"machine_end_gcode", {coString}}, {"before_layer_change_gcode", {coString}},
+        {"layer_change_gcode", {coString}}, {"time_lapse_gcode", {coString}},
+        {"wrapping_detection_gcode", {coString}}, {"printing_by_object_gcode", {coString}},
+        {"machine_pause_gcode", {coString}}, {"template_custom_gcode", {coString}},
+        {"change_filament_gcode", {coString}}, {"change_extrusion_role_gcode", {coString}},
+        {"process_change_extrusion_role_gcode", {coString}},
+        {"filament_start_gcode", {coStrings}}, {"filament_end_gcode", {coStrings}},
+        {"filament_change_extrusion_role_gcode", {coStrings}}, {"post_process", {coStrings, true}}
+    };
+    return rules;
+}
+
+namespace {
+std::optional<PolicyConflict> custom_code_conflict(const std::string &key, const ConfigOption *option)
+{
+    const auto rule = custom_code_policy().find(key);
+    if (rule == custom_code_policy().end()) {
+        if (key.find("gcode") != std::string::npos && option &&
+            (option->type() == coString || option->type() == coStrings))
+            return PolicyConflict{key, option->serialize(), "Unknown custom code field requires compatibility audit"};
+        return {};
+    }
+    bool empty = false;
+    if (option && !option->is_nil() && option->type() == rule->second.type) {
+        if (const auto *text = dynamic_cast<const ConfigOptionString *>(option))
+            empty = text->value.empty();
+        else if (const auto *list = dynamic_cast<const ConfigOptionStrings *>(option))
+            empty = rule->second.empty_list ? list->values.empty() :
+                std::all_of(list->values.begin(), list->values.end(), [](const std::string &s) { return s.empty(); });
+    }
+    if (!empty)
+        return PolicyConflict{key, option && !option->is_nil() ? option->serialize() : "<missing>",
+                              "Custom code is unqualified; requires an empty native field"};
+    return {};
+}
+}
+
+std::optional<PolicyConflict> model_custom_code_conflict(const Model &model)
+{
+    for (const auto &[plate, custom] : model.plates_custom_gcodes)
+        if (!custom.gcodes.empty())
+            return PolicyConflict{"plates_custom_gcodes[" + std::to_string(plate) + "]",
+                                  std::to_string(custom.gcodes.size()), "Custom plate actions are unqualified"};
+    const auto inspect = [](const ConfigBase &source) -> std::optional<PolicyConflict> {
+        for (const auto &key : source.keys())
+            if (auto conflict = custom_code_conflict(key, source.option(key))) return conflict;
+        return {};
+    };
+    for (const auto &material : model.materials)
+        if (auto conflict = inspect(material.second->config.get())) return conflict;
+    for (const auto *object : model.objects) {
+        if (auto conflict = inspect(object->config.get())) return conflict;
+        for (const auto *volume : object->volumes)
+            if (auto conflict = inspect(volume->config.get())) return conflict;
+        for (const auto &range : object->layer_config_ranges)
+            if (auto conflict = inspect(range.second.get())) return conflict;
+    }
+    return {};
+}
+
 bool requests_guarded_mode(const ConfigBase &config)
 {
     const auto *option = config.option("nptop_mode");
@@ -49,13 +114,27 @@ PolicySnapshot resolve_policy(const ConfigBase &config, size_t objects, size_t i
         {"spiral_mode", "0"}, {"enable_arc_fitting", "0"},
         {"enable_support", "0"}, {"raft_layers", "0"},
         {"wall_generator", "classic"}, {"fuzzy_skin", "disabled_fuzzy"},
-        {"ironing_type", "no ironing"}, {"seam_slope_type", "none"},
-        {"post_process", ""}
+        {"ironing_type", "no ironing"}, {"seam_slope_type", "none"}
     };
     for (const auto &requirement : requirements) {
         const auto actual = read(requirement.first);
         if (actual != requirement.second)
             conflicts.push_back({requirement.first, actual, std::string("Requires ") + requirement.second});
+    }
+    for (const auto &entry : custom_code_policy()) {
+        read(entry.first);
+        if (auto conflict = custom_code_conflict(entry.first, config.option(entry.first)))
+            conflicts.push_back(std::move(*conflict));
+    }
+    // This detects new textual code hooks in a resolved config. It is not a
+    // complete audit of arbitrary new geometry-affecting settings, nor of keys
+    // discarded earlier by an importer's forward-compatibility substitution.
+    for (const auto &key : config.keys()) {
+        if (custom_code_policy().count(key) == 0)
+            if (auto conflict = custom_code_conflict(key, config.option(key))) {
+                read(key);
+                conflicts.push_back(std::move(*conflict));
+            }
     }
     resolved.emplace("object_count", std::to_string(objects));
     resolved.emplace("instance_count", std::to_string(instances));
