@@ -4,6 +4,8 @@
 #include <string_view>
 
 namespace Slic3r::nptop {
+// Exact byte hashing shared by bounded native source/config snapshots.
+std::string sha256_bytes(std::string_view bytes);
 struct StlSourceSnapshot {
     const std::string bytes;
     const std::string sha256;

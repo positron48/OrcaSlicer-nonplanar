@@ -9,9 +9,12 @@
 #include "../fff_print/test_data.hpp"
 #include <boost/filesystem.hpp>
 #include <cmath>
+#include <cfenv>
 #include <limits>
 #include <cstring>
+#include <set>
 #include <type_traits>
+#include <nlohmann/json.hpp>
 using namespace Slic3r;
 using namespace Slic3r::nptop;
 namespace {
@@ -45,6 +48,112 @@ DynamicPrintConfig eligible()
     }
     return c;
 }
+}
+TEST_CASE("B01 config fingerprint matches independent canonical JSON and SHA256 vectors", "[Nonplanar][B01][B01Fingerprint]")
+{
+    const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/config-fingerprint-v1.json";
+    boost::nowide::ifstream input(path.string());
+    REQUIRE(input.good());
+    nlohmann::json fixtures; input>>fixtures;
+    DynamicConfig source;
+    t_config_enum_values names{{"a",1},{"b",2}};
+    for (const auto &test : fixtures) {
+        if (test.at("name")=="mixed") {
+            source.set_key_value("bool",new ConfigOptionBool(true));
+            source.set_key_value("float",new ConfigOptionFloat(0.1));
+            source.set_key_value("float%",new ConfigOptionFloatOrPercent(0.1,true));
+            source.set_key_value("ints",new ConfigOptionInts{-1,0,2147483647});
+            const uint64_t raw=0x7ff8000000000001ULL; double nil; std::memcpy(&nil,&raw,sizeof nil);
+            source.set_key_value("nil",new ConfigOptionFloatsNullable{nil,-0.,std::numeric_limits<double>::denorm_min()});
+            source.set_key_value("point",new ConfigOptionPoint3(Vec3d(1,2,3)));
+            source.set_key_value("text",new ConfigOptionStrings{"Привет",std::string("line\n\0tail",10)});
+            source.set_key_value("enum",new ConfigOptionEnumGeneric(&names,2));
+        }
+        const ResolvedConfigSnapshot snapshot(source);
+        CHECK(snapshot.canonical_json()==test.at("canonical").get<std::string>());
+        CHECK(snapshot.fingerprint()==test.at("sha256").get<std::string>());
+    }
+}
+TEST_CASE("B01 config identity includes exact values types percent flags and unknown keys", "[Nonplanar][B01][B01Fingerprint]")
+{
+    DynamicConfig source; source.set_key_value("future",new ConfigOptionFloat(0.1));
+    const auto original=ResolvedConfigSnapshot(source).fingerprint();
+    const auto rounded=source.opt_serialize("future");
+    source.option<ConfigOptionFloat>("future")->value=std::nextafter(0.1,1.);
+    REQUIRE(source.opt_serialize("future")==rounded);
+    REQUIRE(ResolvedConfigSnapshot(source).fingerprint()!=original);
+    source.set_key_value("future",new ConfigOptionPercent(0.1));
+    REQUIRE(ResolvedConfigSnapshot(source).fingerprint()!=original);
+    source.set_key_value("future",new ConfigOptionFloatOrPercent(0.1,false));
+    const auto absolute=ResolvedConfigSnapshot(source).fingerprint();
+    source.option<ConfigOptionFloatOrPercent>("future")->percent=true;
+    REQUIRE(ResolvedConfigSnapshot(source).fingerprint()!=absolute);
+    source.set_key_value("another",new ConfigOptionString("unknown but present"));
+    const ResolvedConfigSnapshot owned(source);
+    const auto frozen=owned.fingerprint();
+    source.clear();
+    REQUIRE(owned.fingerprint()==frozen);
+    REQUIRE(ResolvedConfigSnapshot(source).fingerprint()!=frozen);
+}
+TEST_CASE("B01 canonical config captures all actual native options and nested mutations", "[Nonplanar][B01][B01Fingerprint]")
+{
+    const auto full=eligible();
+    const ResolvedConfigSnapshot snapshot(full);
+    REQUIRE(snapshot.fingerprint().size()==64);
+    const auto encoded=nlohmann::json::parse(snapshot.canonical_json());
+    REQUIRE(encoded.at("options").size()==full.keys().size());
+    REQUIRE(encoded.at("schema")==1);
+    DynamicConfig nested;
+    nested.set_key_value("points",new ConfigOptionPointsGroups{{Vec2d(1,2),Vec2d(3,4)}});
+    nested.set_key_value("ints",new ConfigOptionIntsGroups{{1,2},{3}});
+    nested.set_key_value("percents",new ConfigOptionFloatsOrPercents{{1,false},{2,true}});
+    const auto before=ResolvedConfigSnapshot(nested).fingerprint();
+    nested.option<ConfigOptionPointsGroups>("points")->values.front().front().y()=std::nextafter(2.,3.);
+    REQUIRE(ResolvedConfigSnapshot(nested).fingerprint()!=before);
+}
+TEST_CASE("B01 fingerprints preserve enum dictionaries nullable flags and every binary64 bit", "[Nonplanar][B01][B01Fingerprint]")
+{
+    DynamicConfig source;
+    t_config_enum_values names{{"alpha",1},{"beta",2}};
+    source.set_key_value("enum",new ConfigOptionEnumsGeneric(&names,2,1));
+    const ResolvedConfigSnapshot frozen(source);
+    const auto old=frozen.fingerprint();
+    names["future"]=3;
+    REQUIRE(ResolvedConfigSnapshot(source).fingerprint()!=old);
+    names.clear(); source.clear();
+    REQUIRE(frozen.fingerprint()==old);
+    source.set_key_value("vector",new ConfigOptionEnumsGeneric{1,2});
+    const auto required=ResolvedConfigSnapshot(source).fingerprint();
+    source.set_key_value("vector",new ConfigOptionEnumsGenericNullable{1,2});
+    REQUIRE(ResolvedConfigSnapshot(source).fingerprint()!=required);
+    source.clear();
+    std::set<std::string> fingerprints;
+    for (uint64_t bits : {0ULL,0x8000000000000000ULL,1ULL,0x7ff8000000000001ULL,0x7ff8000000000002ULL,0x7ff0000000000000ULL}) {
+        double value; std::memcpy(&value,&bits,sizeof value);
+        source.set_key_value("number",new ConfigOptionFloatsNullable{value});
+        const ResolvedConfigSnapshot snapshot(source);
+        REQUIRE(fingerprints.insert(snapshot.fingerprint()).second);
+        // Hex strings represent raw invalid/nil states without JSON NaN/Inf.
+        REQUIRE(nlohmann::json::parse(snapshot.canonical_json()).is_object());
+    }
+    const auto exact=ResolvedConfigSnapshot(source).canonical_json();
+    struct RestoreRounding { ~RestoreRounding() { std::fesetround(FE_TONEAREST); } } restore;
+    std::fesetround(FE_DOWNWARD);
+    REQUIRE(ResolvedConfigSnapshot(source).canonical_json()==exact);
+}
+TEST_CASE("B01 canonical config rejects unsupported native representations and bounded output overflow", "[Nonplanar][B01][B01Fingerprint]")
+{
+    struct Unsupported : ConfigOptionString {
+        ConfigOptionType type() const override { return coNone; }
+        ConfigOption *clone() const override { return new Unsupported(*this); }
+    };
+    DynamicConfig source; source.set_key_value("unsupported",new Unsupported);
+    REQUIRE_THROWS_AS(ResolvedConfigSnapshot(source).canonical_json(),ConfigurationError);
+    source.clear(); source.set_key_value("large",new ConfigOptionString(std::string(2*1024*1024,'x')));
+    REQUIRE_THROWS_AS(ResolvedConfigSnapshot(source).canonical_json(),std::length_error);
+    source.clear();
+    for (int i=0; i<4097; ++i) source.set_key_value(std::to_string(i),new ConfigOptionInt(i));
+    REQUIRE_THROWS_AS(ResolvedConfigSnapshot(source).fingerprint(),std::length_error);
 }
 TEST_CASE("B01 single tool rejects extra diameters maps offsets and malformed native values", "[Nonplanar][B01][B01SingleTool]")
 {

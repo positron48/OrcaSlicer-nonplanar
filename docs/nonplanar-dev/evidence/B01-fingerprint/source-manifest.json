@@ -1,0 +1,20 @@
+{
+  "base_commit": "c30be4c1d489aa65b386bd10da3c0083a306f02e",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-fingerprint.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/Policy.hpp": "95cbc1e1afc87241b5558cdd03952e741f685059cc1d63ef313331035c0b54f4",
+    "src/libslic3r/Nonplanar/Policy.cpp": "1db5e76f5b1dd40e6a33f7010dab7d86d2c3d3a80c3c748f9117a4b6643c14ed",
+    "src/libslic3r/Nonplanar/StlImport.hpp": "48ee14df185fe7ca1b1af12c2e41b193c6f3bf90d72fe89fb48c205601b46330",
+    "src/libslic3r/Nonplanar/StlImport.cpp": "4cd196babb5a7f63b4b4bb19429b023acd341be0190c39169ef663bf2cb1ad9d",
+    "tests/nonplanar/test_policy.cpp": "8737ac98902b34c9e43cd1823bba025f132274dde4b2a3abbc5b6f21c879f4d2",
+    "scripts/nonplanar/config_fingerprint_oracle.py": "cb504fb584948fb7e3ed2d5f1d062f35c86a3cc2b30283432180edfb47fce0f9",
+    "tests/nonplanar/data/config-fingerprint-v1.json": "7a3bc3c2acbcd1dc7ad2715b8b0ea1d57f8c19835814897daf79675577e5960e"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "c9581c2bba5460d1a3003d72c0f02458d134a38fb3bfc92181a33d4bfa7e5e99",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "7419f8bb5012df88c0b98ae3a93a6f710bb12b9bc8619fa5e95444579df1069e",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "2c4c24fc203f3fd3edf6c45942fe14717c32ee62a4a50f3dd2cec91f5f0f4343"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin"
+}

@@ -3,8 +3,7 @@
 #include <openssl/evp.h>
 
 namespace Slic3r::nptop {
-namespace {
-std::string sha256(const std::string &bytes)
+std::string sha256_bytes(std::string_view bytes)
 {
     unsigned char digest[EVP_MAX_MD_SIZE];
     unsigned int size = 0;
@@ -19,12 +18,11 @@ std::string sha256(const std::string &bytes)
     }
     return result;
 }
-}
 std::shared_ptr<const StlSourceSnapshot> capture_stl_snapshot(std::string_view bytes, bool millimeters_declared)
 {
     if (bytes.size()>2*1024*1024) throw std::length_error("STL source byte limit");
     std::string owned(bytes);
-    auto hash=sha256(owned);
+    auto hash=sha256_bytes(owned);
     return std::make_shared<const StlSourceSnapshot>(StlSourceSnapshot{std::move(owned),std::move(hash),millimeters_declared});
 }
 StlImportResult import_stl_snapshot(std::string_view bytes, bool millimeters_declared, const MeshAuditLimits &requested_limits)

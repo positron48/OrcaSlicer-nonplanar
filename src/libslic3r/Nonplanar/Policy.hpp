@@ -30,13 +30,16 @@ std::optional<PolicyConflict> model_policy_conflict(const Model &);
 // erase it. OFF returns no conflict and does not inspect the policy registries.
 std::optional<PolicyConflict> input_policy_conflict(const Model &, const ConfigBase &);
 // An owned copy of all present native options, including unknown keys. The
-// caller must keep the source stable while capturing it. This is not a whole
-// job snapshot or a canonical fingerprint. No mutable DynamicConfig escapes.
+// caller must keep the source stable while capturing it. Its canonical identity
+// covers present options, not a whole job. No mutable DynamicConfig escapes.
 class ResolvedConfigSnapshot final : public ConfigOptionResolver {
 public:
     explicit ResolvedConfigSnapshot(const ConfigBase &);
     const ConfigOption *optptr(const t_config_option_key &) const override;
     t_config_option_keys keys() const;
+    // Versioned exact byte identity, bounded to 4 MiB; not compatibility approval.
+    std::string canonical_json() const;
+    std::string fingerprint() const;
 private:
     struct Storage;
     std::shared_ptr<const Storage> m_storage;

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="6" skipped="0" tests="8" hostname="tbd" time="0.001" timestamp="2026-09-28T15:40:38Z">
+    <properties>
+      <property name="random-seed" value="483750118"/>
+      <property name="filters" value="[B01Fingerprint]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B01 config identity includes exact values types percent flags and unknown keys" time="0.000" status="run">
+      <failure message="ResolvedConfigSnapshot(source).fingerprint()!=original" type="REQUIRE">
+FAILED:
+  REQUIRE( ResolvedConfigSnapshot(source).fingerprint()!=original )
+with expansion:
+  "" != ""
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:82
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 canonical config captures all actual native options and nested mutations" time="0.000" status="run">
+      <failure message="snapshot.fingerprint().size()==64" type="REQUIRE">
+FAILED:
+  REQUIRE( snapshot.fingerprint().size()==64 )
+with expansion:
+  0 == 64
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:100
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 config fingerprint matches independent canonical JSON and SHA256 vectors" time="0.000" status="run">
+      <failure message="snapshot.canonical_json()==test.at(&quot;canonical&quot;).get&lt;std::string>()" type="CHECK">
+FAILED:
+  CHECK( snapshot.canonical_json()==test.at("canonical").get&lt;std::string>() )
+with expansion:
+  "" == "{"options":[],"schema":1}"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:71
+      </failure>
+      <failure message="snapshot.fingerprint()==test.at(&quot;sha256&quot;).get&lt;std::string>()" type="CHECK">
+FAILED:
+  CHECK( snapshot.fingerprint()==test.at("sha256").get&lt;std::string>() )
+with expansion:
+  ""
+  ==
+  "5fc0267515f085d50bba7bf34e1411d7520d07b27d134f452372b577682ba810"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:72
+      </failure>
+      <failure message="snapshot.canonical_json()==test.at(&quot;canonical&quot;).get&lt;std::string>()" type="CHECK">
+FAILED:
+  CHECK( snapshot.canonical_json()==test.at("canonical").get&lt;std::string>() )
+with expansion:
+  ""
+  ==
+  "{"options":[["626f6f6c",8,false,true],["656e756d",9,false,["generic",[["61",
+  1],["62",2]],2]],["666c6f6174",1,false,"3fb999999999999a"],["666c6f617425",5,
+  false,["3fb999999999999a",true]],["696e7473",16386,false,[-1,0,2147483647]],
+  ["6e696c",16385,true,["7ff8000000000001","8000000000000000",
+  "0000000000000001"]],["706f696e74",7,false,["3ff0000000000000",
+  "4000000000000000","4008000000000000"]],["74657874",16387,false,
+  ["d09fd180d0b8d0b2d0b5d182","6c696e650a007461696c"]]],"schema":1}"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:71
+      </failure>
+      <failure message="snapshot.fingerprint()==test.at(&quot;sha256&quot;).get&lt;std::string>()" type="CHECK">
+FAILED:
+  CHECK( snapshot.fingerprint()==test.at("sha256").get&lt;std::string>() )
+with expansion:
+  ""
+  ==
+  "3db1cb654426b6f315fac6a13f8baa109bceffaaca2fec582f7d85ec89cfe911"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:72
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
