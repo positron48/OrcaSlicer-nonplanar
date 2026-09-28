@@ -17,7 +17,7 @@
     "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_SPHERE_COUPON_PREPARATION_COMPLETE_INDEPENDENT_REVIEW_PENDING",
     "B01": "PREFLIGHT_REGISTRIES_AND_OWNED_NATIVE_CONFIG_PASS_FULL_COMPATIBILITY_AND_JOB_SNAPSHOT_PENDING",
     "B02": "BOUNDED_IMPORT_FILE_CLI_AND_NATIVE_MODEL_CHAIN_PASS_PLATE_JOB_GUI_HARD_LIMITS_PENDING",
-    "B03": "BOUNDED_NOMINAL_UPPER_MASKS_HOLES_AND_WHOLE_FOOTPRINT_PASS_CURVATURE_TOOL_ROI_AND_PLANNING_PENDING"
+    "B03": "BOUNDED_NOMINAL_MASKS_FOOTPRINT_AND_AFFINE_CURVATURE_PASS_CURVED_SURFACES_TOOL_ROI_AND_PLANNING_PENDING"
   },
   "executed_checks": {
     "ORC-01": "PASS",
@@ -29,7 +29,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 136,
+    "new_native_cases": 140,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -45,8 +45,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 173,
-    "final_ctest_executed": 173,
+    "final_ctest_discovered": 177,
+    "final_ctest_executed": 177,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -143,12 +143,14 @@
     "B03_projection_assertions": 103,
     "B03_projection_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B03_patches_cases": 4,
-    "B03_current_cases": 15,
-    "B03_current_assertions": 340,
+    "B03_current_cases": 19,
+    "B03_current_assertions": 420,
     "B03_patches_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B03_footprint_cases": 5,
     "B03_footprint_rectangle_oracles": 120,
-    "B03_footprint_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
+    "B03_footprint_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B03_curvature_cases": 4,
+    "B03_curvature_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -165,7 +167,7 @@
   "ci": "RUN_36422010850_042A11AC_TWO_HOUR_TIMEOUT_TESTS_SKIPPED_TEST_FIRST_180_MINUTE_WORKFLOW_PENDING",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Continue B03 curvature/inset and tool-accessibility checks; bind captured inputs to actual plate/job/worker ownership and complete compatibility. Independent review and physical qualification remain pending.",
+  "next_step": "Continue B03 curved-surface/ROI and tool-accessibility checks; bind captured inputs to actual plate/job/worker ownership and complete compatibility. Independent review and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -200,7 +202,8 @@
     "B01_single_tool": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-single-tool.md",
     "B03_projection": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-projection.md",
     "B03_patches": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-patches.md",
-    "B03_footprint": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-footprint.md"
+    "B03_footprint": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-footprint.md",
+    "B03_curvature": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-curvature.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -231,5 +234,6 @@
   "B03_projection_evidence": "docs/nonplanar-dev/evidence/B03-projection/source-manifest.json",
   "ci_test_first_evidence": "docs/nonplanar-dev/evidence/CI-test-first/source-manifest.json",
   "B03_patches_evidence": "docs/nonplanar-dev/evidence/B03-patches/source-manifest.json",
-  "B03_footprint_evidence": "docs/nonplanar-dev/evidence/B03-footprint/source-manifest.json"
+  "B03_footprint_evidence": "docs/nonplanar-dev/evidence/B03-footprint/source-manifest.json",
+  "B03_curvature_evidence": "docs/nonplanar-dev/evidence/B03-curvature/source-manifest.json"
 }

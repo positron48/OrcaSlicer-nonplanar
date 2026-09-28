@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="3" skipped="0" tests="8" hostname="tbd" time="0.001" timestamp="2026-09-28T15:12:38Z">
+    <properties>
+      <property name="random-seed" value="1505217088"/>
+      <property name="filters" value="[UpperCurvature]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B03 one ULP nominal crease is not smoothed away" time="0.000" status="run">
+      <failure message="projection.snapshot->slope_patches.front().creases.size()==6" type="REQUIRE">
+FAILED:
+  REQUIRE( projection.snapshot->slope_patches.front().creases.size()==6 )
+with expansion:
+  0 == 6
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_upper_projection.cpp:428
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B03 crease curvature cannot be inferred from safe endpoint footprints" time="0.000" status="run">
+      <failure message="patch.creases.size()==6" type="REQUIRE">
+FAILED:
+  REQUIRE( patch.creases.size()==6 )
+with expansion:
+  0 == 6
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_upper_projection.cpp:392
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B03 affine curvature survives coplanar triangulation edges" time="0.000" status="run">
+      <failure message="patch.nominal_curvature_upper_mm_inv==0" type="REQUIRE">
+FAILED:
+  REQUIRE( patch.nominal_curvature_upper_mm_inv==0 )
+with expansion:
+  {?} == 0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_upper_projection.cpp:375
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

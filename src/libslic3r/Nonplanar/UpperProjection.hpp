@@ -1,6 +1,9 @@
 #pragma once
 #include "MeshAudit.hpp"
+#include <array>
 #include <cstdint>
+#include <limits>
+#include <optional>
 #include <vector>
 
 namespace Slic3r::nptop {
@@ -22,6 +25,15 @@ struct UpperPatch {
     std::vector<size_t> mesh_faces;
     std::vector<ProjectionBoundary> boundaries;
     double xy_area_lower_mm2, xy_area_upper_mm2;
+    double minimum_z_mm = std::numeric_limits<double>::infinity();
+    double maximum_z_mm = -std::numeric_limits<double>::infinity();
+    double slope_upper = 0;
+    struct Crease {
+        std::array<size_t,2> mesh_vertices, mesh_faces;
+    };
+    std::vector<Crease> creases;
+    // Zero only for an exactly affine nominal patch, otherwise unknown.
+    std::optional<double> nominal_curvature_upper_mm_inv;
 };
 struct UpperProjectionSnapshot {
     const std::shared_ptr<const TriangleMesh> geometry;
@@ -81,9 +93,14 @@ struct UpperFootprintResult {
     UpperFootprintStatus status = UpperFootprintStatus::Unknown;
     std::string reason;
     double required_inset_upper_mm = 0;
+    std::optional<double> nominal_curvature_upper_mm_inv;
 };
 // Tests the whole swept disk against one nominal XY patch, preserving holes.
 // This is an implicit inset query, not Z contact, curvature or head clearance.
 UpperFootprintResult check_upper_footprint(std::shared_ptr<const UpperProjectionSnapshot>,
+    const UpperFootprintQuery &, const UpperFootprintLimits &limits = {});
+// Additionally requires the whole capsule to avoid every noncoplanar crease.
+// Reaching a crease is UNKNOWN; affine nominal curvature alone is not printability.
+UpperFootprintResult check_affine_upper_footprint(std::shared_ptr<const UpperProjectionSnapshot>,
     const UpperFootprintQuery &, const UpperFootprintLimits &limits = {});
 }

@@ -364,3 +364,99 @@ TEST_CASE("B03 footprint captures ownership and rejects invalid cancelled stale 
     REQUIRE(mutated);
     REQUIRE_FALSE(snapshot);
 }
+
+TEST_CASE("B03 affine curvature survives coplanar triangulation edges", "[Nonplanar][B03][UpperCurvature]")
+{
+    const std::array<TriangleMesh,3> meshes{make_cube(20,10,2),wedge(),gridded_plate(3,false)};
+    for (size_t index=0; index<meshes.size(); ++index) {
+        const auto projection=analyze_upper_projection(meshes[index],true,6);
+        REQUIRE(projection.snapshot);
+        const auto &patch=projection.snapshot->slope_patches.front();
+        REQUIRE(patch.creases.empty());
+        REQUIRE(patch.nominal_curvature_upper_mm_inv==0);
+        REQUIRE(patch.minimum_z_mm==2);
+        REQUIRE(patch.maximum_z_mm==(index==1 ? 4.5 : 2));
+        const double expected_slope=index==1 ? 0.125 : 0.;
+        REQUIRE(patch.slope_upper>=expected_slope);
+        REQUIRE(patch.slope_upper-expected_slope<1e-10);
+        const auto result=check_affine_upper_footprint(projection.snapshot,{0,{0.5,0.5},{2.5,2.5},0.125,0,0});
+        INFO(result.reason);
+        REQUIRE(result.status==UpperFootprintStatus::Contained);
+        REQUIRE(result.nominal_curvature_upper_mm_inv==0);
+        REQUIRE_FALSE(check_upper_footprint(projection.snapshot,{0,{0.5,0.5},{2.5,2.5},0.125,0,0}).nominal_curvature_upper_mm_inv);
+    }
+}
+TEST_CASE("B03 crease curvature cannot be inferred from safe endpoint footprints", "[Nonplanar][B03][UpperCurvature]")
+{
+    UpperProjectionLimits limits; limits.max_slope=2;
+    const auto projection=analyze_upper_projection(gridded_plate(3,false,true),true,7,limits);
+    REQUIRE(projection.snapshot);
+    REQUIRE(projection.snapshot->slope_patches.size()==1);
+    const auto &patch=projection.snapshot->slope_patches.front();
+    REQUIRE(patch.creases.size()==6);
+    REQUIRE_FALSE(patch.nominal_curvature_upper_mm_inv);
+    REQUIRE(patch.minimum_z_mm==2);
+    REQUIRE(patch.maximum_z_mm==3);
+    REQUIRE(patch.slope_upper>=1);
+    REQUIRE(patch.slope_upper<1.00000001);
+    std::set<std::array<int,3>> expected_edges;
+    for (const auto &crease : patch.creases) {
+        const auto &a=projection.snapshot->geometry->its.vertices[crease.mesh_vertices[0]];
+        const auto &b=projection.snapshot->geometry->its.vertices[crease.mesh_vertices[1]];
+        REQUIRE(a.x()==b.x());
+        REQUIRE((a.x()==1 || a.x()==2));
+        expected_edges.insert({int(a.x()),int(std::min(a.y(),b.y())),int(std::max(a.y(),b.y()))});
+    }
+    const std::set<std::array<int,3>> predefined{{1,0,1},{1,1,2},{1,2,3},{2,0,1},{2,1,2},{2,2,3}};
+    REQUIRE(expected_edges==predefined);
+    for (double x : {0.5,1.5,2.5}) {
+        const auto result=check_affine_upper_footprint(projection.snapshot,{0,{x,0.5},{x,2.5},0.125,0,0});
+        REQUIRE(result.status==UpperFootprintStatus::Contained);
+        REQUIRE(result.nominal_curvature_upper_mm_inv==0);
+    }
+    for (const auto &query : {UpperFootprintQuery{0,{0.5,1.5},{2.5,1.5},0.125,0,0},
+                              UpperFootprintQuery{0,{0.75,0.5},{0.75,0.5},0.25,0,0}}) {
+        REQUIRE(check_upper_footprint(projection.snapshot,query).status==UpperFootprintStatus::Contained);
+        const auto result=check_affine_upper_footprint(projection.snapshot,query);
+        REQUIRE(result.status==UpperFootprintStatus::Unknown);
+        REQUIRE(result.reason=="UNQUALIFIED_CREASE_IN_FOOTPRINT");
+        REQUIRE_FALSE(result.nominal_curvature_upper_mm_inv);
+    }
+}
+TEST_CASE("B03 one ULP nominal crease is not smoothed away", "[Nonplanar][B03][UpperCurvature]")
+{
+    auto source=gridded_plate(3,false,true);
+    for (auto &v : source.its.vertices) if (v.z()==3) v.z()=std::nextafter(2.f,3.f);
+    const auto projection=analyze_upper_projection(source,true,8);
+    REQUIRE(projection.snapshot);
+    REQUIRE(projection.snapshot->slope_patches.front().creases.size()==6);
+    REQUIRE(check_affine_upper_footprint(projection.snapshot,{0,{0.5,1.5},{2.5,1.5},0.125,0,0}).status==UpperFootprintStatus::Unknown);
+}
+TEST_CASE("B03 affine footprint never retains a curvature bound after late invalidation", "[Nonplanar][B03][UpperCurvature]")
+{
+    UpperProjectionLimits projection_limits; projection_limits.max_slope=2;
+    const auto projection=analyze_upper_projection(gridded_plate(3,false,true),true,9,projection_limits);
+    REQUIRE(projection.snapshot);
+    const UpperFootprintQuery query{0,{0.5,0.5},{0.5,2.5},0.125,0,0};
+    size_t calls=0;
+    UpperFootprintLimits limits;
+    limits.is_current=[&](uint64_t) { ++calls; return true; };
+    REQUIRE(check_affine_upper_footprint(projection.snapshot,query,limits).nominal_curvature_upper_mm_inv==0);
+    const auto final_call=calls; REQUIRE(final_call>6); calls=0;
+    limits.is_current=[&](uint64_t) { return ++calls<final_call; };
+    const auto stale=check_affine_upper_footprint(projection.snapshot,query,limits);
+    REQUIRE(stale.status==UpperFootprintStatus::Unknown);
+    REQUIRE(stale.reason=="STALE_REVISION");
+    REQUIRE_FALSE(stale.nominal_curvature_upper_mm_inv);
+    calls=0; limits={}; limits.cancelled=[&] { return ++calls==final_call; };
+    const auto cancelled=check_affine_upper_footprint(projection.snapshot,query,limits);
+    REQUIRE(cancelled.status==UpperFootprintStatus::Unknown);
+    REQUIRE(cancelled.reason=="CANCELLED");
+    REQUIRE_FALSE(cancelled.nominal_curvature_upper_mm_inv);
+    limits={}; limits.timeout=std::chrono::milliseconds(1);
+    limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(3)); return false; };
+    const auto expired=check_affine_upper_footprint(projection.snapshot,query,limits);
+    REQUIRE(expired.status==UpperFootprintStatus::Unknown);
+    REQUIRE(expired.reason=="DEADLINE");
+    REQUIRE_FALSE(expired.nominal_curvature_upper_mm_inv);
+}

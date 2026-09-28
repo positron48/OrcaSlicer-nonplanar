@@ -45,12 +45,26 @@ template<class Stop> std::optional<std::vector<UpperPatch>> build_patches(
             const auto index=todo.back(); todo.pop_back();
             const auto &facet=facets[index];
             patch.mesh_faces.push_back(facet.mesh_face);
+            patch.slope_upper=std::max(patch.slope_upper,facet.slope_upper);
             area=area+Interval(facet.xy_area_lower_mm2,facet.xy_area_upper_mm2);
             for (auto neighbor : adjacent[index]) if (!visited[neighbor]) { visited[neighbor]=true; todo.push_back(neighbor); }
             const auto &ids=mesh.indices[facet.mesh_face];
+            for (int vertex=0; vertex<3; ++vertex) {
+                const double z=mesh.vertices[ids(vertex)].z();
+                patch.minimum_z_mm=std::min(patch.minimum_z_mm,z);
+                patch.maximum_z_mm=std::max(patch.maximum_z_mm,z);
+            }
             for (int edge=0; edge<3; ++edge) {
                 const int from=ids(edge), to=ids((edge+1)%3);
-                if (incidence.at(edge_key(from,to)).size()==1 &&
+                const auto &uses=incidence.at(edge_key(from,to));
+                if (uses.size()==2 && uses.front()==index) {
+                    const auto other=facets[uses.back()].mesh_face;
+                    const auto &neighbor=mesh.indices[other];
+                    if (!detail::coplanar_faces({mesh.vertices[ids(0)],mesh.vertices[ids(1)],mesh.vertices[ids(2)]},
+                        {mesh.vertices[neighbor(0)],mesh.vertices[neighbor(1)],mesh.vertices[neighbor(2)]}))
+                        patch.creases.push_back({{size_t(from),size_t(to)},{facet.mesh_face,other}});
+                }
+                if (uses.size()==1 &&
                     (!next.emplace(from,to).second || !incoming.insert(to).second)) {
                     reason="AMBIGUOUS_MASK_BOUNDARY"; return {};
                 }
@@ -96,6 +110,7 @@ template<class Stop> std::optional<std::vector<UpperPatch>> build_patches(
             reason="MASK_AREA_OR_OWNERSHIP_MISMATCH"; return {};
         }
         std::sort(patch.mesh_faces.begin(),patch.mesh_faces.end());
+        if (patch.creases.empty()) patch.nominal_curvature_upper_mm_inv=0.;
         patch.xy_area_lower_mm2=std::max(0.,area.lo); patch.xy_area_upper_mm2=area.hi;
         patches.push_back(std::move(patch));
     }
@@ -214,8 +229,9 @@ UpperProjectionResult analyze_upper_projection(const TriangleMesh &source, bool 
     return result;
 }
 
-UpperFootprintResult check_upper_footprint(std::shared_ptr<const UpperProjectionSnapshot> snapshot,
-    const UpperFootprintQuery &requested_query, const UpperFootprintLimits &requested_limits)
+namespace {
+UpperFootprintResult check_footprint(std::shared_ptr<const UpperProjectionSnapshot> snapshot,
+    const UpperFootprintQuery &requested_query, const UpperFootprintLimits &requested_limits, bool require_affine)
 {
     const UpperFootprintQuery query=requested_query;
     const UpperFootprintLimits limits=requested_limits;
@@ -267,14 +283,40 @@ UpperFootprintResult check_upper_footprint(std::shared_ptr<const UpperProjection
         }
         // Start membership plus positive whole-segment boundary clearance
         // implies that the connected capsule stays inside this one patch.
+        if (contained && require_affine) {
+            const auto &vertices=snapshot->geometry->its.vertices;
+            for (const auto &crease : snapshot->slope_patches[query.patch].creases) {
+                if (stop()) return result;
+                if (!detail::projected_clearance_exceeds(query.start_mm,query.end_mm,
+                        vertices[crease.mesh_vertices[0]],vertices[crease.mesh_vertices[1]],inset.hi)) {
+                    if (!stop()) result.reason="UNQUALIFIED_CREASE_IN_FOOTPRINT";
+                    return result;
+                }
+            }
+        }
         if (stop()) return result;
         result.status=contained ? UpperFootprintStatus::Contained : UpperFootprintStatus::Outside;
         result.reason=reason;
+        if (contained && require_affine) {
+            result.nominal_curvature_upper_mm_inv=0.;
+            result.reason="NOMINAL_AFFINE_FOOTPRINT_ONLY";
+        }
     } catch (const std::exception &) {
         result.reason="FOOTPRINT_EXCEPTION";
     } catch (...) {
         result.reason="FOOTPRINT_EXCEPTION";
     }
     return result;
+}
+}
+UpperFootprintResult check_upper_footprint(std::shared_ptr<const UpperProjectionSnapshot> snapshot,
+    const UpperFootprintQuery &query, const UpperFootprintLimits &limits)
+{
+    return check_footprint(std::move(snapshot),query,limits,false);
+}
+UpperFootprintResult check_affine_upper_footprint(std::shared_ptr<const UpperProjectionSnapshot> snapshot,
+    const UpperFootprintQuery &query, const UpperFootprintLimits &limits)
+{
+    return check_footprint(std::move(snapshot),query,limits,true);
 }
 }

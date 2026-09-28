@@ -29,6 +29,13 @@ int projection_orientation(const ProjectionTriangle &t)
     const auto p=project(t);
     return int(CGAL::orientation(p[0],p[1],p[2]));
 }
+bool coplanar_faces(const ProjectionTriangle &a, const ProjectionTriangle &b)
+{
+    const auto point=[](const Vec3f &v) { return Kernel::Point_3(v.x(),v.y(),v.z()); };
+    const auto p=point(a[0]), q=point(a[1]), r=point(a[2]);
+    for (const auto &v : b) if (!CGAL::coplanar(p,q,r,point(v))) return false;
+    return true;
+}
 bool projection_interiors_overlap(const ProjectionTriangle &a, const ProjectionTriangle &b)
 {
     const auto pa=project(a), pb=project(b);
