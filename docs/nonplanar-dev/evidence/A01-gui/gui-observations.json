@@ -1,0 +1,55 @@
+{
+  "status": "PASS_BOUNDED_GUI_SMOKE",
+  "source_commit": "1e0b5b9814834deaedbf23b01dc8170c10aa030d",
+  "bundle_identifier": "local.nonplanartoplab.experimental.gui-1e0b5b98",
+  "native_process_id": 23201,
+  "source_fixture": "docs/nonplanar/fixtures/models/flat_block.stl",
+  "import_observed": {
+    "dimensions_mm": [
+      30,
+      20,
+      4
+    ],
+    "triangles": 96,
+    "volume_mm3": 2400
+  },
+  "test_presets": [
+    "Generic Klipper Printer",
+    "Generic PLA",
+    "0.20mm Standard @MyKlipper"
+  ],
+  "setup": {
+    "stealth_mode": true,
+    "network_plugin_installed": false
+  },
+  "preview_observed": {
+    "layers": 20,
+    "top_z_mm": 4.0,
+    "layer_height_mm": 0.2,
+    "estimated_time": "3m30s",
+    "estimated_filament_g": 1.7
+  },
+  "workflow": [
+    "launch isolated bundle",
+    "complete local offline setup",
+    "import fixed fixture",
+    "Cmd-R Slice plate",
+    "observe preview",
+    "Cmd-Q and discard disposable project"
+  ],
+  "exit": "PROCESS_ABSENT_AFTER_GRACEFUL_QUIT",
+  "installed_stock_app_launched": false,
+  "coexistence": "NOT_RUN",
+  "hybrid_gui": "NOT_IMPLEMENTED",
+  "printer_connection": "NOT_RUN",
+  "printing": "NOT_RUN",
+  "automation_notes": [
+    "AX observation timed out after import; screenshot and process sample showed a responsive idle main loop. AX recovered.",
+    "Coordinate hit-test for Slice plate failed; Cmd-R succeeded.",
+    "Quit observation reported procNotFound; process absence and GUI_App exit log confirmed termination."
+  ],
+  "screenshots": [
+    "A01-gui-flat-block.png",
+    "A01-gui-flat-block-preview.png"
+  ]
+}

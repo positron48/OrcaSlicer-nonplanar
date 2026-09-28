@@ -114,3 +114,8 @@ The resources link points at this checkout, so this is not a portable package.
 GUI launch/coexistence and signing/release packaging remain NOT_RUN; no Finder
 registration or /Applications install was performed. Only CLI isolation is
 accepted in this bootstrap. Do not bypass the launcher for user-facing runs.
+
+Later GUI validation is recorded in `A01-gui.md`: fresh labeled bundles, actual
+OS isolation probes and native import/slice/preview pass on 2026-09-28. The
+bootstrap NOT_RUN statement above is historical. Stock coexistence and portable
+release packaging remain unverified; no /Applications installation occurred.

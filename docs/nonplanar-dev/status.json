@@ -7,7 +7,7 @@
   "delivery": "USER_FORK_BRANCH",
   "gate_a": "IN_PROGRESS",
   "tasks": {
-    "A01": "MACOS_NATIVE_PASS_EARLIER_LINUX_APP_BUILD_PASS_TEST_GATE_FAILED_GUI_NOT_RUN",
+    "A01": "MACOS_NATIVE_AND_ISOLATED_GUI_SMOKE_PASS_COEXISTENCE_NOT_RUN_LINUX_TEST_GATE_FAILED",
     "A02": "SOURCE_AUDIT_AND_SIX_STOCK_FORK_BASELINES_PASS",
     "A03": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A04": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
@@ -108,7 +108,9 @@
     "B02_placement_OFF_ZAA": "NOT_RUN_INTERNAL_API_NO_PRODUCTION_CALLER_STOCK_PATHS_UNCHANGED",
     "B02_numeric_callback_cases": 2,
     "B02_numeric_callback_assertions": 17,
-    "B02_numeric_callback_regression": "RED_EXIT_42_EIGHT_FAILURES_THEN_FIXED_PASS"
+    "B02_numeric_callback_regression": "RED_EXIT_42_EIGHT_FAILURES_THEN_FIXED_PASS",
+    "A01_current_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "A01_gui": "ISOLATED_IMPORT_SLICE_PREVIEW_AND_QUIT_PASS"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -166,5 +168,6 @@
   "B02_worker_evidence": "docs/nonplanar-dev/evidence/B02-worker/source-manifest.json",
   "B02_file_evidence": "docs/nonplanar-dev/evidence/B02-file/source-manifest.json",
   "B02_placement_evidence": "docs/nonplanar-dev/evidence/B02-placement/source-manifest.json",
-  "B02_numeric_callback_evidence": "docs/nonplanar-dev/evidence/B02-callback/source-manifest.json"
+  "B02_numeric_callback_evidence": "docs/nonplanar-dev/evidence/B02-callback/source-manifest.json",
+  "A01_gui_evidence": "docs/nonplanar-dev/evidence/A01-gui/source-manifest.json"
 }

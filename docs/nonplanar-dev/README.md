@@ -103,3 +103,7 @@ B02-snapshot OFF/ZAA comparisons pass. Hard memory/I/O containment, native Model
 the full job error budget, whole-job snapshots and a successful hybrid pipeline
 remain unimplemented. Gate A still
 requires independent review; digital coupon preparation is not physical proof.
+
+`A01-gui.md` records the fresh full macOS build, six OFF/ZAA comparisons and an
+isolated native GUI import/slice/preview/quit run at `1e0b5b98`. Actual sandbox
+write/network probes pass. Stock coexistence and hybrid GUI remain unverified.
