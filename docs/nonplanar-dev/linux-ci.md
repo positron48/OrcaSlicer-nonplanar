@@ -21,3 +21,18 @@ ran. The default shallow checkout cannot satisfy the audit's baseline commit
 and ancestry checks. Fetch full history, create evidence before the audit, and
 retain its output on failure. Public API annotations confirm the failed step;
 raw remote logs require authentication and were not available.
+
+Run 36402596420 (6ffcd91f) subsequently completed both pinned dependency and
+native application/test builds, but its selected test step failed with exit 2.
+Public annotations contain only that exit code; unauthenticated artifact/log
+requests cannot establish the actual failing test. This remains a test failure,
+not a Linux pass. The observation and step timestamps are retained in
+evidence/B02-worker/linux-ci-observation.json.
+
+Future native test-step failures publish the gate error and up to five failed,
+skipped or unbuilt test names with bounded JUnit output in check annotations.
+Log text is escaped as workflow-command data, and unreadable/missing reports are
+explicit. The original test exit code, selection, acceptance rules and full
+uploaded logs are unchanged. This is diagnostic visibility, not a failure fix.
+Six diagnostic tests and all eight existing real CMake/CTest harness tests pass
+locally; exact commands/exits/output are in evidence/ci-diagnostics.

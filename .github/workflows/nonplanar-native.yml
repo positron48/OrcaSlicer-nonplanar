@@ -42,9 +42,13 @@ jobs:
       - name: Build native application and tests
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/build.log -- ./build_linux.sh -strlL -j 2
       - name: Execute nonempty selected native suites
+        id: native_tests
         run: |
           clang++ --version > build/nonplanar-evidence/linux/compiler.txt
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/tests.log -- python3 scripts/nonplanar/ctest_gate.py --build-dir build --output-dir build/nonplanar-evidence/linux/ctest --target-executable nonplanar_tests --target-executable fff_print_tests
+      - name: Expose native failure diagnostics in check annotations
+        if: failure() && steps.native_tests.outcome == 'failure'
+        run: python3 scripts/nonplanar/publish_ci_failure.py --evidence-dir build/nonplanar-evidence/linux
       - name: Preserve observed results even on failure
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
