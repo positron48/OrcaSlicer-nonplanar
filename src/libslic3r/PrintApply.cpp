@@ -1113,6 +1113,11 @@ static PrintObjectRegions* generate_print_object_regions(
 
 Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_config, bool extruder_applied)
 {
+    // Inspect the actual supplied settings/model before native normalization
+    // drops an out-of-range filament or turns off an unused prime tower.
+    std::string nonplanar_input_conflict;
+    if (const auto conflict = nptop::input_policy_conflict(model, new_full_config))
+        nonplanar_input_conflict = "Nonplanar Top Lab: " + conflict->key + " = " + conflict->value + ": " + conflict->reason;
 #ifdef _DEBUG
     check_model_ids_validity(model);
 #endif /* _DEBUG */
@@ -1247,6 +1252,12 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
 
     // Grab the lock for the Print / PrintObject milestones.
 	std::scoped_lock<std::mutex> lock(this->state_mutex());
+
+    if (m_nonplanar_input_conflict != nonplanar_input_conflict) {
+        this->call_cancel_callback();
+        update_apply_status(this->invalidate_step(psGCodeExport));
+        m_nonplanar_input_conflict = std::move(nonplanar_input_conflict);
+    }
 
     // The following call may stop the background processing.
     if (! print_diff.empty())

@@ -78,6 +78,7 @@ void Print::clear()
     m_print_regions.clear();
     m_model.clear_objects();
     m_statistics_by_extruder_count.clear();
+    m_nonplanar_input_conflict.clear();
 }
 
 bool Print::has_tpu_filament() const
@@ -1260,6 +1261,7 @@ StringObjectException Print::check_multi_filament_valid(const Print& print)
 
 std::string Print::nonplanar_block_reason() const
 {
+    if (!m_nonplanar_input_conflict.empty()) return m_nonplanar_input_conflict;
     if (!nptop::requests_guarded_mode(model(), full_print_config())) return {};
     if (const auto conflict = nptop::model_policy_conflict(model()))
         return "Nonplanar Top Lab: " + conflict->key + " = " + conflict->value + ": " + conflict->reason;

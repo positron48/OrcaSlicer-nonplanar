@@ -19,10 +19,16 @@ struct CustomCodeRule { ConfigOptionType type; bool empty_list = false; };
 const std::map<std::string, CustomCodeRule> &custom_code_policy();
 struct NeutralTransformRule { ConfigOptionType type; double neutral; };
 const std::map<std::string, NeutralTransformRule> &neutral_transform_policy();
+// One physical nozzle and one filament, identity offset and fixed maps.
+// Scalar selections may inherit (0) or select the sole filament (1).
+const std::map<std::string, ConfigOptionType> &single_tool_policy();
 struct PolicyConflict { std::string key, value, reason; };
 // Covers sparse source overrides and plate actions that are not necessarily
 // present in the resolved native PrintRegionConfig.
 std::optional<PolicyConflict> model_policy_conflict(const Model &);
+// Capture a guarded input conflict before native normalization/clamping can
+// erase it. OFF returns no conflict and does not inspect the policy registries.
+std::optional<PolicyConflict> input_policy_conflict(const Model &, const ConfigBase &);
 // An owned copy of all present native options, including unknown keys. The
 // caller must keep the source stable while capturing it. This is not a whole
 // job snapshot or a canonical fingerprint. No mutable DynamicConfig escapes.

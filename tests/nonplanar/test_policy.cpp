@@ -33,7 +33,10 @@ DynamicPrintConfig eligible()
     c.set_deserialize_strict({{"nptop_mode","safe_hybrid"},{"zaa_enabled",false},{"gcode_flavor","klipper"},
       {"spiral_mode",false},{"enable_arc_fitting",false},{"enable_support",false},{"raft_layers",0},
       {"wall_generator","classic"},{"fuzzy_skin","disabled_fuzzy"},{"ironing_type","no ironing"},
-      {"seam_slope_type","none"},{"post_process",""}});
+      {"seam_slope_type","none"},{"post_process",""},
+      {"single_extruder_multi_material",false},{"manual_filament_change",false},
+      {"enable_prime_tower",false},{"enable_filament_dynamic_map",false},
+      {"has_filament_switcher",false},{"filament_map_mode","Manual"}});
     for (const auto &key : custom_code_hooks) {
         if (c.option(key)->type() == coStrings)
             c.set_key_value(key, new ConfigOptionStrings{});
@@ -42,6 +45,141 @@ DynamicPrintConfig eligible()
     }
     return c;
 }
+}
+TEST_CASE("B01 single tool rejects extra diameters maps offsets and malformed native values", "[Nonplanar][B01][B01SingleTool]")
+{
+    REQUIRE(resolve_policy(eligible(),1,1).passes_config_preflight());
+    REQUIRE(single_tool_policy().size() == 14);
+    for (const auto &[key, type] : single_tool_policy())
+        REQUIRE(print_config_def.get(key)->type == type);
+    for (const auto *key : {"nozzle_diameter","filament_diameter"}) {
+        for (const auto &values : std::vector<std::vector<double>>{
+            {},{0.4,0.4},{0.},{-1.},{std::numeric_limits<double>::quiet_NaN()},
+            {std::numeric_limits<double>::infinity()},{std::numeric_limits<double>::denorm_min()}}) {
+            INFO(key);
+            auto config=eligible(); config.set_key_value(key,new ConfigOptionFloats(values));
+            const auto policy=resolve_policy(config,1,1);
+            CHECK_FALSE(policy.passes_config_preflight());
+            if (!policy.conflicts.empty()) CHECK(policy.conflicts.front().key == key);
+        }
+    }
+    for (const auto *key : {"filament_map","physical_extruder_map"}) {
+        const int required=std::string(key) == "filament_map" ? 1 : 0;
+        for (const auto &values : std::vector<std::vector<int>>{{},{required,required},{required+1},{-1}}) {
+            INFO(key);
+            auto config=eligible(); config.set_key_value(key,new ConfigOptionInts(values));
+            CHECK_FALSE(resolve_policy(config,1,1).passes_config_preflight());
+        }
+    }
+    for (const auto &values : std::vector<Pointfs>{
+        {},{Vec2d::Zero(),Vec2d::Zero()},{Vec2d(0.01,0)},
+        {Vec2d(0,std::numeric_limits<double>::denorm_min())},
+        {Vec2d(std::numeric_limits<double>::quiet_NaN(),0)}}) {
+        auto config=eligible(); config.set_key_value("extruder_offset",new ConfigOptionPoints(values));
+        CHECK_FALSE(resolve_policy(config,1,1).passes_config_preflight());
+    }
+    auto config=eligible(); config.set_key_value("extruder_offset",new ConfigOptionPoints{Vec2d(-0.,0.)});
+    CHECK(resolve_policy(config,1,1).passes_config_preflight());
+    for (const auto *key : {"nozzle_diameter","filament_diameter","filament_map","physical_extruder_map","extruder_offset"}) {
+        config=eligible(); config.set_key_value(key,new ConfigOptionString(config.opt_serialize(key)));
+        CHECK_FALSE(resolve_policy(config,1,1).passes_config_preflight());
+        config=eligible(); config.erase(key);
+        CHECK_FALSE(resolve_policy(config,1,1).passes_config_preflight());
+    }
+    config=eligible(); config.set_key_value("filament_diameter",new ConfigOptionFloatsNullable{1.75});
+    CHECK_FALSE(resolve_policy(config,1,1).passes_config_preflight());
+}
+TEST_CASE("B01 fixed mapping rejects automatic material switching and tower modes", "[Nonplanar][B01][B01SingleTool]")
+{
+    for (const auto *key : {"single_extruder_multi_material","manual_filament_change","enable_prime_tower",
+                           "enable_filament_dynamic_map","has_filament_switcher"}) {
+        INFO(key);
+        auto config=eligible(); config.set_key_value(key,new ConfigOptionBool(true));
+        const auto policy=resolve_policy(config,1,1);
+        CHECK_FALSE(policy.passes_config_preflight());
+        if (!policy.conflicts.empty()) CHECK(policy.conflicts.front().key == key);
+    }
+    // The native enum includes fmmDefault, but its text dictionary does not.
+    for (auto mode : {fmmAutoForFlush,fmmAutoForMatch,fmmDefault}) {
+        auto config=eligible(); config.set_key_value("filament_map_mode",new ConfigOptionEnum<FilamentMapMode>(mode));
+        CHECK_FALSE(resolve_policy(config,1,1).passes_config_preflight());
+    }
+}
+TEST_CASE("B01 single filament source selections allow inheritance but not normalization of other IDs", "[Nonplanar][B01][B01SingleTool]")
+{
+    for (const auto *key : {"extruder","sparse_infill_filament_id","outer_wall_filament_id","inner_wall_filament_id",
+                           "internal_solid_filament_id","top_surface_filament_id","bottom_surface_filament_id",
+                           "support_filament","support_interface_filament"}) {
+        INFO(key);
+        for (int id : {0,1,-1,2,999}) {
+            auto config=eligible(); config.set_key_value(key,new ConfigOptionInt(id));
+            CHECK(resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1));
+            Model model; auto *object=model.add_object();
+            auto *volume=object->add_volume(TriangleMesh(its_make_cube(1,1,1)));
+            auto *material=model.add_material("test-material");
+            for (auto *source : std::vector<ModelConfig *>{&material->config,&object->config,&volume->config,&object->layer_config_ranges[{0.,1.}]}) {
+                source->set_key_value(key,new ConfigOptionInt(id));
+                CHECK(model_policy_conflict(model).has_value() == (id != 0 && id != 1));
+                source->erase(key);
+            }
+        }
+        auto config=eligible(); config.set_key_value(key,new ConfigOptionString("1"));
+        CHECK_FALSE(resolve_policy(config,1,1).passes_config_preflight());
+    }
+}
+TEST_CASE("B01 material painting invalidates guarded cached output and remains intact in OFF", "[Nonplanar][B01][B01SingleTool]")
+{
+    CachedPrint print; print.is_BBL_printer()=false; Model model;
+    auto config=eligible(); Test::init_print({Test::TestMesh::cube_20x20x20},print,model,config);
+    auto &painting=model.objects.front()->volumes.front()->mmu_segmentation_facets;
+    painting.set_triangle_from_string(0,"4");
+    painting.touch();
+    REQUIRE(model.is_mm_painted());
+    print.set_started(psGCodeExport); print.set_done(psGCodeExport);
+    print.apply(model,config);
+    CHECK_FALSE(print.is_step_done(psGCodeExport));
+    CHECK_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("mmu_segmentation_facets"));
+    REQUIRE_THROWS(print.process());
+    config.set_deserialize_strict("nptop_mode","off"); print.apply(model,config);
+    CHECK(print.nonplanar_block_reason().empty());
+    CHECK(model.is_mm_painted());
+    painting.reset(); config.set_deserialize_strict("nptop_mode","safe_hybrid"); print.apply(model,config);
+    CHECK_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("not implemented"));
+}
+TEST_CASE("B01 source tool selections reach native Print before fallback can hide them", "[Nonplanar][B01][B01SingleTool]")
+{
+    unsigned cancellations=0;
+    CachedPrint print; print.is_BBL_printer()=false; Model model;
+    auto config=eligible(); Test::init_print({Test::TestMesh::cube_20x20x20},print,model,config);
+    auto &source=model.objects.front()->config;
+    print.set_cancel_callback([&] { ++cancellations; });
+    source.set_key_value("extruder",new ConfigOptionInt(2));
+    print.set_started(psGCodeExport); print.set_done(psGCodeExport);
+    print.apply(model,config);
+    REQUIRE_FALSE(print.is_step_done(psGCodeExport));
+    REQUIRE(cancellations > 0);
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("extruder = 2"));
+    REQUIRE(source.get().option<ConfigOptionInt>("extruder")->value == 2);
+    REQUIRE_THROWS(print.process());
+    source.erase("extruder"); print.apply(model,config);
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("not implemented"));
+    config.set_key_value("enable_prime_tower",new ConfigOptionBool(true));
+    print.set_started(psGCodeExport); print.set_done(psGCodeExport);
+    print.apply(model,config);
+    REQUIRE_FALSE(print.is_step_done(psGCodeExport));
+    REQUIRE_FALSE(print.full_print_config().option<ConfigOptionBool>("enable_prime_tower")->value);
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("enable_prime_tower"));
+    config.set_key_value("enable_prime_tower",new ConfigOptionBool(false));
+    print.set_started(psGCodeExport); print.set_done(psGCodeExport);
+    print.apply(model,config);
+    REQUIRE_FALSE(print.is_step_done(psGCodeExport));
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("not implemented"));
+    config.set_key_value("enable_prime_tower",new ConfigOptionBool(true));
+    print.apply(model,config);
+    config.set_deserialize_strict("nptop_mode","off"); print.apply(model,config);
+    REQUIRE(print.nonplanar_block_reason().empty());
+    REQUIRE(config.option<ConfigOptionBool>("enable_prime_tower")->value);
+    print.set_cancel_callback([] {});
 }
 TEST_CASE("B01 resolved snapshot owns every native value without a mutable configuration API", "[Nonplanar][B01][B01Snapshot]")
 {
@@ -70,14 +208,12 @@ TEST_CASE("B01 resolved snapshot owns every native value without a mutable confi
 }
 TEST_CASE("B01 discrete constraints reject textual substitutes for native settings", "[Nonplanar][B01][B01Discrete]")
 {
-    REQUIRE(discrete_policy().size() == 10);
+    REQUIRE(discrete_policy().size() == 16);
     for (const auto &[key, rule] : discrete_policy()) {
         REQUIRE(print_config_def.get(key)->type == rule.type);
         if (rule.type == coEnum) REQUIRE(print_config_def.get(key)->enum_keys_map->at(rule.label) == rule.required);
     }
-    for (const auto *key : {"zaa_enabled","gcode_flavor","spiral_mode","enable_arc_fitting",
-                           "enable_support","raft_layers","wall_generator","fuzzy_skin",
-                           "ironing_type","seam_slope_type"}) {
+    for (const auto &[key, rule] : discrete_policy()) {
         INFO(key);
         auto config=eligible();
         const auto text=config.opt_serialize(key);
@@ -85,6 +221,8 @@ TEST_CASE("B01 discrete constraints reject textual substitutes for native settin
         const auto policy=resolve_policy(config,1,1);
         CHECK_FALSE(policy.passes_config_preflight());
         if (!policy.conflicts.empty()) CHECK(policy.conflicts.front().key == key);
+        config=eligible(); config.erase(key);
+        CHECK_FALSE(resolve_policy(config,1,1).passes_config_preflight());
     }
 }
 TEST_CASE("B01 discrete source and invalid enum values fail without unsafe serialization", "[Nonplanar][B01][B01Discrete]")
@@ -105,7 +243,7 @@ TEST_CASE("B01 discrete source and invalid enum values fail without unsafe seria
 }
 TEST_CASE("B01 discrete enum constraints use native values rather than borrowed labels", "[Nonplanar][B01][B01Discrete]")
 {
-    for (const auto *key : {"gcode_flavor","wall_generator","fuzzy_skin","ironing_type","seam_slope_type"}) {
+    for (const auto *key : {"gcode_flavor","wall_generator","fuzzy_skin","ironing_type","seam_slope_type","filament_map_mode"}) {
         INFO(key);
         auto config=eligible();
         const auto label=config.opt_serialize(key);

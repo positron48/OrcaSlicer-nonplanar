@@ -57,7 +57,13 @@ const std::map<std::string, DiscreteRule> &discrete_policy()
         {"wall_generator", {coEnum, int(PerimeterGeneratorType::Classic), "classic"}},
         {"fuzzy_skin", {coEnum, int(FuzzySkinType::Disabled_fuzzy), "disabled_fuzzy"}},
         {"ironing_type", {coEnum, int(IroningType::NoIroning), "no ironing"}},
-        {"seam_slope_type", {coEnum, int(SeamScarfType::None), "none"}}
+        {"seam_slope_type", {coEnum, int(SeamScarfType::None), "none"}},
+        {"single_extruder_multi_material", {coBool, 0, "0"}},
+        {"manual_filament_change", {coBool, 0, "0"}},
+        {"enable_prime_tower", {coBool, 0, "0"}},
+        {"enable_filament_dynamic_map", {coBool, 0, "0"}},
+        {"has_filament_switcher", {coBool, 0, "0"}},
+        {"filament_map_mode", {coEnum, int(fmmManual), "Manual"}}
     };
     return rules;
 }
@@ -96,6 +102,19 @@ const std::map<std::string, NeutralTransformRule> &neutral_transform_policy()
     return rules;
 }
 
+const std::map<std::string, ConfigOptionType> &single_tool_policy()
+{
+    static const std::map<std::string, ConfigOptionType> rules = {
+        {"nozzle_diameter", coFloats}, {"filament_diameter", coFloats},
+        {"filament_map", coInts}, {"physical_extruder_map", coInts}, {"extruder_offset", coPoints},
+        {"extruder", coInt}, {"sparse_infill_filament_id", coInt}, {"outer_wall_filament_id", coInt},
+        {"inner_wall_filament_id", coInt}, {"internal_solid_filament_id", coInt},
+        {"top_surface_filament_id", coInt}, {"bottom_surface_filament_id", coInt},
+        {"support_filament", coInt}, {"support_interface_filament", coInt}
+    };
+    return rules;
+}
+
 namespace {
 std::optional<PolicyConflict> discrete_conflict(const std::string &key, const ConfigOption *option)
 {
@@ -124,6 +143,65 @@ bool is_neutral(double value, double expected)
     // Both signs of zero are neutral. Bit comparison also rejects subnormals
     // under a caller's flush-to-zero mode without doing floating arithmetic.
     return value_bits == expected_bits || ((value_bits & magnitude) == 0 && (expected_bits & magnitude) == 0);
+}
+
+std::optional<PolicyConflict> single_tool_conflict(const std::string &key, const ConfigOption *option)
+{
+    const auto rule = single_tool_policy().find(key);
+    if (rule == single_tool_policy().end()) return {};
+    std::ostringstream actual;
+    actual.imbue(std::locale::classic());
+    actual << std::setprecision(std::numeric_limits<double>::max_digits10);
+    bool accepted = false;
+    const char *requirement = "Requires the native single-tool setting";
+    if (option && option->type() == rule->second && !option->nullable()) {
+        if (const auto *selection = dynamic_cast<const ConfigOptionInt *>(option)) {
+            actual << selection->value;
+            accepted = selection->value == 0 || selection->value == 1;
+            requirement = "Requires filament 1 or inherited selection 0";
+        } else if (const auto *diameters = dynamic_cast<const ConfigOptionFloats *>(option)) {
+            // Inspect IEEE bits so NaN and subnormal inputs cannot become
+            // accepted through fast-math assumptions or caller FTZ modes.
+            accepted = diameters->values.size() == 1;
+            actual << '[';
+            for (size_t i = 0; i < diameters->values.size(); ++i) {
+                const double value = diameters->values[i];
+                if (i) actual << ',';
+                actual << value;
+                uint64_t bits;
+                std::memcpy(&bits, &value, sizeof bits);
+                const auto exponent = (bits >> 52) & 0x7ff;
+                accepted = accepted && (bits >> 63) == 0 && exponent > 0 && exponent < 0x7ff;
+            }
+            actual << ']';
+            requirement = "Requires exactly one finite positive normal diameter; physical qualification is separate";
+        } else if (const auto *mapping = dynamic_cast<const ConfigOptionInts *>(option)) {
+            // Filament -> logical extruder is one-based; logical -> physical
+            // is zero-based in native Orca. Neither map may be auto-rewritten.
+            const int required = key == "filament_map" ? 1 : 0;
+            accepted = mapping->values.size() == 1 && mapping->values.front() == required;
+            actual << '[';
+            for (size_t i = 0; i < mapping->values.size(); ++i) {
+                if (i) actual << ',';
+                actual << mapping->values[i];
+            }
+            actual << ']';
+            requirement = key == "filament_map" ? "Requires exactly [1]" : "Requires exactly [0]";
+        } else if (const auto *offsets = dynamic_cast<const ConfigOptionPoints *>(option)) {
+            accepted = offsets->values.size() == 1;
+            actual << '[';
+            for (size_t i = 0; i < offsets->values.size(); ++i) {
+                const auto &point = offsets->values[i];
+                if (i) actual << ',';
+                actual << '(' << point.x() << ',' << point.y() << ')';
+                accepted = accepted && is_neutral(point.x(), 0.) && is_neutral(point.y(), 0.);
+            }
+            actual << ']';
+            requirement = "Requires exactly one identity extruder offset (0,0)";
+        }
+    }
+    if (accepted) return {};
+    return PolicyConflict{key, actual.str().empty() ? "<missing-or-wrong-native-type>" : actual.str(), requirement};
 }
 
 std::optional<PolicyConflict> neutral_transform_conflict(const std::string &key, const ConfigOption *option)
@@ -187,6 +265,17 @@ std::optional<PolicyConflict> custom_code_conflict(const std::string &key, const
                               "Custom code is unqualified; requires an empty native field"};
     return {};
 }
+
+std::optional<PolicyConflict> source_policy_conflict(const ConfigBase &source)
+{
+    for (const auto &key : source.keys()) {
+        if (auto conflict = discrete_conflict(key, source.option(key))) return conflict;
+        if (auto conflict = custom_code_conflict(key, source.option(key))) return conflict;
+        if (auto conflict = neutral_transform_conflict(key, source.option(key))) return conflict;
+        if (auto conflict = single_tool_conflict(key, source.option(key))) return conflict;
+    }
+    return {};
+}
 }
 
 std::optional<PolicyConflict> model_policy_conflict(const Model &model)
@@ -195,27 +284,22 @@ std::optional<PolicyConflict> model_policy_conflict(const Model &model)
         if (!custom.gcodes.empty())
             return PolicyConflict{"plates_custom_gcodes[" + std::to_string(plate) + "]",
                                   std::to_string(custom.gcodes.size()), "Custom plate actions are unqualified"};
-    const auto inspect = [](const ConfigBase &source) -> std::optional<PolicyConflict> {
-        for (const auto &key : source.keys()) {
-            if (auto conflict = discrete_conflict(key, source.option(key))) return conflict;
-            if (auto conflict = custom_code_conflict(key, source.option(key))) return conflict;
-            if (auto conflict = neutral_transform_conflict(key, source.option(key))) return conflict;
-        }
-        return {};
-    };
     for (const auto &material : model.materials)
-        if (auto conflict = inspect(material.second->config.get())) return conflict;
+        if (auto conflict = source_policy_conflict(material.second->config.get())) return conflict;
     for (size_t index = 0; index < model.objects.size(); ++index) {
         const auto *object = model.objects[index];
-        if (auto conflict = inspect(object->config.get())) return conflict;
+        if (auto conflict = source_policy_conflict(object->config.get())) return conflict;
         for (const auto *volume : object->volumes)
-            if (auto conflict = inspect(volume->config.get())) return conflict;
+            if (auto conflict = source_policy_conflict(volume->config.get())) return conflict;
         for (const auto &range : object->layer_config_ranges)
-            if (auto conflict = inspect(range.second.get())) return conflict;
+            if (auto conflict = source_policy_conflict(range.second.get())) return conflict;
         // These source controls live outside the resolved PrintRegionConfig.
         // Do not let native profile fallback/normalization qualify an input
         // whose custom layer generation has not been audited for this mode.
         const auto prefix = "objects[" + std::to_string(index) + "].";
+        if (object->is_mm_painted())
+            return PolicyConflict{prefix + "mmu_segmentation_facets", "present",
+                                  "Material painting is outside the single-material domain"};
         if (!object->layer_height_profile.empty())
             return PolicyConflict{prefix + "layer_height_profile", "present",
                                   "Custom layer-height profiles are outside the uniform-layer domain"};
@@ -247,6 +331,13 @@ bool requests_guarded_mode(const Model &model, const ConfigBase &config)
             if (requests_guarded_mode(range.second.get())) return true;
     }
     return false;
+}
+
+std::optional<PolicyConflict> input_policy_conflict(const Model &model, const ConfigBase &config)
+{
+    if (!requests_guarded_mode(model, config)) return {};
+    if (auto conflict = model_policy_conflict(model)) return conflict;
+    return source_policy_conflict(config);
 }
 
 PolicySnapshot resolve_policy(const ConfigBase &source, size_t objects, size_t instances)
@@ -293,6 +384,17 @@ PolicySnapshot resolve_policy(const ConfigBase &source, size_t objects, size_t i
             conflicts.push_back(std::move(*conflict));
         } else {
             read(entry.first);
+        }
+    }
+    for (const auto &[key, type] : single_tool_policy()) {
+        // Native normalize_fdm removes this optional source-only selector.
+        // All resolved region selections and tool vectors remain required.
+        if (key == "extruder" && !config.option(key)) continue;
+        if (auto conflict = single_tool_conflict(key, config.option(key))) {
+            resolved.emplace(key, conflict->value);
+            conflicts.push_back(std::move(*conflict));
+        } else {
+            read(key);
         }
     }
     for (const auto &entry : custom_code_policy()) {

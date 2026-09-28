@@ -28,7 +28,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 116,
+    "new_native_cases": 121,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -44,8 +44,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 153,
-    "final_ctest_executed": 153,
+    "final_ctest_discovered": 158,
+    "final_ctest_executed": 158,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -112,8 +112,8 @@
     "A01_current_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "A01_gui": "ISOLATED_IMPORT_SLICE_PREVIEW_AND_QUIT_PASS",
     "B01_custom_hook_cases": 5,
-    "B01_current_cases": 26,
-    "B01_current_assertions": 2940,
+    "B01_current_cases": 31,
+    "B01_current_assertions": 3321,
     "B01_custom_hook_registry_keys": 17,
     "B01_hooks_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B01_transform_cases": 3,
@@ -122,7 +122,7 @@
     "B01_snapshot_cases": 3,
     "B01_snapshot_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B01_discrete_cases": 4,
-    "B01_discrete_registry_keys": 10,
+    "B01_discrete_registry_keys": 16,
     "B01_discrete_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B01_layering_cases": 3,
     "B01_layering_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
@@ -133,7 +133,11 @@
     "B02_model_cases": 4,
     "B02_placement_centering_model_cases": 14,
     "B02_placement_centering_model_assertions": 227,
-    "B02_model_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
+    "B02_model_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B01_single_tool_cases": 5,
+    "B01_single_tool_registry_keys": 14,
+    "B01_single_tool_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B01_pre_normalization_cache": "RED_EXTRUDER_ASSIGNMENT_LEFT_EXPORT_DONE_THEN_NATIVE_INVALIDATION_AND_OWNED_DIAGNOSTIC_PASS"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -181,7 +185,8 @@
     "B01_discrete": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-discrete.md",
     "B01_layering": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-layering.md",
     "B02_centering": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B02-centering.md",
-    "B02_model": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B02-model.md"
+    "B02_model": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B02-model.md",
+    "B01_single_tool": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-single-tool.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -207,5 +212,6 @@
   "B01_discrete_evidence": "docs/nonplanar-dev/evidence/B01-discrete/source-manifest.json",
   "B01_layering_evidence": "docs/nonplanar-dev/evidence/B01-layering/source-manifest.json",
   "B02_centering_evidence": "docs/nonplanar-dev/evidence/B02-centering/source-manifest.json",
-  "B02_model_evidence": "docs/nonplanar-dev/evidence/B02-model/source-manifest.json"
+  "B02_model_evidence": "docs/nonplanar-dev/evidence/B02-model/source-manifest.json",
+  "B01_single_tool_evidence": "docs/nonplanar-dev/evidence/B01-single-tool/source-manifest.json"
 }

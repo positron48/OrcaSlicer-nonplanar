@@ -1,0 +1,1532 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="1" failures="190" skipped="0" tests="289" hostname="tbd" time="0.074" timestamp="2026-09-28T14:04:34Z">
+    <properties>
+      <property name="random-seed" value="3699447113"/>
+      <property name="filters" value="[B01SingleTool]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B01 single filament source selections allow inheritance but not normalization of other IDs" time="0.037" status="run">
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+extruder
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:123
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+sparse_infill_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:123
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+outer_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:123
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+inner_wall_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:123
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+internal_solid_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:123
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+top_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:123
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+bottom_surface_filament_id
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:123
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+support_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:123
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1)" type="CHECK">
+FAILED:
+  CHECK( resolve_policy(config,1,1).passes_config_preflight() == (id == 0 || id == 1) )
+with expansion:
+  true == false
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:112
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1)" type="CHECK">
+FAILED:
+  CHECK( model_policy_conflict(model).has_value() == (id != 0 &amp;&amp; id != 1) )
+with expansion:
+  false == true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:118
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+support_interface_filament
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:123
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 single tool rejects extra diameters maps offsets and malformed native values" time="0.026" status="run">
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+nozzle_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+nozzle_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+nozzle_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+nozzle_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+nozzle_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+nozzle_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+nozzle_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+filament_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+filament_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+filament_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+filament_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+filament_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+filament_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+filament_diameter
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:59
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+filament_map
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:68
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+filament_map
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:68
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+filament_map
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:68
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+filament_map
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:68
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+physical_extruder_map
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:68
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+physical_extruder_map
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:68
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+physical_extruder_map
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:68
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+physical_extruder_map
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:68
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:76
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:76
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:76
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:76
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:76
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:82
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:84
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:82
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:84
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:82
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:84
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:82
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:84
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:82
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:84
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:87
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 fixed mapping rejects automatic material switching and tower modes" time="0.000" status="run">
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+single_extruder_multi_material
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:96
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+manual_filament_change
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:96
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+enable_prime_tower
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:96
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+enable_filament_dynamic_map
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:96
+      </failure>
+      <failure message="!(policy.passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( policy.passes_config_preflight() )
+with expansion:
+  !true
+has_filament_switcher
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:96
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:101
+      </failure>
+      <failure message="!(resolve_policy(config,1,1).passes_config_preflight())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( resolve_policy(config,1,1).passes_config_preflight() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:101
+      </failure>
+      <error message="{Unknown expression after the reported line}">
+FAILED:
+  {Unknown expression after the reported line}
+Invalid value provided for parameter filament_map_mode: Default
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:101
+      </error>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 material painting invalidates guarded cached output and remains intact in OFF" time="0.007" status="run">
+      <failure message="print.nonplanar_block_reason(), Catch::Matchers::ContainsSubstring(&quot;mmu_segmentation_facets&quot;)" type="CHECK_THAT">
+FAILED:
+  CHECK_THAT( print.nonplanar_block_reason(), Catch::Matchers::ContainsSubstring("mmu_segmentation_facets") )
+with expansion:
+  "Nonplanar Top Lab: guarded slicing and export are not implemented" contains:
+  "mmu_segmentation_facets"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:137
+      </failure>
+      <system-out>
+st=1,
+      </system-out>
+    </testcase>
+    <system-out>
+st=1,
+    </system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>

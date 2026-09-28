@@ -1,0 +1,19 @@
+{
+  "base_commit": "488602ecef02a48e97834fdcfc0b58042e0ca2cf",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-single-tool.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/Policy.hpp": "c78357038d79953ce275c2d4939d4f8b35078f3cc0784e8c60ab02db34e24389",
+    "src/libslic3r/Nonplanar/Policy.cpp": "79d2c8bf4fa6859f909f7a0e597ce8b94680e9b98c3825eb830c326e14996506",
+    "src/libslic3r/Print.hpp": "66c517e821eca3f2ecff69d9a799e4fc927a1604842a35813b3f93bdf7792c65",
+    "src/libslic3r/Print.cpp": "63839b757dc2ef287bba56be67d93e0525a5ca8c43d7790c33d8ba009b782522",
+    "src/libslic3r/PrintApply.cpp": "312744878238d71e98c2ad8f940b4f4d2d29e64e3913c2954e8436baaa124d8f",
+    "tests/nonplanar/test_policy.cpp": "165920dad32da937985e22428e5a21d51484dac0607d19111c8dc3c8b5bbb296"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "b34d27e207286bb75adf452907b649a7a2c479e3067dc65978602853e5f4a15f",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "2d16fc844072ff8e513fcaa6470d927d0f9b687e0d5c315f75613ff04e10e03d",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "78690bff2c69ab0c61c06762f96183f806b329c438ee7bd97e4cb7f619ad2852"
+  },
+  "platform": "Darwin positroid-mac.local 25.5.0 Darwin Kernel Version 25.5.0: Mon Apr 27 20:39:42 PDT 2026; root:xnu-12377.121.6~2/RELEASE_ARM64_T6031 arm64",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin"
+}

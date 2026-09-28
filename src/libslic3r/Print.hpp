@@ -1152,6 +1152,9 @@ private:
     Polygons            first_layer_islands() const;
 
     PrintConfig                             m_config;
+    // Owned diagnostic from the last guarded apply input, before native
+    // normalization can discard unsupported assignments or disable a tower.
+    std::string                             m_nonplanar_input_conflict;
     PrintObjectConfig                       m_default_object_config;
     PrintRegionConfig                       m_default_region_config;
     PrintObjectPtrs                         m_objects;
