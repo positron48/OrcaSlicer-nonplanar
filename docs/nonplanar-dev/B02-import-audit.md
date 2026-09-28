@@ -1,5 +1,11 @@
 # B02 source import audit (implementation pending)
 
+Implementation follow-up: B02-mesh.md and B02-snapshot.md now record bounded
+native topology/self-intersection checks, owned source bytes, SHA-256, pre-repair
+geometry and exact repair comparison. File-descriptor capture, decimal conversion
+error and worker resource isolation remain pending. The findings below describe
+the pinned import path that motivated those changes.
+
 Pinned native entry: Format/STL.cpp load_stl -> TriangleMesh::ReadSTLFile ->
 admesh stl_open -> TriangleMesh::from_stl. Binary and ASCII parsing are native.
 The load_stl path repairs before adding the mesh to Model.

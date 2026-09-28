@@ -13,6 +13,10 @@ struct MeshAuditLimits {
     double max_coordinate_mm = 10000;
     std::chrono::milliseconds timeout{1000};
     std::function<bool()> cancelled;
+    bool valid() const {
+        return max_faces>0 && max_faces<=5000 && max_vertices>0 && max_vertices<=15000 &&
+            std::isfinite(max_coordinate_mm) && max_coordinate_mm>0 && max_coordinate_mm<=10000 && timeout.count()>0;
+    }
 };
 struct MeshAuditResult {
     MeshAuditStatus status = MeshAuditStatus::Unknown;
@@ -29,4 +33,7 @@ struct MeshAuditResult {
 // a worker before exposing untrusted imports through an interactive job pipeline.
 MeshAuditResult audit_mesh(const TriangleMesh &source, bool millimeters_declared,
                            const MeshAuditLimits &limits = {});
+// Exact comparison for bounded, finite, index-valid meshes already audited by
+// the caller. Ignores face order and cyclic vertex rotation, never winding.
+bool same_oriented_triangles(const indexed_triangle_set &, const indexed_triangle_set &);
 }

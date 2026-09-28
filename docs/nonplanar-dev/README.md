@@ -86,3 +86,14 @@ exercise bounded native modules; SYS-08's full 200k pipeline remains NOT_RUN.
 `A08-review.md` records findings and `A08-estimate.md` revises remaining effort.
 Gate A stays open for analytical sphere evidence, a prepared coupon/protocol
 and independent review. Operator data and physical qualification remain absent.
+
+## B01/B02 continuation
+
+`status.json` is the current checkpoint. `B01.md` records a bounded resolved
+mode preflight and native/CLI/archive output blocks; the full compatibility
+registry is still pending. `B02-parser.md`, `B02-mesh.md` and `B02-snapshot.md`
+record bounded STL metadata, parsed geometry checks and immutable source-byte
+provenance. Latest selected CTest executes 107/107; fresh OFF/ZAA G-code/replay
+comparisons pass. Full source error budgets, isolated import work, whole-job
+snapshots and a successful hybrid pipeline remain unimplemented. Gate A still
+requires independent review; digital coupon preparation is not physical proof.

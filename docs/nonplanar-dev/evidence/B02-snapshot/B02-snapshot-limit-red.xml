@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="6" skipped="0" tests="6" hostname="tbd" time="0.002" timestamp="2026-09-28T10:45:36Z">
+    <properties>
+      <property name="random-seed" value="1346053289"/>
+      <property name="filters" value="[LimitSnapshot]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B02 callback cannot relax captured geometry or import limits" time="0.002" status="run">
+      <failure message="audited.status==MeshAuditStatus::Unknown" type="CHECK">
+FAILED:
+  CHECK( audited.status==MeshAuditStatus::Unknown )
+with expansion:
+  0 == 2
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:170
+      </failure>
+      <failure message="audited.reason==&quot;COORDINATE_DOMAIN&quot;" type="CHECK">
+FAILED:
+  CHECK( audited.reason=="COORDINATE_DOMAIN" )
+with expansion:
+  "CLOSED_ORIENTED_SINGLE_COMPONENT"
+  ==
+  "COORDINATE_DOMAIN"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:171
+      </failure>
+      <failure message="!(audited.normalized)" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( audited.normalized )
+with expansion:
+  !0x101d75398
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:172
+      </failure>
+      <failure message="imported.geometry.status==MeshAuditStatus::Unknown" type="CHECK">
+FAILED:
+  CHECK( imported.geometry.status==MeshAuditStatus::Unknown )
+with expansion:
+  0 == 2
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:173
+      </failure>
+      <failure message="imported.geometry.reason==&quot;COORDINATE_DOMAIN&quot;" type="CHECK">
+FAILED:
+  CHECK( imported.geometry.reason=="COORDINATE_DOMAIN" )
+with expansion:
+  "CLOSED_ORIENTED_SINGLE_COMPONENT"
+  ==
+  "COORDINATE_DOMAIN"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:174
+      </failure>
+      <failure message="!(imported.geometry.normalized)" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( imported.geometry.normalized )
+with expansion:
+  !0x101d75168
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:175
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

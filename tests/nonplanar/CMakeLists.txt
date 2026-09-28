@@ -1,4 +1,4 @@
-add_executable(nonplanar_tests test_contracts.cpp test_collision.cpp test_profile_scene.cpp test_stl_metadata.cpp test_mesh_audit.cpp)
+add_executable(nonplanar_tests test_contracts.cpp test_collision.cpp test_profile_scene.cpp test_stl_metadata.cpp test_mesh_audit.cpp test_stl_import.cpp)
 target_link_libraries(nonplanar_tests test_common libslic3r Catch2::Catch2WithMain)
 set_property(TARGET nonplanar_tests PROPERTY FOLDER "tests")
 orcaslicer_copy_test_dlls()

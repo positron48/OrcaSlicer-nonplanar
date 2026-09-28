@@ -29,6 +29,8 @@ set(lisbslic3r_sources
     Nonplanar/Policy.hpp
     Nonplanar/MeshAudit.cpp
     Nonplanar/MeshAudit.hpp
+    Nonplanar/StlImport.cpp
+    Nonplanar/StlImport.hpp
     Nonplanar/Contracts.cpp
     Nonplanar/Contracts.hpp
     Nonplanar/Collision.cpp

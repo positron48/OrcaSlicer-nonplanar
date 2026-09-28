@@ -18,8 +18,11 @@ std::vector<Triangle> triangles(const indexed_triangle_set &mesh)
         for (int rotation=0; rotation<3; ++rotation) {
             Triangle candidate{};
             for (int i=0; i<3; ++i)
-                for (int axis=0; axis<3; ++axis)
-                    candidate[i*3+axis]=mesh.vertices.at(face((i+rotation)%3))(axis);
+                for (int axis=0; axis<3; ++axis) {
+                    const float value=mesh.vertices.at(face((i+rotation)%3))(axis);
+                    if (!std::isfinite(value)) throw std::invalid_argument("nonfinite round-trip coordinate");
+                    candidate[i*3+axis]=value;
+                }
             if (rotation==0 || candidate<canonical) canonical=candidate;
         }
         result.push_back(canonical);
@@ -29,8 +32,14 @@ std::vector<Triangle> triangles(const indexed_triangle_set &mesh)
 }
 }
 
-MeshAuditResult audit_mesh(const TriangleMesh &source, bool millimeters_declared, const MeshAuditLimits &limits)
+bool same_oriented_triangles(const indexed_triangle_set &a, const indexed_triangle_set &b)
 {
+    return a.indices.size()==b.indices.size() && triangles(a)==triangles(b);
+}
+
+MeshAuditResult audit_mesh(const TriangleMesh &source, bool millimeters_declared, const MeshAuditLimits &requested_limits)
+{
+    const MeshAuditLimits limits=requested_limits;
     MeshAuditResult result;
     const auto started=std::chrono::steady_clock::now();
     auto stop = [&] {
@@ -42,9 +51,7 @@ MeshAuditResult audit_mesh(const TriangleMesh &source, bool millimeters_declared
         result.status=MeshAuditStatus::Invalid; result.reason=reason; return result;
     };
     if (!millimeters_declared) { result.reason="UNCONFIRMED_UNITS"; return result; }
-    if (limits.max_faces==0 || limits.max_faces>5000 || limits.max_vertices==0 || limits.max_vertices>15000 ||
-        !std::isfinite(limits.max_coordinate_mm) ||
-        limits.max_coordinate_mm<=0 || limits.max_coordinate_mm>10000 || limits.timeout.count()<=0) {
+    if (!limits.valid()) {
         result.reason="INVALID_LIMITS"; return result;
     }
     if (source.its.indices.size()>limits.max_faces || source.its.vertices.size()>limits.max_vertices) {
@@ -147,7 +154,7 @@ MeshAuditResult audit_mesh(const TriangleMesh &source, bool millimeters_declared
         if (stop()) return result;
         const auto cgal=MeshBoolean::cgal::triangle_mesh_to_cgal(mesh);
         const auto roundtrip=MeshBoolean::cgal::cgal_to_indexed_triangle_set(*cgal);
-        if (triangles(mesh)!=triangles(roundtrip)) return invalid("CGAL_CHANGED_GEOMETRY");
+        if (!same_oriented_triangles(mesh,roundtrip)) return invalid("CGAL_CHANGED_GEOMETRY");
         if (stop()) return result;
         const bool intersects=MeshBoolean::cgal::does_self_intersect(*cgal);
         if (stop()) return result;

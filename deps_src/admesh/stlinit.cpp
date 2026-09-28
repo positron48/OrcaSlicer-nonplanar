@@ -26,6 +26,7 @@
 #include <math.h>
 #include <assert.h>
 #include <sstream>
+#include <memory>
 
 #include <boost/log/trivial.hpp>
 #include <boost/nowide/cstdio.hpp>
@@ -169,7 +170,7 @@ static FILE *stl_open_count_facets(stl_file *stl, const char *file, unsigned int
 /* Reads the contents of the file pointed to by fp into the stl structure,
    starting at facet first_facet.  The second argument says if it's our first
    time running this for the stl and therefore we should reset our max and min stats. */
-static bool stl_read(stl_file *stl, FILE *fp, int first_facet, bool first, ImportstlProgressFn stlFn, int custom_header_length)
+static bool stl_read(stl_file *stl, FILE *fp, int first_facet, bool first, ImportstlProgressFn stlFn, int custom_header_length, bool strict = false)
 {
     // Metadata belongs to this import, including during a reentrant callback.
     std::string model_id, country_code;
@@ -228,26 +229,21 @@ static bool stl_read(stl_file *stl, FILE *fp, int first_facet, bool first, Impor
             unused_result = fscanf(fp, " solid%*[^\n]\n");  // name might contain spaces so %*s doesn't work and it also can be empty (just "solid")
 			// Leading space in the fscanf format skips all leading white spaces including numerous new lines and tabs.
 			int res_normal     = fscanf(fp, " facet normal %31s %31s %31s", normal_buf[0], normal_buf[1], normal_buf[2]);
-			assert(res_normal == 3);
 			int res_outer_loop = fscanf(fp, " outer loop");
-			assert(res_outer_loop == 0);
 			int res_vertex1    = fscanf(fp, " vertex %f %f %f", &facet.vertex[0](0), &facet.vertex[0](1), &facet.vertex[0](2));
-			assert(res_vertex1 == 3);
 			int res_vertex2    = fscanf(fp, " vertex %f %f %f", &facet.vertex[1](0), &facet.vertex[1](1), &facet.vertex[1](2));
-			assert(res_vertex2 == 3);
 			// Trailing whitespace is there to eat all whitespaces and empty lines up to the next non-whitespace.
 			int res_vertex3    = fscanf(fp, " vertex %f %f %f ", &facet.vertex[2](0), &facet.vertex[2](1), &facet.vertex[2](2));
-			assert(res_vertex3 == 3);
+			if (res_normal != 3 || res_outer_loop != 0 || res_vertex1 != 3 || res_vertex2 != 3 || res_vertex3 != 3)
+				return false;
 			// Some G-code generators tend to produce text after "endloop" and "endfacet". Just ignore it.
-			char buf[2048];
-            [[maybe_unused]] auto unused_result2 = fgets(buf, 2047, fp);
+			char buf[2048]{};
+            if (!fgets(buf, 2047, fp)) return false;
 			bool endloop_ok = strncmp(buf, "endloop", 7) == 0 && (buf[7] == '\r' || buf[7] == '\n' || buf[7] == ' ' || buf[7] == '\t');
-			assert(endloop_ok);
 			// Skip the trailing whitespaces and empty lines.
             unused_result = fscanf(fp, " ");
-            unused_result2 = fgets(buf, 2047, fp);
+            if (!fgets(buf, 2047, fp)) return false;
 			bool endfacet_ok = strncmp(buf, "endfacet", 8) == 0 && (buf[8] == '\r' || buf[8] == '\n' || buf[8] == ' ' || buf[8] == '\t');
-			assert(endfacet_ok);
 			if (res_normal != 3 || res_outer_loop != 0 || res_vertex1 != 3 || res_vertex2 != 3 || res_vertex3 != 3 || ! endloop_ok || ! endfacet_ok) {
 				BOOST_LOG_TRIVIAL(error) << "Something is syntactically very wrong with this ASCII STL! ";
 				return false;
@@ -278,6 +274,13 @@ static bool stl_read(stl_file *stl, FILE *fp, int first_facet, bool first, Impor
 		}
 #endif
 
+        if (strict) {
+            for (int axis = 0; axis < 3; ++axis) {
+                if (!std::isfinite(facet.normal(axis))) return false;
+                for (int vertex = 0; vertex < 3; ++vertex)
+                    if (!std::isfinite(facet.vertex[vertex](axis))) return false;
+            }
+        }
 		// Write the facet into memory if none of facet vertices is NAN.
 		bool someone_is_nan = false;
 		for (size_t j = 0; j < 3; ++j) {
@@ -313,6 +316,75 @@ bool stl_open(stl_file *stl, const char *file, ImportstlProgressFn stlFn, int cu
     bool result = stl_read(stl, fp, 0, true, stlFn, custom_header_length);
   	fclose(fp);
   	return result;
+}
+
+bool stl_open_from_memory(stl_file *stl, std::string_view bytes, size_t max_facets, ImportstlProgressFn stlFn)
+{
+    stl->clear();
+    if (bytes.size() > 2 * 1024 * 1024 || bytes.size() < HEADER_SIZE || max_facets == 0 || max_facets > 5000)
+        return false;
+    // Binary length and count must agree exactly, including headers beginning
+    // with "solid". No allocation is made from an untrusted declared count.
+    uint32_t count = 0;
+    for (int i = 0; i < 4; ++i)
+        count |= uint32_t(static_cast<unsigned char>(bytes[LABEL_SIZE+i])) << (8*i);
+    const bool is_binary = uint64_t(count) * SIZEOF_STL_FACET + HEADER_SIZE == bytes.size();
+    if (!is_binary) {
+        // Validate record boundaries before invoking the permissive native
+        // scanner. One ASCII solid, seven bounded lines per facet, no ignored
+        // trailing content. Coordinates are still parsed by stl_read.
+        count = 0;
+        bool opened = false, closed = false;
+        int record = 0;
+        size_t offset = 0;
+        while (offset < bytes.size()) {
+            auto end = bytes.find('\n', offset);
+            if (end == std::string_view::npos) end = bytes.size();
+            auto line = bytes.substr(offset, end-offset);
+            offset = end == bytes.size() ? end : end+1;
+            if (line.size() > 255) return false;
+            for (unsigned char c : line)
+                if ((c < 32 && c != '\r' && c != '\t') || c > 126) return false;
+            const auto first = line.find_first_not_of(" \t\r");
+            if (first == std::string_view::npos) continue;
+            line = line.substr(first, line.find_last_not_of(" \t\r")-first+1);
+            auto keyword = [&](std::string_view word) {
+                return line.substr(0, word.size()) == word &&
+                    (line.size() == word.size() || line[word.size()] == ' ' || line[word.size()] == '\t');
+            };
+            if (!opened) {
+                if (!keyword("solid")) return false;
+                opened = true;
+                continue;
+            }
+            if (closed) return false;
+            if (record == 0 && keyword("endsolid")) { closed = true; continue; }
+            if (line.size() > 96) return false;
+            if ((record == 0 && !keyword("facet normal")) ||
+                (record == 1 && line != "outer loop") ||
+                (record >= 2 && record <= 4 && !keyword("vertex")) ||
+                (record == 5 && line != "endloop") ||
+                (record == 6 && line != "endfacet")) return false;
+            if (++record == ASCII_LINES_PER_FACET) {
+                record = 0;
+                if (++count > max_facets) return false;
+            }
+        }
+        if (!closed || record != 0) return false;
+    }
+    if (count == 0 || count > max_facets) return false;
+    // Anonymous temporary stream is owned throughout parsing. No pathname is
+    // exposed and a callback cannot swap the captured input by changing a file.
+    std::unique_ptr<FILE, decltype(&fclose)> stream(::tmpfile(), &fclose);
+    if (!stream || fwrite(bytes.data(), 1, bytes.size(), stream.get()) != bytes.size() ||
+        fseek(stream.get(), 0, SEEK_SET) != 0) return false;
+    Slic3r::CNumericLocalesSetter locales_setter;
+    stl->stats.reset_header(LABEL_SIZE);
+    stl->stats.type = is_binary ? binary : ascii;
+    stl->stats.number_of_facets = count;
+    stl->stats.original_num_facets = count;
+    stl_allocate(stl);
+    return stl_read(stl, stream.get(), 0, true, stlFn, LABEL_SIZE, true);
 }
 
 void stl_allocate(stl_file *stl)
