@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="libslic3r_tests" errors="0" failures="0" skipped="0" tests="8" hostname="tbd" time="0.004" timestamp="2026-09-28T10:07:40Z">
+    <properties>
+      <property name="random-seed" value="3873707854"/>
+      <property name="filters" value="[stl]"/>
+    </properties>
+    <testcase classname="libslic3r_tests.global" name="Scenario: Reading an STL file" time="0.000" status="run"/>
+    <testcase classname="libslic3r_tests.global" name="Scenario: Reading an STL file/Given: umlauts in the path of a binary STL file, Czech characters in the file name" time="0.003" status="run"/>
+    <testcase classname="libslic3r_tests.global" name="Scenario: Reading an STL file/Given: umlauts in the path of a binary STL file, Czech characters in the file name/When: STL file is read" time="0.003" status="run"/>
+    <testcase classname="libslic3r_tests.global" name="Scenario: Reading an STL file/Given: umlauts in the path of a binary STL file, Czech characters in the file name/When: STL file is read/Then: load should succeed" time="0.002" status="run"/>
+    <testcase classname="libslic3r_tests.global" name="Scenario: Reading an STL file/Given: in ASCII format" time="0.000" status="run"/>
+    <testcase classname="libslic3r_tests.global" name="Scenario: Reading an STL file/Given: in ASCII format/When: line endings LF" time="0.000" status="run"/>
+    <testcase classname="libslic3r_tests.global" name="Scenario: Reading an STL file/Given: in ASCII format/When: line endings LF/Then: load should succeed" time="0.000" status="run"/>
+    <testcase classname="libslic3r_tests.global" name="Scenario: Reading an STL file/Given: in ASCII format/When: line endings CRLF" time="0.000" status="run"/>
+    <testcase classname="libslic3r_tests.global" name="Scenario: Reading an STL file/Given: in ASCII format/When: line endings CRLF/Then: load should succeed" time="0.000" status="run"/>
+    <testcase classname="libslic3r_tests.global" name="Scenario: Reading an STL file/Given: in ASCII format/When: nonstandard STL file (text after ending tags, invalid normals, for example infinities)" time="0.000" status="run"/>
+    <testcase classname="libslic3r_tests.global" name="Scenario: Reading an STL file/Given: in ASCII format/When: nonstandard STL file (text after ending tags, invalid normals, for example infinities)/Then: load should succeed" time="0.000" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

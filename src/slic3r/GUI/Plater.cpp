@@ -5798,66 +5798,12 @@ BoundingBox Plater::priv::scaled_bed_shape_bb() const
 
 
 void read_binary_stl(const std::string& filename, std::string& model_id, std::string& code) {
-    std::ifstream file( encode_path(filename.c_str()), std::ios::binary);
-    if (!file) {
-        return;
-    }
-
-    try {
-        // Read the first 80 bytes
-        char data[80];
-        file.read(data, 80);
-        if (!file) {
-            file.close();
-            return;
-        }
-
-        if (data[0] == '\0' || data[0] == ' ') {
-            file.close();
-            return;
-        }
-
-        char magic[2] = { data[0], data[1] };
-        if (magic[0] != 'M' || magic[1] != 'W') {
-            file.close();
-            return;
-        }
-
-        if (data[2] != ' ') {
-            file.close();
-            return;
-        }
-
-        char protocol_version[3] = { data[3], data[4], data[5] };
-
-        //version
-        if (protocol_version[0] != '1' || protocol_version[1] != '.' || protocol_version[2] != '0') {
-            file.close();
-            return;
-        }
-
-        std::vector<char*> tokens;
-        std::istringstream iss(data);
-        std::string token;
-        while (std::getline(iss, token, ' ')) {
-            char* tokenPtr = new char[token.length() + 1];
-            std::strcpy(tokenPtr, token.c_str());
-            tokens.push_back(tokenPtr);
-        }
-
-        //model id
-        if (tokens.size() < 4) {
-            file.close();
-            return;
-        }
-
-        model_id = tokens[2];
-        code = tokens[3];
-        file.close();
-    }
-    catch (...) {
-    }
-    return;
+    std::ifstream file(encode_path(filename.c_str()), std::ios::binary);
+    char data[80];
+    if (!file.read(data, sizeof(data)) || std::string_view(data, 3) != "MW ") return;
+    const auto metadata = stl_parse_source_metadata(std::string_view(data, sizeof(data)));
+    model_id = metadata.model_id;
+    code = metadata.country_code;
 }
 
 // BBS: backup & restore

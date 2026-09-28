@@ -25,6 +25,7 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
+#include <sstream>
 
 #include <boost/log/trivial.hpp>
 #include <boost/nowide/cstdio.hpp>
@@ -43,9 +44,20 @@
 extern void stl_internal_reverse_quads(char *buf, size_t cnt);
 #endif /* BOOST_ENDIAN_BIG_BYTE */
 
+stl_source_metadata stl_parse_source_metadata(std::string_view header)
+{
+    if (header.size() > 255) return {};
+    header = header.substr(0, header.find('\0'));
+    const auto marker = header.find("MW ");
+    if (marker == std::string_view::npos) return {};
+    std::istringstream fields{std::string(header.substr(marker + 3))};
+    std::string version, id, country;
+    if (!(fields >> version >> id >> country) || version != "1.0" ||
+        id.size() > 127 || country.size() > 15) return {};
+    return {std::move(id), std::move(country)};
+}
+
 const int LOAD_STL_UNIT_NUM           = 5;
-static std::string model_id           = "";
-static std::string country_code       = "";
 
 static FILE *stl_open_count_facets(stl_file *stl, const char *file, unsigned int custom_header_length)
 {
@@ -126,8 +138,15 @@ static FILE *stl_open_count_facets(stl_file *stl, const char *file, unsigned int
 		    if (strlen(linebuf) <= 4)
 		    	continue;
 		    // Skip solid/endsolid lines as broken STL file generators may put several of them.
-		    if (strncmp(linebuf, "solid", 5) == 0 || strncmp(linebuf, "endsolid", 8) == 0)
+		    if (strncmp(linebuf, "solid", 5) == 0 || strncmp(linebuf, "endsolid", 8) == 0) {
+                // A long name may span several fgets buffers, but is still one
+                // header line. Do not count its continuation as facet records.
+                if (strchr(linebuf, '\n') == nullptr) {
+                    int c;
+                    while ((c = fgetc(fp)) != '\n' && c != EOF) {}
+                }
 		    	continue;
+            }
 		    ++ num_lines;
 		}
 
@@ -152,47 +171,25 @@ static FILE *stl_open_count_facets(stl_file *stl, const char *file, unsigned int
    time running this for the stl and therefore we should reset our max and min stats. */
 static bool stl_read(stl_file *stl, FILE *fp, int first_facet, bool first, ImportstlProgressFn stlFn, int custom_header_length)
 {
+    // Metadata belongs to this import, including during a reentrant callback.
+    std::string model_id, country_code;
     if (stl->stats.type == binary) {
         int header_size = custom_header_length + NUM_FACET_SIZE;
         fseek(fp, header_size, SEEK_SET);
-        model_id = "";
-        country_code = "";
+    } else {
+        rewind(fp);
+        char solid_name[256]{};
+        const int res_solid = fscanf(fp, " solid %255[^\n]", solid_name);
+        const int next = fgetc(fp);
+        // An overlong optional header is ignored, never truncated into trusted
+        // metadata. The facet parser below still reads the original geometry.
+        if (res_solid == 1 && (next == '\n' || next == EOF)) {
+            auto metadata = stl_parse_source_metadata(solid_name);
+            model_id = std::move(metadata.model_id);
+            country_code = std::move(metadata.country_code);
+        }
+        rewind(fp);
     }
-	else {
-        rewind(fp);
-        try{
-            char solid_name[256];
-            int res_solid = fscanf(fp, " solid %[^\n]", solid_name);
-            if (res_solid == 1) {
-                char* mw_position = strstr(solid_name, "MW");
-                if (mw_position != NULL) {
-                    // Extract the value after "MW"
-                    char version_str[16];
-                    char model_id_str[128]; 
-                    char country_code_str[16];
-                    int num_values = sscanf(mw_position + 3, "%s %s %s", version_str, model_id_str, country_code_str);
-                    if (num_values == 3) {
-                        if (strcmp(version_str, "1.0") == 0) {
-                            model_id = model_id_str;
-                            country_code = country_code_str;
-                        }
-                    }
-                    else {
-                        model_id = "";
-                        country_code = "";
-                    }
-                }
-                else {
-                    model_id = "";  // No MW format found
-                    country_code = "";
-                }
-            }
-        }
-        catch (...){
-        }
-        
-        rewind(fp);
-	}
     	
 
   	char normal_buf[3][32];

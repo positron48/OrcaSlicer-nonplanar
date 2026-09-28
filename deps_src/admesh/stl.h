@@ -28,6 +28,7 @@
 #include <stddef.h>
 
 #include <vector>
+#include <string_view>
 #include <Eigen/Geometry> 
 
 // Size of the binary STL header, free form.
@@ -46,6 +47,10 @@ static_assert(sizeof(stl_vertex) == 12, "size of stl_vertex incorrect");
 static_assert(sizeof(stl_normal) == 12, "size of stl_normal incorrect");
 
 typedef std::function<void(int current, int total, bool& cancel, std::string& model_id, std::string& code)> ImportstlProgressFn;
+
+struct stl_source_metadata { std::string model_id, country_code; };
+// Optional metadata from a bounded ASCII/binary header (NUL padding allowed).
+extern stl_source_metadata stl_parse_source_metadata(std::string_view header);
 
 typedef enum {
     eNormal,  // normal face

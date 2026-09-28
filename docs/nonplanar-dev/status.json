@@ -16,7 +16,7 @@
     "A07": "SIMULATION_CONTRACT_NATIVE_TESTS_PASS_OPERATOR_EVIDENCE_NOT_RUN_REVIEW_PENDING",
     "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_SPHERE_COUPON_PREPARATION_COMPLETE_INDEPENDENT_REVIEW_PENDING",
     "B01": "BOUNDED_NATIVE_MODE_PREFLIGHT_AND_OUTPUT_BLOCKS_PASS_COMPATIBILITY_REGISTRY_PENDING",
-    "B02": "SOURCE_IMPORT_AUDIT_ONLY_IMPLEMENTATION_PENDING"
+    "B02": "BOUNDED_STL_METADATA_FIX_AND_NATIVE_TESTS_PASS_FULL_MESH_VALIDATION_PENDING"
   },
   "executed_checks": {
     "ORC-01": "PASS",
@@ -28,10 +28,10 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 54,
+    "new_native_cases": 57,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
-    "other_upstream_tests_not_run": 156,
+    "other_upstream_tests_not_run": 155,
     "GEO-01": "PASS_A04_PRIMITIVE_DOMAIN_ONLY",
     "GEO-02": "PASS_A04_PRIMITIVE_DOMAIN_ONLY",
     "GEO-03": "PASS_A04_PRIMITIVE_DOMAIN_ONLY",
@@ -44,8 +44,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 91,
-    "final_ctest_executed": 91,
+    "final_ctest_discovered": 94,
+    "final_ctest_executed": 94,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -76,7 +76,13 @@
     "B01_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_RESOLVED_SCHEMA_ADDS_ONLY_NPTOP_MODE_OFF",
     "ORC-04": "PASS_NATIVE_AND_SANDBOXED_CLI_MODE_ZAA_REJECTION_GUI_NOT_RUN",
     "ORC-10": "PASS_NATIVE_RESOLVED_REGION_AND_SOURCE_OVERRIDE_REJECTION",
-    "ORC-35": "NOT_IMPLEMENTED_FULL_COMPATIBILITY_REGISTRY_PENDING"
+    "ORC-35": "NOT_IMPLEMENTED_FULL_COMPATIBILITY_REGISTRY_PENDING",
+    "B02_parser_cases": 3,
+    "B02_parser_assertions": 175,
+    "B02_upstream_stl_cases": 1,
+    "B02_upstream_stl_assertions": 8,
+    "B02_parser_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B02_metadata_boundary": "RED_EXIT_42_THEN_FIXED_PASS"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -90,7 +96,7 @@
     "coupon_geometry": "PREPARED_AND_VALIDATED_DIGITALLY_ONLY"
   },
   "gui_coexistence": "NOT_RUN",
-  "ci": "RUN_36402596420_RUNNING_PINNED_DEPENDENCIES_AFTER_SOURCE_AUDIT_AND_SYSTEM_DEPS_PASS",
+  "ci": "RUN_36402596420_RUNNING_DEPENDENCIES_NEWER_BRANCH_RUN_QUEUED",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
   "next_step": "Finish B01 compatibility registry and whole resolved policy; implement bounded native STL import validation. Gate A independent approval and all physical qualification remain pending.",
@@ -109,7 +115,8 @@
     "coupon_preparation": "9897b7f3",
     "linux_ci": "26317237",
     "linux_ci_ancestry_fix": "6ffcd91f",
-    "B01": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/Policy.cpp"
+    "B01": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/Policy.cpp",
+    "B02_parser": "SELF: git log --diff-filter=A --format=%H -- tests/nonplanar/test_stl_metadata.cpp"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -118,5 +125,6 @@
     "INDEPENDENT_REVIEW_PENDING"
   ],
   "A08_evidence": "docs/nonplanar-dev/evidence/A08/source-manifest.json",
-  "B01_evidence": "docs/nonplanar-dev/evidence/B01/source-manifest.json"
+  "B01_evidence": "docs/nonplanar-dev/evidence/B01/source-manifest.json",
+  "B02_parser_evidence": "docs/nonplanar-dev/evidence/B02-parser/source-manifest.json"
 }

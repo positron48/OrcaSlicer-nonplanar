@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="1" failures="1" skipped="0" tests="162" hostname="tbd" time="0.004" timestamp="2026-09-28T09:59:52Z">
+    <properties>
+      <property name="random-seed" value="986453771"/>
+      <property name="filters" value="[B02]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B02 binary STL metadata reads exactly the bounded header" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B02 native STL metadata bounds preserve geometry for long and malformed headers" time="0.000" status="run">
+      <failure message="id.empty()" type="REQUIRE">
+FAILED:
+  REQUIRE( id.empty() )
+with expansion:
+  false
+269
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_metadata.cpp:64
+      </failure>
+      <error message="mesh.ReadSTLFile(path.c_str(),true,[&amp;](int,int,bool&amp;,std::string &amp;id,std::string &amp;country) { ++callbacks; do { (void)__builtin_constant_p( id.empty() ); Catch::AssertionHandler catchAssertionHandler( &quot;REQUIRE&quot;_catch_sr, ::Catch::SourceLineInfo( &quot;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_metadata.cpp&quot;, static_cast&lt;std::size_t>( 64 ) ), &quot;id.empty()&quot;_catch_sr, Catch::ResultDisposition::Normal ); { _Pragma( &quot;clang diagnostic push&quot; ) _Pragma( &quot;clang diagnostic ignored \&quot;-Wparentheses\&quot;&quot; ) catchAssertionHandler.handleExpr( Catch::Decomposer() &lt;= id.empty() ); _Pragma( &quot;clang diagnostic pop&quot; ) } catchAssertionHandler.complete(); } while( (void)0, (false) &amp;&amp; static_cast&lt;const bool&amp;>( !!(id.empty()) ) ); do { (void)__builtin_constant_p( country.empty() ); Catch::AssertionHandler catchAssertionHandler( &quot;REQUIRE&quot;_catch_sr, ::Catch::SourceLineInfo( &quot;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_metadata.cpp&quot;, static_cast&lt;std::size_t>( 64 ) ), &quot;country.empty()&quot;_catch_sr, Catch::ResultDisposition::Normal ); { _Pragma( &quot;clang diagnostic push&quot; ) _Pragma( &quot;clang diagnostic ignored \&quot;-Wparentheses\&quot;&quot; ) catchAssertionHandler.handleExpr( Catch::Decomposer() &lt;= country.empty() ); _Pragma( &quot;clang diagnostic pop&quot; ) } catchAssertionHandler.complete(); } while( (void)0, (false) &amp;&amp; static_cast&lt;const bool&amp;>( !!(country.empty()) ) ); })" type="REQUIRE">
+FAILED:
+  REQUIRE( mesh.ReadSTLFile(path.c_str(),true,[&amp;](int,int,bool&amp;,std::string &amp;id,std::string &amp;country) { ++callbacks; do { (void)__builtin_constant_p( id.empty() ); Catch::AssertionHandler catchAssertionHandler( "REQUIRE"_catch_sr, ::Catch::SourceLineInfo( "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_metadata.cpp", static_cast&lt;std::size_t>( 64 ) ), "id.empty()"_catch_sr, Catch::ResultDisposition::Normal ); { _Pragma( "clang diagnostic push" ) _Pragma( "clang diagnostic ignored \"-Wparentheses\"" ) catchAssertionHandler.handleExpr( Catch::Decomposer() &lt;= id.empty() ); _Pragma( "clang diagnostic pop" ) } catchAssertionHandler.complete(); } while( (void)0, (false) &amp;&amp; static_cast&lt;const bool&amp;>( !!(id.empty()) ) ); do { (void)__builtin_constant_p( country.empty() ); Catch::AssertionHandler catchAssertionHandler( "REQUIRE"_catch_sr, ::Catch::SourceLineInfo( "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_metadata.cpp", static_cast&lt;std::size_t>( 64 ) ), "country.empty()"_catch_sr, Catch::ResultDisposition::Normal ); { _Pragma( "clang diagnostic push" ) _Pragma( "clang diagnostic ignored \"-Wparentheses\"" ) catchAssertionHandler.handleExpr( Catch::Decomposer() &lt;= country.empty() ); _Pragma( "clang diagnostic pop" ) } catchAssertionHandler.complete(); } while( (void)0, (false) &amp;&amp; static_cast&lt;const bool&amp;>( !!(country.empty()) ) ); }) )
+Exception translation was disabled by CATCH_CONFIG_FAST_COMPILE
+269
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_metadata.cpp:65
+      </error>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B02 nested native STL imports retain metadata belonging to each file" time="0.001" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
