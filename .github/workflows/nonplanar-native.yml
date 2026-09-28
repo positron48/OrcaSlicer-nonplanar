@@ -14,7 +14,8 @@ permissions:
   contents: read
 concurrency:
   group: nonplanar-native-${{ github.ref }}
-  cancel-in-progress: true
+  # Finish costly dependency builds so every completed run retains evidence.
+  cancel-in-progress: false
 jobs:
   linux:
     runs-on: ubuntu-24.04
