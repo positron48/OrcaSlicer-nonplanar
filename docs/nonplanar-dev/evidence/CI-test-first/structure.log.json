@@ -1,0 +1,15 @@
+{
+  "command": [
+    "ruby",
+    "-ryaml",
+    "-rjson",
+    "-e",
+    "d=YAML.load_file(ARGV[0]); j=d.fetch(\"jobs\").fetch(\"linux\"); s=j.fetch(\"steps\"); names=s.map { |x| x[\"name\"] }; build=names.index(\"Build native tests before the application\"); tests=names.index(\"Execute nonempty selected native suites\"); app=names.index(\"Build native application after test verification\"); abort \"Invalid test order\" unless build < tests && tests < app; abort \"Unexpected timeout\" unless j[\"timeout-minutes\"]==180; abort \"Missing test command\" unless s[build][\"run\"].include?(\"./build_linux.sh -trlL -j 2\"); abort \"Missing app command\" unless s[app][\"run\"].include?(\"./build_linux.sh -srlL -j 2\"); puts JSON.pretty_generate({status: \"PASS\", test_build_index: build, test_execution_index: tests, application_build_index: app, timeout_minutes: j[\"timeout-minutes\"], linux_execution: \"NOT_RUN\"})",
+    ".github/workflows/nonplanar-native.yml"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-09-28T14:40:59.486930+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 0.098
+}

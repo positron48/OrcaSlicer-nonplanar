@@ -28,7 +28,7 @@ concurrency:
 jobs:
   linux:
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 180
     env:
       CMAKE_BUILD_PARALLEL_LEVEL: '2'
     steps:
@@ -73,8 +73,10 @@ jobs:
           state = 'RESTORED_EXACT_CACHE' if os.environ['DEPENDENCIES_CACHE_HIT'] == 'true' else 'BUILT_THIS_RUN'
           Path('build/nonplanar-evidence/linux/deps-origin.json').write_text(json.dumps({'status': state}) + '\n')
           PY
-      - name: Build native application and tests
-        run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/build.log -- ./build_linux.sh -strlL -j 2
+      # Retain test diagnostics before spending the remaining time on GUI and
+      # packaging. The pinned script supports tests-only with the same config.
+      - name: Build native tests before the application
+        run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/test-build.log -- ./build_linux.sh -trlL -j 2
       - name: Execute nonempty selected native suites
         id: native_tests
         run: |
@@ -85,6 +87,8 @@ jobs:
         run: python3 scripts/nonplanar/publish_ci_failure.py --evidence-dir build/nonplanar-evidence/linux
       - name: Exercise native STL audit command
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/stl-cli.log -- python3 scripts/nonplanar/validate_stl_audit_cli.py --executable build/src/nonplanar_import/Release/nonplanar_stl_audit --output-dir build/nonplanar-evidence/linux/stl-cli
+      - name: Build native application after test verification
+        run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/app-build.log -- ./build_linux.sh -srlL -j 2
       - name: Preserve observed results even on failure
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
