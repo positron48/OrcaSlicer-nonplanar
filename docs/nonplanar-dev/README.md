@@ -16,7 +16,7 @@ revision resolves with the included Git command.
 Follow `../nonplanar/prompts/01_bootstrap.md`: A01–A03, then concrete A04–A08
 tasks. Native macOS stock/fork builds, 37 FFF tests, seven analytical C++ tests
 and six OFF/ZAA differential cases passed. See bootstrap-report.md. Gate A as
-a whole is IN_PROGRESS: A06-A08 and independent critical review remain ahead.
+a whole is IN_PROGRESS: A08, operator evidence and independent critical review remain ahead.
 
 ## A04 continuation
 
@@ -67,3 +67,12 @@ round-trips); selected fresh native CTest executes 72/72 cases with no skips.
 The implementation revision resolves via the command in `A06.md`. No production export or safety
 approval is introduced. A07/A08 remain next; detailed failures and limitations
 are retained under `evidence/A06/`.
+
+## A07 continuation
+
+`A07.md` and ADR-0009 record a versioned synthetic scene/profile applicability
+contract and an unconfirmed operator worksheet. Six new cases pass; selected
+fresh native CTest executes 78/78 cases without skips. Confirmation claims do
+not qualify synthetic geometry. Full coverage of declared envelopes does not
+imply collision freedom or export permission. Next is A08 review/benchmarks;
+operator measurements and physical qualification remain NOT_RUN.

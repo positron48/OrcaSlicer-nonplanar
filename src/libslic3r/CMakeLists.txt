@@ -23,6 +23,8 @@ option(BUILD_SHARED_LIBS "Build shared libs" OFF)
 set(lisbslic3r_sources
     Nonplanar/GCodeAdapter.cpp
     Nonplanar/GCodeAdapter.hpp
+    Nonplanar/ProfileScene.cpp
+    Nonplanar/ProfileScene.hpp
     Nonplanar/Contracts.cpp
     Nonplanar/Contracts.hpp
     Nonplanar/Collision.cpp
@@ -643,11 +645,11 @@ endif()
 
 # Outward interval operations must not be reassociated or contracted. Restrict
 # these options to the new primitive queries; stock slicing flags stay unchanged.
-set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 if(MSVC)
-    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 else()
-    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
+    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
 endif()
 
 if (SLIC3R_PCH AND NOT SLIC3R_SYNTAXONLY)

@@ -34,3 +34,8 @@ Human evidence needed at A07:
 
 The simulation JSONs in `tests/nonplanar/data/baseline` intentionally describe a
 generic software fixture. They are not U1 settings and must not be sent to U1.
+
+The continuation worksheet is [A07-operator-worksheet.md](A07-operator-worksheet.md),
+with an entirely unconfirmed [record](A07-operator-record.json). The native
+versioned scene experiment is described by ADR-0009; it has no U1 dimensions
+and cannot qualify an operator profile.
