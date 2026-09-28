@@ -36,3 +36,11 @@ explicit. The original test exit code, selection, acceptance rules and full
 uploaded logs are unchanged. This is diagnostic visibility, not a failure fix.
 Six diagnostic tests and all eight existing real CMake/CTest harness tests pass
 locally; exact commands/exits/output are in evidence/ci-diagnostics.
+
+Run 36434944242 at 01865dcf completed the native application/test build and
+published the first concrete test diagnostic: `Skirt height is honored` threw
+`Coordinate outside allowed range`. The STL CLI step was skipped after that
+failure. Public annotations and job timings are retained in
+`evidence/B03-heights/`. `A02-print-defaults.md` records the resulting native
+initialization fix and local regression; Linux confirmation is still pending.
+The revised test-first workflow is described in `ci-test-first.md`.

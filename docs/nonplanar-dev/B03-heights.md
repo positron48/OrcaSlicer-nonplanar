@@ -30,4 +30,5 @@ successfully, then failed the inherited Skirt height is honored case with
 Coordinate outside allowed range. Public bounded annotations and job timings
 are preserved. The diagnostic CLI step was skipped because CTest failed.
 This is neither a successful Linux gate nor a test of the current revision;
-the now-concrete inherited failure is the next investigation.
+the resulting initialization investigation and local correction are recorded
+in `A02-print-defaults.md`, with Linux confirmation still pending.

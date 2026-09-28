@@ -30,7 +30,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 170,
+    "new_native_cases": 171,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -46,8 +46,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 207,
-    "final_ctest_executed": 207,
+    "final_ctest_discovered": 208,
+    "final_ctest_executed": 208,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -183,7 +183,15 @@
     "B04_region_A05_combined_assertions": 251,
     "B04_region_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B03_heights_cases": 2,
-    "B03_heights_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
+    "B03_heights_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "A02_print_defaults_cases": 1,
+    "A02_print_defaults_assertions": 6,
+    "A02_print_defaults_regression": "RED_FOUR_DEFAULT_CHECKS_THEN_SIX_ASSERTIONS_PASS",
+    "A02_print_defaults_skirt_cases": 2,
+    "A02_print_defaults_skirt_assertions": 9,
+    "A02_print_defaults_skirt_seed": 1648739313,
+    "A02_print_defaults_strict_diagnostic": "EXIT_42_TWO_INHERITED_SKIRT_SECTION_NO_ASSERTIONS_WARNINGS_RETAINED",
+    "A02_print_defaults_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -197,10 +205,10 @@
     "coupon_geometry": "PREPARED_AND_VALIDATED_DIGITALLY_ONLY"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "RUN_36434944242_01865DCF_DEPENDENCIES_AND_APP_TEST_BUILD_PASS_SKIRT_HEIGHT_NATIVE_TEST_FAILED_COORDINATE_OUTSIDE_ALLOWED_RANGE_CURRENT_REVISION_PENDING",
+  "ci": "RUN_36434944242_01865DCF_NATIVE_BUILD_PASS_SKIRT_HEIGHT_RANGE_FAILURE_MACOS_PRINT_DEFAULTS_FIX_PASS_LINUX_CONFIRMATION_PENDING",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Continue B03 curved-surface/ROI and tool-accessibility checks; bind captured inputs to actual plate/job/worker ownership and complete compatibility. Independent review and physical qualification remain pending.",
+  "next_step": "Verify native Print default initialization correction in Linux CI; continue B01/B02 whole-job/plate/worker ownership, B03 qualified geometry/ROI/tool access and B04 body-cap partition. See next-tasks.md. Independent review and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -245,7 +253,8 @@
     "B01_flow": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-flow.md",
     "B01_paths": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-paths.md",
     "B04_region": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-region.md",
-    "B03_heights": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-heights.md"
+    "B03_heights": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-heights.md",
+    "A02_print_defaults": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A02-print-defaults.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -286,5 +295,6 @@
   "B01_flow_evidence": "docs/nonplanar-dev/evidence/B01-flow/source-manifest.json",
   "B01_paths_evidence": "docs/nonplanar-dev/evidence/B01-paths/source-manifest.json",
   "B04_region_evidence": "docs/nonplanar-dev/evidence/B04-region/source-manifest.json",
-  "B03_heights_evidence": "docs/nonplanar-dev/evidence/B03-heights/source-manifest.json"
+  "B03_heights_evidence": "docs/nonplanar-dev/evidence/B03-heights/source-manifest.json",
+  "A02_print_defaults_evidence": "docs/nonplanar-dev/evidence/A02-print-defaults/source-manifest.json"
 }

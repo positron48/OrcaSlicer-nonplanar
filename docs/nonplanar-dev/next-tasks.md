@@ -1,13 +1,28 @@
-# Small tasks following bootstrap
+# Next implementation tasks
 
-Status: A04–A07 native experiments and A08 author audit/bounded benchmarks are
-implemented and tested. Gate A remains open. Next tasks, in order:
+Current source checkpoint is `status.json`; milestone reports below distinguish
+bounded implemented primitives from the complete pipeline. Sphere evidence and
+digital coupon preparation are recorded in `sphere.md` and `coupons/README.md`.
+They do not qualify the physical printer. Gate A remains open.
 
-1. Analytical sphere primitive/oracle evidence under a bounded documented domain;
-   preserve UNKNOWN for unsupported pairs and add independent positive/negative tests.
-2. Prepare a physical coupon artifact and later operator protocol; no printer action
-   or invented machine dimensions, firmware state or qualification.
-3. Obtain independent review of A03–A08 and resolve findings before Gate A closure.
+Next software tasks, in dependency order:
+
+1. Verify the `A02-print-defaults.md` correction in Linux CI. The previous native
+   build passed, but selected CTest failed in `Skirt height is honored`; local
+   initialization evidence alone does not establish the Linux exception's cause.
+2. Complete B01 compatibility and immutable job provenance, then B02 binding to
+   actual GUI plate/settings/worker ownership and hard resource containment.
+3. Extend B03 nominal affine bounds to qualified error budgets, curved surfaces,
+   ROI and tool access. Existing masks, whole-footprint checks and isolated CLI
+   results remain diagnostic geometry, without export permission.
+4. Complete B04 body/cap partition, dense coverage and the adapter for the whole
+   native body. The owned snapshot currently represents only one LayerRegion.
+5. Continue the dependent planner, safety/replay and guarded export integration
+   against the normative backlog; do not close P2 from these partial modules.
+
+Independent review of A03–A08 remains required for Gate A closure. Operator
+measurements, machine/material confirmation and physical coupon runs remain
+separate pending work; do not substitute synthetic evidence for them.
 
 A07 operator evidence remains NOT_RUN. SYS-08 full-cycle performance is unmeasured.
 Normative dependencies remain in `../nonplanar/backlog.json`; no large UI is next.

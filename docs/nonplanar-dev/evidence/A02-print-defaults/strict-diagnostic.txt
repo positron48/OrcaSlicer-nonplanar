@@ -1,0 +1,120 @@
+Filters: [PrintDefaults],[SkirtBrim]
+Randomness seeded to: 1648739313
+st=1, 
+[2026-09-28 19:53:50.227995] [0x00000001f419de80] [error]   get_hrc_by_nozzle_type: parse info/nozzle_info.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 1, column 1: syntax error while parsing value - unexpected end of input; expected '[', '{', or a literal
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Skirt height is honored
+  printing a single object
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/fff_print/test_skirt_brim.cpp:48
+...............................................................................
+
+
+No assertions in section 'printing a single object'
+
+st=1, 
+st=2, 
+-------------------------------------------------------------------------------
+Skirt height is honored
+  printing multiple objects
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/fff_print/test_skirt_brim.cpp:51
+...............................................................................
+
+
+No assertions in section 'printing multiple objects'
+
+st=1, 
+[2026-09-28 19:53:50.285811] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_deretraction_speed not found, skipping
+[2026-09-28 19:53:50.285822] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_long_retractions_when_cut not found, skipping
+[2026-09-28 19:53:50.285828] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9945: option filament_retract_before_wipe not found, skipping
+[2026-09-28 19:53:50.285832] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_above not found, skipping
+[2026-09-28 19:53:50.285836] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_below not found, skipping
+[2026-09-28 19:53:50.285842] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 10008: option filament_retract_lift_enforce not found, skipping
+[2026-09-28 19:53:50.285846] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_restart_extra not found, skipping
+[2026-09-28 19:53:50.285850] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_retract_when_changing_layer not found, skipping
+[2026-09-28 19:53:50.285854] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_distances_when_cut not found, skipping
+[2026-09-28 19:53:50.285858] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_length not found, skipping
+[2026-09-28 19:53:50.285861] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_minimum_travel not found, skipping
+[2026-09-28 19:53:50.285865] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_speed not found, skipping
+[2026-09-28 19:53:50.285869] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_wipe not found, skipping
+[2026-09-28 19:53:50.285873] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_wipe_distance not found, skipping
+[2026-09-28 19:53:50.285876] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_z_hop not found, skipping
+[2026-09-28 19:53:50.285890] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 10008: option filament_z_hop_types not found, skipping
+st=1, 
+[2026-09-28 19:53:50.315126] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_deretraction_speed not found, skipping
+[2026-09-28 19:53:50.315136] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_long_retractions_when_cut not found, skipping
+[2026-09-28 19:53:50.315141] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9945: option filament_retract_before_wipe not found, skipping
+[2026-09-28 19:53:50.315145] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_above not found, skipping
+[2026-09-28 19:53:50.315148] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_below not found, skipping
+[2026-09-28 19:53:50.315152] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 10008: option filament_retract_lift_enforce not found, skipping
+[2026-09-28 19:53:50.315155] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_restart_extra not found, skipping
+[2026-09-28 19:53:50.315158] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_retract_when_changing_layer not found, skipping
+[2026-09-28 19:53:50.315161] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_distances_when_cut not found, skipping
+[2026-09-28 19:53:50.315164] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_length not found, skipping
+[2026-09-28 19:53:50.315167] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_minimum_travel not found, skipping
+[2026-09-28 19:53:50.315170] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_speed not found, skipping
+[2026-09-28 19:53:50.315174] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_wipe not found, skipping
+[2026-09-28 19:53:50.315177] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_wipe_distance not found, skipping
+[2026-09-28 19:53:50.315180] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_z_hop not found, skipping
+[2026-09-28 19:53:50.315183] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 10008: option filament_z_hop_types not found, skipping
+st=1, 
+[2026-09-28 19:53:50.320571] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_deretraction_speed not found, skipping
+[2026-09-28 19:53:50.320579] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_long_retractions_when_cut not found, skipping
+[2026-09-28 19:53:50.320583] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9945: option filament_retract_before_wipe not found, skipping
+[2026-09-28 19:53:50.320586] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_above not found, skipping
+[2026-09-28 19:53:50.320589] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_below not found, skipping
+[2026-09-28 19:53:50.320598] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 10008: option filament_retract_lift_enforce not found, skipping
+[2026-09-28 19:53:50.320601] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_restart_extra not found, skipping
+[2026-09-28 19:53:50.320604] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_retract_when_changing_layer not found, skipping
+[2026-09-28 19:53:50.320607] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_distances_when_cut not found, skipping
+[2026-09-28 19:53:50.320610] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_length not found, skipping
+[2026-09-28 19:53:50.320613] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_minimum_travel not found, skipping
+[2026-09-28 19:53:50.320616] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_speed not found, skipping
+[2026-09-28 19:53:50.320619] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_wipe not found, skipping
+[2026-09-28 19:53:50.320622] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_wipe_distance not found, skipping
+[2026-09-28 19:53:50.320625] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_z_hop not found, skipping
+[2026-09-28 19:53:50.320628] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 10008: option filament_z_hop_types not found, skipping
+st=1, 
+[2026-09-28 19:53:50.346829] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_deretraction_speed not found, skipping
+[2026-09-28 19:53:50.346838] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_long_retractions_when_cut not found, skipping
+[2026-09-28 19:53:50.346843] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9945: option filament_retract_before_wipe not found, skipping
+[2026-09-28 19:53:50.346848] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_above not found, skipping
+[2026-09-28 19:53:50.346851] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_below not found, skipping
+[2026-09-28 19:53:50.346855] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 10008: option filament_retract_lift_enforce not found, skipping
+[2026-09-28 19:53:50.346858] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_restart_extra not found, skipping
+[2026-09-28 19:53:50.346862] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_retract_when_changing_layer not found, skipping
+[2026-09-28 19:53:50.346865] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_distances_when_cut not found, skipping
+[2026-09-28 19:53:50.346868] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_length not found, skipping
+[2026-09-28 19:53:50.346871] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_minimum_travel not found, skipping
+[2026-09-28 19:53:50.346878] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_speed not found, skipping
+[2026-09-28 19:53:50.346882] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_wipe not found, skipping
+[2026-09-28 19:53:50.346885] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_wipe_distance not found, skipping
+[2026-09-28 19:53:50.346888] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_z_hop not found, skipping
+[2026-09-28 19:53:50.346891] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 10008: option filament_z_hop_types not found, skipping
+st=1, 
+[2026-09-28 19:53:50.372872] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_deretraction_speed not found, skipping
+[2026-09-28 19:53:50.372881] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_long_retractions_when_cut not found, skipping
+[2026-09-28 19:53:50.372886] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9945: option filament_retract_before_wipe not found, skipping
+[2026-09-28 19:53:50.372889] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_above not found, skipping
+[2026-09-28 19:53:50.372893] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_lift_below not found, skipping
+[2026-09-28 19:53:50.372896] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 10008: option filament_retract_lift_enforce not found, skipping
+[2026-09-28 19:53:50.372899] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retract_restart_extra not found, skipping
+[2026-09-28 19:53:50.372902] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_retract_when_changing_layer not found, skipping
+[2026-09-28 19:53:50.372906] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_distances_when_cut not found, skipping
+[2026-09-28 19:53:50.372910] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_length not found, skipping
+[2026-09-28 19:53:50.372914] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_minimum_travel not found, skipping
+[2026-09-28 19:53:50.372917] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_retraction_speed not found, skipping
+[2026-09-28 19:53:50.372921] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9987: option filament_wipe not found, skipping
+[2026-09-28 19:53:50.372924] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_wipe_distance not found, skipping
+[2026-09-28 19:53:50.372927] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 9924: option filament_z_hop not found, skipping
+[2026-09-28 19:53:50.372930] [0x00000001f419de80] [warning] update_values_to_printer_extruders_for_multiple_filaments, Line 10008: option filament_z_hop_types not found, skipping
+===============================================================================
+test cases:  3 |  2 passed | 1 failed
+assertions: 17 | 15 passed | 2 failed
+

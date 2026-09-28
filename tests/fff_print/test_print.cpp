@@ -6,8 +6,33 @@
 
 #include "test_data.hpp"
 
+#include <cstring>
+#include <memory>
+#include <new>
+
 using namespace Slic3r;
 using namespace Slic3r::Test;
+
+TEST_CASE("Print: default plate frame and printer kind do not depend on storage", "[Print][PrintDefaults]")
+{
+    // Exercise default initialization, as used by the native slicing helpers,
+    // in nonzero storage. 0x01 represents a valid true bool and finite doubles.
+    alignas(Print) unsigned char storage[sizeof(Print)];
+    std::memset(storage, 0x01, sizeof(storage));
+    auto destroy = [](Print *print) { print->~Print(); };
+    std::unique_ptr<Print, decltype(destroy)> print(::new (storage) Print, destroy);
+
+    CHECK(print->get_plate_origin().x() == 0.0);
+    CHECK(print->get_plate_origin().y() == 0.0);
+    CHECK(print->get_plate_origin().z() == 0.0);
+    CHECK_FALSE(print->is_BBL_printer());
+
+    const Vec3d origin(256.0, -512.0, 0.0);
+    print->set_plate_origin(origin);
+    print->is_BBL_printer() = true;
+    CHECK(print->get_plate_origin() == origin);
+    CHECK(print->is_BBL_printer());
+}
 
 SCENARIO("Print: Skirt generation", "[Print]") {
     GIVEN("20mm cube and default config") {
@@ -171,4 +196,3 @@ TEST_CASE("Print: {first_object_name} is not replaced by the saved-project file 
     add_named_cube(model, "WidgetPart");
     CHECK(resolved_output_name(model, "{first_object_name}", "SavedProject") == "WidgetPart.gcode");
 }
-

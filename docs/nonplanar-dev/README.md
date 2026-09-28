@@ -13,6 +13,25 @@ Branch: `feature/nonplanar-bootstrap`, published to
 Bootstrap: `1ad7bdad`; A04: `93192ca7`. `status.json` is the current checkpoint; its `SELF`
 revision resolves with the included Git command.
 
+## Current checkpoint — 2026-09-28
+
+The nearest completed stage is the native constructor correction in
+`A02-print-defaults.md`: `Print` starts with a zero plate origin and generic
+printer identity. Its poisoned-storage regression demonstrates four failures
+before the fix and six passing assertions afterwards. Fresh selected CTest
+executes 208/208; all six OFF/ZAA differential captures pass. The inherited
+NoAssertions section diagnostics are retained separately. Linux confirmation
+of the prior skirt-range failure remains pending.
+
+The latest feature milestones are exact nominal affine endpoint/gradient bounds
+(`B03-heights.md`) and owned native LayerRegion path semantics (`B04-region.md`).
+Full compatibility/job ownership, body/cap partition, curved surfaces, planning
+and guarded hybrid export remain open. `next-tasks.md` lists the dependency
+order. Independent review and physical qualification remain pending.
+
+The continuation sections below preserve historical counts and next steps;
+`status.json` and this checkpoint describe the current state.
+
 Follow `../nonplanar/prompts/01_bootstrap.md`: A01–A03, then concrete A04–A08
 tasks. Native macOS stock/fork builds, 37 FFF tests, seven analytical C++ tests
 and six OFF/ZAA differential cases passed. See bootstrap-report.md. Gate A as

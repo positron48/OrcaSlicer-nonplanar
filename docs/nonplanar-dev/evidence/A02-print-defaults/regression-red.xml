@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="4" skipped="0" tests="6" hostname="tbd" time="0.001" timestamp="2026-09-28T16:48:11Z">
+    <properties>
+      <property name="random-seed" value="209058519"/>
+      <property name="filters" value="[PrintDefaults]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="Print: default plate frame and printer kind do not depend on storage" time="0.000" status="run">
+      <failure message="print->get_plate_origin().x() == 0.0" type="CHECK">
+FAILED:
+  CHECK( print->get_plate_origin().x() == 0.0 )
+with expansion:
+  0.0 == 0.0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/fff_print/test_print.cpp:25
+      </failure>
+      <failure message="print->get_plate_origin().y() == 0.0" type="CHECK">
+FAILED:
+  CHECK( print->get_plate_origin().y() == 0.0 )
+with expansion:
+  0.0 == 0.0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/fff_print/test_print.cpp:26
+      </failure>
+      <failure message="print->get_plate_origin().z() == 0.0" type="CHECK">
+FAILED:
+  CHECK( print->get_plate_origin().z() == 0.0 )
+with expansion:
+  0.0 == 0.0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/fff_print/test_print.cpp:27
+      </failure>
+      <failure message="!(print->is_BBL_printer())" type="CHECK_FALSE">
+FAILED:
+  CHECK_FALSE( print->is_BBL_printer() )
+with expansion:
+  !true
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/fff_print/test_print.cpp:28
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

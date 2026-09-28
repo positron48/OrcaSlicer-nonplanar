@@ -1,0 +1,15 @@
+{
+  "base_commit": "b8459264ba780833e921185d74b2b353d37d00db",
+  "upstream_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "confirmed_defect": "Print default initialization leaves native plate origin and printer-kind state indeterminate; poisoned-storage regression fails four checks before patch",
+  "linux_causality": "UNCONFIRMED: prior annotation provides no stack trace; local defect reproduction is not the Linux Clipper exception",
+  "source_path": [
+    "tests/fff_print/test_data.cpp:init_print leaves both fields unset",
+    "src/libslic3r/Print.cpp:export_gcode passes get_plate_origin to GCode::set_gcode_offset",
+    "src/libslic3r/GCode.cpp:travel geometry translates by writer XY offset"
+  ],
+  "source_review": "AUTHOR_ONLY: two member initializers; native GUI/CLI setters and profile schema unchanged; no acceptance tests removed",
+  "current_ci_refresh": "UNAVAILABLE: initial public GitHub API request terminated after hanging; bounded retry failed with curl exit 28 SSL connection timeout",
+  "independent_review": "PENDING",
+  "physical_qualification": "NOT_RUN"
+}

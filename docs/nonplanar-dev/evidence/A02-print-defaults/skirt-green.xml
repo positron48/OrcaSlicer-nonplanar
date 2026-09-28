@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="0" skipped="0" tests="9" hostname="tbd" time="0.208" timestamp="2026-09-28T16:54:07Z">
+    <properties>
+      <property name="random-seed" value="1648739313"/>
+      <property name="filters" value="[SkirtBrim]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="Skirt height is honored" time="0.053" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Skirt height is honored/printing multiple objects" time="0.051" status="run">
+      <system-out>
+st=1, 
+st=1, 
+st=2,
+      </system-out>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation" time="0.036" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration" time="0.036" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Brim width is set to 5" time="0.029" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Brim width is set to 5/Then: Brim is generated" time="0.029" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: brim width to 1 with layer_width of 0.5" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: brim width to 1 with layer_width of 0.5/Then: 2 brim lines" time="0.005" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Object is plated with overhang support and a brim" time="0.025" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Object is plated with overhang support and a brim/Then: Support and brim are both emitted" time="0.025" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: an object with support is surrounded by a skirt" time="0.026" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: an object with support is surrounded by a skirt/Then: the skirt is long enough to enclose the object and its support" time="0.026" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Large minimum skirt length is used." time="0.035" status="run"/>
+    <testcase classname="fff_print_tests.global" name="Scenario: Skirt and brim generation/Given: A default configuration/When: Large minimum skirt length is used./Then: The skirt is extended to at least the minimum length" time="0.035" status="run">
+      <system-out>
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1,
+      </system-out>
+    </testcase>
+    <system-out>
+st=1, 
+st=1, 
+st=2, 
+st=1, 
+st=1, 
+st=1, 
+st=1, 
+st=1,
+    </system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>
