@@ -35,6 +35,10 @@ std::string serialize_candidate(const std::vector<MotionEvent> &events,
         require(quantized_motion, "candidate movement collapses at export precision");
         const double feed = event.speed_limit.value() * 60;
         require(feed >= 0.001 && feed < 100000, "candidate feed outside writer domain");
+        // Domain checks must also hold after native decimal formatting.
+        // For example, 99999.9996 rounds to 100000, outside replay's F domain.
+        require(GCodeG1Formatter::quantize_xyzf(feed) < 100000,
+                "rounded candidate feed outside replay domain");
         double e = 0;
         if (const auto *bead = std::get_if<Deposition>(&event.payload)) {
             e = filament_feed(bead->volume, diameter, flow).value();

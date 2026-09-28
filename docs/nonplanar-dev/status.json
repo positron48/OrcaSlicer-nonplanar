@@ -14,7 +14,7 @@
     "A05": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A06": "BOUNDED_NATIVE_SERIALIZATION_REPLAY_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A07": "SIMULATION_CONTRACT_NATIVE_TESTS_PASS_OPERATOR_EVIDENCE_NOT_RUN_REVIEW_PENDING",
-    "A08": "SCOPED_NOT_STARTED"
+    "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_COMPLETE_INDEPENDENT_REVIEW_AND_GATE_FOLLOWUPS_PENDING"
   },
   "executed_checks": {
     "ORC-01": "PASS",
@@ -26,7 +26,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 41,
+    "new_native_cases": 43,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 156,
@@ -42,8 +42,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 78,
-    "final_ctest_executed": 78,
+    "final_ctest_discovered": 80,
+    "final_ctest_executed": 80,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -59,7 +59,14 @@
     "PRF-01": "PASS_SIMULATION_APPLICABILITY_ONLY_NO_EXPORT_ROUTE",
     "PRF-06": "PASS_NATIVE_QUALIFICATION_CLAIMS_REJECTED_ONLY",
     "ORC-38": "PASS_NATIVE_STRUCTURAL_COMPLETENESS_ONLY",
-    "A07_fresh_OFF_ZAA_capture": "NOT_RUN_SHARED_PATHS_UNCHANGED"
+    "A07_fresh_OFF_ZAA_capture": "NOT_RUN_SHARED_PATHS_UNCHANGED",
+    "A08_native_cases": 2,
+    "A08_native_assertions": 10,
+    "A08_benchmark_processes": 25,
+    "A08_benchmark_case_executions": 210,
+    "SYS-08": "NOT_RUN_FULL_200K_PIPELINE_NOT_IMPLEMENTED",
+    "DOC-01": "PACKAGE_GRAPH_CHECK_PASS_INDEPENDENT_COMPLETENESS_REVIEW_PENDING",
+    "A08_rounding_regression": "RED_EXIT_42_THEN_FIXED_PASS"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -75,7 +82,7 @@
   "ci": "NO_WORKFLOW_RUN_FOR_A06_AT_2026_09_28_CHECK",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "A08 independent review and benchmarks; operator measurements and physical qualification remain NOT_RUN.",
+  "next_step": "Gate A follow-ups: analytical sphere oracle/domain, prepared physical coupon/protocol, independent review; no large GUI or production export yet.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -85,9 +92,16 @@
     "A02_object_labels": "091c64617940122a80db8f5273e77b4786916861",
     "A05": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/Transition.cpp",
     "A06": "29fbec039d074af624a5cdca12cd43fc6f09f79b",
-    "A07": "SELF: git log --diff-filter=A --format=%H -- src/libslic3r/Nonplanar/ProfileScene.cpp"
+    "A07": "c044c4b62d1c36ea7e3cdb382a84fcfc71df6139",
+    "A08": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A08.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
-  "A07_evidence": "docs/nonplanar-dev/evidence/A07/source-manifest.json"
+  "A07_evidence": "docs/nonplanar-dev/evidence/A07/source-manifest.json",
+  "gate_a_open_items": [
+    "ANALYTICAL_SPHERE_EVIDENCE_NOT_IMPLEMENTED",
+    "PREPARED_PHYSICAL_COUPON_NOT_RECORDED",
+    "INDEPENDENT_REVIEW_PENDING"
+  ],
+  "A08_evidence": "docs/nonplanar-dev/evidence/A08/source-manifest.json"
 }

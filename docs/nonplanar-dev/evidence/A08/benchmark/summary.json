@@ -1,0 +1,1127 @@
+{
+  "scope": "BOUNDED_NATIVE_TEST_WORKLOADS_NOT_SYS08",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "machine": "arm64",
+  "repeats": 5,
+  "commit": "c044c4b62d1c36ea7e3cdb382a84fcfc71df6139",
+  "working_diff_sha256": "617d1cef2055d55928188d955fc8eec142cd8f6a5e063abe5aa3a1c393ce6c8f",
+  "executable_sha256": {
+    "nonplanar": "30ad14725d25ec9a5e48b927f81aa285081b85fa4ad36430d04155631d46656a",
+    "fff_print": "409f39349466797a3b076b4a9f4f7af999a5f5258b9fda98ff38ace90f9ac5a5"
+  },
+  "runner_sha256": "8aad69394e44ccbe2e0e3729846a0cec607cf5f1d6387b6ce079d04084dc83e7",
+  "workloads": {
+    "contracts_geometry": {
+      "cases_per_run": 19,
+      "measurements": [
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+            "[Nonplanar]~[A07]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/contracts_geometry-1/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.011268042027950287,
+          "user_seconds": 0.006123,
+          "system_seconds": 0.002802,
+          "peak_rss_bytes": 9961472,
+          "test_names": [
+            "VOL-01 invalid deposition dimensions reject instead of producing volume",
+            "GEO-04 entering contact does not starve a later penetration",
+            "GEO-08 malformed geometry and numeric environment fail closed",
+            "Numeric budgets charge each component and reject missing invalid or exceeded bounds",
+            "GEO-04 translation reversal and envelope growth preserve clearance decisions",
+            "GEO-03 transverse slope collides along a constant Z path",
+            "GEO-02 finite outer tip uses full plane gradient",
+            "VOL-02 vertical and normal gaps obey independent plane distance",
+            "GEO-04 bounded subdivision proves a diagonal sweep clear",
+            "VOL-01 XY integral preserves volume on sloped surfaces without a second correction",
+            "GEO-05 duct collision is independent of nozzle clearance",
+            "GEO-01 asymmetric tool axes stay fixed when the path turns",
+            "ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales",
+            "GEO-07 uncertain clearance never passes at the boundary",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.07",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.1",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.13",
+            "IR deposition travel and retraction carry different measures",
+            "GEO-04 sweep agrees with an independent slab intersection oracle",
+            "ORC-05 rejects stale scale nonfinite and out of domain coordinates",
+            "GEO-04 continuous sweep catches a wall between free endpoints",
+            "GEO-08 unsupported queries and exhausted limits stay unknown"
+          ],
+          "cases_executed": 19,
+          "junit_case_entries": 22,
+          "assertions": 2789,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+            "[Nonplanar]~[A07]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/contracts_geometry-2/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.010128583991900086,
+          "user_seconds": 0.005787,
+          "system_seconds": 0.002802,
+          "peak_rss_bytes": 10043392,
+          "test_names": [
+            "VOL-01 invalid deposition dimensions reject instead of producing volume",
+            "GEO-04 entering contact does not starve a later penetration",
+            "GEO-08 malformed geometry and numeric environment fail closed",
+            "Numeric budgets charge each component and reject missing invalid or exceeded bounds",
+            "GEO-04 translation reversal and envelope growth preserve clearance decisions",
+            "GEO-03 transverse slope collides along a constant Z path",
+            "GEO-02 finite outer tip uses full plane gradient",
+            "VOL-02 vertical and normal gaps obey independent plane distance",
+            "GEO-04 bounded subdivision proves a diagonal sweep clear",
+            "VOL-01 XY integral preserves volume on sloped surfaces without a second correction",
+            "GEO-05 duct collision is independent of nozzle clearance",
+            "GEO-01 asymmetric tool axes stay fixed when the path turns",
+            "ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales",
+            "GEO-07 uncertain clearance never passes at the boundary",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.07",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.1",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.13",
+            "IR deposition travel and retraction carry different measures",
+            "GEO-04 sweep agrees with an independent slab intersection oracle",
+            "ORC-05 rejects stale scale nonfinite and out of domain coordinates",
+            "GEO-04 continuous sweep catches a wall between free endpoints",
+            "GEO-08 unsupported queries and exhausted limits stay unknown"
+          ],
+          "cases_executed": 19,
+          "junit_case_entries": 22,
+          "assertions": 2789,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+            "[Nonplanar]~[A07]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/contracts_geometry-3/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.011121040966827422,
+          "user_seconds": 0.0062169999999999994,
+          "system_seconds": 0.003185,
+          "peak_rss_bytes": 10108928,
+          "test_names": [
+            "VOL-01 invalid deposition dimensions reject instead of producing volume",
+            "GEO-04 entering contact does not starve a later penetration",
+            "GEO-08 malformed geometry and numeric environment fail closed",
+            "Numeric budgets charge each component and reject missing invalid or exceeded bounds",
+            "GEO-04 translation reversal and envelope growth preserve clearance decisions",
+            "GEO-03 transverse slope collides along a constant Z path",
+            "GEO-02 finite outer tip uses full plane gradient",
+            "VOL-02 vertical and normal gaps obey independent plane distance",
+            "GEO-04 bounded subdivision proves a diagonal sweep clear",
+            "VOL-01 XY integral preserves volume on sloped surfaces without a second correction",
+            "GEO-05 duct collision is independent of nozzle clearance",
+            "GEO-01 asymmetric tool axes stay fixed when the path turns",
+            "ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales",
+            "GEO-07 uncertain clearance never passes at the boundary",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.07",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.1",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.13",
+            "IR deposition travel and retraction carry different measures",
+            "GEO-04 sweep agrees with an independent slab intersection oracle",
+            "ORC-05 rejects stale scale nonfinite and out of domain coordinates",
+            "GEO-04 continuous sweep catches a wall between free endpoints",
+            "GEO-08 unsupported queries and exhausted limits stay unknown"
+          ],
+          "cases_executed": 19,
+          "junit_case_entries": 22,
+          "assertions": 2789,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+            "[Nonplanar]~[A07]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/contracts_geometry-4/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.011315957992337644,
+          "user_seconds": 0.006137,
+          "system_seconds": 0.003276,
+          "peak_rss_bytes": 10027008,
+          "test_names": [
+            "VOL-01 invalid deposition dimensions reject instead of producing volume",
+            "GEO-04 entering contact does not starve a later penetration",
+            "GEO-08 malformed geometry and numeric environment fail closed",
+            "Numeric budgets charge each component and reject missing invalid or exceeded bounds",
+            "GEO-04 translation reversal and envelope growth preserve clearance decisions",
+            "GEO-03 transverse slope collides along a constant Z path",
+            "GEO-02 finite outer tip uses full plane gradient",
+            "VOL-02 vertical and normal gaps obey independent plane distance",
+            "GEO-04 bounded subdivision proves a diagonal sweep clear",
+            "VOL-01 XY integral preserves volume on sloped surfaces without a second correction",
+            "GEO-05 duct collision is independent of nozzle clearance",
+            "GEO-01 asymmetric tool axes stay fixed when the path turns",
+            "ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales",
+            "GEO-07 uncertain clearance never passes at the boundary",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.07",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.1",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.13",
+            "IR deposition travel and retraction carry different measures",
+            "GEO-04 sweep agrees with an independent slab intersection oracle",
+            "ORC-05 rejects stale scale nonfinite and out of domain coordinates",
+            "GEO-04 continuous sweep catches a wall between free endpoints",
+            "GEO-08 unsupported queries and exhausted limits stay unknown"
+          ],
+          "cases_executed": 19,
+          "junit_case_entries": 22,
+          "assertions": 2789,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+            "[Nonplanar]~[A07]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/contracts_geometry-5/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.010389457980636507,
+          "user_seconds": 0.005899,
+          "system_seconds": 0.0028989999999999997,
+          "peak_rss_bytes": 10010624,
+          "test_names": [
+            "VOL-01 invalid deposition dimensions reject instead of producing volume",
+            "GEO-04 entering contact does not starve a later penetration",
+            "GEO-08 malformed geometry and numeric environment fail closed",
+            "Numeric budgets charge each component and reject missing invalid or exceeded bounds",
+            "GEO-04 translation reversal and envelope growth preserve clearance decisions",
+            "GEO-03 transverse slope collides along a constant Z path",
+            "GEO-02 finite outer tip uses full plane gradient",
+            "VOL-02 vertical and normal gaps obey independent plane distance",
+            "GEO-04 bounded subdivision proves a diagonal sweep clear",
+            "VOL-01 XY integral preserves volume on sloped surfaces without a second correction",
+            "GEO-05 duct collision is independent of nozzle clearance",
+            "GEO-01 asymmetric tool axes stay fixed when the path turns",
+            "ORC-05 scaled XYZ preserves absolute nonzero coordinates at both native scales",
+            "GEO-07 uncertain clearance never passes at the boundary",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.07",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.1",
+            "GEO-07 uncertain clearance never passes at the boundary/clearance at z=0.13",
+            "IR deposition travel and retraction carry different measures",
+            "GEO-04 sweep agrees with an independent slab intersection oracle",
+            "ORC-05 rejects stale scale nonfinite and out of domain coordinates",
+            "GEO-04 continuous sweep catches a wall between free endpoints",
+            "GEO-08 unsupported queries and exhausted limits stay unknown"
+          ],
+          "cases_executed": 19,
+          "junit_case_entries": 22,
+          "assertions": 2789,
+          "valid": true
+        }
+      ],
+      "metrics": {
+        "wall_seconds": {
+          "min": 0.010128583991900086,
+          "median": 0.011121040966827422,
+          "max": 0.011315957992337644
+        },
+        "user_seconds": {
+          "min": 0.005787,
+          "median": 0.006123,
+          "max": 0.0062169999999999994
+        },
+        "system_seconds": {
+          "min": 0.002802,
+          "median": 0.0028989999999999997,
+          "max": 0.003276
+        },
+        "peak_rss_bytes": {
+          "min": 9961472,
+          "median": 10027008,
+          "max": 10108928
+        }
+      }
+    },
+    "native_transition": {
+      "cases_per_run": 9,
+      "measurements": [
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A05]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/native_transition-1/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.0409642499871552,
+          "user_seconds": 0.036342,
+          "system_seconds": 0.022015,
+          "peak_rss_bytes": 33292288,
+          "test_names": [
+            "INT-01 affine footprint and volume use all corners",
+            "INT-01 native reserved body supports an affine first pass",
+            "INT-02 lower support excludes the bead shoulders endpoints and gaps",
+            "INT-03 offset mutations recheck gap and volume without auto lifting",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset -0.15",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset 0",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset 0.15",
+            "INT-03 uncertainty never creates support or increases nominal volume",
+            "INT-01 native support is invariant under reversal and explicit translation",
+            "INT-03 invalid cells budgets and stale scales stay unknown",
+            "INT-02 native lower stair support rejects the unchanged upper candidate",
+            "INT-02 unsupported native paths cannot masquerade as planar support",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 0",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 1",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 2",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 3",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 4",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 5",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 6"
+          ],
+          "cases_executed": 9,
+          "junit_case_entries": 19,
+          "assertions": 113,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A05]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/native_transition-2/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.04027970798779279,
+          "user_seconds": 0.037100999999999995,
+          "system_seconds": 0.018668999999999998,
+          "peak_rss_bytes": 33554432,
+          "test_names": [
+            "INT-01 affine footprint and volume use all corners",
+            "INT-01 native reserved body supports an affine first pass",
+            "INT-02 lower support excludes the bead shoulders endpoints and gaps",
+            "INT-03 offset mutations recheck gap and volume without auto lifting",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset -0.15",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset 0",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset 0.15",
+            "INT-03 uncertainty never creates support or increases nominal volume",
+            "INT-01 native support is invariant under reversal and explicit translation",
+            "INT-03 invalid cells budgets and stale scales stay unknown",
+            "INT-02 native lower stair support rejects the unchanged upper candidate",
+            "INT-02 unsupported native paths cannot masquerade as planar support",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 0",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 1",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 2",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 3",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 4",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 5",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 6"
+          ],
+          "cases_executed": 9,
+          "junit_case_entries": 19,
+          "assertions": 113,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A05]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/native_transition-3/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.03909979196032509,
+          "user_seconds": 0.035944,
+          "system_seconds": 0.016548,
+          "peak_rss_bytes": 33439744,
+          "test_names": [
+            "INT-01 affine footprint and volume use all corners",
+            "INT-01 native reserved body supports an affine first pass",
+            "INT-02 lower support excludes the bead shoulders endpoints and gaps",
+            "INT-03 offset mutations recheck gap and volume without auto lifting",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset -0.15",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset 0",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset 0.15",
+            "INT-03 uncertainty never creates support or increases nominal volume",
+            "INT-01 native support is invariant under reversal and explicit translation",
+            "INT-03 invalid cells budgets and stale scales stay unknown",
+            "INT-02 native lower stair support rejects the unchanged upper candidate",
+            "INT-02 unsupported native paths cannot masquerade as planar support",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 0",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 1",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 2",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 3",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 4",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 5",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 6"
+          ],
+          "cases_executed": 9,
+          "junit_case_entries": 19,
+          "assertions": 113,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A05]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/native_transition-4/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.04146337503334507,
+          "user_seconds": 0.037117,
+          "system_seconds": 0.020349,
+          "peak_rss_bytes": 33259520,
+          "test_names": [
+            "INT-01 affine footprint and volume use all corners",
+            "INT-01 native reserved body supports an affine first pass",
+            "INT-02 lower support excludes the bead shoulders endpoints and gaps",
+            "INT-03 offset mutations recheck gap and volume without auto lifting",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset -0.15",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset 0",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset 0.15",
+            "INT-03 uncertainty never creates support or increases nominal volume",
+            "INT-01 native support is invariant under reversal and explicit translation",
+            "INT-03 invalid cells budgets and stale scales stay unknown",
+            "INT-02 native lower stair support rejects the unchanged upper candidate",
+            "INT-02 unsupported native paths cannot masquerade as planar support",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 0",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 1",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 2",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 3",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 4",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 5",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 6"
+          ],
+          "cases_executed": 9,
+          "junit_case_entries": 19,
+          "assertions": 113,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A05]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/native_transition-5/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.04020645801210776,
+          "user_seconds": 0.035872999999999995,
+          "system_seconds": 0.019226999999999998,
+          "peak_rss_bytes": 33079296,
+          "test_names": [
+            "INT-01 affine footprint and volume use all corners",
+            "INT-01 native reserved body supports an affine first pass",
+            "INT-02 lower support excludes the bead shoulders endpoints and gaps",
+            "INT-03 offset mutations recheck gap and volume without auto lifting",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset -0.15",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset 0",
+            "INT-03 offset mutations recheck gap and volume without auto lifting/offset 0.15",
+            "INT-03 uncertainty never creates support or increases nominal volume",
+            "INT-01 native support is invariant under reversal and explicit translation",
+            "INT-03 invalid cells budgets and stale scales stay unknown",
+            "INT-02 native lower stair support rejects the unchanged upper candidate",
+            "INT-02 unsupported native paths cannot masquerade as planar support",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 0",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 1",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 2",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 3",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 4",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 5",
+            "INT-02 unsupported native paths cannot masquerade as planar support/mutation 6"
+          ],
+          "cases_executed": 9,
+          "junit_case_entries": 19,
+          "assertions": 113,
+          "valid": true
+        }
+      ],
+      "metrics": {
+        "wall_seconds": {
+          "min": 0.03909979196032509,
+          "median": 0.04027970798779279,
+          "max": 0.04146337503334507
+        },
+        "user_seconds": {
+          "min": 0.035872999999999995,
+          "median": 0.036342,
+          "max": 0.037117
+        },
+        "system_seconds": {
+          "min": 0.016548,
+          "median": 0.019226999999999998,
+          "max": 0.022015
+        },
+        "peak_rss_bytes": {
+          "min": 33079296,
+          "median": 33292288,
+          "max": 33554432
+        }
+      }
+    },
+    "serialization_replay": {
+      "cases_per_run": 7,
+      "measurements": [
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A06]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/serialization_replay-1/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.03118904196890071,
+          "user_seconds": 0.025754,
+          "system_seconds": 0.003313,
+          "peak_rss_bytes": 25231360,
+          "test_names": [
+            "ORC-07 native E applies compensation once without slope correction",
+            "A06 candidate rejects broken order continuity and unsupported events",
+            "GCD-01 parser fails closed on unsupported modal state and grammar",
+            "A08 serialization rejects feed rounded outside the replay domain",
+            "A06 native roundtrip bounds cover negative coordinates and travel between beads",
+            "ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z",
+            "GCD-01 replay exposes XYZ E feed and rounding mutations"
+          ],
+          "cases_executed": 7,
+          "junit_case_entries": 7,
+          "assertions": 1345,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A06]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/serialization_replay-2/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.03189533296972513,
+          "user_seconds": 0.026227999999999998,
+          "system_seconds": 0.003453,
+          "peak_rss_bytes": 25329664,
+          "test_names": [
+            "ORC-07 native E applies compensation once without slope correction",
+            "A06 candidate rejects broken order continuity and unsupported events",
+            "GCD-01 parser fails closed on unsupported modal state and grammar",
+            "A08 serialization rejects feed rounded outside the replay domain",
+            "A06 native roundtrip bounds cover negative coordinates and travel between beads",
+            "ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z",
+            "GCD-01 replay exposes XYZ E feed and rounding mutations"
+          ],
+          "cases_executed": 7,
+          "junit_case_entries": 7,
+          "assertions": 1345,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A06]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/serialization_replay-3/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.03404041600879282,
+          "user_seconds": 0.027226,
+          "system_seconds": 0.004072,
+          "peak_rss_bytes": 25280512,
+          "test_names": [
+            "ORC-07 native E applies compensation once without slope correction",
+            "A06 candidate rejects broken order continuity and unsupported events",
+            "GCD-01 parser fails closed on unsupported modal state and grammar",
+            "A08 serialization rejects feed rounded outside the replay domain",
+            "A06 native roundtrip bounds cover negative coordinates and travel between beads",
+            "ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z",
+            "GCD-01 replay exposes XYZ E feed and rounding mutations"
+          ],
+          "cases_executed": 7,
+          "junit_case_entries": 7,
+          "assertions": 1345,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A06]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/serialization_replay-4/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.03488066600402817,
+          "user_seconds": 0.027757999999999998,
+          "system_seconds": 0.004379,
+          "peak_rss_bytes": 25296896,
+          "test_names": [
+            "ORC-07 native E applies compensation once without slope correction",
+            "A06 candidate rejects broken order continuity and unsupported events",
+            "GCD-01 parser fails closed on unsupported modal state and grammar",
+            "A08 serialization rejects feed rounded outside the replay domain",
+            "A06 native roundtrip bounds cover negative coordinates and travel between beads",
+            "ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z",
+            "GCD-01 replay exposes XYZ E feed and rounding mutations"
+          ],
+          "cases_executed": 7,
+          "junit_case_entries": 7,
+          "assertions": 1345,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A06]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/serialization_replay-5/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.03378170897485688,
+          "user_seconds": 0.026900999999999998,
+          "system_seconds": 0.004109,
+          "peak_rss_bytes": 25231360,
+          "test_names": [
+            "ORC-07 native E applies compensation once without slope correction",
+            "A06 candidate rejects broken order continuity and unsupported events",
+            "GCD-01 parser fails closed on unsupported modal state and grammar",
+            "A08 serialization rejects feed rounded outside the replay domain",
+            "A06 native roundtrip bounds cover negative coordinates and travel between beads",
+            "ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z",
+            "GCD-01 replay exposes XYZ E feed and rounding mutations"
+          ],
+          "cases_executed": 7,
+          "junit_case_entries": 7,
+          "assertions": 1345,
+          "valid": true
+        }
+      ],
+      "metrics": {
+        "wall_seconds": {
+          "min": 0.03118904196890071,
+          "median": 0.03378170897485688,
+          "max": 0.03488066600402817
+        },
+        "user_seconds": {
+          "min": 0.025754,
+          "median": 0.026900999999999998,
+          "max": 0.027757999999999998
+        },
+        "system_seconds": {
+          "min": 0.003313,
+          "median": 0.004072,
+          "max": 0.004379
+        },
+        "peak_rss_bytes": {
+          "min": 25231360,
+          "median": 25280512,
+          "max": 25329664
+        }
+      }
+    },
+    "simulation_scene": {
+      "cases_per_run": 6,
+      "measurements": [
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+            "[A07]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/simulation_scene-1/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.00838166702305898,
+          "user_seconds": 0.002372,
+          "system_seconds": 0.0022359999999999997,
+          "peak_rss_bytes": 9814016,
+          "test_names": [
+            "ORC-38 missing head dimensions inventory and moving envelope reject",
+            "PRF-01 complete synthetic scene is usable only for simulation",
+            "A07 malformed versions identities chronology and numeric state fail closed",
+            "A07 analytic Minkowski bounds include uncertainty at coverage boundaries",
+            "PRF-06 confirmation flags cannot qualify synthetic geometry",
+            "A07 full head and omitted upper parts must fit declared scene coverage"
+          ],
+          "cases_executed": 6,
+          "junit_case_entries": 6,
+          "assertions": 34,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+            "[A07]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/simulation_scene-2/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.0066368330153636634,
+          "user_seconds": 0.0025039999999999997,
+          "system_seconds": 0.0024089999999999997,
+          "peak_rss_bytes": 9846784,
+          "test_names": [
+            "ORC-38 missing head dimensions inventory and moving envelope reject",
+            "PRF-01 complete synthetic scene is usable only for simulation",
+            "A07 malformed versions identities chronology and numeric state fail closed",
+            "A07 analytic Minkowski bounds include uncertainty at coverage boundaries",
+            "PRF-06 confirmation flags cannot qualify synthetic geometry",
+            "A07 full head and omitted upper parts must fit declared scene coverage"
+          ],
+          "cases_executed": 6,
+          "junit_case_entries": 6,
+          "assertions": 34,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+            "[A07]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/simulation_scene-3/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.006642916996497661,
+          "user_seconds": 0.002395,
+          "system_seconds": 0.002427,
+          "peak_rss_bytes": 9830400,
+          "test_names": [
+            "ORC-38 missing head dimensions inventory and moving envelope reject",
+            "PRF-01 complete synthetic scene is usable only for simulation",
+            "A07 malformed versions identities chronology and numeric state fail closed",
+            "A07 analytic Minkowski bounds include uncertainty at coverage boundaries",
+            "PRF-06 confirmation flags cannot qualify synthetic geometry",
+            "A07 full head and omitted upper parts must fit declared scene coverage"
+          ],
+          "cases_executed": 6,
+          "junit_case_entries": 6,
+          "assertions": 34,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+            "[A07]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/simulation_scene-4/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.007091832987498492,
+          "user_seconds": 0.002766,
+          "system_seconds": 0.0026769999999999997,
+          "peak_rss_bytes": 9814016,
+          "test_names": [
+            "ORC-38 missing head dimensions inventory and moving envelope reject",
+            "PRF-01 complete synthetic scene is usable only for simulation",
+            "A07 malformed versions identities chronology and numeric state fail closed",
+            "A07 analytic Minkowski bounds include uncertainty at coverage boundaries",
+            "PRF-06 confirmation flags cannot qualify synthetic geometry",
+            "A07 full head and omitted upper parts must fit declared scene coverage"
+          ],
+          "cases_executed": 6,
+          "junit_case_entries": 6,
+          "assertions": 34,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+            "[A07]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/simulation_scene-5/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.006795374967623502,
+          "user_seconds": 0.0025009999999999998,
+          "system_seconds": 0.00242,
+          "peak_rss_bytes": 9830400,
+          "test_names": [
+            "ORC-38 missing head dimensions inventory and moving envelope reject",
+            "PRF-01 complete synthetic scene is usable only for simulation",
+            "A07 malformed versions identities chronology and numeric state fail closed",
+            "A07 analytic Minkowski bounds include uncertainty at coverage boundaries",
+            "PRF-06 confirmation flags cannot qualify synthetic geometry",
+            "A07 full head and omitted upper parts must fit declared scene coverage"
+          ],
+          "cases_executed": 6,
+          "junit_case_entries": 6,
+          "assertions": 34,
+          "valid": true
+        }
+      ],
+      "metrics": {
+        "wall_seconds": {
+          "min": 0.0066368330153636634,
+          "median": 0.006795374967623502,
+          "max": 0.00838166702305898
+        },
+        "user_seconds": {
+          "min": 0.002372,
+          "median": 0.0025009999999999998,
+          "max": 0.002766
+        },
+        "system_seconds": {
+          "min": 0.0022359999999999997,
+          "median": 0.00242,
+          "max": 0.0026769999999999997
+        },
+        "peak_rss_bytes": {
+          "min": 9814016,
+          "median": 9830400,
+          "max": 9846784
+        }
+      }
+    },
+    "max_candidate_10000_moves": {
+      "cases_per_run": 1,
+      "measurements": [
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A08Stress]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/max_candidate_10000_moves-1/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.056047875026706606,
+          "user_seconds": 0.049298999999999996,
+          "system_seconds": 0.0038309999999999998,
+          "peak_rss_bytes": 30113792,
+          "test_names": [
+            "A08 bounded 10000 move candidate roundtrip preserves endpoint and total E"
+          ],
+          "cases_executed": 1,
+          "junit_case_entries": 1,
+          "assertions": 7,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A08Stress]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/max_candidate_10000_moves-2/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.05618650000542402,
+          "user_seconds": 0.048843,
+          "system_seconds": 0.004398,
+          "peak_rss_bytes": 29917184,
+          "test_names": [
+            "A08 bounded 10000 move candidate roundtrip preserves endpoint and total E"
+          ],
+          "cases_executed": 1,
+          "junit_case_entries": 1,
+          "assertions": 7,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A08Stress]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/max_candidate_10000_moves-3/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.055124000005889684,
+          "user_seconds": 0.048451999999999995,
+          "system_seconds": 0.004043,
+          "peak_rss_bytes": 31424512,
+          "test_names": [
+            "A08 bounded 10000 move candidate roundtrip preserves endpoint and total E"
+          ],
+          "cases_executed": 1,
+          "junit_case_entries": 1,
+          "assertions": 7,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A08Stress]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/max_candidate_10000_moves-4/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.05725100002018735,
+          "user_seconds": 0.05024,
+          "system_seconds": 0.0043089999999999995,
+          "peak_rss_bytes": 30146560,
+          "test_names": [
+            "A08 bounded 10000 move candidate roundtrip preserves endpoint and total E"
+          ],
+          "cases_executed": 1,
+          "junit_case_entries": 1,
+          "assertions": 7,
+          "valid": true
+        },
+        {
+          "command": [
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+            "[A08Stress]",
+            "--rng-seed",
+            "4708",
+            "--order",
+            "rand",
+            "--warn",
+            "NoAssertions",
+            "--reporter",
+            "junit",
+            "--out",
+            "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/max_candidate_10000_moves-5/results.xml"
+          ],
+          "exit_code": 0,
+          "timeout": false,
+          "wall_seconds": 0.054875959001947194,
+          "user_seconds": 0.047719,
+          "system_seconds": 0.004299,
+          "peak_rss_bytes": 30867456,
+          "test_names": [
+            "A08 bounded 10000 move candidate roundtrip preserves endpoint and total E"
+          ],
+          "cases_executed": 1,
+          "junit_case_entries": 1,
+          "assertions": 7,
+          "valid": true
+        }
+      ],
+      "metrics": {
+        "wall_seconds": {
+          "min": 0.054875959001947194,
+          "median": 0.056047875026706606,
+          "max": 0.05725100002018735
+        },
+        "user_seconds": {
+          "min": 0.047719,
+          "median": 0.048843,
+          "max": 0.05024
+        },
+        "system_seconds": {
+          "min": 0.0038309999999999998,
+          "median": 0.004299,
+          "max": 0.004398
+        },
+        "peak_rss_bytes": {
+          "min": 29917184,
+          "median": 30146560,
+          "max": 31424512
+        }
+      }
+    }
+  },
+  "hardware": "machdep.cpu.brand_string: Apple M3 Max\nhw.memsize: 51539607552\nhw.ncpu: 16",
+  "status": "PASS_BOUNDED_BENCHMARK_ONLY"
+}

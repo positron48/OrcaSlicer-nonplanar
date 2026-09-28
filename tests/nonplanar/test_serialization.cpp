@@ -115,3 +115,44 @@ TEST_CASE("A06 native roundtrip bounds cover negative coordinates and travel bet
         }
     }
 }
+TEST_CASE("A08 serialization rejects feed rounded outside the replay domain", "[Nonplanar][A06][A08]")
+{
+    auto events = plan();
+    events[0].speed_limit = Speed(99999.9996 / 60);
+    // Input F is below 100000, but the native formatter rounds to F100000.
+    // Rejection must occur before returning bytes outside the replay dialect.
+    REQUIRE_THROWS_AS(serialize_candidate(events, Length(1.75), FlowCompensation(1)), std::invalid_argument);
+    events[0].speed_limit = Speed(99999.999 / 60);
+    const auto bytes = serialize_candidate(events, Length(1.75), FlowCompensation(1));
+    const auto moves = nptop_verify::replay(bytes, {101,202,3});
+    REQUIRE(moves.front().feed == Approx(99999.999));
+    REQUIRE(moves.front().feed < 100000);
+}
+TEST_CASE("A08 bounded 10000 move candidate roundtrip preserves endpoint and total E", "[Nonplanar][A08][A08Stress]")
+{
+    auto prototype = plan().front();
+    prototype.start = PhysicalPosition(101,202,3);
+    std::vector<MotionEvent> events;
+    events.reserve(10000);
+    for (unsigned i = 1; i <= 10000; ++i) {
+        prototype.event_id = i;
+        prototype.sequence_index = i-1;
+        prototype.end = PhysicalPosition(101+.01*i,202,3+.001*(i%11));
+        events.push_back(prototype);
+        prototype.start = prototype.end;
+    }
+    const auto bytes = serialize_candidate(events, Length(1.75), FlowCompensation(1));
+    const auto replay = nptop_verify::replay(bytes, {101,202,3});
+    REQUIRE(replay.size() == 10000);
+    REQUIRE(replay.back().end[0] == Approx(201));
+    REQUIRE(replay.back().end[1] == Approx(202));
+    REQUIRE(replay.back().end[2] == Approx(3.001));
+    double total_e = 0;
+    for (const auto &move : replay) total_e += move.e;
+    const double expected = 80000/(std::acos(-1.)*1.75*1.75);
+    // Sum of 10000 half-E-quantum bounds, plus floating arithmetic allowance.
+    REQUIRE(std::abs(total_e-expected) <= .0501);
+    events.push_back(prototype);
+    REQUIRE_THROWS_AS(serialize_candidate(events, Length(1.75), FlowCompensation(1)), std::invalid_argument);
+    REQUIRE_THROWS(nptop_verify::replay(bytes+"G1 X202\n", {101,202,3}));
+}

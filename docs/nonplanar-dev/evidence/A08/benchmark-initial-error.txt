@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/benchmark_native.py", line 113, in <module>
+    main()
+    ~~~~^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/benchmark_native.py", line 101, in main
+    records.append(measure([executables[target], spec], directory, cases))
+                   ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/benchmark_native.py", line 62, in measure
+    raise RuntimeError(f"Failed or incomplete native workload: {directory}")
+RuntimeError: Failed or incomplete native workload: /Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark/contracts_geometry-1

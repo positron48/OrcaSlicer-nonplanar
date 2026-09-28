@@ -1,0 +1,109 @@
+tests/nonplanar/test_collision.cpp:34:    auto result = query_clearance(path, tip(), plane, policy());
+tests/nonplanar/test_collision.cpp:37:    auto opening_only = query_clearance(path, tip(.21), plane, policy());
+tests/nonplanar/test_collision.cpp:39:    auto clear = query_clearance(motion({0, 0, 1}, {4, 0, 4}), tip(), plane, policy(.1));
+tests/nonplanar/test_collision.cpp:50:    auto result = query_clearance(motion({0, 0, .2}, {4, -3, .2}), tip(), plane, policy());
+tests/nonplanar/test_collision.cpp:63:        auto result = query_clearance(motion(points[i-1], points[i]), duct, wall, policy());
+tests/nonplanar/test_collision.cpp:68:    REQUIRE(query_clearance(motion(points[1], points[1]), duct, wall, policy()).status == ClearanceStatus::Fail);
+tests/nonplanar/test_collision.cpp:75:        REQUIRE(query_clearance(motion({x,0,0}, {x,0,0}), box(), wall, policy()).status == ClearanceStatus::Pass);
+tests/nonplanar/test_collision.cpp:76:    auto result = query_clearance(motion({0,0,0}, {10,0,0}), box(), wall, policy());
+tests/nonplanar/test_collision.cpp:87:    auto narrow = query_clearance(motion({0,0,0}, {10,0,0}), tiny, thin, policy());
+tests/nonplanar/test_collision.cpp:97:    REQUIRE(query_clearance(path, box(), wall, policy()).status == ClearanceStatus::Pass);
+tests/nonplanar/test_collision.cpp:99:    auto result = query_clearance(path, duct, wall, policy());
+tests/nonplanar/test_collision.cpp:109:    auto result = query_clearance(motion({0,0,0}, {10,10,0}), box(), remote, policy(.1));
+tests/nonplanar/test_collision.cpp:115:    auto fixed = query_clearance(motion({0,0,0}, {0,0,0}), box(), diagonal, policy(4.9));
+tests/nonplanar/test_collision.cpp:129:            auto a = query_clearance(path, tip(), plane, policy(.1,.02));
+tests/nonplanar/test_collision.cpp:130:            auto b = query_clearance(path, box(), block, policy(.1,.02));
+tests/nonplanar/test_collision.cpp:137:    REQUIRE(query_clearance(motion({0,0,0},{0,0,0}), tip(), plane, policy()).status == ClearanceStatus::Unknown);
+tests/nonplanar/test_collision.cpp:143:    auto result = query_clearance(motion({0,0,.13},{0,0,.13}), tip(), plane, charged);
+tests/nonplanar/test_collision.cpp:152:    REQUIRE(query_clearance(path, box(), plane, policy()).reason == ClearanceReason::UnsupportedPair);
+tests/nonplanar/test_collision.cpp:154:    auto unsupported = query_clearance(path, tip(), wall, policy());
+tests/nonplanar/test_collision.cpp:159:    REQUIRE(query_clearance(path, contact, plane, policy()).reason == ClearanceReason::UnsupportedContact);
+tests/nonplanar/test_collision.cpp:162:    REQUIRE(query_clearance(path, tip(), plane, policy(), none).reason == ClearanceReason::WorkLimit);
+tests/nonplanar/test_collision.cpp:165:    auto timeout = query_clearance(path, tip(), plane, policy(), expired);
+tests/nonplanar/test_collision.cpp:170:    auto exhausted = query_clearance(motion({0,0,0},{10,0,0}), box(), wall, policy(), one);
+tests/nonplanar/test_collision.cpp:180:    REQUIRE(query_clearance(path, bad_tip, plane, policy()).reason == ClearanceReason::InvalidInput);
+tests/nonplanar/test_collision.cpp:183:    REQUIRE(query_clearance(path, tip(), plane, bad_budget).status == ClearanceStatus::Unknown);
+tests/nonplanar/test_collision.cpp:185:    REQUIRE(query_clearance(path, tip(), plane, policy()).status == ClearanceStatus::Unknown);
+tests/nonplanar/test_collision.cpp:187:    REQUIRE(query_clearance(path, tip(), plane, policy()).status == ClearanceStatus::Unknown);
+tests/nonplanar/test_collision.cpp:191:    REQUIRE(query_clearance(path, tip(), plane, policy()).reason == ClearanceReason::NumericalFailure);
+tests/nonplanar/test_collision.cpp:198:        auto result = query_clearance(motion({reverse?10.:0.,0,0},{reverse?0.:10.,0,0}), box(), wall, policy());
+tests/nonplanar/test_collision.cpp:202:    REQUIRE(query_clearance(motion({100,-30,20},{110,-30,20}), box(), translated, policy()).status == ClearanceStatus::Fail);
+tests/nonplanar/test_collision.cpp:204:    auto small = query_clearance(path, box(), wall, policy(.1));
+tests/nonplanar/test_collision.cpp:207:    auto big = query_clearance(path, big_box, wall, policy(.1));
+tests/nonplanar/test_collision.cpp:211:    REQUIRE(query_clearance(path, box(), wall, policy(4)).status == ClearanceStatus::Fail);
+tests/nonplanar/test_collision.cpp:221:    const auto result = query_clearance(motion({5,5,-1},{3,-6,1}), asymmetric, fixed, policy());
+tests/nonplanar/test_collision.cpp:258:        const auto result = query_clearance(motion({a[0],a[1],a[2]},{b[0],b[1],b[2]}), asymmetric, fixed, policy());
+tests/nonplanar/test_profile_scene.cpp:27:    REQUIRE(assess_simulation_scene(fixture(),motions()) == SceneApplicability::SimulationOnly);
+tests/nonplanar/test_profile_scene.cpp:29:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::SimulationOnly);
+tests/nonplanar/test_profile_scene.cpp:32:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::SimulationOnly);
+tests/nonplanar/test_profile_scene.cpp:37:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::UnsupportedQualification);
+tests/nonplanar/test_profile_scene.cpp:39:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::UnsupportedQualification);
+tests/nonplanar/test_profile_scene.cpp:41:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::UnsupportedQualification);
+tests/nonplanar/test_profile_scene.cpp:47:        REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry);
+tests/nonplanar/test_profile_scene.cpp:50:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::InvalidInput);
+tests/nonplanar/test_profile_scene.cpp:52:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry);
+tests/nonplanar/test_profile_scene.cpp:54:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry);
+tests/nonplanar/test_profile_scene.cpp:56:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry);
+tests/nonplanar/test_profile_scene.cpp:61:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage);
+tests/nonplanar/test_profile_scene.cpp:63:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage);
+tests/nonplanar/test_profile_scene.cpp:65:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage);
+tests/nonplanar/test_profile_scene.cpp:67:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage);
+tests/nonplanar/test_profile_scene.cpp:69:    REQUIRE(assess_simulation_scene(s,m) == SceneApplicability::OutsideCoverage);
+tests/nonplanar/test_profile_scene.cpp:72:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage);
+tests/nonplanar/test_profile_scene.cpp:77:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::UnsupportedVersion);
+tests/nonplanar/test_profile_scene.cpp:79:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::InvalidInput);
+tests/nonplanar/test_profile_scene.cpp:81:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::InvalidInput);
+tests/nonplanar/test_profile_scene.cpp:83:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::InvalidInput);
+tests/nonplanar/test_profile_scene.cpp:85:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::InvalidInput);
+tests/nonplanar/test_profile_scene.cpp:86:    REQUIRE(assess_simulation_scene(fixture(),{}) == SceneApplicability::InvalidInput);
+tests/nonplanar/test_profile_scene.cpp:88:    REQUIRE(assess_simulation_scene(fixture(),m) == SceneApplicability::InvalidInput);
+tests/nonplanar/test_profile_scene.cpp:91:    const auto result=assess_simulation_scene(fixture(),motions());
+tests/nonplanar/test_profile_scene.cpp:99:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::SimulationOnly);
+tests/nonplanar/test_profile_scene.cpp:101:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage);
+tests/nonplanar/test_profile_scene.cpp:104:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::SimulationOnly);
+tests/nonplanar/test_profile_scene.cpp:106:    REQUIRE(assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage);
+tests/nonplanar/test_transition.cpp:25:    auto result = reconstruct_planar_core(path,0,top,PhysicalPosition(0,0,0),NativeScale::capture(),17,
+tests/nonplanar/test_transition.cpp:62:                auto result = reconstruct_planar_core(*path,i,top.print_z,PhysicalPosition(100,100,0),
+tests/nonplanar/test_transition.cpp:108:    const auto result = assess_first_pass(cell,support,policy(.001));
+tests/nonplanar/test_transition.cpp:140:    REQUIRE(assess_first_pass(inside(high,1.18),high,policy()).status == TransitionStatus::Compatible);
+tests/nonplanar/test_transition.cpp:141:    const auto rejected = assess_first_pass(inside(low,1.18),low,policy());
+tests/nonplanar/test_transition.cpp:152:    auto result = assess_first_pass(cell,support,policy());
+tests/nonplanar/test_transition.cpp:159:    REQUIRE(assess_first_pass(cell,support,policy()).reason == TransitionReason::GapTooLarge);
+tests/nonplanar/test_transition.cpp:168:            const auto result = assess_first_pass(cell,support,policy());
+tests/nonplanar/test_transition.cpp:184:    REQUIRE(assess_first_pass(cell,support,policy()).status == TransitionStatus::Compatible);
+tests/nonplanar/test_transition.cpp:186:    auto shoulder = assess_first_pass(cell,support,policy());
+tests/nonplanar/test_transition.cpp:190:    REQUIRE(assess_first_pass(cell,support,policy()).reason == TransitionReason::UnsupportedFootprint);
+tests/nonplanar/test_transition.cpp:192:    REQUIRE(assess_first_pass(cell,support,policy()).status == TransitionStatus::Unknown);
+tests/nonplanar/test_transition.cpp:199:    const auto nominal = assess_first_pass(cell,core(path),policy());
+tests/nonplanar/test_transition.cpp:200:    const auto uncertain = assess_first_pass(cell,core(path,1,0,.15),policy());
+tests/nonplanar/test_transition.cpp:206:    REQUIRE(assess_first_pass(cell,core(path),policy()).status == TransitionStatus::Unknown);
+tests/nonplanar/test_transition.cpp:208:    REQUIRE(assess_first_pass(cell,core(path),policy()).status == TransitionStatus::Compatible);
+tests/nonplanar/test_transition.cpp:209:    REQUIRE(assess_first_pass(cell,core(path),policy(.01)).status == TransitionStatus::Unknown);
+tests/nonplanar/test_transition.cpp:225:            auto result = reconstruct_planar_core(path,0,1,PhysicalPosition(0,0,0),NativeScale::capture(),17,
+tests/nonplanar/test_transition.cpp:240:    REQUIRE(assess_first_pass(cell,support,limits).status == TransitionStatus::Unknown);
+tests/nonplanar/test_transition.cpp:242:    REQUIRE(assess_first_pass(cell,support,policy()).reason == TransitionReason::InvalidInput);
+tests/nonplanar/test_transition.cpp:244:        REQUIRE_FALSE(reconstruct_planar_core(path,0,1,PhysicalPosition(0,0,0),NativeScale::capture(),17,
+tests/nonplanar/test_transition.cpp:250:    REQUIRE(reconstruct_planar_core(tiny,0,1,PhysicalPosition(0,0,0),NativeScale::capture(),17,
+tests/nonplanar/test_transition.cpp:253:    REQUIRE(assess_first_pass(cell,support,policy()).status == TransitionStatus::Unknown);
+tests/nonplanar/test_transition.cpp:257:    REQUIRE_FALSE(reconstruct_planar_core(path,0,1,PhysicalPosition(0,0,0),scale,17,
+tests/nonplanar/test_transition.cpp:270:    const auto translated = reconstruct_planar_core(path,0,1,PhysicalPosition(20,30,4),
+tests/nonplanar/test_transition.cpp:278:    const auto result = assess_first_pass({{19.8,31,20.2,39},5.2,5.2,5.2},*translated.core,policy());
+tests/nonplanar/test_serialization.cpp:19:std::string candidate() { return serialize_candidate(plan(), Length(1.75), FlowCompensation(1)); }
+tests/nonplanar/test_serialization.cpp:52:        const auto bytes = serialize_candidate(plan(), Length(1.75), FlowCompensation(k));
+tests/nonplanar/test_serialization.cpp:82:    auto check = [](const auto &events) { return serialize_candidate(events, Length(1.75), FlowCompensation(1)); };
+tests/nonplanar/test_serialization.cpp:92:    REQUIRE_THROWS(serialize_candidate(plan(), Length(0), FlowCompensation(1)));
+tests/nonplanar/test_serialization.cpp:106:        const auto bytes = serialize_candidate(events, Length(1.75), FlowCompensation(1.17));
+tests/nonplanar/test_serialization.cpp:124:    REQUIRE_THROWS_AS(serialize_candidate(events, Length(1.75), FlowCompensation(1)), std::invalid_argument);
+tests/nonplanar/test_serialization.cpp:126:    const auto bytes = serialize_candidate(events, Length(1.75), FlowCompensation(1));
+tests/nonplanar/test_serialization.cpp:144:    const auto bytes = serialize_candidate(events, Length(1.75), FlowCompensation(1));
+tests/nonplanar/test_serialization.cpp:156:    REQUIRE_THROWS_AS(serialize_candidate(events, Length(1.75), FlowCompensation(1)), std::invalid_argument);
+src/libslic3r/Nonplanar/Collision.cpp:65:ClearanceResult query_clearance(const MotionEvent &motion, const ToolComponent &tool, const SceneObstacle &scene,
+src/libslic3r/Nonplanar/Transition.hpp:30:SupportCoreResult reconstruct_planar_core(const ExtrusionPath &, size_t segment, double layer_print_z,
+src/libslic3r/Nonplanar/Transition.hpp:52:TransitionResult assess_first_pass(const AffineCapCell &, const PlanarSupportCore &, const TransitionPolicy &);
+src/libslic3r/Nonplanar/ProfileScene.hpp:36:SceneApplicability assess_simulation_scene(const SimulationScene &, const std::vector<MotionEvent> &);
+src/libslic3r/Nonplanar/GCodeAdapter.hpp:10:std::string serialize_candidate(const std::vector<MotionEvent> &events,
+src/libslic3r/Nonplanar/ProfileScene.cpp:37:SceneApplicability assess_simulation_scene(const SimulationScene &s, const std::vector<MotionEvent> &events)
+src/libslic3r/Nonplanar/GCodeAdapter.cpp:6:std::string serialize_candidate(const std::vector<MotionEvent> &events,
+src/libslic3r/Nonplanar/Collision.hpp:67:ClearanceResult query_clearance(const MotionEvent &, const ToolComponent &, const SceneObstacle &,
+src/libslic3r/Nonplanar/Transition.cpp:22:SupportCoreResult reconstruct_planar_core(const ExtrusionPath &path, size_t segment, double layer_print_z,
+src/libslic3r/Nonplanar/Transition.cpp:84:TransitionResult assess_first_pass(const AffineCapCell &cell, const PlanarSupportCore &support, const TransitionPolicy &policy)

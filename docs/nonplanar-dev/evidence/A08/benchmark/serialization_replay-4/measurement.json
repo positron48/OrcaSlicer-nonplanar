@@ -1,0 +1,35 @@
+{
+  "command": [
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+    "[A06]",
+    "--rng-seed",
+    "4708",
+    "--order",
+    "rand",
+    "--warn",
+    "NoAssertions",
+    "--reporter",
+    "junit",
+    "--out",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/A08-benchmark-final/serialization_replay-4/results.xml"
+  ],
+  "exit_code": 0,
+  "timeout": false,
+  "wall_seconds": 0.03488066600402817,
+  "user_seconds": 0.027757999999999998,
+  "system_seconds": 0.004379,
+  "peak_rss_bytes": 25296896,
+  "test_names": [
+    "ORC-07 native E applies compensation once without slope correction",
+    "A06 candidate rejects broken order continuity and unsupported events",
+    "GCD-01 parser fails closed on unsupported modal state and grammar",
+    "A08 serialization rejects feed rounded outside the replay domain",
+    "A06 native roundtrip bounds cover negative coordinates and travel between beads",
+    "ORC-06 ordered native serialization preserves absolute placed XYZ and modal Z",
+    "GCD-01 replay exposes XYZ E feed and rounding mutations"
+  ],
+  "cases_executed": 7,
+  "junit_case_entries": 7,
+  "assertions": 1345,
+  "valid": true
+}

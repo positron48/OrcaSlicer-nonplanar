@@ -1,0 +1,16 @@
+src/libslic3r/Nonplanar/Interval.hpp:10:namespace Slic3r::nptop::detail {
+src/libslic3r/Nonplanar/Interval.hpp:62:} // namespace Slic3r::nptop::detail
+src/libslic3r/CMakeLists.txt:24:    Nonplanar/GCodeAdapter.cpp
+src/libslic3r/CMakeLists.txt:25:    Nonplanar/GCodeAdapter.hpp
+src/libslic3r/CMakeLists.txt:26:    Nonplanar/ProfileScene.cpp
+src/libslic3r/CMakeLists.txt:27:    Nonplanar/ProfileScene.hpp
+src/libslic3r/CMakeLists.txt:28:    Nonplanar/Contracts.cpp
+src/libslic3r/CMakeLists.txt:29:    Nonplanar/Contracts.hpp
+src/libslic3r/CMakeLists.txt:30:    Nonplanar/Collision.cpp
+src/libslic3r/CMakeLists.txt:31:    Nonplanar/Collision.hpp
+src/libslic3r/CMakeLists.txt:32:    Nonplanar/Interval.hpp
+src/libslic3r/CMakeLists.txt:33:    Nonplanar/Transition.cpp
+src/libslic3r/CMakeLists.txt:34:    Nonplanar/Transition.hpp
+src/libslic3r/CMakeLists.txt:648:set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+src/libslic3r/CMakeLists.txt:650:    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+src/libslic3r/CMakeLists.txt:652:    set_source_files_properties(Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")

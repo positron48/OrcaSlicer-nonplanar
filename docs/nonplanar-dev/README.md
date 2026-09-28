@@ -76,3 +76,13 @@ fresh native CTest executes 78/78 cases without skips. Confirmation claims do
 not qualify synthetic geometry. Full coverage of declared envelopes does not
 imply collision freedom or export permission. Next is A08 review/benchmarks;
 operator measurements and physical qualification remain NOT_RUN.
+
+## A08 continuation
+
+`A08.md` records a source-based author audit, one fixed native feed-rounding
+defect, a 10000-move serialization/replay stress case and five-repeat CPU/RSS
+measurements. Selected CTest executes 80/80 cases. The 25 measured processes
+exercise bounded native modules; SYS-08's full 200k pipeline remains NOT_RUN.
+`A08-review.md` records findings and `A08-estimate.md` revises remaining effort.
+Gate A stays open for analytical sphere evidence, a prepared coupon/protocol
+and independent review. Operator data and physical qualification remain absent.
