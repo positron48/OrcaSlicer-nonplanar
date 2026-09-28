@@ -1,6 +1,7 @@
 #pragma once
 #include "StlImport.hpp"
 
+namespace Slic3r { class ModelVolume; }
 namespace Slic3r::nptop {
 struct MeshPlacementLimits {
     MeshAuditLimits geometry;
@@ -26,4 +27,22 @@ struct MeshPlacementResult {
 // coordinates in build-plate space only after a new geometry audit.
 MeshPlacementResult place_imported_mesh(const StlImportResult &, const Transform3d &model_to_plate,
                                         uint64_t revision, const MeshPlacementLimits &limits = {});
+
+struct CenteredVolumeSnapshot {
+    const std::shared_ptr<const StlSourceSnapshot> source;
+    const std::shared_ptr<const TriangleMesh> volume_local;
+    const Vec3d source_offset;
+    const double source_error_upper_mm;
+    const uint64_t revision;
+};
+struct CenteredVolumeResult {
+    std::shared_ptr<const CenteredVolumeSnapshot> snapshot;
+    MeshAuditResult geometry;
+    std::optional<double> centering_error_upper_mm;
+    std::optional<double> total_error_upper_mm;
+};
+// Caller owns/synchronizes the ModelVolume during capture. Establishes only the
+// source-to-volume-local centering step, not volume/instance/plate placement.
+CenteredVolumeResult capture_centered_volume(const StlImportResult &, const ModelVolume &,
+                                             uint64_t revision, const MeshPlacementLimits &limits = {});
 }

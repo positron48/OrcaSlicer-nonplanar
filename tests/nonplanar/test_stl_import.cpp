@@ -1,5 +1,17 @@
+#include <libslic3r/libslic3r.h>
+#define NANOSVG_IMPLEMENTATION
+#include "nanosvg/nanosvg.h"
+#define NANOSVGRAST_IMPLEMENTATION
+#include "nanosvg/nanosvgrast.h"
+// Model integration pulls native SVG consumers into this test executable;
+// provide the same implementation units as the upstream FFF test target.
 #include <catch2/catch_test_macros.hpp>
 #include <libslic3r/Nonplanar/StlImport.hpp>
+#include <libslic3r/Nonplanar/MeshPlacement.hpp>
+#include <libslic3r/Model.hpp>
+#include <libslic3r/Format/STL.hpp>
+#include <boost/nowide/fstream.hpp>
+#include <cfenv>
 #include <cstring>
 #include <iomanip>
 #include <limits>
@@ -45,6 +57,120 @@ std::string ascii_stl(const TriangleMesh &mesh)
     out << "endsolid cube\n";
     return out.str();
 }
+}
+TEST_CASE("B02 centered native volume retains source provenance and independent rounding allowance", "[Nonplanar][B02][Centering]")
+{
+    auto cube=make_cube(20,10,2); cube.translate(0.1f,0.1f,0.1f);
+    const auto source=import_stl_snapshot(binary_stl(cube),true);
+    REQUIRE(source.geometry.status==MeshAuditStatus::ValidGeometry);
+    Model model;
+    auto *object=model.add_object("source","",cube);
+    auto *volume=object->volumes.front();
+    const auto before=volume->mesh().its;
+    const auto offset=volume->source.mesh_offset;
+    const auto result=capture_centered_volume(source,*volume,41);
+    INFO(result.geometry.reason);
+    REQUIRE(result.geometry.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(result.snapshot);
+    REQUIRE(result.snapshot->revision==41);
+    REQUIRE(result.snapshot->source==source.source);
+    REQUIRE(result.snapshot->source_offset==offset);
+    REQUIRE(result.snapshot->volume_local.get()!=&volume->mesh());
+    REQUIRE(result.centering_error_upper_mm);
+    // Independent Python Fraction oracle for all eight corners, retained in
+    // B02-centering evidence. Source is binary STL, so import error is zero.
+    constexpr double expected=147./268435456.;
+    REQUIRE(*result.centering_error_upper_mm>=expected);
+    REQUIRE(*result.centering_error_upper_mm<expected+1e-12);
+    REQUIRE(*result.total_error_upper_mm>=expected);
+    REQUIRE(*source.source_error_upper_mm==0);
+    REQUIRE(result.snapshot->source_error_upper_mm==0);
+    REQUIRE(volume->mesh().its.vertices==before.vertices);
+    REQUIRE(volume->mesh().its.indices==before.indices);
+    REQUIRE(volume->source.mesh_offset==offset);
+    MeshPlacementLimits limits; limits.max_error_upper_mm=expected/2;
+    const auto rejected=capture_centered_volume(source,*volume,41,limits);
+    REQUIRE(rejected.geometry.status!=MeshAuditStatus::ValidGeometry);
+    REQUIRE_FALSE(rejected.geometry.normalized);
+    REQUIRE_FALSE(rejected.total_error_upper_mm);
+    auto conservative=source; conservative.source_error_upper_mm=0.0001;
+    const auto propagated=capture_centered_volume(conservative,*volume,41);
+    REQUIRE(propagated.geometry.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(propagated.snapshot->source_error_upper_mm==0.0001);
+    REQUIRE(*propagated.total_error_upper_mm>=0.0001+expected);
+    REQUIRE(*propagated.total_error_upper_mm<0.0001+expected+1e-12);
+}
+TEST_CASE("B02 actual native STL to ModelVolume path matches the captured original source", "[Nonplanar][B02][Centering]")
+{
+    boost::nowide::ifstream input(NPTOP_STL_FIXTURE_PATH,std::ios::binary);
+    REQUIRE(input);
+    const std::string bytes(std::istreambuf_iterator<char>(input),{});
+    auto source=import_stl_snapshot(bytes,true);
+    REQUIRE(source.geometry.status==MeshAuditStatus::ValidGeometry);
+    Model model;
+    REQUIRE(load_stl(NPTOP_STL_FIXTURE_PATH,&model));
+    REQUIRE(model.objects.size()==1);
+    REQUIRE(model.objects.front()->volumes.size()==1);
+    const auto *volume=model.objects.front()->volumes.front();
+    const auto result=capture_centered_volume(source,*volume,1);
+    REQUIRE(result.geometry.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(result.snapshot->source->bytes==bytes);
+    REQUIRE(same_oriented_triangles(result.geometry.normalized->its,volume->mesh().its));
+    REQUIRE(*result.total_error_upper_mm<1e-12);
+    REQUIRE(capture_centered_volume(source,*volume,0).geometry.status==MeshAuditStatus::Unknown);
+    source.source_error_upper_mm.reset();
+    REQUIRE(capture_centered_volume(source,*volume,1).geometry.reason=="MISSING_IMPORT_PROVENANCE");
+}
+TEST_CASE("B02 centered source capture rejects altered geometry offsets units and volume roles", "[Nonplanar][B02][Centering]")
+{
+    const auto cube=make_cube(20,10,2);
+    const auto source=import_stl_snapshot(binary_stl(cube),true);
+    REQUIRE(source.geometry.status==MeshAuditStatus::ValidGeometry);
+    for (int mutation=0; mutation<7; ++mutation) {
+        INFO(mutation);
+        Model model; auto *volume=model.add_object("source","",cube)->volumes.front();
+        if (mutation==0) { auto changed=volume->mesh(); changed.translate(0.1f,0,0); volume->set_mesh(std::move(changed)); }
+        if (mutation==1) volume->source.mesh_offset.x()+=0.1;
+        if (mutation==2) volume->source.is_converted_from_inches=true;
+        if (mutation==3) volume->source.is_converted_from_meters=true;
+        if (mutation==4) volume->set_type(ModelVolumeType::PARAMETER_MODIFIER);
+        if (mutation==5) volume->source.transform.set_offset(Vec3d(1,0,0));
+        if (mutation==6) { auto changed=volume->mesh(); changed.its.indices.front()(0)=-1; volume->set_mesh(std::move(changed)); }
+        const auto result=capture_centered_volume(source,*volume,1);
+        REQUIRE(result.geometry.status!=MeshAuditStatus::ValidGeometry);
+        REQUIRE_FALSE(result.geometry.normalized);
+        REQUIRE_FALSE(result.total_error_upper_mm);
+    }
+}
+TEST_CASE("B02 centered volume is frozen before callbacks and stale results cannot accept geometry", "[Nonplanar][B02][Centering]")
+{
+    const auto cube=make_cube(20,10,2);
+    auto source=import_stl_snapshot(binary_stl(cube),true);
+    Model model; auto *volume=model.add_object("source","",cube)->volumes.front();
+    const auto original=volume->mesh().its;
+    MeshPlacementLimits limits;
+    limits.geometry.cancelled=[&] {
+        volume->reset_mesh(); volume->source.mesh_offset=Vec3d(999,999,999);
+        source.geometry={}; limits.max_error_upper_mm=-1; return false;
+    };
+    const auto frozen=capture_centered_volume(source,*volume,9,limits);
+    INFO(frozen.geometry.reason);
+    REQUIRE(frozen.geometry.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(same_oriented_triangles(frozen.snapshot->volume_local->its,original));
+    source=import_stl_snapshot(binary_stl(cube),true);
+    Model stable; volume=stable.add_object("source","",cube)->volumes.front();
+    for (int mode=0; mode<4; ++mode) {
+        struct Restore { int mode=std::fegetround(); ~Restore() { std::fesetround(mode); } } restore;
+        limits={}; int polls=0;
+        if (mode==0) limits.geometry.cancelled=[] { return true; };
+        if (mode==1) limits.is_current=[&](uint64_t) { return ++polls<3; };
+        if (mode==2) limits.geometry.cancelled=[] { std::fesetround(FE_UPWARD); return false; };
+        if (mode==3) limits.geometry.timeout=std::chrono::milliseconds(0);
+        const auto rejected=capture_centered_volume(source,*volume,9,limits);
+        REQUIRE(rejected.geometry.status!=MeshAuditStatus::ValidGeometry);
+        REQUIRE_FALSE(rejected.geometry.normalized);
+        REQUIRE_FALSE(rejected.total_error_upper_mm);
+    }
 }
 TEST_CASE("B02 ASCII and binary snapshots preserve bytes and native geometry", "[Nonplanar][B02][StlImport]")
 {

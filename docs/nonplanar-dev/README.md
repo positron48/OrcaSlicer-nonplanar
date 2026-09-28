@@ -138,3 +138,8 @@ pass; full compatibility remains open.
 `B01-layering.md` rejects custom source layer-height profiles and height-range
 overrides while preserving OFF inputs. Twenty-six B01 cases/2940 assertions,
 145/145 selected CTest and six fresh OFF/ZAA comparisons pass.
+
+`B02-centering.md` and ADR-0014 bind captured native volume-local geometry to
+its STL source after centering, including an independent rounding-error oracle.
+Four cases/70 assertions, 149/149 selected CTest and six fresh OFF/ZAA comparisons
+pass. The remaining transform chain and whole-job integration are still open.

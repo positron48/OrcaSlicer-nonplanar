@@ -16,7 +16,7 @@
     "A07": "SIMULATION_CONTRACT_NATIVE_TESTS_PASS_OPERATOR_EVIDENCE_NOT_RUN_REVIEW_PENDING",
     "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_SPHERE_COUPON_PREPARATION_COMPLETE_INDEPENDENT_REVIEW_PENDING",
     "B01": "PREFLIGHT_REGISTRIES_AND_OWNED_NATIVE_CONFIG_PASS_FULL_COMPATIBILITY_AND_JOB_SNAPSHOT_PENDING",
-    "B02": "BOUNDED_IMPORT_FILE_CLI_AND_NATIVE_PLACEMENT_PASS_MODEL_JOB_GUI_HARD_LIMITS_PENDING"
+    "B02": "BOUNDED_IMPORT_FILE_CLI_PLACEMENT_AND_NATIVE_CENTERING_PASS_MODEL_CHAIN_JOB_GUI_HARD_LIMITS_PENDING"
   },
   "executed_checks": {
     "ORC-01": "PASS",
@@ -28,7 +28,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 108,
+    "new_native_cases": 112,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -44,8 +44,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 145,
-    "final_ctest_executed": 145,
+    "final_ctest_discovered": 149,
+    "final_ctest_executed": 149,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -125,7 +125,11 @@
     "B01_discrete_registry_keys": 10,
     "B01_discrete_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B01_layering_cases": 3,
-    "B01_layering_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
+    "B01_layering_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B02_centering_cases": 4,
+    "B02_centering_assertions": 70,
+    "B02_centering_oracle": "EXACT_FRACTION_L1_147_OVER_268435456_MM",
+    "B02_centering_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -139,7 +143,7 @@
     "coupon_geometry": "PREPARED_AND_VALIDATED_DIGITALLY_ONLY"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "RUN_36413130735_1A2B6C40_NATIVE_BUILD_PASS_TEST_STEP_FAILED_RUN_36422010850_042A11AC_IN_PROGRESS",
+  "ci": "RUN_36413130735_1A2B6C40_NATIVE_BUILD_PASS_TEST_STEP_FAILED_RUN_36422010850_042A11AC_BUILDING_APP_TESTS",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
   "next_step": "Complete source/model transform provenance and whole-job snapshots; finish B01 compatibility registry. Linux detailed diagnostics, independent review and physical qualification remain pending.",
@@ -171,7 +175,8 @@
     "B01_transforms": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-transforms.md",
     "B01_snapshot": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-snapshot.md",
     "B01_discrete": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-discrete.md",
-    "B01_layering": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-layering.md"
+    "B01_layering": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-layering.md",
+    "B02_centering": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B02-centering.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -195,5 +200,6 @@
   "A01_coexistence_evidence": "docs/nonplanar-dev/evidence/A01-coexistence/observations.json",
   "B01_snapshot_evidence": "docs/nonplanar-dev/evidence/B01-snapshot/source-manifest.json",
   "B01_discrete_evidence": "docs/nonplanar-dev/evidence/B01-discrete/source-manifest.json",
-  "B01_layering_evidence": "docs/nonplanar-dev/evidence/B01-layering/source-manifest.json"
+  "B01_layering_evidence": "docs/nonplanar-dev/evidence/B01-layering/source-manifest.json",
+  "B02_centering_evidence": "docs/nonplanar-dev/evidence/B02-centering/source-manifest.json"
 }
