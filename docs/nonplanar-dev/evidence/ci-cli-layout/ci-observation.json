@@ -1,0 +1,91 @@
+{
+  "run_id": 36413130735,
+  "source_commit": "1a2b6c40",
+  "observation": "2026-09-28",
+  "jobs": [
+    {
+      "id": 108899911569,
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-09-28T11:07:45Z",
+          "completed_at": "2026-09-28T11:07:46Z"
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-09-28T11:07:46Z",
+          "completed_at": "2026-09-28T11:08:30Z"
+        },
+        {
+          "name": "Pinned source and normative package",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-09-28T11:08:30Z",
+          "completed_at": "2026-09-28T11:08:32Z"
+        },
+        {
+          "name": "System dependencies on disposable runner",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-09-28T11:08:32Z",
+          "completed_at": "2026-09-28T11:09:18Z"
+        },
+        {
+          "name": "Build pinned dependency sources",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-09-28T11:09:18Z",
+          "completed_at": "2026-09-28T11:50:54Z"
+        },
+        {
+          "name": "Build native application and tests",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-09-28T11:50:54Z",
+          "completed_at": "2026-09-28T12:35:37Z"
+        },
+        {
+          "name": "Execute nonempty selected native suites",
+          "status": "completed",
+          "conclusion": "failure",
+          "started_at": "2026-09-28T12:35:37Z",
+          "completed_at": "2026-09-28T12:35:43Z"
+        },
+        {
+          "name": "Preserve observed results even on failure",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-09-28T12:35:43Z",
+          "completed_at": "2026-09-28T12:35:44Z"
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-09-28T12:35:44Z",
+          "completed_at": "2026-09-28T12:35:44Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-09-28T12:35:44Z",
+          "completed_at": "2026-09-28T12:35:44Z"
+        }
+      ]
+    }
+  ],
+  "failing_test_case": "UNKNOWN_AUTHENTICATED_LOGS_UNAVAILABLE",
+  "later_run": {
+    "id": 36422010850,
+    "source_commit": "042a11ac",
+    "status": "IN_PROGRESS"
+  },
+  "cli_path_fix_explains_test_failure": false
+}

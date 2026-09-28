@@ -50,7 +50,7 @@ jobs:
         if: failure() && steps.native_tests.outcome == 'failure'
         run: python3 scripts/nonplanar/publish_ci_failure.py --evidence-dir build/nonplanar-evidence/linux
       - name: Exercise native STL audit command
-        run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/stl-cli.log -- python3 scripts/nonplanar/validate_stl_audit_cli.py --executable build/src/nonplanar_import/nonplanar_stl_audit --output-dir build/nonplanar-evidence/linux/stl-cli
+        run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/stl-cli.log -- python3 scripts/nonplanar/validate_stl_audit_cli.py --executable build/src/nonplanar_import/Release/nonplanar_stl_audit --output-dir build/nonplanar-evidence/linux/stl-cli
       - name: Preserve observed results even on failure
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4

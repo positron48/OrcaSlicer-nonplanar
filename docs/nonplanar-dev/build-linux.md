@@ -25,3 +25,16 @@ has completed dependencies and is building app/tests at this observation. These
 are earlier commits: current source changes have no Linux test pass yet. Future
 runs emit bounded failure details in public check annotations and retain artifacts.
 The original bootstrap record above is historical, not current CI configuration.
+
+Run 36413130735 at 1a2b6c40 subsequently completed native application/test builds
+(11:50:54–12:35:37 UTC), then failed the selected-test step at 12:35:43. No
+individual failing case is available from its unauthenticated public metadata.
+Run 36422010850 at 042a11ac is now in progress and includes the later bounded
+annotation publisher. These observations do not establish a Linux test pass.
+
+The diagnostic CLI command separately lacked the Release directory selected by
+`build_linux.sh`'s Ninja Multi-Config generator. Its path is now
+`build/src/nonplanar_import/Release/nonplanar_stl_audit`. A local CMake target-file
+probe confirms this layout; it is not Linux execution or a fix for the earlier
+selected-test failure, which precedes this CLI step. Evidence is retained under
+`evidence/ci-cli-layout/`.
