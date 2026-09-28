@@ -8,8 +8,9 @@ original meaning. No source snapshots or golden outputs have been regenerated.
 ## Bootstrap scope
 
 Base: `8500fcdccaa10b5099ac20d252af3a7c560046f1` (v2.4.2).
-Branch: `feature/nonplanar-bootstrap`. Bootstrap is committed locally; no remote
-fork has been published. `status.json` is the current checkpoint; its `SELF`
+Branch: `feature/nonplanar-bootstrap`, published to
+[the user fork](https://github.com/positron48/OrcaSlicer-nonplanar/tree/feature/nonplanar-bootstrap).
+Bootstrap: `1ad7bdad`; A04: `93192ca7`. `status.json` is the current checkpoint; its `SELF`
 revision resolves with the included Git command.
 
 Follow `../nonplanar/prompts/01_bootstrap.md`: A01–A03, then concrete A04–A08
@@ -19,7 +20,7 @@ a whole is IN_PROGRESS: A05-A08 and independent critical review remain ahead.
 
 ## A04 continuation
 
-`A04.md` records the locally committed continuation: continuous primitive
+`A04.md` records the published continuation: continuous primitive
 clearance queries, finite tip/full gradient, fixed asymmetric box sweeps and
 fail-closed numerical/resource limits. Twelve new native cases plus seven A03
 cases pass, including 300 independent slab-oracle scenes; six fresh OFF/ZAA

@@ -4,7 +4,7 @@
   "branch": "feature/nonplanar-bootstrap",
   "fork_commit": "SELF",
   "fork_commit_resolution": "git log -1 --format=%H -- docs/nonplanar-dev/status.json",
-  "delivery": "COMMITTED_LOCALLY_NOT_PUSHED",
+  "delivery": "PUSHED_TO_USER_FORK",
   "gate_a": "IN_PROGRESS",
   "tasks": {
     "A01": "MACOS_NATIVE_BUILD_TESTS_ISOLATED_CLI_COMPLETE_GUI_LINUX_NOT_RUN",
@@ -53,5 +53,11 @@
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
   "next_step": "A05 transition experiment and body reservation ADR; A07 operator evidence later.",
-  "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json"
+  "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
+  "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
+  "published_branch": "feature/nonplanar-bootstrap",
+  "milestone_commits": {
+    "bootstrap": "1ad7bdadaee803d53e0a517c593ed23ac688d7c3",
+    "A04": "93192ca7"
+  }
 }
