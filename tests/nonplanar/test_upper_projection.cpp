@@ -1,5 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
+#include <array>
 #include <libslic3r/Nonplanar/UpperProjection.hpp>
+#include <libslic3r/Nonplanar/UpperProjectionPredicates.hpp>
 #include <cfenv>
 #include <limits>
 #include <set>
@@ -30,6 +32,99 @@ TriangleMesh overhang()
     }
     return TriangleMesh(std::move(mesh));
 }
+TriangleMesh gridded_plate(int side, bool hole, bool ramp=false, bool pinched=false)
+{
+    indexed_triangle_set mesh;
+    const int stride=side+1, layer=stride*stride;
+    const auto present=[&](int x,int y) { return x>=0 && x<side && y>=0 && y<side && !(hole && x==1 && y==1); };
+    for (int z=0; z<2; ++z)
+        for (int y=0; y<=side; ++y)
+            for (int x=0; x<=side; ++x) {
+                float top=ramp && x>=2 ? 3.f : 2.f;
+                if (pinched && ((x==0 && y==0) || (x==2 && y==2))) top=3;
+                mesh.vertices.emplace_back(float(x),float(y),z ? top : 0.f);
+            }
+    for (int y=0; y<side; ++y) for (int x=0; x<side; ++x) if (present(x,y)) {
+        const std::array<int,4> v{y*stride+x,y*stride+x+1,(y+1)*stride+x+1,(y+1)*stride+x};
+        mesh.indices.emplace_back(v[0]+layer,v[1]+layer,v[2]+layer);
+        mesh.indices.emplace_back(v[0]+layer,v[2]+layer,v[3]+layer);
+        mesh.indices.emplace_back(v[0],v[2],v[1]); mesh.indices.emplace_back(v[0],v[3],v[2]);
+        const std::array<bool,4> exterior{!present(x,y-1),!present(x+1,y),!present(x,y+1),!present(x-1,y)};
+        for (int edge=0; edge<4; ++edge) if (exterior[edge]) {
+            const int a=v[edge], b=v[(edge+1)%4];
+            mesh.indices.emplace_back(a,b,b+layer); mesh.indices.emplace_back(a,b+layer,a+layer);
+        }
+    }
+    return TriangleMesh(std::move(mesh));
+}
+}
+TEST_CASE("B03 connected upper mask keeps the through-hole boundary and exact area", "[Nonplanar][B03][UpperProjection][UpperPatches]")
+{
+    const auto source=gridded_plate(3,true);
+    const auto result=analyze_upper_projection(source,true,1);
+    INFO(result.reason);
+    REQUIRE(result.status==UpperProjectionStatus::NominalHeightfield);
+    REQUIRE(result.snapshot->slope_patches.size()==1);
+    const auto &patch=result.snapshot->slope_patches.front();
+    REQUIRE(patch.mesh_faces.size()==16);
+    REQUIRE(patch.xy_area_lower_mm2<=8);
+    REQUIRE(patch.xy_area_upper_mm2>=8);
+    REQUIRE(patch.xy_area_upper_mm2-patch.xy_area_lower_mm2<1e-10);
+    REQUIRE(patch.boundaries.size()==2);
+    size_t holes=0;
+    for (const auto &boundary : patch.boundaries) {
+        const double expected=boundary.hole ? -1 : 9;
+        holes += boundary.hole;
+        REQUIRE(boundary.signed_xy_area_lower_mm2<=expected);
+        REQUIRE(boundary.signed_xy_area_upper_mm2>=expected);
+        REQUIRE(boundary.mesh_vertices.size()==(boundary.hole ? 4 : 12));
+    }
+    REQUIRE(holes==1);
+}
+TEST_CASE("B03 slope mask separates flat strips without erasing the steep connecting geometry", "[Nonplanar][B03][UpperProjection][UpperPatches]")
+{
+    const auto source=gridded_plate(3,false,true);
+    UpperProjectionLimits limits; limits.max_slope=0.1;
+    const auto result=analyze_upper_projection(source,true,1,limits);
+    INFO(result.reason);
+    REQUIRE(result.status==UpperProjectionStatus::NominalHeightfield);
+    REQUIRE(result.snapshot->slope_patches.size()==2);
+    REQUIRE(result.snapshot->upward_facets.size()==18);
+    REQUIRE(result.snapshot->filtered_area_lower_mm2>5.999999999);
+    for (const auto &patch : result.snapshot->slope_patches) {
+        REQUIRE(patch.mesh_faces.size()==6);
+        REQUIRE(patch.xy_area_lower_mm2<=3);
+        REQUIRE(patch.xy_area_upper_mm2>=3);
+        REQUIRE(patch.boundaries.size()==1);
+        REQUIRE_FALSE(patch.boundaries.front().hole);
+    }
+    REQUIRE(same_oriented_triangles(result.snapshot->geometry->its,source.its));
+}
+TEST_CASE("B03 a valid heightfield with a pinched slope mask is not silently repaired", "[Nonplanar][B03][UpperProjection][UpperPatches]")
+{
+    const auto source=gridded_plate(4,false,false,true);
+    REQUIRE(audit_mesh(source,true).status==MeshAuditStatus::ValidGeometry);
+    UpperProjectionLimits limits; limits.max_slope=0.1;
+    const auto result=analyze_upper_projection(source,true,1,limits);
+    REQUIRE(result.status==UpperProjectionStatus::Unknown);
+    REQUIRE(result.reason=="AMBIGUOUS_MASK_BOUNDARY");
+    REQUIRE_FALSE(result.snapshot);
+}
+TEST_CASE("B03 exact boundary predicates distinguish endpoint adjacency from projected overlap", "[Nonplanar][B03][UpperProjection][UpperPatches]")
+{
+    for (bool reverse_first : {false,true}) for (bool reverse_second : {false,true}) {
+        Vec3f a(0,0,0), b(2,0,0), c(2,0,0), d(3,0,0);
+        if (reverse_first) std::swap(a,b);
+        if (reverse_second) std::swap(c,d);
+        REQUIRE_FALSE(detail::projected_boundary_conflict(a,b,c,d,true));
+        REQUIRE(detail::projected_boundary_conflict(a,b,c,d,false));
+        c=Vec3f(2,0,0); d=Vec3f(1,0,0);
+        if (reverse_second) std::swap(c,d);
+        REQUIRE(detail::projected_boundary_conflict(a,b,c,d,true));
+    }
+    REQUIRE(detail::projected_boundary_conflict(Vec3f(0,0,0),Vec3f(2,0,0),Vec3f(1,-1,9),Vec3f(1,1,9),false));
+    REQUIRE_FALSE(detail::projected_boundary_conflict(Vec3f(0,0,0),Vec3f(2,0,0),Vec3f(1,1e-30f,0),Vec3f(2,1e-30f,0),false));
+    REQUIRE_FALSE(detail::projected_boundary_conflict(Vec3f(0,0,0),Vec3f(2,0,0),Vec3f(2,0,0),Vec3f(2,2,0),true));
 }
 TEST_CASE("B03 nominal upper projection retains the full predefined flat and wedge masks", "[Nonplanar][B03][UpperProjection]")
 {

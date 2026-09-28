@@ -1,0 +1,18 @@
+{
+  "base_commit": "ff09c4ce7c78fb05298584073cd1f187d10e9ef4",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-patches.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/UpperProjection.hpp": "af205ba586156b976f31b9da9bb81e932ee8deaa7341df89e2295e1fed4a8bef",
+    "src/libslic3r/Nonplanar/UpperProjection.cpp": "5d2f7a767823945ae0b19519d74fd64247d2f9ecbd34c87ddc7a57464d8c711a",
+    "src/libslic3r/Nonplanar/UpperProjectionPredicates.hpp": "df49d7838f9977c9ff39b135b6d09a71880fee3ac411591fccb10e99ec1f95d0",
+    "src/libslic3r/Nonplanar/UpperProjectionPredicates.cpp": "6639d43530b539163cf76c0d7c2ebd16f5703eedc40442f228822e76034d14b8",
+    "tests/nonplanar/test_upper_projection.cpp": "bf1de0984fd8b514a2544bcf2166d02e16c03582030217591142e36c179cf7fb"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "4ed142bbd12f7b4a2bed10d7702124a7dd255bb975e70354ee7ca8dd251ab051",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "00cae1e1fe4d1c8f2d8b1ecd7cc28c67e91b183f642394f92ba413fdc7ed672d",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "78690bff2c69ab0c61c06762f96183f806b329c438ee7bd97e4cb7f619ad2852"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin"
+}

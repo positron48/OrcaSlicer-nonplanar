@@ -1,5 +1,6 @@
 #include "UpperProjectionPredicates.hpp"
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Intersections_2/Segment_2_Segment_2.h>
 
 namespace Slic3r::nptop::detail {
 namespace {
@@ -29,5 +30,20 @@ bool projection_interiors_overlap(const ProjectionTriangle &a, const ProjectionT
 {
     const auto pa=project(a), pb=project(b);
     return !has_separating_edge(pa,pb) && !has_separating_edge(pb,pa);
+}
+bool projected_boundary_conflict(const Vec3f &a, const Vec3f &b, const Vec3f &c, const Vec3f &d, bool adjacent)
+{
+    const Kernel::Point_2 pa(a.x(),a.y()), pb(b.x(),b.y()), pc(c.x(),c.y()), pd(d.x(),d.y());
+    const Kernel::Segment_2 first(pa,pb), second(pc,pd);
+    if (!CGAL::do_intersect(first,second)) return false;
+    if (!adjacent) return true;
+    // No intersection construction or rounded intersection point is needed.
+    // For adjacent segments the only permitted intersection is their endpoint;
+    // any further endpoint-on-segment contact implies a collinear overlap.
+    if (pa==pc) return first.has_on(pd) || second.has_on(pb);
+    if (pa==pd) return first.has_on(pc) || second.has_on(pb);
+    if (pb==pc) return first.has_on(pd) || second.has_on(pa);
+    if (pb==pd) return first.has_on(pc) || second.has_on(pa);
+    return true;
 }
 }

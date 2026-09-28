@@ -4,8 +4,116 @@
 #include <algorithm>
 #include <array>
 #include <limits>
+#include <map>
+#include <optional>
+#include <set>
 
 namespace Slic3r::nptop {
+namespace {
+template<class Stop> std::optional<std::vector<UpperPatch>> build_patches(
+    const indexed_triangle_set &mesh, const std::vector<UpperFacet> &facets, Stop &&stop, std::string &reason)
+{
+    using Edge = std::pair<int,int>;
+    const auto edge_key=[](int a,int b) { return Edge{std::min(a,b),std::max(a,b)}; };
+    std::map<Edge,std::vector<size_t>> incidence;
+    std::vector<std::vector<size_t>> adjacent(facets.size());
+    for (size_t face=0; face<facets.size(); ++face) if (facets[face].within_slope_limit) {
+        if (stop()) return {};
+        const auto &ids=mesh.indices[facets[face].mesh_face];
+        for (int edge=0; edge<3; ++edge) incidence[edge_key(ids(edge),ids((edge+1)%3))].push_back(face);
+    }
+    for (const auto &[edge,uses] : incidence) {
+        if (stop()) return {};
+        if (uses.size()>2) { reason="NONMANIFOLD_MASK_EDGE"; return {}; }
+        if (uses.size()==2) {
+            adjacent[uses[0]].push_back(uses[1]); adjacent[uses[1]].push_back(uses[0]);
+        }
+    }
+    struct BoundaryEdge { size_t from, to, patch, loop, order, loop_size; };
+    std::vector<BoundaryEdge> boundary_edges;
+    std::vector<bool> visited(facets.size(),false);
+    std::vector<UpperPatch> patches;
+    using detail::Interval;
+    for (size_t seed=0; seed<facets.size(); ++seed) if (facets[seed].within_slope_limit && !visited[seed]) {
+        UpperPatch patch;
+        Interval area(0), boundary_area(0);
+        std::vector<size_t> todo{seed}; visited[seed]=true;
+        std::map<int,int> next;
+        std::set<int> incoming;
+        while (!todo.empty()) {
+            if (stop()) return {};
+            const auto index=todo.back(); todo.pop_back();
+            const auto &facet=facets[index];
+            patch.mesh_faces.push_back(facet.mesh_face);
+            area=area+Interval(facet.xy_area_lower_mm2,facet.xy_area_upper_mm2);
+            for (auto neighbor : adjacent[index]) if (!visited[neighbor]) { visited[neighbor]=true; todo.push_back(neighbor); }
+            const auto &ids=mesh.indices[facet.mesh_face];
+            for (int edge=0; edge<3; ++edge) {
+                const int from=ids(edge), to=ids((edge+1)%3);
+                if (incidence.at(edge_key(from,to)).size()==1 &&
+                    (!next.emplace(from,to).second || !incoming.insert(to).second)) {
+                    reason="AMBIGUOUS_MASK_BOUNDARY"; return {};
+                }
+            }
+        }
+        if (next.empty()) { reason="MISSING_MASK_BOUNDARY"; return {}; }
+        for (const auto &[from,to] : next)
+            if (!incoming.count(from) || !next.count(to)) { reason="OPEN_MASK_BOUNDARY"; return {}; }
+        size_t outer_loops=0;
+        while (!next.empty()) {
+            std::vector<size_t> vertices;
+            const int first=next.begin()->first;
+            int current=first;
+            do {
+                if (stop()) return {};
+                auto edge=next.find(current);
+                if (edge==next.end()) { reason="OPEN_MASK_BOUNDARY"; return {}; }
+                vertices.push_back(size_t(current));
+                current=edge->second; next.erase(edge);
+            } while (current!=first);
+            if (vertices.size()<3) { reason="DEGENERATE_MASK_BOUNDARY"; return {}; }
+            Interval twice_area(0);
+            const auto &origin=mesh.vertices[vertices.front()];
+            for (size_t i=0; i<vertices.size(); ++i) {
+                if (stop()) return {};
+                const auto &a=mesh.vertices[vertices[i]], &b=mesh.vertices[vertices[(i+1)%vertices.size()]];
+                const auto ax=Interval(double(a.x()))-Interval(double(origin.x()));
+                const auto ay=Interval(double(a.y()))-Interval(double(origin.y()));
+                const auto bx=Interval(double(b.x()))-Interval(double(origin.x()));
+                const auto by=Interval(double(b.y()))-Interval(double(origin.y()));
+                twice_area=twice_area+ax*by-ay*bx;
+                boundary_edges.push_back({vertices[i],vertices[(i+1)%vertices.size()],patches.size(),
+                                          patch.boundaries.size(),i,vertices.size()});
+            }
+            const auto signed_area=twice_area/Interval(2);
+            if (signed_area.lo<=0 && signed_area.hi>=0) { reason="UNRESOLVED_MASK_AREA"; return {}; }
+            const bool hole=signed_area.hi<0;
+            if (!hole) ++outer_loops;
+            boundary_area=boundary_area+signed_area;
+            patch.boundaries.push_back({std::move(vertices),hole,signed_area.lo,signed_area.hi});
+        }
+        if (outer_loops!=1 || boundary_area.lo>area.hi || boundary_area.hi<area.lo) {
+            reason="MASK_AREA_OR_OWNERSHIP_MISMATCH"; return {};
+        }
+        std::sort(patch.mesh_faces.begin(),patch.mesh_faces.end());
+        patch.xy_area_lower_mm2=std::max(0.,area.lo); patch.xy_area_upper_mm2=area.hi;
+        patches.push_back(std::move(patch));
+    }
+    for (size_t i=0; i<boundary_edges.size(); ++i)
+        for (size_t j=i+1; j<boundary_edges.size(); ++j) {
+            if (stop()) return {};
+            const auto &a=boundary_edges[i], &b=boundary_edges[j];
+            const bool neighbors=a.patch==b.patch && a.loop==b.loop &&
+                ((a.order+1)%a.loop_size==b.order || (b.order+1)%b.loop_size==a.order);
+            if (detail::projected_boundary_conflict(mesh.vertices[a.from],mesh.vertices[a.to],
+                                                   mesh.vertices[b.from],mesh.vertices[b.to],neighbors)) {
+                reason="INTERSECTING_MASK_BOUNDARY"; return {};
+            }
+        }
+    return patches;
+}
+}
+
 UpperProjectionResult analyze_upper_projection(const TriangleMesh &source, bool millimeters_declared,
                                                uint64_t revision, const UpperProjectionLimits &requested_limits)
 {
@@ -89,9 +197,11 @@ UpperProjectionResult analyze_upper_projection(const TriangleMesh &source, bool 
                     result.reason="OVERLAPPING_UPWARD_PROJECTIONS"; return result;
                 }
             }
+        auto patches=build_patches(mesh,facets,stop,result.reason);
+        if (!patches) return result;
         auto snapshot=std::make_shared<const UpperProjectionSnapshot>(UpperProjectionSnapshot{
             audited.normalized,revision,std::move(facets),std::max(0.,area.lo),area.hi,
-            std::max(0.,filtered_area.lo),filtered_area.hi,minimum_z,maximum_z});
+            std::max(0.,filtered_area.lo),filtered_area.hi,minimum_z,maximum_z,std::move(*patches)});
         if (stop()) return result;
         result.snapshot=std::move(snapshot);
         result.status=UpperProjectionStatus::NominalHeightfield;

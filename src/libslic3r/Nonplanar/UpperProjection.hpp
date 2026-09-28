@@ -11,6 +11,16 @@ struct UpperFacet {
     double slope_upper;
     bool within_slope_limit;
 };
+struct ProjectionBoundary {
+    std::vector<size_t> mesh_vertices; // Closed implicitly; first vertex is not repeated.
+    bool hole;
+    double signed_xy_area_lower_mm2, signed_xy_area_upper_mm2;
+};
+struct UpperPatch {
+    std::vector<size_t> mesh_faces;
+    std::vector<ProjectionBoundary> boundaries;
+    double xy_area_lower_mm2, xy_area_upper_mm2;
+};
 struct UpperProjectionSnapshot {
     const std::shared_ptr<const TriangleMesh> geometry;
     const uint64_t revision;
@@ -18,6 +28,7 @@ struct UpperProjectionSnapshot {
     const double xy_area_lower_mm2, xy_area_upper_mm2;
     const double filtered_area_lower_mm2, filtered_area_upper_mm2;
     const double minimum_z_mm, maximum_z_mm;
+    const std::vector<UpperPatch> slope_patches;
 };
 struct UpperProjectionLimits {
     MeshAuditLimits geometry;

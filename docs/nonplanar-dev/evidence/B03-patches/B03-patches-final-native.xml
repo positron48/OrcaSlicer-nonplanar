@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="151" hostname="tbd" time="0.009" timestamp="2026-09-28T15:00:52Z">
+    <properties>
+      <property name="random-seed" value="1003005874"/>
+      <property name="filters" value="[UpperProjection]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B03 native STL Model placement feeds a subdivided nominal upper projection" time="0.003" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 connected upper mask keeps the through-hole boundary and exact area" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 a valid heightfield with a pinched slope mask is not silently repaired" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 slope mask separates flat strips without erasing the steep connecting geometry" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 exact boundary predicates distinguish endpoint adjacency from projected overlap" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 late staleness and elapsed deadline discard an otherwise complete mask" time="0.004" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 hidden shelf cannot become a visible upper candidate" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 nominal upper projection retains the full predefined flat and wedge masks" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 nominal slope exclusion reports area without changing the source" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B03 invalid units mesh budgets and stale callbacks never publish a partial mask" time="0.000" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
