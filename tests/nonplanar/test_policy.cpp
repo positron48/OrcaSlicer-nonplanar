@@ -2,6 +2,9 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 #include <libslic3r/Nonplanar/Policy.hpp>
 #include <libslic3r/Nonplanar/InputSnapshot.hpp>
+#include <libslic3r/Nonplanar/PlanarBody.hpp>
+#include <libslic3r/Nonplanar/StlFile.hpp>
+#include <libslic3r/Format/STL.hpp>
 #include <libslic3r/Print.hpp>
 #include <libslic3r/GCode.hpp>
 #include <libslic3r/Format/bbs_3mf.hpp>
@@ -15,6 +18,7 @@
 #include <cstring>
 #include <set>
 #include <type_traits>
+#include <thread>
 #include <nlohmann/json.hpp>
 using namespace Slic3r;
 using namespace Slic3r::nptop;
@@ -1344,4 +1348,148 @@ TEST_CASE("B01 source mesh and raw override changes invalidate Print and aggrega
     volume->supported_facets.set_data(TriangleSelector::TriangleSplittingData(annotation));
     volume->seam_facets.set_data(std::move(annotation));
     REQUIRE_THROWS_AS(capture_native_input(model,config),std::length_error);
+}
+
+namespace {
+VolumePartitionResult native_body_partition(DynamicPrintConfig config,
+    const DynamicPrintConfig &object_config={}, const DynamicPrintConfig &volume_config={})
+{
+    const auto path=boost::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/
+        "docs/nonplanar/fixtures/models/flat_block.stl";
+    const auto file=capture_stl_file(path.string(),true,71); REQUIRE(file.source);
+    const auto imported=import_stl_snapshot(file.source->bytes,true); REQUIRE(imported.geometry.status==MeshAuditStatus::ValidGeometry);
+    Model model; REQUIRE(load_stl(path.string().c_str(),&model));
+    model.objects.front()->config.apply(object_config);
+    model.objects.front()->volumes.front()->config.apply(volume_config);
+    model.objects.front()->add_instance()->set_offset(Vec3d(20,20,0));
+    const NativeInputBinding input{71,capture_native_input(model,config)};
+    const auto placed=capture_input_placement(imported,input,{}); INFO(placed.geometry.reason);
+    REQUIRE(placed.geometry.status==MeshAuditStatus::ValidGeometry);
+    auto reservation=make_cube(8,8,4); reservation.translate(16,16,2);
+    auto partition=partition_cap(placed,reservation); INFO(partition.reason);
+    REQUIRE(partition.status==VolumePartitionStatus::Partitioned); return partition;
+}
+DynamicPrintConfig planar_body_config(double density=100)
+{
+    auto config=eligible();
+    config.set_deserialize_strict({{"layer_height",.2},{"initial_layer_print_height",.2},
+        {"wall_loops",2},{"sparse_infill_density",density},{"top_shell_layers",3},{"bottom_shell_layers",3},
+        {"brim_type","no_brim"},{"skirt_loops",0}});
+    return config;
+}
+bool segment_inside_reservation(const Position<Frame::BuildPlate> &a, const Position<Frame::BuildPlate> &b)
+{
+    // Independent strict-interior slab clipping: endpoints outside the reserved
+    // rectangle do not excuse a long segment crossing its interior.
+    long double lower=0, upper=1;
+    for (const auto axis : {std::pair<double,double>{a.x(),b.x()},{a.y(),b.y()}}) {
+        const long double delta=static_cast<long double>(axis.second)-axis.first;
+        if (delta==0) { if (axis.first<=17 || axis.first>=23) return false; continue; }
+        long double t0=(17.L-axis.first)/delta, t1=(23.L-axis.first)/delta;
+        if (t0>t1) std::swap(t0,t1);
+        lower=std::max(lower,t0); upper=std::min(upper,t1);
+    }
+    return lower<upper;
+}
+}
+TEST_CASE("B04 whole native body adapter slices reserved mesh and retains all semantic layers", "[Nonplanar][B04][PlanarBody]")
+{
+    DynamicPrintConfig object_config,volume_config;
+    object_config.set_key_value("wall_loops",new ConfigOptionInt(3));
+    volume_config.set_key_value("outer_wall_line_width",new ConfigOptionFloatOrPercent(.55,false));
+    auto input=native_body_partition(planar_body_config(),object_config,volume_config); const auto owned=input.snapshot;
+    const auto original_id=owned->placement->native_input->fingerprint;
+    PlanarBodyLimits limits; limits.paths.cancelled=[&] { input={}; return false; };
+    const auto result=generate_planar_body(input,limits); INFO(result.reason); REQUIRE(result.snapshot);
+    const auto &body=*result.snapshot; REQUIRE(body.partition==owned); REQUIRE(body.revision==71);
+    REQUIRE_FALSE(input.snapshot); REQUIRE(body.fingerprint().size()==64);
+    REQUIRE(body.guarded_settings->regions.front().policy.passes_config_preflight());
+    REQUIRE(body.executed_full_config.option<ConfigOptionString>("nptop_mode")->value=="off");
+    REQUIRE(owned->placement->native_input->config.option<ConfigOptionString>("nptop_mode")->value=="safe_hybrid");
+    REQUIRE(owned->placement->native_input->fingerprint==original_id);
+    REQUIRE(owned->placement->native_input->config.option<ConfigOptionInt>("wall_loops")->value==2);
+    REQUIRE(body.regions.size()==20); REQUIRE(body.native_volume_mm3.lower>0);
+    bool floor=false, surrounding_roof=false, walls=false;
+    for (const auto &region : body.regions) {
+        REQUIRE(region.geometry->revision==71);
+        REQUIRE(region.config.option<ConfigOptionPercent>("sparse_infill_density")->value==100);
+        REQUIRE(region.config.option<ConfigOptionInt>("wall_loops")->value==3);
+        REQUIRE(region.config.option<ConfigOptionFloatOrPercent>("outer_wall_line_width")->value==.55);
+        for (const auto &path : region.geometry->paths) {
+            REQUIRE(path.width_mm>path.height_mm); REQUIRE(path.native_volume_mm3.lower>0);
+            walls=walls || path.role==erExternalPerimeter;
+            if (path.role==erExternalPerimeter) REQUIRE(std::abs(path.width_mm-.55)<1e-6);
+            for (size_t i=1; i<path.points.size(); ++i) {
+                const bool enters=segment_inside_reservation(path.points[i-1],path.points[i]);
+                if (path.points[i].z()>2.000001) REQUIRE_FALSE(enters);
+                floor=floor || (enters && std::abs(path.points[i].z()-2)<1e-6 && path.role==erTopSolidInfill);
+            }
+            for (const auto &point : path.points) {
+                const bool interior=point.x()>17 && point.x()<23 && point.y()>17 && point.y()<23;
+                if (interior) REQUIRE(point.z()<=2.000001);
+                floor=floor || (interior && std::abs(point.z()-2)<1e-6 && path.role==erTopSolidInfill);
+                surrounding_roof=surrounding_roof || (!interior && std::abs(point.z()-4)<1e-6);
+            }
+        }
+    }
+    REQUIRE(floor); REQUIRE(surrounding_roof); REQUIRE(walls);
+}
+TEST_CASE("B04 native body preserves sparse settings and refuses incompatible or stale processing", "[Nonplanar][B04][PlanarBody]")
+{
+    const auto dense=generate_planar_body(native_body_partition(planar_body_config())); REQUIRE(dense.snapshot);
+    const auto sparse_input=native_body_partition(planar_body_config(10));
+    const auto sparse=generate_planar_body(sparse_input); INFO(sparse.reason);
+    // Actual native sparse paths include internal bridges outside the retained
+    // ordinary planar role contract. Preserve the input and refuse the snapshot.
+    REQUIRE_FALSE(sparse.snapshot); REQUIRE(sparse.reason=="UNSUPPORTED_PLANAR_ROLE");
+    REQUIRE(sparse_input.snapshot->placement->native_input->config.option<ConfigOptionPercent>("sparse_infill_density")->value==10);
+    REQUIRE(sparse_input.snapshot->fingerprint()!=dense.snapshot->partition->fingerprint());
+    const auto rejected=[](const PlanarBodyResult &result) { INFO(result.reason); REQUIRE_FALSE(result.snapshot); };
+    rejected(generate_planar_body({}));
+    auto incompatible=planar_body_config(); incompatible.set_key_value("machine_start_gcode",new ConfigOptionString("G28"));
+    const auto invalid=generate_planar_body(native_body_partition(incompatible));
+    REQUIRE(invalid.reason.find("machine_start_gcode")!=std::string::npos); rejected(invalid);
+    const auto input=native_body_partition(planar_body_config());
+    PlanarBodyLimits limits; limits.paths.cancelled=[] { return true; }; rejected(generate_planar_body(input,limits));
+    limits={}; unsigned polls=0; limits.paths.is_current=[&](uint64_t) { return ++polls<5; };
+    auto stale=generate_planar_body(input,limits); REQUIRE(stale.reason=="STALE_REVISION"); rejected(stale);
+    REQUIRE(polls>=5);
+    limits={}; limits.max_layers=1; auto bounded=generate_planar_body(input,limits);
+    REQUIRE(bounded.reason=="BODY_LAYER_LIMIT"); rejected(bounded);
+    limits={}; limits.max_regions=1; rejected(generate_planar_body(input,limits));
+    auto helpers=planar_body_config(); helpers.set_key_value("skirt_loops",new ConfigOptionInt(1));
+    const auto helper_result=generate_planar_body(native_body_partition(helpers));
+    REQUIRE(helper_result.reason=="UNSUPPORTED_BODY_HELPER_EXTRUSIONS"); rejected(helper_result);
+    limits={}; limits.paths.timeout=std::chrono::milliseconds(1);
+    limits.paths.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(5)); return false; };
+    auto late=generate_planar_body(input,limits); REQUIRE(late.reason=="BODY_DEADLINE"); rejected(late);
+}
+TEST_CASE("B04 native body identity matches independent complete semantic encoding", "[Nonplanar][B04][PlanarBody]")
+{
+    const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/planar-body-fingerprint-v1.json";
+    boost::nowide::ifstream input(path.string()); REQUIRE(input.good()); nlohmann::json oracle; input>>oracle;
+    DynamicConfig empty; const ResolvedConfigSnapshot config(empty);
+    const auto mesh=std::make_shared<const TriangleMesh>();
+    const auto native=std::make_shared<const NativeInputSnapshot>(NativeInputSnapshot{config,{},{},0,"","input"});
+    const auto bytes=std::make_shared<const StlSourceSnapshot>(StlSourceSnapshot{"","source",true});
+    const auto centered=std::make_shared<const CenteredVolumeSnapshot>(CenteredVolumeSnapshot{bytes,mesh,Vec3d::Zero(),0,19});
+    const auto placement=std::make_shared<const ModelPlacementSnapshot>(ModelPlacementSnapshot{
+        centered,Transform3d::Identity(),Transform3d::Identity(),{2,Vec3d(.1,-0.,2)},native});
+    const auto partition=std::make_shared<const VolumePartitionSnapshot>(VolumePartitionSnapshot{
+        19,placement,mesh,mesh,mesh,mesh,{0,0},{0,0},{0,0},{0,0},{0,0},.1,.2,0,0,0});
+    const auto guarded=std::make_shared<const PrintConfigSnapshot>(PrintConfigSnapshot{
+        3,Vec3d(.1,-0.,2),1,1,config,config,{},std::string("blocked\0reason",14),{},42,"source"});
+    const auto scale=NativeScale::capture();
+    const PlanarPathRecord record{3,erSolidInfill,.4,.2,.08,{Point3(int64_t(0),int64_t(0),int64_t(0)),
+        Point3(int64_t(1000000),int64_t(0),int64_t(0))},
+        {Position<Frame::BuildPlate>(20,-0.,3.6),Position<Frame::BuildPlate>(21,-0.,3.6)},.01,{1,1},{.08,.08}};
+    const auto geometry=std::make_shared<const PlanarRegionSnapshot>(PlanarRegionSnapshot{
+        71,2,.2,.6,Position<Frame::BuildPlate>(20,-0.,3),scale,
+        {{0,PlanarEntityKind::Collection,true,false,-1,{}},{0,PlanarEntityKind::Collection,false,true,0,{}},
+         {2,PlanarEntityKind::Path,false,false,0,{}}},{record},{.08,.08}});
+    // Placeholder provenance and dimensions are serialization data only; this
+    // vector never enters the body factory or constitutes a material proof.
+    const PlanarBodySnapshot body{71,partition,guarded,config,config,config,scale,.1,{{7,config,geometry}},{.08,.08}};
+    REQUIRE(body.canonical_json()==oracle.at("canonical").get<std::string>());
+    REQUIRE(body.fingerprint()==oracle.at("sha256").get<std::string>());
 }

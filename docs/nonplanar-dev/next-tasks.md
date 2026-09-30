@@ -25,8 +25,10 @@ Next software tasks, in dependency order:
    results remain diagnostic geometry, without export permission.
 4. Complete B04 dense coverage and the adapter for the whole native body.
    `B04-partition.md` supplies an owned exact nominal body/cap partition with a
-   common native interface. The current path snapshot represents one LayerRegion;
-   derive all body layers from the reserved mesh and preserve native semantics.
+   common native interface. `B04-body.md` now derives every supported body layer
+   from that reserved mesh, retaining source/effective configs and native roles.
+   Extend hole/stepped native cases, bind worker/job ownership, reconstruct actual
+   material and prove dense coverage or refuse; sparse bridge roles remain rejected.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.
 

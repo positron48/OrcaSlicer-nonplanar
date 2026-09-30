@@ -1,0 +1,35 @@
+{
+  "base_commit": "5d505983481c5efcb70ed5a15f9fcd3ff55904cb",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-body.md",
+  "sha256": {
+    "src/libslic3r/CMakeLists.txt": "33e70cf79372588b197e1325b6086f8cf6bf4834a64ebecc45d6845ed86efc43",
+    "src/libslic3r/Nonplanar/PlanarBody.hpp": "fa867f58c526be6230a81ae3a169b23652152aab5adff53a2c12fabb01462c98",
+    "src/libslic3r/Nonplanar/PlanarBody.cpp": "d8037b046097b571738bbd65caa2777a5480134448e9a89cf9d4a9f728edcda3",
+    "src/libslic3r/Nonplanar/VolumePartition.hpp": "03e5558c9d61b09fa11e48c7f17517edc847a894248d34e8600228bb0a950acd",
+    "src/libslic3r/Nonplanar/VolumePartition.cpp": "4d23f185615f6312b64dd562a9e59ed800e37db4eaa9e2943d6b82c7d2bf23ab",
+    "src/libslic3r/Nonplanar/Transition.hpp": "4c5ed134b3d1388f98a8debce560460fc00141d318166a4f8ec0d35f2f779307",
+    "src/libslic3r/Nonplanar/Transition.cpp": "8f5941c680eb4fc348b87127c8166181dadfe47d6c2bf36027ebaa7f56d02f98",
+    "tests/nonplanar/test_policy.cpp": "d93e1601ed71277f50e14e0160f980b6e812bebe4f6f9a81ddbc17243830d67a",
+    "scripts/nonplanar/planar_body_fingerprint_oracle.py": "39203b3f5f036e3a11235d9071be7b8b1d2c025aaeed3cea574410da71abfa79",
+    "tests/nonplanar/data/planar-body-fingerprint-v1.json": "62a5cd637841f1f25e0cc5471d3478b42d9b285a5bcf3bd62f85a11365b72f50"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "ad4362ef2b73ce350fec2c481789f80ca44396e599a98fd969d9d9a06469d93e",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "3d6c2c02818459fb1c25e55c0a151d06b7f468572aeb92a1ffaf4735935dc221",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "33123e99ce8e0ba5bfdecacc047244a97eb8b834db7993b7ef56b17b307f06fb"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "macos_native_checks": {
+    "new_cases": 3,
+    "new_assertions": 2965,
+    "ctest_discovered": 231,
+    "ctest_executed": 231,
+    "skips": 0,
+    "OFF_ZAA_pairs": 6
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN"
+}

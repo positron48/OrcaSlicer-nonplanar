@@ -13,7 +13,7 @@ Branch: `feature/nonplanar-bootstrap`, published to
 Bootstrap: `1ad7bdad`; A04: `93192ca7`. `status.json` is the current checkpoint; its `SELF`
 revision resolves with the included Git command.
 
-## Current checkpoint — 2026-09-30
+## Current checkpoint — 2026-10-01
 
 The current implementation boundary is exact pre-apply native source ownership
 and revision invalidation in `B01-inputs.md`. Raw settings, meshes, transforms,
@@ -29,10 +29,14 @@ executes 223/223 without skips, with six fresh OFF/ZAA comparisons passing.
 `B04-partition.md` adds a common exact body/cap interface with preserved walls,
 hole and stepped-interface fixtures: five cases/4881 assertions pass. Current
 selected CTest executes 228/228; six fresh OFF/ZAA comparisons pass.
+`B04-body.md` now derives all supported body layers through native Print with
+owned settings and path semantics: three cases/2965 assertions pass. Final selected
+CTest executes 231/231; six fresh OFF/ZAA comparisons pass. Sparse native bridge
+roles and generated helpers reject; this is nominal data, not support approval.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
-compatibility, whole-body native planning, dense coverage, material replay and guarded hybrid
+compatibility, dense coverage, material replay, ordering and guarded hybrid
 export remain open. `next-tasks.md` lists the dependency order. Independent review
 and physical qualification remain pending. U1 standard head and nominal 0.4 mm
 nozzle are user-declared in `B15-u1-declared-setup.md`, without measurement claims.
