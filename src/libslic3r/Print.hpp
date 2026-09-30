@@ -41,6 +41,8 @@ class ExtrusionLayers;
 
 namespace nptop {
 struct PrintConfigSnapshot;
+struct NativeInputSnapshot;
+struct NativeInputBinding;
 std::shared_ptr<const PrintConfigSnapshot> capture_print_config(const Print &);
 }
 
@@ -939,6 +941,8 @@ public:
     // Common preflight for slicing and native export entry points. Empty means
     // stock mode only, never a nonplanar export approval.
     std::string nonplanar_block_reason() const;
+    // Owned pre-normalization input plus a monotonic invalidation token.
+    nptop::NativeInputBinding nonplanar_input() const;
 
     // Returns an empty string if valid, otherwise returns an error message.
     StringObjectException validate(StringObjectException *warning = nullptr, Polygons* collison_polygons = nullptr, std::vector<std::pair<Polygon, float>>* height_polygons = nullptr) const override;
@@ -1160,6 +1164,8 @@ private:
     // Owned diagnostic from the last guarded apply input, before native
     // normalization can discard unsupported assignments or disable a tower.
     std::string                             m_nonplanar_input_conflict;
+    std::shared_ptr<const nptop::NativeInputSnapshot> m_nonplanar_input;
+    uint64_t                                m_nonplanar_input_revision = 0;
     friend std::shared_ptr<const nptop::PrintConfigSnapshot> nptop::capture_print_config(const Print &);
     PrintObjectConfig                       m_default_object_config;
     PrintRegionConfig                       m_default_region_config;

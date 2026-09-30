@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 #include <libslic3r/Nonplanar/Policy.hpp>
+#include <libslic3r/Nonplanar/InputSnapshot.hpp>
 #include <libslic3r/Print.hpp>
 #include <libslic3r/GCode.hpp>
 #include <libslic3r/Format/bbs_3mf.hpp>
@@ -20,7 +21,7 @@ using namespace Slic3r::nptop;
 
 TEST_CASE("B01 Print settings identity matches independent canonical and SHA256 vectors", "[Nonplanar][B01][PrintSnapshot]")
 {
-    const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/print-config-fingerprint-v1.json";
+    const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/print-config-fingerprint-v2.json";
     boost::nowide::ifstream input(path.string());
     REQUIRE(input.good());
     nlohmann::json fixtures; input>>fixtures;
@@ -37,7 +38,7 @@ TEST_CASE("B01 Print settings identity matches independent canonical and SHA256 
             conflict=PolicyConflict{"key","value","reason"};
         }
         const PrintConfigSnapshot snapshot{3,Vec3d(0.1,-0.,2.),1,1,ResolvedConfigSnapshot(full),ResolvedConfigSnapshot(full),
-            std::move(regions),std::string("blocked\0reason",14),std::move(conflict)};
+            std::move(regions),std::string("blocked\0reason",14),std::move(conflict),42,"source"};
         CHECK(snapshot.canonical_json()==test.at("canonical").get<std::string>());
         CHECK(snapshot.fingerprint()==test.at("sha256").get<std::string>());
     }
@@ -1074,10 +1075,10 @@ TEST_CASE("B01 Print snapshot identity distinguishes plate counts and exact full
     const auto adjacent=std::nextafter(speed,speed+1);
     config.set_key_value("travel_speed",new ConfigOptionFloat(adjacent));
     print.apply(model,config);
-    // Native apply uses approximate option equality and retains this cached
-    // value. Bind actual Print state, not a discarded incoming source value.
+    // Native apply retains the cached value, but the raw-input identity must
+    // still invalidate dependent guarded results.
     REQUIRE(print.full_print_config().option<ConfigOptionFloat>("travel_speed")->value==speed);
-    REQUIRE(capture_print_config(print)->fingerprint()==identity);
+    REQUIRE(capture_print_config(print)->fingerprint()!=identity);
     Print fresh; fresh.apply(model,config);
     REQUIRE(fresh.full_print_config().option<ConfigOptionFloat>("travel_speed")->value==adjacent);
     REQUIRE(capture_print_config(fresh)->fingerprint()!=identity);
@@ -1186,4 +1187,161 @@ TEST_CASE("B01 Print snapshot binds effective native filament overrides alongsid
     print.clear(); model.clear_objects(); config.clear();
     REQUIRE(snapshot->fingerprint()==original);
     REQUIRE(snapshot->resolved_print_config.option<ConfigOptionFloats>("retraction_length")->values==std::vector<double>{1.25});
+}
+
+TEST_CASE("B01 native input identity matches independent byte vectors", "[Nonplanar][B01][InputSnapshot]")
+{
+    const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/input-fingerprint-v1.json";
+    boost::nowide::ifstream input(path.string()); REQUIRE(input.good());
+    nlohmann::json fixture; input>>fixture;
+    indexed_triangle_set mesh;
+    REQUIRE(native_mesh_fingerprint(mesh)==fixture.at("meshes").at(0).at("sha256").get<std::string>());
+    mesh.vertices={Vec3f(0.1f,-0.f,1.f),Vec3f(2.f,0.f,1.f),Vec3f(0.f,2.f,1.f)};
+    mesh.indices={stl_triangle_vertex_indices(0,1,2)}; mesh.properties={{eNormal,0.125}};
+    REQUIRE(native_mesh_fingerprint(mesh)==fixture.at("meshes").at(1).at("sha256").get<std::string>());
+    mesh.vertices.front().x()=std::nextafter(0.1f,1.f);
+    REQUIRE(native_mesh_fingerprint(mesh)!=fixture.at("meshes").at(1).at("sha256").get<std::string>());
+    Model model; DynamicConfig config; config.set_key_value("nptop_mode",new ConfigOptionString("safe_hybrid"));
+    const auto snapshot=capture_native_input(model,config); REQUIRE(snapshot);
+    REQUIRE(snapshot->canonical_json==fixture.at("input").at("canonical").get<std::string>());
+    REQUIRE(snapshot->fingerprint==fixture.at("input").at("sha256").get<std::string>());
+}
+TEST_CASE("B01 native input owns meshes transforms raw overrides and annotations", "[Nonplanar][B01][InputSnapshot]")
+{
+    Model model; auto *object=model.add_object();
+    auto *volume=object->add_volume(TriangleMesh(its_make_cube(10,10,10))); auto *instance=object->add_instance();
+    instance->set_offset(Vec3d(0.1,0,0)); volume->source.mesh_offset=Vec3d(2,3,4);
+    object->config.set_key_value("wall_loops",new ConfigOptionInt(4));
+    volume->config.set_key_value("wall_loops",new ConfigOptionInt(5));
+    auto config=eligible(); const auto snapshot=capture_native_input(model,config); REQUIRE(snapshot);
+    const auto identity=snapshot->fingerprint;
+    REQUIRE(snapshot->objects.front().volumes.front().mesh.vertices==volume->mesh().its.vertices);
+    REQUIRE(snapshot->objects.front().instances.front().transform.matrix()==instance->get_matrix().matrix());
+    REQUIRE(snapshot->objects.front().volumes.front().source_offset==Vec3d(2,3,4));
+    instance->set_offset(Vec3d(0.2,0,0));
+    REQUIRE(capture_native_input(model,config)->fingerprint!=identity);
+    instance->set_offset(Vec3d(0.1,0,0)); REQUIRE(capture_native_input(model,config)->fingerprint==identity);
+    volume->source.is_converted_from_inches=true; REQUIRE(capture_native_input(model,config)->fingerprint!=identity);
+    volume->source.is_converted_from_inches=false;
+    volume->config.set_key_value("wall_loops",new ConfigOptionInt(6));
+    REQUIRE(capture_native_input(model,config)->fingerprint!=identity);
+    volume->config.set_key_value("wall_loops",new ConfigOptionInt(5));
+    volume->seam_facets.set_triangle_from_string(0,"1");
+    const auto painted=capture_native_input(model,config); REQUIRE(painted->fingerprint!=identity);
+    REQUIRE_FALSE(painted->objects.front().volumes.front().annotations[1].triangles_to_split.empty());
+    volume->reset_mesh(); model.clear_objects(); config.clear();
+    REQUIRE(snapshot->fingerprint==identity);
+    REQUIRE(snapshot->objects.front().volumes.front().mesh.indices.size()==12);
+    REQUIRE(snapshot->objects.front().volumes.front().config.option<ConfigOptionInt>("wall_loops")->value==5);
+    REQUIRE_FALSE(painted->objects.front().volumes.front().annotations[1].triangles_to_split.empty());
+}
+TEST_CASE("B01 pre-apply exact source changes invalidate native export even when Orca retains cached settings", "[Nonplanar][B01][InputSnapshot]")
+{
+    Model model; auto *object=model.add_object(); object->add_volume(TriangleMesh(its_make_cube(10,10,10))); object->add_instance();
+    auto config=eligible(); CachedPrint print; print.apply(model,config);
+    const auto initial=print.nonplanar_input(); REQUIRE(initial.snapshot); REQUIRE(initial.revision>0);
+    const auto identity=capture_print_config(print)->fingerprint();
+    const auto speed=config.option<ConfigOptionFloat>("travel_speed")->value;
+    print.set_started(psGCodeExport); print.set_done(psGCodeExport);
+    unsigned cancellations=0; print.set_cancel_callback([&] { ++cancellations; });
+    config.set_key_value("travel_speed",new ConfigOptionFloat(std::nextafter(speed,speed+1)));
+    print.apply(model,config); const auto changed=print.nonplanar_input(); REQUIRE(changed.snapshot);
+    REQUIRE(changed.revision>initial.revision); REQUIRE(changed.snapshot->fingerprint!=initial.snapshot->fingerprint);
+    REQUIRE_FALSE(print.is_step_done(psGCodeExport)); REQUIRE(cancellations>0);
+    REQUIRE(print.full_print_config().option<ConfigOptionFloat>("travel_speed")->value==speed);
+    REQUIRE(capture_print_config(print)->fingerprint()!=identity);
+    const auto adjacent=changed.snapshot->config.option<ConfigOptionFloat>("travel_speed")->value;
+    REQUIRE(adjacent!=speed);
+    print.apply(model,config); REQUIRE(print.nonplanar_input().revision==changed.revision);
+    config.set_deserialize_strict("nptop_mode","off"); print.apply(model,config);
+    const auto off=print.nonplanar_input(); REQUIRE_FALSE(off.snapshot); REQUIRE(off.revision>changed.revision);
+    REQUIRE(print.nonplanar_block_reason().empty());
+    print.apply(model,config); REQUIRE(print.nonplanar_input().revision==off.revision);
+    config=eligible(); print.apply(model,config); const auto restored=print.nonplanar_input();
+    REQUIRE(restored.snapshot); REQUIRE(restored.revision>off.revision);
+    print.clear(); REQUIRE_FALSE(print.nonplanar_input().snapshot); REQUIRE(print.nonplanar_input().revision>restored.revision);
+    REQUIRE(initial.snapshot->config.option<ConfigOptionFloat>("travel_speed")->value==speed);
+    print.set_cancel_callback([] {});
+}
+TEST_CASE("B01 source capture failure invalidates prior inputs and OFF bypasses input limits", "[Nonplanar][B01][InputSnapshot]")
+{
+    Model model; auto *object=model.add_object(); object->add_instance(); object->add_volume(TriangleMesh(its_make_cube(1,1,1)));
+    auto config=eligible(); Print print; print.apply(model,config); const auto previous=print.nonplanar_input(); REQUIRE(previous.snapshot);
+    for (int i=0; i<256; ++i) object->add_volume(TriangleMesh(its_make_cube(1,1,1)));
+    REQUIRE_THROWS_AS(capture_native_input(model,config),std::length_error);
+    print.apply(model,config); const auto failure=print.nonplanar_input(); REQUIRE_FALSE(failure.snapshot);
+    REQUIRE(failure.revision>previous.revision);
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("input capture failed"));
+    print.apply(model,config); REQUIRE(print.nonplanar_input().revision>failure.revision);
+    config.set_deserialize_strict("nptop_mode","off"); REQUIRE_FALSE(capture_native_input(model,config));
+    print.apply(model,config); REQUIRE(print.nonplanar_block_reason().empty());
+    Model unsupported; auto *bad=unsupported.add_object(); bad->brim_points.emplace_back();
+    config=eligible(); REQUIRE_THROWS_AS(capture_native_input(unsupported,config),ConfigurationError);
+}
+
+TEST_CASE("B01 native input binds material range and plate action source controls", "[Nonplanar][B01][InputSnapshot]")
+{
+    Model model; auto *object=model.add_object();
+    auto *volume=object->add_volume(TriangleMesh(its_make_cube(10,10,10))); object->add_instance();
+    auto *material=model.add_material("one"); volume->set_material_id("one");
+    auto config=eligible(); const auto initial=capture_native_input(model,config); REQUIRE(initial);
+    const auto identity=initial->fingerprint;
+    material->attributes["origin"]="first";
+    auto snapshot=capture_native_input(model,config); REQUIRE(snapshot->fingerprint!=identity);
+    const auto attributes_identity=snapshot->fingerprint;
+    material->config.set_key_value("wall_loops",new ConfigOptionInt(4));
+    snapshot=capture_native_input(model,config); REQUIRE(snapshot->fingerprint!=attributes_identity);
+    const auto material_identity=snapshot->fingerprint;
+    object->layer_config_ranges[{0.,2.}].set_key_value("wall_loops",new ConfigOptionInt(5));
+    snapshot=capture_native_input(model,config); REQUIRE(snapshot->fingerprint!=material_identity);
+    const auto range_identity=snapshot->fingerprint;
+    object->layer_height_profile.set({0.,0.2,10.,0.1});
+    snapshot=capture_native_input(model,config); REQUIRE(snapshot->fingerprint!=range_identity);
+    const auto profile_identity=snapshot->fingerprint;
+    model.plates_custom_gcodes[0].gcodes.push_back({0.2,CustomGCode::Custom,1,"","unexecuted source bytes"});
+    snapshot=capture_native_input(model,config); REQUIRE(snapshot->fingerprint!=profile_identity);
+    const auto owned=snapshot;
+    model.plates_custom_gcodes[0].gcodes.front().extra="different bytes";
+    REQUIRE(capture_native_input(model,config)->fingerprint!=owned->fingerprint);
+    model.curr_plate_index=2; REQUIRE(capture_native_input(model,config)->model_plate_index==2);
+    material->attributes.clear(); object->layer_config_ranges.clear(); object->layer_height_profile.clear();
+    model.clear_objects();
+    REQUIRE(owned->materials.front().attributes.at("origin")=="first");
+    REQUIRE(owned->materials.front().config.option<ConfigOptionInt>("wall_loops")->value==4);
+    REQUIRE(owned->objects.front().layer_ranges.front().config.option<ConfigOptionInt>("wall_loops")->value==5);
+    REQUIRE(owned->objects.front().layer_height_profile.size()==4);
+}
+TEST_CASE("B01 source mesh and raw override changes invalidate Print and aggregate metadata limits fail", "[Nonplanar][B01][InputSnapshot]")
+{
+    Model model; auto *object=model.add_object();
+    auto *volume=object->add_volume(TriangleMesh(its_make_cube(10,10,10))); auto *instance=object->add_instance();
+    auto config=eligible(); CachedPrint print; print.apply(model,config);
+    auto previous=print.nonplanar_input(); REQUIRE(previous.snapshot);
+    const auto changed=[&] {
+        print.set_started(psGCodeExport); print.set_done(psGCodeExport); print.apply(model,config);
+        const auto current=print.nonplanar_input(); REQUIRE(current.snapshot);
+        REQUIRE(current.revision>previous.revision);
+        REQUIRE(current.snapshot->fingerprint!=previous.snapshot->fingerprint);
+        REQUIRE_FALSE(print.is_step_done(psGCodeExport)); previous=current;
+    };
+    auto mesh=volume->mesh().its; mesh.vertices.front().x()=std::nextafter(mesh.vertices.front().x(),100.f);
+    volume->set_mesh(std::move(mesh)); changed();
+    object->config.set_key_value("future_geometry_setting",new ConfigOptionFloat(0.1)); changed();
+    volume->source.mesh_offset.x()=0.1; changed();
+    instance->set_offset(Vec3d(0.1,0,0)); changed();
+    instance->set_offset(Vec3d(std::nextafter(0.1,1.),0,0)); changed();
+    instance->arrange_order=2; changed();
+    DynamicConfig large; large.set_key_value("nptop_mode",new ConfigOptionString("safe_hybrid"));
+    for (const auto *v : object->volumes) REQUIRE_FALSE(v->mesh().its.indices.empty());
+    for (int i=0; i<4; ++i) {
+        auto *v=object->add_volume(TriangleMesh(its_make_cube(1,1,1)));
+        v->config.set_key_value("private_source_data",new ConfigOptionString(std::string(700000,'x')));
+    }
+    REQUIRE_THROWS_AS(capture_native_input(model,large),std::length_error);
+    for (auto *v : object->volumes) v->config.erase("private_source_data");
+    TriangleSelector::TriangleSplittingData annotation;
+    annotation.triangles_to_split.resize(100001);
+    volume->supported_facets.set_data(TriangleSelector::TriangleSplittingData(annotation));
+    volume->seam_facets.set_data(std::move(annotation));
+    REQUIRE_THROWS_AS(capture_native_input(model,config),std::length_error);
 }

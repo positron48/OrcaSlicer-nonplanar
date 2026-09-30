@@ -15,23 +15,24 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-09-30
 
-The nearest completed stage is the owned native Print settings aggregate in
-`B01-print-snapshot.md`: full/effective/region configs, counts and plate frame
-are retained together, with exact canonical identity. Native preflight consumes
-the capture. Seven new cases/82 assertions and all 48 B01 cases/4501 assertions
-pass with NoAssertions; selected CTest executes 215/215 without skips. Six fresh
-OFF/ZAA differential captures pass. The existing upstream NoAssertions section
-diagnostics remain historical evidence, with no test policy relaxation.
+The current implementation boundary is exact pre-apply native source ownership
+and revision invalidation in `B01-inputs.md`. Raw settings, meshes, transforms,
+overrides, annotations and source metadata are owned before Orca normalization;
+changes hidden by approximate native comparisons still invalidate guarded output.
+Print settings identity is schema 2, binding source fingerprint/revision. Six new
+cases/90 assertions and all 54 B01 cases/4591 assertions pass with NoAssertions;
+selected CTest executes 221/221 without skips. Six fresh OFF/ZAA comparisons pass.
 
-The prior constructor correction in `A02-print-defaults.md` is also confirmed
-by successful Linux native CI run 36454696019 at d57e9325. This is evidence for
-that revision; the new Print settings milestone still needs its own Linux run.
+The complete B01–B15 objective remains active and `gate-b-plan.md` records the
+full acceptance scope. Source/file/plate/job/profile/scene binding, complete
+compatibility, body/cap partition, material replay, planning and guarded hybrid
+export remain open. `next-tasks.md` lists the dependency order. Independent review
+and physical qualification remain pending. U1 standard head and nominal 0.4 mm
+nozzle are user-declared in `B15-u1-declared-setup.md`, without measurement claims.
 
-The latest feature milestones are exact nominal affine endpoint/gradient bounds
-(`B03-heights.md`) and owned native LayerRegion path semantics (`B04-region.md`).
-Full compatibility/source-input and job ownership, body/cap partition, curved surfaces, planning
-and guarded hybrid export remain open. `next-tasks.md` lists the dependency
-order. Independent review and physical qualification remain pending.
+Prior Linux run 36454696019 at d57e9325 succeeded. Run 36758101513 at 7df1d765
+remains in_progress in the latest saved API snapshot. Neither record proves
+Linux execution of the new input-revision source. Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;
 `status.json` and this checkpoint describe the current state.

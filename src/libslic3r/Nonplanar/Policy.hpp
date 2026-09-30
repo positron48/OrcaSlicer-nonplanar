@@ -61,8 +61,8 @@ struct PrintRegionConfigSnapshot {
     const ResolvedConfigSnapshot config;
     const PolicySnapshot policy;
 };
-// Settings-only boundary. No source mesh, tool/scene qualification, revision or
-// export permission is implied by this identity. Capture requires the caller
+// Actual Print settings bound to the pre-apply source token when available.
+// No tool/scene qualification or export permission is implied. Caller must
 // to own/synchronize Print for the entire synchronous operation.
 struct PrintConfigSnapshot {
     const int plate_index;
@@ -73,6 +73,8 @@ struct PrintConfigSnapshot {
     const std::vector<PrintRegionConfigSnapshot> regions;
     const std::string input_conflict;
     const std::optional<PolicyConflict> model_conflict;
+    const uint64_t input_revision = 0;
+    const std::string input_fingerprint;
     std::string block_reason() const;
     std::string canonical_json() const;
     std::string fingerprint() const;

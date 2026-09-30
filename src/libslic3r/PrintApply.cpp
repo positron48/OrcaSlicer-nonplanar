@@ -2,6 +2,7 @@
 #include "Model.hpp"
 #include "Print.hpp"
 #include "Nonplanar/Policy.hpp"
+#include "Nonplanar/InputSnapshot.hpp"
 
 #include <boost/log/trivial.hpp>
 #include <cfloat>
@@ -1116,8 +1117,37 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
     // Inspect the actual supplied settings/model before native normalization
     // drops an out-of-range filament or turns off an unused prime tower.
     std::string nonplanar_input_conflict;
-    if (const auto conflict = nptop::input_policy_conflict(model, new_full_config))
-        nonplanar_input_conflict = "Nonplanar Top Lab: " + conflict->key + " = " + conflict->value + ": " + conflict->reason;
+    std::shared_ptr<const nptop::NativeInputSnapshot> nonplanar_input;
+    bool nonplanar_capture_failed=false;
+    try {
+        nonplanar_input=nptop::capture_native_input(model,new_full_config);
+        if (const auto conflict = nptop::input_policy_conflict(model, new_full_config))
+            nonplanar_input_conflict = "Nonplanar Top Lab: " + conflict->key + " = " + conflict->value + ": " + conflict->reason;
+    } catch (const std::exception &) {
+        nonplanar_capture_failed=true;
+        nonplanar_input_conflict="Nonplanar Top Lab: native input capture failed";
+    }
+    bool nonplanar_inputs_changed=false, nonplanar_export_invalidated=false;
+    {
+        // Publish the invalidation before normalization, which may itself throw
+        // or discard a source value through Orca's approximate option equality.
+        std::scoped_lock<std::mutex> lock(this->state_mutex());
+        nonplanar_inputs_changed=nonplanar_capture_failed || m_nonplanar_input_conflict!=nonplanar_input_conflict ||
+            bool(m_nonplanar_input)!=bool(nonplanar_input) ||
+            (m_nonplanar_input && nonplanar_input && m_nonplanar_input->fingerprint!=nonplanar_input->fingerprint);
+        if (nonplanar_inputs_changed) {
+            this->call_cancel_callback();
+            nonplanar_export_invalidated=this->invalidate_step(psGCodeExport);
+            m_nonplanar_input.reset();
+            m_nonplanar_input_conflict=std::move(nonplanar_input_conflict);
+            if (m_nonplanar_input_revision==std::numeric_limits<uint64_t>::max()) {
+                m_nonplanar_input_conflict="Nonplanar Top Lab: input revision exhausted";
+                throw std::overflow_error(m_nonplanar_input_conflict);
+            }
+            ++m_nonplanar_input_revision;
+            m_nonplanar_input=std::move(nonplanar_input);
+        }
+    }
 #ifdef _DEBUG
     check_model_ids_validity(model);
 #endif /* _DEBUG */
@@ -1244,6 +1274,7 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
     unsigned int apply_status = APPLY_STATUS_UNCHANGED;
     auto update_apply_status = [&apply_status](bool invalidated)
         { apply_status = std::max<unsigned int>(apply_status, invalidated ? APPLY_STATUS_INVALIDATED : APPLY_STATUS_CHANGED); };
+    if (nonplanar_inputs_changed) update_apply_status(nonplanar_export_invalidated);
     if (! (print_diff.empty() && object_diff.empty() && region_diff.empty())) {
         update_apply_status(false);
         //BBS: add more logs
@@ -1252,12 +1283,6 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
 
     // Grab the lock for the Print / PrintObject milestones.
 	std::scoped_lock<std::mutex> lock(this->state_mutex());
-
-    if (m_nonplanar_input_conflict != nonplanar_input_conflict) {
-        this->call_cancel_callback();
-        update_apply_status(this->invalidate_step(psGCodeExport));
-        m_nonplanar_input_conflict = std::move(nonplanar_input_conflict);
-    }
 
     // The following call may stop the background processing.
     if (! print_diff.empty())

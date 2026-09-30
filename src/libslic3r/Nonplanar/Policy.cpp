@@ -1,4 +1,6 @@
 #include "Policy.hpp"
+#include "Canonical.hpp"
+#include "InputSnapshot.hpp"
 #include "StlImport.hpp"
 #include "../Model.hpp"
 #include "../Print.hpp"
@@ -47,91 +49,7 @@ const ConfigOption *ResolvedConfigSnapshot::optptr(const t_config_option_key &ke
 
 t_config_option_keys ResolvedConfigSnapshot::keys() const { return m_storage->values.keys(); }
 
-namespace {
-class CanonicalConfigWriter {
-public:
-    void append(std::string_view value) {
-        if (value.size()>4*1024*1024-bytes.size()) throw std::length_error("Canonical config byte limit");
-        bytes.append(value);
-    }
-    void value(bool v) { append(v ? "true" : "false"); }
-    void value(int v) { append(std::to_string(v)); }
-    void value(unsigned char v) { value(int(v)); }
-    void value(double v) {
-        static_assert(sizeof(double)==sizeof(uint64_t) && std::numeric_limits<double>::is_iec559);
-        uint64_t bits; std::memcpy(&bits,&v,sizeof bits);
-        char encoded[16];
-        for (int i=0; i<16; ++i) encoded[i]=hex[(bits>>(60-4*i))&15];
-        append("\""); append(std::string_view(encoded,sizeof encoded)); append("\"");
-    }
-    void value(const std::string &v) {
-        append("\"");
-        for (unsigned char c : v) { const char pair[]{hex[c>>4],hex[c&15]}; append(std::string_view(pair,2)); }
-        append("\"");
-    }
-    void value(const Vec2d &v) { append("["); value(v.x()); append(","); value(v.y()); append("]"); }
-    void value(const Vec3d &v) { append("["); value(v.x()); append(","); value(v.y()); append(","); value(v.z()); append("]"); }
-    void value(const FloatOrPercent &v) { append("["); value(v.value); append(","); value(v.percent); append("]"); }
-    template<class T, class Allocator> void value(const std::vector<T,Allocator> &values) {
-        append("["); bool first=true;
-        for (const auto &v : values) { if (!first) append(","); first=false; value(v); }
-        append("]");
-    }
-    void dictionary(const t_config_enum_values *names) {
-        if (!names) { append("null"); return; }
-        append("["); bool first=true;
-        for (const auto &[name,number] : *names) {
-            if (!first) append(","); first=false;
-            append("["); value(name); append(","); value(number); append("]");
-        }
-        append("]");
-    }
-    template<class T> const T &native(const ConfigOption &option) {
-        const auto *typed=dynamic_cast<const T *>(&option);
-        if (!typed) throw ConfigurationError("Unsupported native canonical config representation");
-        return *typed;
-    }
-    void option(const ConfigOption &option) {
-        switch (option.type()) {
-        case coFloat: case coPercent: value(native<ConfigOptionSingle<double>>(option).value); break;
-        case coFloats: case coPercents: value(native<ConfigOptionVector<double>>(option).values); break;
-        case coInt: value(native<ConfigOptionInt>(option).value); break;
-        case coInts: value(native<ConfigOptionVector<int>>(option).values); break;
-        case coString: value(native<ConfigOptionString>(option).value); break;
-        case coStrings: value(native<ConfigOptionStrings>(option).values); break;
-        case coBool: value(native<ConfigOptionBool>(option).value); break;
-        case coBools: value(native<ConfigOptionVector<unsigned char>>(option).values); break;
-        case coFloatOrPercent: {
-            const auto &v=native<ConfigOptionFloatOrPercent>(option);
-            value(FloatOrPercent{v.value,v.percent}); break;
-        }
-        case coFloatsOrPercents: value(native<ConfigOptionVector<FloatOrPercent>>(option).values); break;
-        case coPoint: value(native<ConfigOptionPoint>(option).value); break;
-        case coPoints: value(native<ConfigOptionPoints>(option).values); break;
-        case coPoint3: value(native<ConfigOptionPoint3>(option).value); break;
-        case coPointsGroups: value(native<ConfigOptionPointsGroups>(option).values); break;
-        case coIntsGroups: value(native<ConfigOptionIntsGroups>(option).values); break;
-        case coEnum:
-            if (const auto *v=dynamic_cast<const ConfigOptionEnumGeneric *>(&option)) {
-                append("[\"generic\","); dictionary(v->keys_map); append(","); value(v->value); append("]");
-            } else { append("[\"native\","); value(option.getInt()); append("]"); }
-            break;
-        case coEnums: {
-            const auto *plain=dynamic_cast<const ConfigOptionEnumsGeneric *>(&option);
-            const auto *nullable=dynamic_cast<const ConfigOptionEnumsGenericNullable *>(&option);
-            if (!plain && !nullable) throw ConfigurationError("Unsupported native canonical enum vector");
-            append("[\"generic\","); dictionary(plain ? plain->keys_map : nullable->keys_map); append(",");
-            value(native<ConfigOptionVector<int>>(option).values); append("]"); break;
-        }
-        default: throw ConfigurationError("Unsupported native canonical config type");
-        }
-    }
-    std::string take() { return std::move(bytes); }
-private:
-    static constexpr char hex[]="0123456789abcdef";
-    std::string bytes;
-};
-}
+using detail::CanonicalConfigWriter;
 
 std::string ResolvedConfigSnapshot::canonical_json() const
 {
@@ -157,6 +75,8 @@ std::string PrintConfigSnapshot::canonical_json() const
     CanonicalConfigWriter writer;
     writer.append("{\"full_config\":"); writer.append(full_config.canonical_json());
     writer.append(",\"input_conflict_hex\":"); writer.value(input_conflict);
+    writer.append(",\"input_fingerprint\":"); writer.value(input_fingerprint);
+    writer.append(",\"input_revision\":"); writer.append(std::to_string(input_revision));
     writer.append(",\"instance_count\":"); writer.append(std::to_string(instance_count));
     writer.append(",\"model_conflict\":");
     if (model_conflict) {
@@ -173,7 +93,7 @@ std::string PrintConfigSnapshot::canonical_json() const
         writer.value(region.region_id); writer.append(","); writer.append(region.config.canonical_json()); writer.append("]");
     }
     writer.append("],\"resolved_print_config\":"); writer.append(resolved_print_config.canonical_json());
-    writer.append(",\"schema\":1}");
+    writer.append(",\"schema\":2}");
     return writer.take();
 }
 std::string PrintConfigSnapshot::fingerprint() const { return sha256_bytes(canonical_json()); }
@@ -620,7 +540,8 @@ std::shared_ptr<const PrintConfigSnapshot> capture_print_config(const Print &pri
     }
     return std::make_shared<const PrintConfigSnapshot>(PrintConfigSnapshot{
         print.get_plate_index(),print.get_plate_origin(),objects,instances,full,resolved_full,std::move(regions),
-        print.m_nonplanar_input_conflict,model_policy_conflict(print.model())});
+        print.m_nonplanar_input_conflict,model_policy_conflict(print.model()),print.m_nonplanar_input_revision,
+        print.m_nonplanar_input ? print.m_nonplanar_input->fingerprint : std::string{}});
 }
 
 std::string PrintConfigSnapshot::block_reason() const

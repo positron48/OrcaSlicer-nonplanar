@@ -15,10 +15,21 @@
     "A06": "BOUNDED_NATIVE_SERIALIZATION_REPLAY_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A07": "SIMULATION_CONTRACT_AND_OWNED_FULL_HEAD_TRAVEL_PASS_OPERATOR_EVIDENCE_NOT_RUN_REVIEW_PENDING",
     "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_SPHERE_COUPON_PREPARATION_COMPLETE_INDEPENDENT_REVIEW_PENDING",
-    "B01": "PREFLIGHT_REGISTRIES_OWNED_NATIVE_PRINT_SETTINGS_AGGREGATE_AND_EXACT_FINGERPRINT_PASS_SOURCE_INPUT_PROVENANCE_FULL_COMPATIBILITY_AND_JOB_SNAPSHOT_PENDING",
+    "B01": "PREFLIGHT_OWNED_NATIVE_PRINT_AND_EXACT_PRE_APPLY_SOURCE_REVISION_PASS_FULL_COMPATIBILITY_JOB_AND_PLATE_BINDING_PENDING",
     "B02": "BOUNDED_IMPORT_FILE_CLI_AND_NATIVE_MODEL_CHAIN_PASS_PLATE_JOB_GUI_HARD_LIMITS_PENDING",
     "B03": "BOUNDED_NOMINAL_MASKS_FOOTPRINT_AFFINE_CURVATURE_AND_ISOLATED_CLI_PASS_CURVED_SURFACES_TOOL_ROI_AND_PLANNING_PENDING",
-    "B04": "BOUNDED_OWNED_NATIVE_REGION_SEMANTICS_PASS_BODY_CAP_PARTITION_DENSE_COVERAGE_AND_FULL_ADAPTER_PENDING"
+    "B04": "BOUNDED_OWNED_NATIVE_REGION_SEMANTICS_PASS_BODY_CAP_PARTITION_DENSE_COVERAGE_AND_FULL_ADAPTER_PENDING",
+    "B05": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B06": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B07": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B08": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B09": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B10": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B11": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B12": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B13": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B14": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B15": "NOT_IMPLEMENTED_FULL_SCOPE"
   },
   "executed_checks": {
     "ORC-01": "PASS",
@@ -30,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 178,
+    "new_native_cases": 184,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -46,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 215,
-    "final_ctest_executed": 215,
+    "final_ctest_discovered": 221,
+    "final_ctest_executed": 221,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -114,8 +125,8 @@
     "A01_current_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "A01_gui": "ISOLATED_IMPORT_SLICE_PREVIEW_AND_QUIT_PASS",
     "B01_custom_hook_cases": 5,
-    "B01_current_cases": 48,
-    "B01_current_assertions": 4501,
+    "B01_current_cases": 54,
+    "B01_current_assertions": 4591,
     "B01_custom_hook_registry_keys": 17,
     "B01_hooks_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B01_transform_cases": 3,
@@ -197,7 +208,9 @@
     "B01_print_snapshot_cross_language_oracles": 2,
     "B01_print_snapshot_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B01_print_snapshot_cached_double": "NATIVE_APPROXIMATE_APPLY_RETAINS_OLD_VALUE_FRESH_PRINT_EXACT_VALUE_DISTINGUISHED_SOURCE_INPUT_OWNERSHIP_PENDING",
-    "A02_print_defaults_linux": "D57E9325_RUN_36454696019_NATIVE_TESTS_STL_CLI_AND_APPLICATION_PASS"
+    "A02_print_defaults_linux": "D57E9325_RUN_36454696019_NATIVE_TESTS_STL_CLI_AND_APPLICATION_PASS",
+    "B01_input_snapshot_cases": 6,
+    "B01_input_snapshot_assertions": 90
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -261,7 +274,8 @@
     "B04_region": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-region.md",
     "B03_heights": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-heights.md",
     "A02_print_defaults": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A02-print-defaults.md",
-    "B01_print_snapshot": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-print-snapshot.md"
+    "B01_print_snapshot": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-print-snapshot.md",
+    "B01_inputs": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-inputs.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -304,5 +318,7 @@
   "B04_region_evidence": "docs/nonplanar-dev/evidence/B04-region/source-manifest.json",
   "B03_heights_evidence": "docs/nonplanar-dev/evidence/B03-heights/source-manifest.json",
   "A02_print_defaults_evidence": "docs/nonplanar-dev/evidence/A02-print-defaults/source-manifest.json",
-  "B01_print_snapshot_evidence": "docs/nonplanar-dev/evidence/B01-print-snapshot/source-manifest.json"
+  "B01_print_snapshot_evidence": "docs/nonplanar-dev/evidence/B01-print-snapshot/source-manifest.json",
+  "active_objective": "IMPLEMENT_COMPLETE_B01_B15",
+  "B01_inputs_evidence": "docs/nonplanar-dev/evidence/B01-inputs/source-manifest.json"
 }

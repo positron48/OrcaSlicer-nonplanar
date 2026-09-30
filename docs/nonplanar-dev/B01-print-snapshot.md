@@ -71,3 +71,8 @@ and Windows execution remain pending; physical qualification remains NOT_RUN.
 Implementation revision:
 `git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-print-snapshot.md`.
 Diff: `git show <resolved-implementation-revision>`.
+
+Follow-up 2026-09-30: `B01-inputs.md` and ADR-0026 now capture raw source inputs
+before native normalization and bind Print settings schema 2 to a source
+fingerprint/revision. The schema-1 statements/counts above describe this earlier
+commit. Whole-job/plate/profile/scene binding and export remain pending.

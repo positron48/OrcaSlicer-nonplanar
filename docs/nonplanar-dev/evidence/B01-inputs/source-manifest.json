@@ -1,0 +1,41 @@
+{
+  "base_commit": "7df1d7652644a57ae0262e9562f86231962eaaed",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-inputs.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/Canonical.hpp": "2dc5581d8e95a64fd9848835f1f0127678c910ef1f050fa4cffd894c8c0aa39b",
+    "src/libslic3r/Nonplanar/InputSnapshot.hpp": "16f4ec0b31de16993fa6112ff4d11b989db8cfeba53a5b5804c1ca433b2b34f7",
+    "src/libslic3r/Nonplanar/InputSnapshot.cpp": "92d91233bb2fbca3fb48bc455d590f23088dcbb59b7a15019c4f4680505cf959",
+    "src/libslic3r/Nonplanar/Policy.hpp": "4779cd3a617f96128f405dd8c3d7aa4f912b60212e0e82359b0212b2c159febf",
+    "src/libslic3r/Nonplanar/Policy.cpp": "73f443de5b1c7d5a0ed55e1d051a5488945327fea5c36caf615a4c3fa59fd9e9",
+    "src/libslic3r/Print.hpp": "1f92529ee43e81cf49976d4b72e7f8eb021de92742be0cf7f0284ce9a802e844",
+    "src/libslic3r/Print.cpp": "9ca492a627d161f1b03da6e845fa59b6ef91722968542c777c2220c68fcd363e",
+    "src/libslic3r/PrintApply.cpp": "4f52efde85448d10d3dfda75299ca82a639a99ea98a832a5abfafba725b24d69",
+    "src/libslic3r/CMakeLists.txt": "74ba64700d24e50f128dc854529132010dfe0d77fd7b222b889746312c346730",
+    "tests/nonplanar/test_policy.cpp": "28e8e86ed5d0215b3a7907a6205daae19e744119ff5ecb74cc803cf4f8962ed9",
+    "scripts/nonplanar/input_fingerprint_oracle.py": "8c8c1295d88359f56f9977a7e302b8fccc3375dfd26712a19731a635eebec935",
+    "scripts/nonplanar/print_config_fingerprint_oracle.py": "041850652e315cac5baa7ab42f9efb7354b054a206c876da59af20d3e8564470",
+    "tests/nonplanar/data/input-fingerprint-v1.json": "09af0ce17fcd4c3463499ec03c8f17b6d205dca0e4e1c6e08040042dc13e9bae",
+    "tests/nonplanar/data/print-config-fingerprint-v2.json": "a9946a32c30b5c95bcb529140e9888ef2a98b0428c4d4288ba234c6a9b94bff9"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "a51ffd2aa13eeed5e79f642c37a707621e392dd7872587a7c3cf83ecfc602f23",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "4d9ec0bc4391987a441b0589dcef3b15cac659054aff0e09f83326d614aa27a3",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "34e71a0f7392f8f1d63e9199b818670395e3623ab3a38a9afff7f908a0205dc2"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "macos_native_checks": {
+    "new_cases": 6,
+    "new_assertions": 90,
+    "b01_cases": 54,
+    "b01_assertions": 4591,
+    "ctest_discovered": 221,
+    "ctest_executed": 221,
+    "skips": 0,
+    "OFF_ZAA_pairs": 6
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN"
+}

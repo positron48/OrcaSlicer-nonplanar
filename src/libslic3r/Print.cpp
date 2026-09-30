@@ -17,6 +17,7 @@
 #include "Utils.hpp"
 #include "PrintConfig.hpp"
 #include "Nonplanar/Policy.hpp"
+#include "Nonplanar/InputSnapshot.hpp"
 #include "MaterialType.hpp"
 #include "Model.hpp"
 #include "format.hpp"
@@ -78,7 +79,21 @@ void Print::clear()
     m_print_regions.clear();
     m_model.clear_objects();
     m_statistics_by_extruder_count.clear();
+    if (m_nonplanar_input || !m_nonplanar_input_conflict.empty()) {
+        m_nonplanar_input.reset();
+        if (m_nonplanar_input_revision==std::numeric_limits<uint64_t>::max()) {
+            m_nonplanar_input_conflict="Nonplanar Top Lab: input revision exhausted";
+            return; // clear() also runs from the destructor; never wrap or throw.
+        }
+        ++m_nonplanar_input_revision;
+    }
     m_nonplanar_input_conflict.clear();
+}
+
+nptop::NativeInputBinding Print::nonplanar_input() const
+{
+    std::scoped_lock<std::mutex> lock(this->state_mutex());
+    return {m_nonplanar_input_revision,m_nonplanar_input};
 }
 
 bool Print::has_tpu_filament() const

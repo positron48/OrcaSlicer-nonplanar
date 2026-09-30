@@ -7,12 +7,13 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
-1. Complete B01 compatibility and immutable job provenance, then B02 binding to
-   actual GUI plate/settings/worker ownership and hard resource containment.
-   B01-print-snapshot retains actual full/effective/region settings and the native
-   plate frame. Capture source inputs before apply/normalization next: native
-   approximate option equality can discard small incoming changes. Bind source
-   geometry/transforms, revision and the worker to the same owned inputs.
+1. Complete B01 compatibility and whole-job provenance, then B02 original STL
+   and actual GUI/native plate binding. `B01-inputs.md` now retains exact source
+   meshes/configs/transforms before normalization and invalidates the guarded
+   Print revision; `B01-print-snapshot.md` retains full/effective/region settings.
+   Source and actual native effective values remain distinct. Bind all remaining
+   job IDs, plate changes, file/import error, software and qualified tool/scene
+   dependencies before accepting worker/planner/verifier callbacks.
 2. Verify new milestones on Linux. The prior A02 correction at d57e9325 has a
    successful native Linux run 36454696019; its earlier range-failure evidence
    remains historical and does not establish an exact exception call stack.
