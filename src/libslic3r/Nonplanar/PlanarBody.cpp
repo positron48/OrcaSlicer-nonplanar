@@ -6,6 +6,7 @@
 #include "../Model.hpp"
 #include "../Print.hpp"
 #include "../Layer.hpp"
+#include "../Flow.hpp"
 #include <mutex>
 
 namespace Slic3r::nptop {
@@ -181,5 +182,158 @@ PlanarBodyResult generate_planar_body(const VolumePartitionResult &requested, co
         return {"NOMINAL_NATIVE_BODY_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) { return {e.what(),{}}; }
     catch (const std::exception &e) { return {"BODY_NATIVE_OR_CAPTURE_FAILURE: "+std::string(e.what()),{}}; }
+}
+
+std::string BodyMaterialSnapshot::canonical_context() const
+{
+    detail::CanonicalConfigWriter w;
+    w.append("{\"body\":"); w.value(body_fingerprint);
+    w.append(",\"material\":"); w.value(material_fingerprint);
+    w.append(",\"plate_origin\":"); w.value(Vec3d(plate_origin.x(),plate_origin.y(),plate_origin.z()));
+    w.append(",\"reference_count\":"); w.append(std::to_string(references.size()));
+    w.append(",\"schema\":1}"); return w.take();
+}
+std::string BodyMaterialSnapshot::canonical_reference(size_t index) const
+{
+    const auto &r=references.at(index); detail::CanonicalConfigWriter w;
+    w.append("["); w.append(std::to_string(r.record_index)); w.append(","); w.append(std::to_string(r.region_index));
+    w.append(","); w.append(std::to_string(r.path_index)); w.append(","); w.append(std::to_string(r.segment_index));
+    w.append(","); w.value(r.width_reconciliation_upper_mm); w.append(","); w.value(r.volume_reconciliation_upper_mm3);
+    w.append("]"); return w.take();
+}
+namespace {
+std::string body_material_hash(const BodyMaterialSnapshot &snapshot, const std::function<void()> &poll)
+{
+    std::string hash=sha256_bytes(std::string("nptop-body-material-v1\0",23)+snapshot.canonical_context());
+    for (size_t i=0; i<snapshot.references.size(); ++i) {
+        if (i%128==0) poll();
+        hash=sha256_bytes(std::string("nptop-body-bead-v1\0",19)+hash+snapshot.canonical_reference(i));
+    }
+    return hash;
+}
+}
+std::string BodyMaterialSnapshot::fingerprint() const { return body_material_hash(*this,[]{}); }
+
+BodyMaterialResult reconstruct_planar_body_material(const PlanarBodyResult &requested,
+    const BodyMaterialParameters &requested_parameters, const MaterialLimits &requested_limits)
+{
+    const auto body=requested.snapshot; const auto parameters=requested_parameters; const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    using detail::Interval;
+    const auto absolute_upper=[](Interval value) { return std::max(std::abs(value.lo),std::abs(value.hi)); };
+    const auto stop=[&] {
+        if (limits.cancelled && limits.cancelled()) reject("CANCELLED");
+        if (limits.is_current && !limits.is_current(body->revision)) reject("STALE_REVISION");
+        if (std::chrono::steady_clock::now()-started>=limits.timeout) reject("BODY_MATERIAL_DEADLINE");
+        detail::require_interval_environment();
+    };
+    try {
+        detail::require_interval_environment();
+        if (!body || !body->revision || !body->partition || !body->guarded_settings || body->regions.empty() || body->regions.size()>1000)
+            reject("MISSING_MATERIAL_BODY");
+        if (!limits.max_records || limits.max_records>200000 || limits.timeout.count()<=0 || limits.timeout>std::chrono::seconds(30) ||
+            !parameters.support_reference_id || !parameters.contact_reference_id || !parameters.model.model_id ||
+            parameters.deposition_speed.value()<=0 || parameters.travel_speed.value()<=0 || parameters.acceleration.value()<=0)
+            reject("INVALID_BODY_MATERIAL_CONTEXT");
+        for (double value : {body->origin_error_upper_mm,body->partition->total_error_upper_mm})
+            if (!std::isfinite(value) || value<0 || value>.05) reject("BODY_MATERIAL_NUMERIC_BUDGET");
+        const auto *nozzles=body->executed_full_config.option<ConfigOptionFloats>("nozzle_diameter");
+        if (!nozzles || nozzles->values.size()!=1 || !std::isfinite(nozzles->values.front()) || nozzles->values.front()<=0)
+            reject("MISSING_BODY_NOZZLE_REFERENCE");
+        stop(); const auto body_id=body->fingerprint(); stop();
+        body->native_scale.require_current();
+        std::vector<MaterialRecord> records; std::vector<BodyBeadReference> references;
+        std::optional<PhysicalPosition> previous; size_t path_id=0, point_count=0; double conversion_error=0;
+        const auto add=[&](PhysicalPosition a, PhysicalPosition b, Payload payload, std::optional<BeadSection> section,
+                           uint64_t patch, int label, Speed speed) {
+            if (records.size()>=limits.max_records) reject("BODY_MATERIAL_RECORD_LIMIT");
+            const auto index=records.size();
+            records.push_back({{index+1,index,patch,a,b,speed,parameters.acceleration,std::move(payload),label},section});
+        };
+        const auto translate=[&](Position<Frame::BuildPlate> p) {
+            const std::array<double,3> v{p.x()+parameters.plate_origin.x(),p.y()+parameters.plate_origin.y(),p.z()+parameters.plate_origin.z()};
+            const std::array<Interval,3> exact{Interval(p.x())+Interval(parameters.plate_origin.x()),
+                Interval(p.y())+Interval(parameters.plate_origin.y()),Interval(p.z())+Interval(parameters.plate_origin.z())};
+            Interval error(0);
+            for (size_t axis=0; axis<3; ++axis) {
+                if (!std::isfinite(v[axis]) || std::abs(v[axis])>NativeScale::max_coordinate_mm) reject("BODY_MATERIAL_COORDINATE_DOMAIN");
+                error=error+Interval(absolute_upper(exact[axis]-Interval(v[axis])));
+            }
+            return std::pair<PhysicalPosition,double>{{v[0],v[1],v[2]},error.hi};
+        };
+        for (size_t r=0; r<body->regions.size(); ++r) {
+            stop(); const auto &region=body->regions[r].geometry;
+            if (!region || region->revision!=body->revision || region->native_layer_id>size_t(std::numeric_limits<int>::max()))
+                reject("BODY_MATERIAL_REGION_BINDING");
+            region->native_scale.require_current();
+            for (size_t p=0; p<region->paths.size(); ++p) {
+                stop(); const auto &path=region->paths[p]; ++path_id;
+                if (path.points.size()<2 || path.points.size()!=path.native_points.size() || path.points.size()>200000-point_count)
+                    reject("BODY_MATERIAL_POINT_LIMIT");
+                point_count+=path.points.size();
+                if (path.role!=erPerimeter && path.role!=erExternalPerimeter && path.role!=erInternalInfill &&
+                    path.role!=erSolidInfill && path.role!=erTopSolidInfill && path.role!=erBottomSurface)
+                    reject("UNSUPPORTED_BODY_MATERIAL_ROLE");
+                if (!std::isfinite(path.width_mm) || !std::isfinite(path.height_mm) || !std::isfinite(path.mm3_per_mm) ||
+                    path.height_mm<=0 || path.width_mm<=path.height_mm || path.width_mm>NativeScale::max_coordinate_mm ||
+                    path.mm3_per_mm!=Flow(float(path.width_mm),float(path.height_mm),float(nozzles->values.front())).mm3_per_mm())
+                    reject("UNSUPPORTED_NATIVE_MATERIAL_FLOW");
+                if (!std::isfinite(path.coordinate_error_upper_mm) || path.coordinate_error_upper_mm<0)
+                    reject("BODY_MATERIAL_NUMERIC_BUDGET");
+                for (size_t segment=0; segment+1<path.points.size(); ++segment) {
+                    if (segment%128==0) stop();
+                    // Validate before signed native subtraction, including for
+                    // diagnostic snapshots constructed outside the factory.
+                    for (size_t i : {segment,segment+1}) {
+                        const auto native=from_native_scaled<Frame::ModelLocal>(path.native_points[i],body->native_scale).position;
+                        const auto &point=path.points[i];
+                        if (point.x()!=native.x()+region->object_origin.x() || point.y()!=native.y()+region->object_origin.y() ||
+                            point.z()!=region->native_print_z_mm+region->object_origin.z()) reject("BODY_MATERIAL_NATIVE_POINT_BINDING");
+                    }
+                    const auto a=translate(path.points[segment]), b=translate(path.points[segment+1]);
+                    if (a.first.z()!=b.first.z() || path.native_points[segment].z()!=0 || path.native_points[segment+1].z()!=0)
+                        reject("UNSUPPORTED_BODY_MATERIAL_SLOPE");
+                    const auto dx=Interval(b.first.x())-Interval(a.first.x()), dy=Interval(b.first.y())-Interval(a.first.y());
+                    const auto length=detail::root(detail::square(dx)+detail::square(dy));
+                    if (length.lo<=0) reject("BODY_MATERIAL_ZERO_SEGMENT");
+                    const double amount=((length.lo+length.hi)/2)*path.mm3_per_mm;
+                    const auto area=Interval(amount)/length, height=Interval(path.height_mm);
+                    const auto width=area/height+(Interval(1)-Interval(3.141592653589793,3.1415926535897936)/Interval(4))*height;
+                    const double nominal_width=(width.lo+width.hi)/2;
+                    const double width_error=absolute_upper(width-Interval(path.width_mm));
+                    const auto native_dx=Interval(double(path.native_points[segment+1].x()-path.native_points[segment].x()))*Interval(body->native_scale.mm_per_unit());
+                    const auto native_dy=Interval(double(path.native_points[segment+1].y()-path.native_points[segment].y()))*Interval(body->native_scale.mm_per_unit());
+                    const auto native_volume=detail::root(detail::square(native_dx)+detail::square(native_dy))*Interval(path.mm3_per_mm);
+                    const double volume_error=absolute_upper(native_volume-Interval(amount));
+                    const auto error=Interval(path.coordinate_error_upper_mm)+Interval(std::max(a.second,b.second))+Interval(width_error)/Interval(2);
+                    conversion_error=std::max(conversion_error,error.hi);
+                    if (previous && (previous->x()!=a.first.x() || previous->y()!=a.first.y() || previous->z()!=a.first.z()))
+                        add(*previous,a.first,Travel{},{},0,int(region->native_layer_id),parameters.travel_speed);
+                    references.push_back({records.size(),r,p,segment,width_error,volume_error});
+                    add(a.first,b.first,Deposition{Volume(amount),WidthXY(nominal_width),VerticalGap(path.height_mm),VerticalGap(path.height_mm),
+                        parameters.material,parameters.support_reference_id,parameters.contact_reference_id},
+                        BeadSection{BeadSectionKind::RoundedRectangle,path.height_mm,path.height_mm,{width.lo,width.hi}},
+                        path_id,int(region->native_layer_id),parameters.deposition_speed);
+                    previous=b.first;
+                }
+            }
+        }
+        auto model=parameters.model;
+        const auto total=Interval(model.numerical_coordinate_error.value())+Interval(body->partition->total_error_upper_mm)+
+            Interval(body->origin_error_upper_mm)+Interval(conversion_error);
+        if (total.hi>.05) reject("BODY_MATERIAL_NUMERIC_BUDGET");
+        model.numerical_coordinate_error=Length(total.hi);
+        auto remaining=limits;
+        remaining.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        remaining.cancelled=[&] { stop(); return false; }; remaining.is_current={};
+        const auto captured=capture_material_sequence(records,model,body->revision,body_id,remaining);
+        if (!captured.snapshot) throw Rejection(captured.reason);
+        stop(); const auto material_id=captured.snapshot->fingerprint(); stop();
+        auto snapshot=std::make_shared<const BodyMaterialSnapshot>(BodyMaterialSnapshot{body,captured.snapshot,body_id,material_id,
+            parameters.plate_origin,std::move(references)});
+        body_material_hash(*snapshot,stop); stop();
+        return {"DECLARED_NATIVE_BODY_MATERIAL_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) { return {e.what(),{}}; }
+    catch (const std::exception &e) { return {"BODY_MATERIAL_CAPTURE_OR_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
 }
 }

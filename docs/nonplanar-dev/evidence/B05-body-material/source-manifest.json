@@ -1,0 +1,33 @@
+{
+  "base_commit": "77cded2c5e29d2916495b3dab8353dc309a2026c",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B05-body-material.md",
+  "compiled_commit_macro": "31461d50",
+  "sha256": {
+    "src/libslic3r/Nonplanar/PlanarBody.hpp": "f6f61ac2a0582bbb800aeeffc5b01ee8f1a05eb91f043595e5299cd5430db228",
+    "src/libslic3r/Nonplanar/PlanarBody.cpp": "5160c504f4900d593101640019b09b1138a4277cb5c91170cb5aaf8688d479af",
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "d72b976f15630eaf1b591deb6f7a8192ba5fe28510b7606b5682bbb9934b2166",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "edfb7ba7783726e71f4836f1750490f1a757b94d2ea95ca18a15e6cbaac93bd3",
+    "tests/nonplanar/test_policy.cpp": "3a2c6421e36b555b17a81a6791153116c9f848790618e6798dee82ea2103f1f2",
+    "scripts/nonplanar/body_material_fingerprint_oracle.py": "63c1e6cdca2cefed438c13c63a487bb23f788c763202aae0902f11ffcfd6f7db",
+    "tests/nonplanar/data/body-material-fingerprint-v1.json": "bc998e5f0de250b3ab1d94e84b9619ed5551746e6f95acf7ed6e35632001ba70"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "98763b2ef75de49141ff646372d10734e3ee73669431b5d7d37bc320d8171bfb",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "255e8e42f5ae0a55c4979f9c410638a2a5a2c1fbc991620cf3f9f7960279f9c6",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "db2bb4b16a95c7bb15663aed775b049c519de4fb59de5bbe38fb58fe18999511"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "macos_native_checks": {
+    "new_cases": 3,
+    "new_assertions": 46118,
+    "ctest_discovered": 241,
+    "ctest_executed": 241,
+    "skips": 0,
+    "OFF_ZAA_pairs": 6
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN"
+}

@@ -3,6 +3,7 @@
 #include <libslic3r/Nonplanar/Policy.hpp>
 #include <libslic3r/Nonplanar/InputSnapshot.hpp>
 #include <libslic3r/Nonplanar/PlanarBody.hpp>
+#include <libslic3r/Nonplanar/DepositionModel.hpp>
 #include <libslic3r/Nonplanar/StlFile.hpp>
 #include <libslic3r/Format/STL.hpp>
 #include <libslic3r/Print.hpp>
@@ -1492,4 +1493,109 @@ TEST_CASE("B04 native body identity matches independent complete semantic encodi
     const PlanarBodySnapshot body{71,partition,guarded,config,config,config,scale,.1,{{7,config,geometry}},{.08,.08}};
     REQUIRE(body.canonical_json()==oracle.at("canonical").get<std::string>());
     REQUIRE(body.fingerprint()==oracle.at("sha256").get<std::string>());
+}
+
+TEST_CASE("B05 native body material retains every source segment and conserves native flow", "[Nonplanar][B05][BodyMaterial]")
+{
+    auto body=generate_planar_body(native_body_partition(planar_body_config())); REQUIRE(body.snapshot);
+    const auto source=body.snapshot;
+    const BodyMaterialParameters parameters{{.1,-.2,1},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits limits; limits.timeout=std::chrono::seconds(5);
+    limits.cancelled=[&] { body={}; return false; };
+    const auto result=reconstruct_planar_body_material(body,parameters,limits); INFO(result.reason); REQUIRE(result.snapshot);
+    const auto &snapshot=*result.snapshot; REQUIRE_FALSE(body.snapshot); REQUIRE(snapshot.body==source);
+    REQUIRE(snapshot.material->source_fingerprint==source->fingerprint()); REQUIRE(snapshot.material->revision==71);
+    REQUIRE(snapshot.material->model.numerical_coordinate_error.value()>source->partition->total_error_upper_mm);
+    REQUIRE(snapshot.material->model.numerical_coordinate_error.value()<.05);
+    size_t expected=0; for (const auto &region : source->regions) for (const auto &path : region.geometry->paths) expected+=path.points.size()-1;
+    REQUIRE(snapshot.references.size()==expected);
+    long double amount=0; std::set<size_t> referenced;
+    for (const auto &ref : snapshot.references) {
+        REQUIRE(referenced.insert(ref.record_index).second);
+        const auto &path=source->regions.at(ref.region_index).geometry->paths.at(ref.path_index);
+        const auto &motion=snapshot.material->records.at(ref.record_index).motion;
+        const auto &deposit=std::get<Deposition>(motion.payload);
+        const auto &a=path.points.at(ref.segment_index), &b=path.points.at(ref.segment_index+1);
+        REQUIRE(motion.start.x()==a.x()+.1); REQUIRE(motion.start.y()==a.y()-.2); REQUIRE(motion.start.z()==a.z()+1);
+        REQUIRE(motion.end.x()==b.x()+.1); REQUIRE(motion.end.y()==b.y()-.2); REQUIRE(motion.end.z()==b.z()+1);
+        const long double dx=static_cast<long double>(motion.end.x())-motion.start.x(), dy=static_cast<long double>(motion.end.y())-motion.start.y();
+        const long double native=std::sqrt(dx*dx+dy*dy)*path.mm3_per_mm;
+        REQUIRE(std::abs(static_cast<long double>(deposit.volume.value())-native)<1e-12L);
+        const long double h=path.height_mm, k=1-std::acos(-1.L)/4;
+        const long double width=path.mm3_per_mm/h+k*h;
+        REQUIRE(std::abs(deposit.width.value()-width)<1e-12L);
+        REQUIRE(ref.width_reconciliation_upper_mm<1e-6); REQUIRE(ref.volume_reconciliation_upper_mm3<1e-8);
+        amount+=deposit.volume.value();
+        if (referenced.size()==1) {
+            const auto state=material_at(snapshot.material,ref.record_index,.5); REQUIRE(state.lower.snapshot);
+            const PhysicalPosition middle((motion.start.x()+motion.end.x())/2,(motion.start.y()+motion.end.y())/2,motion.start.z()-h/2);
+            // Behind the advancing prefix end, rather than exactly on its cap.
+            const PhysicalPosition deposited(motion.start.x()*.75+motion.end.x()*.25,motion.start.y()*.75+motion.end.y()*.25,middle.z());
+            REQUIRE(classify_material(state.lower,deposited).membership==MaterialMembership::Inside);
+        }
+    }
+    const auto complete=material_at(snapshot.material,snapshot.material->records.size(),0,limits); REQUIRE(complete.nominal.snapshot);
+    REQUIRE(complete.nominal.snapshot->nominal_deposited_volume_mm3.lower<=amount);
+    REQUIRE(complete.nominal.snapshot->nominal_deposited_volume_mm3.upper>=amount);
+    REQUIRE(std::abs(amount-(source->native_volume_mm3.lower+source->native_volume_mm3.upper)/2)<1e-6L);
+    REQUIRE(snapshot.fingerprint().size()==64);
+    // No body material is silently manufactured in the reserved cap interior.
+    REQUIRE(classify_material(complete.upper,{20.1,19.8,4}).membership==MaterialMembership::Outside);
+}
+TEST_CASE("B05 native body material refuses unsupported flow stale budgets and malformed context", "[Nonplanar][B05][BodyMaterial]")
+{
+    const auto body=generate_planar_body(native_body_partition(planar_body_config())); REQUIRE(body.snapshot);
+    const BodyMaterialParameters params{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    const auto rejected=[](const BodyMaterialResult &r) { INFO(r.reason); REQUIRE_FALSE(r.snapshot); };
+    rejected(reconstruct_planar_body_material({},params));
+    auto invalid=params; invalid.support_reference_id=0; rejected(reconstruct_planar_body_material(body,invalid));
+    invalid=params; invalid.model.numerical_coordinate_error=Length(.05); rejected(reconstruct_planar_body_material(body,invalid));
+    invalid=params; invalid.plate_origin={10001,0,0}; rejected(reconstruct_planar_body_material(body,invalid));
+    MaterialLimits limits; limits.cancelled=[] { return true; }; rejected(reconstruct_planar_body_material(body,params,limits));
+    limits={}; limits.is_current=[](uint64_t) { return false; }; rejected(reconstruct_planar_body_material(body,params,limits));
+    limits={}; limits.max_records=1; rejected(reconstruct_planar_body_material(body,params,limits));
+    limits={}; limits.timeout=std::chrono::milliseconds(1);
+    limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(5)); return false; };
+    rejected(reconstruct_planar_body_material(body,params,limits));
+    limits={}; limits.cancelled=[] { std::fesetround(FE_DOWNWARD); return false; };
+    const auto rounding=reconstruct_planar_body_material(body,params,limits);
+    REQUIRE(std::fesetround(FE_TONEAREST)==0); rejected(rounding);
+    const auto mutate=[&](const std::function<void(PlanarPathRecord &)> &change) {
+        const auto &original=body.snapshot->regions; auto paths=original.front().geometry->paths; change(paths.front());
+        const auto &g=*original.front().geometry;
+        auto altered=std::make_shared<const PlanarRegionSnapshot>(PlanarRegionSnapshot{g.revision,g.native_layer_id,g.native_layer_height_mm,
+            g.native_print_z_mm,g.object_origin,g.native_scale,g.entities,std::move(paths),g.native_volume_mm3});
+        std::vector<PlanarBodyRegion> regions;
+        for (size_t i=0; i<original.size(); ++i) regions.push_back({original[i].native_region_id,original[i].config,i ? original[i].geometry : altered});
+        const auto &b=*body.snapshot;
+        return PlanarBodyResult{"mutation",std::make_shared<const PlanarBodySnapshot>(PlanarBodySnapshot{b.revision,b.partition,b.guarded_settings,
+            b.executed_full_config,b.executed_print_config,b.executed_object_config,b.native_scale,b.origin_error_upper_mm,std::move(regions),b.native_volume_mm3})};
+    };
+    const auto flow=reconstruct_planar_body_material(mutate([](auto &p){ p.mm3_per_mm*=1.01; }),params);
+    REQUIRE(flow.reason=="UNSUPPORTED_NATIVE_MATERIAL_FLOW"); rejected(flow);
+    rejected(reconstruct_planar_body_material(mutate([](auto &p){ p.native_points.front().x()=std::numeric_limits<coord_t>::min(); }),params));
+    const auto mismatch=reconstruct_planar_body_material(mutate([](auto &p){ p.native_points.front().x()+=100; }),params);
+    REQUIRE(mismatch.reason=="BODY_MATERIAL_NATIVE_POINT_BINDING"); rejected(mismatch);
+    const auto bridge=reconstruct_planar_body_material(mutate([](auto &p){ p.role=erBridgeInfill; }),params);
+    REQUIRE(bridge.reason=="UNSUPPORTED_BODY_MATERIAL_ROLE"); rejected(bridge);
+
+}
+TEST_CASE("B05 native material source references match independent chained encoding", "[Nonplanar][B05][BodyMaterial]")
+{
+    const auto directory=boost::filesystem::path(__FILE__).parent_path()/"data";
+    boost::nowide::ifstream input((directory/"body-material-fingerprint-v1.json").string());
+    REQUIRE(input.good()); nlohmann::json oracle; input>>oracle;
+    boost::nowide::ifstream body_input((directory/"planar-body-fingerprint-v1.json").string());
+    boost::nowide::ifstream material_input((directory/"material-fingerprint-v1.json").string());
+    nlohmann::json body,material; body_input>>body; material_input>>material;
+    // Stored parent IDs and references are encoding data only. Null parents
+    // never enter reconstruction or become an accepted material result.
+    const BodyMaterialSnapshot snapshot{{},{},body.at("sha256").get<std::string>(),material.at("sha256").get<std::string>(),
+        {.1,-.2,1},{{0,0,0,0,.01,.02},{3,2,3,4,1e-6,-0.}}};
+    REQUIRE(snapshot.canonical_context()==oracle.at("context").get<std::string>());
+    for (size_t i=0; i<snapshot.references.size(); ++i)
+        REQUIRE(snapshot.canonical_reference(i)==oracle.at("references").at(i).get<std::string>());
+    REQUIRE(snapshot.fingerprint()==oracle.at("sha256").get<std::string>());
 }

@@ -29,6 +29,9 @@ Next software tasks, in dependency order:
    from that reserved mesh, retaining source/effective configs and native roles.
    Extend hole/stepped native cases, bind worker/job ownership, reconstruct actual
    material and prove dense coverage or refuse; sparse bridge roles remain rejected.
+   `B05-material.md` and `B05-body-material.md` now supply ordered constant-flux
+   prefixes and all native body beads. Whole-footprint union coverage, legal order
+   and contact qualification remain open.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.
 

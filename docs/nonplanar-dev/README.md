@@ -35,9 +35,10 @@ CTest executes 231/231; six fresh OFF/ZAA comparisons pass. Sparse native bridge
 roles and generated helpers reject; this is nominal data, not support approval.
 
 `B05-material.md` adds owned ordered material and within-G1 constant-flux prefixes:
-seven cases/4466 assertions pass. Selected CTest executes 238/238 and six fresh
-OFF/ZAA comparisons pass. Native body binding, whole-footprint coverage and local
-contact qualification remain open.
+seven cases/4466 assertions pass. `B05-body-material.md` binds every actual native
+body segment and reconciles float Flow: three cases/46118 assertions pass. Selected
+CTest executes 241/241 and six fresh OFF/ZAA comparisons pass. Whole-footprint
+coverage, legal order and local contact qualification remain open.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete

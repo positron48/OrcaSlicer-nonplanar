@@ -1,0 +1,16 @@
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1502:11: error: unknown type name 'BodyMaterialParameters'
+ 1502 |     const BodyMaterialParameters parameters{{.1,-.2,1},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1549:11: error: unknown type name 'BodyMaterialParameters'
+ 1549 |     const BodyMaterialParameters params{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1551:34: error: unknown type name 'BodyMaterialResult'
+ 1551 |     const auto rejected=[](const BodyMaterialResult &r) { INFO(r.reason); REQUIRE_FALSE(r.snapshot); };
+      |                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1563:20: error: object of type 'value_type' (aka 'Slic3r::nptop::PlanarBodyRegion') cannot be assigned because its copy assignment operator is implicitly deleted
+ 1563 |     regions.front()=PlanarBodyRegion{regions.front().native_region_id,regions.front().config,altered};
+      |                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/PlanarBody.hpp:12:15: note: copy assignment operator of 'PlanarBodyRegion' is implicitly deleted because field 'native_region_id' is of const-qualified type 'const int'
+   12 |     const int native_region_id;
+      |               ^
+4 errors generated.
