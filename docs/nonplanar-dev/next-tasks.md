@@ -23,8 +23,10 @@ Next software tasks, in dependency order:
 3. Extend B03 nominal affine bounds to qualified error budgets, curved surfaces,
    ROI and tool access. Existing masks, whole-footprint checks and isolated CLI
    results remain diagnostic geometry, without export permission.
-4. Complete B04 body/cap partition, dense coverage and the adapter for the whole
-   native body. The owned snapshot currently represents only one LayerRegion.
+4. Complete B04 dense coverage and the adapter for the whole native body.
+   `B04-partition.md` supplies an owned exact nominal body/cap partition with a
+   common native interface. The current path snapshot represents one LayerRegion;
+   derive all body layers from the reserved mesh and preserve native semantics.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.
 

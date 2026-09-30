@@ -1,0 +1,17 @@
+{
+  "command": [
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+    "[VolumePartition]",
+    "--warn",
+    "NoAssertions",
+    "--reporter",
+    "JUnit::out=build/nonplanar-evidence/B04-partition/native-1.xml",
+    "--reporter",
+    "console"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-09-30T20:17:52.984182+00:00",
+  "status": "COMPLETED",
+  "exit_code": 42,
+  "elapsed_seconds": 0.049
+}

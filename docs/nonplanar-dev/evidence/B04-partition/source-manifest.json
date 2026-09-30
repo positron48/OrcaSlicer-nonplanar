@@ -1,0 +1,33 @@
+{
+  "base_commit": "e7a46961c57f61e79b81a3d9adf9c61468315172",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-partition.md",
+  "sha256": {
+    "src/libslic3r/CMakeLists.txt": "554b2b4eb7dbd454b84ca129bd21a2bcf39fb107e73e82469bddba0bd2b2b1cb",
+    "src/libslic3r/Nonplanar/VolumePartition.hpp": "03e5558c9d61b09fa11e48c7f17517edc847a894248d34e8600228bb0a950acd",
+    "src/libslic3r/Nonplanar/VolumePartition.cpp": "4d23f185615f6312b64dd562a9e59ed800e37db4eaa9e2943d6b82c7d2bf23ab",
+    "src/libslic3r/Nonplanar/VolumePartitionExact.hpp": "4a10a4ae02954da5293c18a4c947cc41bee08c1e39d8bb9e00127d52ed8685ad",
+    "src/libslic3r/Nonplanar/VolumePartitionExact.cpp": "b9f5d9795c5edfc48776d2abaeb40ea10e3ebb46cd515c8d9051d1e5e7b1b31d",
+    "tests/nonplanar/test_stl_import.cpp": "f120ba5490db481a703fb5383c0260e0343ce1a58218078ded0d04ca3000409c",
+    "scripts/nonplanar/partition_fingerprint_oracle.py": "2d916ab3e7832180f2f07d05ff605a320a44b4f8e36b9021dc3332965420569c",
+    "tests/nonplanar/data/partition-fingerprint-v1.json": "3a276e907f27109d432d64aff7e00df775be2a964323621a5460fa4856a08a0b"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "749b91235013ebc95d40d236e71bd06c5406d666b085cf6e06cee96ee0368267",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "4d9ec0bc4391987a441b0589dcef3b15cac659054aff0e09f83326d614aa27a3",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "33123e99ce8e0ba5bfdecacc047244a97eb8b834db7993b7ef56b17b307f06fb"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "macos_native_checks": {
+    "new_cases": 5,
+    "new_assertions": 4881,
+    "ctest_discovered": 228,
+    "ctest_executed": 228,
+    "skips": 0,
+    "OFF_ZAA_pairs": 6
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN"
+}

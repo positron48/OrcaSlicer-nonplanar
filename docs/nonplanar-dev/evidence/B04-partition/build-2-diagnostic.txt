@@ -1,0 +1,158 @@
+      |                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/GUI_ObjectList.cpp:2326:22: warning: lambda capture 'this' is not used [-Wunused-lambda-capture]
+ 2326 |                     [this, &is_user_cancel, &linear, &angle, &split_compound](Slic3r::Step& file, double& linear_value,
+      |                      ^~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/GUI_ObjectList.cpp:3209:4: warning: '/*' within block comment [-Wcomment]
+ 3209 |    /* wxGetApp().plater()->load_model_objects(objects);
+      |    ^
+12 warnings generated.
+[424/697] Building CXX object src/slic3r/CMakeFiles/libslic3r_gui.dir/Release/GUI/Jobs/BoostThreadWorker.cpp.o
+[425/697] Building CXX object src/slic3r/CMakeFiles/libslic3r_gui.dir/Release/GUI/DeviceErrorDialog.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:21:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Monitor.hpp:4:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Tabbook.hpp:143:10: warning: 'Tabbook::AddPage' hides overloaded virtual function [-Woverloaded-virtual]
+  143 |     bool AddPage(wxWindow* page,
+  177 |     virtual bool AddPage(wxWindow *page,
+      |                  ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:21:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Monitor.hpp:4:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Tabbook.hpp:187:10: warning: 'RemovePage' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  187 |     bool RemovePage(size_t n)
+  161 |     virtual bool RemovePage(size_t n)
+      |                  ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:24:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationPanel.hpp:4:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationWizard.hpp:8:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationWizardStartPage.hpp:51:10: warning: 'on_reset_page' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  310 |     virtual void on_reset_page() {}
+      |                  ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:24:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationPanel.hpp:4:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationWizard.hpp:8:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationWizardStartPage.hpp:52:10: warning: 'on_device_connected' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  308 |     virtual void on_device_connected(MachineObject* obj) { curr_obj = obj; }
+      |                  ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:24:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationPanel.hpp:4:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationWizard.hpp:8:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationWizardStartPage.hpp:66:10: warning: 'on_reset_page' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  310 |     virtual void on_reset_page() {}
+      |                  ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:24:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationPanel.hpp:4:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationWizard.hpp:8:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationWizardStartPage.hpp:67:10: warning: 'on_device_connected' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  308 |     virtual void on_device_connected(MachineObject* obj) { curr_obj = obj; }
+      |                  ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:24:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationPanel.hpp:4:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationWizard.hpp:11:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/CalibrationWizardSavePage.hpp:193:10: warning: 'on_device_connected' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  308 |     virtual void on_device_connected(MachineObject* obj) { curr_obj = obj; }
+      |                  ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:25:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/UnsavedChangesDialog.hpp:336:9: warning: 'ShowModal' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  336 |     int ShowModal();
+      |         ^
+  199 |     int ShowModal()
+      |         ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:26:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Widgets/SideButton.hpp:34:10: warning: 'SetLabel' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   34 |     void SetLabel(const wxString& label);
+      |          ^
+   56 |     virtual void SetLabel( const wxString& label ) override;
+      |                  ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:26:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Widgets/SideButton.hpp:50:10: warning: 'Enable' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   50 |     bool Enable(bool enable = true);
+      |          ^
+  646 |     virtual bool Enable( bool enable = true );
+      |                  ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:36:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/calib_dlg.hpp:12:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Widgets/LabeledStaticBox.hpp:45:10: warning: 'LabeledStaticBox::SetFont' hides overloaded virtual function [-Woverloaded-virtual]
+   45 |     void SetFont(wxFont set_font);
+   44 |     virtual bool SetFont( const wxFont &font ) override;
+      |                  ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/DeviceErrorDialog.cpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/MainFrame.hpp:21:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Monitor.hpp:4:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Tabbook.hpp:421:25: warning: private field 'm_ctrl' is not used [-Wunused-private-field]
+  421 |     TabButtonsListCtrl *m_ctrl{nullptr};
+      |                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/ObjColorDialog.cpp:256:65: warning: lambda capture 'this' is not used [-Wunused-lambda-capture]
+  256 |             m_color_cluster_num_by_user_ebox->Bind(wxEVT_CHAR, [this](wxKeyEvent &e) {
+      |                                                                 ^~~~
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/ObjColorDialog.cpp:4:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/ObjColorDialog.hpp:82:29: warning: private field 'm_combox_width' is not used [-Wunused-private-field]
+   82 |     const int               m_combox_width{50};
+      |                                                                      ~~~^~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Plater.cpp:6540:26: warning: lambda capture 'this' is not used [-Wunused-lambda-capture]
+ 6540 |                         [this, &path, &is_user_cancel, &linear, &angle, &split_compound](Slic3r::Step& file, double& linear_value, double& angle_value, bool& is_split)-> int {
+      |                          ^~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Plater.cpp:6540:33: warning: lambda capture 'path' is not used [-Wunused-lambda-capture]
+ 6540 |                         [this, &path, &is_user_cancel, &linear, &angle, &split_compound](Slic3r::Step& file, double& linear_value, double& angle_value, bool& is_split)-> int {
+      |                                ~^~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Plater.cpp:6561:22: warning: lambda capture 'this' is not used [-Wunused-lambda-capture]
+ 6561 |                     [this, &dlg, real_filename, &progress_percent, &file_percent, INPUT_FILES_RATIO, total_files, i, &designer_model_id, &designer_country_code](int current, int total, bool &cancel, std::string &mode_id, std::string &code)
+      |                      ^~~~~
+      |                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/TroubleshootDialog.cpp:74:23: warning: lambda capture 'this' is not used [-Wunused-lambda-capture]
+   74 |     auto add_sizer = [this, g_sizer, create_label](PresetCollection* col, wxString label, int in_use, int user) {
+      |                       ^~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/TroubleshootDialog.cpp:181:86: warning: lambda capture 'sys_copy_btn' is not used [-Wunused-lambda-capture]
+  181 |     sys_less_btn->Bind(wxEVT_BUTTON, [this, sys_panel, sys_less_btn, sys_info_lines, sys_copy_btn](wxCommandEvent &e) {
+      |                                                                                    ~~^~~~~~~~~~~~
+      |                       ^~~~~~ ~~
+6 warnings generated.
+[543/697] Building CXX object src/slic3r/CMakeFiles/libslic3r_gui.dir/Release/GUI/Widgets/ErrorMsgStaticText.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Widgets/ErrorMsgStaticText.cpp:1:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/GUI/Widgets/ErrorMsgStaticText.hpp:20:10: warning: 'ErrorMsgStaticText::SetLabel' hides overloaded virtual function [-Woverloaded-virtual]
+   20 |     void SetLabel(wxString msg){m_msg = msg;};
+      |          ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/wx-3.3/wx/osx/window.h:56:18: note: hidden overloaded virtual function 'wxWindow::SetLabel' declared here: type mismatch at 1st parameter ('const wxString &' vs 'wxString')
+   56 |     virtual void SetLabel( const wxString& label ) override;
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/Utils/ElegooLink.cpp:1:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/Utils/ElegooLink.hpp:38:18: warning: 'upload_inner_with_host' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   38 |     virtual bool upload_inner_with_host(PrintHostUpload upload_data, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn) const;
+      |                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/Utils/OctoPrint.hpp:42:18: note: overridden virtual function is here
+   42 |     virtual bool upload_inner_with_host(PrintHostUpload upload_data, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn) const;
+      |                  ^
+2 warnings generated.
+[595/697] Building CXX object src/slic3r/CMakeFiles/libslic3r_gui.dir/Release/Utils/minilzo_extension.cpp.o
+[596/697] Building CXX object src/slic3r/CMakeFiles/libslic3r_gui.dir/Release/Utils/Flashforge.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/Utils/PrintHost.cpp:29:
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/Utils/ElegooLink.hpp:38:18: warning: 'upload_inner_with_host' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+   38 |     virtual bool upload_inner_with_host(PrintHostUpload upload_data, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn) const;
+      |                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/Utils/OctoPrint.hpp:42:18: note: overridden virtual function is here
+   42 |     virtual bool upload_inner_with_host(PrintHostUpload upload_data, ProgressFn prorgess_fn, ErrorFn error_fn, InfoFn info_fn) const;
+      |                  ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/Utils/PrintHost.cpp:25:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/Utils/../GUI/MainFrame.hpp:21:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/slic3r/Utils/../GUI/Monitor.hpp:4:
+[693/697] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_upper_projection.cpp.o
+[694/697] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_stl_import.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_stl_import.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"e7a46961\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_stl_import.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_stl_import.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_stl_import.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:8:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:11:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:12:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_assertion_handler.hpp:12:
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_decomposer.hpp:424:27: error: static assertion failed due to requirement 'always_false<const bool &>::value': operator&& is not supported inside assertions, wrap the expression inside parentheses, or decompose it
+  424 |             static_assert(always_false<RhsT>::value,
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:580:91: note: in instantiation of function template specialization 'Catch::operator&&<const bool &>' requested here
+  580 |         REQUIRE(body==(in_original && !in_cap)); REQUIRE(cap==in_cap); REQUIRE_FALSE(body && cap);

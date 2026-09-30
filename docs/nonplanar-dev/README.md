@@ -26,17 +26,20 @@ selected CTest executed 221/221 without skips at that revision.
 native geometry placement, independent of live GUI Model lifetime. Two new cases/
 62 assertions and all 46 B02 cases/791 assertions pass; current selected CTest
 executes 223/223 without skips, with six fresh OFF/ZAA comparisons passing.
+`B04-partition.md` adds a common exact body/cap interface with preserved walls,
+hole and stepped-interface fixtures: five cases/4881 assertions pass. Current
+selected CTest executes 228/228; six fresh OFF/ZAA comparisons pass.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
-compatibility, body/cap partition, material replay, planning and guarded hybrid
+compatibility, whole-body native planning, dense coverage, material replay and guarded hybrid
 export remain open. `next-tasks.md` lists the dependency order. Independent review
 and physical qualification remain pending. U1 standard head and nominal 0.4 mm
 nozzle are user-declared in `B15-u1-declared-setup.md`, without measurement claims.
 
-Prior Linux run 36454696019 at d57e9325 succeeded. Run 36758101513 at 7df1d765
-remains in_progress in the latest saved API snapshot. Neither record proves
-Linux execution of the new input-revision source. Windows remains NOT_RUN.
+Prior Linux runs 36454696019 at d57e9325 and 36758101513 at 7df1d765 succeeded.
+Run 36767506583 at e7a46961 remains in_progress in the latest saved API snapshot.
+These records do not prove Linux execution of the new partition. Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;
 `status.json` and this checkpoint describe the current state.

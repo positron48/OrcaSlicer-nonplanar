@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="2" skipped="0" tests="2451" hostname="tbd" time="0.017" timestamp="2026-09-30T20:17:53Z">
+    <properties>
+      <property name="random-seed" value="3100901305"/>
+      <property name="filters" value="[VolumePartition]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B04 partition preserves a through hole and handles a stepped reserved interface" time="0.007" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B04 cap partition owns callback inputs and rejects unusable geometry or stale work" time="0.009" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B04 partition enforces measured native conversion and inherited error budget" time="0.000" status="run">
+      <failure message="placed.geometry.status==MeshAuditStatus::ValidGeometry" type="REQUIRE">
+FAILED:
+  REQUIRE( placed.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  2 == 0
+CLOSED_ORIENTED_SINGLE_COMPONENT
+SOURCE_CENTER_OFFSET_MISMATCH
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:531
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B04 exact interior cap reservation preserves native source walls and affine volume" time="0.000" status="run">
+      <failure message="placed.geometry.status==MeshAuditStatus::ValidGeometry" type="REQUIRE">
+FAILED:
+  REQUIRE( placed.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  2 == 0
+CLOSED_ORIENTED_SINGLE_COMPONENT
+SOURCE_CENTER_OFFSET_MISMATCH
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:531
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
