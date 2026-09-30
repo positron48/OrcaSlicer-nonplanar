@@ -247,3 +247,104 @@ TEST_CASE("B05 footprint coverage blocks exhausted work stale geometry and uncer
     limits={}; limits.max_depth=3;
     REQUIRE(cover_material(all.nominal,{{0,0,.9},{0,0,.9}},limits).status==MaterialCoverageStatus::Unknown);
 }
+
+TEST_CASE("B06 first pass uses actual stepped material and bounds the missing nominal volume", "[Nonplanar][B06][MaterialTransition]")
+{
+    const auto first=bead(1,0,{0,0,1},{10,0,1},1.2,.4,.4,BeadSectionKind::Rectangle);
+    const MaterialRecord travel{{2,1,0,{10,0,1},{0,1,1.2},Speed(10),Acceleration(100),Travel{}},{}};
+    const auto ledger=captured({first,travel,bead(3,2,{0,1,1.2},{10,1,1.2},1.2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto state=material_at(ledger,3,0);
+    const AffineCapCell cell{{1,-.4,9,1.4},1.4,1.42,1.4};
+    const TransitionPolicy policy{VerticalGap(.1),VerticalGap(.6),Length(.00001)};
+    const auto result=assess_material_first_pass(state.lower,cell,.9,policy); INFO(result.reason);
+    REQUIRE(result.status==TransitionStatus::Compatible);
+    REQUIRE(result.source==state.lower.snapshot); REQUIRE(result.cell); REQUIRE(result.policy);
+    REQUIRE(result.support.status==MaterialCoverageStatus::Covered);
+    REQUIRE(result.support.representation==MaterialRepresentation::Lower);
+    REQUIRE(result.nominal_roof_ceiling_mm); REQUIRE(*result.nominal_roof_ceiling_mm>=1.2);
+    REQUIRE(*result.nominal_roof_ceiling_mm<1.200000001);
+    REQUIRE(result.upper_roof_ceiling_mm); REQUIRE(*result.upper_roof_ceiling_mm>1.21);
+    REQUIRE(result.gap_mm); REQUIRE(result.gap_mm->lower>.1); REQUIRE(result.gap_mm->upper<.6);
+    // Independent step integral: the higher second row owns y>=.4, including
+    // the overlap. Mean affine height is 1.41; commanded bead sums are not used.
+    REQUIRE(result.nominal_volume_mm3);
+    volume_contains(*result.nominal_volume_mm3,8.L*(.8L*(1.41L-1)+1.L*(1.41L-1.2L)));
+    const auto partial=material_at(ledger,0,.4);
+    REQUIRE(assess_material_first_pass(partial.lower,cell,.9,policy).status!=TransitionStatus::Compatible);
+    const auto low=assess_material_first_pass(state.lower,{{1,-.4,9,1.4},.95,.95,.95},.9,policy);
+    REQUIRE(low.status==TransitionStatus::Rejected);
+    const auto high=assess_material_first_pass(state.lower,{{1,-.4,9,1.4},2.,2.,2.},.9,policy);
+    REQUIRE(high.status==TransitionStatus::Rejected);
+}
+
+TEST_CASE("B06 footprint roof excludes a tall neighboring bead by exact oriented clipping", "[Nonplanar][B06][MaterialTransition]")
+{
+    const auto floor=bead(1,0,{0,0,1},{10,0,1},1.2,.4,.4);
+    const MaterialRecord travel{{2,1,0,{10,0,1},{-5,-4,8},Speed(10),Acceleration(100),Travel{}},{}};
+    // Its XY bounding box overlaps the target, but the diagonal bead does not.
+    const auto tall=bead(3,2,{-5,-4,8},{5,6,9},.8,.2,.4);
+    const auto ledger=captured({floor,travel,tall},model(.02,.01)); const auto all=material_at(ledger,3,0);
+    const AffineCapCell cell{{2,-.1,8,.1},1.3,1.3,1.3};
+    const TransitionPolicy policy{VerticalGap(.1),VerticalGap(.5),Length(0)};
+    const auto result=assess_material_first_pass(all.lower,cell,.85,policy); INFO(result.reason);
+    REQUIRE(result.status==TransitionStatus::Compatible);
+    REQUIRE(result.upper_roof_ceiling_mm); REQUIRE(*result.upper_roof_ceiling_mm<1.05);
+    REQUIRE(result.nominal_volume_mm3); volume_contains(*result.nominal_volume_mm3,1.2L*.3L);
+    // A previously laid wall really over the footprint must block the pass.
+    const MaterialRecord connector{{2,1,0,{10,0,1},{0,0,8},Speed(10),Acceleration(100),Travel{}},{}};
+    const auto over=captured({floor,connector,bead(3,2,{0,0,8},{10,0,8},.8,.2,.2)});
+    const auto obstacle=assess_material_first_pass(material_at(over,3,0).lower,cell,.85,policy);
+    REQUIRE(obstacle.status!=TransitionStatus::Compatible);
+    REQUIRE(obstacle.upper_roof_ceiling_mm); REQUIRE(*obstacle.upper_roof_ceiling_mm>8);
+}
+
+TEST_CASE("B06 varying gap roof charges transverse growth and clips the current prefix", "[Nonplanar][B06][MaterialTransition]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,2},.8,.2,.4)},model(.02,.01));
+    const auto partial=material_at(ledger,0,.4);
+    const AffineCapCell cell{{1,-.02,3,.02},1.5,1.7,1.5};
+    const TransitionPolicy policy{VerticalGap(.1),VerticalGap(.8),Length(0)};
+    // A common plane must actually lie inside the whole varying-height section.
+    const auto result=assess_material_first_pass(partial.lower,cell,1.085,policy); INFO(result.reason);
+    REQUIRE(result.status!=TransitionStatus::Compatible);
+    REQUIRE(result.upper_roof_ceiling_mm);
+    const long double ceiling=1.3L+.02L+.02L+(.9L+.1L)*(.02L/10);
+    REQUIRE(*result.upper_roof_ceiling_mm>=ceiling); REQUIRE(*result.upper_roof_ceiling_mm<1.343);
+    // A small continuously supported footprint is positive, without changing Z.
+    const auto narrow=assess_material_first_pass(partial.lower,{{1,-.02,1.2,.02},1.4,1.42,1.4},1.04,policy);
+    INFO(narrow.reason); REQUIRE(narrow.status==TransitionStatus::Compatible);
+    const auto future=assess_material_first_pass(partial.lower,{{5,-.02,6,.02},1.8,1.9,1.8},1.4,policy);
+    REQUIRE(future.status!=TransitionStatus::Compatible);
+}
+
+TEST_CASE("B06 transition keeps holes limits revision ownership and uncertain gap blocking", "[Nonplanar][B06][MaterialTransition]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},.8,.2,.2)}); auto state=material_at(ledger,1,0);
+    AffineCapCell cell{{1,-.05,3,.05},1.2,1.2,1.2};
+    TransitionPolicy policy{VerticalGap(.1),VerticalGap(.4),Length(0)};
+    REQUIRE(assess_material_first_pass(state.lower,cell,.9,policy).status==TransitionStatus::Compatible);
+    auto uncertain=policy; uncertain.minimum=VerticalGap(.2);
+    REQUIRE(assess_material_first_pass(state.lower,cell,.9,uncertain).status==TransitionStatus::Unknown);
+    MaterialCoverageLimits limits; limits.max_evaluations=1;
+    REQUIRE(assess_material_first_pass(state.lower,cell,.9,policy,limits).status==TransitionStatus::Unknown);
+    limits={}; limits.cancelled=[] { return true; };
+    REQUIRE(assess_material_first_pass(state.lower,cell,.9,policy,limits).status==TransitionStatus::Unknown);
+    limits={}; limits.is_current=[](uint64_t) { return false; };
+    REQUIRE(assess_material_first_pass(state.lower,cell,.9,policy,limits).status==TransitionStatus::Unknown);
+    limits={}; limits.timeout=std::chrono::milliseconds(1);
+    limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(5)); return false; };
+    REQUIRE(assess_material_first_pass(state.lower,cell,.9,policy,limits).status==TransitionStatus::Unknown);
+    limits={}; limits.cancelled=[&] { state.lower.snapshot.reset(); cell.z00=8; policy.minimum=VerticalGap(9); return false; };
+    const auto owned=assess_material_first_pass(state.lower,cell,.9,policy,limits); INFO(owned.reason);
+    REQUIRE(owned.status==TransitionStatus::Compatible); REQUIRE(owned.source); REQUIRE(owned.cell->z00==1.2);
+    state=material_at(ledger,1,0); cell={{1,-.05,3,.05},1.2,1.2,1.2}; policy={VerticalGap(.1),VerticalGap(.4),Length(0)};
+    REQUIRE(assess_material_first_pass(state.lower,{{3,-.05,1,.05},1.2,1.2,1.2},.9,policy).status==TransitionStatus::Unknown);
+    REQUIRE(assess_material_first_pass(state.lower,cell,10001,policy).status==TransitionStatus::Unknown);
+    REQUIRE(assess_material_first_pass({},cell,.9,policy).status==TransitionStatus::Unknown);
+    limits={}; const int rounding=std::fegetround();
+    limits.cancelled=[] { std::fesetround(FE_UPWARD); return false; };
+    const auto numeric=assess_material_first_pass(state.lower,cell,.9,policy,limits);
+    std::fesetround(rounding); REQUIRE(numeric.status==TransitionStatus::Unknown);
+    const auto hole=assess_material_first_pass(state.lower,{{1,-1,3,1},1.2,1.2,1.2},.9,policy);
+    REQUIRE(hole.status==TransitionStatus::Rejected); REQUIRE(hole.support.witness);
+}

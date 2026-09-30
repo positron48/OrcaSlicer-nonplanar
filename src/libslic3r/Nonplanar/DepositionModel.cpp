@@ -338,6 +338,54 @@ Polygon clip(const Polygon &polygon, const Vertex &normal, const Exact &offset, 
     if (result.size()>64) reject("MATERIAL_COVERAGE_VERTEX_LIMIT");
     return result;
 }
+std::optional<double> roof_ceiling(const MaterialRecord &row, const MaterialModel &model,
+                                   Polygon polygon, double progress, Representation rep)
+{
+    // Enclose precisely the section model used by piece(). Exact clipping to
+    // its oriented XY enclosure removes irrelevant neighboring walls before
+    // evaluating height, retaining longitudinal/transverse correlation.
+    const auto &m=row.motion; const auto &b=*row.bead;
+    const auto length=detail::root(length_squared(row));
+    const auto area=Interval(std::get<Deposition>(m.payload).volume.value())/length;
+    const auto dh=Interval(b.gap_end_mm)-Interval(b.gap_begin_mm), dz=Interval(m.end.z())-Interval(m.start.z());
+    const auto prefix_h=Interval(b.gap_begin_mm)+dh*Interval(progress);
+    const auto hmin=detail::minimum(Interval(b.gap_begin_mm),prefix_h);
+    Interval begin(0), end(progress), half=section_width(area,hmin,b.kind)/Interval(2), top_growth(0);
+    if (rep==Representation::Upper) {
+        const auto xy=Interval(model.outer_xy_growth.value())+Interval(model.numerical_coordinate_error.value());
+        const auto z=Interval(model.outer_z_growth.value())+Interval(model.numerical_coordinate_error.value());
+        const auto erosion=xy/length, shift=detail::minimum(erosion,Interval(progress));
+        begin=Interval(-erosion.hi); end=Interval((end+erosion).hi);
+        if (b.kind==BeadSectionKind::Rectangle) {
+            half=half+xy+area/square(hmin)*absolute(dh)*shift/Interval(2);
+            top_growth=z+absolute(dz)*shift;
+        } else {
+            const auto core_error=(area/square(hmin)+pi()/Interval(4))*absolute(dh)/Interval(2)*shift;
+            const auto radius_error=xy+z+(absolute(dz-dh/Interval(2))+absolute(dh)/Interval(2))*shift;
+            half=half+core_error+radius_error;
+            top_growth=radius_error;
+        }
+    }
+    const Vertex delta{Exact(m.end.x())-Exact(m.start.x()),Exact(m.end.y())-Exact(m.start.y())};
+    const Exact length2=delta[0]*delta[0]+delta[1]*delta[1];
+    const Exact start=delta[0]*Exact(m.start.x())+delta[1]*Exact(m.start.y());
+    polygon=clip(polygon,delta,start+Exact(begin.lo)*length2,true);
+    if (polygon.empty()) return {};
+    polygon=clip(polygon,delta,start+Exact(end.hi)*length2,false);
+    if (polygon.empty()) return {};
+    const Vertex normal{-delta[1],delta[0]};
+    const Exact center=normal[0]*Exact(m.start.x())+normal[1]*Exact(m.start.y());
+    const Exact transverse=Exact(half.hi)*Exact(length.hi);
+    polygon=clip(polygon,normal,center-transverse,true);
+    if (polygon.empty()) return {};
+    polygon=clip(polygon,normal,center+transverse,false);
+    if (polygon.empty()) return {};
+    const auto projected=project_polygon(row,polygon,Interval(0));
+    const auto local=detail::maximum(Interval(0),detail::minimum(projected.t,Interval(progress)));
+    const auto top=Interval(m.start.z())+dz*local+top_growth;
+    coordinate(top.lo); coordinate(top.hi);
+    return top.hi;
+}
 MaterialCoverageResult coverage(std::shared_ptr<const MaterialPrefixSnapshot> cursor, const SceneBox &requested,
                                Representation rep, const MaterialCoverageLimits &requested_limits)
 {
@@ -459,4 +507,82 @@ MaterialCoverageResult cover_material(const UpperMaterialView &v, const SceneBox
 { return coverage(v.snapshot,d,Representation::Upper,l); }
 MaterialCoverageResult cover_material(const LowerMaterialView &v, const SceneBox &d, const MaterialCoverageLimits &l)
 { return coverage(v.snapshot,d,Representation::Lower,l); }
+
+MaterialTransitionResult assess_material_first_pass(const LowerMaterialView &view, const AffineCapCell &requested_cell,
+    double plane, const TransitionPolicy &requested_policy, const MaterialCoverageLimits &requested_limits)
+{
+    // All caller-owned values/handles are captured before any callback.
+    const auto cursor=view.snapshot; const auto cell=requested_cell; const auto policy=requested_policy;
+    const auto limits=requested_limits; const auto started=std::chrono::steady_clock::now();
+    MaterialTransitionResult result; result.source=cursor; result.cell=cell; result.policy=policy; result.support_plane_z_mm=plane;
+    try {
+        detail::require_interval_environment();
+        if (!cursor || !cursor->sequence || cursor->sequence->records.size()>200000 ||
+            cursor->sequence->geometry.size()!=cursor->sequence->records.size() ||
+            cursor->completed_records>cursor->sequence->records.size() || !std::isfinite(cursor->current_progress) ||
+            cursor->current_progress<0 || cursor->current_progress>1 ||
+            (cursor->completed_records==cursor->sequence->records.size() && cursor->current_progress!=0) ||
+            !limits.max_evaluations || limits.max_evaluations>200000 || !limits.max_cells || limits.max_cells>65535 ||
+            !limits.max_depth || limits.max_depth>32 || !valid_timeout(limits.timeout) ||
+            cell.footprint.min_x>=cell.footprint.max_x || cell.footprint.min_y>=cell.footprint.max_y ||
+            policy.minimum.value()<=0 || policy.minimum.value()>=policy.maximum.value()) reject("INVALID_MATERIAL_TRANSITION");
+        const auto &r=cell.footprint;
+        for (double v : {r.min_x,r.min_y,r.max_x,r.max_y,cell.z00,cell.z10,cell.z01,plane}) coordinate(v);
+        const auto sequence=cursor->sequence; const auto poll=[&] { stop(limits,sequence->revision,started); };
+        poll();
+        const Polygon footprint{{Exact(r.min_x),Exact(r.min_y)},{Exact(r.max_x),Exact(r.min_y)},
+                                {Exact(r.max_x),Exact(r.max_y)},{Exact(r.min_x),Exact(r.max_y)}};
+        const size_t end=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence->records.size());
+        for (size_t i=0; i<end; ++i) {
+            if (i%128==0) poll();
+            const auto &row=sequence->records[i]; if (!row.bead) continue;
+            if (!sequence->geometry[i] || !std::holds_alternative<Deposition>(row.motion.payload))
+                reject("INVALID_MATERIAL_TRANSITION_GEOMETRY");
+            const double progress=i<cursor->completed_records ? 1 : cursor->current_progress;
+            for (auto rep : {Representation::Nominal,Representation::Upper}) {
+                if (result.roof_evaluations>=limits.max_evaluations) reject("MATERIAL_TRANSITION_WORK_LIMIT");
+                if (result.roof_evaluations%128==0) poll(); ++result.roof_evaluations;
+                const auto ceiling=roof_ceiling(row,sequence->model,footprint,progress,rep);
+                auto &target=rep==Representation::Nominal ? result.nominal_roof_ceiling_mm : result.upper_roof_ceiling_mm;
+                if (ceiling) target=target ? std::max(*target,*ceiling) : *ceiling;
+            }
+        }
+        poll();
+        if (result.roof_evaluations>=limits.max_evaluations) reject("MATERIAL_TRANSITION_WORK_LIMIT");
+        auto remaining=limits; remaining.max_evaluations-=result.roof_evaluations;
+        remaining.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        if (!valid_timeout(remaining.timeout)) reject("MATERIAL_DEADLINE");
+        result.support=coverage(cursor,{{r.min_x,r.min_y,plane},{r.max_x,r.max_y,plane}},Representation::Lower,remaining);
+        poll();
+        if (result.support.status==MaterialCoverageStatus::Uncovered) {
+            result.status=TransitionStatus::Rejected; result.reason="UNSUPPORTED_MATERIAL_TRANSITION_FOOTPRINT"; return result;
+        }
+        if (result.support.status!=MaterialCoverageStatus::Covered) { result.reason=result.support.reason; return result; }
+        if (!result.nominal_roof_ceiling_mm || !result.upper_roof_ceiling_mm ||
+            *result.nominal_roof_ceiling_mm<plane || *result.upper_roof_ceiling_mm<*result.nominal_roof_ceiling_mm)
+            reject("MATERIAL_TRANSITION_INCONSISTENT_ROOF");
+        const Interval error(-policy.corner_height_error.value(),policy.corner_height_error.value());
+        const auto h00=Interval(cell.z00)+error, h10=Interval(cell.z10)+error, h01=Interval(cell.z01)+error;
+        const std::array<Interval,4> corners{h00,h10,h01,h10+h01-h00};
+        auto cap=corners[0]; bool too_small=false,too_large=false;
+        for (auto corner : corners) {
+            coordinate(corner.lo); coordinate(corner.hi);
+            cap=Interval(std::min(cap.lo,corner.lo),std::max(cap.hi,corner.hi));
+            too_small|=(corner-Interval(plane)).hi<policy.minimum.value();
+            too_large|=(corner-Interval(*result.upper_roof_ceiling_mm)).lo>policy.maximum.value();
+        }
+        const auto gap=cap-Interval(plane,*result.upper_roof_ceiling_mm); result.gap_mm=bounds(gap);
+        const auto area=(Interval(r.max_x)-Interval(r.min_x))*(Interval(r.max_y)-Interval(r.min_y));
+        const auto mean=(Interval(cell.z10)+Interval(cell.z01))/Interval(2);
+        result.nominal_volume_mm3=bounds(area*(mean-Interval(plane,*result.nominal_roof_ceiling_mm)));
+        poll();
+        if (too_small || too_large) {
+            result.status=TransitionStatus::Rejected;result.reason=too_small ? "MATERIAL_GAP_TOO_SMALL" : "MATERIAL_GAP_TOO_LARGE";
+        } else if (gap.lo>policy.minimum.value() && gap.hi<policy.maximum.value() && result.nominal_volume_mm3->lower>0) {
+            result.status=TransitionStatus::Compatible;result.reason="CONTINUOUS_MATERIAL_FIRST_PASS_FEASIBLE";
+        } else result.reason="MATERIAL_TRANSITION_UNCERTAIN_GAP";
+    } catch (const Rejection &e) { result.status=TransitionStatus::Unknown;result.reason=e.what(); }
+    catch (const std::exception &e) { result.status=TransitionStatus::Unknown;result.reason="MATERIAL_TRANSITION_NUMERIC_FAILURE: "+std::string(e.what()); }
+    return result;
+}
 }

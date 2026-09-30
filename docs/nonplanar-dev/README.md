@@ -45,6 +45,13 @@ repetitions pass. Final selected CTest executes 245/245 and six fresh corrected-
 library OFF/ZAA comparisons pass. Full seam/edge domains, legal order and local
 contact qualification remain open.
 
+`B06-material-transition.md` adds first-pass affine feasibility against one actual
+material prefix, with separate continuous lower support and upper roof/gap bounds.
+Five new cases/84 assertions pass, including actual native cap interior, blocked
+edge and an independent step-volume integral. Nominal volume remains a diagnostic
+interval; thickness selection, refined integration and volumetric seam are open.
+Final selected CTest executes 250/250 and six fresh OFF/ZAA comparisons pass.
+
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
 compatibility, dense coverage, material replay, ordering and guarded hybrid
@@ -53,8 +60,9 @@ and physical qualification remain pending. U1 standard head and nominal 0.4 mm
 nozzle are user-declared in `B15-u1-declared-setup.md`, without measurement claims.
 
 Prior Linux runs 36454696019 at d57e9325 and 36758101513 at 7df1d765 succeeded.
-Run 36767506583 at e7a46961 remains in_progress in the latest saved API snapshot.
-These records do not prove Linux execution of the new partition. Windows remains NOT_RUN.
+Runs 36767506583 at e7a46961 and 36786738740 at 23f00bfd succeeded. In the saved
+snapshot, 36791501134 at b35408ce is in_progress. These records do not
+prove Linux execution of this transition patch. Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;
 `status.json` and this checkpoint describe the current state.

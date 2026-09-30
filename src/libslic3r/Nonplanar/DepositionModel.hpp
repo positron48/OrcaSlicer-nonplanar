@@ -102,4 +102,26 @@ struct MaterialCoverageResult {
 MaterialCoverageResult cover_material(const NominalMaterialView &, const SceneBox &, const MaterialCoverageLimits &limits = {});
 MaterialCoverageResult cover_material(const UpperMaterialView &, const SceneBox &, const MaterialCoverageLimits &limits = {});
 MaterialCoverageResult cover_material(const LowerMaterialView &, const SceneBox &, const MaterialCoverageLimits &limits = {});
+
+inline constexpr unsigned material_transition_contract_version=1;
+struct MaterialTransitionResult {
+    TransitionStatus status=TransitionStatus::Unknown;
+    std::string reason;
+    std::shared_ptr<const MaterialPrefixSnapshot> source;
+    std::optional<AffineCapCell> cell;
+    std::optional<TransitionPolicy> policy;
+    double support_plane_z_mm=0;
+    MaterialCoverageResult support;
+    // Ceilings over the complete XY footprint, not lower bounds on the roof.
+    std::optional<double> nominal_roof_ceiling_mm, upper_roof_ceiling_mm;
+    std::optional<ScalarBounds> gap_mm, nominal_volume_mm3;
+    size_t roof_evaluations=0;
+};
+// Bounded affine-cell feasibility from one actual prefix. The requested support
+// plane must be continuously covered by D_lower; D_upper bounds the minimum gap.
+// Nominal volume bounds integrate the unfilled vertical cell above its highest
+// nominal material. They are diagnostic, never a selected bead volume/E, seam,
+// tool contact, complete transition plan or export approval. No Z adaptation.
+MaterialTransitionResult assess_material_first_pass(const LowerMaterialView &, const AffineCapCell &,
+    double support_plane_z_mm, const TransitionPolicy &, const MaterialCoverageLimits &limits = {});
 }

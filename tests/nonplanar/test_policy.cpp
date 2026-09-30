@@ -1646,3 +1646,39 @@ TEST_CASE("B04 actual dense native floor has continuous inner coverage under the
     REQUIRE(future.status==MaterialCoverageStatus::Uncovered); REQUIRE(future.witness);
     REQUIRE(classify_material(complete.lower,*future.witness).membership==MaterialMembership::Outside);
 }
+
+TEST_CASE("B06 actual native reserved body bounds the first affine pass and missing cap volume", "[Nonplanar][B06][NativeTransition]")
+{
+    const auto body=generate_planar_body(native_body_partition(planar_body_config())); REQUIRE(body.snapshot);
+    const BodyMaterialParameters params{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits material_limits; material_limits.timeout=std::chrono::seconds(5);
+    const auto material=reconstruct_planar_body_material(body,params,material_limits); REQUIRE(material.snapshot);
+    const auto ledger=material.snapshot->material;
+    const auto all=material_at(ledger,ledger->records.size(),0,material_limits); REQUIRE(all.lower.snapshot);
+    MaterialCoverageLimits limits; limits.timeout=std::chrono::seconds(5);
+    const TransitionPolicy policy{VerticalGap(.1),VerticalGap(.32),Length(.00001)};
+    const AffineCapCell cell{{17,17,23,23},2.2,2.2,2.2};
+    const auto first=assess_material_first_pass(all.lower,cell,1.9,policy,limits); INFO(first.reason);
+    REQUIRE(first.status==TransitionStatus::Compatible);
+    REQUIRE(first.source==all.lower.snapshot); REQUIRE(first.support.status==MaterialCoverageStatus::Covered);
+    REQUIRE(first.gap_mm); REQUIRE(first.gap_mm->lower>.1); REQUIRE(first.gap_mm->upper<.32);
+    // Body walls reach Z=4 elsewhere. They cannot become a fictitious roof
+    // inside the reserved cap interior. Real native paths, not CAD, are queried.
+    REQUIRE(first.nominal_roof_ceiling_mm); REQUIRE(*first.nominal_roof_ceiling_mm>=2);
+    REQUIRE(*first.nominal_roof_ceiling_mm<2.00000001);
+    REQUIRE(first.upper_roof_ceiling_mm); REQUIRE(*first.upper_roof_ceiling_mm<2.03);
+    REQUIRE(first.nominal_volume_mm3);
+    // Every nominal bead roof is at/below 2 and the whole plane at 1.9 lies
+    // inside nominal material. Thus the true missing vertical cell volume is
+    // within [36*(2.2-2),36*(2.2-1.9)], including corrugated shoulders/overlaps.
+    REQUIRE(first.nominal_volume_mm3->lower<=7.2); REQUIRE(first.nominal_volume_mm3->lower>7.19999);
+    REQUIRE(first.nominal_volume_mm3->upper>=10.8); REQUIRE(first.nominal_volume_mm3->upper<10.80001);
+    REQUIRE(first.roof_evaluations+first.support.evaluations<=limits.max_evaluations);
+    const auto unsupported=assess_material_first_pass(all.lower,cell,2.5,policy,limits);
+    REQUIRE(unsupported.status==TransitionStatus::Rejected); REQUIRE(unsupported.support.witness);
+    const auto too_high=assess_material_first_pass(all.lower,{{17,17,23,23},2.6,2.6,2.6},1.9,policy,limits);
+    REQUIRE(too_high.status==TransitionStatus::Rejected);
+    const auto edge=assess_material_first_pass(all.lower,{{15,17,23,23},2.2,2.2,2.2},1.9,policy,limits);
+    REQUIRE(edge.status!=TransitionStatus::Compatible);
+}

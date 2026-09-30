@@ -1,0 +1,59 @@
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:259:23: error: use of undeclared identifier 'assess_material_first_pass'
+  259 |     const auto result=assess_material_first_pass(state.lower,cell,.9,policy); INFO(result.reason);
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:273:13: error: use of undeclared identifier 'assess_material_first_pass'
+  273 |     REQUIRE(assess_material_first_pass(partial.lower,cell,.9,policy).status!=TransitionStatus::Compatible);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:273:13: error: use of undeclared identifier 'assess_material_first_pass'
+  273 |     REQUIRE(assess_material_first_pass(partial.lower,cell,.9,policy).status!=TransitionStatus::Compatible);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:273:13: error: use of undeclared identifier 'assess_material_first_pass'
+  273 |     REQUIRE(assess_material_first_pass(partial.lower,cell,.9,policy).status!=TransitionStatus::Compatible);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:274:20: error: use of undeclared identifier 'assess_material_first_pass'
+  274 |     const auto low=assess_material_first_pass(state.lower,{{1,-.4,9,1.4},.95,.95,.95},.9,policy);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:276:21: error: use of undeclared identifier 'assess_material_first_pass'
+  276 |     const auto high=assess_material_first_pass(state.lower,{{1,-.4,9,1.4},2.,2.,2.},.9,policy);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:289:23: error: use of undeclared identifier 'assess_material_first_pass'
+  289 |     const auto result=assess_material_first_pass(all.lower,cell,.85,policy); INFO(result.reason);
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:296:25: error: use of undeclared identifier 'assess_material_first_pass'
+  296 |     const auto obstacle=assess_material_first_pass(material_at(over,3,0).lower,cell,.85,policy);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:308:23: error: use of undeclared identifier 'assess_material_first_pass'
+  308 |     const auto result=assess_material_first_pass(partial.lower,cell,1.085,policy); INFO(result.reason);
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:314:23: error: use of undeclared identifier 'assess_material_first_pass'
+  314 |     const auto narrow=assess_material_first_pass(partial.lower,{{1,-.02,1.2,.02},1.4,1.42,1.4},1.04,policy);
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:316:23: error: use of undeclared identifier 'assess_material_first_pass'
+  316 |     const auto future=assess_material_first_pass(partial.lower,{{5,-.02,6,.02},1.8,1.9,1.8},1.4,policy);
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:325:13: error: use of undeclared identifier 'assess_material_first_pass'
+  325 |     REQUIRE(assess_material_first_pass(state.lower,cell,.9,policy).status==TransitionStatus::Compatible);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:325:13: error: use of undeclared identifier 'assess_material_first_pass'
+  325 |     REQUIRE(assess_material_first_pass(state.lower,cell,.9,policy).status==TransitionStatus::Compatible);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:325:13: error: use of undeclared identifier 'assess_material_first_pass'
+  325 |     REQUIRE(assess_material_first_pass(state.lower,cell,.9,policy).status==TransitionStatus::Compatible);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:327:13: error: use of undeclared identifier 'assess_material_first_pass'
+  327 |     REQUIRE(assess_material_first_pass(state.lower,cell,.9,uncertain).status==TransitionStatus::Unknown);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:327:13: error: use of undeclared identifier 'assess_material_first_pass'
+  327 |     REQUIRE(assess_material_first_pass(state.lower,cell,.9,uncertain).status==TransitionStatus::Unknown);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:327:13: error: use of undeclared identifier 'assess_material_first_pass'
+  327 |     REQUIRE(assess_material_first_pass(state.lower,cell,.9,uncertain).status==TransitionStatus::Unknown);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:329:13: error: use of undeclared identifier 'assess_material_first_pass'
+  329 |     REQUIRE(assess_material_first_pass(state.lower,cell,.9,policy,limits).status==TransitionStatus::Unknown);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:329:13: error: use of undeclared identifier 'assess_material_first_pass'
+  329 |     REQUIRE(assess_material_first_pass(state.lower,cell,.9,policy,limits).status==TransitionStatus::Unknown);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.

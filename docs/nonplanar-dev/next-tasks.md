@@ -30,10 +30,12 @@ Next software tasks, in dependency order:
    Extend hole/stepped native cases, bind worker/job ownership, reconstruct actual
    material and prove dense coverage or refuse; sparse bridge roles remain rejected.
    `B05-material.md` and `B05-body-material.md` now supply ordered constant-flux
-   prefixes and all native body beads. Whole-footprint union coverage, legal order
+   prefixes and all native body beads. Wider union domains, legal order
    and contact qualification remain open. `B05-coverage.md` now proves the whole
    flat 6x6 mm interior support plane through exact union coverage plus Clipper;
-   use it with upper material bounds for actual transition, then seam/edge domains.
+   `B06-material-transition.md` now bounds first-pass roof/gap/nominal volume
+   against that actual prefix. Refine the roof integral, subdivide stepped support
+   into qualified cells and select thickness/volume before seam/edge domains.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.
 

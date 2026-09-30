@@ -1,0 +1,36 @@
+{
+  "base_commit": "b35408ce384cb89ca04eea5b45f79a4c3b265a31",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-material-transition.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "a205352c4f498c2866dd050bc4172d57cd60e08a5b9221c74f244582040f3045",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "b436be8c927798668ec148aeda830e25150d60209a0f34e4c3489862797275bc",
+    "tests/nonplanar/test_deposition_model.cpp": "d85975c68c3ff74a89d538dab1feb9e67d89f32abe8b017e37e4b680c5288bbd",
+    "tests/nonplanar/test_policy.cpp": "dfad9e69e5b73b85b1d5fd1d22fdf0484b9bcd94cb24e92c88bea4edf750b28e"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "3ba7f6cfcc821f56baeb74631fba08db5175ebf86b018418cb7bf57e50411b7b",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "b8dea501ca56096090bbf8bc404c83a38afcadfb891af941550d38567688cbe7"
+  },
+  "compiled_commit_label": "31461d50",
+  "compiled_commit_label_note": "Retained configure label; exact source and binary hashes above bind this build. Full B13 software provenance remains pending.",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "new_geometric_cases": 4,
+  "new_geometric_assertions": 55,
+  "new_native_cases": 1,
+  "new_native_assertions": 29,
+  "material_suite_cases": 14,
+  "material_suite_assertions": 4555,
+  "body_suite_cases": 5,
+  "body_suite_assertions": 46163,
+  "ctest_discovered": 250,
+  "ctest_executed": 250,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN",
+  "full_B06": "NOT_IMPLEMENTED_REFINED_SOLVER_SELECTED_THICKNESS_VOLUME_SEAM_COMPLETE_PATH_PENDING"
+}
