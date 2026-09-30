@@ -1,0 +1,23 @@
+FF
+======================================================================
+FAIL: test_architecture_scope_and_pinned_source (__main__.GmpBuildContract.test_architecture_scope_and_pinned_source) (apple=True, processor='arm64', target='', cross=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/test_gmp_build_contract.py", line 47, in test_architecture_scope_and_pinned_source
+    self.assertEqual('--disable-assembly' in args, disabled)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False != True
+
+======================================================================
+FAIL: test_architecture_scope_and_pinned_source (__main__.GmpBuildContract.test_architecture_scope_and_pinned_source) (apple=True, processor='x86_64', target='arm64', cross=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/test_gmp_build_contract.py", line 47, in test_architecture_scope_and_pinned_source
+    self.assertEqual('--disable-assembly' in args, disabled)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False != True
+
+----------------------------------------------------------------------
+Ran 1 test in 0.034s
+
+FAILED (failures=2)

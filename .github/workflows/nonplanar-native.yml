@@ -42,6 +42,7 @@ jobs:
           uname -a > build/nonplanar-evidence/linux/platform.txt
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/source-audit.log -- python3 docs/nonplanar/scripts/audit_orca_checkout.py --repo .
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/package.log -- python3 docs/nonplanar/scripts/validate_package.py
+          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/gmp-contract.log -- python3 scripts/nonplanar/test_gmp_build_contract.py
       - name: System dependencies on disposable runner
         run: sudo ./build_linux.sh -ur
       - name: Identify exact dependency source and runner environment
