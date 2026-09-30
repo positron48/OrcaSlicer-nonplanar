@@ -19,7 +19,7 @@
     "B02": "BOUNDED_IMPORT_AND_OWNED_PRE_APPLY_NATIVE_INPUT_PLACEMENT_PASS_GUI_PLATE_JOB_BINDING_AND_HARD_LIMITS_PENDING",
     "B03": "BOUNDED_NOMINAL_MASKS_FOOTPRINT_AFFINE_CURVATURE_AND_ISOLATED_CLI_PASS_CURVED_SURFACES_TOOL_ROI_AND_PLANNING_PENDING",
     "B04": "OWNED_EXACT_PARTITION_AND_NATIVE_WHOLE_BODY_SEMANTICS_PASS_DENSE_COVERAGE_SEAM_WIDER_NATIVE_DOMAIN_AND_JOB_WORKER_BINDING_PENDING",
-    "B05": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B05": "OWNED_ORDERED_CONSTANT_FLUX_MATERIAL_PREFIX_AND_SEPARATE_ENVELOPES_PASS_NATIVE_BODY_BINDING_CONTACT_CCD_AND_FULL_SCOPE_PENDING",
     "B06": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B07": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B08": "NOT_IMPLEMENTED_FULL_SCOPE",
@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 194,
+    "new_native_cases": 201,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 231,
-    "final_ctest_executed": 231,
+    "final_ctest_discovered": 238,
+    "final_ctest_executed": 238,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -222,7 +222,17 @@
     "B04_body_cases": 3,
     "B04_body_assertions": 2965,
     "B04_body_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
-    "B04_body_oracle": "INDEPENDENT_FULL_SEMANTIC_ENCODING_PASS_SERIALIZATION_ONLY"
+    "B04_body_oracle": "INDEPENDENT_FULL_SEMANTIC_ENCODING_PASS_SERIALIZATION_ONLY",
+    "B05_material_cases": 7,
+    "B05_material_assertions": 4466,
+    "B05_material_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B05_material_oracle": "INDEPENDENT_RECORD_CHAIN_AND_PREFIX_ENCODING_PASS_SERIALIZATION_ONLY",
+    "MAT-01": "PASS_DECLARED_VERTICAL_POINT_SECTIONS_ONLY",
+    "MAT-02": "PASS_NEIGHBOUR_GEOMETRY_RETENTION_ONLY_COLLISION_LOCALIZATION_PENDING",
+    "MAT-03": "PASS_LINEAR_G1_CURRENT_PREFIX_AND_ABSENT_FUTURE_MATERIAL_ONLY",
+    "MAT-04": "PASS_NO_GLOBAL_GEOMETRY_EXCLUSION_ONLY_LOCAL_CONTACT_PENDING",
+    "GCD-09": "PASS_RETRACT_UNRETRACT_NO_MATERIAL_ONLY",
+    "B05_uniform_flow_regression": "RED_EXIT_42_THEN_CONSTANT_FLUX_WIDTH_LAW_PASS"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -236,10 +246,10 @@
     "coupon_geometry": "PREPARED_AND_VALIDATED_DIGITALLY_ONLY"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "RUN_36758101513_7DF1D765_SUCCESS_RUN_36767506583_E7A46961_IN_PROGRESS_RUN_36774517729_5D505983_PENDING_BODY_REVISION_PENDING",
+  "ci": "RUN_36758101513_7DF1D765_SUCCESS_RUN_36767506583_E7A46961_LAST_IN_PROGRESS_RUN_36774517729_5D505983_CANCELLED_RUN_36778238255_31461D50_PENDING_B05_REVISION_NOT_VERIFIED",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Reconstruct actual D_nominal/D_upper/D_lower from owned native body trajectories; prove dense under-cap coverage or refuse, then volumetric seam and transition. Extend native hole/step geometry and connect job/worker ownership. Complete B01-B03 boundaries and dependent B05-B14 planning/replay/export. Linux new revision, independent review and physical qualification remain pending.",
+  "next_step": "Bind actual owned native body segments and native float Flow to D_nominal/D_upper/D_lower; prove dense under-cap coverage or refuse, then volumetric seam and transition. Extend native hole/step geometry and connect job/worker ownership. Complete B01-B03 boundaries and dependent B05-B14 planning/replay/export. Linux new revision, independent review and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -290,7 +300,8 @@
     "B01_inputs": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-inputs.md",
     "B02_input_placement": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B02-input-placement.md",
     "B04_partition": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-partition.md",
-    "B04_body": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-body.md"
+    "B04_body": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-body.md",
+    "B05_material": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B05-material.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -338,5 +349,6 @@
   "B01_inputs_evidence": "docs/nonplanar-dev/evidence/B01-inputs/source-manifest.json",
   "B02_input_placement_evidence": "docs/nonplanar-dev/evidence/B02-input-placement/source-manifest.json",
   "B04_partition_evidence": "docs/nonplanar-dev/evidence/B04-partition/source-manifest.json",
-  "B04_body_evidence": "docs/nonplanar-dev/evidence/B04-body/source-manifest.json"
+  "B04_body_evidence": "docs/nonplanar-dev/evidence/B04-body/source-manifest.json",
+  "B05_material_evidence": "docs/nonplanar-dev/evidence/B05-material/source-manifest.json"
 }

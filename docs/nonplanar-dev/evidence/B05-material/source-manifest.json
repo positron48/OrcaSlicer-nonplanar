@@ -1,0 +1,32 @@
+{
+  "base_commit": "31461d502bba3ba6961c833858120917be5fb724",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B05-material.md",
+  "sha256": {
+    "src/libslic3r/CMakeLists.txt": "7ca25a787406ae9ebeec9ae18028c7c1f59c90432842b2fe8567a33e299b28f3",
+    "tests/nonplanar/CMakeLists.txt": "b9171fcd56d1173d55907823a61c6aabf8eb9e1f7c219fd68e63485a9a0c83ce",
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "d72b976f15630eaf1b591deb6f7a8192ba5fe28510b7606b5682bbb9934b2166",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "edfb7ba7783726e71f4836f1750490f1a757b94d2ea95ca18a15e6cbaac93bd3",
+    "tests/nonplanar/test_deposition_model.cpp": "7c59b70c92626e9a3b2c7228f121857dfc2a6eb18690e2060793373e38736ced",
+    "scripts/nonplanar/material_fingerprint_oracle.py": "6ecedba091ce73eab184a93c5df5d5703453c3c840d470600208e0c24f4fed02",
+    "tests/nonplanar/data/material-fingerprint-v1.json": "7f670d5077130c6d5d663a13e05cb3a82f4581b192fe19ea13ad308d23f6657b"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "98763b2ef75de49141ff646372d10734e3ee73669431b5d7d37bc320d8171bfb",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "3d6c2c02818459fb1c25e55c0a151d06b7f468572aeb92a1ffaf4735935dc221",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "db2bb4b16a95c7bb15663aed775b049c519de4fb59de5bbe38fb58fe18999511"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "macos_native_checks": {
+    "new_cases": 7,
+    "new_assertions": 4466,
+    "ctest_discovered": 238,
+    "ctest_executed": 238,
+    "skips": 0,
+    "OFF_ZAA_pairs": 6
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN"
+}

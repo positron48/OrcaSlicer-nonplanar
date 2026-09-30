@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="4" hostname="tbd" time="0.000" timestamp="2026-09-30T22:08:33Z">
+    <properties>
+      <property name="random-seed" value="3858074600"/>
+      <property name="filters" value="[UniformDeposition]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B05 varying gap respects uniform within-event G1 deposition" time="0.000" status="run">
+      <failure message="b.upper>=expected" type="REQUIRE">
+FAILED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.96000000000000196 >= 1.2
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:31
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

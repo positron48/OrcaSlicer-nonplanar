@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="4388" hostname="tbd" time="0.011" timestamp="2026-09-30T21:55:23Z">
+    <properties>
+      <property name="random-seed" value="600639816"/>
+      <property name="filters" value="[MaterialModel]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="MAT-01 separate rounded material views match independent angled section oracle" time="0.003" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="MAT-02 GCD-09 neighbour material persists through travel retract and unretract" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B05 rectangular sloped variable gaps conserve XY volume and reject mutations" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B05 material captures owned callbacks and blocks stale late and numerical work" time="0.008" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="MAT-03 current deposition grows within a segment and future material stays absent" time="0.000" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

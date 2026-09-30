@@ -1,0 +1,22 @@
+Filters: [UniformDeposition]
+Randomness seeded to: 3858074600
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B05 varying gap respects uniform within-event G1 deposition
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:150
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:31: FAILED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.96000000000000196 >= 1.2
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 4 | 3 passed | 1 failed
+

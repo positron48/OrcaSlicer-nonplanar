@@ -1,0 +1,22 @@
+Filters: [MaterialModel]
+Randomness seeded to: 2124333069
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B05 rectangular sloped variable gaps conserve XY volume and reject mutations
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:114
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:34: FAILED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  3.00000000000000044 <= 3
+
+===============================================================================
+test cases:    6 |    5 passed | 1 failed
+assertions: 4437 | 4436 passed | 1 failed
+
