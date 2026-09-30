@@ -1,0 +1,198 @@
+{
+  "exception": {
+    "codes": "0x0000000000000002, 0x000000016fd7c000",
+    "message": "Bad access in stack guard region for thread 1 but crash was associated with thread 0 - possible stray access?",
+    "rawCodes": [
+      2,
+      6171377664
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGBUS",
+    "subtype": "KERN_PROTECTION_FAILURE at 0x000000016fd7c000"
+  },
+  "faultingThread": 0,
+  "thread": {
+    "triggered": true,
+    "id": 9385398,
+    "threadState": {
+      "x": [
+        {
+          "value": 6171377680
+        },
+        {
+          "value": 31566393024
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 8796093022208
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 246
+        },
+        {
+          "value": 247
+        },
+        {
+          "value": 6576770080,
+          "symbolLocation": 0,
+          "symbol": "___chkstk_darwin"
+        },
+        {
+          "value": 55824610288
+        },
+        {
+          "value": 18446744073709551273
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 31566382048
+        },
+        {
+          "value": 31561451184
+        },
+        {
+          "value": 6171366720
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 31557876880
+        },
+        {
+          "value": 31557875968
+        },
+        {
+          "value": 31561451184
+        }
+      ],
+      "flavor": "ARM_THREAD_STATE64",
+      "lr": {
+        "value": 4325279356
+      },
+      "cpsr": {
+        "value": 1073745920
+      },
+      "fp": {
+        "value": 6171366704
+      },
+      "sp": {
+        "value": 6171366384
+      },
+      "esr": {
+        "value": 2449473607,
+        "description": "(Data Abort) byte write Translation fault"
+      },
+      "pc": {
+        "value": 4325259412,
+        "matchesCrashFrame": 1
+      },
+      "far": {
+        "value": 6171377664
+      }
+    },
+    "queue": "com.apple.main-thread",
+    "frames": [
+      {
+        "imageOffset": 29751444,
+        "symbol": "__gmpn_mul_1",
+        "symbolLocation": 156,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 29771388,
+        "symbol": "__gmpn_mul_basecase",
+        "symbolLocation": 44,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 29746068,
+        "symbol": "mpq_cmp_numden",
+        "symbolLocation": 652,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 18446714750919874148,
+        "imageIndex": 1
+      }
+    ]
+  },
+  "usedImages": [
+    {
+      "source": "P",
+      "arch": "arm64",
+      "base": 4295507968,
+      "CFBundleShortVersionString": "",
+      "CFBundleIdentifier": "com.orcaslicer.OrcaSlicer",
+      "size": 41140224,
+      "uuid": "0dcba573-c9b5-37b9-ba00-aaa1ea03eb89",
+      "path": "/Users/USER/*/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "name": "fff_print_tests",
+      "CFBundleVersion": ""
+    },
+    {
+      "size": 0,
+      "source": "A",
+      "base": 0,
+      "uuid": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6576762880,
+      "size": 52028,
+      "uuid": "4f33683c-18c8-39a1-800b-2e3bd43bcc13",
+      "path": "/usr/lib/system/libsystem_pthread.dylib",
+      "name": "libsystem_pthread.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6576508928,
+      "size": 250544,
+      "uuid": "cc1cf985-bc65-3725-809f-4c1e36b8f4ba",
+      "path": "/usr/lib/system/libsystem_kernel.dylib",
+      "name": "libsystem_kernel.dylib"
+    }
+  ]
+}

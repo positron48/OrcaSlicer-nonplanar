@@ -18,8 +18,8 @@
     "B01": "PREFLIGHT_OWNED_NATIVE_PRINT_AND_EXACT_PRE_APPLY_SOURCE_REVISION_PASS_FULL_COMPATIBILITY_JOB_AND_PLATE_BINDING_PENDING",
     "B02": "BOUNDED_IMPORT_AND_OWNED_PRE_APPLY_NATIVE_INPUT_PLACEMENT_PASS_GUI_PLATE_JOB_BINDING_AND_HARD_LIMITS_PENDING",
     "B03": "BOUNDED_NOMINAL_MASKS_FOOTPRINT_AFFINE_CURVATURE_AND_ISOLATED_CLI_PASS_CURVED_SURFACES_TOOL_ROI_AND_PLANNING_PENDING",
-    "B04": "OWNED_EXACT_PARTITION_AND_NATIVE_WHOLE_BODY_SEMANTICS_PASS_DENSE_COVERAGE_SEAM_WIDER_NATIVE_DOMAIN_AND_JOB_WORKER_BINDING_PENDING",
-    "B05": "OWNED_ORDERED_CONSTANT_FLUX_PREFIX_SEPARATE_ENVELOPES_AND_NATIVE_BODY_BINDING_PASS_CONTACT_CCD_FULL_SCOPE_PENDING",
+    "B04": "OWNED_EXACT_PARTITION_NATIVE_BODY_MATERIAL_AND_INTERIOR_DENSE_COVERAGE_PASS_SEAM_WIDER_NATIVE_DOMAIN_JOB_WORKER_PENDING",
+    "B05": "OWNED_ORDERED_CONSTANT_FLUX_PREFIX_NATIVE_BODY_AND_CONTINUOUS_UNION_COVERAGE_PASS_CONTACT_CCD_FULL_SCOPE_PENDING",
     "B06": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B07": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B08": "NOT_IMPLEMENTED_FULL_SCOPE",
@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 204,
+    "new_native_cases": 208,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 241,
-    "final_ctest_executed": 241,
+    "final_ctest_discovered": 245,
+    "final_ctest_executed": 245,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -236,7 +236,15 @@
     "B05_body_material_cases": 3,
     "B05_body_material_assertions": 46118,
     "B05_body_material_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
-    "B05_body_material_oracle": "INDEPENDENT_PARENT_TRANSLATION_AND_SOURCE_ASSOCIATION_CHAIN_PASS_SERIALIZATION_ONLY"
+    "B05_body_material_oracle": "INDEPENDENT_PARENT_TRANSLATION_AND_SOURCE_ASSOCIATION_CHAIN_PASS_SERIALIZATION_ONLY",
+    "B05_coverage_geometric_cases": 3,
+    "B05_coverage_geometric_assertions": 34,
+    "B04_native_coverage_cases": 1,
+    "B04_native_coverage_assertions": 16,
+    "B04_native_coverage_oracle": "INDEPENDENT_INSCRIBED_SECTIONS_AND_CLIPPER_DIFFERENCE_PASS_6X6_INTERIOR_PLANE_ONLY",
+    "B05_coverage_OFF_ZAA": "SIX_CORRECTED_GMP_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "GMP_apple_arm64": "PINNED_621_PORTABLE_ARITHMETIC_197_PROGRAMS_ZERO_X18_AUDIT_AND_100_RANDOMIZED_NATIVE_REPETITIONS_PASS",
+    "GMP_build_contract_scenarios": 5
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -253,7 +261,7 @@
   "ci": "RUN_36758101513_7DF1D765_SUCCESS_RUN_36767506583_E7A46961_LAST_IN_PROGRESS_RUN_36774517729_5D505983_CANCELLED_RUN_36778238255_31461D50_PENDING_B05_REVISION_NOT_VERIFIED",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Prove continuous whole-footprint dense under-cap coverage from actual D_lower bead union or refuse, then volumetric seam and transition. Extend native hole/step geometry and connect job/worker ownership. Complete B01-B03 boundaries and dependent B05-B14 planning/replay/export. Linux new revision, independent review and physical qualification remain pending.",
+  "next_step": "Use actual lower-material continuous coverage and upper material bounds in the stepped first-pass gap/volume solver, then prove volumetric seam. Complete cap planning, CCD/contact, legal motion order and final-byte replay/export plus B01-B03 job/plate/worker boundaries. Extend native hole/step/edge domains. Linux new revision, independent review and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -306,7 +314,9 @@
     "B04_partition": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-partition.md",
     "B04_body": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-body.md",
     "B05_material": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B05-material.md",
-    "B05_body_material": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B05-body-material.md"
+    "B05_body_material": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B05-body-material.md",
+    "GMP_apple_arm64": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/GMP-apple-arm64.md",
+    "B05_coverage": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B05-coverage.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -356,5 +366,7 @@
   "B04_partition_evidence": "docs/nonplanar-dev/evidence/B04-partition/source-manifest.json",
   "B04_body_evidence": "docs/nonplanar-dev/evidence/B04-body/source-manifest.json",
   "B05_material_evidence": "docs/nonplanar-dev/evidence/B05-material/source-manifest.json",
-  "B05_body_material_evidence": "docs/nonplanar-dev/evidence/B05-body-material/source-manifest.json"
+  "B05_body_material_evidence": "docs/nonplanar-dev/evidence/B05-body-material/source-manifest.json",
+  "GMP_apple_arm64_evidence": "docs/nonplanar-dev/evidence/GMP-apple-arm64/source-manifest.json",
+  "B05_coverage_evidence": "docs/nonplanar-dev/evidence/B05-coverage/source-manifest.json"
 }

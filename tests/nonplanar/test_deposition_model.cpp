@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
+#include <libslic3r/Nonplanar/Collision.hpp>
 #include <cmath>
 #include <cfenv>
 #include <thread>
@@ -194,4 +195,55 @@ TEST_CASE("B05 material chain and prefix identity match independent byte encodin
     const MaterialPrefixSnapshot prefix{ledger,0,.4,{1.19,1.21}};
     REQUIRE(prefix.canonical()==oracle.at("prefix").at("canonical").get<std::string>());
     REQUIRE(prefix.fingerprint()==oracle.at("prefix").at("sha256").get<std::string>());
+}
+
+TEST_CASE("B05 continuous lower union covers a footprint across multiple deposited rows", "[Nonplanar][B05][MaterialCoverage]")
+{
+    const auto first=bead(1,0,{0,0,1},{10,0,1},1.2,.2,.2,BeadSectionKind::Rectangle);
+    const MaterialRecord connector{{2,1,0,{10,0,1},{0,1,1},Speed(10),Acceleration(100),Travel{}},{}};
+    const auto second=bead(3,2,{0,1,1},{10,1,1},1.2,.2,.2,BeadSectionKind::Rectangle);
+    const auto ledger=captured({first,connector,second}); const auto all=material_at(ledger,3,0);
+    const SceneBox footprint{{1,-.4,.88},{9,1.4,.92}};
+    const auto covered=cover_material(all.lower,footprint); INFO(covered.reason);
+    REQUIRE(covered.status==MaterialCoverageStatus::Covered); REQUIRE(covered.source==all.lower.snapshot);
+    REQUIRE(covered.domain); REQUIRE(covered.domain->max.y()==1.4); REQUIRE(covered.representation==MaterialRepresentation::Lower);
+    REQUIRE(covered.cells>1); REQUIRE_FALSE(covered.witness);
+    MaterialCoverageLimits exhausted; exhausted.max_cells=1;
+    REQUIRE(cover_material(all.lower,footprint,exhausted).status==MaterialCoverageStatus::Unknown);
+    exhausted={}; exhausted.max_evaluations=1;
+    REQUIRE(cover_material(all.lower,footprint,exhausted).status==MaterialCoverageStatus::Unknown);
+    const auto partial=material_at(ledger,0,.4);
+    REQUIRE(cover_material(partial.lower,{{1,-.3,.88},{3,.3,.92}}).status==MaterialCoverageStatus::Covered);
+    const auto future=cover_material(partial.lower,footprint);
+    REQUIRE(future.status==MaterialCoverageStatus::Uncovered); REQUIRE(future.witness);
+    REQUIRE(classify_material(partial.lower,*future.witness).membership==MaterialMembership::Outside);
+}
+TEST_CASE("B05 continuous coverage detects a hole hidden by all footprint corners", "[Nonplanar][B05][MaterialCoverage]")
+{
+    const auto first=bead(1,0,{0,-1,1},{10,-1,1},.6,.2,.2,BeadSectionKind::Rectangle);
+    const MaterialRecord connector{{2,1,0,{10,-1,1},{0,1,1},Speed(10),Acceleration(100),Travel{}},{}};
+    const auto ledger=captured({first,connector,bead(3,2,{0,1,1},{10,1,1},.6,.2,.2,BeadSectionKind::Rectangle)});
+    const auto all=material_at(ledger,3,0);
+    for (double x : {1.,9.}) for (double y : {-1.,1.}) REQUIRE(classify_material(all.lower,{x,y,.9}).membership==MaterialMembership::Inside);
+    const auto hole=cover_material(all.lower,{{1,-1,.9},{9,1,.9}}); INFO(hole.reason);
+    REQUIRE(hole.status==MaterialCoverageStatus::Uncovered); REQUIRE(hole.witness);
+    REQUIRE(classify_material(all.lower,*hole.witness).membership==MaterialMembership::Outside);
+    REQUIRE(hole.witness->x()>=1); REQUIRE(hole.witness->x()<=9);
+    REQUIRE(hole.witness->y()>=-1); REQUIRE(hole.witness->y()<=1);
+}
+TEST_CASE("B05 footprint coverage blocks exhausted work stale geometry and uncertain boundary", "[Nonplanar][B05][MaterialCoverage]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},.8,.2,.2)}); const auto all=material_at(ledger,1,0);
+    const SceneBox footprint{{1,-.35,.88},{9,.35,.92}};
+    REQUIRE(cover_material(all.lower,footprint).status==MaterialCoverageStatus::Covered);
+    MaterialCoverageLimits limits; limits.max_evaluations=0;
+    REQUIRE(cover_material(all.lower,footprint,limits).status==MaterialCoverageStatus::Unknown);
+    limits={}; limits.is_current=[](uint64_t){return false;}; REQUIRE(cover_material(all.lower,footprint,limits).status==MaterialCoverageStatus::Unknown);
+    limits={}; limits.cancelled=[] { return true; }; REQUIRE(cover_material(all.lower,footprint,limits).status==MaterialCoverageStatus::Unknown);
+    limits={}; limits.timeout=std::chrono::milliseconds(1); limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(5)); return false; };
+    REQUIRE(cover_material(all.lower,footprint,limits).status==MaterialCoverageStatus::Unknown);
+    REQUIRE(cover_material(all.lower,{{2,0,.9},{1,0,.9}}).status==MaterialCoverageStatus::Unknown);
+    // Butt boundary is uncertain and can never become covered from refinement.
+    limits={}; limits.max_depth=3;
+    REQUIRE(cover_material(all.nominal,{{0,0,.9},{0,0,.9}},limits).status==MaterialCoverageStatus::Unknown);
 }

@@ -4,6 +4,7 @@
 #include <libslic3r/Nonplanar/InputSnapshot.hpp>
 #include <libslic3r/Nonplanar/PlanarBody.hpp>
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
+#include <libslic3r/ClipperUtils.hpp>
 #include <libslic3r/Nonplanar/StlFile.hpp>
 #include <libslic3r/Format/STL.hpp>
 #include <libslic3r/Print.hpp>
@@ -1598,4 +1599,50 @@ TEST_CASE("B05 native material source references match independent chained encod
     for (size_t i=0; i<snapshot.references.size(); ++i)
         REQUIRE(snapshot.canonical_reference(i)==oracle.at("references").at(i).get<std::string>());
     REQUIRE(snapshot.fingerprint()==oracle.at("sha256").get<std::string>());
+}
+
+TEST_CASE("B04 actual dense native floor has continuous inner coverage under the cap", "[Nonplanar][B04][B05][NativeCoverage]")
+{
+    const auto body=generate_planar_body(native_body_partition(planar_body_config())); REQUIRE(body.snapshot);
+    const BodyMaterialParameters params{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits material_limits; material_limits.timeout=std::chrono::seconds(5);
+    const auto reconstructed=reconstruct_planar_body_material(body,params,material_limits); REQUIRE(reconstructed.snapshot);
+    const auto ledger=reconstructed.snapshot->material;
+    const auto complete=material_at(ledger,ledger->records.size(),0,material_limits); REQUIRE(complete.lower.snapshot);
+    MaterialCoverageLimits limits; limits.timeout=std::chrono::seconds(5);
+    const auto coverage=cover_material(complete.lower,{{17,17,1.9},{23,23,1.9}},limits);
+    INFO(coverage.reason); INFO(coverage.cells); INFO(coverage.evaluations);
+    REQUIRE(coverage.status==MaterialCoverageStatus::Covered);
+    REQUIRE(coverage.cells>1); REQUIRE(coverage.evaluations<=limits.max_evaluations);
+    // Independent continuous oracle: inscribed bead rectangles at this plane,
+    // long-double section math and native integer polygon subtraction. Shrink
+    // by 64 microns before quantizing to 1 micron, so rounding cannot grow them.
+    constexpr long double scale=1000000.L, inset=.000064L, plane=1.9L;
+    Polygons guaranteed;
+    const auto &model=ledger->model;
+    for (const auto &row : ledger->records) if (row.bead) {
+        const auto &m=row.motion; const auto &deposit=std::get<Deposition>(m.payload);
+        const long double dx=static_cast<long double>(m.end.x())-m.start.x(),dy=static_cast<long double>(m.end.y())-m.start.y();
+        const long double length=std::sqrt(dx*dx+dy*dy),height=row.bead->gap_begin_mm;
+        const long double area=deposit.volume.value()/length, k=1-std::acos(-1.L)/4;
+        const long double width=area/height+k*height, center=m.start.z()-height/2;
+        const long double radius=height/2-model.inner_xy_loss.value()-model.inner_z_loss.value()-2*model.numerical_coordinate_error.value();
+        const long double vertical=plane-center;
+        if (radius<=0 || std::abs(vertical)>=radius) continue;
+        const long double half=(width-height)/2+std::sqrt(radius*radius-vertical*vertical)-inset;
+        const long double end_loss=model.inner_xy_loss.value()+model.numerical_coordinate_error.value()+inset;
+        if (half<=0 || length<=2*end_loss) continue;
+        const long double ux=dx/length,uy=dy/length,nx=-uy,ny=ux;
+        const long double ax=m.start.x()+ux*end_loss,ay=m.start.y()+uy*end_loss;
+        const long double bx=m.end.x()-ux*end_loss,by=m.end.y()-uy*end_loss;
+        const auto point=[&](long double x,long double y){return Point(coord_t(std::llround(x*scale)),coord_t(std::llround(y*scale)));};
+        guaranteed.emplace_back(Points{point(ax-nx*half,ay-ny*half),point(bx-nx*half,by-ny*half),
+            point(bx+nx*half,by+ny*half),point(ax+nx*half,ay+ny*half)});
+    }
+    const Polygons target{Polygon(Points{Point(17000000,17000000),Point(23000000,17000000),Point(23000000,23000000),Point(17000000,23000000)})};
+    REQUIRE_FALSE(guaranteed.empty()); REQUIRE(diff(target,guaranteed).empty());
+    const auto future=cover_material(complete.lower,{{17,17,2.5},{23,23,2.5}},limits);
+    REQUIRE(future.status==MaterialCoverageStatus::Uncovered); REQUIRE(future.witness);
+    REQUIRE(classify_material(complete.lower,*future.witness).membership==MaterialMembership::Outside);
 }

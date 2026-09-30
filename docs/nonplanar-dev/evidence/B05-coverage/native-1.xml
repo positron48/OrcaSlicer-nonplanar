@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="2" skipped="0" tests="21" hostname="tbd" time="0.008" timestamp="2026-09-30T22:48:13Z">
+    <properties>
+      <property name="random-seed" value="4130919349"/>
+      <property name="filters" value="[MaterialCoverage]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B05 continuous coverage detects a hole hidden by all footprint corners" time="0.000" status="run">
+      <failure message="hole.status==MaterialCoverageStatus::Uncovered" type="REQUIRE">
+FAILED:
+  REQUIRE( hole.status==MaterialCoverageStatus::Uncovered )
+with expansion:
+  2 == 1
+MATERIAL_COVERAGE_DEPTH_LIMIT
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:224
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B05 continuous lower union covers a footprint across multiple deposited rows" time="0.000" status="run">
+      <failure message="future.status==MaterialCoverageStatus::Uncovered" type="REQUIRE">
+FAILED:
+  REQUIRE( future.status==MaterialCoverageStatus::Uncovered )
+with expansion:
+  2 == 1
+CONTINUOUS_DECLARED_MATERIAL_COVERAGE
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:213
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B05 footprint coverage blocks exhausted work stale geometry and uncertain boundary" time="0.006" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

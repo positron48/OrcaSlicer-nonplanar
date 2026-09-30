@@ -1,5 +1,6 @@
 #pragma once
 #include "Transition.hpp"
+#include "Collision.hpp"
 #include <string>
 
 namespace Slic3r::nptop {
@@ -81,4 +82,24 @@ struct MaterialQueryResult {
 MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
 MaterialQueryResult classify_material(const UpperMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
 MaterialQueryResult classify_material(const LowerMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+enum class MaterialCoverageStatus { Covered, Uncovered, Unknown };
+enum class MaterialRepresentation { Nominal, Upper, Lower };
+inline constexpr unsigned material_coverage_contract_version=1;
+struct MaterialCoverageLimits : MaterialQueryLimits {
+    size_t max_cells=4095, max_depth=32;
+};
+struct MaterialCoverageResult {
+    MaterialCoverageStatus status=MaterialCoverageStatus::Unknown;
+    std::string reason;
+    std::shared_ptr<const MaterialPrefixSnapshot> source;
+    std::optional<SceneBox> domain;
+    MaterialRepresentation representation=MaterialRepresentation::Nominal;
+    std::optional<PhysicalPosition> witness;
+    size_t cells=0, evaluations=0;
+};
+// Continuous coverage of the complete physical XY footprint x vertical range,
+// including zero-thickness planes. A point/vertex sample is never a certificate.
+MaterialCoverageResult cover_material(const NominalMaterialView &, const SceneBox &, const MaterialCoverageLimits &limits = {});
+MaterialCoverageResult cover_material(const UpperMaterialView &, const SceneBox &, const MaterialCoverageLimits &limits = {});
+MaterialCoverageResult cover_material(const LowerMaterialView &, const SceneBox &, const MaterialCoverageLimits &limits = {});
 }

@@ -31,7 +31,9 @@ Next software tasks, in dependency order:
    material and prove dense coverage or refuse; sparse bridge roles remain rejected.
    `B05-material.md` and `B05-body-material.md` now supply ordered constant-flux
    prefixes and all native body beads. Whole-footprint union coverage, legal order
-   and contact qualification remain open.
+   and contact qualification remain open. `B05-coverage.md` now proves the whole
+   flat 6x6 mm interior support plane through exact union coverage plus Clipper;
+   use it with upper material bounds for actual transition, then seam/edge domains.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.
 

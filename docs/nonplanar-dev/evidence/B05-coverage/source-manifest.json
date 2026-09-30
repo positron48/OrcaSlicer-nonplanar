@@ -1,0 +1,35 @@
+{
+  "base_commit": "0034e21ed65fac4d899d2ba516527ea1ab941a88",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B05-coverage.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "9d160bcacba2ac66f0267a117a28452b669c6c062dd3d9f65bd6cd976ac3bf36",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "d0e6b547d73934d1e1336dea566be5553e21e7589d7909c5db10dc60b08ff549",
+    "tests/nonplanar/test_deposition_model.cpp": "fbde9a33b98e86a4a46d43fa81bf791e78d68e91762cce8342842308674625f1",
+    "tests/nonplanar/test_policy.cpp": "e384eb2f78d912ceea801e423e7ca981929768c4acc81f7965a40306c29dd03f"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "f25fa0bd42cf668f939826cd399ddd3bce170ff41970c77e5400dd15571b5943",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "a154479ed64fcb9e453fb028f637cfa78d81fc7a6132628ee41363f150f99f73"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "new_geometric_cases": 3,
+  "new_geometric_assertions": 34,
+  "new_native_floor_cases": 1,
+  "new_native_floor_assertions": 16,
+  "material_suite_cases": 10,
+  "material_suite_assertions": 4500,
+  "body_suite_cases": 4,
+  "body_suite_assertions": 46134,
+  "corrected_final_integration": "../GMP-apple-arm64/source-manifest.json",
+  "ctest_discovered": 245,
+  "ctest_executed": 245,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "randomized_integration_repetitions": 100,
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN"
+}

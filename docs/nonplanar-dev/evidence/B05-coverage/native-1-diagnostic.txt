@@ -1,0 +1,37 @@
+Filters: [MaterialCoverage]
+Randomness seeded to: 4130919349
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B05 continuous coverage detects a hole hidden by all footprint corners
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:216
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:224: FAILED:
+  REQUIRE( hole.status==MaterialCoverageStatus::Uncovered )
+with expansion:
+  2 == 1
+with message:
+  MATERIAL_COVERAGE_DEPTH_LIMIT
+
+-------------------------------------------------------------------------------
+B05 continuous lower union covers a footprint across multiple deposited rows
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:200
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:213: FAILED:
+  REQUIRE( future.status==MaterialCoverageStatus::Uncovered )
+with expansion:
+  2 == 1
+with message:
+  CONTINUOUS_DECLARED_MATERIAL_COVERAGE
+
+===============================================================================
+test cases:  3 |  1 passed | 2 failed
+assertions: 21 | 19 passed | 2 failed
+

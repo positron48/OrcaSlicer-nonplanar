@@ -1,0 +1,276 @@
+{
+  "exception": {
+    "codes": "0x0000000000000002, 0x000000016fb0c000",
+    "message": "Bad access in stack guard region for thread 1 but crash was associated with thread 0 - possible stray access?",
+    "rawCodes": [
+      2,
+      6168821760
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGBUS",
+    "subtype": "KERN_PROTECTION_FAILURE at 0x000000016fb0c000"
+  },
+  "faultingThread": 0,
+  "thread": {
+    "triggered": true,
+    "id": 9376563,
+    "threadState": {
+      "x": [
+        {
+          "value": 0
+        },
+        {
+          "value": 6168821728
+        },
+        {
+          "value": 4013181968076552506
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 3492594551311918702
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 7162257226239836160
+        },
+        {
+          "value": 8026363936153105013
+        },
+        {
+          "value": 18446744073709551615
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 8649004212039604
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 1746297275655959351
+        },
+        {
+          "value": 4363894896
+        },
+        {
+          "value": 31344050176
+        },
+        {
+          "value": 31344062360
+        },
+        {
+          "value": 29732839462
+        },
+        {
+          "value": 18446744073709551257
+        },
+        {
+          "value": 31344050560
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 31344050912
+        },
+        {
+          "value": 4294967292
+        },
+        {
+          "value": 0
+        },
+        {
+          "value": 1
+        },
+        {
+          "value": 5
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 4
+        },
+        {
+          "value": 40
+        }
+      ],
+      "flavor": "ARM_THREAD_STATE64",
+      "lr": {
+        "value": 4327818164
+      },
+      "cpsr": {
+        "value": 4096
+      },
+      "fp": {
+        "value": 6168810576
+      },
+      "sp": {
+        "value": 6168810128
+      },
+      "esr": {
+        "value": 2449473543,
+        "description": "(Data Abort) byte read Translation fault"
+      },
+      "pc": {
+        "value": 4327826368,
+        "matchesCrashFrame": 1
+      },
+      "far": {
+        "value": 6168821760
+      }
+    },
+    "queue": "com.apple.main-thread",
+    "frames": [
+      {
+        "imageOffset": 29762496,
+        "symbol": "__gmpn_rshift",
+        "symbolLocation": 208,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 29754292,
+        "symbol": "__gmpz_tdiv_q_2exp",
+        "symbolLocation": 92,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 1449348,
+        "symbol": "CGAL::Lazy_exact_Add<boost::multiprecision::number<boost::multiprecision::backends::gmp_rational, (boost::multiprecision::expression_template_option)1>, boost::multiprecision::number<boost::multiprecision::backends::gmp_rational, (boost::multiprecision::expression_template_option)1>, boost::multiprecision::number<boost::multiprecision::backends::gmp_rational, (boost::multiprecision::expression_template_option)1>>::update_exact() const",
+        "symbolLocation": 180,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 9144,
+        "symbol": "std::__1::__call_once(unsigned long volatile&, void*, void (*)(void*))",
+        "symbolLocation": 196,
+        "imageIndex": 1
+      },
+      {
+        "imageOffset": 2064796,
+        "symbol": "Slic3r::nptop::(anonymous namespace)::coverage(std::__1::shared_ptr<Slic3r::nptop::MaterialPrefixSnapshot const>, Slic3r::nptop::SceneBox const&, Slic3r::nptop::MaterialRepresentation, Slic3r::nptop::MaterialCoverageLimits const&)",
+        "symbolLocation": 10176,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 2074052,
+        "symbol": "Slic3r::nptop::cover_material(Slic3r::nptop::LowerMaterialView const&, Slic3r::nptop::SceneBox const&, Slic3r::nptop::MaterialCoverageLimits const&)",
+        "symbolLocation": 72,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 1055648,
+        "symbol": "CATCH2_INTERNAL_TEST_144()",
+        "symbolLocation": 1232,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 33217408,
+        "symbol": "Catch::RunContext::runCurrentTest()",
+        "symbolLocation": 264,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 33216168,
+        "symbol": "Catch::RunContext::runTest(Catch::TestCaseHandle const&)",
+        "symbolLocation": 360,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 33082788,
+        "symbol": "Catch::(anonymous namespace)::TestGroup::execute()",
+        "symbolLocation": 136,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 33079908,
+        "symbol": "Catch::Session::runInternal()",
+        "symbolLocation": 1152,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 33078600,
+        "symbol": "Catch::Session::run()",
+        "symbolLocation": 36,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 11911160,
+        "symbol": "main",
+        "symbolLocation": 84,
+        "imageIndex": 0
+      },
+      {
+        "imageOffset": 130560,
+        "symbol": "start",
+        "symbolLocation": 6992,
+        "imageIndex": 2
+      }
+    ]
+  },
+  "usedImages": [
+    {
+      "source": "P",
+      "arch": "arm64",
+      "base": 4298063872,
+      "CFBundleShortVersionString": "",
+      "CFBundleIdentifier": "com.orcaslicer.OrcaSlicer",
+      "size": 41140224,
+      "uuid": "643c9730-eb2a-30f4-96e2-544b9c72b95f",
+      "path": "/Users/USER/*/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "name": "fff_print_tests",
+      "CFBundleVersion": ""
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6575804416,
+      "size": 592616,
+      "uuid": "5013c0f8-84a9-3b56-9feb-c353816a750f",
+      "path": "/usr/lib/libc++.1.dylib",
+      "name": "libc++.1.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6572736512,
+      "size": 680472,
+      "uuid": "a237ef81-b68b-37ba-a165-92c965529534",
+      "path": "/usr/lib/dyld",
+      "name": "dyld"
+    },
+    {
+      "size": 0,
+      "source": "A",
+      "base": 0,
+      "uuid": "00000000-0000-0000-0000-000000000000"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6576508928,
+      "size": 250544,
+      "uuid": "cc1cf985-bc65-3725-809f-4c1e36b8f4ba",
+      "path": "/usr/lib/system/libsystem_kernel.dylib",
+      "name": "libsystem_kernel.dylib"
+    },
+    {
+      "source": "P",
+      "arch": "arm64e",
+      "base": 6576762880,
+      "size": 52028,
+      "uuid": "4f33683c-18c8-39a1-800b-2e3bd43bcc13",
+      "path": "/usr/lib/system/libsystem_pthread.dylib",
+      "name": "libsystem_pthread.dylib"
+    }
+  ]
+}

@@ -3,6 +3,8 @@
 #include "Interval.hpp"
 #include "StlImport.hpp"
 #include <set>
+#include <CGAL/Gmpq.h>
+#include <CGAL/number_utils.h>
 
 namespace Slic3r::nptop {
 namespace {
@@ -189,15 +191,21 @@ MaterialAt material_at(std::shared_ptr<const MaterialSequenceSnapshot> sequence,
     catch (const std::exception &e) { return {"MATERIAL_PREFIX_NUMERIC_FAILURE: "+std::string(e.what()),{},{},{}}; }
 }
 namespace {
-enum class Representation { Nominal, Upper, Lower };
-MaterialMembership piece(const MaterialRecord &row, const MaterialModel &model, PhysicalPosition point, double progress, Representation rep)
+using Representation=MaterialRepresentation;
+struct Projection { Interval t, normal, z; };
+Projection project(const MaterialRecord &row, Interval x, Interval y, Interval z)
+{
+    const auto &m=row.motion;
+    const auto dx=Interval(m.end.x())-Interval(m.start.x()), dy=Interval(m.end.y())-Interval(m.start.y());
+    const auto length2=square(dx)+square(dy);
+    x=x-Interval(m.start.x()); y=y-Interval(m.start.y());
+    return {(dx*x+dy*y)/length2,(dx*y-dy*x)/detail::root(length2),z};
+}
+MaterialMembership piece(const MaterialRecord &row, const MaterialModel &model, Projection projection, double progress, Representation rep)
 {
     const auto &b=*row.bead; const auto &m=row.motion;
-    const Interval dx=Interval(m.end.x())-Interval(m.start.x()), dy=Interval(m.end.y())-Interval(m.start.y());
-    const auto length2=square(dx)+square(dy), length=detail::root(length2);
-    const auto x=Interval(point.x())-Interval(m.start.x()), y=Interval(point.y())-Interval(m.start.y());
-    const auto t=(dx*x+dy*y)/length2;
-    const auto n=absolute((dx*y-dy*x)/length);
+    const auto length=detail::root(length_squared(row));
+    const auto t=projection.t, n=absolute(projection.normal), point_z=projection.z;
     Interval xy(0), z(0), begin(0), end(progress);
     if (rep!=Representation::Nominal) {
         xy=Interval(rep==Representation::Upper ? model.outer_xy_growth.value() : model.inner_xy_loss.value())+Interval(model.numerical_coordinate_error.value());
@@ -208,7 +216,7 @@ MaterialMembership piece(const MaterialRecord &row, const MaterialModel &model, 
     }
     if (begin.lo>=end.hi || t.hi<begin.lo || t.lo>end.hi) return MaterialMembership::Outside;
     const bool along_inside=t.lo>begin.hi && t.hi<end.lo;
-    const auto local=rep==Representation::Upper ? detail::maximum(Interval(0),detail::minimum(t,Interval(progress))) : t;
+    const auto local=detail::maximum(Interval(0),detail::minimum(t,Interval(progress)));
     const auto dh=Interval(b.gap_end_mm)-Interval(b.gap_begin_mm), dz=Interval(m.end.z())-Interval(m.start.z());
     const auto h=Interval(b.gap_begin_mm)+dh*local, top=Interval(m.start.z())+dz*local;
     const auto shift=detail::minimum(xy/length,Interval(progress));
@@ -223,8 +231,8 @@ MaterialMembership piece(const MaterialRecord &row, const MaterialModel &model, 
         const auto top_error=z+absolute(dz)*shift, bottom_error=z+absolute(dz-dh)*shift;
         const auto upper=rep==Representation::Upper ? top+top_error : rep==Representation::Lower ? top-top_error : top;
         const auto lower=rep==Representation::Upper ? top-h-bottom_error : rep==Representation::Lower ? top-h+bottom_error : top-h;
-        if (half.hi<=0 || n.lo>half.hi || point.z()<lower.lo || point.z()>upper.hi) return MaterialMembership::Outside;
-        if (along_inside && half.lo>0 && n.hi<half.lo && point.z()>lower.hi && point.z()<upper.lo) return MaterialMembership::Inside;
+        if (half.hi<=0 || n.lo>half.hi || point_z.hi<lower.lo || point_z.lo>upper.hi) return MaterialMembership::Outside;
+        if (along_inside && half.lo>0 && n.hi<half.lo && point_z.lo>lower.hi && point_z.hi<upper.lo) return MaterialMembership::Inside;
         return MaterialMembership::Unknown;
     }
     const auto center=top-h/Interval(2);
@@ -243,7 +251,7 @@ MaterialMembership piece(const MaterialRecord &row, const MaterialModel &model, 
     }
     if (core.lo<0 || radius.lo<=0) return MaterialMembership::Unknown;
     const auto transverse=detail::maximum(n-core,Interval(0));
-    const auto distance2=square(transverse)+square(Interval(point.z())-center), radius2=square(radius);
+    const auto distance2=square(transverse)+square(point_z-center), radius2=square(radius);
     if (distance2.lo>radius2.hi) return MaterialMembership::Outside;
     if (along_inside && distance2.hi<radius2.lo) return MaterialMembership::Inside;
     return MaterialMembership::Unknown;
@@ -266,7 +274,7 @@ MaterialQueryResult query(std::shared_ptr<const MaterialPrefixSnapshot> cursor, 
             const auto &row=sequence->records[i]; if (!row.bead) continue;
             if (result.evaluations>=limits.max_evaluations) reject("MATERIAL_QUERY_WORK_LIMIT");
             ++result.evaluations;
-            const auto membership=piece(row,sequence->model,point,i<cursor->completed_records ? 1 : cursor->current_progress,rep);
+            const auto membership=piece(row,sequence->model,project(row,Interval(point.x()),Interval(point.y()),Interval(point.z())),i<cursor->completed_records ? 1 : cursor->current_progress,rep);
             if (membership==MaterialMembership::Inside) {
                 stop(limits,sequence->revision,started); result.membership=membership;result.reason="INSIDE_DECLARED_MATERIAL";
                 result.source_event_id=row.motion.event_id;return result;
@@ -287,4 +295,168 @@ MaterialQueryResult classify_material(const UpperMaterialView &v, const Physical
 { return query(v.snapshot,p,Representation::Upper,l); }
 MaterialQueryResult classify_material(const LowerMaterialView &v, const PhysicalPosition &p, const MaterialQueryLimits &l)
 { return query(v.snapshot,p,Representation::Lower,l); }
+
+namespace {
+// Eager rationals keep each bounded split independent of a deferred expression
+// history and its later recursive evaluation. Binary64 inputs remain exact.
+using Exact=CGAL::Gmpq;
+using Vertex=std::array<Exact,2>;
+using Polygon=std::vector<Vertex>;
+Interval exact_interval(const Exact &value)
+{
+    const auto range=CGAL::to_interval(value); detail::require_interval_environment();
+    return {range.first,range.second};
+}
+Projection project_polygon(const MaterialRecord &row, const Polygon &polygon, Interval z)
+{
+    auto projection=project(row,exact_interval(polygon.front()[0]),exact_interval(polygon.front()[1]),z);
+    for (size_t i=1; i<polygon.size(); ++i) {
+        const auto next=project(row,exact_interval(polygon[i][0]),exact_interval(polygon[i][1]),z);
+        projection.t={std::min(projection.t.lo,next.t.lo),std::max(projection.t.hi,next.t.hi)};
+        projection.normal={std::min(projection.normal.lo,next.normal.lo),std::max(projection.normal.hi,next.normal.hi)};
+    }
+    return projection;
+}
+Polygon clip(const Polygon &polygon, const Vertex &normal, const Exact &offset, bool positive)
+{
+    Polygon result;
+    const auto distance=[&](const Vertex &p) { return normal[0]*p[0]+normal[1]*p[1]-offset; };
+    const auto append=[&](const Vertex &p) { if (result.empty() || result.back()!=p) result.push_back(p); };
+    auto previous=polygon.back(); auto previous_distance=distance(previous);
+    bool previous_inside=positive ? previous_distance>=0 : previous_distance<=0;
+    for (const auto &current : polygon) {
+        const auto current_distance=distance(current);
+        const bool current_inside=positive ? current_distance>=0 : current_distance<=0;
+        if (current_inside!=previous_inside) {
+            const auto fraction=previous_distance/(previous_distance-current_distance);
+            append({previous[0]+fraction*(current[0]-previous[0]),previous[1]+fraction*(current[1]-previous[1])});
+        }
+        if (current_inside) append(current);
+        previous=current; previous_distance=current_distance; previous_inside=current_inside;
+    }
+    if (result.size()>1 && result.front()==result.back()) result.pop_back();
+    if (result.size()>64) reject("MATERIAL_COVERAGE_VERTEX_LIMIT");
+    return result;
+}
+MaterialCoverageResult coverage(std::shared_ptr<const MaterialPrefixSnapshot> cursor, const SceneBox &requested,
+                               Representation rep, const MaterialCoverageLimits &requested_limits)
+{
+    const auto domain=requested; const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now(); MaterialCoverageResult result; result.source=cursor;
+    result.domain=domain; result.representation=rep;
+    try {
+        detail::require_interval_environment();
+        if (!cursor || !cursor->sequence || cursor->sequence->records.size()>200000 ||
+            cursor->sequence->geometry.size()!=cursor->sequence->records.size() ||
+            cursor->completed_records>cursor->sequence->records.size() || !std::isfinite(cursor->current_progress) ||
+            cursor->current_progress<0 || cursor->current_progress>1 ||
+            (cursor->completed_records==cursor->sequence->records.size() && cursor->current_progress!=0) ||
+            !limits.max_evaluations || limits.max_evaluations>200000 || !limits.max_cells || limits.max_cells>65535 ||
+            !limits.max_depth || limits.max_depth>32 || !valid_timeout(limits.timeout) ||
+            domain.min.x()>domain.max.x() || domain.min.y()>domain.max.y() || domain.min.z()>domain.max.z())
+            reject("INVALID_MATERIAL_COVERAGE");
+        for (const auto &p : {domain.min,domain.max}) { coordinate(p.x());coordinate(p.y());coordinate(p.z()); }
+        const auto sequence=cursor->sequence;
+        const auto poll=[&] { stop(limits,sequence->revision,started); };
+        poll();
+        const size_t end=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence->records.size());
+        std::vector<size_t> active;
+        for (size_t i=0; i<end; ++i) if (sequence->records[i].bead) {
+            if (!sequence->geometry[i] || !std::holds_alternative<Deposition>(sequence->records[i].motion.payload))
+                reject("INVALID_MATERIAL_COVERAGE_GEOMETRY");
+            active.push_back(i);
+        }
+        const auto fraction=[&](size_t i) { return i<cursor->completed_records ? 1 : cursor->current_progress; };
+        const auto evaluate=[&](size_t i, Projection projection) {
+            if (result.evaluations>=limits.max_evaluations) reject("MATERIAL_COVERAGE_WORK_LIMIT");
+            if (result.evaluations%128==0) poll(); ++result.evaluations;
+            return piece(sequence->records[i],sequence->model,projection,fraction(i),rep);
+        };
+        Polygon initial{{Exact(domain.min.x()),Exact(domain.min.y())},{Exact(domain.max.x()),Exact(domain.min.y())},
+                        {Exact(domain.max.x()),Exact(domain.max.y())},{Exact(domain.min.x()),Exact(domain.max.y())}};
+        struct Node { Polygon polygon; Interval z; std::vector<size_t> candidates; size_t depth; };
+        std::vector<Node> stack; stack.push_back({std::move(initial),Interval(domain.min.z(),domain.max.z()),active,0});
+        bool unresolved=false;
+        while (!stack.empty()) {
+            poll(); if (result.cells>=limits.max_cells) reject("MATERIAL_COVERAGE_CELL_LIMIT"); ++result.cells;
+            auto node=std::move(stack.back()); stack.pop_back();
+            bool covered=false; std::vector<size_t> uncertain;
+            for (size_t i : node.candidates) {
+                const auto membership=evaluate(i,project_polygon(sequence->records[i],node.polygon,node.z));
+                if (membership==MaterialMembership::Inside) { covered=true;break; }
+                if (membership==MaterialMembership::Unknown) uncertain.push_back(i);
+            }
+            if (covered) continue;
+            Exact x(0), y(0);
+            for (const auto &p : node.polygon) { x+=p[0];y+=p[1]; }
+            const auto bx=exact_interval(x/Exact(node.polygon.size())), by=exact_interval(y/Exact(node.polygon.size()));
+            const PhysicalPosition witness((bx.lo+bx.hi)/2,(by.lo+by.hi)/2,(node.z.lo+node.z.hi)/2);
+            // A certified interior counterexample may reject immediately;
+            // samples are never used to accept continuous coverage.
+            bool interior=true;
+            const Vertex exact_witness{Exact(witness.x()),Exact(witness.y())};
+            auto xmin=node.polygon.front()[0], xmax=xmin, ymin=node.polygon.front()[1], ymax=ymin;
+            for (size_t j=0; j<node.polygon.size(); ++j) {
+                const auto &a=node.polygon[j], &b=node.polygon[(j+1)%node.polygon.size()];
+                if ((b[0]-a[0])*(exact_witness[1]-a[1])-(b[1]-a[1])*(exact_witness[0]-a[0])<0) interior=false;
+                xmin=std::min(xmin,a[0]); xmax=std::max(xmax,a[0]); ymin=std::min(ymin,a[1]); ymax=std::max(ymax,a[1]);
+            }
+            interior=interior && exact_witness[0]>=xmin && exact_witness[0]<=xmax && exact_witness[1]>=ymin && exact_witness[1]<=ymax;
+            bool outside=interior;
+            if (interior) for (size_t i : uncertain)
+                if (evaluate(i,project(sequence->records[i],Interval(witness.x()),Interval(witness.y()),Interval(witness.z())))!=MaterialMembership::Outside) {
+                    outside=false;break;
+                }
+            if (outside) {
+                poll(); result.status=MaterialCoverageStatus::Uncovered;result.reason="UNCOVERED_DECLARED_MATERIAL";
+                result.witness=witness; return result;
+            }
+            if (uncertain.empty()) reject("MATERIAL_COVERAGE_WITNESS_ROUNDING");
+            if (node.depth>=limits.max_depth) { unresolved=true;continue; }
+            // Split parallel to a long relevant bead; aligned strips avoid a
+            // tiny axis-aligned grid at every diagonal overlap. This changes
+            // proof cells only, never the motion order or material geometry.
+            size_t splitter=uncertain.front();
+            for (size_t i : uncertain)
+                if (sequence->geometry[i]->xy_length_mm.upper>sequence->geometry[splitter]->xy_length_mm.upper) splitter=i;
+            const auto &motion=sequence->records[splitter].motion;
+            const Exact dx=Exact(motion.end.x())-Exact(motion.start.x()), dy=Exact(motion.end.y())-Exact(motion.start.y());
+            Vertex normal{-dy,dx};
+            const auto projection=project_polygon(sequence->records[splitter],node.polygon,node.z);
+            if ((projection.t.lo<=0 || projection.t.hi>=fraction(splitter)) &&
+                projection.normal.hi-projection.normal.lo<sequence->records[splitter].bead->width_mm.lower/2)
+                normal={dx,dy};
+            auto minimum=normal[0]*node.polygon.front()[0]+normal[1]*node.polygon.front()[1], maximum=minimum;
+            for (const auto &p : node.polygon) {
+                const auto value=normal[0]*p[0]+normal[1]*p[1];
+                if (value<minimum) minimum=value; if (value>maximum) maximum=value;
+            }
+            if (minimum==maximum) {
+                if (node.z.lo==node.z.hi) { unresolved=true;continue; }
+                const double middle=(node.z.lo+node.z.hi)/2;
+                if (middle<=node.z.lo || middle>=node.z.hi) { unresolved=true;continue; }
+                stack.push_back({node.polygon,Interval(middle,node.z.hi),uncertain,node.depth+1});
+                stack.push_back({std::move(node.polygon),Interval(node.z.lo,middle),std::move(uncertain),node.depth+1});
+            } else {
+                const Exact middle=(minimum+maximum)/Exact(2);
+                auto first=clip(node.polygon,normal,middle,false), second=clip(node.polygon,normal,middle,true);
+                if (first.empty() || second.empty()) reject("MATERIAL_COVERAGE_INVALID_SPLIT");
+                stack.push_back({std::move(second),node.z,uncertain,node.depth+1});
+                stack.push_back({std::move(first),node.z,std::move(uncertain),node.depth+1});
+            }
+        }
+        poll();
+        if (unresolved) result.reason="MATERIAL_COVERAGE_UNCERTAIN_BOUNDARY";
+        else { result.status=MaterialCoverageStatus::Covered;result.reason="CONTINUOUS_DECLARED_MATERIAL_COVERAGE"; }
+    } catch (const Rejection &e) { result.reason=e.what(); }
+    catch (const std::exception &e) { result.reason="MATERIAL_COVERAGE_NUMERIC_FAILURE: "+std::string(e.what()); }
+    return result;
+}
+}
+MaterialCoverageResult cover_material(const NominalMaterialView &v, const SceneBox &d, const MaterialCoverageLimits &l)
+{ return coverage(v.snapshot,d,Representation::Nominal,l); }
+MaterialCoverageResult cover_material(const UpperMaterialView &v, const SceneBox &d, const MaterialCoverageLimits &l)
+{ return coverage(v.snapshot,d,Representation::Upper,l); }
+MaterialCoverageResult cover_material(const LowerMaterialView &v, const SceneBox &d, const MaterialCoverageLimits &l)
+{ return coverage(v.snapshot,d,Representation::Lower,l); }
 }
