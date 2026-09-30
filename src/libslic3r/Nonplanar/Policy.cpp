@@ -1,6 +1,7 @@
 #include "Policy.hpp"
 #include "StlImport.hpp"
 #include "../Model.hpp"
+#include "../Print.hpp"
 #include <algorithm>
 #include <array>
 #include <cstring>
@@ -150,6 +151,32 @@ std::string ResolvedConfigSnapshot::canonical_json() const
     return writer.take();
 }
 std::string ResolvedConfigSnapshot::fingerprint() const { return sha256_bytes(canonical_json()); }
+
+std::string PrintConfigSnapshot::canonical_json() const
+{
+    CanonicalConfigWriter writer;
+    writer.append("{\"full_config\":"); writer.append(full_config.canonical_json());
+    writer.append(",\"input_conflict_hex\":"); writer.value(input_conflict);
+    writer.append(",\"instance_count\":"); writer.append(std::to_string(instance_count));
+    writer.append(",\"model_conflict\":");
+    if (model_conflict) {
+        writer.append("["); writer.value(model_conflict->key); writer.append(",");
+        writer.value(model_conflict->value); writer.append(","); writer.value(model_conflict->reason); writer.append("]");
+    } else writer.append("null");
+    writer.append(",\"object_count\":"); writer.append(std::to_string(object_count));
+    writer.append(",\"plate_index\":"); writer.value(plate_index);
+    writer.append(",\"plate_origin_mm\":"); writer.value(plate_origin_mm);
+    writer.append(",\"regions\":["); bool first=true;
+    for (const auto &region : regions) {
+        if (!first) writer.append(","); first=false;
+        writer.append("["); writer.append(std::to_string(region.object_index)); writer.append(",");
+        writer.value(region.region_id); writer.append(","); writer.append(region.config.canonical_json()); writer.append("]");
+    }
+    writer.append("],\"resolved_print_config\":"); writer.append(resolved_print_config.canonical_json());
+    writer.append(",\"schema\":1}");
+    return writer.take();
+}
+std::string PrintConfigSnapshot::fingerprint() const { return sha256_bytes(canonical_json()); }
 
 const std::map<std::string, DiscreteRule> &discrete_policy()
 {
@@ -474,11 +501,10 @@ std::optional<PolicyConflict> input_policy_conflict(const Model &model, const Co
     return source_policy_conflict(config);
 }
 
-PolicySnapshot resolve_policy(const ConfigBase &source, size_t objects, size_t instances)
+static PolicySnapshot resolve_captured_policy(const ConfigOptionResolver &config,
+                                              std::optional<ResolvedConfigSnapshot> native_config,
+                                              size_t objects, size_t instances)
 {
-    std::optional<ResolvedConfigSnapshot> native_config;
-    if (requests_guarded_mode(source)) native_config.emplace(source);
-    const ConfigOptionResolver &config = native_config ? static_cast<const ConfigOptionResolver &>(*native_config) : source;
     std::map<std::string, std::string> resolved;
     std::vector<PolicyConflict> conflicts;
     auto read = [&](const std::string &key) {
@@ -554,5 +580,65 @@ PolicySnapshot resolve_policy(const ConfigBase &source, size_t objects, size_t i
     if (objects != 1) conflicts.push_back({"object_count", std::to_string(objects), "Requires one object"});
     if (instances != 1) conflicts.push_back({"instance_count", std::to_string(instances), "Requires one instance"});
     return {mode, std::move(resolved), std::move(conflicts), std::move(native_config)};
+}
+
+PolicySnapshot resolve_policy(const ConfigBase &source, size_t objects, size_t instances)
+{
+    if (!requests_guarded_mode(source)) return resolve_captured_policy(source,{},objects,instances);
+    const ResolvedConfigSnapshot config(source);
+    return resolve_captured_policy(config,config,objects,instances);
+}
+
+std::shared_ptr<const PrintConfigSnapshot> capture_print_config(const Print &print)
+{
+    if (print.m_nonplanar_input_conflict.empty() &&
+        !requests_guarded_mode(print.model(),print.full_print_config())) return {};
+    const auto source_full=print.full_print_config();
+    const ResolvedConfigSnapshot full(source_full);
+    auto native_full=source_full;
+    // Native PrintConfig includes filament overrides not written back into
+    // full_print_config(), e.g. retraction_length. Bind the engine's values.
+    native_full.apply(print.config());
+    const ResolvedConfigSnapshot resolved_full(native_full);
+    const size_t objects=print.objects().size(), instances=print.num_object_instances();
+    std::vector<PrintRegionConfigSnapshot> regions;
+    size_t object_index=0;
+    for (const auto *object : print.objects()) {
+        for (const PrintRegion &region : object->all_regions()) {
+            if (regions.size()>=256) throw std::length_error("Native Print config region limit");
+            auto resolved=native_full;
+            resolved.apply(object->config());
+            resolved.apply(region.config());
+            // Preserve the existing job-level guard across an OFF override.
+            if (requests_guarded_mode(source_full) && !requests_guarded_mode(resolved))
+                resolved.set_key_value("nptop_mode",source_full.option("nptop_mode")->clone());
+            const ResolvedConfigSnapshot config(resolved);
+            regions.push_back({object_index,region.print_region_id(),config,
+                resolve_captured_policy(config,config,objects,instances)});
+        }
+        ++object_index;
+    }
+    return std::make_shared<const PrintConfigSnapshot>(PrintConfigSnapshot{
+        print.get_plate_index(),print.get_plate_origin(),objects,instances,full,resolved_full,std::move(regions),
+        print.m_nonplanar_input_conflict,model_policy_conflict(print.model())});
+}
+
+std::string PrintConfigSnapshot::block_reason() const
+{
+    if (!input_conflict.empty()) return input_conflict;
+    const auto describe=[](const PolicyConflict &conflict) {
+        return "Nonplanar Top Lab: " + conflict.key + " = " + conflict.value + ": " + conflict.reason;
+    };
+    if (model_conflict) return describe(*model_conflict);
+    if (plate_index<0) return "Nonplanar Top Lab: plate_index must be nonnegative";
+    if (!plate_origin_mm.allFinite() || plate_origin_mm.cwiseAbs().maxCoeff()>10000)
+        return "Nonplanar Top Lab: plate_origin outside the supported capture domain";
+    for (const auto &region : regions)
+        if (!region.policy.conflicts.empty()) return describe(region.policy.conflicts.front());
+    if (regions.empty()) {
+        const auto policy=resolve_captured_policy(resolved_print_config,resolved_print_config,object_count,instance_count);
+        if (!policy.conflicts.empty()) return describe(policy.conflicts.front());
+    }
+    return "Nonplanar Top Lab: guarded slicing and export are not implemented";
 }
 }

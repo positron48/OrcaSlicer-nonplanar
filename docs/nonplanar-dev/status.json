@@ -7,7 +7,7 @@
   "delivery": "USER_FORK_BRANCH",
   "gate_a": "IN_PROGRESS",
   "tasks": {
-    "A01": "MACOS_NATIVE_AND_ISOLATED_GUI_SMOKE_PASS_PROCESS_COEXISTENCE_OBSERVED_STOCK_GUI_UNVERIFIED_LINUX_TEST_GATE_FAILED",
+    "A01": "MACOS_NATIVE_AND_ISOLATED_GUI_SMOKE_PASS_PROCESS_COEXISTENCE_OBSERVED_STOCK_GUI_UNVERIFIED_LINUX_D57E9325_NATIVE_TESTS_AND_APPLICATION_PASS",
     "A02": "SOURCE_AUDIT_AND_SIX_STOCK_FORK_BASELINES_PASS",
     "A03": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A04": "IMPLEMENTED_NATIVE_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
@@ -15,7 +15,7 @@
     "A06": "BOUNDED_NATIVE_SERIALIZATION_REPLAY_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
     "A07": "SIMULATION_CONTRACT_AND_OWNED_FULL_HEAD_TRAVEL_PASS_OPERATOR_EVIDENCE_NOT_RUN_REVIEW_PENDING",
     "A08": "AUTHOR_AUDIT_BOUNDED_BENCHMARK_SPHERE_COUPON_PREPARATION_COMPLETE_INDEPENDENT_REVIEW_PENDING",
-    "B01": "PREFLIGHT_REGISTRIES_OWNED_CONFIG_AND_EXACT_FINGERPRINT_PASS_FULL_COMPATIBILITY_AND_JOB_SNAPSHOT_PENDING",
+    "B01": "PREFLIGHT_REGISTRIES_OWNED_NATIVE_PRINT_SETTINGS_AGGREGATE_AND_EXACT_FINGERPRINT_PASS_SOURCE_INPUT_PROVENANCE_FULL_COMPATIBILITY_AND_JOB_SNAPSHOT_PENDING",
     "B02": "BOUNDED_IMPORT_FILE_CLI_AND_NATIVE_MODEL_CHAIN_PASS_PLATE_JOB_GUI_HARD_LIMITS_PENDING",
     "B03": "BOUNDED_NOMINAL_MASKS_FOOTPRINT_AFFINE_CURVATURE_AND_ISOLATED_CLI_PASS_CURVED_SURFACES_TOOL_ROI_AND_PLANNING_PENDING",
     "B04": "BOUNDED_OWNED_NATIVE_REGION_SEMANTICS_PASS_BODY_CAP_PARTITION_DENSE_COVERAGE_AND_FULL_ADAPTER_PENDING"
@@ -30,7 +30,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 171,
+    "new_native_cases": 178,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -46,8 +46,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 208,
-    "final_ctest_executed": 208,
+    "final_ctest_discovered": 215,
+    "final_ctest_executed": 215,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -114,8 +114,8 @@
     "A01_current_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "A01_gui": "ISOLATED_IMPORT_SLICE_PREVIEW_AND_QUIT_PASS",
     "B01_custom_hook_cases": 5,
-    "B01_current_cases": 41,
-    "B01_current_assertions": 4419,
+    "B01_current_cases": 48,
+    "B01_current_assertions": 4501,
     "B01_custom_hook_registry_keys": 17,
     "B01_hooks_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B01_transform_cases": 3,
@@ -191,11 +191,17 @@
     "A02_print_defaults_skirt_assertions": 9,
     "A02_print_defaults_skirt_seed": 1648739313,
     "A02_print_defaults_strict_diagnostic": "EXIT_42_TWO_INHERITED_SKIRT_SECTION_NO_ASSERTIONS_WARNINGS_RETAINED",
-    "A02_print_defaults_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
+    "A02_print_defaults_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B01_print_snapshot_cases": 7,
+    "B01_print_snapshot_assertions": 82,
+    "B01_print_snapshot_cross_language_oracles": 2,
+    "B01_print_snapshot_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B01_print_snapshot_cached_double": "NATIVE_APPROXIMATE_APPLY_RETAINS_OLD_VALUE_FRESH_PRINT_EXACT_VALUE_DISTINGUISHED_SOURCE_INPUT_OWNERSHIP_PENDING",
+    "A02_print_defaults_linux": "D57E9325_RUN_36454696019_NATIVE_TESTS_STL_CLI_AND_APPLICATION_PASS"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
-    "linux_x86_64": "01865DCF_NATIVE_BUILD_PASS_SELECTED_CTEST_FAILED_SKIRT_HEIGHT_CLIPPER_RANGE_EXCEPTION_CURRENT_REVISION_NOT_VERIFIED"
+    "linux_x86_64": "D57E9325_NATIVE_TESTS_STL_CLI_AND_APPLICATION_PASS_NEW_PRINT_SNAPSHOT_REVISION_NOT_VERIFIED"
   },
   "physical": {
     "machine": "Snapmaker U1",
@@ -205,10 +211,10 @@
     "coupon_geometry": "PREPARED_AND_VALIDATED_DIGITALLY_ONLY"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "RUN_36434944242_01865DCF_NATIVE_BUILD_PASS_SKIRT_HEIGHT_RANGE_FAILURE_MACOS_PRINT_DEFAULTS_FIX_PASS_LINUX_CONFIRMATION_PENDING",
+  "ci": "RUN_36454696019_D57E9325_NATIVE_TESTS_STL_CLI_AND_APPLICATION_SUCCESS_CURRENT_MILESTONE_LINUX_PENDING",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Verify native Print default initialization correction in Linux CI; continue B01/B02 whole-job/plate/worker ownership, B03 qualified geometry/ROI/tool access and B04 body-cap partition. See next-tasks.md. Independent review and physical qualification remain pending.",
+  "next_step": "Capture guarded source settings before native apply/normalization; bind source geometry/transforms, revision and worker to the same owned job. Complete B01 compatibility, B02 actual GUI plate/job ownership and containment, B03 qualified geometry/ROI/tool access, and B04 body-cap partition. New revision Linux, independent review and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -254,7 +260,8 @@
     "B01_paths": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-paths.md",
     "B04_region": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B04-region.md",
     "B03_heights": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B03-heights.md",
-    "A02_print_defaults": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A02-print-defaults.md"
+    "A02_print_defaults": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/A02-print-defaults.md",
+    "B01_print_snapshot": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-print-snapshot.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -296,5 +303,6 @@
   "B01_paths_evidence": "docs/nonplanar-dev/evidence/B01-paths/source-manifest.json",
   "B04_region_evidence": "docs/nonplanar-dev/evidence/B04-region/source-manifest.json",
   "B03_heights_evidence": "docs/nonplanar-dev/evidence/B03-heights/source-manifest.json",
-  "A02_print_defaults_evidence": "docs/nonplanar-dev/evidence/A02-print-defaults/source-manifest.json"
+  "A02_print_defaults_evidence": "docs/nonplanar-dev/evidence/A02-print-defaults/source-manifest.json",
+  "B01_print_snapshot_evidence": "docs/nonplanar-dev/evidence/B01-print-snapshot/source-manifest.json"
 }

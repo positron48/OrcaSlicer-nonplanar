@@ -5,7 +5,7 @@
 #include <optional>
 #include <string>
 #include <vector>
-namespace Slic3r { class Model; }
+namespace Slic3r { class Model; class Print; }
 namespace Slic3r::nptop {
 bool requests_guarded_mode(const ConfigBase &);
 // Conservatively includes overrides before resolution, for cached publication.
@@ -54,4 +54,29 @@ struct PolicySnapshot {
 };
 // Configuration preflight only: no profile qualification or export approval.
 PolicySnapshot resolve_policy(const ConfigBase &, size_t objects, size_t instances);
+
+struct PrintRegionConfigSnapshot {
+    const size_t object_index;
+    const int region_id;
+    const ResolvedConfigSnapshot config;
+    const PolicySnapshot policy;
+};
+// Settings-only boundary. No source mesh, tool/scene qualification, revision or
+// export permission is implied by this identity. Capture requires the caller
+// to own/synchronize Print for the entire synchronous operation.
+struct PrintConfigSnapshot {
+    const int plate_index;
+    const Vec3d plate_origin_mm;
+    const size_t object_count, instance_count;
+    const ResolvedConfigSnapshot full_config;
+    const ResolvedConfigSnapshot resolved_print_config;
+    const std::vector<PrintRegionConfigSnapshot> regions;
+    const std::string input_conflict;
+    const std::optional<PolicyConflict> model_conflict;
+    std::string block_reason() const;
+    std::string canonical_json() const;
+    std::string fingerprint() const;
+};
+// OFF returns null without capturing native options or plate state.
+std::shared_ptr<const PrintConfigSnapshot> capture_print_config(const Print &);
 }

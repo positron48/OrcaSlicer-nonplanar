@@ -1262,29 +1262,12 @@ StringObjectException Print::check_multi_filament_valid(const Print& print)
 std::string Print::nonplanar_block_reason() const
 {
     if (!m_nonplanar_input_conflict.empty()) return m_nonplanar_input_conflict;
-    if (!nptop::requests_guarded_mode(model(), full_print_config())) return {};
-    if (const auto conflict = nptop::model_policy_conflict(model()))
-        return "Nonplanar Top Lab: " + conflict->key + " = " + conflict->value + ": " + conflict->reason;
-    const auto conflict_reason = [&](const ConfigBase &config) -> std::string {
-        const auto policy = nptop::resolve_policy(config, m_objects.size(), num_object_instances());
-        if (policy.conflicts.empty()) return {};
-        const auto &conflict = policy.conflicts.front();
-        return "Nonplanar Top Lab: " + conflict.key + " = " + conflict.value + ": " + conflict.reason;
-    };
-    // Diagnose the actual object/region configuration, not only the preset.
-    for (const auto *object : m_objects)
-        for (const PrintRegion &region : object->all_regions()) {
-            auto resolved = full_print_config();
-            resolved.apply(object->config());
-            resolved.apply(region.config());
-            // An OFF override cannot silently downgrade an explicitly enabled job.
-            if (nptop::requests_guarded_mode(full_print_config()) && !nptop::requests_guarded_mode(resolved))
-                resolved.set_key_value("nptop_mode", full_print_config().option("nptop_mode")->clone());
-            if (const auto reason = conflict_reason(resolved); !reason.empty()) return reason;
-        }
-    if (m_objects.empty())
-        if (const auto reason = conflict_reason(full_print_config()); !reason.empty()) return reason;
-    return "Nonplanar Top Lab: guarded slicing and export are not implemented";
+    try {
+        const auto snapshot=nptop::capture_print_config(*this);
+        return snapshot ? snapshot->block_reason() : std::string{};
+    } catch (const std::exception &) {
+        return "Nonplanar Top Lab: native print settings capture failed";
+    }
 }
 
 // Precondition: Print::validate() requires the Print::apply() to be called its invocation.

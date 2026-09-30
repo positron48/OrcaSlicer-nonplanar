@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="8" skipped="0" tests="9" hostname="tbd" time="0.007" timestamp="2026-09-30T17:58:20Z">
+    <properties>
+      <property name="random-seed" value="4047570695"/>
+      <property name="filters" value="[PrintSnapshot]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B01 Print snapshot rejects invalid plate state and preserves the OFF capture bypass" time="0.000" status="run">
+      <failure message="snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( snapshot )
+with expansion:
+  0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1117
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 Print snapshots retain pre-normalization and source conflicts without mutable aliases" time="0.000" status="run">
+      <failure message="raw" type="REQUIRE">
+FAILED:
+  REQUIRE( raw )
+with expansion:
+  0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1092
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 Print captures full object region and native plate settings as one owned snapshot" time="0.000" status="run">
+      <failure message="snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( snapshot )
+with expansion:
+  0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1029
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 Print settings identity matches independent canonical and SHA256 vectors" time="0.000" status="run">
+      <failure message="snapshot.canonical_json()==test.at(&quot;canonical&quot;).get&lt;std::string>()" type="CHECK">
+FAILED:
+  CHECK( snapshot.canonical_json()==test.at("canonical").get&lt;std::string>() )
+with expansion:
+  ""
+  ==
+  "{"full_config":{"options":[],"schema":1},"input_conflict_hex":
+  "626c6f636b656400726561736f6e","instance_count":1,"model_conflict":null,
+  "object_count":1,"plate_index":3,"plate_origin_mm":["3fb999999999999a",
+  "8000000000000000","4000000000000000"],"regions":[],"schema":1}"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:41
+      </failure>
+      <failure message="snapshot.fingerprint()==test.at(&quot;sha256&quot;).get&lt;std::string>()" type="CHECK">
+FAILED:
+  CHECK( snapshot.fingerprint()==test.at("sha256").get&lt;std::string>() )
+with expansion:
+  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  ==
+  "571ed5b3bf9c1958637c2a4f0d01e34198fae32daf03b070b0cb708ccfddbe26"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:42
+      </failure>
+      <failure message="snapshot.canonical_json()==test.at(&quot;canonical&quot;).get&lt;std::string>()" type="CHECK">
+FAILED:
+  CHECK( snapshot.canonical_json()==test.at("canonical").get&lt;std::string>() )
+with expansion:
+  ""
+  ==
+  "{"full_config":{"options":[["61",1,false,"3fb999999999999a"]],"schema":1},
+  "input_conflict_hex":"626c6f636b656400726561736f6e","instance_count":1,
+  "model_conflict":["6b6579","76616c7565","726561736f6e"],"object_count":1,
+  "plate_index":3,"plate_origin_mm":["3fb999999999999a","8000000000000000",
+  "4000000000000000"],"regions":[[0,7,{"options":[],"schema":1}],[0,9,
+  {"options":[["61",1,false,"3fb999999999999a"]],"schema":1}]],"schema":1}"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:41
+      </failure>
+      <failure message="snapshot.fingerprint()==test.at(&quot;sha256&quot;).get&lt;std::string>()" type="CHECK">
+FAILED:
+  CHECK( snapshot.fingerprint()==test.at("sha256").get&lt;std::string>() )
+with expansion:
+  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  ==
+  "f4f9413d4074092477c6c19f7b92a735afdfe437fb551ca41fa786fa119348ce"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:42
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 Print snapshot identity distinguishes plate counts and exact full or resolved settings" time="0.000" status="run">
+      <failure message="original" type="REQUIRE">
+FAILED:
+  REQUIRE( original )
+with expansion:
+  0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1066
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

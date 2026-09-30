@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="60" hostname="tbd" time="0.045" timestamp="2026-09-30T18:01:26Z">
+    <properties>
+      <property name="random-seed" value="1124626740"/>
+      <property name="filters" value="[PrintSnapshot]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B01 Print snapshot rejects invalid plate state and preserves the OFF capture bypass" time="0.015" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B01 Print settings identity matches independent canonical and SHA256 vectors" time="0.000" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B01 Print snapshot identity distinguishes plate counts and exact full or resolved settings" time="0.000" status="run">
+      <failure message="capture_print_config(print)->fingerprint()!=identity" type="REQUIRE">
+FAILED:
+  REQUIRE( capture_print_config(print)->fingerprint()!=identity )
+with expansion:
+  "45663d870c278266309809c291b856703df67040f287b4ba130e3c2674ee0cbb"
+  !=
+  "45663d870c278266309809c291b856703df67040f287b4ba130e3c2674ee0cbb"
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1075
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B01 Print snapshots retain pre-normalization and source conflicts without mutable aliases" time="0.008" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B01 Print captures full object region and native plate settings as one owned snapshot" time="0.010" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

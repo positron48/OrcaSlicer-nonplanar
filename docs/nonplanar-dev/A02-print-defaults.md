@@ -51,9 +51,16 @@ manifests/comparison, author review and source/binary hashes are in
 `build/nonplanar-evidence/print-defaults*`. Source inventory audit passes; it is
 not a semantic or safety approval. Existing native build warnings remain.
 
-Linux verification of this correction remains pending; the previous failure
-is not reclassified. A public API refresh timed out during the SSL connection,
-so no new CI state is inferred. A Linux rerun is the next dependent check.
+Linux verification was refreshed on 2026-09-30: native run 36454696019 at the
+corrected d57e9325 revision completed successfully. Its Linux job reports success
+for building native tests, executing the nonempty selected native suites,
+exercising the STL audit CLI and building the application. Live GitHub API
+run/job/step records are retained under evidence/B01-print-snapshot. The workflow
+restored exact cached dependencies; it did not rebuild dependencies in this run.
+Archived JUnit counts/compiler output were not downloaded, and no Linux OFF/ZAA
+differential capture is inferred. The earlier failing run remains historical
+evidence; success confirms the corrected revision without proving the exact
+exception call stack.
 Independent review, Windows execution and physical qualification remain pending.
 This correction does not complete Gate A, B01–B04 or authorize hybrid export.
 

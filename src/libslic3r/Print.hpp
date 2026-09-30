@@ -39,6 +39,11 @@ class TreeSupportData;
 class TreeSupport;
 class ExtrusionLayers;
 
+namespace nptop {
+struct PrintConfigSnapshot;
+std::shared_ptr<const PrintConfigSnapshot> capture_print_config(const Print &);
+}
+
 #define MAX_OUTER_NOZZLE_DIAMETER   4
 // BBS: move from PrintObjectSlice.cpp
 struct VolumeSlices
@@ -1155,6 +1160,7 @@ private:
     // Owned diagnostic from the last guarded apply input, before native
     // normalization can discard unsupported assignments or disable a tower.
     std::string                             m_nonplanar_input_conflict;
+    friend std::shared_ptr<const nptop::PrintConfigSnapshot> nptop::capture_print_config(const Print &);
     PrintObjectConfig                       m_default_object_config;
     PrintRegionConfig                       m_default_region_config;
     PrintObjectPtrs                         m_objects;

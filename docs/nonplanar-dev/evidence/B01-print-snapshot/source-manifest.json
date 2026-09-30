@@ -1,0 +1,39 @@
+{
+  "base_commit": "d57e932571f48f70812649902f9572367ad780ff",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B01-print-snapshot.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/Policy.hpp": "50c9c4156f24900eecd5bef0de4ecff541134e4ff565fc358b3df29f25b1f664",
+    "src/libslic3r/Nonplanar/Policy.cpp": "88a74b7f808bbd3e2706878b06722dcf89b27b9dfca194c2ec6552e573f7cbc5",
+    "src/libslic3r/Print.hpp": "0eddd2b998132afa62988f04fecbffe5892736bde2bd7e469886b2e51842b070",
+    "src/libslic3r/Print.cpp": "f539ecd16d53aa9d5296fdfa3c4bf7f8021e35a3b56d2293bc328ccc42a3383f",
+    "tests/nonplanar/test_policy.cpp": "a75952130b369fb1c566f2a9e8fc91d9d6793290756586b7223dcdd7dec27b40",
+    "tests/nonplanar/data/print-config-fingerprint-v1.json": "b4c363b6b34348422dd1a3a48a0359f85e8d23d8b36d83c6e5e6e93da1dcb10c",
+    "scripts/nonplanar/print_config_fingerprint_oracle.py": "6a96639b99a7694ad191ffe089d80955b0aa7666250c023aea335471640d3d17"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "028ac7c0d0ab0711176b5475f7c7c4c14a26febc7651f30a999d75fddebe7adf",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "3e0e468ce83b146cfb457c4fd239dc750bedd8d67da7e2ea40d1c221c606dd45",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "c30e68e0b895d3e67b691f9874ba96ea328a920e4af7a1df760b28e098412626"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "macos_native_checks": {
+    "new_cases": 7,
+    "new_assertions": 82,
+    "b01_cases": 48,
+    "b01_assertions": 4501,
+    "ctest_discovered": 215,
+    "ctest_executed": 215,
+    "skips": 0,
+    "OFF_ZAA_pairs": 6
+  },
+  "linux_prior_revision": {
+    "sha": "d57e932571f48f70812649902f9572367ad780ff",
+    "run_id": 36454696019,
+    "status": "SUCCESS",
+    "archived_junit_and_compiler": "NOT_DOWNLOADED",
+    "new_milestone": "NOT_VERIFIED"
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN"
+}

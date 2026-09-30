@@ -17,6 +17,31 @@
 #include <nlohmann/json.hpp>
 using namespace Slic3r;
 using namespace Slic3r::nptop;
+
+TEST_CASE("B01 Print settings identity matches independent canonical and SHA256 vectors", "[Nonplanar][B01][PrintSnapshot]")
+{
+    const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/print-config-fingerprint-v1.json";
+    boost::nowide::ifstream input(path.string());
+    REQUIRE(input.good());
+    nlohmann::json fixtures; input>>fixtures;
+    for (const auto &test : fixtures) {
+        DynamicConfig full, empty;
+        std::vector<PrintRegionConfigSnapshot> regions;
+        std::optional<PolicyConflict> conflict;
+        if (test.at("name")=="mixed") {
+            full.set_key_value("a",new ConfigOptionFloat(0.1));
+            for (int id : {7,9}) {
+                ResolvedConfigSnapshot config(id==7 ? empty : full);
+                regions.push_back({0,id,config,{Mode::SafeHybrid,{},{},config}});
+            }
+            conflict=PolicyConflict{"key","value","reason"};
+        }
+        const PrintConfigSnapshot snapshot{3,Vec3d(0.1,-0.,2.),1,1,ResolvedConfigSnapshot(full),ResolvedConfigSnapshot(full),
+            std::move(regions),std::string("blocked\0reason",14),std::move(conflict)};
+        CHECK(snapshot.canonical_json()==test.at("canonical").get<std::string>());
+        CHECK(snapshot.fingerprint()==test.at("sha256").get<std::string>());
+    }
+}
 namespace {
 const std::vector<std::string> custom_code_hooks = {
     "file_start_gcode", "machine_start_gcode", "machine_end_gcode",
@@ -984,4 +1009,181 @@ TEST_CASE("B01 embedded G-code rejects guarded mode without touching existing fi
         REQUIRE_THAT(settings,Catch::Matchers::ContainsSubstring("nptop_mode"));
         REQUIRE_THAT(settings,Catch::Matchers::ContainsSubstring("safe_hybrid"));
     }
+}
+
+TEST_CASE("B01 Print captures full object region and native plate settings as one owned snapshot", "[Nonplanar][B01][PrintSnapshot]")
+{
+    Model model;
+    auto *object=model.add_object();
+    object->add_volume(TriangleMesh(Slic3r::its_make_cube(10,10,10)));
+    auto second=TriangleMesh(Slic3r::its_make_cube(10,10,10)); second.translate(20,0,0);
+    object->add_volume(std::move(second));
+    object->add_instance();
+    object->config.set_key_value("wall_loops",new ConfigOptionInt(3));
+    object->volumes.back()->config.set_key_value("wall_loops",new ConfigOptionInt(5));
+    object->config.set_key_value("nptop_mode",new ConfigOptionString("off"));
+    auto config=eligible();
+    Print print; print.apply(model,config);
+    print.set_plate_index(3); print.set_plate_origin(Vec3d(0.1,-0.,2.));
+    const auto snapshot=capture_print_config(print);
+    REQUIRE(snapshot);
+    REQUIRE(snapshot->object_count==1);
+    REQUIRE(snapshot->instance_count==1);
+    REQUIRE(snapshot->plate_index==3);
+    REQUIRE(snapshot->plate_origin_mm==Vec3d(0.1,-0.,2.));
+    REQUIRE(snapshot->full_config.option<ConfigOptionString>("nptop_mode")->value=="safe_hybrid");
+    REQUIRE(snapshot->regions.size()==2);
+    std::set<int> walls, ids;
+    for (const auto &region : snapshot->regions) {
+        REQUIRE(region.object_index==0);
+        REQUIRE(region.policy.passes_config_preflight());
+        REQUIRE(region.config.option<ConfigOptionString>("nptop_mode")->value=="safe_hybrid");
+        REQUIRE(region.policy.native_config->optptr("wall_loops")==region.config.optptr("wall_loops"));
+        walls.insert(region.config.option<ConfigOptionInt>("wall_loops")->value);
+        ids.insert(region.region_id);
+    }
+    REQUIRE(walls==std::set<int>{3,5});
+    REQUIRE(ids.size()==2);
+    REQUIRE_THAT(snapshot->block_reason(),Catch::Matchers::ContainsSubstring("not implemented"));
+    REQUIRE(print.nonplanar_block_reason()==snapshot->block_reason());
+    const auto identity=snapshot->fingerprint();
+    config.set_deserialize_strict("travel_speed","100");
+    object->config.set_key_value("wall_loops",new ConfigOptionInt(7));
+    print.apply(model,config); print.set_plate_index(4); print.set_plate_origin(Vec3d(1,2,3));
+    REQUIRE(capture_print_config(print)->fingerprint()!=identity);
+    print.clear(); model.clear_objects(); config.clear();
+    REQUIRE(snapshot->fingerprint()==identity);
+    REQUIRE(snapshot->regions.front().config.option<ConfigOptionInt>("wall_loops")->value!=7);
+    REQUIRE(snapshot->plate_index==3);
+    REQUIRE(snapshot->plate_origin_mm.x()==0.1);
+}
+TEST_CASE("B01 Print snapshot identity distinguishes plate counts and exact full or resolved settings", "[Nonplanar][B01][PrintSnapshot]")
+{
+    Model model; auto *object=model.add_object();
+    object->add_volume(TriangleMesh(Slic3r::its_make_cube(10,10,10))); object->add_instance();
+    auto config=eligible(); Print print; print.apply(model,config);
+    const auto original=capture_print_config(print);
+    REQUIRE(original);
+    const auto identity=original->fingerprint();
+    print.set_plate_index(1); REQUIRE(capture_print_config(print)->fingerprint()!=identity);
+    print.set_plate_index(0); print.set_plate_origin(Vec3d(std::numeric_limits<double>::denorm_min(),0,0));
+    REQUIRE(capture_print_config(print)->fingerprint()!=identity);
+    print.set_plate_origin(Vec3d(-0.,0,0)); REQUIRE(capture_print_config(print)->fingerprint()!=identity);
+    print.set_plate_origin(Vec3d::Zero()); REQUIRE(capture_print_config(print)->fingerprint()==identity);
+    const auto speed=config.option<ConfigOptionFloat>("travel_speed")->value;
+    const auto adjacent=std::nextafter(speed,speed+1);
+    config.set_key_value("travel_speed",new ConfigOptionFloat(adjacent));
+    print.apply(model,config);
+    // Native apply uses approximate option equality and retains this cached
+    // value. Bind actual Print state, not a discarded incoming source value.
+    REQUIRE(print.full_print_config().option<ConfigOptionFloat>("travel_speed")->value==speed);
+    REQUIRE(capture_print_config(print)->fingerprint()==identity);
+    Print fresh; fresh.apply(model,config);
+    REQUIRE(fresh.full_print_config().option<ConfigOptionFloat>("travel_speed")->value==adjacent);
+    REQUIRE(capture_print_config(fresh)->fingerprint()!=identity);
+    config=eligible(); object->config.set_key_value("wall_loops",new ConfigOptionInt(5));
+    print.apply(model,config); REQUIRE(capture_print_config(print)->fingerprint()!=identity);
+    object->config.erase("wall_loops"); object->add_instance()->set_offset(Vec3d(30,0,0));
+    print.apply(model,config);
+    const auto copies=capture_print_config(print);
+    REQUIRE(copies->instance_count==2);
+    REQUIRE(copies->fingerprint()!=identity);
+    REQUIRE_THAT(copies->block_reason(),Catch::Matchers::ContainsSubstring("instance_count"));
+}
+TEST_CASE("B01 Print snapshots retain pre-normalization and source conflicts without mutable aliases", "[Nonplanar][B01][PrintSnapshot]")
+{
+    Model model; auto *object=model.add_object();
+    object->add_volume(TriangleMesh(Slic3r::its_make_cube(10,10,10))); object->add_instance();
+    auto config=eligible(); config.set_key_value("extruder",new ConfigOptionInt(2));
+    Print print; print.apply(model,config);
+    const auto raw=capture_print_config(print);
+    REQUIRE(raw);
+    REQUIRE_THAT(raw->input_conflict,Catch::Matchers::ContainsSubstring("extruder = 2"));
+    REQUIRE(raw->block_reason()==print.nonplanar_block_reason());
+    const auto raw_identity=raw->fingerprint();
+    config=eligible(); print.apply(model,config);
+    REQUIRE(capture_print_config(print)->fingerprint()!=raw_identity);
+    REQUIRE_THAT(raw->block_reason(),Catch::Matchers::ContainsSubstring("extruder = 2"));
+    object->layer_height_profile.set({0.,0.2,10.,0.1}); print.apply(model,config);
+    const auto custom=capture_print_config(print);
+    REQUIRE(custom->model_conflict);
+    REQUIRE_THAT(custom->block_reason(),Catch::Matchers::ContainsSubstring("layer_height_profile"));
+    const auto custom_identity=custom->fingerprint();
+    print.clear(); model.clear_objects(); config.clear();
+    REQUIRE(raw->fingerprint()==raw_identity);
+    REQUIRE(custom->fingerprint()==custom_identity);
+}
+TEST_CASE("B01 Print snapshot rejects invalid plate state and preserves the OFF capture bypass", "[Nonplanar][B01][PrintSnapshot]")
+{
+    Model model; auto *object=model.add_object();
+    object->add_volume(TriangleMesh(Slic3r::its_make_cube(10,10,10))); object->add_instance();
+    auto config=eligible(); Print print; print.apply(model,config);
+    for (const Vec3d origin : {Vec3d(std::numeric_limits<double>::quiet_NaN(),0,0),
+                              Vec3d(0,std::numeric_limits<double>::infinity(),0),Vec3d(0,0,10001)}) {
+        print.set_plate_origin(origin);
+        const auto snapshot=capture_print_config(print);
+        REQUIRE(snapshot);
+        REQUIRE_THAT(snapshot->block_reason(),Catch::Matchers::ContainsSubstring("plate_origin"));
+        REQUIRE(print.nonplanar_block_reason()==snapshot->block_reason());
+    }
+    print.set_plate_origin(Vec3d::Zero()); print.set_plate_index(-1);
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("plate_index"));
+    config.set_deserialize_strict("nptop_mode","off"); print.apply(model,config);
+    REQUIRE_FALSE(capture_print_config(print));
+    REQUIRE(print.nonplanar_block_reason().empty());
+    // A region-only request must still capture a full OFF job, and an empty
+    // guarded Print must retain the missing-object preflight rejection.
+    print.set_plate_index(0);
+    object->config.set_key_value("nptop_mode",new ConfigOptionString("safe_hybrid"));
+    print.apply(model,config);
+    const auto overridden=capture_print_config(print);
+    REQUIRE(overridden);
+    REQUIRE(overridden->full_config.option<ConfigOptionString>("nptop_mode")->value=="off");
+    REQUIRE(overridden->regions.front().policy.mode==Mode::SafeHybrid);
+    Model empty; config=eligible(); print.apply(empty,config);
+    REQUIRE_THAT(capture_print_config(print)->block_reason(),Catch::Matchers::ContainsSubstring("object_count"));
+}
+
+TEST_CASE("B01 Print settings capture and combined canonical output enforce aggregate limits", "[Nonplanar][B01][PrintSnapshot]")
+{
+    Model model; auto *object=model.add_object(); object->add_instance();
+    for (int i=1; i<=257; ++i) {
+        auto *volume=object->add_volume(TriangleMesh(Slic3r::its_make_cube(1,1,1)));
+        volume->config.set_key_value("wall_loops",new ConfigOptionInt(i));
+    }
+    auto config=eligible(); Print print; print.apply(model,config);
+    REQUIRE(print.objects().front()->all_regions().size()==257);
+    REQUIRE_THROWS_AS(capture_print_config(print),std::length_error);
+    REQUIRE_THAT(print.nonplanar_block_reason(),Catch::Matchers::ContainsSubstring("capture failed"));
+    DynamicConfig large; large.set_key_value("x",new ConfigOptionString(std::string(700000,'x')));
+    const ResolvedConfigSnapshot owned(large);
+    REQUIRE(owned.canonical_json().size()<4*1024*1024);
+    std::vector<PrintRegionConfigSnapshot> regions;
+    for (int i=0; i<3; ++i) regions.push_back({0,i,owned,{Mode::SafeHybrid,{},{},owned}});
+    const PrintConfigSnapshot oversized{0,Vec3d::Zero(),1,1,owned,owned,std::move(regions),{}, {}};
+    REQUIRE_THROWS_AS(oversized.canonical_json(),std::length_error);
+    REQUIRE_THROWS_AS(oversized.fingerprint(),std::length_error);
+}
+
+TEST_CASE("B01 Print snapshot binds effective native filament overrides alongside full settings", "[Nonplanar][B01][PrintSnapshot]")
+{
+    Model model; auto *object=model.add_object();
+    object->add_volume(TriangleMesh(Slic3r::its_make_cube(10,10,10))); object->add_instance();
+    auto config=eligible();
+    config.set_key_value("retraction_length",new ConfigOptionFloats{0.8});
+    config.set_key_value("filament_retraction_length",new ConfigOptionFloatsNullable{1.25});
+    Print print; print.apply(model,config);
+    REQUIRE(print.full_print_config().option<ConfigOptionFloats>("retraction_length")->values==std::vector<double>{0.8});
+    REQUIRE(print.config().retraction_length.values==std::vector<double>{1.25});
+    const auto snapshot=capture_print_config(print);
+    REQUIRE(snapshot);
+    REQUIRE(snapshot->full_config.option<ConfigOptionFloats>("retraction_length")->values==std::vector<double>{0.8});
+    REQUIRE(snapshot->resolved_print_config.option<ConfigOptionFloats>("retraction_length")->values==std::vector<double>{1.25});
+    REQUIRE(snapshot->regions.front().config.option<ConfigOptionFloats>("retraction_length")->values==std::vector<double>{1.25});
+    const auto original=snapshot->fingerprint();
+    config.set_key_value("filament_retraction_length",new ConfigOptionFloatsNullable{1.5}); print.apply(model,config);
+    REQUIRE(capture_print_config(print)->fingerprint()!=original);
+    print.clear(); model.clear_objects(); config.clear();
+    REQUIRE(snapshot->fingerprint()==original);
+    REQUIRE(snapshot->resolved_print_config.option<ConfigOptionFloats>("retraction_length")->values==std::vector<double>{1.25});
 }

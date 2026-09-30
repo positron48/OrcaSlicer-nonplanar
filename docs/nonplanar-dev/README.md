@@ -13,19 +13,23 @@ Branch: `feature/nonplanar-bootstrap`, published to
 Bootstrap: `1ad7bdad`; A04: `93192ca7`. `status.json` is the current checkpoint; its `SELF`
 revision resolves with the included Git command.
 
-## Current checkpoint — 2026-09-28
+## Current checkpoint — 2026-09-30
 
-The nearest completed stage is the native constructor correction in
-`A02-print-defaults.md`: `Print` starts with a zero plate origin and generic
-printer identity. Its poisoned-storage regression demonstrates four failures
-before the fix and six passing assertions afterwards. Fresh selected CTest
-executes 208/208; all six OFF/ZAA differential captures pass. The inherited
-NoAssertions section diagnostics are retained separately. Linux confirmation
-of the prior skirt-range failure remains pending.
+The nearest completed stage is the owned native Print settings aggregate in
+`B01-print-snapshot.md`: full/effective/region configs, counts and plate frame
+are retained together, with exact canonical identity. Native preflight consumes
+the capture. Seven new cases/82 assertions and all 48 B01 cases/4501 assertions
+pass with NoAssertions; selected CTest executes 215/215 without skips. Six fresh
+OFF/ZAA differential captures pass. The existing upstream NoAssertions section
+diagnostics remain historical evidence, with no test policy relaxation.
+
+The prior constructor correction in `A02-print-defaults.md` is also confirmed
+by successful Linux native CI run 36454696019 at d57e9325. This is evidence for
+that revision; the new Print settings milestone still needs its own Linux run.
 
 The latest feature milestones are exact nominal affine endpoint/gradient bounds
 (`B03-heights.md`) and owned native LayerRegion path semantics (`B04-region.md`).
-Full compatibility/job ownership, body/cap partition, curved surfaces, planning
+Full compatibility/source-input and job ownership, body/cap partition, curved surfaces, planning
 and guarded hybrid export remain open. `next-tasks.md` lists the dependency
 order. Independent review and physical qualification remain pending.
 
