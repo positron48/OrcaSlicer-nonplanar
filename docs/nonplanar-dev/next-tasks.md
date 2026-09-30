@@ -14,6 +14,9 @@ Next software tasks, in dependency order:
    Source and actual native effective values remain distinct. Bind all remaining
    job IDs, plate changes, file/import error, software and qualified tool/scene
    dependencies before accepting worker/planner/verifier callbacks.
+   `B02-input-placement.md` connects owned inputs to the native placement/error
+   chain and enforces source plate-index agreement; actual GUI membership and
+   original file-to-job association remain pending.
 2. Verify new milestones on Linux. The prior A02 correction at d57e9325 has a
    successful native Linux run 36454696019; its earlier range-failure evidence
    remains historical and does not establish an exact exception call stack.

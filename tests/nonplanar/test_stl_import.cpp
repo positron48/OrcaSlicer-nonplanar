@@ -8,6 +8,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <libslic3r/Nonplanar/StlImport.hpp>
 #include <libslic3r/Nonplanar/MeshPlacement.hpp>
+#include <libslic3r/Nonplanar/InputSnapshot.hpp>
 #include <libslic3r/Nonplanar/UpperProjection.hpp>
 #include <libslic3r/Model.hpp>
 #include <libslic3r/Format/STL.hpp>
@@ -18,6 +19,7 @@
 #include <limits>
 #include <locale>
 #include <sstream>
+#include <thread>
 
 using namespace Slic3r;
 using namespace Slic3r::nptop;
@@ -455,4 +457,62 @@ TEST_CASE("B02 import reports actual decimal conversion error and rejects unboun
     REQUIRE(unsupported.geometry.reason=="SOURCE_ERROR_UNKNOWN");
     REQUIRE_FALSE(unsupported.source_error_upper_mm);
     REQUIRE_FALSE(unsupported.geometry.normalized);
+}
+
+TEST_CASE("B02 owned native inputs reproduce original source placement after model destruction", "[Nonplanar][B02][InputPlacement]")
+{
+    const auto cube=make_cube(20,10,2); const auto source=import_stl_snapshot(binary_stl(cube),true);
+    REQUIRE(source.geometry.status==MeshAuditStatus::ValidGeometry);
+    Model model; auto *object=model.add_object("source","",cube); model.curr_plate_index=7;
+    object->volumes.front()->scale(Vec3d(2,1,1));
+    auto *instance=object->add_instance(); instance->set_offset(Vec3d(100,80,3));
+    instance->set_rotation(Vec3d(0,0,0.3)); instance->set_scaling_factor(Vec3d(2,3,1));
+    const PlateFrame plate{7,Vec3d(50,40,0)};
+    auto expected=model.mesh(); Transform3d world_to_plate=Transform3d::Identity(); world_to_plate.translation()=-plate.world_origin_mm;
+    expected.transform(world_to_plate,false);
+    DynamicConfig config; config.set_key_value("nptop_mode",new ConfigOptionString("safe_hybrid"));
+    NativeInputBinding binding{42,capture_native_input(model,config)}; REQUIRE(binding.snapshot);
+    const auto owned=binding.snapshot; const auto identity=owned->fingerprint;
+    MeshPlacementLimits limits; limits.geometry.cancelled=[&] { binding.snapshot.reset(); model.clear_objects(); return false; };
+    const auto placed=capture_input_placement(source,binding,plate,limits);
+    INFO(placed.geometry.reason); REQUIRE(placed.geometry.status==MeshAuditStatus::ValidGeometry);
+    REQUIRE(placed.snapshot); REQUIRE(placed.snapshot->native_input==owned);
+    REQUIRE(placed.snapshot->native_input->fingerprint==identity);
+    REQUIRE(placed.snapshot->centered->revision==42); REQUIRE(placed.snapshot->centered->source==source.source);
+    REQUIRE(same_oriented_triangles(placed.geometry.normalized->its,expected.its));
+    REQUIRE(placed.total_error_upper_mm); REQUIRE(*placed.total_error_upper_mm<1e-4);
+    REQUIRE(placed.native_transform_errors_upper_mm); REQUIRE(placed.centering_error_upper_mm);
+    REQUIRE(model.objects.empty()); REQUIRE_FALSE(binding.snapshot);
+    const auto projection=analyze_upper_projection(*placed.geometry.normalized,true,42);
+    INFO(projection.reason); REQUIRE(projection.status==UpperProjectionStatus::NominalHeightfield);
+    REQUIRE(projection.snapshot->revision==42);
+}
+TEST_CASE("B02 input placement refuses mismatched source plate and stale or unprintable inputs", "[Nonplanar][B02][InputPlacement]")
+{
+    const auto cube=make_cube(20,10,2); const auto source=import_stl_snapshot(binary_stl(cube),true);
+    REQUIRE(source.geometry.status==MeshAuditStatus::ValidGeometry);
+    Model model; auto *object=model.add_object("source","",cube); auto *instance=object->add_instance();
+    DynamicConfig config; config.set_key_value("nptop_mode",new ConfigOptionString("safe_hybrid"));
+    NativeInputBinding binding{3,capture_native_input(model,config)};
+    const auto rejected=[](const ModelPlacementResult &result) {
+        REQUIRE(result.geometry.status!=MeshAuditStatus::ValidGeometry); REQUIRE_FALSE(result.geometry.normalized);
+        REQUIRE_FALSE(result.snapshot); REQUIRE_FALSE(result.total_error_upper_mm);
+    };
+    rejected(capture_input_placement(source,{0,binding.snapshot},{})); rejected(capture_input_placement(source,{3,{}},{}));
+    auto wrong=capture_input_placement(source,binding,PlateFrame{1,Vec3d::Zero()});
+    REQUIRE(wrong.geometry.reason=="INPUT_PLATE_MISMATCH"); rejected(wrong);
+    const auto unrelated=import_stl_snapshot(binary_stl(make_cube(21,10,2)),true);
+    wrong=capture_input_placement(unrelated,binding,{}); rejected(wrong);
+    instance->printable=false; binding.snapshot=capture_native_input(model,config);
+    wrong=capture_input_placement(source,binding,{}); REQUIRE(wrong.geometry.reason=="REQUIRES_ONE_PRINTABLE_OBJECT_VOLUME_INSTANCE"); rejected(wrong);
+    instance->printable=true; binding.snapshot=capture_native_input(model,config);
+    MeshPlacementLimits limits; limits.geometry.cancelled=[] { return true; };
+    wrong=capture_input_placement(source,binding,{},limits); REQUIRE(wrong.geometry.reason=="CANCELLED"); rejected(wrong);
+    limits={}; unsigned polls=0; limits.is_current=[&](uint64_t revision) { REQUIRE(revision==3); return ++polls<3; };
+    wrong=capture_input_placement(source,binding,{},limits); REQUIRE(wrong.geometry.reason=="STALE_REVISION"); rejected(wrong);
+    limits={}; limits.geometry.timeout=std::chrono::milliseconds(1);
+    limits.geometry.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(5)); return false; };
+    wrong=capture_input_placement(source,binding,{},limits); REQUIRE(wrong.geometry.reason=="DEADLINE"); rejected(wrong);
+    limits={}; limits.geometry.cancelled=[]() -> bool { throw std::runtime_error("callback"); };
+    rejected(capture_input_placement(source,binding,{},limits));
 }

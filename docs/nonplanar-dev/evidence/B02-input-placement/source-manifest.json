@@ -1,0 +1,32 @@
+{
+  "base_commit": "911f238042837cd8068a79399cd9dd1efd1c268c",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B02-input-placement.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/MeshPlacement.hpp": "5243c6f6cecbc76da9ea1379c2021217a829399363ad8d0bbebf7786da052fa8",
+    "src/libslic3r/Nonplanar/MeshPlacement.cpp": "a1fba3485bb94b59edac61efd9b4d3f07c104ebd5d8bb0e72ce191a87357ba79",
+    "src/libslic3r/Nonplanar/InputSnapshot.hpp": "16f4ec0b31de16993fa6112ff4d11b989db8cfeba53a5b5804c1ca433b2b34f7",
+    "src/libslic3r/Nonplanar/InputSnapshot.cpp": "92d91233bb2fbca3fb48bc455d590f23088dcbb59b7a15019c4f4680505cf959",
+    "tests/nonplanar/test_stl_import.cpp": "6cac6691d7b3b68e6f7de8c93e886a1d48f8210aec07a47ff6bdf0f62e525ed8"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "a51ffd2aa13eeed5e79f642c37a707621e392dd7872587a7c3cf83ecfc602f23",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "4d9ec0bc4391987a441b0589dcef3b15cac659054aff0e09f83326d614aa27a3",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "e2abd06b14a81ca833474c1678b7ce10b7f10442b1383af97ac46b70e5453864"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "macos_native_checks": {
+    "new_cases": 2,
+    "new_assertions": 62,
+    "b02_cases": 46,
+    "b02_assertions": 791,
+    "ctest_discovered": 223,
+    "ctest_executed": 223,
+    "skips": 0,
+    "OFF_ZAA_pairs": 6
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN"
+}

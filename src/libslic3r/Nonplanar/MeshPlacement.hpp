@@ -4,6 +4,8 @@
 
 namespace Slic3r { class Model; class ModelVolume; }
 namespace Slic3r::nptop {
+struct NativeInputSnapshot;
+struct NativeInputBinding;
 struct MeshPlacementLimits {
     MeshAuditLimits geometry;
     double max_error_upper_mm=0.01;
@@ -55,6 +57,7 @@ struct ModelPlacementSnapshot {
     const std::shared_ptr<const CenteredVolumeSnapshot> centered;
     const Transform3d volume_to_object, instance_to_world;
     const PlateFrame plate;
+    const std::shared_ptr<const NativeInputSnapshot> native_input;
 };
 struct ModelPlacementResult {
     std::shared_ptr<const ModelPlacementSnapshot> snapshot;
@@ -67,4 +70,10 @@ struct ModelPlacementResult {
 // supplies the plate frame; GUI plate selection/membership is not certified here.
 ModelPlacementResult capture_model_placement(const StlImportResult &, const Model &, const PlateFrame &,
                                              uint64_t revision, const MeshPlacementLimits &limits = {});
+// Consumes the owned pre-apply source, never the live GUI Model. Reuses native
+// placement/centering with exact captured matrices. The plate index must match
+// the captured source selection; GUI membership and full job qualification
+// remain separate. Failed/cancelled/stale calls expose no accepted payload.
+ModelPlacementResult capture_input_placement(const StlImportResult &, const NativeInputBinding &,
+                                             const PlateFrame &, const MeshPlacementLimits &limits = {});
 }

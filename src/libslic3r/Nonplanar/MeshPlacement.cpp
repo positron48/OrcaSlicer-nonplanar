@@ -1,4 +1,5 @@
 #include "MeshPlacement.hpp"
+#include "InputSnapshot.hpp"
 #include "Interval.hpp"
 #include "../Model.hpp"
 
@@ -253,6 +254,72 @@ ModelPlacementResult capture_model_placement(const StlImportResult &requested_so
         result.total_error_upper_mm=error;
     } catch (const std::exception &) {
         result.geometry={}; result.geometry.reason="MODEL_PLACEMENT_EXCEPTION";
+    }
+    return result;
+}
+
+ModelPlacementResult capture_input_placement(const StlImportResult &requested_source,
+                                             const NativeInputBinding &requested_input,
+                                             const PlateFrame &requested_plate,
+                                             const MeshPlacementLimits &requested_limits)
+{
+    const auto source=requested_source;
+    const auto input=requested_input;
+    const auto plate=requested_plate;
+    const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    ModelPlacementResult result;
+    try {
+        detail::require_interval_environment();
+        if (!input.snapshot || input.revision==0 || !limits.geometry.valid()) {
+            result.geometry.reason="INVALID_INPUT_PLACEMENT"; return result;
+        }
+        const auto &objects=input.snapshot->objects;
+        if (objects.size()!=1 || !objects.front().printable || objects.front().volumes.size()!=1 ||
+            objects.front().instances.size()!=1 || !objects.front().instances.front().printable ||
+            objects.front().instances.front().print_volume_state!=int(ModelInstancePVS_Inside)) {
+            result.geometry.reason="REQUIRES_ONE_PRINTABLE_OBJECT_VOLUME_INSTANCE"; return result;
+        }
+        if (input.snapshot->model_plate_index<0 || size_t(input.snapshot->model_plate_index)!=plate.index) {
+            result.geometry.reason="INPUT_PLATE_MISMATCH"; return result;
+        }
+        const auto &v=objects.front().volumes.front();
+        const auto &i=objects.front().instances.front();
+        if (v.mesh.vertices.size()>limits.geometry.max_vertices || v.mesh.indices.size()>limits.geometry.max_faces) {
+            result.geometry.reason="RESOURCE_LIMIT"; return result;
+        }
+        if (v.type!=int(ModelVolumeType::MODEL_PART)) {
+            result.geometry.reason="UNQUALIFIED_VOLUME_SOURCE"; return result;
+        }
+        // Build a private native geometry view, without centering again. Reuse
+        // the existing Orca placement chain rather than duplicate its float
+        // stores/error accounting. Config resolution remains the job's task.
+        Model model; auto *object=model.add_object();
+        auto *volume=object->add_volume(TriangleMesh(v.mesh),ModelVolumeType::MODEL_PART,false);
+        volume->set_transformation(v.transform);
+        volume->source.input_file=v.source_file;
+        volume->source.object_idx=v.source_object_index; volume->source.volume_idx=v.source_volume_index;
+        volume->source.mesh_offset=v.source_offset; volume->source.transform.set_matrix(v.source_transform);
+        volume->source.is_converted_from_inches=v.from_inches; volume->source.is_converted_from_meters=v.from_meters;
+        volume->source.is_from_builtin_objects=v.builtin;
+        auto *instance=object->add_instance(); instance->set_transformation(Geometry::Transformation(i.transform));
+        instance->auto_drop=i.auto_drop; instance->arrange_order=i.arrange_order;
+        auto remaining=limits;
+        remaining.geometry.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        if (remaining.geometry.timeout.count()<=0) { result.geometry.reason="DEADLINE"; return result; }
+        auto placed=capture_model_placement(source,model,plate,input.revision,remaining);
+        if (placed.geometry.status!=MeshAuditStatus::ValidGeometry) {
+            result.geometry.status=placed.geometry.status; result.geometry.reason=placed.geometry.reason; return result;
+        }
+        if (std::chrono::steady_clock::now()-started>=limits.geometry.timeout) {
+            result.geometry.reason="DEADLINE"; return result;
+        }
+        placed.snapshot=std::make_shared<const ModelPlacementSnapshot>(ModelPlacementSnapshot{
+            placed.snapshot->centered,placed.snapshot->volume_to_object,placed.snapshot->instance_to_world,
+            placed.snapshot->plate,input.snapshot});
+        return placed;
+    } catch (const std::exception &) {
+        result.geometry.reason="INPUT_PLACEMENT_EXCEPTION";
     }
     return result;
 }

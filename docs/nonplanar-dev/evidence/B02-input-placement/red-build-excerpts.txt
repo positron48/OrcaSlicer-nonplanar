@@ -1,0 +1,60 @@
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:477:23: error: use of undeclared identifier 'capture_input_placement'; did you mean 'capture_model_placement'?
+  477 |     const auto placed=capture_input_placement(source,binding,plate,limits);
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~
+      |                       capture_model_placement
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:477:54: error: no viable conversion from 'NativeInputBinding' to 'const Model'
+  477 |     const auto placed=capture_input_placement(source,binding,plate,limits);
+      |                                                      ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Model.hpp:1578:5: note: candidate constructor not viable: no known conversion from 'NativeInputBinding' to 'const Model &' for 1st argument
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:501:14: error: use of undeclared identifier 'capture_input_placement'
+  501 |     rejected(capture_input_placement(source,{0,binding.snapshot},{})); rejected(capture_input_placement(source,{3,{}},{}));
+      |              ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:501:81: error: use of undeclared identifier 'capture_input_placement'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:501:81: error: use of undeclared identifier 'capture_input_placement'
+  501 |     rejected(capture_input_placement(source,{0,binding.snapshot},{})); rejected(capture_input_placement(source,{3,{}},{}));
+      |                                                                                 ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:502:16: error: use of undeclared identifier 'capture_input_placement'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:502:16: error: use of undeclared identifier 'capture_input_placement'
+  502 |     auto wrong=capture_input_placement(source,binding,PlateFrame{1,Vec3d::Zero()});
+      |                ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:505:11: error: use of undeclared identifier 'capture_input_placement'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:505:11: error: use of undeclared identifier 'capture_input_placement'
+  505 |     wrong=capture_input_placement(unrelated,binding,{}); rejected(wrong);
+      |           ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:507:11: error: use of undeclared identifier 'capture_input_placement'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:507:11: error: use of undeclared identifier 'capture_input_placement'
+  507 |     wrong=capture_input_placement(source,binding,{}); REQUIRE(wrong.geometry.reason=="REQUIRES_ONE_PRINTABLE_OBJECT_VOLUME_INSTANCE"); rejected(wrong);
+      |           ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:510:11: error: use of undeclared identifier 'capture_input_placement'; did you mean 'capture_model_placement'?
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:510:11: error: use of undeclared identifier 'capture_input_placement'; did you mean 'capture_model_placement'?
+  510 |     wrong=capture_input_placement(source,binding,{},limits); REQUIRE(wrong.geometry.reason=="CANCELLED"); rejected(wrong);
+      |           ^~~~~~~~~~~~~~~~~~~~~~~
+      |           capture_model_placement
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:510:42: error: no viable conversion from 'NativeInputBinding' to 'const Model'
+  510 |     wrong=capture_input_placement(source,binding,{},limits); REQUIRE(wrong.geometry.reason=="CANCELLED"); rejected(wrong);
+      |                                          ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Model.hpp:1578:5: note: candidate constructor not viable: no known conversion from 'NativeInputBinding' to 'const Model &' for 1st argument
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:512:11: error: use of undeclared identifier 'capture_input_placement'; did you mean 'capture_model_placement'?
+  512 |     wrong=capture_input_placement(source,binding,{},limits); REQUIRE(wrong.geometry.reason=="STALE_REVISION"); rejected(wrong);
+      |           ^~~~~~~~~~~~~~~~~~~~~~~
+      |           capture_model_placement
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:512:42: error: no viable conversion from 'NativeInputBinding' to 'const Model'
+  512 |     wrong=capture_input_placement(source,binding,{},limits); REQUIRE(wrong.geometry.reason=="STALE_REVISION"); rejected(wrong);
+      |                                          ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Model.hpp:1578:5: note: candidate constructor not viable: no known conversion from 'NativeInputBinding' to 'const Model &' for 1st argument
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:515:11: error: use of undeclared identifier 'capture_input_placement'; did you mean 'capture_model_placement'?
+  515 |     wrong=capture_input_placement(source,binding,{},limits); REQUIRE(wrong.geometry.reason=="DEADLINE"); rejected(wrong);
+      |           ^~~~~~~~~~~~~~~~~~~~~~~
+      |           capture_model_placement
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:515:42: error: no viable conversion from 'NativeInputBinding' to 'const Model'
+  515 |     wrong=capture_input_placement(source,binding,{},limits); REQUIRE(wrong.geometry.reason=="DEADLINE"); rejected(wrong);
+      |                                          ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Model.hpp:1578:5: note: candidate constructor not viable: no known conversion from 'NativeInputBinding' to 'const Model &' for 1st argument
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:517:14: error: use of undeclared identifier 'capture_input_placement'; did you mean 'capture_model_placement'?
+  517 |     rejected(capture_input_placement(source,binding,{},limits));
+      |              ^~~~~~~~~~~~~~~~~~~~~~~
+      |              capture_model_placement
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:517:45: error: no viable conversion from 'NativeInputBinding' to 'const Model'
+  517 |     rejected(capture_input_placement(source,binding,{},limits));
+      |                                             ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Model.hpp:1578:5: note: candidate constructor not viable: no known conversion from 'NativeInputBinding' to 'const Model &' for 1st argument

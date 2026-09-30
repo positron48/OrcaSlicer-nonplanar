@@ -21,7 +21,11 @@ overrides, annotations and source metadata are owned before Orca normalization;
 changes hidden by approximate native comparisons still invalidate guarded output.
 Print settings identity is schema 2, binding source fingerprint/revision. Six new
 cases/90 assertions and all 54 B01 cases/4591 assertions pass with NoAssertions;
-selected CTest executes 221/221 without skips. Six fresh OFF/ZAA comparisons pass.
+selected CTest executed 221/221 without skips at that revision.
+`B02-input-placement.md` now connects owned source inputs to the original STL and
+native geometry placement, independent of live GUI Model lifetime. Two new cases/
+62 assertions and all 46 B02 cases/791 assertions pass; current selected CTest
+executes 223/223 without skips, with six fresh OFF/ZAA comparisons passing.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
