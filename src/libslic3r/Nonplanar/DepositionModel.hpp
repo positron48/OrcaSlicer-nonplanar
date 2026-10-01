@@ -396,4 +396,35 @@ struct MaterialUnionResult {
 // limit. Declared geometric union only; no target fill, physical contact or export.
 MaterialUnionResult integrate_material_union(const NominalMaterialView &, const SceneBox &,
                                              const MaterialUnionLimits &limits = {});
+
+inline constexpr unsigned material_fill_contract_version=1;
+struct MaterialFillLimits : MaterialUnionLimits {};
+struct MaterialFillResult;
+struct MaterialFillSnapshot {
+    const std::shared_ptr<const MaterialIntegralProof> target;
+    const std::shared_ptr<const MaterialUnionSnapshot> occupied;
+    const ScalarBounds target_volume_mm3, covered_target_mm3, missing_target_mm3;
+    const ScalarBounds outside_target_mm3, below_roof_mm3, above_surface_mm3;
+    const size_t cells, evaluations;
+private:
+    MaterialFillSnapshot(std::shared_ptr<const MaterialIntegralProof> t, std::shared_ptr<const MaterialUnionSnapshot> u,
+        ScalarBounds volume, ScalarBounds covered, ScalarBounds missing, ScalarBounds outside,
+        ScalarBounds below, ScalarBounds above, size_t count, size_t work)
+        : target(std::move(t)), occupied(std::move(u)), target_volume_mm3(volume), covered_target_mm3(covered),
+          missing_target_mm3(missing), outside_target_mm3(outside), below_roof_mm3(below), above_surface_mm3(above),
+          cells(count), evaluations(work) {}
+    friend MaterialFillResult reconcile_material_fill(const MaterialIntegralResult &, const MaterialUnionResult &, const MaterialFillLimits &);
+};
+struct MaterialFillResult {
+    std::string reason;
+    std::shared_ptr<const MaterialFillSnapshot> snapshot;
+    size_t cells=0, evaluations=0;
+    std::optional<ScalarBounds> provisional_below_roof_mm3, provisional_above_surface_mm3; // Never a certificate.
+};
+// Separate nonnegative target deficit from Z spill within the owned union box.
+// The box must match the target XY cell and contain its complete vertical volume.
+// Material outside this XY box is a separate obligation. Reuses protected roof
+// and union proofs; wrapper fields cannot replace them. Geometric measures only.
+MaterialFillResult reconcile_material_fill(const MaterialIntegralResult &, const MaterialUnionResult &,
+                                          const MaterialFillLimits &limits = {});
 }

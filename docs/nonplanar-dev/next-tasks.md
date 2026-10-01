@@ -43,8 +43,10 @@ Next software tasks, in dependency order:
    seam/edge domains; prospective surfaces alone do not prove later cap support.
    `B07-first-hatch-beads.md` now derives actual first-centerline nominal roof
    gaps and bounded fixed-width amounts. `B07-material-union.md` now measures
-   clipped declared nominal occupied union and multiplicity excess. Reconcile
-   these measures and localized underfill/excess with target volumes, qualify
+   clipped declared nominal occupied union and multiplicity excess.
+   `B07-material-fill.md` now separates covered/missing target and vertical spill
+   with continuous actual roof bounds. Localize and resolve that deficit/excess
+   by constructing useful finite paths, qualify
    finite-width floor/contact, then construct seam and later actual support;
    short-packet motion/flow limits remain unverified.
 5. Continue the dependent planner, safety/replay and guarded export integration

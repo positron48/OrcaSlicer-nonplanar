@@ -1,0 +1,82 @@
+{
+  "status": "PASS_SOURCE_INVENTORY_ONLY",
+  "baseline_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "head_commit": "4b3da47d64f03e2131c7db4867c7ac5d60cfdac5",
+  "head_is_baseline": false,
+  "files": [
+    {
+      "path": "src/libslic3r/ContourZ.cpp",
+      "markers_checked": 1,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/ExtrusionEntity.hpp",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/GCode.cpp",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/Format/STEP.cpp",
+      "markers_checked": 1,
+      "status": "PRESENT"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "tests/CMakeLists.txt",
+      "markers_checked": 1,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/slic3r/GUI/BackgroundSlicingProcess.cpp",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/Format/bbs_3mf.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/slic3r/GUI/GCodeViewer.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/PrintConfig.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/Print.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/PrintObject.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/slic3r/GUI/Tab.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    }
+  ],
+  "tracked_worktree_changes": [
+    "M src/libslic3r/Nonplanar/DepositionModel.cpp",
+    " M src/libslic3r/Nonplanar/DepositionModel.hpp",
+    " M tests/nonplanar/test_deposition_model.cpp",
+    " M tests/nonplanar/test_policy.cpp"
+  ],
+  "build_status": "NOT_RUN",
+  "slicer_test_status": "NOT_RUN",
+  "semantic_hook_audit": "REQUIRES_ENGINEER_REVIEW"
+}

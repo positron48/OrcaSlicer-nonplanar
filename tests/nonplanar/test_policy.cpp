@@ -2097,9 +2097,10 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first-hatch union measures rounded overlap rather than summed extrusion", "[Nonplanar][B07][NativeMaterialUnion]")
+TEST_CASE("B07 native first-hatch union measures rounded overlap rather than summed extrusion", "[Nonplanar][B07][NativeMaterialUnion][NativeMaterialFill]")
 {
     STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialUnionSnapshot>::value);
+    STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialFillSnapshot>::value);
     const auto body=generate_planar_body(native_body_partition(planar_body_config(),{},{},4.2,
         "tests/nonplanar/data/affine-wedge-1-in-16.stl"));REQUIRE(body.snapshot);
     const BodyMaterialParameters parameters{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
@@ -2154,4 +2155,26 @@ TEST_CASE("B07 native first-hatch union measures rounded overlap rather than sum
     REQUIRE(proof.union_volume_mm3.upper-proof.union_volume_mm3.lower<=.01);
     REQUIRE(proof.repeated_volume_mm3.upper-proof.repeated_volume_mm3.lower<=.01);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(integrate_material_union(prefix.nominal,proof.domain,limits).snapshot);
+    MaterialFillLimits fill_limits;fill_limits.maximum_interval_width=Volume(.02);fill_limits.max_cells=65535;
+    fill_limits.max_evaluations=2000000;fill_limits.timeout=std::chrono::seconds(20);
+    const auto &stack=*native.snapshot->hatches->source;
+    MaterialIntegralLimits target_limits;target_limits.maximum_interval_width=Volume(.001);target_limits.max_cells=65535;
+    target_limits.timeout=std::chrono::seconds(5);
+    const auto first=integrate_material_first_pass({stack.source},stack.surfaces.front().cell,stack.support_plane_z_mm,stack.policy.first_gap,target_limits);
+    INFO(first.reason);REQUIRE(first.proof);
+    INFO("target cells=" << first.cells << " target interval=[" << first.nominal_volume_mm3->lower << ',' << first.nominal_volume_mm3->upper << ']');
+    const auto fit=reconcile_material_fill(first,result,fill_limits);
+    const auto below=fit.provisional_below_roof_mm3.value_or(ScalarBounds{0,0}),above=fit.provisional_above_surface_mm3.value_or(ScalarBounds{0,0});
+    INFO("provisional below=[" << below.lower << ',' << below.upper << "] above=[" << above.lower << ',' << above.upper << ']');
+    INFO(fit.reason << " fill cells=" << fit.cells << " work=" << fit.evaluations);REQUIRE(fit.snapshot);
+    const auto &f=*fit.snapshot;
+    INFO("target=[" << f.target_volume_mm3.lower << ',' << f.target_volume_mm3.upper << "] covered=[" << f.covered_target_mm3.lower << ',' <<
+        f.covered_target_mm3.upper << "] missing=[" << f.missing_target_mm3.lower << ',' << f.missing_target_mm3.upper << "] outside=[" <<
+        f.outside_target_mm3.lower << ',' << f.outside_target_mm3.upper << "] below=[" << f.below_roof_mm3.lower << ',' << f.below_roof_mm3.upper <<
+        "] above=[" << f.above_surface_mm3.lower << ',' << f.above_surface_mm3.upper << ']');
+    REQUIRE(f.target==first.proof);REQUIRE(f.occupied==result.snapshot);
+    REQUIRE(f.missing_target_mm3.lower>0);REQUIRE(f.covered_target_mm3.upper<f.target_volume_mm3.lower);
+    for (auto volume : {f.covered_target_mm3,f.missing_target_mm3,f.outside_target_mm3,f.below_roof_mm3,f.above_surface_mm3}) {
+        REQUIRE(volume.lower>=0);REQUIRE(volume.upper-volume.lower<=fill_limits.maximum_interval_width.value());
+    }
 }

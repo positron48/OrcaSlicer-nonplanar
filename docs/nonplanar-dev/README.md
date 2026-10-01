@@ -83,8 +83,15 @@ clipped summed amounts and multiplicity excess, preserving actual prefixes and
 finite gaps. Seven geometric cases/170 assertions and one native case/37
 assertions pass. All 14 first lines / 2109 declared packets yield occupied volume
 1.3122–1.3222 mm3 versus summed amount 1.3957 mm3, at 0.01 mm3 interval precision.
-Current selected CTest executes 284/284; six fresh OFF/ZAA comparisons pass.
-Target-fill reconciliation, finite-width contact, seam and later support remain open.
+At that checkpoint selected CTest executes 284/284; six fresh OFF/ZAA comparisons pass.
+
+`B07-material-fill.md` now separates covered and missing target volumes from
+below-roof and above-surface spill, using protected actual roof/union sources.
+Five analytical cases/126 assertions and the extended native case/54 assertions
+pass. Current selected CTest executes 289/289; six fresh OFF/ZAA comparisons pass.
+The native first candidates have approximately 1.27-1.29 mm3 proven deficit and
+0.015-0.019 mm3 outside volume. Localized fill resolution, finite-width contact,
+seam and later support remain open.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -95,10 +102,10 @@ nozzle are user-declared in `B15-u1-declared-setup.md`, without measurement clai
 
 Prior Linux native runs at d57e9325, 7df1d765, e7a46961, 23f00bfd,
 b35408ce, a083f2df, 63779b4f and 8bcbbd45 succeeded. Run 36809462993 confirms
-8bcbbd45 native tests and application. The latest saved snapshot has run
-36812147275 at e2030e15 in progress. Earlier intermediate runs were cancelled by
+8bcbbd45 native tests and application. The latest saved snapshot records successful e2030e15 runs
+36812147275 and 36819847014; run 36820170446 at 4b3da47d is in progress. Earlier intermediate runs were cancelled by
 workflow concurrency. These records do not prove Linux execution of this
-nominal-union integration revision.
+nominal target-fill integration revision.
 Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;

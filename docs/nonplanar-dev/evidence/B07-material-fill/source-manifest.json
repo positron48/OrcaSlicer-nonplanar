@@ -1,0 +1,950 @@
+{
+  "base_commit": "4b3da47d64f03e2131c7db4867c7ac5d60cfdac5",
+  "upstream_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-material-fill.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "4f608ceb4f3d14843d713fb3501a09e061c3a572c18653f18d71032ecc7d50fe",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "80e6bb708b36394fa1705de608dc631a803bcdecec7608a84cf02de9bee09563",
+    "tests/nonplanar/test_deposition_model.cpp": "c3c0a8453835730110c9953ee0000b37f1fdaf836bb311be4aabb76c728f3f7a",
+    "tests/nonplanar/test_policy.cpp": "2a9e5c15de9b2fd573bafd89e35e43f2b2371f4e625a287b089ee1dc7ab9715b",
+    "docs/nonplanar-dev/adr-0043-nominal-target-fill-reconciliation.md": "b83ac58800093a35de2adb22ffc65548f137ab5d936bd23eb8fdad67c42dfef4",
+    "docs/nonplanar-dev/B07-material-fill.md": "ecf922f4a52edfad7b73e2853edd0982b14eb632d395eb9e5dd1661af7891c5c",
+    "docs/nonplanar-dev/status.json": "d813f403b993e7683eac0e2eb725a9b1344c7e9b94952f25abc5961e93e58856",
+    "docs/nonplanar-dev/README.md": "3d0aa792d2a2313763e45785fbe6fbcaf57bee00bdd74a40ae2a9bcc77909f9e",
+    "docs/nonplanar-dev/next-tasks.md": "a2f193134958c2302019e21b811230f03645e394acc6ec2b6b094ea4826dbaf9"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "9d1f8ac90bf86b04a88ff40a98b8ec82855e7010fc46fdbd3a954f2f8dfa8daf",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "deece9b14d4d1663f958e288f488f112eafa11f56d0388742b3783ad5edcc77a"
+  },
+  "compiled_commit_label": "31461d50",
+  "compiled_commit_label_note": "Retained configure label; source/binary hashes identify this build. Full B13 software provenance is pending.",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "captured_utc": "2026-10-01T06:40:41.163141+00:00",
+  "internal_material_fill_contract": 1,
+  "new_geometric_cases": 5,
+  "new_geometric_assertions": 126,
+  "extended_native_cases": 1,
+  "extended_native_assertions": 54,
+  "native_case_time_seconds": 25.293,
+  "material_suite_cases": 45,
+  "material_suite_assertions": 11988,
+  "body_suite_cases": 13,
+  "body_suite_assertions": 107878,
+  "ctest_discovered": 289,
+  "ctest_executed": 289,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "native_domain_mm": {
+    "min": [
+      19,
+      17,
+      4.0
+    ],
+    "max": [
+      21,
+      23,
+      4.7
+    ]
+  },
+  "native_first_lines": 14,
+  "native_packets": 2109,
+  "native_commanded_sum_mm3_decimal": "1.39569413683378021",
+  "native_union_cells": 32213,
+  "native_union_work_units": 1598991,
+  "native_target_cells": 10377,
+  "native_fill_cells": 41056,
+  "native_fill_work_units": 885187,
+  "native_union_policy": {
+    "maximum_interval_width_mm3": 0.01,
+    "max_cells": 65535,
+    "max_evaluations": 2000000,
+    "timeout_ms": 10000
+  },
+  "native_target_policy": {
+    "maximum_interval_width_mm3": 0.001,
+    "max_cells": 65535,
+    "max_evaluations": 200000,
+    "timeout_ms": 5000
+  },
+  "native_fill_policy": {
+    "maximum_interval_width_mm3": 0.02,
+    "max_cells": 65535,
+    "max_evaluations": 2000000,
+    "max_depth": 32,
+    "timeout_ms": 20000
+  },
+  "native_fill_intervals_note": "Approximate printed intervals; exact predicate expansions and raw diagnostics retained in body.txt.gz.",
+  "native_target_mm3_approx": [
+    2.57885,
+    2.57985
+  ],
+  "native_covered_mm3_approx": [
+    1.29275,
+    1.30712
+  ],
+  "native_missing_mm3_approx": [
+    1.27173,
+    1.2871
+  ],
+  "native_outside_mm3_approx": [
+    0.0150945,
+    0.0194677
+  ],
+  "native_below_mm3_approx": [
+    0.0150945,
+    0.0173445
+  ],
+  "native_above_mm3_approx": [
+    0,
+    0.00212321
+  ],
+  "limits_default": {
+    "maximum_interval_width_mm3": 0.001,
+    "max_cells": 4095,
+    "max_evaluations": 200000,
+    "max_depth": 32,
+    "timeout_ms": 1000
+  },
+  "limits_hard": {
+    "source_records": 200000,
+    "max_cells": 65535,
+    "max_evaluations": 2000000,
+    "max_depth": 32,
+    "timeout_ms": 30000
+  },
+  "independent_review": "PENDING",
+  "native_whole_fill_independent_oracle": "NOT_IMPLEMENTED_GENERIC_ANALYTICAL_ORACLES_AND_NATIVE_COMMAND_SUM_ONLY",
+  "physical": "NOT_RUN",
+  "windows": "NOT_RUN",
+  "linux_prior_e2030e15": "RUNS_36812147275_AND_36819847014_SUCCESS",
+  "linux_parent_4b3da47d": "RUN_36820170446_IN_PROGRESS_SAVED_SNAPSHOT",
+  "linux_fill_revision": "NOT_VERIFIED",
+  "full_B07": "NOT_IMPLEMENTED_LOCALIZED_FILL_RESOLUTION_FINITE_WIDTH_CONTACT_PERIMETER_SEAM_CURVED_ACTUAL_LATER_SUPPORT_ORDER_PENDING",
+  "export": "EXISTING_SAFE_HYBRID_BLOCKER_RETAINED",
+  "raw_output_sha256": {
+    "baseline-capture.log": "7f4827cd6ff881fc56b8e7d955e895c92afb6f553f7a6a607c5ff07c581752fe",
+    "baseline-capture.log.json": "cf5b4e5fb0d276a2dba9109cdf720154afcf4af511941f568d4f35130657e578",
+    "baseline-compare.log": "14bdf3eb82fad8b4210bed868b9124996e150788e839c30f3c35e33189b88fe0",
+    "baseline-compare.log.json": "7a92bcb2d684fbd2e80ae5f20648ddb92ce02701a5f226903887f024cb1d2463",
+    "body.log": "b7d439c29b30fed87149c67664ea97b2f88955835eb52d56eed1d6284148fc26",
+    "body.log.json": "e8098c8bfdbe95033f9027402925b01a0dffc0b49854cddfd3f213bc96e35f9d",
+    "body.xml": "b5f2e2098746ca7bf5704744cce730149004d2147b6e47a6c91c328f74ed58c1",
+    "build1.log": "f7c0b57c48c098c1c273277352f8ee5a6c53bdfcf0e04d9f197001c3adde975a",
+    "build1.log.json": "38e98d66e7d88eb4ea39a0405f15777882887363c8f8267855a027a6f0ce6122",
+    "build10.log": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build10.log.json": "000fd17cb09fbe29f42888850046efcafb0a3f78231b01ccbb7302de3d54bd10",
+    "build11.log": "bfc419e17374aef83d76c3d5afbdd574a51598f139f6bb7c4f517930b66d369a",
+    "build11.log.json": "16d53e9543a127bed3ba044a2c643a271167151f013414e37d4688cbbfc27e35",
+    "build12.log": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build12.log.json": "582b9c7ef67a8fb8c918d451a209feeeecac9c23489db55d652c76f81f3da13a",
+    "build13.log": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build13.log.json": "efba92e08bf6e637c46a53df66389669001c53f28d12b8d52d5cc9cf24ee8fcf",
+    "build2.log": "fa10a0bb253157da6d6b1fa962a8e443c8299db2572516be8a84410d888c9828",
+    "build2.log.json": "28680f0ccf404d0a098bb5c8152f74d189a53eb76ed3c24278b8a56b2a041a09",
+    "build3.log": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build3.log.json": "581beb90b46c8963a4bec62ba6147757d50907888920d8e82b2a7c6e4b569000",
+    "build4.log": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build4.log.json": "34b0a9e314911847635283dea2bd956ec6c535beeafa391a4391efcd937a6b6e",
+    "build5.log": "fc6340039f7b761edc9bb0557b3675660993118ee75fc39772e585a7027445a2",
+    "build5.log.json": "26a6d7021f2685f5d70be077296339e3a4e61d7e93892d15f22b5a9bd985bba3",
+    "build6.log": "cdd02baf3a557c99c00e8ec4fbc7902c70b4832f9aa273d0487f5cbfcddbd092",
+    "build6.log.json": "d88602c24088bdcbc0d2e1826df0c2174aca3dd5090a59b6c61ca214566b7bb4",
+    "build7.log": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build7.log.json": "5155bd74995597ee7b353173fef555ccb96fe70bd45fc60b4c0e87377a1f037f",
+    "build8.log": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build8.log.json": "1896bf8c149d1cb7d7029146baddd65158ba627035f7f37c938ef51e103bf10b",
+    "build9.log": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build9.log.json": "a784dfd9c9bf7d454b748d82a1a3ed2bccef6a343886f82d075a6aacc6d400eb",
+    "ctest/discovery.json": "c7ea8f42d19b10733dc4c332408226552f8f1f97ad879b0101262c8ed48dc053",
+    "ctest/results.xml": "659b981a2efc6082160416d5c4c46ec3ae8ff7d706a0f7f2dc189a48476726b0",
+    "ctest.log": "e71b19b52842819e8c5872e8d15da03ad6ada422663212e30d77057a23c8c662",
+    "ctest.log.json": "3b1900b50cd7bb78495afb393e005b756d19c9a7f038f32ca0535cc0b77cb325",
+    "geometry1.log": "c0242a31a94cf34d75f8d529d30242b08f7c0f5aec3462b464cbe014039fe807",
+    "geometry1.log.json": "cfa2947f27c4fca0d31b92d7e2556b72c1e4dfdb7095fd8ff614d4c0c41fa00d",
+    "geometry1.xml": "064b97f95fc2ea59bceefd2bd906a4a4a4a012b43e99b75ce84349b2f3b6369e",
+    "geometry2.log": "cd1efbbec9d31aef59db3d7bae2ed86b6755b0f8cc7cb62e732ec4910a73d6ec",
+    "geometry2.log.json": "b90d64e8ab02ce87d730178c72c3cd0f0cbcaebe6341c760e6a677d28a5c4e58",
+    "geometry2.xml": "f580a727171bb067d6a99887b048dd885a441545a920c103896246d6b1a201a4",
+    "geometry3.log": "9b9d42025a9cf7422d8b1fffdd71ca910aa40141381b79a64ed717b24ad338cd",
+    "geometry3.log.json": "a26be072448a840bd8b87ad9a0582e83994c52e492a70924ddc755a9b63e6fe8",
+    "geometry3.xml": "05aeb3b45466339bb8b9c94df57270891e97a5bb1cf2b3dffcab0a85af406a00",
+    "geometry4.log": "fa10bc616501f62235ba43db04c25f73530908951c455bd92be796b88f020897",
+    "geometry4.log.json": "9a1fa03958c77977073f24670652f0051d7ba7eaa5b3bebe438ed3df70c7ebf1",
+    "geometry4.xml": "b02f09e5de379b39014f0b3b2c2ac4843689f65bad6a59a469a985031577a36c",
+    "geometry5.log": "f14096fc2377a92eca8b72b14b54aa0d927d56ceb14b022808d687613f320308",
+    "geometry5.log.json": "dabc033f83fee5b0ba74ca92a7e85512b0fe70917ed54bbdda3cc2ca3355686b",
+    "geometry5.xml": "6eb5b9ddecce86e762f7278d4346e9c9f41c9fd2301180ed0a51471757bf287a",
+    "geometry6.log": "d63afc5e0f5275fecbd9870cb1766ac4e4aef5de295b23e4188ac1ad7bb8094a",
+    "geometry6.log.json": "9fbc9df046c25078fcfada7468403d1fdc4e69ece0e4df1c60021fe7cccd2dca",
+    "geometry6.xml": "0604b4bbec47005ae6b9934c58a97b6e3f61e75e9999a9451efc0bd8f65bed15",
+    "geometry7.log": "ec16085ed8211d0f3f4a5fb2bbb37042680124845fc7d1c4c52d81d0ecd5c8d8",
+    "geometry7.log.json": "6c0db74849ee86d1bcc6e3cefb0629f1f97d24bb6be1576ca3a50b1d173b1b43",
+    "geometry7.xml": "c144c6680523e23a283b2be774df43ed7f7699528505049c11dfe3bfa0c4fb89",
+    "geometry8.log": "a27984d8ad50df59edfdb26bd120aac530f3dc01e8c8eef40f8af14a8d19c04b",
+    "geometry8.log.json": "1abb04d622628225b408b7fd801cac2771c91878d5e71866460c0f86dfc577aa",
+    "geometry8.xml": "fc707788016f3f8787c2805687086e60a7e11aaa7e707a58fe0764e85e4060f1",
+    "geometry9.log": "d79cd1d4cd9b9ec9920c5d672b24503e60dce7d1d01199667cc53fe11476ed1f",
+    "geometry9.log.json": "d3a23b3d74de5524773041c8a4198b992fdb065c930c5379c8a1fa7d9e5e9dd7",
+    "geometry9.xml": "2d95a7ffe35d486e7fd3e48144d046537d86c712e320b872fc6a047c2fcdd0a3",
+    "linux-ci.json": "7fee0e4c39d8693768ffa48be9a3b62f9b070049f174480cd29d70865e242f20",
+    "material.log": "9992dd759984dedbc9e353c312fc9efdea9b8a9a7f2230189b881aa8c446fa6c",
+    "material.log.json": "8b50527d80feee12b0d3f1fb6d661b78df9501adb91a513d43ba2835b06c6e6e",
+    "material.xml": "973406c16039f9cec7b22c8bf36ce145c4a28ae5e74465566f2f2473e09f9eeb",
+    "native1.log": "dcc38078abe47133244d7e9c596f828e4e6848893224f49f5913692f319bb7c6",
+    "native1.log.json": "5e967b78249533140f6863a3feba30c1abc9b769a59f7eef5a5009043d2c893f",
+    "native1.xml": "ffba37f8347d24f7314ed6f01abf7026350e3151003628ccab93148a2c432eb8",
+    "native10.log": "154eb97fd604dbc477781069a21c0aadfc2e9029dafe4280224d2d27dd504557",
+    "native10.log.json": "20b59eeac1f9727ff2263c41c50ccee8de4a46a03a84331d79e1d523f8ecf53e",
+    "native10.xml": "71e871c562f10a414ac4c18907b4ff307773fc4b74606c9fdb82351a91a108d4",
+    "native2.log": "04705a1165fabca0dbf1e29359a88420345f0544d7001e182fa72173677b5124",
+    "native2.log.json": "87089c09f450d5795a94c294f6d321df97e1c56d61c81038232c53cd00eea19f",
+    "native2.xml": "d4496f1c07481943153d7ccd9de49cd3ad7c7bf25804a1c8da1737478f805000",
+    "native3.log": "3791d72467595e54f13d1291a738a9b62a140c6f13fe5530a3af78c39c55dac2",
+    "native3.log.json": "e06fd39ce1f4984cc38bb20a6b0f76be49cbf98b9b9ed48b86bc8c246634e6df",
+    "native3.xml": "e94407e59b66933340a2933e9198cf0efafbc5a6b6101896e0ce5c5dccc4e3d1",
+    "native4.log": "872447159116518d4020b1d66264e70bf7063b087f06daf9eeb83bda2189916a",
+    "native4.log.json": "3455d74bb641b70f84163f2174a05259d5a71431f28789ed515605fac7c72e4c",
+    "native4.xml": "e04f0f0092ac0bdf14ae2b8517e3c86d83cb54a7334b18fa844180fc045b25ec",
+    "native5.log": "4487a18cb57017b49f0c0e2464cc345cace6d78898aab2fd777eb397c82aaad2",
+    "native5.log.json": "76b8bd50c93f9cc3d5f3a01c4259bc7fe18465c139756165b55095b2aacf9108",
+    "native5.xml": "cc0696f7d2299d8a92937704d63f542f1fa5e95c8bd21bf441444b2386f7cf55",
+    "native6.log": "444905d018ad3de1eeb3b0c5603e7626ea311ce5e160148abba8906815042255",
+    "native6.log.json": "d754131ad60447b3b8e9e659a437dbb7c51442aa20d2ba366788e5427bc08da3",
+    "native6.xml": "a6ef1e8874cdffe84a32847bf6d8b955b9e2815b62521a7817ea58e271b3772b",
+    "native7.log": "855e8416fb8cf7fb2f1f322a53916e650e699ac2b290877f4c43c328aacf6a0e",
+    "native7.log.json": "4e36389262204df41025503c1d646b0a94fc14085fae1f79498c3f2aed55489b",
+    "native7.xml": "3cd8003342e13824be2824fc61cbb0beabb4f6c68d0e969f9b0cef353e0e88e0",
+    "native8.log": "a1fcac2a5081e73dd415c8d871ab999ea4e70a457e94688f820f2943d1b65a0b",
+    "native8.log.json": "60b85e066330392184fb142fcb71488393cfd9912effe5d7eea04566a7eaaa71",
+    "native8.xml": "35e7ffab67e4d5df5af420881be40dfb94402df78c1eed87bb9c5aa4377cfb53",
+    "native9.log": "d1a5280ff0523e8391626c8d25250c07fc796ee00905f0a8f92e25cd64d93922",
+    "native9.log.json": "5edfc59c06e4933e4d82ba19b6f926cb8d1e8e11c327040b5783fd7385f05820",
+    "native9.xml": "0f42ced04be627ed199f01143adc5c1fe247845211413e533bd28cfe16d992e1",
+    "package-validation.log": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "package-validation.log.json": "3bd81130ca4c08b29fb31dc9130bb1f2a57499de126b9842c089bfbd08fef74c",
+    "red.log": "a0b83785114099d3c3d7aa7053876ecb44446297ba4b1731e609319d522ca69a",
+    "red.log.json": "26bab383c382f987ed975b9a04760c7f3fbb514a93a0468cd34fa12cccb7ccca",
+    "source-audit.log": "1ed36b642c95cee1e94d5fdf8937030b56c3c3f14d54015f8fe224055bc1cfd3",
+    "source-audit.log.json": "9e2f84db4c5a0dd2277ff00d54b733fa7476a553524353dd03e74810d525aeb8",
+    "baselines/flat_block-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/flat_block-off/output/plate_1.gcode": "9df5cea07f707111be5190e1e81060e3a4747d16aae6e01d46e6588b64cebcf5",
+    "baselines/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/flat_block-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/flat_block-off/run.log.json": "b53a6ef5b15764b577a8bd8f5f29fa51f2fa09f6fd71148e8dc570184fc75828",
+    "baselines/flat_block-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/flat_block-zaa/output/plate_1.gcode": "8745bef75fad596300d1fac6f42bb811ec9a944eb282e2f0f705811fc8c0db38",
+    "baselines/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/flat_block-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/flat_block-zaa/run.log.json": "a542c7df14d3786d501aa505f73b21582a6779ec5d0730e212866fb9cfdc1faf",
+    "baselines/manifest.json": "f3c40efed03ac132920291e357743ed5a1d7f6a47d94e9b19e97781fdd48e553",
+    "baselines/offline.sb": "14c709af1ce7784df49bdb44ab2f0e13209ba8b006371fc5e2727350b6b24aa0",
+    "baselines/shallow_sphere-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/shallow_sphere-off/output/plate_1.gcode": "2a7d2d2605b3d3ca343bcf8624248075b85ee43016283ba23ebe08833d0dbe32",
+    "baselines/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/shallow_sphere-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/shallow_sphere-off/run.log.json": "53c42b11dd6bb138899ac41e8dface2700c3937825292f55ade2756c22917e3e",
+    "baselines/shallow_sphere-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/shallow_sphere-zaa/output/plate_1.gcode": "468b7255c9aabeb592144e7fb5cf455527fca8cc32710334bb02e8045a5d174a",
+    "baselines/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/shallow_sphere-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/shallow_sphere-zaa/run.log.json": "bcbd0f456cf6538306401f563b0840736e338d94f42297ba65ec8dec607a2e76",
+    "baselines/wedge_5deg-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/wedge_5deg-off/output/plate_1.gcode": "e126817695076ba21d3844e2bad1cf7fb026d7f964bb6c6605c3a1748f7d0ede",
+    "baselines/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/wedge_5deg-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/wedge_5deg-off/run.log.json": "351676737cb9786cd9ed351db78c838a513af7b50c3f95bbae7a26d74643025d",
+    "baselines/wedge_5deg-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/wedge_5deg-zaa/output/plate_1.gcode": "eb72832490779888f2f0f1a237d5c6770aa0122b1a468387c268d2baa4f254c0",
+    "baselines/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/wedge_5deg-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/wedge_5deg-zaa/run.log.json": "d0a74cc5583cfcd910e4d4f14c867ba5b6e988428bcb6fb8e815036411b1074b"
+  },
+  "archive_mapping": {
+    "baseline-capture.log": {
+      "archive_file": "baseline-capture.txt",
+      "compression": null
+    },
+    "baseline-capture.log.json": {
+      "archive_file": "baseline-capture.log.json",
+      "compression": null
+    },
+    "baseline-compare.log": {
+      "archive_file": "baseline-compare.txt",
+      "compression": null
+    },
+    "baseline-compare.log.json": {
+      "archive_file": "baseline-compare.log.json",
+      "compression": null
+    },
+    "body.log": {
+      "archive_file": "body.txt.gz",
+      "compression": "gzip"
+    },
+    "body.log.json": {
+      "archive_file": "body.log.json",
+      "compression": null
+    },
+    "body.xml": {
+      "archive_file": "body.xml",
+      "compression": null
+    },
+    "build1.log": {
+      "archive_file": "build1.txt",
+      "compression": null
+    },
+    "build1.log.json": {
+      "archive_file": "build1.log.json",
+      "compression": null
+    },
+    "build10.log": {
+      "archive_file": "build10.txt",
+      "compression": null
+    },
+    "build10.log.json": {
+      "archive_file": "build10.log.json",
+      "compression": null
+    },
+    "build11.log": {
+      "archive_file": "build11.txt",
+      "compression": null
+    },
+    "build11.log.json": {
+      "archive_file": "build11.log.json",
+      "compression": null
+    },
+    "build12.log": {
+      "archive_file": "build12.txt",
+      "compression": null
+    },
+    "build12.log.json": {
+      "archive_file": "build12.log.json",
+      "compression": null
+    },
+    "build13.log": {
+      "archive_file": "build13.txt",
+      "compression": null
+    },
+    "build13.log.json": {
+      "archive_file": "build13.log.json",
+      "compression": null
+    },
+    "build2.log": {
+      "archive_file": "build2.txt",
+      "compression": null
+    },
+    "build2.log.json": {
+      "archive_file": "build2.log.json",
+      "compression": null
+    },
+    "build3.log": {
+      "archive_file": "build3.txt",
+      "compression": null
+    },
+    "build3.log.json": {
+      "archive_file": "build3.log.json",
+      "compression": null
+    },
+    "build4.log": {
+      "archive_file": "build4.txt",
+      "compression": null
+    },
+    "build4.log.json": {
+      "archive_file": "build4.log.json",
+      "compression": null
+    },
+    "build5.log": {
+      "archive_file": "build5.txt",
+      "compression": null
+    },
+    "build5.log.json": {
+      "archive_file": "build5.log.json",
+      "compression": null
+    },
+    "build6.log": {
+      "archive_file": "build6.txt",
+      "compression": null
+    },
+    "build6.log.json": {
+      "archive_file": "build6.log.json",
+      "compression": null
+    },
+    "build7.log": {
+      "archive_file": "build7.txt",
+      "compression": null
+    },
+    "build7.log.json": {
+      "archive_file": "build7.log.json",
+      "compression": null
+    },
+    "build8.log": {
+      "archive_file": "build8.txt",
+      "compression": null
+    },
+    "build8.log.json": {
+      "archive_file": "build8.log.json",
+      "compression": null
+    },
+    "build9.log": {
+      "archive_file": "build9.txt",
+      "compression": null
+    },
+    "build9.log.json": {
+      "archive_file": "build9.log.json",
+      "compression": null
+    },
+    "ctest/discovery.json": {
+      "archive_file": "ctest/discovery.json",
+      "compression": null
+    },
+    "ctest/results.xml": {
+      "archive_file": "ctest/results.xml",
+      "compression": null
+    },
+    "ctest.log": {
+      "archive_file": "ctest.txt",
+      "compression": null
+    },
+    "ctest.log.json": {
+      "archive_file": "ctest.log.json",
+      "compression": null
+    },
+    "geometry1.log": {
+      "archive_file": "geometry1.txt",
+      "compression": null
+    },
+    "geometry1.log.json": {
+      "archive_file": "geometry1.log.json",
+      "compression": null
+    },
+    "geometry1.xml": {
+      "archive_file": "geometry1.xml",
+      "compression": null
+    },
+    "geometry2.log": {
+      "archive_file": "geometry2.txt",
+      "compression": null
+    },
+    "geometry2.log.json": {
+      "archive_file": "geometry2.log.json",
+      "compression": null
+    },
+    "geometry2.xml": {
+      "archive_file": "geometry2.xml",
+      "compression": null
+    },
+    "geometry3.log": {
+      "archive_file": "geometry3.txt",
+      "compression": null
+    },
+    "geometry3.log.json": {
+      "archive_file": "geometry3.log.json",
+      "compression": null
+    },
+    "geometry3.xml": {
+      "archive_file": "geometry3.xml",
+      "compression": null
+    },
+    "geometry4.log": {
+      "archive_file": "geometry4.txt",
+      "compression": null
+    },
+    "geometry4.log.json": {
+      "archive_file": "geometry4.log.json",
+      "compression": null
+    },
+    "geometry4.xml": {
+      "archive_file": "geometry4.xml",
+      "compression": null
+    },
+    "geometry5.log": {
+      "archive_file": "geometry5.txt",
+      "compression": null
+    },
+    "geometry5.log.json": {
+      "archive_file": "geometry5.log.json",
+      "compression": null
+    },
+    "geometry5.xml": {
+      "archive_file": "geometry5.xml",
+      "compression": null
+    },
+    "geometry6.log": {
+      "archive_file": "geometry6.txt",
+      "compression": null
+    },
+    "geometry6.log.json": {
+      "archive_file": "geometry6.log.json",
+      "compression": null
+    },
+    "geometry6.xml": {
+      "archive_file": "geometry6.xml",
+      "compression": null
+    },
+    "geometry7.log": {
+      "archive_file": "geometry7.txt",
+      "compression": null
+    },
+    "geometry7.log.json": {
+      "archive_file": "geometry7.log.json",
+      "compression": null
+    },
+    "geometry7.xml": {
+      "archive_file": "geometry7.xml",
+      "compression": null
+    },
+    "geometry8.log": {
+      "archive_file": "geometry8.txt",
+      "compression": null
+    },
+    "geometry8.log.json": {
+      "archive_file": "geometry8.log.json",
+      "compression": null
+    },
+    "geometry8.xml": {
+      "archive_file": "geometry8.xml",
+      "compression": null
+    },
+    "geometry9.log": {
+      "archive_file": "geometry9.txt",
+      "compression": null
+    },
+    "geometry9.log.json": {
+      "archive_file": "geometry9.log.json",
+      "compression": null
+    },
+    "geometry9.xml": {
+      "archive_file": "geometry9.xml",
+      "compression": null
+    },
+    "linux-ci.json": {
+      "archive_file": "linux-ci.json",
+      "compression": null
+    },
+    "material.log": {
+      "archive_file": "material.txt.gz",
+      "compression": "gzip"
+    },
+    "material.log.json": {
+      "archive_file": "material.log.json",
+      "compression": null
+    },
+    "material.xml": {
+      "archive_file": "material.xml",
+      "compression": null
+    },
+    "native1.log": {
+      "archive_file": "native1.txt",
+      "compression": null
+    },
+    "native1.log.json": {
+      "archive_file": "native1.log.json",
+      "compression": null
+    },
+    "native1.xml": {
+      "archive_file": "native1.xml",
+      "compression": null
+    },
+    "native10.log": {
+      "archive_file": "native10.txt",
+      "compression": null
+    },
+    "native10.log.json": {
+      "archive_file": "native10.log.json",
+      "compression": null
+    },
+    "native10.xml": {
+      "archive_file": "native10.xml",
+      "compression": null
+    },
+    "native2.log": {
+      "archive_file": "native2.txt",
+      "compression": null
+    },
+    "native2.log.json": {
+      "archive_file": "native2.log.json",
+      "compression": null
+    },
+    "native2.xml": {
+      "archive_file": "native2.xml",
+      "compression": null
+    },
+    "native3.log": {
+      "archive_file": "native3.txt",
+      "compression": null
+    },
+    "native3.log.json": {
+      "archive_file": "native3.log.json",
+      "compression": null
+    },
+    "native3.xml": {
+      "archive_file": "native3.xml",
+      "compression": null
+    },
+    "native4.log": {
+      "archive_file": "native4.txt",
+      "compression": null
+    },
+    "native4.log.json": {
+      "archive_file": "native4.log.json",
+      "compression": null
+    },
+    "native4.xml": {
+      "archive_file": "native4.xml",
+      "compression": null
+    },
+    "native5.log": {
+      "archive_file": "native5.txt",
+      "compression": null
+    },
+    "native5.log.json": {
+      "archive_file": "native5.log.json",
+      "compression": null
+    },
+    "native5.xml": {
+      "archive_file": "native5.xml",
+      "compression": null
+    },
+    "native6.log": {
+      "archive_file": "native6.txt",
+      "compression": null
+    },
+    "native6.log.json": {
+      "archive_file": "native6.log.json",
+      "compression": null
+    },
+    "native6.xml": {
+      "archive_file": "native6.xml",
+      "compression": null
+    },
+    "native7.log": {
+      "archive_file": "native7.txt",
+      "compression": null
+    },
+    "native7.log.json": {
+      "archive_file": "native7.log.json",
+      "compression": null
+    },
+    "native7.xml": {
+      "archive_file": "native7.xml",
+      "compression": null
+    },
+    "native8.log": {
+      "archive_file": "native8.txt",
+      "compression": null
+    },
+    "native8.log.json": {
+      "archive_file": "native8.log.json",
+      "compression": null
+    },
+    "native8.xml": {
+      "archive_file": "native8.xml",
+      "compression": null
+    },
+    "native9.log": {
+      "archive_file": "native9.txt",
+      "compression": null
+    },
+    "native9.log.json": {
+      "archive_file": "native9.log.json",
+      "compression": null
+    },
+    "native9.xml": {
+      "archive_file": "native9.xml",
+      "compression": null
+    },
+    "package-validation.log": {
+      "archive_file": "package-validation.txt",
+      "compression": null
+    },
+    "package-validation.log.json": {
+      "archive_file": "package-validation.log.json",
+      "compression": null
+    },
+    "red.log": {
+      "archive_file": "red.txt",
+      "compression": null
+    },
+    "red.log.json": {
+      "archive_file": "red.log.json",
+      "compression": null
+    },
+    "source-audit.log": {
+      "archive_file": "source-audit.txt",
+      "compression": null
+    },
+    "source-audit.log.json": {
+      "archive_file": "source-audit.log.json",
+      "compression": null
+    },
+    "baselines/flat_block-off/00000.log": {
+      "archive_file": "baselines/flat_block-off/00000.txt",
+      "compression": null
+    },
+    "baselines/flat_block-off/output/plate_1.gcode": {
+      "archive_file": "baselines/flat_block-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/flat_block-off/resolved.json": {
+      "archive_file": "baselines/flat_block-off/resolved.json",
+      "compression": null
+    },
+    "baselines/flat_block-off/run.log": {
+      "archive_file": "baselines/flat_block-off/run.txt",
+      "compression": null
+    },
+    "baselines/flat_block-off/run.log.json": {
+      "archive_file": "baselines/flat_block-off/run.log.json",
+      "compression": null
+    },
+    "baselines/flat_block-zaa/00000.log": {
+      "archive_file": "baselines/flat_block-zaa/00000.txt",
+      "compression": null
+    },
+    "baselines/flat_block-zaa/output/plate_1.gcode": {
+      "archive_file": "baselines/flat_block-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/flat_block-zaa/resolved.json": {
+      "archive_file": "baselines/flat_block-zaa/resolved.json",
+      "compression": null
+    },
+    "baselines/flat_block-zaa/run.log": {
+      "archive_file": "baselines/flat_block-zaa/run.txt",
+      "compression": null
+    },
+    "baselines/flat_block-zaa/run.log.json": {
+      "archive_file": "baselines/flat_block-zaa/run.log.json",
+      "compression": null
+    },
+    "baselines/manifest.json": {
+      "archive_file": "baselines/manifest.json",
+      "compression": null
+    },
+    "baselines/offline.sb": {
+      "archive_file": "baselines/offline.sb",
+      "compression": null
+    },
+    "baselines/shallow_sphere-off/00000.log": {
+      "archive_file": "baselines/shallow_sphere-off/00000.txt",
+      "compression": null
+    },
+    "baselines/shallow_sphere-off/output/plate_1.gcode": {
+      "archive_file": "baselines/shallow_sphere-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/shallow_sphere-off/resolved.json": {
+      "archive_file": "baselines/shallow_sphere-off/resolved.json",
+      "compression": null
+    },
+    "baselines/shallow_sphere-off/run.log": {
+      "archive_file": "baselines/shallow_sphere-off/run.txt",
+      "compression": null
+    },
+    "baselines/shallow_sphere-off/run.log.json": {
+      "archive_file": "baselines/shallow_sphere-off/run.log.json",
+      "compression": null
+    },
+    "baselines/shallow_sphere-zaa/00000.log": {
+      "archive_file": "baselines/shallow_sphere-zaa/00000.txt",
+      "compression": null
+    },
+    "baselines/shallow_sphere-zaa/output/plate_1.gcode": {
+      "archive_file": "baselines/shallow_sphere-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/shallow_sphere-zaa/resolved.json": {
+      "archive_file": "baselines/shallow_sphere-zaa/resolved.json",
+      "compression": null
+    },
+    "baselines/shallow_sphere-zaa/run.log": {
+      "archive_file": "baselines/shallow_sphere-zaa/run.txt",
+      "compression": null
+    },
+    "baselines/shallow_sphere-zaa/run.log.json": {
+      "archive_file": "baselines/shallow_sphere-zaa/run.log.json",
+      "compression": null
+    },
+    "baselines/wedge_5deg-off/00000.log": {
+      "archive_file": "baselines/wedge_5deg-off/00000.txt",
+      "compression": null
+    },
+    "baselines/wedge_5deg-off/output/plate_1.gcode": {
+      "archive_file": "baselines/wedge_5deg-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/wedge_5deg-off/resolved.json": {
+      "archive_file": "baselines/wedge_5deg-off/resolved.json",
+      "compression": null
+    },
+    "baselines/wedge_5deg-off/run.log": {
+      "archive_file": "baselines/wedge_5deg-off/run.txt",
+      "compression": null
+    },
+    "baselines/wedge_5deg-off/run.log.json": {
+      "archive_file": "baselines/wedge_5deg-off/run.log.json",
+      "compression": null
+    },
+    "baselines/wedge_5deg-zaa/00000.log": {
+      "archive_file": "baselines/wedge_5deg-zaa/00000.txt",
+      "compression": null
+    },
+    "baselines/wedge_5deg-zaa/output/plate_1.gcode": {
+      "archive_file": "baselines/wedge_5deg-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/wedge_5deg-zaa/resolved.json": {
+      "archive_file": "baselines/wedge_5deg-zaa/resolved.json",
+      "compression": null
+    },
+    "baselines/wedge_5deg-zaa/run.log": {
+      "archive_file": "baselines/wedge_5deg-zaa/run.txt",
+      "compression": null
+    },
+    "baselines/wedge_5deg-zaa/run.log.json": {
+      "archive_file": "baselines/wedge_5deg-zaa/run.log.json",
+      "compression": null
+    }
+  },
+  "archive_file_sha256": {
+    "baseline-capture.log.json": "cf5b4e5fb0d276a2dba9109cdf720154afcf4af511941f568d4f35130657e578",
+    "baseline-capture.txt": "7f4827cd6ff881fc56b8e7d955e895c92afb6f553f7a6a607c5ff07c581752fe",
+    "baseline-compare.log.json": "7a92bcb2d684fbd2e80ae5f20648ddb92ce02701a5f226903887f024cb1d2463",
+    "baseline-compare.txt": "14bdf3eb82fad8b4210bed868b9124996e150788e839c30f3c35e33189b88fe0",
+    "baselines/flat_block-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/flat_block-off/output/plate_1.gcode.gz": "f16ca5b2f7cd18ec9b429dab572d55b788fb2044bbf883ae2fd4213273c53d5e",
+    "baselines/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/flat_block-off/run.log.json": "b53a6ef5b15764b577a8bd8f5f29fa51f2fa09f6fd71148e8dc570184fc75828",
+    "baselines/flat_block-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/flat_block-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/flat_block-zaa/output/plate_1.gcode.gz": "559044531b94b859e177168e9499b164160ce75b4c14be07c13857313f98dff7",
+    "baselines/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/flat_block-zaa/run.log.json": "a542c7df14d3786d501aa505f73b21582a6779ec5d0730e212866fb9cfdc1faf",
+    "baselines/flat_block-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/manifest.json": "f3c40efed03ac132920291e357743ed5a1d7f6a47d94e9b19e97781fdd48e553",
+    "baselines/offline.sb": "14c709af1ce7784df49bdb44ab2f0e13209ba8b006371fc5e2727350b6b24aa0",
+    "baselines/shallow_sphere-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/shallow_sphere-off/output/plate_1.gcode.gz": "31849b175092714e01fb1e48cc34584f67b85ecdadbdcac6675235cab5960451",
+    "baselines/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/shallow_sphere-off/run.log.json": "53c42b11dd6bb138899ac41e8dface2700c3937825292f55ade2756c22917e3e",
+    "baselines/shallow_sphere-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/shallow_sphere-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/shallow_sphere-zaa/output/plate_1.gcode.gz": "72dc2ed52edb76574d08bcdc3241ebf5ae035fed5ace6bd13f35bf878d447ca5",
+    "baselines/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/shallow_sphere-zaa/run.log.json": "bcbd0f456cf6538306401f563b0840736e338d94f42297ba65ec8dec607a2e76",
+    "baselines/shallow_sphere-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/wedge_5deg-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/wedge_5deg-off/output/plate_1.gcode.gz": "b816beadf1d5584e20dc822232cad6dc81a97aa055a5087085bf3dfbd0bb6cc1",
+    "baselines/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/wedge_5deg-off/run.log.json": "351676737cb9786cd9ed351db78c838a513af7b50c3f95bbae7a26d74643025d",
+    "baselines/wedge_5deg-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/wedge_5deg-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/wedge_5deg-zaa/output/plate_1.gcode.gz": "ad807d8563df9b5a0f99ad39c4de9e31515b7bf181265057b5e76478a38147a9",
+    "baselines/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/wedge_5deg-zaa/run.log.json": "d0a74cc5583cfcd910e4d4f14c867ba5b6e988428bcb6fb8e815036411b1074b",
+    "baselines/wedge_5deg-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "body.log.json": "e8098c8bfdbe95033f9027402925b01a0dffc0b49854cddfd3f213bc96e35f9d",
+    "body.txt.gz": "090b5d4f634aa8960aad3ce879b3b8cc856b0d8e4115afa66afd043e92d04ecf",
+    "body.xml": "b5f2e2098746ca7bf5704744cce730149004d2147b6e47a6c91c328f74ed58c1",
+    "build1.log.json": "38e98d66e7d88eb4ea39a0405f15777882887363c8f8267855a027a6f0ce6122",
+    "build1.txt": "f7c0b57c48c098c1c273277352f8ee5a6c53bdfcf0e04d9f197001c3adde975a",
+    "build10.log.json": "000fd17cb09fbe29f42888850046efcafb0a3f78231b01ccbb7302de3d54bd10",
+    "build10.txt": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build11.log.json": "16d53e9543a127bed3ba044a2c643a271167151f013414e37d4688cbbfc27e35",
+    "build11.txt": "bfc419e17374aef83d76c3d5afbdd574a51598f139f6bb7c4f517930b66d369a",
+    "build12.log.json": "582b9c7ef67a8fb8c918d451a209feeeecac9c23489db55d652c76f81f3da13a",
+    "build12.txt": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build13.log.json": "efba92e08bf6e637c46a53df66389669001c53f28d12b8d52d5cc9cf24ee8fcf",
+    "build13.txt": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build2.log.json": "28680f0ccf404d0a098bb5c8152f74d189a53eb76ed3c24278b8a56b2a041a09",
+    "build2.txt": "fa10a0bb253157da6d6b1fa962a8e443c8299db2572516be8a84410d888c9828",
+    "build3.log.json": "581beb90b46c8963a4bec62ba6147757d50907888920d8e82b2a7c6e4b569000",
+    "build3.txt": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build4.log.json": "34b0a9e314911847635283dea2bd956ec6c535beeafa391a4391efcd937a6b6e",
+    "build4.txt": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build5.log.json": "26a6d7021f2685f5d70be077296339e3a4e61d7e93892d15f22b5a9bd985bba3",
+    "build5.txt": "fc6340039f7b761edc9bb0557b3675660993118ee75fc39772e585a7027445a2",
+    "build6.log.json": "d88602c24088bdcbc0d2e1826df0c2174aca3dd5090a59b6c61ca214566b7bb4",
+    "build6.txt": "cdd02baf3a557c99c00e8ec4fbc7902c70b4832f9aa273d0487f5cbfcddbd092",
+    "build7.log.json": "5155bd74995597ee7b353173fef555ccb96fe70bd45fc60b4c0e87377a1f037f",
+    "build7.txt": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build8.log.json": "1896bf8c149d1cb7d7029146baddd65158ba627035f7f37c938ef51e103bf10b",
+    "build8.txt": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build9.log.json": "a784dfd9c9bf7d454b748d82a1a3ed2bccef6a343886f82d075a6aacc6d400eb",
+    "build9.txt": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "commands.json": "072356367c7fc04a7cce4b159bfeead995224289c5e9beba8d03d277d3963977",
+    "ctest/discovery.json": "c7ea8f42d19b10733dc4c332408226552f8f1f97ad879b0101262c8ed48dc053",
+    "ctest/results.xml": "659b981a2efc6082160416d5c4c46ec3ae8ff7d706a0f7f2dc189a48476726b0",
+    "ctest.log.json": "3b1900b50cd7bb78495afb393e005b756d19c9a7f038f32ca0535cc0b77cb325",
+    "ctest.txt": "e71b19b52842819e8c5872e8d15da03ad6ada422663212e30d77057a23c8c662",
+    "geometry1.log.json": "cfa2947f27c4fca0d31b92d7e2556b72c1e4dfdb7095fd8ff614d4c0c41fa00d",
+    "geometry1.txt": "c0242a31a94cf34d75f8d529d30242b08f7c0f5aec3462b464cbe014039fe807",
+    "geometry1.xml": "064b97f95fc2ea59bceefd2bd906a4a4a4a012b43e99b75ce84349b2f3b6369e",
+    "geometry2.log.json": "b90d64e8ab02ce87d730178c72c3cd0f0cbcaebe6341c760e6a677d28a5c4e58",
+    "geometry2.txt": "cd1efbbec9d31aef59db3d7bae2ed86b6755b0f8cc7cb62e732ec4910a73d6ec",
+    "geometry2.xml": "f580a727171bb067d6a99887b048dd885a441545a920c103896246d6b1a201a4",
+    "geometry3.log.json": "a26be072448a840bd8b87ad9a0582e83994c52e492a70924ddc755a9b63e6fe8",
+    "geometry3.txt": "9b9d42025a9cf7422d8b1fffdd71ca910aa40141381b79a64ed717b24ad338cd",
+    "geometry3.xml": "05aeb3b45466339bb8b9c94df57270891e97a5bb1cf2b3dffcab0a85af406a00",
+    "geometry4.log.json": "9a1fa03958c77977073f24670652f0051d7ba7eaa5b3bebe438ed3df70c7ebf1",
+    "geometry4.txt": "fa10bc616501f62235ba43db04c25f73530908951c455bd92be796b88f020897",
+    "geometry4.xml": "b02f09e5de379b39014f0b3b2c2ac4843689f65bad6a59a469a985031577a36c",
+    "geometry5.log.json": "dabc033f83fee5b0ba74ca92a7e85512b0fe70917ed54bbdda3cc2ca3355686b",
+    "geometry5.txt": "f14096fc2377a92eca8b72b14b54aa0d927d56ceb14b022808d687613f320308",
+    "geometry5.xml": "6eb5b9ddecce86e762f7278d4346e9c9f41c9fd2301180ed0a51471757bf287a",
+    "geometry6.log.json": "9fbc9df046c25078fcfada7468403d1fdc4e69ece0e4df1c60021fe7cccd2dca",
+    "geometry6.txt": "d63afc5e0f5275fecbd9870cb1766ac4e4aef5de295b23e4188ac1ad7bb8094a",
+    "geometry6.xml": "0604b4bbec47005ae6b9934c58a97b6e3f61e75e9999a9451efc0bd8f65bed15",
+    "geometry7.log.json": "6c0db74849ee86d1bcc6e3cefb0629f1f97d24bb6be1576ca3a50b1d173b1b43",
+    "geometry7.txt": "ec16085ed8211d0f3f4a5fb2bbb37042680124845fc7d1c4c52d81d0ecd5c8d8",
+    "geometry7.xml": "c144c6680523e23a283b2be774df43ed7f7699528505049c11dfe3bfa0c4fb89",
+    "geometry8.log.json": "1abb04d622628225b408b7fd801cac2771c91878d5e71866460c0f86dfc577aa",
+    "geometry8.txt": "a27984d8ad50df59edfdb26bd120aac530f3dc01e8c8eef40f8af14a8d19c04b",
+    "geometry8.xml": "fc707788016f3f8787c2805687086e60a7e11aaa7e707a58fe0764e85e4060f1",
+    "geometry9.log.json": "d3a23b3d74de5524773041c8a4198b992fdb065c930c5379c8a1fa7d9e5e9dd7",
+    "geometry9.txt": "d79cd1d4cd9b9ec9920c5d672b24503e60dce7d1d01199667cc53fe11476ed1f",
+    "geometry9.xml": "2d95a7ffe35d486e7fd3e48144d046537d86c712e320b872fc6a047c2fcdd0a3",
+    "linux-ci.json": "7fee0e4c39d8693768ffa48be9a3b62f9b070049f174480cd29d70865e242f20",
+    "material.log.json": "8b50527d80feee12b0d3f1fb6d661b78df9501adb91a513d43ba2835b06c6e6e",
+    "material.txt.gz": "595cdf038a8348d0dd9580caee2a4f45267d99dda0e7a0d24cf04e97c18b7a04",
+    "material.xml": "973406c16039f9cec7b22c8bf36ce145c4a28ae5e74465566f2f2473e09f9eeb",
+    "native1.log.json": "5e967b78249533140f6863a3feba30c1abc9b769a59f7eef5a5009043d2c893f",
+    "native1.txt": "dcc38078abe47133244d7e9c596f828e4e6848893224f49f5913692f319bb7c6",
+    "native1.xml": "ffba37f8347d24f7314ed6f01abf7026350e3151003628ccab93148a2c432eb8",
+    "native10.log.json": "20b59eeac1f9727ff2263c41c50ccee8de4a46a03a84331d79e1d523f8ecf53e",
+    "native10.txt": "154eb97fd604dbc477781069a21c0aadfc2e9029dafe4280224d2d27dd504557",
+    "native10.xml": "71e871c562f10a414ac4c18907b4ff307773fc4b74606c9fdb82351a91a108d4",
+    "native2.log.json": "87089c09f450d5795a94c294f6d321df97e1c56d61c81038232c53cd00eea19f",
+    "native2.txt": "04705a1165fabca0dbf1e29359a88420345f0544d7001e182fa72173677b5124",
+    "native2.xml": "d4496f1c07481943153d7ccd9de49cd3ad7c7bf25804a1c8da1737478f805000",
+    "native3.log.json": "e06fd39ce1f4984cc38bb20a6b0f76be49cbf98b9b9ed48b86bc8c246634e6df",
+    "native3.txt": "3791d72467595e54f13d1291a738a9b62a140c6f13fe5530a3af78c39c55dac2",
+    "native3.xml": "e94407e59b66933340a2933e9198cf0efafbc5a6b6101896e0ce5c5dccc4e3d1",
+    "native4.log.json": "3455d74bb641b70f84163f2174a05259d5a71431f28789ed515605fac7c72e4c",
+    "native4.txt": "872447159116518d4020b1d66264e70bf7063b087f06daf9eeb83bda2189916a",
+    "native4.xml": "e04f0f0092ac0bdf14ae2b8517e3c86d83cb54a7334b18fa844180fc045b25ec",
+    "native5.log.json": "76b8bd50c93f9cc3d5f3a01c4259bc7fe18465c139756165b55095b2aacf9108",
+    "native5.txt": "4487a18cb57017b49f0c0e2464cc345cace6d78898aab2fd777eb397c82aaad2",
+    "native5.xml": "cc0696f7d2299d8a92937704d63f542f1fa5e95c8bd21bf441444b2386f7cf55",
+    "native6.log.json": "d754131ad60447b3b8e9e659a437dbb7c51442aa20d2ba366788e5427bc08da3",
+    "native6.txt": "444905d018ad3de1eeb3b0c5603e7626ea311ce5e160148abba8906815042255",
+    "native6.xml": "a6ef1e8874cdffe84a32847bf6d8b955b9e2815b62521a7817ea58e271b3772b",
+    "native7.log.json": "4e36389262204df41025503c1d646b0a94fc14085fae1f79498c3f2aed55489b",
+    "native7.txt": "855e8416fb8cf7fb2f1f322a53916e650e699ac2b290877f4c43c328aacf6a0e",
+    "native7.xml": "3cd8003342e13824be2824fc61cbb0beabb4f6c68d0e969f9b0cef353e0e88e0",
+    "native8.log.json": "60b85e066330392184fb142fcb71488393cfd9912effe5d7eea04566a7eaaa71",
+    "native8.txt": "a1fcac2a5081e73dd415c8d871ab999ea4e70a457e94688f820f2943d1b65a0b",
+    "native8.xml": "35e7ffab67e4d5df5af420881be40dfb94402df78c1eed87bb9c5aa4377cfb53",
+    "native9.log.json": "5edfc59c06e4933e4d82ba19b6f926cb8d1e8e11c327040b5783fd7385f05820",
+    "native9.txt": "d1a5280ff0523e8391626c8d25250c07fc796ee00905f0a8f92e25cd64d93922",
+    "native9.xml": "0f42ced04be627ed199f01143adc5c1fe247845211413e533bd28cfe16d992e1",
+    "package-validation.log.json": "3bd81130ca4c08b29fb31dc9130bb1f2a57499de126b9842c089bfbd08fef74c",
+    "package-validation.txt": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "red.log.json": "26bab383c382f987ed975b9a04760c7f3fbb514a93a0468cd34fa12cccb7ccca",
+    "red.txt": "a0b83785114099d3c3d7aa7053876ecb44446297ba4b1731e609319d522ca69a",
+    "source-audit.log.json": "9e2f84db4c5a0dd2277ff00d54b733fa7476a553524353dd03e74810d525aeb8",
+    "source-audit.txt": "1ed36b642c95cee1e94d5fdf8937030b56c3c3f14d54015f8fe224055bc1cfd3"
+  }
+}

@@ -1010,3 +1010,124 @@ TEST_CASE("B07 triple occupancy counts multiplicity excess without pairwise doub
         REQUIRE(result.snapshot->repeated_volume_mm3.upper<3*amount);
     }
 }
+
+namespace {
+MaterialIntegralResult flat_fill_target()
+{
+    const auto body=captured({bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto state=material_at(body,1,0);
+    auto target=integrate_material_first_pass(state.lower,{{1,-.4,3,.4},1.2,1.2,1.2},.9,{VerticalGap(.1),VerticalGap(.4),Length(0)});
+    INFO(target.reason);REQUIRE(target.proof);return target;
+}
+MaterialUnionResult flat_fill_union(double top,double fraction=1)
+{
+    const auto row=bead(1,0,{1,0,top},{3,0,top},.8,.2,.2,BeadSectionKind::Rectangle);
+    const auto state=material_at(captured({row}),fraction==1 ? 1 : 0,fraction==1 ? 0 : fraction);
+    auto result=integrate_material_union(state.nominal,{{1,-.4,.7},{3,.4,1.6}});
+    INFO(result.reason);REQUIRE(result.snapshot);return result;
+}
+}
+TEST_CASE("B07 target fill separates equal-total underfill from material outside the cap", "[Nonplanar][B07][MaterialFill]")
+{
+    const auto target=flat_fill_target();const auto material=flat_fill_union(1.3);
+    const auto fit=reconcile_material_fill(target,material);INFO(fit.reason);REQUIRE(fit.snapshot);
+    volume_contains(fit.snapshot->target_volume_mm3,2*.8L*.2L);
+    volume_contains(fit.snapshot->covered_target_mm3,2*.8L*.1L);
+    volume_contains(fit.snapshot->missing_target_mm3,2*.8L*.1L);
+    volume_contains(fit.snapshot->outside_target_mm3,2*.8L*.1L);
+    volume_contains(fit.snapshot->above_surface_mm3,2*.8L*.1L);
+    REQUIRE(fit.snapshot->below_roof_mm3.upper==0);
+    REQUIRE(fit.snapshot->missing_target_mm3.lower>.15);REQUIRE(fit.snapshot->outside_target_mm3.lower>.15);
+    REQUIRE(fit.snapshot->target==target.proof);REQUIRE(fit.snapshot->occupied==material.snapshot);
+}
+TEST_CASE("B07 exact fill current fraction and below-roof spill retain separate geometric measures", "[Nonplanar][B07][MaterialFill]")
+{
+    const auto target=flat_fill_target();
+    for (double fraction : {0.,.3,.5,1.}) {
+        const auto material=flat_fill_union(1.2,fraction);const auto fit=reconcile_material_fill(target,material);INFO(fit.reason);REQUIRE(fit.snapshot);
+        volume_contains(fit.snapshot->covered_target_mm3,2*.8L*.2L*fraction);
+        volume_contains(fit.snapshot->missing_target_mm3,2*.8L*.2L*(1-fraction));
+        REQUIRE(fit.snapshot->outside_target_mm3.upper<=.001);
+    }
+    const auto low=flat_fill_union(1.1);const auto spill=reconcile_material_fill(target,low);INFO(spill.reason);REQUIRE(spill.snapshot);
+    volume_contains(spill.snapshot->below_roof_mm3,2*.8L*.1L);
+    volume_contains(spill.snapshot->missing_target_mm3,2*.8L*.1L);
+    REQUIRE(spill.snapshot->above_surface_mm3.upper==0);
+}
+TEST_CASE("B07 fill reconciliation owns protected inputs and refuses mismatch precision and limits", "[Nonplanar][B07][MaterialFill]")
+{
+    auto target=flat_fill_target();auto material=flat_fill_union(1.3);MaterialFillLimits limits;
+    const auto roof=target.proof;const auto occupied=material.snapshot;
+    target.status=MaterialIntegralStatus::Unknown;target.nominal_volume_mm3=ScalarBounds{100,100};
+    material.reason="FORGED";material.provisional_union_mm3=ScalarBounds{100,100};
+    limits.cancelled=[&] {target.proof.reset();material.snapshot.reset();limits.max_cells=1;return false;};
+    const auto owned=reconcile_material_fill(target,material,limits);INFO(owned.reason);REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->target==roof);REQUIRE(owned.snapshot->occupied==occupied);
+    target.proof=roof;material.snapshot=occupied;limits={};
+    REQUIRE_FALSE(reconcile_material_fill({},material,limits).snapshot);REQUIRE_FALSE(reconcile_material_fill(target,{},limits).snapshot);
+    limits.max_cells=1;REQUIRE_FALSE(reconcile_material_fill(target,material,limits).snapshot);
+    limits={};limits.max_evaluations=1;REQUIRE_FALSE(reconcile_material_fill(target,material,limits).snapshot);
+    limits={};limits.maximum_interval_width=Volume(1e-20);REQUIRE_FALSE(reconcile_material_fill(target,material,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(reconcile_material_fill(target,material,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(reconcile_material_fill(target,material,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE_FALSE(reconcile_material_fill(target,material,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};const auto rounding=reconcile_material_fill(target,material,limits);
+    REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+    limits={};const auto row=bead(1,0,{1,0,1.3},{3,0,1.3},.8,.2,.2,BeadSectionKind::Rectangle);
+    const auto other=capture_material_sequence({row},model(),24,source_id);REQUIRE(other.snapshot);
+    const auto mismatch=integrate_material_union(material_at(other.snapshot,1,0).nominal,occupied->domain);REQUIRE(mismatch.snapshot);
+    REQUIRE_FALSE(reconcile_material_fill(target,mismatch,limits).snapshot);
+    const auto foreign=capture_material_sequence({row},model(),23,std::string(64,'b'));REQUIRE(foreign.snapshot);
+    const auto foreign_union=integrate_material_union(material_at(foreign.snapshot,1,0).nominal,occupied->domain);REQUIRE(foreign_union.snapshot);
+    REQUIRE_FALSE(reconcile_material_fill(target,foreign_union,limits).snapshot);
+    const auto wrong=integrate_material_union({occupied->source},{{0,-.4,.7},{3,.4,1.6}});REQUIRE(wrong.snapshot);
+    REQUIRE_FALSE(reconcile_material_fill(target,wrong,limits).snapshot);
+    const auto shallow=integrate_material_union({occupied->source},{{1,-.4,.7},{3,.4,1.1}});REQUIRE(shallow.snapshot);
+    REQUIRE_FALSE(reconcile_material_fill(target,shallow,limits).snapshot);
+    const auto body=captured({bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto partial=material_at(body,0,.5);
+    const auto partial_target=integrate_material_first_pass(partial.lower,{{1,-.4,3,.4},1.2,1.2,1.2},.9,{VerticalGap(.1),VerticalGap(.4),Length(0)});
+    REQUIRE(partial_target.proof);
+    const auto derived=capture_material_sequence({row},model(),23,body->fingerprint());REQUIRE(derived.snapshot);
+    const auto derived_union=integrate_material_union(material_at(derived.snapshot,1,0).nominal,occupied->domain);REQUIRE(derived_union.snapshot);
+    REQUIRE_FALSE(reconcile_material_fill(partial_target,derived_union,limits).snapshot);
+}
+
+TEST_CASE("B07 transverse affine cap slope exposes balanced underfill and excess", "[Nonplanar][B07][MaterialFill]")
+{
+    const auto body=captured({bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto target=integrate_material_first_pass(material_at(body,1,0).lower,{{1,-.4,3,.4},1.1,1.3,1.1},.9,
+        {VerticalGap(.05),VerticalGap(.5),Length(0)});INFO(target.reason);REQUIRE(target.proof);
+    // Infill is AlongY; its flat transverse top cannot equal the cap's X slope.
+    const auto row=bead(1,0,{2,-.4,1.2},{2,.4,1.2},2,.2,.2,BeadSectionKind::Rectangle);
+    const auto state=material_at(captured({row}),1,0);
+    const auto occupied=integrate_material_union(state.nominal,{{1,-.4,.7},{3,.4,1.6}});REQUIRE(occupied.snapshot);
+    const auto fit=reconcile_material_fill(target,occupied);INFO(fit.reason);REQUIRE(fit.snapshot);
+    // Independent triangles: .8 * integral_0^1(.1*x) dx = .04 mm3 on each side.
+    volume_contains(fit.snapshot->target_volume_mm3,.32L);
+    volume_contains(occupied.snapshot->union_volume_mm3,.32L);
+    volume_contains(fit.snapshot->above_surface_mm3,.04L);
+    volume_contains(fit.snapshot->missing_target_mm3,.04L);
+    volume_contains(fit.snapshot->covered_target_mm3,.28L);
+    REQUIRE(fit.snapshot->outside_target_mm3.lower>.039);REQUIRE(fit.snapshot->missing_target_mm3.lower>.039);
+}
+
+TEST_CASE("B07 rounded actual roof spill matches an independent circular integral", "[Nonplanar][B07][MaterialFill]")
+{
+    const auto body=captured({bead(1,0,{0,0,1},{1,0,1},.6,.4,.4)});
+    MaterialIntegralLimits accuracy;accuracy.maximum_interval_width=Volume(.0001);
+    const auto target=integrate_material_first_pass(material_at(body,1,0).lower,{{.2,.1,.8,.2},1.2,1.2,1.2},.7,
+        {VerticalGap(.1),VerticalGap(.6),Length(0)},accuracy);INFO(target.reason);REQUIRE(target.proof);
+    const auto row=bead(1,0,{.2,.15,1.1},{.8,.15,1.1},.1,.2,.2,BeadSectionKind::Rectangle);
+    const auto occupied=integrate_material_union(material_at(captured({row}),1,0).nominal,{{.2,.1,.7},{.8,.2,1.3}});
+    REQUIRE(occupied.snapshot);const auto fit=reconcile_material_fill(target,occupied);INFO(fit.reason);REQUIRE(fit.snapshot);
+    const long double r=.2L,y=.1L;
+    const long double circle=.5L*(y*std::sqrt(r*r-y*y)+r*r*std::asin(y/r));
+    // Roof is .8 + sqrt(r*r-(y-.1)^2). The bead bottom is .9 and top 1.1.
+    volume_contains(fit.snapshot->target_volume_mm3,.6L*(.1L*.4L-circle));
+    volume_contains(fit.snapshot->below_roof_mm3,.6L*(circle-.1L*.1L));
+    volume_contains(fit.snapshot->covered_target_mm3,.6L*(.1L*.3L-circle));
+    volume_contains(fit.snapshot->missing_target_mm3,.006L);
+    REQUIRE(fit.snapshot->below_roof_mm3.lower>0);REQUIRE(fit.snapshot->above_surface_mm3.upper==0);
+}
