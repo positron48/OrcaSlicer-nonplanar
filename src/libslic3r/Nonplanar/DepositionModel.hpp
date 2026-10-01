@@ -103,6 +103,36 @@ MaterialCoverageResult cover_material(const NominalMaterialView &, const SceneBo
 MaterialCoverageResult cover_material(const UpperMaterialView &, const SceneBox &, const MaterialCoverageLimits &limits = {});
 MaterialCoverageResult cover_material(const LowerMaterialView &, const SceneBox &, const MaterialCoverageLimits &limits = {});
 
+inline constexpr unsigned material_join_contract_version=1;
+struct MaterialJoinLimits : MaterialCoverageLimits {Volume minimum_box_volume{.000001};};
+struct MaterialJoinResult;
+struct FirstCapResult;
+struct FirstCapJoinLimits;
+struct FirstCapJoinsResult;
+struct MaterialJoinSnapshot {
+    const std::shared_ptr<const MaterialPrefixSnapshot> source;
+    const size_t first_record,second_record;
+    const SceneBox domain,witness;
+    const ScalarBounds box_volume_mm3; // Volume of this common inner box, not total intersection.
+    const size_t cells,evaluations;
+private:
+    MaterialJoinSnapshot(std::shared_ptr<const MaterialPrefixSnapshot> s,size_t a,size_t b,SceneBox region,SceneBox box,
+        ScalarBounds volume,size_t count,size_t work)
+        : source(std::move(s)),first_record(a),second_record(b),domain(region),witness(box),box_volume_mm3(volume),cells(count),evaluations(work) {}
+    friend MaterialJoinResult find_material_join(const LowerMaterialView &,size_t,size_t,const SceneBox &,const MaterialJoinLimits &);
+    friend FirstCapJoinsResult assess_first_cap_joins(const FirstCapResult &,const FirstCapJoinLimits &);
+};
+struct MaterialJoinResult {
+    std::string reason;std::shared_ptr<const MaterialJoinSnapshot> snapshot;
+    size_t cells=0,evaluations=0;
+};
+// Find a positive-volume box continuously inside both selected D_lower beads.
+// Honour finite eroded butts and only the actual current fraction; no future
+// record or plane-only touching can certify a join. Failure means no certificate,
+// not proof of disjointness. This does not bound total overlap or physical bonding.
+MaterialJoinResult find_material_join(const LowerMaterialView &,size_t first_record,size_t second_record,
+    const SceneBox &,const MaterialJoinLimits &limits={});
+
 inline constexpr unsigned material_transition_contract_version=1;
 struct MaterialTransitionResult {
     TransitionStatus status=TransitionStatus::Unknown;
@@ -682,5 +712,25 @@ struct FirstCapResult {std::string reason;std::shared_ptr<const FirstCapSnapshot
 // separate obligations. No actual partial cap is replaced by this factory.
 FirstCapResult plan_first_cap(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,
     const FirstHatchLayerLimits &limits={});
+
+struct FirstCapJoinLimits : MaterialJoinLimits {size_t max_joins=8192,max_records=200000;};
+struct FirstCapJoin {size_t first_path,second_path;std::shared_ptr<const MaterialJoinSnapshot> material;};
+struct FirstCapJoinsResult;
+struct FirstCapJoinsSnapshot {
+    const std::shared_ptr<const FirstCapSnapshot> source;
+    const std::vector<FirstCapJoin> joins;
+    const size_t cells,evaluations;
+private:
+    FirstCapJoinsSnapshot(std::shared_ptr<const FirstCapSnapshot> s,std::vector<FirstCapJoin> j,size_t count,size_t work)
+        : source(std::move(s)),joins(std::move(j)),cells(count),evaluations(work) {}
+    friend FirstCapJoinsResult assess_first_cap_joins(const FirstCapResult &,const FirstCapJoinLimits &);
+};
+struct FirstCapJoinsResult {std::string reason;std::shared_ptr<const FirstCapJoinsSnapshot> snapshot;size_t cells=0,evaluations=0;};
+// Require one common lower-material box at every contour corner (including the
+// closing seam) and both ends of every interior owner, from the unchanged joint
+// candidate ledger. Shared search budgets; publish no partial list. Prospective
+// local joins only: internal packet continuity, allowable excess, actual body
+// bonding, head contact/motion and complete fill/export remain separate.
+FirstCapJoinsResult assess_first_cap_joins(const FirstCapResult &,const FirstCapJoinLimits &limits={});
 
 }

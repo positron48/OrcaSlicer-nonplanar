@@ -1,4 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
+#include "material_join_oracle.hpp"
 #include <catch2/matchers/catch_matchers_string.hpp>
 #include <libslic3r/Nonplanar/Policy.hpp>
 #include <libslic3r/Nonplanar/InputSnapshot.hpp>
@@ -2097,7 +2098,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2307,6 +2308,28 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     INFO("native combined first cap paths=" << cap.paths.size() << " packets=" << cap_packets << " amount=[" << cap.deposited_volume_mm3.lower << ',' << cap.deposited_volume_mm3.upper <<
         "] covered=[" << cap.fill->covered_target_mm3.lower << ',' << cap.fill->covered_target_mm3.upper << "] missing=[" << cap.fill->missing_target_mm3.lower << ',' << cap.fill->missing_target_mm3.upper <<
         "] outside=[" << cap.fill->outside_target_mm3.lower << ',' << cap.fill->outside_target_mm3.upper << "] cells=" << cap.cells << " work=" << cap.evaluations);
+    const auto joined=assess_first_cap_joins(first_cap);INFO(joined.reason);REQUIRE_FALSE(joined.snapshot);
+    REQUIRE(joined.reason=="FIRST_CAP_JOIN_NOT_CERTIFIED paths=2,3");
+    // A real high corner has a common lower volume. At the low corner all
+    // overlapping long-side packets are shorter than their two eroded butts;
+    // do not turn nominal overlap into a fabricated full lower-material join.
+    const auto cap_prefix=cap.fill->occupied->source;const auto &sequence=*cap_prefix->sequence;
+    const size_t high_end=cap.paths[0]->pieces.size()-1;
+    const auto high_join=find_material_join({cap_prefix},high_end,high_end+1,wide_box);INFO(high_join.reason);REQUIRE(high_join.snapshot);
+    REQUIRE(high_join.snapshot->source==cap_prefix);test::independent_join_box(*high_join.snapshot);
+    const auto &end=cap.paths[3]->pieces.front();
+    const LayerAmount half=LayerAmount(end.section.width_mm.upper)/2;
+    const LayerAmount loss=LayerAmount(sequence.model.inner_xy_loss.value())+sequence.model.numerical_coordinate_error.value();
+    size_t empty_packets=0;
+    for (const auto &p : cap.paths[2]->pieces) {
+        const LayerAmount xmin=std::min(p.start.x(),p.end.x()),xmax=std::max(p.start.x(),p.end.x());
+        if (xmin>LayerAmount(end.start.x())+half || xmax<LayerAmount(end.start.x())-half) continue;
+        REQUIRE(xmax-xmin<=2*loss);++empty_packets;
+    }
+    REQUIRE(empty_packets>0);
+    INFO("native high-corner common lower box=[" << high_join.snapshot->box_volume_mm3.lower << ',' << high_join.snapshot->box_volume_mm3.upper <<
+        "] cells=" << high_join.cells << " work=" << high_join.evaluations << " low-corner empty packets=" << empty_packets <<
+        " whole candidate join refusal cells=" << joined.cells << " work=" << joined.evaluations);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

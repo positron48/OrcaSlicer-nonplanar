@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="744" hostname="tbd" time="0.069" timestamp="2026-10-01T15:08:55Z">
+    <properties>
+      <property name="random-seed" value="3294776873"/>
+      <property name="filters" value="[MaterialJoin],[FirstCapJoin]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 joining witness is a continuous common lower-material volume at finite corners" time="0.009" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first-cap joins retain every corner and both interior ends with common lower volumes" time="0.000" status="run">
+      <failure message="n*n+vertical*vertical&lt;radius*radius" type="REQUIRE">
+FAILED:
+  REQUIRE( n*n+vertical*vertical&lt;radius*radius )
+with expansion:
+  0.00478759 &lt; 0.00475204
+BOUNDED_FIRST_CONTOUR_AND_INTERIOR_HATCH_CANDIDATE_WITH_MEASURED_JOINT_FILL_ONLY
+direction=0 slope=1 numeric=0.00348669
+ALL_REQUESTED_LOCAL_FIRST_CAP_JOINS_HAVE_COMMON_D_LOWER_BOXES_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:37
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 joining refuses surface-only contact future material and incomplete searches" time="0.003" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="16933" hostname="tbd" time="1.592" timestamp="2026-10-01T15:42:55Z">
+    <properties>
+      <property name="random-seed" value="777064508"/>
+      <property name="filters" value="[MaterialModel],[MaterialCoverage],[MaterialTransition],[MaterialIntegral],[PassStack],[IntegralStrips],[AffineHatches],[HatchCells],[FixedWidthBeads],[FirstHatchBeads],[MaterialUnion],[MaterialFill],[MaterialDeficit],[FirstHatchFootprint],[RemainderHatch],[StadiumDepthBounds],[FlatRoofQueries],[FirstHatchLayer],[FirstHatchEndReplan],[FirstHatchWidthReplan],[FirstContour],[FirstCap],[MaterialJoin],[FirstCapJoin]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 triple occupancy counts multiplicity excess without pairwise double counting" time="0.017" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 variable stadium depth cannot create material above its affine top or below its flat floor" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="MAT-03 current deposition grows within a segment and future material stays absent" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 rounded neighboring finite beads match an independent circular lens overlap" time="0.008" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 joining refuses surface-only contact future material and incomplete searches" time="0.004" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="MAT-02 GCD-09 neighbour material persists through travel retract and unretract" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 constant gap keeps one packet and affine slope never multiplies XY deposition volume" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 whole first-hatch end replan reduces measured deficit without appending old future material" time="0.194" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 first pass uses actual stepped material and bounds the missing nominal volume" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first footprint plans amounts over the whole finite width on a flat laid roof" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 remainder hatch preserves middle obstacles and shares packet and path limits" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 flat roof queries preserve owned sources and shared interruption budgets" time="0.002" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 sloped loop union matches independent circle-line spill and preserves packet gaps" time="0.005" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 finite hatch capture refuses thin sparse stale cancelled and exhausted candidates" time="0.005" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 affine pass selection preserves the final surface and bounds nominal volume quotas" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 remainder hatch retains upper transverse neighbours and refuses exhausted or incompatible proofs" time="0.003" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 deficit cells locate the unprinted finite prefix without future material" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B05 footprint coverage blocks exhausted work stale geometry and uncertain boundary" time="0.008" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 varying gap roof charges transverse growth and clips the current prefix" time="0.064" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B05 material captures owned callbacks and blocks stale late and numerical work" time="0.008" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 closed-loop unions enclose independent circular section moments" time="0.009" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 finite fixed-width hatch candidates retain affine Z strip volumes and both direction choices" time="0.002" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 complete first hatch layer measures rounded overlap rather than summing line coverage" time="0.074" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 refined volume uses the highest overlapping roof and preserves affine cell volume" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 flat roof queries retain reverse diagonal current support for both cap axes" time="0.003" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 remainder hatch constructs finite paths after the actual current butt and proves added fill" time="0.004" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 footprint roof excludes a tall neighboring bead by exact oriented clipping" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first footprint refines continuous rounded shoulders without transverse sampling" time="0.038" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first contour owns a closed finite-width loop and measures corner overlap" time="0.006" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 strip quotas conserve a refined rounded roof integral without repeating material queries" time="0.036" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 stitched nominal strips prove finite continuity without filling a missing packet" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first-width replan repartitions displaced interior strip owners" time="0.206" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap refuses absent interiors later infill roofs and shared construction limits" time="0.045" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 transverse affine cap slope exposes balanced underfill and excess" time="0.019" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 finite material union distinguishes repeated amount from geometric occupancy" time="0.031" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 finite cells retain rounded source shoulders in the boundary remainder" time="0.003" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 target fill separates equal-total underfill from material outside the cap" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 sheared integration preserves sloped XY volumes and clips the original XYZ window" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first footprint refuses unsupported source and exhausted continuous proof" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first hatch bead uses the laid roof rather than the lower support plane" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 rounded actual roof spill matches an independent circular integral" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 union volume captures its domain and refuses stale cancelled or exhausted bounds" time="0.005" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 deficit witnesses retain protected ownership and reject incomplete grids and exhausted budgets" time="0.005" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 refined volume integrates rounded shoulders with an independent circular primitive" time="0.004" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 refined volume cannot publish broad stale late unsupported or future results" time="0.016" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first-hatch end replan captures sources and refuses invalid or exhausted global proofs" time="0.076" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 pass selection distinguishes normal spacing on a slope and refuses an impossible stack" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B05 continuous coverage detects a hole hidden by all footprint corners" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 complete first hatch layer captures shared budgets and refuses partial or clipped candidates" time="0.075" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 stadium depth tightening retains genuine rounded material above the target" time="0.007" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 flat roof queries exclude a higher rectangular neighbour outside the complete footprint" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 end replan retains current material only in the newly extended roof domain" time="0.127" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B05 varying gap respects uniform within-event G1 deposition" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 transition keeps holes limits revision ownership and uncertain gap blocking" time="0.006" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 merged infill-loop union encloses total multiplicity and refuses an unmerged or unequal interior" time="0.015" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 strip partition owns its proof cuts and limits and refuses incomplete or exhausted allocation" time="0.014" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap replaces boundary hatches and measures contour plus interior in one ordered ledger" time="0.087" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 nominal union retains rotated reversed and current finite XY geometry" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first-width replan reduces actual overlap while retaining measured coverage" time="0.005" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 fixed nominal width uses adaptive constant-flux packets with bounded volume" time="0.029" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 joining witness is a continuous common lower-material volume at finite corners" time="0.004" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 flat roof queries retain curved shoulders for current material at both precisions" time="0.008" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first-cap joins retain every corner and both interior ends with common lower volumes" time="0.098" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 fixed-width packet planning captures inputs and refuses stale invalid and exhausted requests" time="0.005" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first-width replan captures immutable input and refuses loss or exhausted proofs" time="0.079" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 deficit localization keeps a rotated current butt and future ledgers separate" time="0.004" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B05 material chain and prefix identity match independent byte encoding" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="MAT-01 separate rounded material views match independent angled section oracle" time="0.014" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B05 continuous lower union covers a footprint across multiple deposited rows" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first hatch bead bounds the continuous rounded roof and owns revision callbacks" time="0.043" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B05 rectangular sloped variable gaps conserve XY volume and reject mutations" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 congruent rounded packet pairs integrate affine gaps and preserve missing longitudinal space" time="0.002" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first contour rejects partial roofs and shares all construction and fill budgets" time="0.019" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 finite cell allocation owns its parent and rejects stale cancelled or exhausted proofs" time="0.007" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 exact fill current fraction and below-roof spill retain separate geometric measures" time="0.002" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 pass stack owns policy and rejects stale work exhausted precision and numerical budget" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first bead excludes future roof and refuses packet and numerical limits" time="0.004" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 fill reconciliation owns protected inputs and refuses mismatch precision and limits" time="0.006" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first footprint retains a transverse ridge that its centerline misses" time="0.016" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 finite hatch cells conserve interior and boundary volumes without charging ends to a bead" time="0.002" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,24 @@
+[1/2] Building CXX object tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_policy.cpp.o
+FAILED: [code=1] tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_policy.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_policy.cpp.o -MF tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_policy.cpp.o.d -o tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_policy.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2316:16: error: redefinition of 'prefix'
+ 2316 |     const auto prefix=cap.fill->occupied->source;const auto &sequence=*prefix->sequence;
+      |                ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2161:16: note: previous definition is here
+ 2161 |     const auto prefix=material_at(ledger.snapshot,rows.size()/2,.3,capture);REQUIRE(prefix.nominal.snapshot);
+      |                ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2316:78: error: member reference type 'const MaterialAt' is not a pointer; did you mean to use '.'?
+ 2316 |     const auto prefix=cap.fill->occupied->source;const auto &sequence=*prefix->sequence;
+      |                                                                        ~~~~~~^~
+      |                                                                              .
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2316:80: error: no member named 'sequence' in 'Slic3r::nptop::MaterialAt'
+ 2316 |     const auto prefix=cap.fill->occupied->source;const auto &sequence=*prefix->sequence;
+      |                                                                        ~~~~~~  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2318:26: error: no matching function for call to 'find_material_join'
+ 2318 |     const auto high_join=find_material_join({prefix},high_end,high_end+1,wide_box);INFO(high_join.reason);REQUIRE(high_join.snapshot);
+      |                          ^~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:133:20: note: candidate function not viable: cannot convert initializer list argument to 'const LowerMaterialView'
+  133 | MaterialJoinResult find_material_join(const LowerMaterialView &,size_t first_record,size_t second_record,
+      |                    ^                  ~~~~~~~~~~~~~~~~~~~~~~~~~
+4 errors generated.
+ninja: build stopped: subcommand failed.

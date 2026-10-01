@@ -1,4 +1,5 @@
 #include <catch2/catch_test_macros.hpp>
+#include "material_join_oracle.hpp"
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
 #include <libslic3r/Nonplanar/Collision.hpp>
 #include <cmath>
@@ -2059,9 +2060,9 @@ TEST_CASE("B07 sloped loop union matches independent circle-line spill and prese
 }
 
 namespace {
-AffineHatchResult first_cap_fixture(HatchDirection direction,bool sloped=false)
+AffineHatchResult first_cap_fixture(HatchDirection direction,bool sloped=false,double inner_loss=.01)
 {
-    const auto body=captured({bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto body=captured({bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle)},model(.01,inner_loss));
     const auto state=material_at(body,1,0);
     const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
     const bool x=direction==HatchDirection::AlongX;
@@ -2196,4 +2197,89 @@ TEST_CASE("B07 merged infill-loop union encloses total multiplicity and refuses 
         unmerged[5]=bead(6,5,unmerged[4].motion.end,point(reverse ? 0 : 2,.02),.9,.25,.25);
         REQUIRE_FALSE(integrate_material_union(material_at(captured(unmerged),6,0).nominal,box,limits).snapshot);
     }
+}
+
+
+TEST_CASE("B07 joining witness is a continuous common lower-material volume at finite corners", "[Nonplanar][B07][MaterialJoin]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialJoinSnapshot>::value);
+    for (auto kind : {BeadSectionKind::Rectangle,BeadSectionKind::RoundedRectangle}) for (bool slope : {false,true}) for (bool rotated : {false,true}) {
+        const double c=rotated ? std::sqrt(.5) : 1,s=rotated ? c : 0;
+        const PhysicalPosition corner{2*c,2*s,1};
+        const auto sequence=captured({bead(1,0,{0,0,slope ? .96 : 1},corner,.8,.3,.3,kind),
+            bead(2,1,corner,{2*c-2*s,2*s+2*c,slope ? 1.04 : 1},.8,.3,.3,kind)});
+        const auto prefix=material_at(sequence,2,0);
+        const SceneBox region{{corner.x()-.5,corner.y()-.5,.6},{corner.x()+.5,corner.y()+.5,1.1}};
+        const auto result=find_material_join(prefix.lower,0,1,region);INFO(result.reason);REQUIRE(result.snapshot);
+        REQUIRE(result.snapshot->source==prefix.lower.snapshot);REQUIRE(result.snapshot->first_record==0);REQUIRE(result.snapshot->second_record==1);
+        test::independent_join_box(*result.snapshot);
+        const auto swapped=find_material_join(prefix.lower,1,0,region);INFO(swapped.reason);REQUIRE(swapped.snapshot);test::independent_join_box(*swapped.snapshot);
+        const auto half=material_at(sequence,1,.5);const auto partial=find_material_join(half.lower,0,1,region);INFO(partial.reason);REQUIRE(partial.snapshot);
+        REQUIRE(partial.snapshot->source==half.lower.snapshot);test::independent_join_box(*partial.snapshot);
+        REQUIRE_FALSE(find_material_join(material_at(sequence,1,0).lower,0,1,region).snapshot);
+        REQUIRE_FALSE(find_material_join(material_at(sequence,1,.005).lower,0,1,region).snapshot);
+    }
+}
+
+TEST_CASE("B07 joining refuses surface-only contact future material and incomplete searches", "[Nonplanar][B07][MaterialJoin]")
+{
+    const auto straight=captured({bead(1,0,{0,0,1},{2,0,1},.8,.3,.3),bead(2,1,{2,0,1},{4,0,1},.8,.3,.3)},model(0,0));
+    REQUIRE_FALSE(find_material_join(material_at(straight,2,0).lower,0,1,{{1.8,-.2,.7},{2.2,.2,1}}).snapshot);
+    auto rows=std::vector<MaterialRecord>{bead(1,0,{0,0,1},{2,0,1},.8,.3,.3),bead(2,1,{2,0,1},{2,2,1},.8,.3,.3)};
+    const auto eroded=captured(rows,model(.01,.2));
+    REQUIRE_FALSE(find_material_join(material_at(eroded,2,0).lower,0,1,{{1.6,-.1,.6},{2.1,.4,1.1}}).snapshot);
+    const auto sequence=captured({bead(1,0,{0,0,1},{2,0,1},.8,.3,.3),bead(2,1,{2,0,1},{2,2,1},.8,.3,.3)});
+    auto view=material_at(sequence,2,0).lower;const auto source=view.snapshot;SceneBox box{{1.6,-.1,.6},{2.1,.4,1.1}};MaterialJoinLimits limits;
+    REQUIRE_FALSE(find_material_join({},0,1,box).snapshot);REQUIRE_FALSE(find_material_join(view,0,0,box).snapshot);
+    REQUIRE_FALSE(find_material_join(view,0,2,box).snapshot);REQUIRE_FALSE(find_material_join(view,0,1,{{1.6,0,.8},{1.6,.2,.9}}).snapshot);
+    limits.max_evaluations=1;REQUIRE_FALSE(find_material_join(view,0,1,box,limits).snapshot);
+    limits={};limits.max_cells=1;REQUIRE_FALSE(find_material_join(view,0,1,box,limits).snapshot);
+    limits={};limits.max_depth=1;REQUIRE_FALSE(find_material_join(view,0,1,{{1.6,-.1,.6},{2.1,.4,.76}},limits).snapshot);
+    limits={};limits.minimum_box_volume=Volume(1);REQUIRE_FALSE(find_material_join(view,0,1,box,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(find_material_join(view,0,1,box,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(find_material_join(view,0,1,box,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(2));return false;};
+    REQUIRE_FALSE(find_material_join(view,0,1,box,limits).snapshot);
+    limits={};limits.cancelled=[&] {view.snapshot.reset();box={{0,0,0},{1,1,1}};limits.minimum_box_volume=Volume(1);return false;};
+    const auto owned=find_material_join(view,0,1,box,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==source);test::independent_join_box(*owned.snapshot);
+    size_t polls=0;limits={};limits.cancelled=[&] {++polls;return false;};
+    const SceneBox original{{1.6,-.1,.6},{2.1,.4,1.1}};
+    REQUIRE(find_material_join({source},0,1,original,limits).snapshot);const size_t publication_poll=polls;polls=0;
+    limits.cancelled=[&] {return ++polls>=publication_poll;};REQUIRE_FALSE(find_material_join({source},0,1,original,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounded=find_material_join({source},0,1,{{1.6,-.1,.6},{2.1,.4,1.1}},limits);
+    std::fesetround(FE_TONEAREST);REQUIRE_FALSE(rounded.snapshot);REQUIRE(rounded.reason.find("unsupported interval rounding")!=std::string::npos);
+}
+
+TEST_CASE("B07 first-cap joins retain every corner and both interior ends with common lower volumes", "[Nonplanar][B07][FirstCapJoin]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapJoinsSnapshot>::value);
+    for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) for (bool sloped : {false,true}) {
+        const auto candidate=plan_first_cap(first_cap_fixture(direction,sloped),{WidthXY(.45),1,true,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});
+        INFO(candidate.reason);REQUIRE(candidate.snapshot);
+        INFO("direction=" << int(direction) << " slope=" << sloped << " numeric=" << candidate.snapshot->numerical_error_upper_mm);
+        const auto result=assess_first_cap_joins(candidate);INFO(result.reason);REQUIRE(result.snapshot);const auto &joins=*result.snapshot;
+        REQUIRE(joins.source==candidate.snapshot);REQUIRE(joins.joins.size()==4+2*(candidate.snapshot->paths.size()-4));
+        for (size_t n=0;n<joins.joins.size();++n) {
+            const auto &join=joins.joins[n];REQUIRE(join.material->source==candidate.snapshot->fill->occupied->source);test::independent_join_box(*join.material);
+            if (n<4) {REQUIRE(join.first_path==n);REQUIRE(join.second_path==(n+1)%4);}
+            else {REQUIRE(join.first_path==4+(n-4)/2);REQUIRE(join.second_path<4);}
+        }
+        FirstCapJoinLimits limits;limits.max_joins=joins.joins.size()-1;REQUIRE_FALSE(assess_first_cap_joins(candidate,limits).snapshot);
+        limits={};limits.max_cells=1;REQUIRE_FALSE(assess_first_cap_joins(candidate,limits).snapshot);
+        limits={};limits.max_evaluations=joins.evaluations-1;REQUIRE_FALSE(assess_first_cap_joins(candidate,limits).snapshot);
+        limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(assess_first_cap_joins(candidate,limits).snapshot);
+        limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(assess_first_cap_joins(candidate,limits).snapshot);
+        limits={};limits.max_records=1;REQUIRE_FALSE(assess_first_cap_joins(candidate,limits).snapshot);
+        limits={};limits.minimum_box_volume=Volume(1);REQUIRE_FALSE(assess_first_cap_joins(candidate,limits).snapshot);
+        auto wrapper=candidate;limits={};limits.cancelled=[&] {wrapper.snapshot.reset();limits.max_joins=1;return false;};
+        const auto owned=assess_first_cap_joins(wrapper,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==candidate.snapshot);
+        size_t polls=0;limits={};limits.cancelled=[&] {++polls;return false;};
+        REQUIRE(assess_first_cap_joins(candidate,limits).snapshot);const size_t publication_poll=polls;polls=0;
+        limits.cancelled=[&] {return ++polls>=publication_poll;};REQUIRE_FALSE(assess_first_cap_joins(candidate,limits).snapshot);
+    }
+    REQUIRE_FALSE(assess_first_cap_joins({}).snapshot);
+    const auto lost=plan_first_cap(first_cap_fixture(HatchDirection::AlongX,false,.08),{WidthXY(.45),1,true,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});
+    INFO(lost.reason);REQUIRE(lost.snapshot);REQUIRE(lost.snapshot->fill->covered_target_mm3.lower>0);
+    const auto no_join=assess_first_cap_joins(lost);INFO(no_join.reason);REQUIRE_FALSE(no_join.snapshot);
 }

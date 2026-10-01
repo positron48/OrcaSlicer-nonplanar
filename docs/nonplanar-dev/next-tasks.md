@@ -25,8 +25,9 @@ Next software tasks, in dependency order:
    361ccdc8 also succeeds in native suites, STL CLI and application. Run
    36858083109 at 05f4a887 also succeeds in native suites, STL CLI and application.
    Run 36861891679 at 4e6cddd7 also succeeds in native suites, STL CLI and application.
-   Run 36871942001 at 9a243279 is building native tests in the saved 14:36 UTC
-   observation; contour and the new joint cap require their own verification. The A02 correction at d57e9325 also
+   Run 36871942001 at 9a243279 now succeeds. Run 36878746418 at a165f0c3 is
+   in progress in the saved 15:32 UTC observation; joint cap and new material
+   joins require their own verification. The A02 correction at d57e9325 also
    has successful native Linux run 36454696019.
 3. Extend B03 nominal affine bounds to qualified error budgets, curved surfaces,
    ROI and tool access. Existing masks, whole-footprint checks and isolated CLI
@@ -88,8 +89,15 @@ Next software tasks, in dependency order:
    ordered ledger with joint measured fill, replacing the outer owners rather
    than duplicating them. The wider native target yields M [0.107167,0.107574]
    mm3, with real positive spill; do not compare gain across different ROIs.
-   Qualify finite-width floor/contact and volumetric joining material, construct
-   paths for measured remaining 3D voids, then reconstruct later actual support;
+   `B07-material-joins.md` now proves common whole boxes in the original D_lower
+   at every requested local corner/interior end in analytical candidates. The
+   unchanged native high corner has a positive witness, but full joining refuses
+   the low corner: all nine relevant packets are shorter than twice their eroded
+   finite-butt loss. Reconstruct lower material for a qualified continuous run
+   across internal packet cuts, retaining actual flux/sections, real ends,
+   current/future semantics and uncertainty; do not simply remove erosion.
+   Then qualify allowable overlap, finite-width floor/body bonding and volumetric
+   seam, construct paths for remaining 3D voids and reconstruct later support;
    short-packet motion/flow limits remain unverified.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.

@@ -192,9 +192,23 @@ native wedge/core yields five paths/161 packets, C [0.207411,0.207818] mm3 and
 M [0.107167,0.107574] mm3, with real positive spill and 293 cells/38258 work.
 This target differs from earlier narrow metrics. First-cap contract 1 retains
 all existing owner/union/fill meanings and has no persisted format. The extended
-native case passes 559 assertions. Current material/body suites pass 77/14 cases;
+native case passes 559 assertions. At that checkpoint material/body suites pass 77/14 cases;
 selected CTest passes 322/322 and six fresh OFF/ZAA comparisons pass. Volumetric
 joining/contact, remaining 3D voids and later actual support remain required.
+
+`B07-material-joins.md` adds protected common lower-volume witnesses, with the
+original finite eroded butts, current/future semantics and numerical losses.
+Three analytical cases/1532 assertions prove continuous whole boxes with an
+independent 113-bit oracle, both cap axes and flat/sloped sources. All corners
+and interior ends share budgets and publication guards. The unchanged native
+wedge has a positive upper-corner witness of 3.44447e-5 mm3 (10 cells/22 work).
+Its whole cap correctly refuses the lower corner: all nine relevant packets
+are shorter than twice their original inner loss. Continuous-run lower material
+across artificial packet cuts is now the next dependency; nominal overlap does
+not override this refusal. Final material/body suites pass 80/14 cases with
+16933/108474 assertions; selected CTest passes 325/325 and six OFF/ZAA comparisons
+pass. Native case: 586 assertions. Remaining 3D fill, seam, allowable excess,
+floor/body bonding, physical contact and complete job/export remain open.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -218,8 +232,8 @@ native suites, native STL CLI and application build, retaining the original
 suites, STL CLI and application. Run 36858083109 at 05f4a887 also succeeds in
 native suites, STL CLI and application. Run 36861891679 at 4e6cddd7 also completes
 native suites, STL CLI and application successfully. Run 36871942001 at
-9a243279 is building native tests in the saved 14:36 UTC observation. The contour
-and new joint cap await their own Linux verification.
+9a243279 now succeeds. The saved 15:32 UTC observation shows run 36878746418
+at a165f0c3 in progress; joint cap and new material joins await their own Linux verification.
 Both failed check annotations are archived.
 Windows remains NOT_RUN.
 
