@@ -717,3 +717,79 @@ TEST_CASE("B07 finite cells retain rounded source shoulders in the boundary rema
     volume_contains(cells.snapshot->passes.front().finite_volume_mm3,finite);
     volume_contains(cells.snapshot->passes.front().remainder_volume_mm3,first_whole-finite);
 }
+
+TEST_CASE("B07 fixed nominal width uses adaptive constant-flux packets with bounded volume", "[Nonplanar][B07][FixedWidthBeads]")
+{
+    for (auto kind : {BeadSectionKind::Rectangle,BeadSectionKind::RoundedRectangle}) {
+        const FixedWidthBeadRequest request{{0,0,1},{3,4,2},WidthXY(.8),VerticalGap(.2),VerticalGap(.4),kind,23,source_id};
+        FixedWidthBeadLimits limits; limits.maximum_width_error=Length(.002);limits.maximum_volume_error=Volume(.00001);
+        const auto result=plan_fixed_width_bead(request,limits); INFO(result.reason); REQUIRE(result.snapshot);
+        const auto &plan=*result.snapshot; REQUIRE(plan.pieces.size()>1); REQUIRE(plan.pieces.size()<=limits.max_segments);
+        const long double h0=.2L,h1=.4L,k=kind==BeadSectionKind::RoundedRectangle ? 1-std::acos(-1.L)/4 : 0;
+        const long double expected=5*(.8L*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3);
+        volume_contains(plan.target_volume_mm3,expected);
+        REQUIRE(plan.total_volume_error_mm3<=limits.maximum_volume_error.value());
+        REQUIRE(plan.maximum_width_error_mm<=limits.maximum_width_error.value());
+        long double delivered=0; PhysicalPosition previous=request.start;
+        for (size_t i=0; i<plan.pieces.size(); ++i) {
+            const auto &piece=plan.pieces[i]; REQUIRE(piece.start.x()==previous.x()); REQUIRE(piece.start.z()==previous.z());
+            REQUIRE(piece.nominal_width.value()==.8); REQUIRE(piece.section.kind==kind);
+            const long double dx=static_cast<long double>(piece.end.x())-piece.start.x(),dy=static_cast<long double>(piece.end.y())-piece.start.y();
+            const long double area=piece.volume.value()/std::sqrt(dx*dx+dy*dy);
+            for (long double t : {0.L,.23L,.71L,1.L}) {
+                const long double h=piece.section.gap_begin_mm+t*(static_cast<long double>(piece.section.gap_end_mm)-piece.section.gap_begin_mm);
+                const long double width=area/h+k*h;
+                REQUIRE(std::abs(width-.8L)<=limits.maximum_width_error.value());
+                REQUIRE(width>=piece.section.width_mm.lower); REQUIRE(width<=piece.section.width_mm.upper);
+            }
+            const auto record=MaterialRecord{{1,0,33,piece.start,piece.end,Speed(20),Acceleration(100),Deposition{piece.volume,piece.nominal_width,
+                VerticalGap(std::min(piece.section.gap_begin_mm,piece.section.gap_end_mm)),VerticalGap(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm)),
+                {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},7,8}},piece.section};
+            const auto accepted=capture_material_sequence({record},model(),23,source_id);INFO(accepted.reason);REQUIRE(accepted.snapshot);
+            delivered+=piece.volume.value(); previous=piece.end;
+        }
+        REQUIRE(previous.x()==request.end.x()); REQUIRE(previous.y()==request.end.y()); REQUIRE(previous.z()==request.end.z());
+        REQUIRE(std::abs(delivered-expected)<=limits.maximum_volume_error.value());
+        auto reversed=request;reversed.start=request.end;reversed.end=request.start;
+        reversed.gap_begin=request.gap_end;reversed.gap_end=request.gap_begin;
+        const auto reverse_plan=plan_fixed_width_bead(reversed,limits);INFO(reverse_plan.reason);REQUIRE(reverse_plan.snapshot);
+        volume_contains(reverse_plan.snapshot->target_volume_mm3,expected);
+        REQUIRE(reverse_plan.snapshot->pieces.front().section.gap_begin_mm==request.gap_end.value());
+        REQUIRE(reverse_plan.snapshot->pieces.back().section.gap_end_mm==request.gap_begin.value());
+        REQUIRE(reverse_plan.snapshot->total_volume_error_mm3<=limits.maximum_volume_error.value());
+    }
+}
+
+TEST_CASE("B07 constant gap keeps one packet and affine slope never multiplies XY deposition volume", "[Nonplanar][B07][FixedWidthBeads]")
+{
+    const FixedWidthBeadRequest request{{1,2,1},{11,2,5},WidthXY(.45),VerticalGap(.2),VerticalGap(.2),BeadSectionKind::RoundedRectangle,23,source_id};
+    const auto plan=plan_fixed_width_bead(request); INFO(plan.reason); REQUIRE(plan.snapshot); REQUIRE(plan.snapshot->pieces.size()==1);
+    const long double expected=10*.2L*(.45L-(1-std::acos(-1.L)/4)*.2L);
+    volume_contains(plan.snapshot->target_volume_mm3,expected);
+    REQUIRE(std::abs(plan.snapshot->pieces.front().volume.value()-expected)<1e-12L);
+    auto reversed=request; reversed.start=request.end;reversed.end=request.start;
+    const auto other=plan_fixed_width_bead(reversed); REQUIRE(other.snapshot);
+    volume_contains(other.snapshot->target_volume_mm3,expected);
+    REQUIRE(other.snapshot->pieces.front().start.z()==5); REQUIRE(other.snapshot->pieces.front().end.z()==1);
+}
+
+TEST_CASE("B07 fixed-width packet planning captures inputs and refuses stale invalid and exhausted requests", "[Nonplanar][B07][FixedWidthBeads]")
+{
+    FixedWidthBeadRequest request{{0,0,1},{10,0,2},WidthXY(.8),VerticalGap(.2),VerticalGap(.4),BeadSectionKind::RoundedRectangle,23,source_id};
+    FixedWidthBeadLimits limits;limits.cancelled=[&] { request.end={0,0,1};request.source_fingerprint.clear();limits.max_segments=1;return false; };
+    const auto owned=plan_fixed_width_bead(request,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->request.end.x()==10);
+    request=owned.snapshot->request;limits={};limits.max_segments=1;REQUIRE_FALSE(plan_fixed_width_bead(request,limits).snapshot);
+    limits={};limits.max_depth=1;limits.maximum_width_error=Length(1e-7);REQUIRE_FALSE(plan_fixed_width_bead(request,limits).snapshot);
+    limits={};limits.maximum_width_error=Length(0);REQUIRE_FALSE(plan_fixed_width_bead(request,limits).snapshot);
+    limits={};limits.maximum_volume_error=Volume(1e-20);REQUIRE_FALSE(plan_fixed_width_bead(request,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_fixed_width_bead(request,limits).snapshot);
+    limits={};limits.cancelled=[] { return true; };REQUIRE_FALSE(plan_fixed_width_bead(request,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE_FALSE(plan_fixed_width_bead(request,limits).snapshot);
+    limits={}; auto invalid=request;invalid.end=invalid.start;REQUIRE_FALSE(plan_fixed_width_bead(invalid,limits).snapshot);
+    invalid=request;invalid.width=WidthXY(.3);REQUIRE_FALSE(plan_fixed_width_bead(invalid,limits).snapshot);
+    invalid=request;invalid.source_fingerprint="other";REQUIRE_FALSE(plan_fixed_width_bead(invalid,limits).snapshot);
+    invalid=request;invalid.kind=static_cast<BeadSectionKind>(7);REQUIRE_FALSE(plan_fixed_width_bead(invalid,limits).snapshot);
+    limits.cancelled=[] { std::fesetround(FE_DOWNWARD);return false; };
+    const auto rounding=plan_fixed_width_bead(request,limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+}

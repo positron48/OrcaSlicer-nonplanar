@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="0" skipped="0" tests="54825" hostname="tbd" time="12.964" timestamp="2026-10-01T03:02:26Z">
+    <properties>
+      <property name="random-seed" value="4182620225"/>
+      <property name="filters" value="[BodyMaterial],[NativeCoverage],[NativeTransition],[NativeIntegral],[NativePassStack],[NativeIntegralStrips],[NativeAffineHatches],[NativeHatchCells],[NativeFixedWidthBeads]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B07 native finite hatch cells keep end and boundary volume in an explicit remainder" time="0.810" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B06 actual native reserved body bounds the first affine pass and missing cap volume" time="0.540" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B07 native affine wedge creates finite nonplanar hatch candidates from the owned source" time="1.475" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B05 native material source references match independent chained encoding" time="0.002" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B05 native body material retains every source segment and conserves native flow" time="0.072" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B06 actual native bead union refines the corrugated first-pass volume" time="0.866" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B04 actual dense native floor has continuous inner coverage under the cap" time="0.079" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B06 native pass stack derives the target from the owned source and stays in the reserved cap" time="3.812" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B06 native refined integral allocates complete X and Y strips from the same owned proof" time="4.638" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B07 native prospective later affine hatches select consistent rounded bead amounts" time="0.578" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B05 native body material refuses unsupported flow stale budgets and malformed context" time="0.091" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,1082 @@
+Filters: [NativeFixedWidthBeads]
+Randomness seeded to: 817681804
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 native prospective later affine hatches select consistent rounded bead
+amounts
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1968
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1970: PASSED:
+with message:
+  !(std::is_aggregate<FixedWidthBeadSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1362: PASSED:
+  REQUIRE( file.source )
+with expansion:
+  0x996cd4888
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1363: PASSED:
+  REQUIRE( imported.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1364: PASSED:
+  REQUIRE( load_stl(path.string().c_str(),&model) )
+with expansion:
+  true
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1370: PASSED:
+  REQUIRE( placed.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+with message:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1373: PASSED:
+  REQUIRE( partition.status==VolumePartitionStatus::Partitioned )
+with expansion:
+  0 == 0
+with messages:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+  NOMINAL_BODY_CAP_PARTITION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1972: PASSED:
+  REQUIRE( body.snapshot )
+with expansion:
+  0x9971d1158
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1976: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x996cf00b8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1984: PASSED:
+  REQUIRE( native.snapshot )
+with expansion:
+  0x9972180d8
+with message:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.41302953909112222 <= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.41302953909112383 >= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.41302953909111895 <= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.41302953909112056 >= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.41302953909112222 <= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.41302953909112383 >= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.41302953909111895 <= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.41302953909112056 >= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.09222594518214156 <= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.09222594518214192 >= 0.0922259
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.41302953909112222 <= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.41302953909112383 >= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.41302953909112222 <= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.41302953909112383 >= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.41302953909112222 <= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.41302953909112383 >= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1999: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x996c04fc0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2000: PASSED:
+  REQUIRE( planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint )
+with expansion:
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+  ==
+  "fd23f3e0ac2a8fe9ec4dd27b5771255e424e1847e8b04f099260b273d40371c2"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2009: PASSED:
+  REQUIRE( accepted.snapshot )
+with expansion:
+  0x997042598
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.lower<=expected )
+with expansion:
+  0.41302953909112222 <= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2013: PASSED:
+  REQUIRE( planned.snapshot->target_volume_mm3.upper>=expected )
+with expansion:
+  0.41302953909112383 >= 0.41303
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2017: PASSED:
+  REQUIRE( lines>0 )
+with expansion:
+  22 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  later lines=22 packets=22 rounded amount=4.59539954527896288
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2017: PASSED:
+  REQUIRE( packets>=lines )
+with expansion:
+  22 >= 22
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  later lines=22 packets=22 rounded amount=4.59539954527896288
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2017: PASSED:
+  REQUIRE( amount>0 )
+with expansion:
+  4.5954 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  later lines=22 packets=22 rounded amount=4.59539954527896288
+
+===============================================================================
+All tests passed (122 assertions in 1 test case)
+

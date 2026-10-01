@@ -1964,3 +1964,55 @@ TEST_CASE("B07 native finite hatch cells keep end and boundary volume in an expl
     auto limits=hatch_limits.volumes; limits.is_current=[](uint64_t){return false;};
     REQUIRE_FALSE(allocate_affine_hatch_cells({"",native.snapshot->hatches},limits).snapshot);
 }
+
+TEST_CASE("B07 native prospective later affine hatches select consistent rounded bead amounts", "[Nonplanar][B07][NativeFixedWidthBeads]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FixedWidthBeadSnapshot>::value);
+    const auto body=generate_planar_body(native_body_partition(planar_body_config(),{},{},4.2,
+        "tests/nonplanar/data/affine-wedge-1-in-16.stl")); REQUIRE(body.snapshot);
+    const BodyMaterialParameters parameters{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits capture; capture.timeout=std::chrono::seconds(5);
+    const auto material=reconstruct_planar_body_material(body,parameters,capture); REQUIRE(material.snapshot);
+    const NativeAffinePassRequest request{{19,17,21,23},0,4.1,
+        {4,{VerticalGap(.1),VerticalGap(.4),Length(.00001)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.01)}};
+    NativeAffinePassLimits pass_limits;pass_limits.material.max_cells=8191;pass_limits.material.timeout=std::chrono::seconds(5);
+    pass_limits.material.maximum_interval_width=Volume(.01);
+    AffineHatchLimits hatch_limits;hatch_limits.timeout=std::chrono::seconds(10);hatch_limits.volumes.max_cells=32768;
+    hatch_limits.volumes.timeout=std::chrono::seconds(5);hatch_limits.volumes.maximum_interval_width=Volume(.01);
+    const auto native=plan_native_affine_hatches(material,request,{WidthXY(.45),Length(.4),Length(.2),HatchDirection::AlongX},
+        pass_limits,hatch_limits); INFO(native.reason); REQUIRE(native.snapshot);
+    size_t lines=0,packets=0;long double amount=0;
+    // Only the prospective affine later interfaces have declared affine gaps.
+    // Actual first-roof gaps and later deposited support are separate proofs.
+    for (size_t p=1; p<native.snapshot->hatches->passes.size(); ++p) {
+        const auto &lower=native.snapshot->passes->stack->surfaces[p-1].cell;
+        const auto gap=[&](PhysicalPosition point) {
+            const long double z=static_cast<long double>(lower.z00)+(static_cast<long double>(lower.z10)-lower.z00)*(point.x()-19)/2+
+                (static_cast<long double>(lower.z01)-lower.z00)*(point.y()-17)/6;
+            return double(point.z()-z);
+        };
+        for (const auto &line : native.snapshot->hatches->passes[p].lines) {
+            ++lines; const FixedWidthBeadRequest input{line.start,line.end,line.width,VerticalGap(gap(line.start)),VerticalGap(gap(line.end)),
+                BeadSectionKind::RoundedRectangle,body.snapshot->revision,material.snapshot->material_fingerprint};
+            FixedWidthBeadLimits limits;limits.maximum_width_error=Length(.002);limits.maximum_volume_error=Volume(.00001);
+            const auto planned=plan_fixed_width_bead(input,limits);INFO(planned.reason);REQUIRE(planned.snapshot);
+            REQUIRE(planned.snapshot->request.source_fingerprint==material.snapshot->material_fingerprint);
+            std::vector<MaterialRecord> rows;
+            for (const auto &piece : planned.snapshot->pieces) {
+                const auto index=rows.size();++packets;amount+=piece.volume.value();
+                rows.push_back({{index+1,index,33,piece.start,piece.end,Speed(20),Acceleration(100),Deposition{piece.volume,piece.nominal_width,
+                    VerticalGap(std::min(piece.section.gap_begin_mm,piece.section.gap_end_mm)),VerticalGap(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm)),
+                    parameters.material,7,8}},piece.section});
+            }
+            const auto accepted=capture_material_sequence(rows,material.snapshot->material->model,body.snapshot->revision,material.snapshot->material_fingerprint);
+            INFO(accepted.reason);REQUIRE(accepted.snapshot);
+            const long double dx=static_cast<long double>(line.end.x())-line.start.x(),dy=static_cast<long double>(line.end.y())-line.start.y();
+            const long double h0=input.gap_begin.value(),h1=input.gap_end.value(),k=1-std::acos(-1.L)/4;
+            const long double expected=std::sqrt(dx*dx+dy*dy)*(.45L*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3);
+            REQUIRE(planned.snapshot->target_volume_mm3.lower<=expected);REQUIRE(planned.snapshot->target_volume_mm3.upper>=expected);
+        }
+    }
+    INFO("later lines=" << lines << " packets=" << packets << " rounded amount=" << std::setprecision(18) << amount);
+    REQUIRE(lines>0);REQUIRE(packets>=lines);REQUIRE(amount>0);
+}

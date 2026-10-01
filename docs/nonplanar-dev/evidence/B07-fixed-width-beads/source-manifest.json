@@ -1,0 +1,62 @@
+{
+  "base_commit": "2ee83d334112c5461857d5b08d460e35f12c4f45",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-fixed-width-beads.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "4bc0cececb141dd7bec8843122b491540f0cbb86d1f22949c5a589dac93647e5",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "ed15b1abb6c3554412e6e8e48617d51d72e152f4c47259758eb808099ba15536",
+    "tests/nonplanar/test_deposition_model.cpp": "852bc33902ff17ec9a48639650c1223910cc6a0d4e0af0854913794c3200834f",
+    "tests/nonplanar/test_policy.cpp": "07c8ac95522b13af8f7ecd6478798fc601a9c17ccd6660a87a5bfc23b897e461",
+    "docs/nonplanar-dev/adr-0040-adaptive-fixed-width-constant-flux.md": "43541814493d1c226549d19cf759abafb0ef07311fb569b76a31fc64c2850eab",
+    "docs/nonplanar-dev/B07-fixed-width-beads.md": "b367b6e52ad40b9767c4e9702941eec2462bdd6c116998e198117dbc14d05630",
+    "docs/nonplanar-dev/status.json": "19a77d52f626cb3ab2745a3055ccea6ed23632b36568d6ea14c468022e2851e6"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "6337e8e83b81f96c8fa9706b1a7c70a090a3fc9b74fc7c284a7640537150ca6f",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "2024f7ca6608d76c872430a894db3a49974f05dec4374b952b74ebf9817dbc51"
+  },
+  "compiled_commit_label": "31461d50",
+  "compiled_commit_label_note": "Retained configure label; exact source/binary hashes bind this build. B13 full software provenance remains pending.",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "internal_material_contract": 1,
+  "internal_affine_pass_stack_contract": 2,
+  "internal_affine_hatch_contract": 2,
+  "internal_affine_hatch_cells_contract": 1,
+  "internal_fixed_width_bead_contract": 1,
+  "new_geometric_cases": 3,
+  "new_geometric_assertions": 6400,
+  "new_native_cases": 1,
+  "new_native_assertions": 122,
+  "material_suite_cases": 30,
+  "material_suite_assertions": 11605,
+  "body_suite_cases": 11,
+  "body_suite_assertions": 54825,
+  "ctest_discovered": 272,
+  "ctest_executed": 272,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "native_prospective_later_lines": 22,
+  "native_packets": 22,
+  "native_commanded_model_amount_mm3": 4.595399545278963,
+  "native_policy": {
+    "nominal_width_xy_mm": 0.45,
+    "maximum_width_departure_mm": 0.002,
+    "maximum_whole_line_volume_error_mm3": 1e-05,
+    "section": "RoundedRectangle"
+  },
+  "primitive_defaults": {
+    "maximum_width_departure_mm": 0.005,
+    "maximum_whole_line_volume_error_mm3": 0.001,
+    "max_segments": 4096,
+    "max_depth": 24,
+    "timeout_ms": 1000
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN",
+  "full_B07": "NOT_IMPLEMENTED_ACTUAL_FIRST_GAP_OVERLAP_PERIMETER_SEAM_CURVED_ACTUAL_LATER_SUPPORT_ORDER_PENDING",
+  "full_B10": "NOT_IMPLEMENTED_COMPLETE_E_MOTION_FLOW_FIRMWARE_CONTACT_MODEL_PENDING",
+  "export": "EXISTING_SAFE_HYBRID_BLOCKER_RETAINED"
+}

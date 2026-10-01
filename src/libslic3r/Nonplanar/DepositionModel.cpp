@@ -16,11 +16,11 @@ ScalarBounds bounds(Interval v) { return {v.lo,v.hi}; }
 Interval interval(ScalarBounds v) { return {v.lower,v.upper}; }
 Interval absolute(Interval v) { return {v.lo<=0 && v.hi>=0 ? 0 : std::min(std::abs(v.lo),std::abs(v.hi)),std::max(std::abs(v.lo),std::abs(v.hi))}; }
 Interval pi() { return {3.141592653589793,3.1415926535897936}; }
-Interval length_squared(const MaterialRecord &row)
+Interval length_squared(PhysicalPosition start, PhysicalPosition end)
 {
-    return square(Interval(row.motion.end.x())-Interval(row.motion.start.x()))+
-           square(Interval(row.motion.end.y())-Interval(row.motion.start.y()));
+    return square(Interval(end.x())-Interval(start.x()))+square(Interval(end.y())-Interval(start.y()));
 }
+Interval length_squared(const MaterialRecord &row) { return length_squared(row.motion.start,row.motion.end); }
 Interval section_width(Interval area, Interval height, BeadSectionKind kind)
 {
     return kind==BeadSectionKind::RoundedRectangle ? area/height+(Interval(1)-pi()/Interval(4))*height : area/height;
@@ -1132,5 +1132,96 @@ AffineHatchCellsResult allocate_affine_hatch_cells(const AffineHatchResult &requ
         poll();return {"BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) { return {e.what(),{}}; }
     catch (const std::exception &e) { return {"HATCH_CELL_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
+}
+
+FixedWidthBeadResult plan_fixed_width_bead(const FixedWidthBeadRequest &requested, const FixedWidthBeadLimits &requested_limits)
+{
+    const auto limits=requested_limits; const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (requested.source_fingerprint.size()!=64) reject("INVALID_FIXED_WIDTH_BEAD_CONTEXT");
+        const auto request=requested;
+        if (!request.revision || !std::all_of(request.source_fingerprint.begin(),request.source_fingerprint.end(),
+                [](char c){return (c>='0' && c<='9') || (c>='a' && c<='f');}) ||
+            (request.kind!=BeadSectionKind::Rectangle && request.kind!=BeadSectionKind::RoundedRectangle) ||
+            request.width.value()<=0 || request.gap_begin.value()<=0 || request.gap_end.value()<=0 ||
+            limits.maximum_width_error.value()<=0 || limits.maximum_width_error.value()>.05 || limits.maximum_volume_error.value()<=0 ||
+            !limits.max_segments || limits.max_segments>65535 || !limits.max_depth || limits.max_depth>32 || !valid_timeout(limits.timeout))
+            reject("INVALID_FIXED_WIDTH_BEAD_REQUEST");
+        for (auto p : {request.start,request.end}) { coordinate(p.x());coordinate(p.y());coordinate(p.z()); }
+        for (double v : {request.width.value(),request.gap_begin.value(),request.gap_end.value()}) coordinate(v);
+        if (request.kind==BeadSectionKind::RoundedRectangle && request.width.value()<=std::max(request.gap_begin.value(),request.gap_end.value()))
+            reject("UNSUPPORTED_FIXED_WIDTH_ROUNDED_DOMAIN");
+        const auto poll=[&] { stop(limits,request.revision,started); };poll();
+        const auto original_length=detail::root(length_squared(request.start,request.end));
+        if (original_length.lo<=0) reject("FIXED_WIDTH_REQUIRES_XY_LENGTH");
+        const auto correction=request.kind==BeadSectionKind::RoundedRectangle ? Interval(1)-pi()/Interval(4) : Interval(0);
+        const auto ideal=[&](Interval begin,Interval end,Interval fraction) {
+            return original_length*fraction*(Interval(request.width.value())*(begin+end)/Interval(2)-
+                correction*(square(begin)+begin*end+square(end))/Interval(3));
+        };
+        const auto target=ideal(Interval(request.gap_begin.value()),Interval(request.gap_end.value()),Interval(1));
+        if (target.lo<=0) reject("FIXED_WIDTH_TARGET_VOLUME_UNCERTAIN");
+        const auto stored=[](const Exact &exact) {
+            const auto range=exact_interval(exact);const double value=(range.lo+range.hi)/2;coordinate(value);
+            const auto delta=range-Interval(value);
+            return std::pair<double,double>{value,std::max(std::abs(delta.lo),std::abs(delta.hi))};
+        };
+        struct Endpoint { PhysicalPosition point; double gap, error; };
+        const auto endpoint=[&](const Exact &t) {
+            const auto x=stored(Exact(request.start.x())+(Exact(request.end.x())-Exact(request.start.x()))*t);
+            const auto y=stored(Exact(request.start.y())+(Exact(request.end.y())-Exact(request.start.y()))*t);
+            const auto z=stored(Exact(request.start.z())+(Exact(request.end.z())-Exact(request.start.z()))*t);
+            const auto h=stored(Exact(request.gap_begin.value())+(Exact(request.gap_end.value())-Exact(request.gap_begin.value()))*t);
+            const double error=(Interval(x.second)+Interval(y.second)+Interval(z.second)+Interval(h.second)).hi;
+            if (h.first<=0 || error>.05) reject("FIXED_WIDTH_COORDINATE_BUDGET");
+            return Endpoint{{x.first,y.first,z.first},h.first,error};
+        };
+        struct Node { Exact begin,end; Endpoint a,b; size_t depth; };
+        std::vector<Node> pending{{Exact(0),Exact(1),endpoint(Exact(0)),endpoint(Exact(1)),0}};
+        std::vector<FixedWidthBeadPiece> pieces; Exact deposited(0);double maximum_width_error=0,numeric=0;
+        while (!pending.empty()) {
+            poll();auto node=std::move(pending.back());pending.pop_back();
+            const auto length=detail::root(length_squared(node.a.point,node.b.point));
+            if (length.lo<=0) reject("FIXED_WIDTH_PACKET_XY_ROUNDING");
+            const Interval h0(node.a.gap),h1(node.b.gap),middle=(h0+h1)/Interval(2);
+            const auto nominal_amount=length*middle*(Interval(request.width.value())-correction*middle);
+            const double amount=(nominal_amount.lo+nominal_amount.hi)/2;
+            if (!std::isfinite(amount) || amount<=0) reject("FIXED_WIDTH_PACKET_AMOUNT_ROUNDING");
+            const auto area=Interval(amount)/length;
+            const Interval hmin(std::min(node.a.gap,node.b.gap)),hmax(std::max(node.a.gap,node.b.gap));
+            const auto wmin=section_width(area,hmax,request.kind),wmax=section_width(area,hmin,request.kind);
+            const double width_error=std::max({0.,(Interval(request.width.value())-wmin).hi,(wmax-Interval(request.width.value())).hi});
+            const auto anchor=section_width(area,middle,request.kind);
+            const Exact original_h0=Exact(request.gap_begin.value())+(Exact(request.gap_end.value())-Exact(request.gap_begin.value()))*node.begin;
+            const Exact original_h1=Exact(request.gap_begin.value())+(Exact(request.gap_end.value())-Exact(request.gap_begin.value()))*node.end;
+            const auto fraction=exact_interval(node.end-node.begin);
+            const auto volume_error=Interval(amount)-ideal(exact_interval(original_h0),exact_interval(original_h1),fraction);
+            const double error=std::max(std::abs(volume_error.lo),std::abs(volume_error.hi));
+            const bool rounded_domain=request.kind!=BeadSectionKind::RoundedRectangle || area.lo>(pi()/Interval(4)*square(hmax)).hi;
+            const bool accepted=rounded_domain && width_error<=limits.maximum_width_error.value() &&
+                error<=(Interval(limits.maximum_volume_error.value())*fraction).lo &&
+                request.width.value()>=anchor.lo && request.width.value()<=anchor.hi;
+            if (!accepted) {
+                if (node.depth>=limits.max_depth) reject("FIXED_WIDTH_PACKET_DEPTH_LIMIT");
+                if (pieces.size()+pending.size()+2>limits.max_segments) reject("FIXED_WIDTH_PACKET_COUNT_LIMIT");
+                const Exact t=(node.begin+node.end)/Exact(2);const auto point=endpoint(t);
+                pending.push_back({t,node.end,point,node.b,node.depth+1});pending.push_back({node.begin,t,node.a,point,node.depth+1});
+                continue;
+            }
+            if (pieces.size()>=limits.max_segments) reject("FIXED_WIDTH_PACKET_COUNT_LIMIT");
+            maximum_width_error=std::max(maximum_width_error,width_error);numeric=std::max({numeric,node.a.error,node.b.error});
+            deposited+=Exact(amount);
+            pieces.push_back({node.a.point,node.b.point,request.width,Volume(amount),
+                {request.kind,node.a.gap,node.b.gap,{wmin.lo,wmax.hi}},width_error,std::max(node.a.error,node.b.error)});
+        }
+        const auto delivered=exact_interval(deposited),difference=delivered-target;
+        const double error=std::max(std::abs(difference.lo),std::abs(difference.hi));
+        if (error>limits.maximum_volume_error.value()) reject("FIXED_WIDTH_GLOBAL_VOLUME_ERROR");
+        poll();auto snapshot=std::shared_ptr<const FixedWidthBeadSnapshot>(new FixedWidthBeadSnapshot(request,std::move(pieces),
+            bounds(target),bounds(delivered),error,maximum_width_error,numeric));
+        poll();return {"BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) { return {e.what(),{}}; }
+    catch (const std::exception &e) { return {"FIXED_WIDTH_BEAD_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
 }
 }

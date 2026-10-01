@@ -291,4 +291,49 @@ struct AffineHatchCellsResult { std::string reason; std::shared_ptr<const Affine
 // is charged to that path. Rounded-section/overlap corrections, filled beads/E,
 // seam construction, actual later support and motion order remain separate.
 AffineHatchCellsResult allocate_affine_hatch_cells(const AffineHatchResult &, const MaterialIntegralLimits &limits = {});
+
+inline constexpr unsigned fixed_width_bead_contract_version=1;
+struct FixedWidthBeadRequest {
+    PhysicalPosition start, end;
+    WidthXY width;
+    VerticalGap gap_begin, gap_end;
+    BeadSectionKind kind;
+    uint64_t revision;
+    std::string source_fingerprint;
+};
+struct FixedWidthBeadLimits {
+    Length maximum_width_error{.005}; // Approximation of one fixed nominal width.
+    Volume maximum_volume_error{.001}; // Whole path, not per packet.
+    size_t max_segments=4096, max_depth=24;
+    std::chrono::milliseconds timeout{1000};
+    std::function<bool()> cancelled;
+    std::function<bool(uint64_t)> is_current;
+};
+struct FixedWidthBeadPiece {
+    PhysicalPosition start, end;
+    WidthXY nominal_width;
+    Volume volume;
+    BeadSection section; // Actual constant-flux width range, not variable design width.
+    double width_error_upper_mm, coordinate_error_upper_mm;
+};
+struct FixedWidthBeadResult;
+struct FixedWidthBeadSnapshot {
+    const FixedWidthBeadRequest request;
+    const std::vector<FixedWidthBeadPiece> pieces;
+    const ScalarBounds target_volume_mm3, deposited_volume_mm3;
+    const double total_volume_error_mm3, maximum_width_error_mm, numerical_error_upper_mm;
+private:
+    FixedWidthBeadSnapshot(FixedWidthBeadRequest r, std::vector<FixedWidthBeadPiece> p, ScalarBounds target,
+        ScalarBounds deposited, double volume_error, double width_error, double numeric)
+        : request(std::move(r)), pieces(std::move(p)), target_volume_mm3(target), deposited_volume_mm3(deposited),
+          total_volume_error_mm3(volume_error), maximum_width_error_mm(width_error), numerical_error_upper_mm(numeric) {}
+    friend FixedWidthBeadResult plan_fixed_width_bead(const FixedWidthBeadRequest &, const FixedWidthBeadLimits &);
+};
+struct FixedWidthBeadResult { std::string reason; std::shared_ptr<const FixedWidthBeadSnapshot> snapshot; };
+// Subdivide a declared straight affine-gap path into constant-flux G1 amounts.
+// Bound departure from its fixed nominal XY width and whole analytic volume.
+// Butt ends and the existing vertical section model; no 3D slope multiplier.
+// Source identity is declared context, not actual support/contact/order proof.
+// Cell filling/overlap, actual gap reconstruction and export remain separate.
+FixedWidthBeadResult plan_fixed_width_bead(const FixedWidthBeadRequest &, const FixedWidthBeadLimits &limits = {});
 }
