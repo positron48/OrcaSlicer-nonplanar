@@ -307,6 +307,12 @@ Interval exact_interval(const Exact &value)
     const auto range=CGAL::to_interval(value); detail::require_interval_environment();
     return {range.first,range.second};
 }
+std::pair<double,double> stored_exact(const Exact &value)
+{
+    const auto range=exact_interval(value);const double rounded=(range.lo+range.hi)/2;coordinate(rounded);
+    const auto error=range-Interval(rounded);
+    return {rounded,std::max(std::abs(error.lo),std::abs(error.hi))};
+}
 Projection project_polygon(const MaterialRecord &row, const Polygon &polygon, Interval z)
 {
     auto projection=project(row,exact_interval(polygon.front()[0]),exact_interval(polygon.front()[1]),z);
@@ -959,15 +965,10 @@ AffineHatchResult plan_affine_hatches(const AffinePassStackResult &requested, co
             reject("AFFINE_HATCH_SPARSE_PROJECTED_PITCH");
         if (!source->first_pass.first_pass.gap_mm || policy.width.value()<=source->first_pass.first_pass.gap_mm->upper ||
             policy.width.value()<=source->policy.later_vertical_maximum.value()) reject("AFFINE_HATCH_WIDTH_HEIGHT_DOMAIN");
-        const auto stored=[&](const Exact &value) {
-            const auto range=exact_interval(value); const double midpoint=(range.lo+range.hi)/2; coordinate(midpoint);
-            const auto error=range-Interval(midpoint);
-            return std::pair<double,double>{midpoint,std::max(std::abs(error.lo),std::abs(error.hi))};
-        };
         const auto point=[&](double x,double y,const AffineCapCell &c) {
             const Exact z=Exact(c.z00)+(Exact(c.z10)-Exact(c.z00))*(Exact(x)-Exact(r.min_x))/(Exact(r.max_x)-Exact(r.min_x))+
                 (Exact(c.z01)-Exact(c.z00))*(Exact(y)-Exact(r.min_y))/(Exact(r.max_y)-Exact(r.min_y));
-            const auto value=stored(z); return std::pair<PhysicalPosition,double>{{x,y,value.first},value.second};
+            const auto value=stored_exact(z); return std::pair<PhysicalPosition,double>{{x,y,value.first},value.second};
         };
         std::vector<AffineHatchPass> passes; size_t line_count=0; Exact total_lower(0),total_upper(0); double numeric=source->numerical_error_upper_mm;
         for (size_t p=0; p<source->surfaces.size(); ++p) {
@@ -982,9 +983,9 @@ AffineHatchResult plan_affine_hatches(const AffinePassStackResult &requested, co
             if (pitch.hi>policy.maximum_pitch.value()) reject("AFFINE_HATCH_PITCH_ROUNDING");
             std::vector<double> centers,cuts; std::vector<double> errors;
             for (size_t i=0; i<count; ++i) {
-                poll(); const auto value=stored(Exact(low)+(Exact(high)-Exact(low))*Exact(int(i))/Exact(int(intervals)));
+                poll(); const auto value=stored_exact(Exact(low)+(Exact(high)-Exact(low))*Exact(int(i))/Exact(int(intervals)));
                 centers.push_back(value.first); errors.push_back(value.second);
-                if (i) cuts.push_back(stored((Exact(centers[i-1])+Exact(centers[i]))/Exact(2)).first);
+                if (i) cuts.push_back(stored_exact((Exact(centers[i-1])+Exact(centers[i]))/Exact(2)).first);
             }
             for (size_t i=1; i<centers.size(); ++i) {
                 const auto gap=exact_interval(Exact(centers[i])-Exact(centers[i-1]));
@@ -1162,17 +1163,12 @@ FixedWidthBeadResult plan_fixed_width_bead(const FixedWidthBeadRequest &requeste
         };
         const auto target=ideal(Interval(request.gap_begin.value()),Interval(request.gap_end.value()),Interval(1));
         if (target.lo<=0) reject("FIXED_WIDTH_TARGET_VOLUME_UNCERTAIN");
-        const auto stored=[](const Exact &exact) {
-            const auto range=exact_interval(exact);const double value=(range.lo+range.hi)/2;coordinate(value);
-            const auto delta=range-Interval(value);
-            return std::pair<double,double>{value,std::max(std::abs(delta.lo),std::abs(delta.hi))};
-        };
         struct Endpoint { PhysicalPosition point; double gap, error; };
         const auto endpoint=[&](const Exact &t) {
-            const auto x=stored(Exact(request.start.x())+(Exact(request.end.x())-Exact(request.start.x()))*t);
-            const auto y=stored(Exact(request.start.y())+(Exact(request.end.y())-Exact(request.start.y()))*t);
-            const auto z=stored(Exact(request.start.z())+(Exact(request.end.z())-Exact(request.start.z()))*t);
-            const auto h=stored(Exact(request.gap_begin.value())+(Exact(request.gap_end.value())-Exact(request.gap_begin.value()))*t);
+            const auto x=stored_exact(Exact(request.start.x())+(Exact(request.end.x())-Exact(request.start.x()))*t);
+            const auto y=stored_exact(Exact(request.start.y())+(Exact(request.end.y())-Exact(request.start.y()))*t);
+            const auto z=stored_exact(Exact(request.start.z())+(Exact(request.end.z())-Exact(request.start.z()))*t);
+            const auto h=stored_exact(Exact(request.gap_begin.value())+(Exact(request.gap_end.value())-Exact(request.gap_begin.value()))*t);
             const double error=(Interval(x.second)+Interval(y.second)+Interval(z.second)+Interval(h.second)).hi;
             if (h.first<=0 || error>.05) reject("FIXED_WIDTH_COORDINATE_BUDGET");
             return Endpoint{{x.first,y.first,z.first},h.first,error};
@@ -1223,5 +1219,143 @@ FixedWidthBeadResult plan_fixed_width_bead(const FixedWidthBeadRequest &requeste
         poll();return {"BOUNDED_CONSTANT_FLUX_FIXED_NOMINAL_WIDTH_CANDIDATE_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) { return {e.what(),{}}; }
     catch (const std::exception &e) { return {"FIXED_WIDTH_BEAD_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
+}
+
+FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &requested, size_t line_index,
+                                         const FirstHatchBeadLimits &requested_limits)
+{
+    const auto source=requested.snapshot; const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!source || !source->source || source->passes.empty() || line_index>=source->passes.front().lines.size() ||
+            !limits.max_evaluations || limits.max_evaluations>200000 || !valid_timeout(limits.timeout) ||
+            !valid_timeout(limits.packets.timeout) || limits.maximum_gap_error.value()<=0 || limits.maximum_gap_error.value()>.05 ||
+            !limits.max_roof_segments || limits.max_roof_segments>65535 || !limits.max_depth || limits.max_depth>32 ||
+            !limits.packets.max_segments || limits.packets.max_segments>65535 || !limits.packets.max_depth || limits.packets.max_depth>32 ||
+            limits.packets.maximum_width_error.value()<=0 || limits.packets.maximum_width_error.value()>.05 ||
+            limits.packets.maximum_volume_error.value()<=0)
+            reject("INVALID_FIRST_HATCH_BEAD");
+        const auto stack=source->source;const auto cursor=stack->source;
+        if (!cursor || !cursor->sequence || !stack->first_pass.proof || stack->first_pass.status!=MaterialIntegralStatus::Bounded)
+            reject("FIRST_HATCH_MISSING_OWNED_ROOF_PROOF");
+        const auto sequence=cursor->sequence; const auto &line=source->passes.front().lines[line_index];
+        const bool x_axis=line.start.y()==line.end.y(), y_axis=line.start.x()==line.end.x();
+        if (x_axis==y_axis) reject("FIRST_HATCH_REQUIRES_AXIS_ALIGNED_CENTERLINE");
+        const auto poll=[&] { stop(limits,sequence->revision,started);stop(limits.packets,sequence->revision,started); };poll();
+        const auto context=sequence_hash(*sequence,poll);
+        size_t evaluations=0, segments=0;
+        const auto evaluate=[&] {
+            if (evaluations>=limits.max_evaluations) reject("FIRST_HATCH_ROOF_WORK_LIMIT");
+            if (evaluations%128==0) poll();++evaluations;
+        };
+        struct Endpoint { PhysicalPosition point;double error; };
+        const auto endpoint=[&](const Exact &t) {
+            const auto x=stored_exact(Exact(line.start.x())+(Exact(line.end.x())-Exact(line.start.x()))*t);
+            const auto y=stored_exact(Exact(line.start.y())+(Exact(line.end.y())-Exact(line.start.y()))*t);
+            const auto z=stored_exact(Exact(line.start.z())+(Exact(line.end.z())-Exact(line.start.z()))*t);
+            return Endpoint{{x.first,y.first,z.first},(Interval(x.second)+Interval(y.second)+Interval(z.second)).hi};
+        };
+        struct Node { Exact begin,end;Endpoint a,b;size_t depth;std::vector<size_t> candidates; };
+        std::vector<size_t> active;
+        const size_t end=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence->records.size());
+        for (size_t i=0;i<end;++i) { if (i%128==0) poll();if (sequence->records[i].bead) active.push_back(i); }
+        std::vector<Node> pending{{Exact(0),Exact(1),endpoint(Exact(0)),endpoint(Exact(1)),0,std::move(active)}};
+        std::vector<FixedWidthBeadPiece> pieces;
+        Exact target_lower(0),target_upper(0),deposited(0);double maximum_gap=0,maximum_width=0,coordinate_error=0;
+        const auto correction=Interval(1)-pi()/Interval(4);
+        while (!pending.empty()) {
+            poll();auto node=std::move(pending.back());pending.pop_back();
+            const Polygon polygon{{Exact(node.a.point.x()),Exact(node.a.point.y())},{Exact(node.b.point.x()),Exact(node.b.point.y())}};
+            double lower=stack->support_plane_z_mm,upper=lower;std::vector<size_t> candidates;
+            for (size_t i : node.candidates) {
+                evaluate();const auto &row=sequence->records[i];const double progress=i<cursor->completed_records ? 1 : cursor->current_progress;
+                const auto last=Interval(row.motion.start.z())+(Interval(row.motion.end.z())-Interval(row.motion.start.z()))*Interval(progress);
+                if (std::max(row.motion.start.z(),last.hi)<stack->support_plane_z_mm) continue;
+                const auto projection=roof_projection(row,sequence->model,polygon,progress,Representation::Nominal);
+                if (!projection) continue;
+                const auto possible=nominal_roof(row,projection->projected,progress);
+                if (!possible || possible->height.hi<stack->support_plane_z_mm) continue;
+                candidates.push_back(i);upper=std::max(upper,possible->height.hi);
+                const auto guaranteed=nominal_roof(row,project_polygon(row,polygon,Interval(0)),progress);
+                if (guaranteed && guaranteed->whole_footprint) lower=std::max(lower,guaranteed->height.lo);
+            }
+            // The owned parent proves D_lower covers the whole ROI at plane.
+            // It is a lower bound on the nominal roof, never its actual value.
+            if (candidates.empty() || lower>upper) reject("FIRST_HATCH_INCONSISTENT_NOMINAL_ROOF");
+            const Interval roof(lower,upper);const double middle=(lower+upper)/2;
+            const double h0=node.a.point.z()-middle,h1=node.b.point.z()-middle;
+            const auto bottom0=Interval(node.a.point.z())-Interval(h0),bottom1=Interval(node.b.point.z())-Interval(h1);
+            const Interval bottom(std::min(bottom0.lo,bottom1.lo),std::max(bottom0.hi,bottom1.hi));
+            const auto gap_difference=bottom-roof;
+            double gap_error=std::max(std::abs(gap_difference.lo),std::abs(gap_difference.hi));
+            const auto fraction=exact_interval(node.end-node.begin);
+            const double budget=(Interval(limits.packets.maximum_volume_error.value())*fraction).lo;
+            bool accepted=false;FixedWidthBeadResult packets;Interval target(0);double width_error=0;
+            if (h0>0 && h1>0 && std::max(h0,h1)<source->policy.width.value() && gap_error<=limits.maximum_gap_error.value()) {
+                auto packet_limits=limits.packets;
+                if (pieces.size()>=packet_limits.max_segments) reject("FIRST_HATCH_PACKET_COUNT_LIMIT");
+                packet_limits.max_segments-=pieces.size();packet_limits.maximum_volume_error=Volume(budget/4);
+                packet_limits.timeout=std::min(limits.timeout,limits.packets.timeout)-
+                    std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+                packet_limits.cancelled=[&] { poll();return false; };packet_limits.is_current={};
+                packets=plan_fixed_width_bead({node.a.point,node.b.point,source->policy.width,VerticalGap(h0),VerticalGap(h1),
+                    BeadSectionKind::RoundedRectangle,sequence->revision,context},packet_limits);
+                poll();
+                if (packets.snapshot) {
+                    // Axis-aligned stored endpoints stay on the queried segment.
+                    // Charge its Z/gap interpolation rounding to the roof model.
+                    gap_error=(Interval(gap_error)+Interval(packets.snapshot->numerical_error_upper_mm)).hi;
+                    bool domain=true;
+                    for (const auto &piece : packets.snapshot->pieces) {
+                        const auto within=[&](PhysicalPosition p) {
+                            return p.x()>=std::min(node.a.point.x(),node.b.point.x()) && p.x()<=std::max(node.a.point.x(),node.b.point.x()) &&
+                                p.y()>=std::min(node.a.point.y(),node.b.point.y()) && p.y()<=std::max(node.a.point.y(),node.b.point.y());
+                        };
+                        if (!within(piece.start) || !within(piece.end)) reject("FIRST_HATCH_PACKET_OUTSIDE_QUERIED_SEGMENT");
+                        const auto hmin=Interval(std::min(piece.section.gap_begin_mm,piece.section.gap_end_mm))-Interval(gap_error);
+                        const auto hmax=Interval(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm))+Interval(gap_error);
+                        if (hmin.lo<=0) { domain=false;break; }
+                        const auto area=Interval(piece.volume.value())/detail::root(length_squared(piece.start,piece.end));
+                        if (area.lo<=(pi()/Interval(4)*square(hmax)).hi) { domain=false;break; }
+                        const auto wmin=section_width(area,hmax,BeadSectionKind::RoundedRectangle),wmax=section_width(area,hmin,BeadSectionKind::RoundedRectangle);
+                        width_error=std::max({width_error,(Interval(source->policy.width.value())-wmin).hi,(wmax-Interval(source->policy.width.value())).hi});
+                    }
+                    const auto length=detail::root(length_squared(node.a.point,node.b.point));
+                    const auto maximum_h=Interval(std::max(h0,h1))+Interval(gap_error);
+                    const auto uncertainty=length*Interval(gap_error)*(Interval(source->policy.width.value())+Interval(2)*correction*maximum_h);
+                    target=interval(packets.snapshot->target_volume_mm3)+Interval(-uncertainty.hi,uncertainty.hi);
+                    const auto difference=interval(packets.snapshot->deposited_volume_mm3)-target;
+                    accepted=domain && target.lo>0 && gap_error<=limits.maximum_gap_error.value() &&
+                        width_error<=limits.packets.maximum_width_error.value() && std::max(std::abs(difference.lo),std::abs(difference.hi))<=budget;
+                } else if (packets.reason!="FIXED_WIDTH_PACKET_COUNT_LIMIT" && packets.reason!="FIXED_WIDTH_PACKET_DEPTH_LIMIT")
+                    throw Rejection(packets.reason);
+            }
+            if (!accepted) {
+                if (node.depth>=limits.max_depth) reject("FIRST_HATCH_ROOF_DEPTH_LIMIT");
+                if (segments+pending.size()+2>limits.max_roof_segments) reject("FIRST_HATCH_ROOF_SEGMENT_LIMIT");
+                const Exact t=(node.begin+node.end)/Exact(2);const auto point=endpoint(t);
+                pending.push_back({t,node.end,point,node.b,node.depth+1,candidates});
+                pending.push_back({node.begin,t,node.a,point,node.depth+1,std::move(candidates)});continue;
+            }
+            ++segments;maximum_gap=std::max(maximum_gap,gap_error);maximum_width=std::max(maximum_width,width_error);
+            coordinate_error=std::max({coordinate_error,node.a.error,node.b.error,packets.snapshot->numerical_error_upper_mm});
+            target_lower+=Exact(target.lo);target_upper+=Exact(target.hi);
+            for (auto piece : packets.snapshot->pieces) {
+                deposited+=Exact(piece.volume.value());pieces.push_back(std::move(piece));
+            }
+        }
+        const Interval target(exact_interval(target_lower).lo,exact_interval(target_upper).hi),delivered=exact_interval(deposited);
+        const auto difference=delivered-target;const double error=std::max(std::abs(difference.lo),std::abs(difference.hi));
+        // Both actual and affine-model widths lie within nominal +/- maximum_width.
+        // Their edge difference is therefore at most maximum_width, not half it.
+        const double numeric=(Interval(source->numerical_error_upper_mm)+Interval(coordinate_error)+Interval(maximum_gap)+Interval(maximum_width)).hi;
+        if (error>limits.packets.maximum_volume_error.value()) reject("FIRST_HATCH_GLOBAL_VOLUME_ERROR");
+        if (numeric>.05) reject("FIRST_HATCH_NUMERICAL_BUDGET");
+        poll();auto snapshot=std::shared_ptr<const FirstHatchBeadSnapshot>(new FirstHatchBeadSnapshot(source,line_index,std::move(pieces),
+            bounds(target),bounds(delivered),maximum_gap,maximum_width,error,numeric,segments,evaluations));
+        poll();return {"BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) { return {e.what(),{}}; }
+    catch (const std::exception &e) { return {"FIRST_HATCH_BEAD_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
 }
 }

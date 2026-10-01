@@ -793,3 +793,82 @@ TEST_CASE("B07 fixed-width packet planning captures inputs and refuses stale inv
     limits.cancelled=[] { std::fesetround(FE_DOWNWARD);return false; };
     const auto rounding=plan_fixed_width_bead(request,limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
 }
+
+TEST_CASE("B07 first hatch bead uses the laid roof rather than the lower support plane", "[Nonplanar][B07][FirstHatchBeads]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},1.2,.4,.4,BeadSectionKind::Rectangle)});const auto present=material_at(ledger,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.76,1.8,1.76},.9,policy);REQUIRE(stack.snapshot);
+    const auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX});REQUIRE(hatch.snapshot);
+    FirstHatchBeadLimits limits;limits.maximum_gap_error=Length(.0001);limits.packets.maximum_width_error=Length(.002);
+    limits.packets.maximum_volume_error=Volume(.00001);
+    const auto result=plan_first_hatch_bead(hatch,0,limits);INFO(result.reason);REQUIRE(result.snapshot);
+    const auto &plan=*result.snapshot;REQUIRE(plan.source==hatch.snapshot);REQUIRE(plan.line_index==0);REQUIRE(plan.pieces.size()>1);
+    const auto &line=hatch.snapshot->passes.front().lines.front();
+    const long double h0=static_cast<long double>(line.start.z())-1,h1=static_cast<long double>(line.end.z())-1;
+    const long double length=static_cast<long double>(line.end.x())-line.start.x(),k=1-std::acos(-1.L)/4;
+    const long double target=length*(.45L*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3);
+    volume_contains(plan.actual_target_volume_mm3,target);
+    REQUIRE(plan.maximum_gap_error_mm<=limits.maximum_gap_error.value());
+    REQUIRE(plan.maximum_width_error_mm<=limits.packets.maximum_width_error.value());
+    REQUIRE(plan.total_volume_error_mm3<=limits.packets.maximum_volume_error.value());
+    for (const auto &piece : plan.pieces) {
+        REQUIRE(std::abs(piece.start.z()-piece.section.gap_begin_mm-1)<=plan.maximum_gap_error_mm);
+        REQUIRE(std::abs(piece.end.z()-piece.section.gap_end_mm-1)<=plan.maximum_gap_error_mm);
+    }
+}
+
+TEST_CASE("B07 first hatch bead bounds the continuous rounded roof and owns revision callbacks", "[Nonplanar][B07][FirstHatchBeads]")
+{
+    const auto row=bead(1,0,{0,0,1},{10,0,1},1.6,.6,.6);const auto ledger=captured({row});const auto present=material_at(ledger,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.05),VerticalGap(.28),Length(0)},VerticalGap(.08),VerticalGap(.13),NormalGap(.08),NormalGap(.13),Volume(.001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.75,3,.75},1.43,1.43,1.43},.82,policy);INFO(stack.reason);REQUIRE(stack.snapshot);
+    auto hatch=plan_affine_hatches(stack,{WidthXY(.3),Length(.25),Length(.05),HatchDirection::AlongY});INFO(hatch.reason);REQUIRE(hatch.snapshot);
+    FirstHatchBeadLimits limits;limits.maximum_gap_error=Length(.0001);limits.packets.maximum_width_error=Length(.002);
+    limits.packets.maximum_volume_error=Volume(.0001);
+    const auto result=plan_first_hatch_bead(hatch,0,limits);INFO(result.reason);REQUIRE(result.snapshot);
+    const auto &plan=*result.snapshot;const auto &line=hatch.snapshot->passes.front().lines.front();REQUIRE(plan.roof_segments>1);
+    // Independent monotone shoulder integration. Actual binary64 source amount
+    // defines its core; production accepts continuous interval bounds, not samples.
+    const long double k=1-std::acos(-1.L)/4,h=row.bead->gap_begin_mm;
+    const long double width=std::get<Deposition>(row.motion.payload).volume.value()/10/h+k*h,core=(width-h)/2,radius=h/2;
+    const auto area=[&](long double y) {const long double d=std::max(std::abs(y)-core,0.L);
+        const long double roof=1-h/2+std::sqrt(radius*radius-d*d),gap=line.start.z()-roof;return gap*(.3L-k*gap);};
+    const long double dy=(static_cast<long double>(line.end.y())-line.start.y())/4096;long double lower=0,upper=0;
+    for (size_t i=0;i<4096;++i) {const long double a=area(line.start.y()+dy*i),b=area(line.start.y()+dy*(i+1));
+        lower+=std::min(a,b)*dy;upper+=std::max(a,b)*dy;}
+    REQUIRE(plan.actual_target_volume_mm3.lower<=lower-1e-10L);REQUIRE(plan.actual_target_volume_mm3.upper>=upper+1e-10L);
+    REQUIRE(plan.total_volume_error_mm3<=limits.packets.maximum_volume_error.value());
+    limits.cancelled=[&] {hatch.snapshot.reset();limits.max_roof_segments=1;return false;};
+    const auto owned=plan_first_hatch_bead(hatch,0,limits);INFO(owned.reason);REQUIRE(owned.snapshot);hatch.snapshot=owned.snapshot->source;limits={};
+    REQUIRE_FALSE(plan_first_hatch_bead({},0,limits).snapshot);REQUIRE_FALSE(plan_first_hatch_bead(hatch,10000,limits).snapshot);
+    limits.max_evaluations=1;REQUIRE_FALSE(plan_first_hatch_bead(hatch,0,limits).snapshot);
+    limits={};limits.maximum_gap_error=Length(1e-8);limits.max_roof_segments=1;REQUIRE_FALSE(plan_first_hatch_bead(hatch,0,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead(hatch,0,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(plan_first_hatch_bead(hatch,0,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE_FALSE(plan_first_hatch_bead(hatch,0,limits).snapshot);
+}
+
+TEST_CASE("B07 first bead excludes future roof and refuses packet and numerical limits", "[Nonplanar][B07][FirstHatchBeads]")
+{
+    const auto low=bead(1,0,{0,0,1},{10,0,1},1.2,.4,.4,BeadSectionKind::Rectangle);
+    const MaterialRecord travel{{2,1,0,{10,0,1},{0,0,2},Speed(10),Acceleration(100),Travel{}},{}};
+    const auto future=bead(3,2,{0,0,2},{10,0,2},1.2,.4,.4,BeadSectionKind::Rectangle);
+    const auto ledger=captured({low,travel,future});const auto present=material_at(ledger,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.76,1.8,1.76},.9,policy);REQUIRE(stack.snapshot);
+    const auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX});REQUIRE(hatch.snapshot);
+    const auto result=plan_first_hatch_bead(hatch,0);INFO(result.reason);REQUIRE(result.snapshot);
+    REQUIRE(result.snapshot->source->source->source->completed_records==1);
+    for (const auto &piece : result.snapshot->pieces) {
+        REQUIRE(std::abs(piece.start.z()-piece.section.gap_begin_mm-1)<=result.snapshot->maximum_gap_error_mm);
+        REQUIRE(std::abs(piece.end.z()-piece.section.gap_end_mm-1)<=result.snapshot->maximum_gap_error_mm);
+    }
+    FirstHatchBeadLimits limits;limits.packets.max_segments=1;REQUIRE_FALSE(plan_first_hatch_bead(hatch,0,limits).snapshot);
+    limits={};limits.packets.maximum_volume_error=Volume(1e-20);REQUIRE_FALSE(plan_first_hatch_bead(hatch,0,limits).snapshot);
+    limits={};limits.packets.cancelled=[] {return true;};REQUIRE_FALSE(plan_first_hatch_bead(hatch,0,limits).snapshot);
+    limits={};limits.packets.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead(hatch,0,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounding=plan_first_hatch_bead(hatch,0,limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+}

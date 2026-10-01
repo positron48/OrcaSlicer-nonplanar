@@ -2016,3 +2016,82 @@ TEST_CASE("B07 native prospective later affine hatches select consistent rounded
     INFO("later lines=" << lines << " packets=" << packets << " rounded amount=" << std::setprecision(18) << amount);
     REQUIRE(lines>0);REQUIRE(packets>=lines);REQUIRE(amount>0);
 }
+
+TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consume bounded amounts", "[Nonplanar][B07][NativeFirstHatchBeads]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstHatchBeadSnapshot>::value);
+    const auto body=generate_planar_body(native_body_partition(planar_body_config(),{},{},4.2,
+        "tests/nonplanar/data/affine-wedge-1-in-16.stl")); REQUIRE(body.snapshot);
+    const BodyMaterialParameters parameters{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits capture;capture.timeout=std::chrono::seconds(5);
+    const auto material=reconstruct_planar_body_material(body,parameters,capture);REQUIRE(material.snapshot);
+    const NativeAffinePassRequest request{{19,17,21,23},0,4.1,
+        {4,{VerticalGap(.1),VerticalGap(.4),Length(.00001)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.01)}};
+    NativeAffinePassLimits pass_limits;pass_limits.material.max_cells=8191;pass_limits.material.timeout=std::chrono::seconds(5);
+    pass_limits.material.maximum_interval_width=Volume(.01);
+    AffineHatchLimits hatch_limits;hatch_limits.timeout=std::chrono::seconds(10);hatch_limits.volumes.max_cells=32768;
+    hatch_limits.volumes.timeout=std::chrono::seconds(5);hatch_limits.volumes.maximum_interval_width=Volume(.01);
+    const auto native=plan_native_affine_hatches(material,request,{WidthXY(.45),Length(.4),Length(.2),HatchDirection::AlongX},
+        pass_limits,hatch_limits);INFO(native.reason);REQUIRE(native.snapshot);
+    FirstHatchBeadLimits limits;limits.timeout=std::chrono::seconds(5);limits.packets.timeout=std::chrono::seconds(5);
+    limits.maximum_gap_error=Length(.0001);limits.packets.maximum_width_error=Length(.002);limits.packets.maximum_volume_error=Volume(.0001);
+    size_t packets=0,roof_segments=0,work=0;long double amount=0,plane_amount=0;double gap_error=0,width_error=0,volume_error=0;
+    const long double k=1-std::acos(-1.L)/4;
+    // An independent point section reconstruction checks generated packet
+    // interior gaps/widths. Continuous acceptance comes from the production
+    // interval proof plus the independent analytic geometric cases, not samples.
+    const auto roof_at=[&](PhysicalPosition p) {
+        long double roof=-10000;
+        for (const auto &row : material.snapshot->material->records) {
+            if (!row.bead || std::max(row.motion.start.z(),row.motion.end.z())<4.1) continue;
+            const long double dx=static_cast<long double>(row.motion.end.x())-row.motion.start.x(),dy=static_cast<long double>(row.motion.end.y())-row.motion.start.y();
+            const long double length=std::sqrt(dx*dx+dy*dy),x=static_cast<long double>(p.x())-row.motion.start.x(),y=static_cast<long double>(p.y())-row.motion.start.y();
+            const long double t=(x*dx+y*dy)/(length*length);if (t<0 || t>1) continue;
+            const long double h=row.bead->gap_begin_mm+t*(static_cast<long double>(row.bead->gap_end_mm)-row.bead->gap_begin_mm);
+            const long double top=row.motion.start.z()+t*(static_cast<long double>(row.motion.end.z())-row.motion.start.z());
+            const long double area=std::get<Deposition>(row.motion.payload).volume.value()/length;
+            const long double width=area/h+(row.bead->kind==BeadSectionKind::RoundedRectangle ? k*h : 0),normal=std::abs((-dy*x+dx*y)/length);
+            if (normal>width/2) continue;
+            if (row.bead->kind==BeadSectionKind::Rectangle) roof=std::max(roof,top);
+            else {const long double transverse=std::max(normal-(width-h)/2,0.L);
+                roof=std::max(roof,top-h/2+std::sqrt(std::max(h*h/4-transverse*transverse,0.L)));}
+        }
+        return roof;
+    };
+    const auto &lines=native.snapshot->hatches->passes.front().lines;
+    for (size_t i=0;i<lines.size();++i) {
+        const auto planned=plan_first_hatch_bead({"",native.snapshot->hatches},i,limits);INFO("line=" << i << " " << planned.reason);REQUIRE(planned.snapshot);
+        const auto &plan=*planned.snapshot;REQUIRE(plan.source==native.snapshot->hatches);REQUIRE(plan.line_index==i);
+        REQUIRE(plan.total_volume_error_mm3<=limits.packets.maximum_volume_error.value());
+        REQUIRE(plan.maximum_gap_error_mm<=limits.maximum_gap_error.value());REQUIRE(plan.maximum_width_error_mm<=limits.packets.maximum_width_error.value());
+        REQUIRE(plan.numerical_error_upper_mm<=.05);
+        roof_segments+=plan.roof_segments;work+=plan.evaluations;gap_error=std::max(gap_error,plan.maximum_gap_error_mm);
+        width_error=std::max(width_error,plan.maximum_width_error_mm);volume_error=std::max(volume_error,plan.total_volume_error_mm3);
+        std::vector<MaterialRecord> rows;
+        for (const auto &piece : plan.pieces) {
+            const auto index=rows.size();++packets;amount+=piece.volume.value();
+            const PhysicalPosition middle{(piece.start.x()+piece.end.x())/2,(piece.start.y()+piece.end.y())/2,(piece.start.z()+piece.end.z())/2};
+            const long double roof=roof_at(middle),gap=middle.z()-roof,model_gap=(static_cast<long double>(piece.section.gap_begin_mm)+piece.section.gap_end_mm)/2;
+            REQUIRE(roof>=4.1);REQUIRE(std::abs(gap-model_gap)<=plan.maximum_gap_error_mm);
+            const long double dx=static_cast<long double>(piece.end.x())-piece.start.x(),dy=static_cast<long double>(piece.end.y())-piece.start.y();
+            const long double width=piece.volume.value()/std::sqrt(dx*dx+dy*dy)/gap+k*gap;
+            REQUIRE(std::abs(width-.45L)<=plan.maximum_width_error_mm);
+            rows.push_back({{index+1,index,33,piece.start,piece.end,Speed(20),Acceleration(100),Deposition{piece.volume,piece.nominal_width,
+                VerticalGap(std::min(piece.section.gap_begin_mm,piece.section.gap_end_mm)),VerticalGap(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm)),
+                parameters.material,7,8}},piece.section});
+        }
+        auto charged=material.snapshot->material->model;charged.numerical_coordinate_error=Length(plan.numerical_error_upper_mm);
+        const auto accepted=capture_material_sequence(rows,charged,body.snapshot->revision,material.snapshot->material_fingerprint,capture);
+        INFO(accepted.reason);REQUIRE(accepted.snapshot);
+        const auto &line=lines[i];const long double h0=static_cast<long double>(line.start.z())-4.1,h1=static_cast<long double>(line.end.z())-4.1;
+        const long double length=static_cast<long double>(line.end.x())-line.start.x();
+        plane_amount+=length*(.45L*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3);
+    }
+    INFO("first lines=" << lines.size() << " packets=" << packets << " roof_segments=" << roof_segments << " roof_work=" << work <<
+        " rounded amount=" << std::setprecision(18) << amount << " support-plane amount=" << plane_amount <<
+        " max_gap_error=" << gap_error << " max_width_error=" << width_error << " max_line_volume_error=" << volume_error);
+    REQUIRE(lines.size()==14);REQUIRE(packets>lines.size());REQUIRE(roof_segments>lines.size());
+    REQUIRE(amount>0);REQUIRE(amount<plane_amount-.1L);
+    limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
+}

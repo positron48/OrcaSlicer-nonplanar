@@ -70,6 +70,14 @@ cases/119 assertions and six added selected-first-pass assertions pass. Current
 selected CTest executes 261/261; six fresh OFF/ZAA comparisons pass. Finite bead
 allocation and seam corrections remain open; volume cells do not authorize E.
 
+`B07-first-hatch-beads.md` now reconstructs the continuous first-centerline
+nominal roof/gap from actual laid prefixes and bounds constant-flux amounts.
+Three geometric cases/87 assertions and one native case/52999 assertions pass;
+all 14 native first lines produce 17624 packets under explicit gap/width/amount
+errors. Selected CTest executes 276/276 and six fresh OFF/ZAA comparisons pass.
+Finite-width contact, filled unions/overlap, perimeter/seam, later deposited
+support and full motion/order remain open; short-packet feasibility is unverified.
+
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
 compatibility, dense coverage, material replay, ordering and guarded hybrid
@@ -77,11 +85,12 @@ export remain open. `next-tasks.md` lists the dependency order. Independent revi
 and physical qualification remain pending. U1 standard head and nominal 0.4 mm
 nozzle are user-declared in `B15-u1-declared-setup.md`, without measurement claims.
 
-Prior Linux runs 36454696019 at d57e9325 and 36758101513 at 7df1d765 succeeded.
-Runs 36767506583 at e7a46961 and 36786738740 at 23f00bfd succeeded. In the saved
-snapshot, 36791501134 at b35408ce succeeded, 36793524250 at 22478ec6 is cancelled,
-36796275758 at a083f2df is in_progress, and 36800464013 at 3310bde1 is pending.
-These records do not prove Linux execution of this strip-allocation patch.
+Prior Linux native runs at d57e9325, 7df1d765, e7a46961, 23f00bfd,
+b35408ce, a083f2df and 63779b4f succeeded. Run 36802647527 confirms the
+63779b4f native tests and application. The latest saved snapshot has run
+36809462993 at 8bcbbd45 in progress; the intermediate
+pending run at 2ee83d33 was cancelled by workflow concurrency. These records do
+not prove Linux execution of this first-centerline gap reconstruction revision.
 Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;

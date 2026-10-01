@@ -41,6 +41,10 @@ Next software tasks, in dependency order:
    owned continuous proof. Subdivide stepped support into qualified cells, derive
    finite fixed-width path/bead geometry from these bounds and solve
    seam/edge domains; prospective surfaces alone do not prove later cap support.
+   `B07-first-hatch-beads.md` now derives actual first-centerline nominal roof
+   gaps and bounded fixed-width amounts. Reconcile finite-width floor/contact,
+   overlaps and filled unions with target volumes before constructing seam and
+   later actual support; short-packet motion/flow limits remain unverified.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.
 
