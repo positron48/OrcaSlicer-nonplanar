@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="422" hostname="tbd" time="0.407" timestamp="2026-10-01T18:22:09Z">
+    <properties>
+      <property name="random-seed" value="4090053823"/>
+      <property name="filters" value="[MaterialVoid]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 variable-gap shoulder deficit matches an independent cubic integral" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+MATERIAL_UNION_CELL_LIMIT
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2661
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 vertical shadow separates missing material below and above laid prisms" time="0.053" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 void classification retains protected inputs and refuses exhausted or stale proofs" time="0.009" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 rounded shoulder voids match independent circular sections in both axes" time="0.033" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 shadow respects original Z clipping and a diagonal finite footprint" time="0.003" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 shadow preserves affine target clipping and counts repeated material once" time="0.119" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

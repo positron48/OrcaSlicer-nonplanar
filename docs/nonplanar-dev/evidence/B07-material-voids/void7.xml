@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="402" hostname="tbd" time="0.380" timestamp="2026-10-01T18:03:21Z">
+    <properties>
+      <property name="random-seed" value="3184064438"/>
+      <property name="filters" value="[MaterialVoid]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 shadow preserves affine target clipping and counts repeated material once" time="0.172" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 vertical shadow separates missing material below and above laid prisms" time="0.059" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 shadow respects original Z clipping and a diagonal finite footprint" time="0.000" status="run">
+      <failure message="result.snapshot->under_material_missing_mm3.upper==0" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.upper==0 )
+with expansion:
+  0.0 == 0
+BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2621
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 rounded shoulder voids match independent circular sections in both axes" time="0.134" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 void classification retains protected inputs and refuses exhausted or stale proofs" time="0.012" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

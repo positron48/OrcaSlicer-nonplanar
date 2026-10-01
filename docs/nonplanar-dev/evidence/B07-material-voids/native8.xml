@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="2914" hostname="tbd" time="7.046" timestamp="2026-10-01T18:18:30Z">
+    <properties>
+      <property name="random-seed" value="1998281056"/>
+      <property name="filters" value="[NativeMaterialVoid]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B07 native first footprint derives bounded amounts inside an actual flat bead core" time="0.000" status="run">
+      <failure message="voids.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( voids.snapshot )
+with expansion:
+  0
+DECLARED_NATIVE_BODY_MATERIAL_ONLY
+SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+native footprint packets=61 roof leaves=1 work=1911 expected amount=0.12307872665804441
+BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+native remaining gain >= 0.0688508719117390672 covered=[0.121222584158338378,0.121222584158343222] missing=[0.130765407432446357,0.130765407432458486] cells=3 work=12474
+BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+native complete first layer paths=2 amount=[0.246158,0.246158] covered=[0.138283,0.138283] missing=[0.113705,0.113705] repeated=[0.107875,0.107875] cells=63 work=17926
+BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+native whole end replan covered=[0.181,0.181] missing=[0.0709877,0.0709877] gain=[0.0427173,0.0427173] cells=79 work=18474
+BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+native whole width replan covered=[0.181,0.181] missing=[0.0709876,0.0709876] repeated reduction=[0.0398967,0.0398967] covered change=[2.46731e-08,2.46731e-08] cells=70 work=18119
+BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+native closed first contour amount=[0.237329,0.237329] covered=[0.149216,0.149627] missing=[0.102361,0.102772] outside=[1.72428e-05,0.000213198] cells=145 work=30690
+SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+BOUNDED_FIRST_CONTOUR_AND_INTERIOR_HATCH_CANDIDATE_WITH_MEASURED_JOINT_FILL_ONLY
+native combined first cap paths=5 packets=161 amount=[0.370959,0.370959] covered=[0.207411,0.207818] missing=[0.107167,0.107574] outside=[0.00016183,0.000359115] cells=293 work=38258
+FIRST_CAP_JOIN_NOT_CERTIFIED paths=2,3
+COMMON_POSITIVE_D_LOWER_BOX_ONLY
+native high-corner common lower box=[3.44447e-05,3.44447e-05] cells=10 work=22 low-corner empty packets=9 whole candidate join refusal cells=64 work=623
+ALL_REQUESTED_LOCAL_FIRST_CAP_JOINS_HAVE_COMMON_CONTINUOUS_RUN_LOWER_BOXES_ONLY
+WHOLE_INFLATED_BOX_IN_ACTUAL_NOMINAL_RUN_ONLY
+native continuous-run joins=6 smallest box=0.000724661 cells=45 work=731 whole long run cells=53 work=106
+BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+native cap/body flat-floor packets=161 anchor volume=[0.03,0.03] cells=162 work=5661
+MATERIAL_UNION_WORK_LIMIT
+MATERIAL_DEADLINE cells=37209 work=554757 provisional shadow=[0.215809,0.216287]
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2377
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

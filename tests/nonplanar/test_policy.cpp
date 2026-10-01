@@ -2098,7 +2098,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2366,6 +2366,26 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     }
     INFO("native cap/body flat-floor packets=" << interface.snapshot->packets.size() << " anchor volume=[" << interface.snapshot->anchor_volume_mm3.lower << ',' <<
         interface.snapshot->anchor_volume_mm3.upper << "] cells=" << interface.cells << " work=" << interface.evaluations);
+    const auto limited_voids=classify_material_voids({"",cap.fill},fill_limits);
+    INFO(limited_voids.reason);REQUIRE_FALSE(limited_voids.snapshot);REQUIRE(limited_voids.reason=="MATERIAL_UNION_WORK_LIMIT");
+    // The complete candidate's original volume-work/deadline policy, rather
+    // than the shorter single-hatch fill policy. Its precision stays .001 mm3.
+    MaterialFillLimits void_limits;static_cast<MaterialUnionLimits &>(void_limits)=layer_limits.volumes;
+    const auto voids=classify_material_voids({"",cap.fill},void_limits);
+    const auto shadow_diagnostic=voids.provisional_shadow_mm3.value_or(ScalarBounds{0,0});
+    INFO(voids.reason << " cells=" << voids.cells << " work=" << voids.evaluations << " provisional shadow=[" <<
+        shadow_diagnostic.lower << ',' << shadow_diagnostic.upper << ']');REQUIRE(voids.snapshot);
+    const auto &v=*voids.snapshot;REQUIRE(v.source==cap.fill);
+    REQUIRE(v.under_material_missing_mm3.lower>0);REQUIRE(v.vertical_clear_missing_mm3.lower>0);
+    REQUIRE(v.shadow_target_mm3.upper>=cap.fill->covered_target_mm3.lower);
+    REQUIRE(v.shadow_target_mm3.lower<=cap.fill->target_volume_mm3.upper);
+    REQUIRE(v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=cap.fill->missing_target_mm3.upper);
+    REQUIRE(v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=cap.fill->missing_target_mm3.lower);
+    for (auto amount : {v.shadow_target_mm3,v.under_material_missing_mm3,v.vertical_clear_missing_mm3})
+        REQUIRE(amount.upper-amount.lower<=void_limits.maximum_interval_width.value());
+    INFO("native cap under-material deficit=[" << v.under_material_missing_mm3.lower << ',' << v.under_material_missing_mm3.upper <<
+        "] vertical-clear deficit=[" << v.vertical_clear_missing_mm3.lower << ',' << v.vertical_clear_missing_mm3.upper <<
+        "] shadow=[" << v.shadow_target_mm3.lower << ',' << v.shadow_target_mm3.upper << "] cells=" << voids.cells << " work=" << voids.evaluations);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

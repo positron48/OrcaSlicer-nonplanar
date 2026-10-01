@@ -1,0 +1,234 @@
+[1/2] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2503:44: error: unknown type name 'MaterialVoidSnapshot'; did you mean 'MaterialJoinSnapshot'?
+ 2503 |     STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialVoidSnapshot>::value);
+      |                                            ^~~~~~~~~~~~~~~~~~~~
+      |                                            MaterialJoinSnapshot
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:172:58: note: expanded from macro 'STATIC_REQUIRE_FALSE'
+  172 |     #define STATIC_REQUIRE_FALSE( ... ) static_assert( !(__VA_ARGS__), "!(" #__VA_ARGS__ ")" ); SUCCEED( "!(" #__VA_ARGS__ ")" )
+      |                                                          ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:112:8: note: 'MaterialJoinSnapshot' declared here
+  112 | struct MaterialJoinSnapshot {
+      |        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2504:20: error: use of undeclared identifier 'material_void_contract_version'; did you mean 'material_join_contract_version'?
+ 2504 |     STATIC_REQUIRE(material_void_contract_version==1);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                    material_join_contract_version
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:171:58: note: expanded from macro 'STATIC_REQUIRE'
+  171 |     #define STATIC_REQUIRE( ... )       static_assert(   __VA_ARGS__,  #__VA_ARGS__ ); SUCCEED( #__VA_ARGS__ )
+      |                                                          ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:106:27: note: 'material_join_contract_version' declared here
+  106 | inline constexpr unsigned material_join_contract_version=1;
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509:27: error: use of undeclared identifier 'classify_material_voids'
+ 2509 |         const auto result=classify_material_voids(fill);INFO(result.reason);REQUIRE(result.snapshot);
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2512:40: error: no matching function for call to 'min'
+ 2512 |         const Q shadow=area*f*max(Q(0),min(ceiling,t)-roof);
+      |                                        ^~~
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:29:128: note: candidate template ignored: could not match 1 against 0
+   29 | inline typename std::enable_if<boost::multiprecision::detail::is_backend<Backend>::value, const number<Backend, et_on>&>::type(min)(const number<Backend, et_on>& a, const number<Backend, et_on>& b)
+      |                                                                                                                                ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:34:128: note: candidate template ignored: could not match 1 against 0
+   34 | inline typename std::enable_if<boost::multiprecision::detail::is_backend<Backend>::value, const number<Backend, et_on> >::type(min)(const number<Backend, et_on>& a, const detail::expression<tag, A1, A2, A3, A4>& b)
+      |                                                                                                                                ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:42:128: note: candidate template ignored: could not match 'detail::expression' against 'number'
+   42 | inline typename std::enable_if<boost::multiprecision::detail::is_backend<Backend>::value, const number<Backend, et_on> >::type(min)(const detail::expression<tag, A1, A2, A3, A4>& a, const number<Backend, et_on>& b)
+      |                                                                                                                                ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:50:70: note: candidate template ignored: could not match 'detail::expression' against 'number'
+   50 | inline typename detail::expression<tag, A1, A2, A3, A4>::result_type(min)(const detail::expression<tag, A1, A2, A3, A4>& a, const detail::expression<tagb, A1b, A2b, A3b, A4b>& b)
+      |                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:58:70: note: candidate template ignored: could not match 'detail::expression' against 'number'
+   58 | inline typename detail::expression<tag, A1, A2, A3, A4>::result_type(min)(const detail::expression<tag, A1, A2, A3, A4>& a, const detail::expression<tag, A1, A2, A3, A4>& b)
+      |                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2513:41: error: no matching function for call to 'min'
+ 2513 |         const Q covered=area*f*max(Q(0),min(ceiling,t)-max(roof,t-height));
+      |                                         ^~~
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:29:128: note: candidate template ignored: could not match 1 against 0
+   29 | inline typename std::enable_if<boost::multiprecision::detail::is_backend<Backend>::value, const number<Backend, et_on>&>::type(min)(const number<Backend, et_on>& a, const number<Backend, et_on>& b)
+      |                                                                                                                                ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:34:128: note: candidate template ignored: could not match 1 against 0
+   34 | inline typename std::enable_if<boost::multiprecision::detail::is_backend<Backend>::value, const number<Backend, et_on> >::type(min)(const number<Backend, et_on>& a, const detail::expression<tag, A1, A2, A3, A4>& b)
+      |                                                                                                                                ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:42:128: note: candidate template ignored: could not match 'detail::expression' against 'number'
+   42 | inline typename std::enable_if<boost::multiprecision::detail::is_backend<Backend>::value, const number<Backend, et_on> >::type(min)(const detail::expression<tag, A1, A2, A3, A4>& a, const number<Backend, et_on>& b)
+      |                                                                                                                                ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:50:70: note: candidate template ignored: could not match 'detail::expression' against 'number'
+   50 | inline typename detail::expression<tag, A1, A2, A3, A4>::result_type(min)(const detail::expression<tag, A1, A2, A3, A4>& a, const detail::expression<tagb, A1b, A2b, A3b, A4b>& b)
+      |                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:58:70: note: candidate template ignored: could not match 'detail::expression' against 'number'
+   58 | inline typename detail::expression<tag, A1, A2, A3, A4>::result_type(min)(const detail::expression<tag, A1, A2, A3, A4>& a, const detail::expression<tag, A1, A2, A3, A4>& b)
+      |                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2513:56: error: no matching function for call to 'max'
+ 2513 |         const Q covered=area*f*max(Q(0),min(ceiling,t)-max(roof,t-height));
+      |                                                        ^~~
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:67:128: note: candidate template ignored: could not match 1 against 0
+   67 | inline typename std::enable_if<boost::multiprecision::detail::is_backend<Backend>::value, const number<Backend, et_on>&>::type(max)(const number<Backend, et_on>& a, const number<Backend, et_on>& b)
+      |                                                                                                                                ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:72:128: note: candidate template ignored: could not match 1 against 0
+   72 | inline typename std::enable_if<boost::multiprecision::detail::is_backend<Backend>::value, const number<Backend, et_on> >::type(max)(const number<Backend, et_on>& a, const detail::expression<tag, A1, A2, A3, A4>& b)
+      |                                                                                                                                ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:80:128: note: candidate template ignored: could not match 'detail::expression' against 'number'
+   80 | inline typename std::enable_if<boost::multiprecision::detail::is_backend<Backend>::value, const number<Backend, et_on> >::type(max)(const detail::expression<tag, A1, A2, A3, A4>& a, const number<Backend, et_on>& b)
+      |                                                                                                                                ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:88:70: note: candidate template ignored: could not match 'detail::expression' against 'number'
+   88 | inline typename detail::expression<tag, A1, A2, A3, A4>::result_type(max)(const detail::expression<tag, A1, A2, A3, A4>& a, const detail::expression<tagb, A1b, A2b, A3b, A4b>& b)
+      |                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/boost/multiprecision/detail/min_max.hpp:96:70: note: candidate template ignored: could not match 'detail::expression' against 'number'
+   96 | inline typename detail::expression<tag, A1, A2, A3, A4>::result_type(max)(const detail::expression<tag, A1, A2, A3, A4>& a, const detail::expression<tag, A1, A2, A3, A4>& b)
+      |                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2546:31: error: use of undeclared identifier 'classify_material_voids'; did you mean 'classify_material'?
+ 2546 |             const auto result=classify_material_voids(fill,limits);INFO(result.reason);REQUIRE(result.snapshot);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~~
+      |                               classify_material
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:21: note: 'classify_material' declared here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2546:55: error: no viable conversion from 'const MaterialFillResult' to 'const NominalMaterialView'
+ 2546 |             const auto result=classify_material_voids(fill,limits);INFO(result.reason);REQUIRE(result.snapshot);
+      |                                                       ^~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:54:8: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'const MaterialFillResult' to 'const NominalMaterialView &' for 1st argument
+   54 | struct NominalMaterialView { std::shared_ptr<const MaterialPrefixSnapshot> snapshot; };
+      |        ^~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:54:8: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'const MaterialFillResult' to 'NominalMaterialView &&' for 1st argument
+   54 | struct NominalMaterialView { std::shared_ptr<const MaterialPrefixSnapshot> snapshot; };
+      |        ^~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:66: note: passing argument to parameter here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2569:22: error: use of undeclared identifier 'classify_material_voids'; did you mean 'classify_material'?
+ 2569 |     const auto owned=classify_material_voids(fill,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==source);
+      |                      ^~~~~~~~~~~~~~~~~~~~~~~
+      |                      classify_material
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:21: note: 'classify_material' declared here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2569:46: error: no viable conversion from 'MaterialFillResult' to 'const NominalMaterialView'
+ 2569 |     const auto owned=classify_material_voids(fill,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==source);
+      |                                              ^~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:54:8: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'MaterialFillResult' to 'const NominalMaterialView &' for 1st argument
+   54 | struct NominalMaterialView { std::shared_ptr<const MaterialPrefixSnapshot> snapshot; };
+      |        ^~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:54:8: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'MaterialFillResult' to 'NominalMaterialView &&' for 1st argument
+   54 | struct NominalMaterialView { std::shared_ptr<const MaterialPrefixSnapshot> snapshot; };
+      |        ^~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:66: note: passing argument to parameter here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2570:50: error: use of undeclared identifier 'classify_material_voids'; did you mean 'classify_material'?
+ 2570 |     fill.snapshot=source;limits={};REQUIRE_FALSE(classify_material_voids({},limits).snapshot);
+      |                                                  ^~~~~~~~~~~~~~~~~~~~~~~
+      |                                                  classify_material
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:21: note: 'classify_material' declared here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2570:77: error: no viable conversion from 'MaterialFillLimits' to 'const PhysicalPosition' (aka 'const Position<Frame::MachinePhysical>')
+ 2570 |     fill.snapshot=source;limits={};REQUIRE_FALSE(classify_material_voids({},limits).snapshot);
+      |                                                                             ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Contracts.hpp:21:25: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'MaterialFillLimits' to 'const Position<Slic3r::nptop::Frame::MachinePhysical> &' for 1st argument
+   21 | template<Frame F> class Position {
+      |                         ^~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Contracts.hpp:21:25: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'MaterialFillLimits' to 'Position<Slic3r::nptop::Frame::MachinePhysical> &&' for 1st argument
+   21 | template<Frame F> class Position {
+      |                         ^~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:92: note: passing argument to parameter here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2570:50: error: use of undeclared identifier 'classify_material_voids'; did you mean 'classify_material'?
+ 2570 |     fill.snapshot=source;limits={};REQUIRE_FALSE(classify_material_voids({},limits).snapshot);
+      |                                                  ^~~~~~~~~~~~~~~~~~~~~~~
+      |                                                  classify_material
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:21: note: 'classify_material' declared here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2570:77: error: no viable conversion from 'MaterialFillLimits' to 'const PhysicalPosition' (aka 'const Position<Frame::MachinePhysical>')
+ 2570 |     fill.snapshot=source;limits={};REQUIRE_FALSE(classify_material_voids({},limits).snapshot);
+      |                                                                             ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Contracts.hpp:21:25: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'MaterialFillLimits' to 'const Position<Slic3r::nptop::Frame::MachinePhysical> &' for 1st argument
+   21 | template<Frame F> class Position {
+      |                         ^~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Contracts.hpp:21:25: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'MaterialFillLimits' to 'Position<Slic3r::nptop::Frame::MachinePhysical> &&' for 1st argument
+   21 | template<Frame F> class Position {
+      |                         ^~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:92: note: passing argument to parameter here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2570:50: error: use of undeclared identifier 'classify_material_voids'; did you mean 'classify_material'?
+ 2570 |     fill.snapshot=source;limits={};REQUIRE_FALSE(classify_material_voids({},limits).snapshot);
+      |                                                  ^~~~~~~~~~~~~~~~~~~~~~~
+      |                                                  classify_material
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:21: note: 'classify_material' declared here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2570:77: error: no viable conversion from 'MaterialFillLimits' to 'const PhysicalPosition' (aka 'const Position<Frame::MachinePhysical>')
+ 2570 |     fill.snapshot=source;limits={};REQUIRE_FALSE(classify_material_voids({},limits).snapshot);
+      |                                                                             ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Contracts.hpp:21:25: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'MaterialFillLimits' to 'const Position<Slic3r::nptop::Frame::MachinePhysical> &' for 1st argument
+   21 | template<Frame F> class Position {
+      |                         ^~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Contracts.hpp:21:25: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'MaterialFillLimits' to 'Position<Slic3r::nptop::Frame::MachinePhysical> &&' for 1st argument
+   21 | template<Frame F> class Position {
+      |                         ^~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:92: note: passing argument to parameter here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2581:27: error: use of undeclared identifier 'classify_material_voids'; did you mean 'classify_material'?
+ 2581 |         const auto result=classify_material_voids(fill,limits);
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~
+      |                           classify_material
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:21: note: 'classify_material' declared here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2581:51: error: no viable conversion from 'MaterialFillResult' to 'const NominalMaterialView'
+ 2581 |         const auto result=classify_material_voids(fill,limits);
+      |                                                   ^~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:54:8: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'MaterialFillResult' to 'const NominalMaterialView &' for 1st argument
+   54 | struct NominalMaterialView { std::shared_ptr<const MaterialPrefixSnapshot> snapshot; };
+      |        ^~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:54:8: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'MaterialFillResult' to 'NominalMaterialView &&' for 1st argument
+   54 | struct NominalMaterialView { std::shared_ptr<const MaterialPrefixSnapshot> snapshot; };
+      |        ^~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:66: note: passing argument to parameter here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2586:13: error: use of undeclared identifier 'classify_material_voids'; did you mean 'classify_material'?
+ 2586 |     REQUIRE(classify_material_voids(fill,limits).snapshot);REQUIRE(callbacks>=2);
+      |             ^~~~~~~~~~~~~~~~~~~~~~~
+      |             classify_material
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:82:21: note: 'classify_material' declared here
+   82 | MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});
+      |                     ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+ninja: build stopped: subcommand failed.

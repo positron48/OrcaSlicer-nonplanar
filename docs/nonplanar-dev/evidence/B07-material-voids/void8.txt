@@ -1,0 +1,3169 @@
+Filters: [MaterialVoid]
+Randomness seeded to: 2850010452
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 void classification retains protected inputs and refuses exhausted or stale
+proofs
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2563
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28ab8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1117: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0x1048976e0
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x1048973e0
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2565: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003660
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2569: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0xa4edd89b0
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2569: PASSED:
+  REQUIRE( owned.snapshot->source==source )
+with expansion:
+  0xa4f003660 == 0xa4f003660
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2570: PASSED:
+  REQUIRE_FALSE( classify_material_voids({},limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2583: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+  0 INVALID_MATERIAL_VOID_INPUT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2583: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+  1 MATERIAL_VOID_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2583: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+  2 INVALID_MATERIAL_VOID_INPUT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2583: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+  3 MATERIAL_VOID_INPUT_PRECISION_TOO_COARSE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2583: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+  4 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2583: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+  5 STALE_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2583: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+  6 MATERIAL_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2582: PASSED:
+  REQUIRE( std::fesetround(0x00000000)==0 )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2583: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+  7 MATERIAL_VOID_NUMERIC_FAILURE: unsupported interval rounding
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2586: PASSED:
+  REQUIRE( classify_material_voids(fill,limits).snapshot )
+with expansion:
+  0xa4edd8a00
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2586: PASSED:
+  REQUIRE( callbacks>=2 )
+with expansion:
+  81 >= 2
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2588: PASSED:
+  REQUIRE_FALSE( classify_material_voids(fill,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2588: PASSED:
+  REQUIRE( callbacks==total )
+with expansion:
+  81 == 81
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+-------------------------------------------------------------------------------
+B07 rounded shoulder voids match independent circular sections in both axes
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2525
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28ab8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2533: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0x104897480
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2544: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2545: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f0035c0
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2546: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.00219618 <= 0.00257522
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.00268435 >= 0.00257522
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.0930457 <= 0.0934248
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.0935339 >= 0.0934248
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.306466 <= 0.306575
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.306954 >= 0.306575
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2557: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.lower>0 )
+with expansion:
+  0.00219617961625901 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2558: PASSED:
+  REQUIRE( result.snapshot->vertical_clear_missing_mm3.lower>0 )
+with expansion:
+  0.30646609906964506 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2544: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2545: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f0035c0
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2546: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.00823952 <= 0.00858407
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.00870218 >= 0.00858407
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.311071 <= 0.311416
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.311534 >= 0.311416
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.088466 <= 0.0885841
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.0889286 >= 0.0885841
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2557: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.lower>0 )
+with expansion:
+  0.00823952173956283 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2558: PASSED:
+  REQUIRE( result.snapshot->vertical_clear_missing_mm3.lower>0 )
+with expansion:
+  0.08846596582564968 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28ab8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2533: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0x104897480
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2544: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2545: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f0035c0
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2546: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.00219618 <= 0.00257522
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.00268435 >= 0.00257522
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.0930457 <= 0.0934248
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.0935339 >= 0.0934248
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.306466 <= 0.306575
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.306954 >= 0.306575
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2557: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.lower>0 )
+with expansion:
+  0.00219617961625899 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2558: PASSED:
+  REQUIRE( result.snapshot->vertical_clear_missing_mm3.lower>0 )
+with expansion:
+  0.30646609906964506 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2544: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2545: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f0035c0
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2546: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.00823952 <= 0.00858407
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.00870218 >= 0.00858407
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.311071 <= 0.311416
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.311534 >= 0.311416
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.088466 <= 0.0885841
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.0889286 >= 0.0885841
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2557: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.lower>0 )
+with expansion:
+  0.00823952173956283 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2558: PASSED:
+  REQUIRE( result.snapshot->vertical_clear_missing_mm3.lower>0 )
+with expansion:
+  0.08846596582564968 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28ab8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2533: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0x104897480
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2544: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2545: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f0035c0
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2546: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.00219618 <= 0.00257522
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.00268435 >= 0.00257522
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.0930457 <= 0.0934248
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.0935339 >= 0.0934248
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.306466 <= 0.306575
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.306954 >= 0.306575
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2557: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.lower>0 )
+with expansion:
+  0.00219617961625899 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2558: PASSED:
+  REQUIRE( result.snapshot->vertical_clear_missing_mm3.lower>0 )
+with expansion:
+  0.30646609906964506 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2544: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2545: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f0035c0
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2546: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.00823952 <= 0.00858407
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.00870218 >= 0.00858407
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.311071 <= 0.311416
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.311534 >= 0.311416
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.088466 <= 0.0885841
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.0889286 >= 0.0885841
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2557: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.lower>0 )
+with expansion:
+  0.00823952173956283 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2558: PASSED:
+  REQUIRE( result.snapshot->vertical_clear_missing_mm3.lower>0 )
+with expansion:
+  0.08846596582564968 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28ab8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2533: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0xa4ee74000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2544: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2545: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f0035c0
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2546: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.00219618 <= 0.00257522
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.00268435 >= 0.00257522
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.0930457 <= 0.0934248
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.0935339 >= 0.0934248
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.306466 <= 0.306575
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.306954 >= 0.306575
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2557: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.lower>0 )
+with expansion:
+  0.00219617961625901 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2558: PASSED:
+  REQUIRE( result.snapshot->vertical_clear_missing_mm3.lower>0 )
+with expansion:
+  0.30646609906964506 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2544: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2545: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f0035c0
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2546: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.00823952 <= 0.00858407
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.00870218 >= 0.00858407
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.311071 <= 0.311416
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.311534 >= 0.311416
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.lower)<=expected )
+with expansion:
+  0.088466 <= 0.0885841
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2553: PASSED:
+  REQUIRE( Q(bounds.upper)>=expected )
+with expansion:
+  0.0889286 >= 0.0885841
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2557: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.lower>0 )
+with expansion:
+  0.00823952173956283 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2558: PASSED:
+  REQUIRE( result.snapshot->vertical_clear_missing_mm3.lower>0 )
+with expansion:
+  0.08846596582564968 > 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+-------------------------------------------------------------------------------
+B07 vertical shadow separates missing material below and above laid prisms
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2501
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2503: PASSED:
+with message:
+  !(std::is_aggregate<MaterialVoidSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2504: PASSED:
+with message:
+  material_void_contract_version==1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28ab8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1117: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0xa4ee74000
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  4.94066e-324 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.32 <= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.32 >= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.31999999999999906 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.31999999999999906 <= 0.32000000000000056
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.32000000000000056 >= 0.31999999999999906
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.048 <= 0.048
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.048 >= 0.048
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  8.74301e-16 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.272 <= 0.272
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.272 >= 0.272
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.27199999999999858 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.27199999999999858 <= 0.27200000000000102
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.27200000000000191 >= 0.2717695312499987
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.08 <= 0.08
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.08 >= 0.08
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  1.44329e-15 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.24 <= 0.24
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.24 >= 0.24
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.2399999999999983 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.2399999999999983 <= 0.24000000000000124
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.24000000000000268 >= 0.23976562499999843
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.16 <= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.16 >= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  2.83107e-15 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.16 <= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.16 >= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.15999999999999759 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.15999999999999759 <= 0.16000000000000192
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.16000000000000475 >= 0.15976562499999775
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  4.94066e-324 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.32 <= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.32 >= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.31999999999999906 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.31999999999999906 <= 0.32000000000000056
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.32000000000000056 >= 0.31999999999999906
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.096 <= 0.096
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.096 >= 0.096
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  8.88178e-16 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.224 <= 0.224
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.224 >= 0.224
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.22399999999999901 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.22399999999999901 <= 0.22400000000000139
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.22400000000000228 >= 0.22399999999999906
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.16 <= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.16 >= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  1.47105e-15 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.16 <= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.16 >= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.15999999999999892 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.15999999999999892 <= 0.16000000000000189
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.16000000000000336 >= 0.159999999999999
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.32 <= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.32 >= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  2.94209e-15 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  3.16414e-15 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.0 <= 0.00000000000000316
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.00000000000000611 >= 0.0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  4.94066e-324 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.32 <= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.32 >= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.31999999999999906 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.31999999999999906 <= 0.32000000000000056
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.32000000000000056 >= 0.31999999999999906
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.0956172 <= 0.096
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.096 >= 0.096
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.0473867 <= 0.048
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.048 >= 0.048
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.224 <= 0.224
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.224383 >= 0.224
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.04738671874999944 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.22399999999999901 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.27138671874999842 <= 0.27200000000000102
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.27238281250000129 >= 0.27176953124999875
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.159687 <= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.16 >= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.0794531 <= 0.08
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.08 >= 0.08
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.16 <= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.160313 >= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.07945312499999906 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.15999999999999892 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.23945312499999799 <= 0.24000000000000124
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.24031250000000179 >= 0.23976562499999851
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.319687 <= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.32 >= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.159453 <= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.16 >= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.0003125 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.15945312499999817 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.15945312499999817 <= 0.16000000000000192
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.16031250000000291 >= 0.15976562499999794
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  4.94066e-324 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.32 <= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.32 >= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.31999999999999906 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.31999999999999906 <= 0.32000000000000056
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.32000000000000056 >= 0.31999999999999906
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.0956367 <= 0.096
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.096 >= 0.096
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.0953906 <= 0.096
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.096 >= 0.096
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.224 <= 0.224
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.224363 >= 0.224
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.09539062499999905 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.22399999999999901 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.31939062499999804 <= 0.32000000000000056
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.32036328125000091 >= 0.31975390624999833
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.159687 <= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.16 >= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.159453 <= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.16 >= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.16 <= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.160313 >= 0.16
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.15945312499999839 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.15999999999999892 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.31945312499999734 <= 0.32000000000000056
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.32031250000000111 >= 0.31976562499999783
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1124: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4f0d8000
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2508: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003520
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2509: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2515: PASSED:
+  REQUIRE( v.source==fill.snapshot )
+with expansion:
+  0xa4f003520 == 0xa4f003520
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.319687 <= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.32 >= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0.319453 <= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.32 >= 0.32
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.lower)<=v )
+with expansion:
+  0 <= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2514: PASSED:
+  REQUIRE( Q(b.upper)>=v )
+with expansion:
+  0.0003125 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower>=0 )
+with expansion:
+  0.31945312499999684 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2519: PASSED:
+  REQUIRE( v.vertical_clear_missing_mm3.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2520: PASSED:
+  REQUIRE( v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.31945312499999684 <= 0.32000000000000056
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2521: PASSED:
+  REQUIRE( v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.32031250000000161 >= 0.31976562499999661
+with messages:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+-------------------------------------------------------------------------------
+B07 shadow respects original Z clipping and a diagonal finite footprint
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2611
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28ab8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1117: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0xa4ee74000
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2616: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2617: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003660
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2618: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.31968749999999935 <= 0.32
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.32000000000000034 >= 0.32
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.07949999999999892 <= 0.08
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.08000000000000092 >= 0.08
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2627: PASSED:
+  REQUIRE( result.snapshot->vertical_clear_missing_mm3.upper<.001 )
+with expansion:
+  0.00031250000000121 < 0.001
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2616: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2617: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003660
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2618: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2620: PASSED:
+  REQUIRE( result.snapshot->shadow_target_mm3.upper==0 )
+with expansion:
+  0.0 == 0
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2621: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.lower==0 )
+with expansion:
+  0.0 == 0
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2622: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.upper<1e-12 )
+with expansion:
+  0.0 < 0.000000000001
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.31999999999999906 <= 0.32
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.32000000000000056 >= 0.32
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2632: PASSED:
+  REQUIRE( diagonal_target.proof )
+with expansion:
+  0xa4ee74070
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28bf8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2634: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2635: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f003660
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2636: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a50
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.03199999999999995 <= 0.032
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.03200000000000006 >= 0.032
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.01599999999999959 <= 0.016
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.0160000000000004 >= 0.016
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2639: PASSED:
+  REQUIRE( result.snapshot->vertical_clear_missing_mm3.upper<.001 )
+with expansion:
+  0.00000000000000017 < 0.001
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+-------------------------------------------------------------------------------
+B07 shadow preserves affine target clipping and counts repeated material once
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2591
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28ab8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2595: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0xa4ee74000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2600: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2601: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f0035c0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2602: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.27987589517608019 <= 0.28
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.28000003814697361 >= 0.28
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2606: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.upper<.001 )
+with expansion:
+  0.00012414297089341 < 0.001
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.03999996185302573 <= 0.04
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.0401241048239206 >= 0.04
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4ec28b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2600: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa4f0d8000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2601: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa4f0035c0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2602: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa4edd8a00
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.2799000040668751 <= 0.28
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.28009877522825355 >= 0.28
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2606: PASSED:
+  REQUIRE( result.snapshot->under_material_missing_mm3.upper<.001 )
+with expansion:
+  0.00063372294186259 < 0.001
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.03990122477174578 <= 0.04
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:40: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.04009999593312569 >= 0.04
+with message:
+  BOUNDED_NOMINAL_UNDER_MATERIAL_AND_VERTICAL_CLEAR_DEFICIT_ONLY
+
+===============================================================================
+All tests passed (416 assertions in 5 test cases)
+

@@ -26,9 +26,9 @@ Next software tasks, in dependency order:
    36858083109 at 05f4a887 also succeeds in native suites, STL CLI and application.
    Run 36861891679 at 4e6cddd7 also succeeds in native suites, STL CLI and application.
    Run 36871942001 at 9a243279 now succeeds. Run 36878746418 at a165f0c3
-   succeeds. The saved 17:07 UTC observation retains d02d7544 material joins in
-   progress and 3d3f97a4 continuous runs pending. The new floor/body interface
-   requires its own Linux verification. The A02 correction at d57e9325 also
+   succeeds. The saved 18:31 UTC observation confirms d02d7544 material joins
+   and 3d3f97a4 continuous runs succeeded; eb0e864a floor/body interface is in
+   progress. New under-material deficit requires its own Linux verification. The A02 correction at d57e9325 also
    has successful native Linux run 36454696019.
 3. Extend B03 nominal affine bounds to qualified error budgets, curved surfaces,
    ROI and tool access. Existing masks, whole-footprint checks and isolated CLI
@@ -103,8 +103,14 @@ Next software tasks, in dependency order:
    flat-floor nominal gap/overlap bounds from the original actual prefix. This
    retains the native 161 packets and their actual amounts; rounded shoulders
    and physical bonding remain unqualified.
+   `B07-material-voids.md` now partitions original M into under-material and
+   vertically clear volumes without inventing solid columns beneath cap roofs.
+   The same native cap retains [.00793882,.00893881] mm3 under-material and
+   [.0986354,.0992278] mm3 clear deficit with unchanged .001 mm3 precision.
+   The original short work policy refuses; complete candidate budgets bound the
+   measure. These nominal clear columns do not certify tool access or support.
    Qualify allowable repeated material and complete shoulder/seam volumes,
-   construct paths for remaining 3D voids and reconstruct later support;
+   construct/replan paths for both remaining 3D volumes and reconstruct later support;
    short-packet motion/flow limits remain unverified.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.

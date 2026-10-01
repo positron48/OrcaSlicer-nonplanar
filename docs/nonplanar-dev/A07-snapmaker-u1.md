@@ -1,9 +1,12 @@
 # A07 — first operator machine: Snapmaker U1
 
-User selected **Snapmaker U1** on 2026-09-27. This confirms the model name only.
-Installed nozzle, modified head/duct, active tool, material, firmware version,
-configuration, offsets and measurements remain **UNCONFIRMED**. This note is not
-a printer preset, an operator_confirmed profile or permission to print.
+User selected **Snapmaker U1** on 2026-09-27 and reported a **standard head
+with a nominal 0.4 mm nozzle** on 2026-10-01. These are user-reported configuration
+facts, not measured head geometry or an operator_confirmed profile. Active tool,
+configuration, offsets and dimensional qualification remain **UNCONFIRMED**.
+Firmware/material details are not prerequisites for the current software
+implementation. Physical qualification remains separate. This note is not a
+printer preset or permission to print.
 
 Official references inspected 2026-09-27:
 

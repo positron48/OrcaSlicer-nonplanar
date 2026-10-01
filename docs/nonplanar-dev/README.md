@@ -15,6 +15,15 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-01
 
+`B07-material-voids.md` and ADR-0057 now partition nominal target deficit into
+under-material and vertically clear volumes from the original occupied prefix.
+Six analytical cases / 516 assertions include independent circular/cubic
+variable-gap integrals. The unchanged native 161-packet cap retains approximately
+.0084 mm3 under-material and .0989 mm3 clear deficit with .001 mm3 precision.
+The short work policy still refuses; the existing complete candidate policy
+bounds the full measure. Complete fill/seam/contact and export remain pending.
+
+
 The current implementation boundary is exact pre-apply native source ownership
 and revision invalidation in `B01-inputs.md`. Raw settings, meshes, transforms,
 overrides, annotations and source metadata are owned before Orca normalization;

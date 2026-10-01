@@ -548,6 +548,30 @@ struct MaterialFillResult {
 // and union proofs; wrapper fields cannot replace them. Geometric measures only.
 MaterialFillResult reconcile_material_fill(const MaterialIntegralResult &, const MaterialUnionResult &,
                                           const MaterialFillLimits &limits = {});
+inline constexpr unsigned material_void_contract_version=1;
+struct MaterialVoidResult;
+struct MaterialVoidSnapshot {
+    const std::shared_ptr<const MaterialFillSnapshot> source;
+    const ScalarBounds shadow_target_mm3, under_material_missing_mm3, vertical_clear_missing_mm3;
+    const size_t cells, evaluations;
+private:
+    MaterialVoidSnapshot(std::shared_ptr<const MaterialFillSnapshot> s,ScalarBounds shadow,ScalarBounds under,
+        ScalarBounds clear,size_t count,size_t work)
+        : source(std::move(s)),shadow_target_mm3(shadow),under_material_missing_mm3(under),
+          vertical_clear_missing_mm3(clear),cells(count),evaluations(work) {}
+    friend MaterialVoidResult classify_material_voids(const MaterialFillResult &,const MaterialFillLimits &);
+};
+struct MaterialVoidResult {
+    std::string reason;
+    std::shared_ptr<const MaterialVoidSnapshot> snapshot;
+    size_t cells=0,evaluations=0;
+    std::optional<ScalarBounds> provisional_shadow_mm3; // Never a certificate.
+};
+// Partition nominal target deficit by the downward vertical shadow of the
+// actual occupied prefix within its original union box. Under-material voids
+// are retained; the remaining clear columns do not prove tool access/support,
+// a sealed cavity, physical bonding or permission to deposit/export.
+MaterialVoidResult classify_material_voids(const MaterialFillResult &,const MaterialFillLimits &limits = {});
 inline constexpr unsigned material_deficit_contract_version=1;
 struct MaterialDeficitLimits : MaterialIntegralLimits {size_t max_regions=256;};
 struct MaterialDeficitCell {

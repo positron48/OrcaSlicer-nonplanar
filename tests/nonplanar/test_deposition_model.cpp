@@ -2497,3 +2497,183 @@ TEST_CASE("B06 cap interface uses the actual body prefix and keeps future high r
         const auto invalid=assess_first_cap_interface(cap,policy);REQUIRE(std::fesetround(previous)==0);REQUIRE_FALSE(invalid.snapshot);
     }
 }
+
+TEST_CASE("B07 vertical shadow separates missing material below and above laid prisms", "[Nonplanar][B07][MaterialVoid]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialVoidSnapshot>::value);
+    STATIC_REQUIRE(material_void_contract_version==1);
+    const auto target=flat_fill_target();
+    for (double top : {1.1,1.2,1.3,1.5}) for (double fraction : {0.,.3,.5,1.}) {
+        const auto material=flat_fill_union(top,fraction);
+        const auto fill=reconcile_material_fill(target,material);INFO(fill.reason);REQUIRE(fill.snapshot);
+        const auto result=classify_material_voids(fill);INFO(result.reason);REQUIRE(result.snapshot);
+        using Q=boost::multiprecision::cpp_bin_float_quad;
+        const Q roof=1,ceiling=Q(1.2),height=Q(.2),area=Q(2)*Q(.8),t=top,f=fraction;
+        const Q shadow=area*f*std::max(Q(0),std::min(ceiling,t)-roof);
+        const Q covered=area*f*std::max(Q(0),std::min(ceiling,t)-std::max(roof,Q(t-height)));
+        const auto contains=[](ScalarBounds b,const Q &v) {REQUIRE(Q(b.lower)<=v);REQUIRE(Q(b.upper)>=v);};
+        const auto &v=*result.snapshot;REQUIRE(v.source==fill.snapshot);
+        contains(v.shadow_target_mm3,shadow);
+        contains(v.under_material_missing_mm3,shadow-covered);
+        contains(v.vertical_clear_missing_mm3,area*(ceiling-roof)-shadow);
+        REQUIRE(v.under_material_missing_mm3.lower>=0);REQUIRE(v.vertical_clear_missing_mm3.lower>=0);
+        REQUIRE(v.under_material_missing_mm3.lower+v.vertical_clear_missing_mm3.lower<=fill.snapshot->missing_target_mm3.upper);
+        REQUIRE(v.under_material_missing_mm3.upper+v.vertical_clear_missing_mm3.upper>=fill.snapshot->missing_target_mm3.lower);
+    }
+}
+
+TEST_CASE("B07 rounded shoulder voids match independent circular sections in both axes", "[Nonplanar][B07][MaterialVoid]")
+{
+    using Q=boost::multiprecision::cpp_bin_float_quad;
+    for (bool along_x : {true,false}) for (bool reverse : {false,true}) {
+        auto body=bead(1,0,PhysicalPosition(0,0,1),
+            along_x ? PhysicalPosition(10,0,1) : PhysicalPosition(0,10,1),2,.4,.4,BeadSectionKind::Rectangle);
+        const RectangleXY roi=along_x ? RectangleXY{1,-.5,3,.5} : RectangleXY{-.5,1,.5,3};
+        const auto target=integrate_material_first_pass(material_at(captured({body}),1,0).lower,{roi,1.2,1.2,1.2},.9,
+            {VerticalGap(.1),VerticalGap(.4),Length(0)});REQUIRE(target.proof);
+        auto a=along_x ? PhysicalPosition(1,0,1.2) : PhysicalPosition(0,1,1.2);
+        auto b=along_x ? PhysicalPosition(3,0,1.2) : PhysicalPosition(0,3,1.2);
+        if (reverse) std::swap(a,b);
+        auto row=bead(1,0,a,b,.8,.2,.2);
+        auto future=bead(2,1,b,a,1,.2,.2,BeadSectionKind::Rectangle);
+        const auto ledger=captured({row,future});
+        const SceneBox box{{roi.min_x,roi.min_y,.7},{roi.max_x,roi.max_y,1.6}};
+        MaterialFillLimits limits;limits.maximum_interval_width=Volume(.001);
+        for (double fraction : {.3,1.}) {
+            const auto state=material_at(ledger,fraction==1 ? 1 : 0,fraction==1 ? 0 : fraction);
+            const auto occupied=integrate_material_union(state.nominal,box,limits);REQUIRE(occupied.snapshot);
+            const auto fill=reconcile_material_fill(target,occupied,limits);INFO(fill.reason);REQUIRE(fill.snapshot);
+            const auto result=classify_material_voids(fill,limits);INFO(result.reason);REQUIRE(result.snapshot);
+            const Q h=.2,r=h/2,length=2,pi=acos(Q(-1)),amount=std::get<Deposition>(row.motion.payload).volume.value();
+            // Actual binary amount fixes the flat core. Two half-circle shoulders
+            // leave this exact area below their floor; no height-map solid is used.
+            const Q under=length*Q(fraction)*r*r*(2-pi/2);
+            const Q shadow=Q(fraction)*amount+under;
+            const Q total=length*(Q(1.2)-1);
+            const auto contains=[](ScalarBounds bounds,const Q &expected) {REQUIRE(Q(bounds.lower)<=expected);REQUIRE(Q(bounds.upper)>=expected);};
+            contains(result.snapshot->under_material_missing_mm3,under);
+            contains(result.snapshot->shadow_target_mm3,shadow);
+            contains(result.snapshot->vertical_clear_missing_mm3,total-shadow);
+            REQUIRE(result.snapshot->under_material_missing_mm3.lower>0);
+            REQUIRE(result.snapshot->vertical_clear_missing_mm3.lower>0);
+        }
+    }
+}
+
+TEST_CASE("B07 void classification retains protected inputs and refuses exhausted or stale proofs", "[Nonplanar][B07][MaterialVoid]")
+{
+    auto fill=reconcile_material_fill(flat_fill_target(),flat_fill_union(1.3));REQUIRE(fill.snapshot);
+    const auto source=fill.snapshot;MaterialFillLimits limits;
+    fill.reason="FORGED";fill.provisional_above_surface_mm3=ScalarBounds{100,100};
+    limits.cancelled=[&] {fill.snapshot.reset();limits.max_cells=1;return false;};
+    const auto owned=classify_material_voids(fill,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==source);
+    fill.snapshot=source;limits={};REQUIRE_FALSE(classify_material_voids({},limits).snapshot);
+    for (int mode=0;mode<8;++mode) {
+        limits={};
+        if (mode==0) limits.max_cells=0;
+        if (mode==1) limits.max_evaluations=1;
+        if (mode==2) limits.max_depth=0;
+        if (mode==3) limits.maximum_interval_width=Volume(1e-20);
+        if (mode==4) limits.cancelled=[] {return true;};
+        if (mode==5) limits.is_current=[](uint64_t) {return false;};
+        if (mode==6) {limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if (mode==7) limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+        const auto result=classify_material_voids(fill,limits);
+        if (mode==7) REQUIRE(std::fesetround(FE_TONEAREST)==0);
+        INFO(mode << ' ' << result.reason);REQUIRE_FALSE(result.snapshot);
+    }
+    limits={};size_t callbacks=0;limits.cancelled=[&] {++callbacks;return false;};
+    REQUIRE(classify_material_voids(fill,limits).snapshot);REQUIRE(callbacks>=2);
+    const auto total=callbacks;callbacks=0;limits.cancelled=[&] {return ++callbacks==total;};
+    REQUIRE_FALSE(classify_material_voids(fill,limits).snapshot);REQUIRE(callbacks==total);
+}
+
+TEST_CASE("B07 shadow preserves affine target clipping and counts repeated material once", "[Nonplanar][B07][MaterialVoid]")
+{
+    const auto body=captured({bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto target=integrate_material_first_pass(material_at(body,1,0).lower,{{1,-.4,3,.4},1.1,1.3,1.1},.9,
+        {VerticalGap(.05),VerticalGap(.5),Length(0)});REQUIRE(target.proof);
+    const auto first=bead(1,0,{2,-.4,1.2},{2,.4,1.2},2,.2,.2,BeadSectionKind::Rectangle);
+    const auto second=bead(2,1,first.motion.end,first.motion.start,2,.2,.2,BeadSectionKind::Rectangle);
+    for (size_t count : {1,2}) {
+        const auto state=material_at(captured({first,second}),count,0);
+        const auto occupied=integrate_material_union(state.nominal,{{1,-.4,.7},{3,.4,1.6}});REQUIRE(occupied.snapshot);
+        const auto fill=reconcile_material_fill(target,occupied);REQUIRE(fill.snapshot);
+        const auto result=classify_material_voids(fill);INFO(result.reason);REQUIRE(result.snapshot);
+        // Independent prism minus transverse triangle, irrespective of the
+        // duplicate returned bead. Its unfilled upper triangle stays clear.
+        volume_contains(result.snapshot->shadow_target_mm3,.28L);
+        REQUIRE(result.snapshot->under_material_missing_mm3.upper<.001);
+        volume_contains(result.snapshot->vertical_clear_missing_mm3,.04L);
+    }
+}
+
+TEST_CASE("B07 shadow respects original Z clipping and a diagonal finite footprint", "[Nonplanar][B07][MaterialVoid]")
+{
+    const auto target=flat_fill_target();
+    for (double top : {1.25,1.5}) {
+        const auto row=bead(1,0,{1,0,top},{3,0,top},.8,.2,.2,BeadSectionKind::Rectangle);
+        const auto occupied=integrate_material_union(material_at(captured({row}),1,0).nominal,{{1,-.4,.7},{3,.4,1.21}});REQUIRE(occupied.snapshot);
+        const auto fill=reconcile_material_fill(target,occupied);REQUIRE(fill.snapshot);
+        const auto result=classify_material_voids(fill);INFO(result.reason);REQUIRE(result.snapshot);
+        if (top==1.5) {
+            REQUIRE(result.snapshot->shadow_target_mm3.upper==0);
+            REQUIRE(result.snapshot->under_material_missing_mm3.lower==0);
+            REQUIRE(result.snapshot->under_material_missing_mm3.upper<1e-12);
+            volume_contains(result.snapshot->vertical_clear_missing_mm3,.32L);
+        } else {
+            volume_contains(result.snapshot->shadow_target_mm3,.32L);
+            volume_contains(result.snapshot->under_material_missing_mm3,.08L);
+            REQUIRE(result.snapshot->vertical_clear_missing_mm3.upper<.001);
+        }
+    }
+    const auto body=captured({bead(1,0,{0,0,1},{4,4,1},2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto diagonal_target=integrate_material_first_pass(material_at(body,1,0).lower,{{1.8,1.8,2.2,2.2},1.2,1.2,1.2},.9,
+        {VerticalGap(.1),VerticalGap(.4),Length(0)});REQUIRE(diagonal_target.proof);
+    const auto row=bead(1,0,{1,1,1.3},{3,3,1.3},2,.2,.2,BeadSectionKind::Rectangle);
+    const auto occupied=integrate_material_union(material_at(captured({row}),1,0).nominal,{{1.8,1.8,.7},{2.2,2.2,1.6}});REQUIRE(occupied.snapshot);
+    const auto fill=reconcile_material_fill(diagonal_target,occupied);REQUIRE(fill.snapshot);
+    const auto result=classify_material_voids(fill);INFO(result.reason);REQUIRE(result.snapshot);
+    volume_contains(result.snapshot->shadow_target_mm3,.032L);
+    volume_contains(result.snapshot->under_material_missing_mm3,.016L);
+    REQUIRE(result.snapshot->vertical_clear_missing_mm3.upper<.001);
+}
+
+TEST_CASE("B07 variable-gap shoulder deficit matches an independent cubic integral", "[Nonplanar][B07][MaterialVoid]")
+{
+    using Q=boost::multiprecision::cpp_bin_float_quad;
+    for (bool along_x : {true,false}) for (bool reverse : {false,true}) {
+        const auto body=bead(1,0,{0,0,1},along_x ? PhysicalPosition(10,0,1) : PhysicalPosition(0,10,1),2,.4,.4,BeadSectionKind::Rectangle);
+        const RectangleXY roi=along_x ? RectangleXY{1,-.7,3,.7} : RectangleXY{-.7,1,.7,3};
+        const AffineCapCell surface{roi,1.125,along_x ? 1.25 : 1.125,along_x ? 1.125 : 1.25};
+        const auto target=integrate_material_first_pass(material_at(captured({body}),1,0).lower,surface,.9,
+            {VerticalGap(.1),VerticalGap(.4),Length(0)});REQUIRE(target.proof);
+        auto a=along_x ? PhysicalPosition(1,0,1.125) : PhysicalPosition(0,1,1.125);
+        auto b=along_x ? PhysicalPosition(3,0,1.25) : PhysicalPosition(0,3,1.25);
+        if (reverse) std::swap(a,b);
+        const double h0=reverse ? .25 : .125,h1=reverse ? .125 : .25;
+        const auto row=bead(1,0,a,b,.8,h0,h1);
+        const auto ledger=captured({row});const SceneBox box{{roi.min_x,roi.min_y,.7},{roi.max_x,roi.max_y,1.6}};
+        for (double fraction : {.3,1.}) {
+            const auto state=material_at(ledger,fraction==1 ? 1 : 0,fraction==1 ? 0 : fraction);
+            const auto occupied=integrate_material_union(state.nominal,box);REQUIRE(occupied.snapshot);
+            const auto fill=reconcile_material_fill(target,occupied);INFO(fill.reason);REQUIRE(fill.snapshot);
+            MaterialFillLimits detailed;detailed.max_cells=65535;detailed.max_evaluations=2000000;detailed.timeout=std::chrono::seconds(5);
+            const auto result=classify_material_voids(fill,detailed);INFO(result.reason);REQUIRE(result.snapshot);
+            const Q f=fraction,h=h0,dh=Q(h1)-h,pi=acos(Q(-1)),amount=std::get<Deposition>(row.motion.payload).volume.value();
+            // Integrate h(t)^2 over the actual current prefix. Dyadic endpoints
+            // keep the complete flat floor exactly at the original body roof.
+            const Q under=Q(2)/4*(2-pi/2)*(h*h*f+h*dh*f*f+dh*dh*f*f*f/3);
+            const Q shadow=amount*f+under,total=Q(2)*(Q(.7)-Q(-.7))*Q(.1875);
+            const auto contains=[](ScalarBounds bounds,const Q &expected) {REQUIRE(Q(bounds.lower)<=expected);REQUIRE(Q(bounds.upper)>=expected);};
+            contains(result.snapshot->under_material_missing_mm3,under);
+            contains(result.snapshot->shadow_target_mm3,shadow);
+            contains(result.snapshot->vertical_clear_missing_mm3,total-shadow);
+        }
+        const auto state=material_at(ledger,1,0);
+        const auto occupied=integrate_material_union(state.nominal,box);REQUIRE(occupied.snapshot);
+        const auto fill=reconcile_material_fill(target,occupied);REQUIRE(fill.snapshot);
+        MaterialFillLimits limited;limited.max_cells=1;REQUIRE_FALSE(classify_material_voids(fill,limited).snapshot);
+        limited={};limited.max_depth=1;REQUIRE_FALSE(classify_material_voids(fill,limited).snapshot);
+    }
+}
