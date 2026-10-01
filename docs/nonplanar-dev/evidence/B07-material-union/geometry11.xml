@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="101" hostname="tbd" time="0.045" timestamp="2026-10-01T05:15:54Z">
+    <properties>
+      <property name="random-seed" value="2139264982"/>
+      <property name="filters" value="[MaterialUnion]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 sheared integration preserves sloped XY volumes and clips the original XYZ window" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 union volume captures its domain and refuses stale cancelled or exhausted bounds" time="0.005" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 rounded neighboring finite beads match an independent circular lens overlap" time="0.008" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 finite material union distinguishes repeated amount from geometric occupancy" time="0.030" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 stitched nominal strips prove finite continuity without filling a missing packet" time="0.000" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

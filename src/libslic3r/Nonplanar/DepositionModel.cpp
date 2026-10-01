@@ -3,6 +3,8 @@
 #include "Interval.hpp"
 #include "StlImport.hpp"
 #include <set>
+#include <map>
+#include <tuple>
 #include <CGAL/Gmpq.h>
 #include <CGAL/number_utils.h>
 
@@ -344,7 +346,7 @@ Polygon clip(const Polygon &polygon, const Vertex &normal, const Exact &offset, 
     if (result.size()>64) reject("MATERIAL_COVERAGE_VERTEX_LIMIT");
     return result;
 }
-struct RoofProjection { Projection projected; Interval top_growth; };
+struct RoofProjection { Projection projected; Interval top_growth; Polygon polygon; };
 std::optional<RoofProjection> roof_projection(const MaterialRecord &row, const MaterialModel &model,
                                              Polygon polygon, double progress, Representation rep)
 {
@@ -387,7 +389,8 @@ std::optional<RoofProjection> roof_projection(const MaterialRecord &row, const M
     if (polygon.empty()) return {};
     polygon=clip(polygon,normal,center+transverse,false);
     if (polygon.empty()) return {};
-    return RoofProjection{project_polygon(row,polygon,Interval(0)),top_growth};
+    const auto projected=project_polygon(row,polygon,Interval(0));
+    return RoofProjection{projected,top_growth,std::move(polygon)};
 }
 std::optional<double> roof_ceiling(const MaterialRecord &row, const MaterialModel &model,
                                    Polygon polygon, double progress, Representation rep)
@@ -399,35 +402,56 @@ std::optional<double> roof_ceiling(const MaterialRecord &row, const MaterialMode
     coordinate(top.lo); coordinate(top.hi);
     return top.hi;
 }
-struct NominalRoof { Interval height; bool whole_footprint; };
-std::optional<NominalRoof> nominal_roof(const MaterialRecord &row, Projection projection, double progress)
+struct NominalRoof { Interval height, depth_below_top; bool whole_footprint, whole_transverse; };
+std::optional<NominalRoof> nominal_roof(const MaterialRecord &row, Projection projection, double progress,
+                                        std::optional<Interval> cached_area={})
 {
     const auto &b=*row.bead; const auto &m=row.motion;
     const auto local=detail::maximum(Interval(0),detail::minimum(projection.t,Interval(progress)));
     const auto height=Interval(b.gap_begin_mm)+(Interval(b.gap_end_mm)-Interval(b.gap_begin_mm))*local;
     const auto top=Interval(m.start.z())+(Interval(m.end.z())-Interval(m.start.z()))*local;
-    const auto area=Interval(std::get<Deposition>(m.payload).volume.value())/detail::root(length_squared(row));
+    const auto area=cached_area ? *cached_area : Interval(std::get<Deposition>(m.payload).volume.value())/detail::root(length_squared(row));
     const auto width=section_width(area,height,b.kind), normal=absolute(projection.normal);
-    const bool whole=projection.t.lo>0 && projection.t.hi<progress && normal.hi<(width/Interval(2)).lo;
-    if (b.kind==BeadSectionKind::Rectangle) return NominalRoof{top,whole};
+    const bool transverse_whole=normal.hi<(width/Interval(2)).lo;
+    const bool whole=projection.t.lo>0 && projection.t.hi<progress && transverse_whole;
+    if (b.kind==BeadSectionKind::Rectangle) return NominalRoof{top,Interval(0),whole,transverse_whole};
     const auto core=(width-height)/Interval(2), radius=height/Interval(2);
     const auto transverse=detail::maximum(normal-core,Interval(0));
     const auto radicand=square(radius)-square(transverse);
     if (radicand.hi<0) return {};
     // The nonnegative root encloses every real cross-section in the projected
     // cell. A lower roof is usable only if that bead covers the entire XY cell.
-    return NominalRoof{top-height/Interval(2)+detail::root(radicand),whole};
+    const auto shoulder=detail::root(radicand);
+    auto depth=height/Interval(2)-shoulder;
+    if (transverse.hi==0) depth=Interval(0);
+    else if (transverse_whole && area.lo>(pi()/Interval(4)*square(height)).hi) {
+        // In the admitted rounded-section domain, depth below the flat top
+        // increases with |normal| and h at fixed area: u'=A/(2h²)+pi/8>1/2.
+        // Evaluate correlated endpoint heights, retaining outward A/pi bounds.
+        const auto at=[&](double h,double n) {
+            const auto radius=Interval(h)/Interval(2),core=(section_width(area,Interval(h),b.kind)-Interval(h))/Interval(2);
+            return radius-detail::root(square(radius)-square(detail::maximum(Interval(n)-core,Interval(0))));
+        };
+        depth={std::max(0.,at(height.lo,normal.lo).lo),at(height.hi,normal.hi).hi};
+    }
+    return NominalRoof{top-depth,depth,whole,transverse_whole};
 }
 std::pair<Interval,Interval> affine_integral(const Polygon &polygon, const AffineCapCell &cell, Exact *exact_area=nullptr)
 {
+    const bool flat=cell.z00==cell.z10 && cell.z00==cell.z01;
     Exact twice_area(0), x_moment(0), y_moment(0);
     for (size_t i=0; i<polygon.size(); ++i) {
         const auto &a=polygon[i], &b=polygon[(i+1)%polygon.size()];
         const Exact cross=a[0]*b[1]-b[0]*a[1];
-        twice_area+=cross; x_moment+=(a[0]+b[0])*cross; y_moment+=(a[1]+b[1])*cross;
+        twice_area+=cross;
+        if (!flat) {x_moment+=(a[0]+b[0])*cross;y_moment+=(a[1]+b[1])*cross;}
     }
     if (twice_area==0 && exact_area) { *exact_area=Exact(0);return {Interval(0),Interval(0)}; }
     if (twice_area<=0) reject("MATERIAL_INTEGRAL_DEGENERATE_CELL");
+    if (flat) {
+        const Exact area=twice_area/Exact(2);if (exact_area) *exact_area=area;
+        return {exact_interval(area),exact_interval(area*Exact(cell.z00))};
+    }
     const Exact x=x_moment/(Exact(3)*twice_area), y=y_moment/(Exact(3)*twice_area);
     const auto &r=cell.footprint;
     const Exact mean=Exact(cell.z00)+(Exact(cell.z10)-Exact(cell.z00))*(x-Exact(r.min_x))/(Exact(r.max_x)-Exact(r.min_x))+
@@ -1357,5 +1381,375 @@ FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &requested, s
         poll();return {"BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) { return {e.what(),{}}; }
     catch (const std::exception &e) { return {"FIRST_HATCH_BEAD_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
+}
+
+MaterialUnionResult integrate_material_union(const NominalMaterialView &view, const SceneBox &requested_domain,
+                                              const MaterialUnionLimits &requested_limits)
+{
+    const auto cursor=view.snapshot;const auto domain=requested_domain;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    size_t evaluations=0,cells=0;
+    std::optional<ScalarBounds> provisional_union,provisional_excess;
+    try {
+        detail::require_interval_environment();
+        if (!cursor || !cursor->sequence || cursor->completed_records>cursor->sequence->records.size() ||
+            cursor->sequence->records.size()>200000 || cursor->sequence->geometry.size()!=cursor->sequence->records.size() ||
+            !std::isfinite(cursor->current_progress) || cursor->current_progress<0 || cursor->current_progress>1 ||
+            (cursor->completed_records==cursor->sequence->records.size() && cursor->current_progress!=0) ||
+            domain.min.x()>=domain.max.x() || domain.min.y()>=domain.max.y() || domain.min.z()>=domain.max.z() ||
+            limits.maximum_interval_width.value()<=0 || !limits.max_evaluations || limits.max_evaluations>2000000 ||
+            !limits.max_cells || limits.max_cells>65535 || !limits.max_depth || limits.max_depth>32 || !valid_timeout(limits.timeout))
+            reject("INVALID_MATERIAL_UNION_INTEGRAL");
+        for (auto p : {domain.min,domain.max}) {coordinate(p.x());coordinate(p.y());coordinate(p.z());}
+        const auto sequence=cursor->sequence;const auto poll=[&] {stop(limits,sequence->revision,started);};poll();
+        const auto evaluate=[&] {if (evaluations>=limits.max_evaluations) reject("MATERIAL_UNION_WORK_LIMIT");if (evaluations%128==0) poll();++evaluations;};
+        const auto progress=[&](size_t i) {return i<cursor->completed_records ? 1 : cursor->current_progress;};
+        Exact shear_x(0),shear_y(0);
+        struct Coefficients {Interval area{0},start{0},along{0},normal{0};};
+        std::vector<Coefficients> coefficients(sequence->records.size());
+        const auto vertical=[&](size_t i,Projection projection,double fraction) {
+            const auto &row=sequence->records[i];const auto &cached=coefficients[i];
+            const auto roof=nominal_roof(row,projection,fraction,cached.area);
+            if (!roof) return std::optional<std::pair<Interval,NominalRoof>>{};
+            const auto t=detail::maximum(Interval(0),detail::minimum(projection.t,Interval(fraction)));
+            const auto top=cached.start+cached.along*t-cached.normal*projection.normal;
+            const auto h=Interval(row.bead->gap_begin_mm)+(Interval(row.bead->gap_end_mm)-Interval(row.bead->gap_begin_mm))*t;
+            auto relative=*roof;relative.height=top-roof->depth_below_top;
+            return std::optional<std::pair<Interval,NominalRoof>>{{top-h+roof->depth_below_top,relative}};
+        };
+        const auto longitudinal=[&](const MaterialRecord &row,const Polygon &polygon,double fraction) {
+            const Vertex d{Exact(row.motion.end.x())-Exact(row.motion.start.x()),Exact(row.motion.end.y())-Exact(row.motion.start.y())};
+            const Exact start=d[0]*Exact(row.motion.start.x())+d[1]*Exact(row.motion.start.y()),last=start+Exact(fraction)*(d[0]*d[0]+d[1]*d[1]);
+            return std::all_of(polygon.begin(),polygon.end(),[&](const Vertex &p) {const Exact t=d[0]*p[0]+d[1]*p[1];return t>=start && t<=last;});
+        };
+        using Span=std::pair<double,double>;
+        const auto measure=[](std::vector<Span> spans) {
+            std::sort(spans.begin(),spans.end());Exact total(0);bool have=false;double begin=0,end=0;
+            for (auto s : spans) {
+                if (s.first>=s.second) continue;
+                if (!have) {begin=s.first;end=s.second;have=true;}
+                else if (s.first<=end) end=std::max(end,s.second);
+                else {total+=Exact(end)-Exact(begin);begin=s.first;end=s.second;}
+            }
+            if (have) total+=Exact(end)-Exact(begin);return total;
+        };
+        std::optional<Exact> full_individual{Exact(0)};std::vector<size_t> active;
+        std::vector<std::array<double,4>> xy_bounds(sequence->records.size());
+        const size_t end=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence->records.size());
+        for (size_t i=0;i<end;++i) {
+            if (i%128==0) poll();const auto &row=sequence->records[i];if (!row.bead) continue;evaluate();
+            const double fraction=progress(i);const auto &m=row.motion;const auto &b=*row.bead;
+            const auto length=detail::root(length_squared(row));
+            coefficients[i].area=Interval(std::get<Deposition>(m.payload).volume.value())/length;
+            const auto h=Interval(b.gap_begin_mm)+(Interval(b.gap_end_mm)-Interval(b.gap_begin_mm))*Interval(fraction);
+            const auto half=section_width(Interval(std::get<Deposition>(m.payload).volume.value())/length,
+                detail::minimum(Interval(b.gap_begin_mm),h),b.kind)/Interval(2);
+            const auto x=exact_interval(Exact(m.start.x())+(Exact(m.end.x())-Exact(m.start.x()))*Exact(fraction));
+            const auto y=exact_interval(Exact(m.start.y())+(Exact(m.end.y())-Exact(m.start.y()))*Exact(fraction));
+            const auto z=exact_interval(Exact(m.start.z())+(Exact(m.end.z())-Exact(m.start.z()))*Exact(fraction));
+            const double x_growth=m.start.y()==m.end.y() ? 0 : (absolute(Interval(m.end.y())-Interval(m.start.y()))/length*half).hi;
+            const double y_growth=m.start.x()==m.end.x() ? 0 : (absolute(Interval(m.end.x())-Interval(m.start.x()))/length*half).hi;
+            const auto xmin=exact_interval(Exact(std::min(m.start.x(),x.lo))-Exact(x_growth)),xmax=exact_interval(Exact(std::max(m.start.x(),x.hi))+Exact(x_growth));
+            const auto ymin=exact_interval(Exact(std::min(m.start.y(),y.lo))-Exact(y_growth)),ymax=exact_interval(Exact(std::max(m.start.y(),y.hi))+Exact(y_growth));
+            const double zmin=(Interval(std::min(m.start.z(),z.lo))-detail::maximum(Interval(b.gap_begin_mm),h)).lo,zmax=std::max(m.start.z(),z.hi);
+            if (xmax.hi<domain.min.x() || xmin.lo>domain.max.x() || ymax.hi<domain.min.y() || ymin.lo>domain.max.y() || zmax<domain.min.z() || zmin>domain.max.z()) continue;
+            active.push_back(i);
+            xy_bounds[i]={xmin.lo,xmax.hi,ymin.lo,ymax.hi};
+            if (full_individual) {
+                if (xmin.lo>=domain.min.x() && xmax.hi<=domain.max.x() && ymin.lo>=domain.min.y() && ymax.hi<=domain.max.y() && zmin>=domain.min.z() && zmax<=domain.max.z())
+                    *full_individual+=Exact(std::get<Deposition>(m.payload).volume.value())*Exact(fraction);
+                else full_individual.reset();
+            }
+        }
+        if (!active.empty()) {
+            const auto &m=sequence->records[active.front()].motion;
+            const Exact dx=Exact(m.end.x())-Exact(m.start.x()),dy=Exact(m.end.y())-Exact(m.start.y()),dz=Exact(m.end.z())-Exact(m.start.z());
+            shear_x=dz*dx/(dx*dx+dy*dy);shear_y=dz*dy/(dx*dx+dy*dy);
+        }
+        for (size_t i : active) {
+            evaluate();const auto &m=sequence->records[i].motion;auto &cached=coefficients[i];
+            const Exact dx=Exact(m.end.x())-Exact(m.start.x()),dy=Exact(m.end.y())-Exact(m.start.y());
+            cached.start=exact_interval(Exact(m.start.z())-shear_x*Exact(m.start.x())-shear_y*Exact(m.start.y()));
+            cached.along=exact_interval(Exact(m.end.z())-Exact(m.start.z())-shear_x*dx-shear_y*dy);
+            cached.normal=exact_interval(-shear_x*dy+shear_y*dx)/detail::root(length_squared(sequence->records[i]));
+        }
+        const auto project_bounds=[&](const MaterialRecord &row,const std::array<double,4> &box) {
+            const auto &m=row.motion;const bool x_axis=m.start.y()==m.end.y();
+            const auto delta=x_axis ? Interval(m.end.x())-Interval(m.start.x()) : Interval(m.end.y())-Interval(m.start.y());
+            const size_t axis=x_axis ? 0 : 1;
+            auto along=Interval(box[axis*2],box[axis*2+1])-Interval(x_axis ? m.start.x() : m.start.y());
+            auto normal=Interval(box[(1-axis)*2],box[(1-axis)*2+1])-Interval(x_axis ? m.start.y() : m.start.x());
+            if (delta.hi<0) along=Interval(0)-along;
+            if (x_axis ? delta.hi<0 : delta.lo>0) normal=Interval(0)-normal;
+            return Projection{along/absolute(delta),normal,Interval(0)};
+        };
+        // A constant-gap axis-aligned rectangular loft has exact finite XY
+        // bounds and affine top/bottom. Clip at the original Z planes and reuse
+        // polygon moments; an interval grid would unnecessarily destroy this
+        // correlation. Rounded and variable-gap sections retain the union solver.
+        if (active.size()==1) {
+            const auto &row=sequence->records[active.front()];const auto &m=row.motion;const auto &b=*row.bead;
+            const bool x_axis=m.start.y()==m.end.y(),y_axis=m.start.x()==m.end.x();
+            if (b.kind==BeadSectionKind::Rectangle && b.gap_begin_mm==b.gap_end_mm && x_axis!=y_axis) {
+                const Exact begin(x_axis ? m.start.x() : m.start.y()),end(x_axis ? m.end.x() : m.end.y()),gap(b.gap_begin_mm);
+                const Exact last=begin+(end-begin)*Exact(progress(active.front())),length=end>begin ? end-begin : begin-end;
+                const Exact center(x_axis ? m.start.y() : m.start.x()),half=Exact(std::get<Deposition>(m.payload).volume.value())/(Exact(2)*length*gap);
+                const Exact a=std::min(begin,last),z=std::max(begin,last),c=center-half,d=center+half;
+                Polygon polygon=x_axis ? Polygon{{a,c},{z,c},{z,d},{a,d}} : Polygon{{c,a},{d,a},{d,z},{c,z}};
+                for (const auto &boundary : {std::tuple<Vertex,Exact,bool>{{Exact(1),Exact(0)},Exact(domain.min.x()),true},
+                    {{Exact(1),Exact(0)},Exact(domain.max.x()),false},{{Exact(0),Exact(1)},Exact(domain.min.y()),true},
+                    {{Exact(0),Exact(1)},Exact(domain.max.y()),false}}) {
+                    if (polygon.empty()) break;polygon=clip(polygon,std::get<0>(boundary),std::get<1>(boundary),std::get<2>(boundary));
+                }
+                const Exact slope=(Exact(m.end.z())-Exact(m.start.z()))/(end-begin),intercept=Exact(m.start.z())-slope*begin;
+                const Vertex normal=x_axis ? Vertex{slope,Exact(0)} : Vertex{Exact(0),slope};
+                if (!polygon.empty()) polygon=clip(polygon,normal,Exact(domain.min.z())-intercept,true);
+                if (!polygon.empty()) polygon=clip(polygon,normal,Exact(domain.max.z())+gap-intercept,false);
+                const auto split=[&](const Polygon &p,const Exact &height) {
+                    if (p.empty()) return std::array<Polygon,2>{};
+                    if (slope==0) return intercept<=height ? std::array<Polygon,2>{p,Polygon{}} : std::array<Polygon,2>{Polygon{},p};
+                    return std::array<Polygon,2>{clip(p,normal,height-intercept,false),clip(p,normal,height-intercept,true)};
+                };
+                Exact lower(0),upper(0);const auto tops=split(polygon,Exact(domain.max.z()));
+                for (size_t top=0;top<2;++top) {
+                    const auto bottoms=split(tops[top],Exact(domain.min.z())+gap);
+                    for (size_t bottom=0;bottom<2;++bottom) {
+                        poll();if (bottoms[bottom].empty()) continue;
+                        if (cells>=limits.max_cells) reject("MATERIAL_UNION_CELL_LIMIT");++cells;evaluate();
+                        const AffineCapCell moment{{0,0,1,1},0,x_axis ? 1. : 0.,x_axis ? 0. : 1.};Exact area(0);
+                        const auto moments=affine_integral(bottoms[bottom],moment,&area);if (area==0) continue;
+                        const Exact alpha=(top ? Exact(0) : slope)-(bottom ? slope : Exact(0));
+                        const Exact beta=(top ? Exact(domain.max.z()) : intercept)-(bottom ? intercept-gap : Exact(domain.min.z()));
+                        const auto volume=exact_interval(alpha)*moments.second+exact_interval(beta)*moments.first;
+                        if (volume.hi<0) reject("MATERIAL_UNION_INCONSISTENT_RECTANGLE");
+                        lower+=Exact(std::max(0.,volume.lo));upper+=Exact(std::max(0.,volume.hi));
+                    }
+                }
+                const Interval volume(exact_interval(lower).lo,exact_interval(upper).hi);
+                if ((Interval(volume.hi)-Interval(volume.lo)).hi>limits.maximum_interval_width.value()) reject("MATERIAL_UNION_RECTANGLE_PRECISION");
+                provisional_union=bounds(volume);provisional_excess=ScalarBounds{0,0};poll();
+                auto snapshot=std::shared_ptr<const MaterialUnionSnapshot>(new MaterialUnionSnapshot(cursor,domain,bounds(volume),bounds(volume),{0,0},cells,evaluations));
+                poll();return {"BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY",std::move(snapshot),cells,evaluations,provisional_union,provisional_excess};
+            }
+        }
+        const AffineCapCell flat{{domain.min.x(),domain.min.y(),domain.max.x(),domain.max.y()},0,0,0};
+        struct Node {Polygon polygon;std::vector<size_t> candidates;Exact union_lo,union_hi,sum_lo,sum_hi,repeated_lo,repeated_hi;size_t depth,id,splitter;double uncertainty;bool potential_chain;};
+        const auto make_node=[&](Polygon polygon,const std::vector<size_t> &candidates,size_t depth) {
+            poll();if (cells>=limits.max_cells) reject("MATERIAL_UNION_CELL_LIMIT");const size_t id=cells++;
+            Exact area(0);affine_integral(polygon,flat,&area);
+            std::array<double,4> cell_bounds{exact_interval(polygon.front()[0]).lo,exact_interval(polygon.front()[0]).hi,
+                exact_interval(polygon.front()[1]).lo,exact_interval(polygon.front()[1]).hi};
+            for (const auto &p : polygon) {
+                const auto x=exact_interval(p[0]),y=exact_interval(p[1]);cell_bounds[0]=std::min(cell_bounds[0],x.lo);cell_bounds[1]=std::max(cell_bounds[1],x.hi);
+                cell_bounds[2]=std::min(cell_bounds[2],y.lo);cell_bounds[3]=std::max(cell_bounds[3],y.hi);
+            }
+            auto reference=exact_interval(shear_x*polygon.front()[0]+shear_y*polygon.front()[1]);
+            for (const auto &p : polygon) {
+                const auto value=exact_interval(shear_x*p[0]+shear_y*p[1]);reference={std::min(reference.lo,value.lo),std::max(reference.hi,value.hi)};
+            }
+            const auto span=[&](double lo,double hi,bool guaranteed=false) {
+                if (full_individual) return Span{lo,hi}; // Every complete bead is inside the original XYZ box.
+                const double bottom=guaranteed ? (Interval(domain.min.z())-Interval(reference.lo)).hi : (Interval(domain.min.z())-Interval(reference.hi)).lo;
+                const double top=guaranteed ? (Interval(domain.max.z())-Interval(reference.hi)).lo : (Interval(domain.max.z())-Interval(reference.lo)).hi;
+                return Span{std::max(bottom,lo),std::min(top,hi)};
+            };
+            std::vector<Span> lower,upper;std::vector<size_t> next;Exact sum_lo(0),sum_hi(0),largest_lower(0);
+            struct Strip {Exact begin,end;Span vertical,possible;bool guaranteed;Projection projected;size_t index;};
+            std::map<std::pair<bool,double>,std::vector<Strip>> strips;
+            std::vector<Span> count_lower,count_upper;
+            size_t splitter=sequence->records.size();double worst=-1;
+            for (size_t i : candidates) {
+                evaluate();const auto &row=sequence->records[i];const double fraction=progress(i);
+                const auto &box=xy_bounds[i];
+                // A pure boundary intersection has zero volume. This does not
+                // change the separate point/footprint contact boundary policy.
+                if (box[1]<=cell_bounds[0] || box[0]>=cell_bounds[1] || box[3]<=cell_bounds[2] || box[2]>=cell_bounds[3]) continue;
+                const bool x_axis=row.motion.start.y()==row.motion.end.y(),y_axis=row.motion.start.x()==row.motion.end.x();
+                std::optional<RoofProjection> footprint;
+                if (x_axis!=y_axis) {
+                    auto clipped=polygon;
+                    for (size_t axis=0;axis<2 && !clipped.empty();++axis) {
+                        const Vertex normal=axis==0 ? Vertex{Exact(1),Exact(0)} : Vertex{Exact(0),Exact(1)};
+                        if (box[axis*2]>cell_bounds[axis*2]) clipped=clip(clipped,normal,Exact(box[axis*2]),true);
+                        if (!clipped.empty() && box[axis*2+1]<cell_bounds[axis*2+1]) clipped=clip(clipped,normal,Exact(box[axis*2+1]),false);
+                    }
+                    if (!clipped.empty()) {
+                        const std::array<double,4> bounds{std::max(box[0],cell_bounds[0]),std::min(box[1],cell_bounds[1]),
+                            std::max(box[2],cell_bounds[2]),std::min(box[3],cell_bounds[3])};
+                        footprint=RoofProjection{project_bounds(row,bounds),Interval(0),std::move(clipped)};
+                    }
+                } else footprint=roof_projection(row,sequence->model,polygon,fraction,Representation::Nominal);
+                if (!footprint) continue;
+                const auto possible=vertical(i,footprint->projected,fraction);if (!possible) continue;
+                const auto outside=span(possible->first.lo,possible->second.height.hi);if (outside.first>=outside.second) continue;
+                next.push_back(i);upper.push_back(outside);
+                const auto inside=vertical(i,x_axis!=y_axis ? project_bounds(row,cell_bounds) : project_polygon(row,polygon,Interval(0)),fraction);
+                if (inside && inside->second.whole_transverse && longitudinal(row,polygon,fraction))
+                    lower.push_back(span(inside->first.hi,inside->second.height.lo,true));
+                // Adjacent finite packets can cover a cell together even when
+                // none covers its full length. Prove that longitudinal union;
+                // never replace disconnected packets by one continuous line.
+                if (x_axis!=y_axis) {
+                    const auto &m=row.motion;const auto coordinate=[&](PhysicalPosition p) {return x_axis ? p.x() : p.y();};
+                    const Exact start(coordinate(m.start)),last=start+(Exact(coordinate(m.end))-start)*Exact(fraction);
+                    const auto s=span(possible->first.hi,possible->second.height.lo,true);
+                    strips[{x_axis,x_axis ? m.start.y() : m.start.x()}].push_back({std::min(start,last),std::max(start,last),s,outside,
+                        inside && inside->second.whole_transverse && s.first<s.second,footprint->projected,i});
+                } else {
+                    count_upper.push_back(outside);
+                    if (inside && inside->second.whole_footprint) count_lower.push_back(span(inside->first.hi,inside->second.height.lo,true));
+                }
+                double uncertainty=outside.second-outside.first;
+                if (!full_individual) {
+                    // Reuse the already clipped finite XY enclosure. A whole
+                    // parent area must never be charged to a short packet.
+                    Exact clipped_area(0);affine_integral(footprint->polygon,flat,&clipped_area);
+                    const Exact individual_hi=clipped_area*(Exact(outside.second)-Exact(outside.first));sum_hi+=individual_hi;
+                    Exact individual_lo(0);
+                    if (possible->second.whole_transverse) {
+                        const auto s=span(possible->first.hi,possible->second.height.lo,true);
+                        if (s.first<s.second) individual_lo=clipped_area*(Exact(s.second)-Exact(s.first));
+                    }
+                    sum_lo+=individual_lo;largest_lower=std::max(largest_lower,individual_lo);
+                    uncertainty=exact_interval(individual_hi-individual_lo).hi;
+                } else if (inside && inside->second.whole_transverse) {
+                    const auto s=span(inside->first.hi,inside->second.height.lo,true);
+                    uncertainty-=std::max(0.,s.second-s.first);
+                }
+                if (uncertainty>worst) {worst=uncertainty;splitter=i;}
+            }
+            std::set<std::pair<bool,double>> potential_chains;
+            std::vector<std::pair<bool,std::vector<Strip>>> covered_chains;
+            for (auto &group : strips) {
+                auto &rows=group.second;const size_t axis=group.first.first ? 0 : 1;
+                Exact begin=polygon.front()[axis],end=begin;
+                for (const auto &point : polygon) {begin=std::min(begin,point[axis]);end=std::max(end,point[axis]);}
+                std::sort(rows.begin(),rows.end(),[](const Strip &a,const Strip &b) {return a.begin<b.begin;});
+                struct Chain {Exact last;std::vector<Strip> rows;};std::vector<Chain> chains;
+                for (const auto &row : rows) {
+                    auto chain=std::find_if(chains.begin(),chains.end(),[&](const Chain &c) {return c.last<=row.begin;});
+                    if (chain==chains.end()) chains.push_back({row.end,{row}});
+                    else {chain->last=row.end;chain->rows.push_back(row);}
+                }
+                for (const auto &chain : chains) {
+                    Exact covered=begin;double bottom=0,top=0,possible_bottom=chain.rows.front().possible.first,possible_top=chain.rows.front().possible.second;bool have=false;
+                    Exact potential_covered=begin;
+                    for (const auto &row : chain.rows) {
+                        possible_bottom=std::min(possible_bottom,row.possible.first);possible_top=std::max(possible_top,row.possible.second);
+                        if (row.begin<=potential_covered) potential_covered=std::max(potential_covered,row.end);
+                        if (!row.guaranteed || row.end<begin || row.begin>end || row.begin>covered) continue;
+                        covered=std::max(covered,row.end);
+                        if (!have) {bottom=row.vertical.first;top=row.vertical.second;have=true;}
+                        else {bottom=std::max(bottom,row.vertical.first);top=std::min(top,row.vertical.second);}
+                    }
+                    // Interior-disjoint butt-ended packets contribute at most
+                    // one profile per chain at each XY point. Coincident or
+                    // longitudinally overlapping packets occupy separate chains.
+                    count_upper.push_back({possible_bottom,possible_top});
+                    // Split-direction hint only: potential longitudinal
+                    // continuity does not certify transverse/vertical coverage.
+                    if (potential_covered>=end) potential_chains.insert(group.first);
+                    if (have && covered>=end && bottom<top) {
+                        lower.push_back({bottom,top});count_lower.push_back({bottom,top});
+                        covered_chains.push_back({group.first.first,chain.rows});
+                    }
+                }
+            }
+            const Exact union_lo=std::max(area*measure(lower),largest_lower),union_hi=full_individual ? area*measure(upper) : std::min(area*measure(upper),sum_hi);
+            if (union_lo>union_hi || sum_lo>sum_hi) reject("MATERIAL_UNION_INCONSISTENT_SECTION");
+            const auto excess=[&](const std::vector<Span> &spans) {
+                Exact sum(0);for (auto s : spans) if (s.first<s.second) sum+=Exact(s.second)-Exact(s.first);
+                return sum-measure(spans);
+            };
+            Exact repeated_lo=area*excess(count_lower),repeated_hi=area*excess(count_upper);
+            if (count_upper.size()==2 && covered_chains.size()==2 && repeated_lo>0 &&
+                covered_chains[0].first==covered_chains[1].first) {
+                Exact xmin=polygon.front()[0],xmax=xmin,ymin=polygon.front()[1],ymax=ymin;
+                for (const auto &p : polygon) {xmin=std::min(xmin,p[0]);xmax=std::max(xmax,p[0]);ymin=std::min(ymin,p[1]);ymax=std::max(ymax,p[1]);}
+                if (area==(xmax-xmin)*(ymax-ymin)) {
+                    // For each fixed longitudinal point the two guaranteed
+                    // convex sections have concave intersection height. On a
+                    // rectangle, Hermite-Hadamard bounds its transverse mean
+                    // between endpoint trapezoid and midpoint height. Interval
+                    // envelopes retain all longitudinal packets and Z clipping.
+                    const bool x_axis=covered_chains.front().first;
+                    const Exact first=x_axis ? ymin : xmin,last=x_axis ? ymax : xmax;
+                    std::array<Exact,3> low{Exact(0),Exact(0),Exact(0)},high=low;
+                    for (size_t sample=0;sample<3;++sample) {
+                        const auto coordinate=exact_interval(sample==0 ? first : sample==1 ? last : (first+last)/Exact(2));
+                        std::vector<Span> lower_profiles,upper_profiles;
+                        for (const auto &chain : covered_chains) {
+                            double bottom=0,top=0,outer_bottom=0,outer_top=0;bool have=false;
+                            for (const auto &strip : chain.second) {
+                                evaluate();const auto &row=sequence->records[strip.index];const auto &m=row.motion;
+                                auto projection=strip.projected;
+                                auto normal=coordinate-Interval(x_axis ? m.start.y() : m.start.x());
+                                if (x_axis ? m.end.x()<m.start.x() : m.end.y()>m.start.y()) normal=Interval(0)-normal;
+                                projection.normal=normal;
+                                const auto section=vertical(strip.index,projection,progress(strip.index));
+                                if (!section) reject("MATERIAL_UNION_INCONSISTENT_CONCAVE_SECTION");
+                                const auto inner=span(section->first.hi,section->second.height.lo,true),outer=span(section->first.lo,section->second.height.hi);
+                                if (!have) {bottom=inner.first;top=inner.second;outer_bottom=outer.first;outer_top=outer.second;have=true;}
+                                else {bottom=std::max(bottom,inner.first);top=std::min(top,inner.second);
+                                    outer_bottom=std::min(outer_bottom,outer.first);outer_top=std::max(outer_top,outer.second);}
+                            }
+                            lower_profiles.push_back({bottom,top});upper_profiles.push_back({outer_bottom,outer_top});
+                        }
+                        low[sample]=excess(lower_profiles);high[sample]=excess(upper_profiles);
+                    }
+                    repeated_lo=std::max(repeated_lo,area*(low[0]+low[1])/Exact(2));
+                    repeated_hi=std::min(repeated_hi,area*high[2]);
+                }
+            }
+            if (repeated_lo>repeated_hi) reject("MATERIAL_UNION_INCONSISTENT_SECTION_EXCESS");
+            const double uncertainty=exact_interval(full_individual ? repeated_hi-repeated_lo : union_hi-union_lo+sum_hi-sum_lo).hi;
+            bool splitter_chain=false;
+            if (splitter<sequence->records.size()) {
+                const auto &m=sequence->records[splitter].motion;const bool x_axis=m.start.y()==m.end.y();
+                splitter_chain=potential_chains.count({x_axis,x_axis ? m.start.y() : m.start.x()})!=0;
+            }
+            return Node{std::move(polygon),std::move(next),union_lo,union_hi,sum_lo,sum_hi,repeated_lo,repeated_hi,depth,id,splitter,uncertainty,splitter_chain};
+        };
+        auto root=make_node({{Exact(domain.min.x()),Exact(domain.min.y())},{Exact(domain.max.x()),Exact(domain.min.y())},
+            {Exact(domain.max.x()),Exact(domain.max.y())},{Exact(domain.min.x()),Exact(domain.max.y())}},active,0);
+        Exact union_lo=root.union_lo,union_hi=root.union_hi,sum_lo=root.sum_lo,sum_hi=root.sum_hi,repeated_lower=root.repeated_lo,repeated_upper=root.repeated_hi;
+        const auto compare=[](const Node &a,const Node &b) {return a.uncertainty==b.uncertainty ? a.id>b.id : a.uncertainty<b.uncertainty;};
+        std::vector<Node> heap;heap.push_back(std::move(root));
+        while (true) {
+            poll();const Exact individual_lo=full_individual ? *full_individual : sum_lo,individual_hi=full_individual ? *full_individual : sum_hi;
+            const Exact lower=std::max(union_lo,individual_lo-repeated_upper),upper=std::min(union_hi,individual_hi-repeated_lower);
+            if (lower>upper) reject("MATERIAL_UNION_INCONSISTENT_TOTAL");
+            const Exact repeated_lo=std::max(repeated_lower,std::max(Exact(0),individual_lo-upper)),repeated_hi=std::min(repeated_upper,std::max(Exact(0),individual_hi-lower));
+            if (repeated_lo>repeated_hi) reject("MATERIAL_UNION_INCONSISTENT_EXCESS");
+            const auto occupied=Interval(exact_interval(lower).lo,exact_interval(upper).hi),individual=Interval(exact_interval(individual_lo).lo,exact_interval(individual_hi).hi),repeated=Interval(exact_interval(repeated_lo).lo,exact_interval(repeated_hi).hi);
+            provisional_union=bounds(occupied);provisional_excess=bounds(repeated);
+            if (std::max({(Interval(occupied.hi)-Interval(occupied.lo)).hi,(Interval(individual.hi)-Interval(individual.lo)).hi,
+                    (Interval(repeated.hi)-Interval(repeated.lo)).hi})<=limits.maximum_interval_width.value()) {
+                poll();auto snapshot=std::shared_ptr<const MaterialUnionSnapshot>(new MaterialUnionSnapshot(cursor,domain,bounds(occupied),bounds(individual),bounds(repeated),cells,evaluations));
+                poll();return {"BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY",std::move(snapshot),cells,evaluations,provisional_union,provisional_excess};
+            }
+            if (heap.empty()) reject("MATERIAL_UNION_DEPTH_LIMIT");
+            std::pop_heap(heap.begin(),heap.end(),compare);auto node=std::move(heap.back());heap.pop_back();
+            if (node.depth>=limits.max_depth) continue;
+            if (node.splitter>=sequence->records.size()) reject("MATERIAL_UNION_INVALID_SPLIT");
+            const auto &row=sequence->records[node.splitter];const auto &m=row.motion;
+            const Exact dx=Exact(m.end.x())-Exact(m.start.x()),dy=Exact(m.end.y())-Exact(m.start.y());Vertex normal{-dy,dx};
+            const auto p=project_polygon(row,node.polygon,Interval(0));
+            if ((!node.potential_chain && (p.t.lo<=0 || p.t.hi>=progress(node.splitter)) && p.normal.hi-p.normal.lo<row.bead->width_mm.lower/2) ||
+                std::max(std::abs(m.end.z()-m.start.z()),std::abs(row.bead->gap_end_mm-row.bead->gap_begin_mm))*(p.t.hi-p.t.lo)>p.normal.hi-p.normal.lo)
+                normal={dx,dy};
+            auto lo=normal[0]*node.polygon.front()[0]+normal[1]*node.polygon.front()[1],hi=lo;
+            for (auto point : node.polygon) {const Exact value=normal[0]*point[0]+normal[1]*point[1];lo=std::min(lo,value);hi=std::max(hi,value);}
+            if (lo==hi) reject("MATERIAL_UNION_INVALID_SPLIT");const Exact middle=(lo+hi)/Exact(2);
+            auto first=make_node(clip(node.polygon,normal,middle,false),node.candidates,node.depth+1);
+            auto second=make_node(clip(node.polygon,normal,middle,true),node.candidates,node.depth+1);
+            union_lo+=first.union_lo+second.union_lo-node.union_lo;union_hi+=first.union_hi+second.union_hi-node.union_hi;
+            sum_lo+=first.sum_lo+second.sum_lo-node.sum_lo;sum_hi+=first.sum_hi+second.sum_hi-node.sum_hi;
+            repeated_lower+=first.repeated_lo+second.repeated_lo-node.repeated_lo;repeated_upper+=first.repeated_hi+second.repeated_hi-node.repeated_hi;
+            heap.push_back(std::move(first));std::push_heap(heap.begin(),heap.end(),compare);
+            heap.push_back(std::move(second));std::push_heap(heap.begin(),heap.end(),compare);
+        }
+    } catch (const Rejection &e) {return {e.what(),{},cells,evaluations,provisional_union,provisional_excess};}
+    catch (const std::exception &e) {return {"MATERIAL_UNION_NUMERIC_FAILURE: "+std::string(e.what()),{},cells,evaluations,provisional_union,provisional_excess};}
 }
 }

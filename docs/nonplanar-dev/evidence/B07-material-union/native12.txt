@@ -1,0 +1,284 @@
+Filters: [NativeMaterialUnion]
+Randomness seeded to: 594025888
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 native first-hatch union measures rounded overlap rather than summed
+extrusion
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2099
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2101: PASSED:
+with message:
+  !(std::is_aggregate<MaterialUnionSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1362: PASSED:
+  REQUIRE( file.source )
+with expansion:
+  0xa27028978
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1363: PASSED:
+  REQUIRE( imported.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1364: PASSED:
+  REQUIRE( load_stl(path.string().c_str(),&model) )
+with expansion:
+  true
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1370: PASSED:
+  REQUIRE( placed.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+with message:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1373: PASSED:
+  REQUIRE( partition.status==VolumePartitionStatus::Partitioned )
+with expansion:
+  0 == 0
+with messages:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+  NOMINAL_BODY_CAP_PARTITION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2103: PASSED:
+  REQUIRE( body.snapshot )
+with expansion:
+  0xa27077e58
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2107: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0xa27007998
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2115: PASSED:
+  REQUIRE( native.snapshot )
+with expansion:
+  0xa26fb6ad8
+with message:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2121: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0xa26f38680
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2136: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0xa27007df8
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2136: PASSED:
+  REQUIRE( prefix.nominal.snapshot )
+with expansion:
+  0xa26d65878
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2142: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa26020000
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+  provisional occupied=[1.31221597619643471,1.32221578176234611] excess=[0.
+  0734783550714341455,0.0834781606373454221]
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY packets=2109
+  cells=32213 work=1598991
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2147: PASSED:
+  REQUIRE( lines.size()==14 )
+with expansion:
+  14 == 14
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+  provisional occupied=[1.31221597619643471,1.32221578176234611] excess=[0.
+  0734783550714341455,0.0834781606373454221]
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY packets=2109
+  cells=32213 work=1598991
+  first lines=14 packets=2109 summed amount=1.39569413683378074 occupied=[1.
+  31221597619643471,1.32221578176234611] repeated=[0.0734783550714341455,0.
+  0834781606373454221] cells=32213 work=1598991
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2147: PASSED:
+  REQUIRE( packets>lines.size() )
+with expansion:
+  2109 (0x83d) > 14
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+  provisional occupied=[1.31221597619643471,1.32221578176234611] excess=[0.
+  0734783550714341455,0.0834781606373454221]
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY packets=2109
+  cells=32213 work=1598991
+  first lines=14 packets=2109 summed amount=1.39569413683378074 occupied=[1.
+  31221597619643471,1.32221578176234611] repeated=[0.0734783550714341455,0.
+  0834781606373454221] cells=32213 work=1598991
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2147: PASSED:
+  REQUIRE( proof.source==prefix.nominal.snapshot )
+with expansion:
+  0xa26d65878 == 0xa26d65878
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+  provisional occupied=[1.31221597619643471,1.32221578176234611] excess=[0.
+  0734783550714341455,0.0834781606373454221]
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY packets=2109
+  cells=32213 work=1598991
+  first lines=14 packets=2109 summed amount=1.39569413683378074 occupied=[1.
+  31221597619643471,1.32221578176234611] repeated=[0.0734783550714341455,0.
+  0834781606373454221] cells=32213 work=1598991
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2148: PASSED:
+  REQUIRE( proof.individual_volume_mm3.lower<=amount )
+with expansion:
+  1.39569413683378007 <= 1.39569
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+  provisional occupied=[1.31221597619643471,1.32221578176234611] excess=[0.
+  0734783550714341455,0.0834781606373454221]
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY packets=2109
+  cells=32213 work=1598991
+  first lines=14 packets=2109 summed amount=1.39569413683378074 occupied=[1.
+  31221597619643471,1.32221578176234611] repeated=[0.0734783550714341455,0.
+  0834781606373454221] cells=32213 work=1598991
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2148: FAILED:
+  REQUIRE( proof.individual_volume_mm3.upper>=amount )
+with expansion:
+  1.3956941368337803 >= 1.39569
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+  provisional occupied=[1.31221597619643471,1.32221578176234611] excess=[0.
+  0734783550714341455,0.0834781606373454221]
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY packets=2109
+  cells=32213 work=1598991
+  first lines=14 packets=2109 summed amount=1.39569413683378074 occupied=[1.
+  31221597619643471,1.32221578176234611] repeated=[0.0734783550714341455,0.
+  0834781606373454221] cells=32213 work=1598991
+
+===============================================================================
+test cases:  1 |  0 passed | 1 failed
+assertions: 31 | 30 passed | 1 failed
+

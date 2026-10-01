@@ -872,3 +872,141 @@ TEST_CASE("B07 first bead excludes future roof and refuses packet and numerical 
     limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
     const auto rounding=plan_first_hatch_bead(hatch,0,limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
 }
+
+TEST_CASE("B07 finite material union distinguishes repeated amount from geometric occupancy", "[Nonplanar][B07][MaterialUnion]")
+{
+    for (const auto kind : {BeadSectionKind::Rectangle,BeadSectionKind::RoundedRectangle}) {
+        const auto first=bead(1,0,{0,0,1},{10,0,1},.8,.2,.2,kind);
+        const MaterialRecord travel{{2,1,0,{10,0,1},{0,0,1},Speed(10),Acceleration(100),Travel{}},{}};
+        auto second=first;second.motion.event_id=3;second.motion.sequence_index=2;
+        const auto ledger=captured({first,travel,second});const SceneBox region{{-1,-1,.7},{11,1,1.1}};
+        const auto present=material_at(ledger,3,0);MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.005);
+        const auto result=integrate_material_union(present.nominal,region,limits);INFO(result.reason);REQUIRE(result.snapshot);
+        const long double expected=std::get<Deposition>(first.motion.payload).volume.value();
+        volume_contains(result.snapshot->union_volume_mm3,expected);
+        volume_contains(result.snapshot->individual_volume_mm3,2*expected);
+        volume_contains(result.snapshot->repeated_volume_mm3,expected);
+        REQUIRE(result.snapshot->source==present.nominal.snapshot);REQUIRE(result.snapshot->union_volume_mm3.lower>0);
+        REQUIRE(result.snapshot->union_volume_mm3.upper-result.snapshot->union_volume_mm3.lower<=.005);
+        const auto prefix=material_at(ledger,1,0);const auto once=integrate_material_union(prefix.nominal,region,limits);REQUIRE(once.snapshot);
+        volume_contains(once.snapshot->union_volume_mm3,expected);volume_contains(once.snapshot->individual_volume_mm3,expected);
+        REQUIRE(once.snapshot->repeated_volume_mm3.lower==0);REQUIRE(once.snapshot->repeated_volume_mm3.upper<=.005);
+    }
+}
+
+TEST_CASE("B07 rounded neighboring finite beads match an independent circular lens overlap", "[Nonplanar][B07][MaterialUnion]")
+{
+    const double pitch=.4;
+    const auto first=bead(1,0,{0,0,1},{2,0,1},.45,.2,.2);
+    const MaterialRecord travel{{2,1,0,{2,0,1},{0,pitch,1},Speed(10),Acceleration(100),Travel{}},{}};
+    const auto second=bead(3,2,{0,pitch,1},{2,pitch,1},.45,.2,.2);
+    const auto ledger=captured({first,travel,second});const auto present=material_at(ledger,3,0);
+    MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.001);limits.max_cells=65535;
+    const auto result=integrate_material_union(present.nominal,{{0,-.3,.7},{2,.7,1.1}},limits);INFO(result.reason);REQUIRE(result.snapshot);
+    const long double r=.1L,h=first.bead->gap_begin_mm,k=1-std::acos(-1.L)/4;
+    const long double amount=std::get<Deposition>(first.motion.payload).volume.value(),w=amount/2/h+k*h,d=pitch-(w-h);
+    const long double repeated=2*(2*r*r*std::acos(d/(2*r))-d/2*std::sqrt(4*r*r-d*d));
+    volume_contains(result.snapshot->individual_volume_mm3,2*amount);
+    volume_contains(result.snapshot->repeated_volume_mm3,repeated);
+    volume_contains(result.snapshot->union_volume_mm3,2*amount-repeated);
+    REQUIRE(result.snapshot->repeated_volume_mm3.lower>0);
+    REQUIRE(result.snapshot->union_volume_mm3.upper<result.snapshot->individual_volume_mm3.lower);
+    // Clip half the finite length and a vertical half-section. Rounded symmetry
+    // gives one quarter of every measure, without extending butt ends.
+    const auto clipped=integrate_material_union(present.nominal,{{.5,-.3,.9},{1.5,.7,1.1}},limits);INFO(clipped.reason);REQUIRE(clipped.snapshot);
+    volume_contains(clipped.snapshot->union_volume_mm3,(2*amount-repeated)/4);
+    volume_contains(clipped.snapshot->individual_volume_mm3,amount/2);
+    volume_contains(clipped.snapshot->repeated_volume_mm3,repeated/4);
+}
+
+TEST_CASE("B07 union volume captures its domain and refuses stale cancelled or exhausted bounds", "[Nonplanar][B07][MaterialUnion]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},.8,.2,.2)});auto present=material_at(ledger,1,0);
+    SceneBox region{{0,-.35,.7},{10,.35,1.1}};MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.005);
+    limits.cancelled=[&] {present.nominal.snapshot.reset();region={{0,0,0},{0,0,0}};limits.max_cells=1;return false;};
+    const auto owned=integrate_material_union(present.nominal,region,limits);INFO(owned.reason);REQUIRE(owned.snapshot);
+    present.nominal.snapshot=owned.snapshot->source;region=owned.snapshot->domain;limits={};
+    REQUIRE_FALSE(integrate_material_union({},region,limits).snapshot);
+    limits.max_cells=1;REQUIRE_FALSE(integrate_material_union(present.nominal,region,limits).snapshot);
+    limits={};limits.max_evaluations=1;REQUIRE_FALSE(integrate_material_union(present.nominal,region,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(integrate_material_union(present.nominal,region,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(integrate_material_union(present.nominal,region,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE_FALSE(integrate_material_union(present.nominal,region,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounding=integrate_material_union(present.nominal,region,limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+}
+
+TEST_CASE("B07 stitched nominal strips prove finite continuity without filling a missing packet", "[Nonplanar][B07][MaterialUnion]")
+{
+    for (bool gap : {false,true}) {
+        const auto a=bead(1,0,{0,0,1},{1,0,1},.8,.2,.2);
+        const MaterialRecord travel{{2,1,0,{1,0,1},{gap ? 2. : 1.,0,1},Speed(10),Acceleration(100),Travel{}},{}};
+        const auto b=bead(3,2,{gap ? 2. : 1.,0,1},{gap ? 3. : 2.,0,1},.8,.2,.2);
+        const auto ledger=captured({a,travel,b});const auto present=material_at(ledger,3,0);
+        MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.002);limits.max_cells=65535;
+        const auto result=integrate_material_union(present.nominal,{{0,-1,.7},{3,1,1.1}},limits);INFO(result.reason);REQUIRE(result.snapshot);
+        const long double expected=std::get<Deposition>(a.motion.payload).volume.value()+std::get<Deposition>(b.motion.payload).volume.value();
+        volume_contains(result.snapshot->union_volume_mm3,expected);volume_contains(result.snapshot->individual_volume_mm3,expected);
+        REQUIRE(result.snapshot->repeated_volume_mm3.lower==0);REQUIRE(result.snapshot->repeated_volume_mm3.upper<=.002);
+        if (gap) {
+            const auto empty=integrate_material_union(present.nominal,{{1,-1,.7},{2,1,1.1}},limits);INFO(empty.reason);REQUIRE(empty.snapshot);
+            REQUIRE(empty.snapshot->union_volume_mm3.upper==0);REQUIRE(empty.snapshot->individual_volume_mm3.upper==0);
+        }
+    }
+}
+
+TEST_CASE("B07 sheared integration preserves sloped XY volumes and clips the original XYZ window", "[Nonplanar][B07][MaterialUnion]")
+{
+    for (auto kind : {BeadSectionKind::Rectangle,BeadSectionKind::RoundedRectangle}) {
+        const auto row=bead(1,0,{0,0,1},{10,0,2},.8,.2,.2,kind);const auto ledger=captured({row});const auto present=material_at(ledger,1,0);
+        MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.001);limits.max_cells=65535;
+        const auto whole=integrate_material_union(present.nominal,{{0,-1,.5},{10,1,2.5}},limits);INFO(whole.reason);REQUIRE(whole.snapshot);
+        const long double expected=std::get<Deposition>(row.motion.payload).volume.value();
+        volume_contains(whole.snapshot->union_volume_mm3,expected);volume_contains(whole.snapshot->individual_volume_mm3,expected);
+        REQUIRE(whole.snapshot->repeated_volume_mm3.upper<=.001);
+        if (kind==BeadSectionKind::Rectangle) {
+            // Independent trapezoids: vertical overlaps are .1*x on [0,2],
+            // .2 on [2,5], and .7-.1*x on [5,7]. Integral is 1 mm2 times width.
+            const auto clipped=integrate_material_union(present.nominal,{{0,-1,1},{10,1,1.5}},limits);INFO(clipped.reason);REQUIRE(clipped.snapshot);
+            volume_contains(clipped.snapshot->union_volume_mm3,expected/2);
+            volume_contains(clipped.snapshot->individual_volume_mm3,expected/2);
+        }
+    }
+}
+
+TEST_CASE("B07 nominal union retains rotated reversed and current finite XY geometry", "[Nonplanar][B07][MaterialUnion]")
+{
+    for (const auto kind : {BeadSectionKind::Rectangle,BeadSectionKind::RoundedRectangle})
+        for (const auto end : {PhysicalPosition(3,4,2),PhysicalPosition(0,-5,2)}) {
+            const auto row=bead(1,0,{0,0,1},end,.8,.2,.2,kind);const auto ledger=captured({row});
+            const long double amount=std::get<Deposition>(row.motion.payload).volume.value();
+            for (double fraction : {.5,1.}) {
+                const auto present=material_at(ledger,fraction==1 ? 1 : 0,fraction==1 ? 0 : fraction);
+                const auto result=integrate_material_union(present.nominal,{{-1,-6,.5},{4,5,2.5}});INFO(result.reason);REQUIRE(result.snapshot);
+                volume_contains(result.snapshot->union_volume_mm3,amount*fraction);
+                volume_contains(result.snapshot->individual_volume_mm3,amount*fraction);
+                REQUIRE(result.snapshot->repeated_volume_mm3.upper==0);
+            }
+        }
+}
+
+TEST_CASE("B07 triple occupancy counts multiplicity excess without pairwise double counting", "[Nonplanar][B07][MaterialUnion]")
+{
+    const auto first=bead(1,0,{0,0,1},{1,0,1},.8,.2,.2);
+    const MaterialRecord travel{{2,1,0,{1,0,1},{0,0,1},Speed(10),Acceleration(100),Travel{}},{}};
+    auto second=first;second.motion.event_id=3;second.motion.sequence_index=2;
+    auto back=travel;back.motion.event_id=4;back.motion.sequence_index=3;
+    auto third=first;third.motion.event_id=5;third.motion.sequence_index=4;
+    const auto ledger=captured({first,travel,second,back,third});
+    const long double amount=std::get<Deposition>(first.motion.payload).volume.value();
+    MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.002);
+    for (double fraction : {.5,1.}) {
+        const auto present=material_at(ledger,fraction==1 ? 5 : 4,fraction==1 ? 0 : fraction);
+        const auto result=integrate_material_union(present.nominal,{{0,-1,.5},{1,1,1.5}},limits);INFO(result.reason);REQUIRE(result.snapshot);
+        volume_contains(result.snapshot->union_volume_mm3,amount);
+        volume_contains(result.snapshot->individual_volume_mm3,(2+fraction)*amount);
+        volume_contains(result.snapshot->repeated_volume_mm3,(1+fraction)*amount);
+        REQUIRE(result.snapshot->repeated_volume_mm3.upper<3*amount);
+    }
+}

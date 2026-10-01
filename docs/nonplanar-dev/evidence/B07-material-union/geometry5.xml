@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="2" skipped="0" tests="81" hostname="tbd" time="1.231" timestamp="2026-10-01T04:42:45Z">
+    <properties>
+      <property name="random-seed" value="3551295490"/>
+      <property name="filters" value="[MaterialUnion]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 stitched nominal strips prove finite continuity without filling a missing packet" time="0.003" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 union volume captures its domain and refuses stale cancelled or exhausted bounds" time="0.000" status="run">
+      <failure message="!(integrate_material_union(present.nominal,region,limits).snapshot)" type="REQUIRE_FALSE">
+FAILED:
+  REQUIRE_FALSE( integrate_material_union(present.nominal,region,limits).snapshot )
+with expansion:
+  !0xa54c08580
+BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:930
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 rounded neighboring finite beads match an independent circular lens overlap" time="0.069" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 sheared integration preserves sloped XY volumes and clips the original XYZ window" time="0.000" status="run">
+      <failure message="clipped.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( clipped.snapshot )
+with expansion:
+  0
+BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+MATERIAL_DEADLINE
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:967
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 finite material union distinguishes repeated amount from geometric occupancy" time="0.152" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

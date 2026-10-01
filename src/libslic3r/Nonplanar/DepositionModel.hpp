@@ -368,4 +368,32 @@ struct FirstHatchBeadResult { std::string reason; std::shared_ptr<const FirstHat
 // ordering, later support and export remain separate obligations.
 FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &, size_t line_index,
                                         const FirstHatchBeadLimits &limits = {});
+
+inline constexpr unsigned material_union_contract_version=1;
+struct MaterialUnionLimits : MaterialIntegralLimits {};
+struct MaterialUnionResult;
+struct MaterialUnionSnapshot {
+    const std::shared_ptr<const MaterialPrefixSnapshot> source;
+    const SceneBox domain;
+    const ScalarBounds union_volume_mm3, individual_volume_mm3, repeated_volume_mm3;
+    const size_t cells, evaluations;
+private:
+    MaterialUnionSnapshot(std::shared_ptr<const MaterialPrefixSnapshot> s, SceneBox box,
+        ScalarBounds occupied, ScalarBounds sum, ScalarBounds repeated, size_t count, size_t work)
+        : source(std::move(s)), domain(box), union_volume_mm3(occupied), individual_volume_mm3(sum),
+          repeated_volume_mm3(repeated), cells(count), evaluations(work) {}
+    friend MaterialUnionResult integrate_material_union(const NominalMaterialView &, const SceneBox &, const MaterialUnionLimits &);
+};
+struct MaterialUnionResult {
+    std::string reason;
+    std::shared_ptr<const MaterialUnionSnapshot> snapshot;
+    size_t cells=0, evaluations=0; // Diagnostics also retained after UNKNOWN.
+    std::optional<ScalarBounds> provisional_union_mm3, provisional_excess_mm3; // Never a certificate.
+};
+// Continuous clipped nominal occupancy, sum of individual bead occupancies and
+// their difference (multiplicity excess, not pairwise intersection volume).
+// Future material is absent. All three intervals meet one whole-domain precision
+// limit. Declared geometric union only; no target fill, physical contact or export.
+MaterialUnionResult integrate_material_union(const NominalMaterialView &, const SceneBox &,
+                                             const MaterialUnionLimits &limits = {});
 }

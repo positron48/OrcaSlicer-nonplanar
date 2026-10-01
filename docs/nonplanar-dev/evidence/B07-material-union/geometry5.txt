@@ -1,0 +1,40 @@
+Filters: [MaterialUnion]
+Randomness seeded to: 3551295490
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 union volume captures its domain and refuses stale cancelled or exhausted
+bounds
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:922
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:930: FAILED:
+  REQUIRE_FALSE( integrate_material_union(present.nominal,region,limits).snapshot )
+with expansion:
+  !0xa54c08580
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+-------------------------------------------------------------------------------
+B07 sheared integration preserves sloped XY volumes and clips the original XYZ
+window
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:955
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:967: FAILED:
+  REQUIRE( clipped.snapshot )
+with expansion:
+  0
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  MATERIAL_DEADLINE
+
+===============================================================================
+test cases:  5 |  3 passed | 2 failed
+assertions: 81 | 79 passed | 2 failed
+

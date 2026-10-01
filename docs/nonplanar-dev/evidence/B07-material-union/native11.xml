@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="26" hostname="tbd" time="9.406" timestamp="2026-10-01T05:16:03Z">
+    <properties>
+      <property name="random-seed" value="708284653"/>
+      <property name="filters" value="[NativeMaterialUnion]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B07 native first-hatch union measures rounded overlap rather than summed extrusion" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+DECLARED_MATERIAL_MODEL_ONLY
+provisional occupied=[1.31108675532412922,1.323578460730225] excess=[0.0721156761035553068,0.0846073815096509835]
+MATERIAL_UNION_WORK_LIMIT packets=2109 cells=47739 work=2000000
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2142
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

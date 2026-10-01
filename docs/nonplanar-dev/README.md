@@ -78,6 +78,14 @@ errors. Selected CTest executes 276/276 and six fresh OFF/ZAA comparisons pass.
 Finite-width contact, filled unions/overlap, perimeter/seam, later deposited
 support and full motion/order remain open; short-packet feasibility is unverified.
 
+`B07-material-union.md` now bounds clipped nominal occupied union, individually
+clipped summed amounts and multiplicity excess, preserving actual prefixes and
+finite gaps. Seven geometric cases/170 assertions and one native case/37
+assertions pass. All 14 first lines / 2109 declared packets yield occupied volume
+1.3122–1.3222 mm3 versus summed amount 1.3957 mm3, at 0.01 mm3 interval precision.
+Current selected CTest executes 284/284; six fresh OFF/ZAA comparisons pass.
+Target-fill reconciliation, finite-width contact, seam and later support remain open.
+
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
 compatibility, dense coverage, material replay, ordering and guarded hybrid
@@ -86,11 +94,11 @@ and physical qualification remain pending. U1 standard head and nominal 0.4 mm
 nozzle are user-declared in `B15-u1-declared-setup.md`, without measurement claims.
 
 Prior Linux native runs at d57e9325, 7df1d765, e7a46961, 23f00bfd,
-b35408ce, a083f2df and 63779b4f succeeded. Run 36802647527 confirms the
-63779b4f native tests and application. The latest saved snapshot has run
-36809462993 at 8bcbbd45 in progress; the intermediate
-pending run at 2ee83d33 was cancelled by workflow concurrency. These records do
-not prove Linux execution of this first-centerline gap reconstruction revision.
+b35408ce, a083f2df, 63779b4f and 8bcbbd45 succeeded. Run 36809462993 confirms
+8bcbbd45 native tests and application. The latest saved snapshot has run
+36812147275 at e2030e15 in progress. Earlier intermediate runs were cancelled by
+workflow concurrency. These records do not prove Linux execution of this
+nominal-union integration revision.
 Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;

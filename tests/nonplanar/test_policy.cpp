@@ -13,6 +13,7 @@
 #include <boost/nowide/fstream.hpp>
 #include <miniz.h>
 #include "../fff_print/test_data.hpp"
+#include <boost/multiprecision/cpp_bin_float.hpp>
 #include <boost/filesystem.hpp>
 #include <cmath>
 #include <cfenv>
@@ -2094,4 +2095,63 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     REQUIRE(lines.size()==14);REQUIRE(packets>lines.size());REQUIRE(roof_segments>lines.size());
     REQUIRE(amount>0);REQUIRE(amount<plane_amount-.1L);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
+}
+
+TEST_CASE("B07 native first-hatch union measures rounded overlap rather than summed extrusion", "[Nonplanar][B07][NativeMaterialUnion]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialUnionSnapshot>::value);
+    const auto body=generate_planar_body(native_body_partition(planar_body_config(),{},{},4.2,
+        "tests/nonplanar/data/affine-wedge-1-in-16.stl"));REQUIRE(body.snapshot);
+    const BodyMaterialParameters parameters{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits capture;capture.timeout=std::chrono::seconds(5);
+    const auto material=reconstruct_planar_body_material(body,parameters,capture);REQUIRE(material.snapshot);
+    const NativeAffinePassRequest request{{19,17,21,23},0,4.1,
+        {4,{VerticalGap(.1),VerticalGap(.4),Length(.00001)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.01)}};
+    NativeAffinePassLimits pass_limits;pass_limits.material.max_cells=8191;pass_limits.material.timeout=std::chrono::seconds(5);
+    pass_limits.material.maximum_interval_width=Volume(.01);
+    AffineHatchLimits hatch_limits;hatch_limits.timeout=std::chrono::seconds(10);hatch_limits.volumes.max_cells=32768;
+    hatch_limits.volumes.timeout=std::chrono::seconds(5);hatch_limits.volumes.maximum_interval_width=Volume(.01);
+    const auto native=plan_native_affine_hatches(material,request,{WidthXY(.45),Length(.4),Length(.2),HatchDirection::AlongX},
+        pass_limits,hatch_limits);INFO(native.reason);REQUIRE(native.snapshot);
+    FirstHatchBeadLimits bead_limits;bead_limits.timeout=std::chrono::seconds(5);bead_limits.packets.timeout=std::chrono::seconds(5);
+    bead_limits.packets.maximum_width_error=Length(.002);
+    std::vector<MaterialRecord> rows;double numeric=0;size_t packets=0;
+    // Apple ARM64 long double is binary64. Sum the binary amounts in 113 bits.
+    using Amount=boost::multiprecision::cpp_bin_float_quad;Amount amount=0;
+    const auto &lines=native.snapshot->hatches->passes.front().lines;
+    for (size_t i=0;i<lines.size();++i) {
+        const auto planned=plan_first_hatch_bead({"",native.snapshot->hatches},i,bead_limits);INFO(planned.reason);REQUIRE(planned.snapshot);
+        numeric=std::max(numeric,planned.snapshot->numerical_error_upper_mm);
+        // Declared geometry ledger only. These connector travels are not
+        // approved motion or an executable order; the public gate remains shut.
+        if (!rows.empty()) {const auto index=rows.size();rows.push_back({{index+1,index,0,rows.back().motion.end,
+            planned.snapshot->pieces.front().start,Speed(30),Acceleration(100),Travel{}},{}});}
+        for (const auto &piece : planned.snapshot->pieces) {
+            ++packets;amount+=piece.volume.value();const auto index=rows.size();
+            rows.push_back({{index+1,index,33,piece.start,piece.end,Speed(20),Acceleration(100),Deposition{piece.volume,piece.nominal_width,
+                VerticalGap(std::min(piece.section.gap_begin_mm,piece.section.gap_end_mm)),VerticalGap(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm)),
+                parameters.material,7,8}},piece.section});
+        }
+    }
+    auto charged=material.snapshot->material->model;charged.numerical_coordinate_error=Length(numeric);
+    const auto ledger=capture_material_sequence(rows,charged,body.snapshot->revision,material.snapshot->material_fingerprint,capture);
+    INFO(ledger.reason);REQUIRE(ledger.snapshot);const auto prefix=material_at(ledger.snapshot,rows.size(),0,capture);REQUIRE(prefix.nominal.snapshot);
+    MaterialUnionLimits limits;limits.max_cells=65535;limits.max_evaluations=2000000;limits.timeout=std::chrono::seconds(10);
+    limits.maximum_interval_width=Volume(.01);
+    const auto result=integrate_material_union(prefix.nominal,{{19,17,4.0},{21,23,4.7}},limits);
+    const auto occupied=result.provisional_union_mm3.value_or(ScalarBounds{0,0}),excess=result.provisional_excess_mm3.value_or(ScalarBounds{0,0});
+    INFO("provisional occupied=[" << std::setprecision(18) << occupied.lower << ',' << occupied.upper << "] excess=[" << excess.lower << ',' << excess.upper << ']');
+    INFO(result.reason << " packets=" << packets << " cells=" << result.cells << " work=" << result.evaluations);REQUIRE(result.snapshot);
+    const auto &proof=*result.snapshot;
+    INFO("first lines=" << lines.size() << " packets=" << packets << " summed amount=" << std::setprecision(18) << amount <<
+        " occupied=[" << proof.union_volume_mm3.lower << ',' << proof.union_volume_mm3.upper << "] repeated=[" <<
+        proof.repeated_volume_mm3.lower << ',' << proof.repeated_volume_mm3.upper << "] cells=" << proof.cells << " work=" << proof.evaluations);
+    REQUIRE(lines.size()==14);REQUIRE(packets>lines.size());REQUIRE(proof.source==prefix.nominal.snapshot);
+    REQUIRE(Amount(proof.individual_volume_mm3.lower)<=amount);REQUIRE(Amount(proof.individual_volume_mm3.upper)>=amount);
+    REQUIRE(proof.union_volume_mm3.lower>1);REQUIRE(proof.repeated_volume_mm3.lower>0);
+    REQUIRE(proof.union_volume_mm3.upper<proof.individual_volume_mm3.lower);
+    REQUIRE(proof.union_volume_mm3.upper-proof.union_volume_mm3.lower<=.01);
+    REQUIRE(proof.repeated_volume_mm3.upper-proof.repeated_volume_mm3.lower<=.01);
+    limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(integrate_material_union(prefix.nominal,proof.domain,limits).snapshot);
 }

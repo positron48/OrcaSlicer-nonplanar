@@ -1,0 +1,10 @@
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:883:52: error: unknown type name 'MaterialUnionLimits'
+  883 |         const auto present=material_at(ledger,3,0);MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.005);
+      |                                                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:904:5: error: unknown type name 'MaterialUnionLimits'
+  904 |     MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.001);limits.max_cells=65535;
+      |     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:925:43: error: unknown type name 'MaterialUnionLimits'
+  925 |     SceneBox region{{0,-1,.7},{10,1,1.1}};MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.005);
+      |                                           ^
+3 errors generated.

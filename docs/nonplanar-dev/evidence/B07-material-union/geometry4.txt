@@ -1,0 +1,26 @@
+Filters: [MaterialUnion]
+Randomness seeded to: 687364913
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 sheared integration preserves sloped XY volumes and clips the original XYZ
+window
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:955
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:967: FAILED:
+  REQUIRE( clipped.snapshot )
+with expansion:
+  0
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  MATERIAL_DEADLINE
+
+===============================================================================
+test cases:  5 |  4 passed | 1 failed
+assertions: 87 | 86 passed | 1 failed
+
