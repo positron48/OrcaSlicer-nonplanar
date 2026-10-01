@@ -17,7 +17,8 @@ Next software tasks, in dependency order:
    `B02-input-placement.md` connects owned inputs to the native placement/error
    chain and enforces source plate-index agreement; actual GUI membership and
    original file-to-job association remain pending.
-2. Verify new milestones on Linux. The prior A02 correction at d57e9325 has a
+2. Resolve the inherited Linux native-fill deadline at 84a709ef without changing
+   budgets, then verify new milestones on Linux. The prior A02 correction at d57e9325 has a
    successful native Linux run 36454696019; its earlier range-failure evidence
    remains historical and does not establish an exact exception call stack.
 3. Extend B03 nominal affine bounds to qualified error budgets, curved surfaces,
@@ -51,6 +52,10 @@ Next software tasks, in dependency order:
    roof of their complete finite width, with explicit domain provenance and
    off-axis ridge rejection. Rounded side-floor contact and target conformity
    still require qualification.
+   `B07-remainder-hatch.md` constructs XY-clear intervals of one original line
+   with measured positive nominal fill gain and exact preservation of the old
+   current prefix. Extend to batch/global replanning and remaining vertical voids
+   under occupied footprints; this does not resolve the complete native deficit.
    Resolve that deficit/excess by constructing paths in actual remaining space,
    recheck union/fill, qualify
    finite-width floor/contact, then construct seam and later actual support;

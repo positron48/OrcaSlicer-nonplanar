@@ -1,0 +1,70 @@
+[1/2] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1320:44: error: unknown type name 'RemainingHatchSnapshot'; did you mean 'AffineHatchSnapshot'?
+ 1320 |     STATIC_REQUIRE_FALSE(std::is_aggregate<RemainingHatchSnapshot>::value);
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~
+      |                                            AffineHatchSnapshot
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:172:58: note: expanded from macro 'STATIC_REQUIRE_FALSE'
+  172 |     #define STATIC_REQUIRE_FALSE( ... ) static_assert( !(__VA_ARGS__), "!(" #__VA_ARGS__ ")" ); SUCCEED( "!(" #__VA_ARGS__ ")" )
+      |                                                          ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:247:8: note: 'AffineHatchSnapshot' declared here
+  247 | struct AffineHatchSnapshot {
+      |        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1323:27: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1323 |         const auto result=plan_remaining_first_hatch(f.hatches,0,f.fill);INFO(result.reason);REQUIRE(result.snapshot);
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1345:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1345 |     REQUIRE_FALSE(plan_remaining_first_hatch(transverse.hatches,0,transverse.fill).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1345:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1345 |     REQUIRE_FALSE(plan_remaining_first_hatch(transverse.hatches,0,transverse.fill).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1345:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1345 |     REQUIRE_FALSE(plan_remaining_first_hatch(transverse.hatches,0,transverse.fill).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1346:56: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1346 |     const auto full=remainder_fixture(1);REQUIRE_FALSE(plan_remaining_first_hatch(full.hatches,0,full.fill).snapshot);
+      |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1346:56: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1346 |     const auto full=remainder_fixture(1);REQUIRE_FALSE(plan_remaining_first_hatch(full.hatches,0,full.fill).snapshot);
+      |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1346:56: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1346 |     const auto full=remainder_fixture(1);REQUIRE_FALSE(plan_remaining_first_hatch(full.hatches,0,full.fill).snapshot);
+      |                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1347:34: error: unknown type name 'RemainingHatchLimits'
+ 1347 |     auto f=remainder_fixture(.3);RemainingHatchLimits limits;
+      |                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1348:11: error: 'auto' deduced as 'std::shared_ptr<const MaterialFillSnapshot>' in declaration of 'source' and deduced as 'std::shared_ptr<const AffineHatchSnapshot>' in declaration of 'hatch'
+ 1348 |     const auto source=f.fill.snapshot,hatch=f.hatches.snapshot;
+      |           ^           ~~~~~~~~~~~~~~~       ~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1352:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1352 |     REQUIRE_FALSE(plan_remaining_first_hatch({},0,f.fill).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1352:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1352 |     REQUIRE_FALSE(plan_remaining_first_hatch({},0,f.fill).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1352:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1352 |     REQUIRE_FALSE(plan_remaining_first_hatch({},0,f.fill).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1353:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1353 |     REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,{}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1353:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1353 |     REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,{}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1353:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1353 |     REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,{}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1354:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1354 |     REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,10000,f.fill).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1354:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1354 |     REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,10000,f.fill).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1354:19: error: use of undeclared identifier 'plan_remaining_first_hatch'
+ 1354 |     REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,10000,f.fill).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+ninja: build stopped: subcommand failed.

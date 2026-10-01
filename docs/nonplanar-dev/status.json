@@ -21,7 +21,7 @@
     "B04": "OWNED_EXACT_PARTITION_NATIVE_BODY_MATERIAL_AND_INTERIOR_DENSE_COVERAGE_PASS_SEAM_WIDER_NATIVE_DOMAIN_JOB_WORKER_PENDING",
     "B05": "OWNED_ORDERED_CONSTANT_FLUX_PREFIX_NATIVE_BODY_AND_CONTINUOUS_UNION_COVERAGE_PASS_CONTACT_CCD_FULL_SCOPE_PENDING",
     "B06": "ACTUAL_FIRST_GAP_REFINED_INTEGRAL_SOURCE_BOUND_AFFINE_SURFACES_AND_PROTECTED_STRIP_VOLUMES_PASS_LATER_SUPPORT_SEAM_FULL_SCOPE_PENDING",
-    "B07": "BOUNDED_AFFINE_HATCH_CELLS_FIRST_FINITE_WIDTH_NOMINAL_ROOF_AMOUNTS_UNION_MULTIPLICITY_EXCESS_TARGET_DEFICIT_Z_SPILL_LOCAL_DEFICIT_WITNESSES_PASS_FILL_RESOLUTION_ROUNDED_SIDE_CONTACT_SEAM_CURVED_LATER_SUPPORT_ORDER_FULL_SCOPE_PENDING",
+    "B07": "BOUNDED_REMAINING_FIRST_HATCH_CONSTRUCTION_FINITE_WIDTH_SOURCE_PRESERVATION_POSITIVE_NOMINAL_FILL_GAIN_PASS_FULL_3D_REPAIR_CONTACT_SEAM_CURVED_LATER_SUPPORT_ORDER_PENDING",
     "B08": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B09": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B10": "NOT_IMPLEMENTED_FULL_SCOPE",
@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 260,
+    "new_native_cases": 263,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 297,
-    "final_ctest_executed": 297,
+    "final_ctest_discovered": 300,
+    "final_ctest_executed": 300,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -319,7 +319,13 @@
     "B07_native_first_footprint_cases": 1,
     "B07_native_first_footprint_assertions": 18,
     "B07_first_footprint_oracle": "INDEPENDENT_FLAT_X_Y_AND_ROUNDED_ROOF_INTEGRALS_TRANSVERSE_RIDGE_REFUSAL_CURRENT_BUTT_AND_NATIVE_FLAT_CORE_PASS_SIDE_CONTACT_AND_TARGET_CONFORMITY_PENDING",
-    "B07_first_footprint_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
+    "B07_first_footprint_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B07_remainder_hatch_geometric_cases": 3,
+    "B07_remainder_hatch_geometric_assertions": 178,
+    "B07_native_remainder_hatch_cases": 1,
+    "B07_native_remainder_hatch_assertions": 29,
+    "B07_remainder_hatch_oracle": "INDEPENDENT_CONSTANT_ROUNDED_SECTION_AMOUNTS_CURRENT_BUTT_UPPER_NEIGHBOUR_MIDDLE_OBSTACLE_AND_NATIVE_POSITIVE_FILL_GAIN_PASS_FULL_3D_FILL_CONTACT_ORDER_PENDING",
+    "B07_remainder_hatch_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -334,10 +340,10 @@
     "operator_profile": "UNCONFIRMED"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "RUN_36820170446_4B3DA47D_SUCCESS_RUN_36826154741_84A709EF_IN_PROGRESS_RUN_36828766748_7F454BA5_PENDING_CURRENT_FINITE_WIDTH_REVISION_NOT_VERIFIED",
+  "ci": "RUN_36826154741_84A709EF_NATIVE_FILL_DEADLINE_FAILURE_RUN_36828766748_7F454BA5_CANCELLED_RUN_36831523726_7F71CC98_IN_PROGRESS_CURRENT_REMAINDER_REVISION_NOT_VERIFIED",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Construct and qualify paths in actual remaining space using complete finite-width roof domains; reconcile resulting union and target deficit/excess. Qualify rounded side-floor contact, target conformity, seam and actual later support. Complete curved/facet segmentation, full-head CCD, legal order, motion/flow limits, final-byte replay/export and B01-B03 job/plate/worker boundaries. Current Linux revision, independent review and physical qualification remain pending.",
+  "next_step": "Tighten valid rounded-section bounds to resolve the inherited Linux fill deadline without changing limits. Continue batch/global replanning and paths in remaining 3D space, then seam/edges and actual later support. Complete head CCD, contact/order/flow, final-byte replay/export and B01-B03 provenance/plate/worker scope. Independent review, current Linux and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -404,7 +410,8 @@
     "B07_material_union": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-material-union.md",
     "B07_material_fill": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-material-fill.md",
     "B07_material_deficit": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-material-deficit.md",
-    "B07_first_footprint": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-footprint.md"
+    "B07_first_footprint": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-footprint.md",
+    "B07_remainder_hatch": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-remainder-hatch.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -468,5 +475,6 @@
   "B07_material_union_evidence": "docs/nonplanar-dev/evidence/B07-material-union/source-manifest.json",
   "B07_material_fill_evidence": "docs/nonplanar-dev/evidence/B07-material-fill/source-manifest.json",
   "B07_material_deficit_evidence": "docs/nonplanar-dev/evidence/B07-material-deficit/source-manifest.json",
-  "B07_first_footprint_evidence": "docs/nonplanar-dev/evidence/B07-first-footprint/source-manifest.json"
+  "B07_first_footprint_evidence": "docs/nonplanar-dev/evidence/B07-first-footprint/source-manifest.json",
+  "B07_remainder_hatch_evidence": "docs/nonplanar-dev/evidence/B07-remainder-hatch/source-manifest.json"
 }

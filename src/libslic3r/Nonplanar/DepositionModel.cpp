@@ -627,6 +627,8 @@ class MaterialIntegralProof {
     friend MaterialFillResult reconcile_material_fill(const MaterialIntegralResult &, const MaterialUnionResult &, const MaterialFillLimits &);
     friend MaterialDeficitResult locate_material_deficit(const MaterialFillResult &,const std::vector<double> &,
         const std::vector<double> &,const MaterialDeficitLimits &);
+    friend RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &,size_t,const MaterialFillResult &,
+        const RemainingHatchPolicy &,const RemainingHatchLimits &);
     ScalarBounds rectangle_volume(const RectangleXY &r, const MaterialIntegralLimits &limits,
         size_t &fragments, size_t &evaluations, const std::function<void()> &poll, const char *reason_prefix) const
     {
@@ -1269,7 +1271,7 @@ FirstHatchBeadResult plan_first_hatch_footprint_bead(const AffineHatchResult &re
 { return FirstHatchBeadSnapshot::plan(requested,line_index,requested_limits,FirstHatchRoofDomain::FiniteWidth); }
 
 FirstHatchBeadResult FirstHatchBeadSnapshot::plan(const AffineHatchResult &requested, size_t line_index,
-    const FirstHatchBeadLimits &requested_limits, FirstHatchRoofDomain domain)
+    const FirstHatchBeadLimits &requested_limits, FirstHatchRoofDomain domain,const AffineHatchLine *slice,double slice_error)
 {
     const auto source=requested.snapshot; const auto limits=requested_limits;
     const auto started=std::chrono::steady_clock::now();
@@ -1286,7 +1288,7 @@ FirstHatchBeadResult FirstHatchBeadSnapshot::plan(const AffineHatchResult &reque
         const auto stack=source->source;const auto cursor=stack->source;
         if (!cursor || !cursor->sequence || !stack->first_pass.proof || stack->first_pass.status!=MaterialIntegralStatus::Bounded)
             reject("FIRST_HATCH_MISSING_OWNED_ROOF_PROOF");
-        const auto sequence=cursor->sequence; const auto &line=source->passes.front().lines[line_index];
+        const auto sequence=cursor->sequence; const auto line=slice ? *slice : source->passes.front().lines[line_index];
         const bool x_axis=line.start.y()==line.end.y(), y_axis=line.start.x()==line.end.x();
         if (x_axis==y_axis) reject("FIRST_HATCH_REQUIRES_AXIS_ALIGNED_CENTERLINE");
         // Any admitted actual-gap width lies in nominal +/- this requested
@@ -1325,7 +1327,7 @@ FirstHatchBeadResult FirstHatchBeadSnapshot::plan(const AffineHatchResult &reque
         for (size_t i=0;i<end;++i) { if (i%128==0) poll();if (sequence->records[i].bead) active.push_back(i); }
         std::vector<Node> pending{{Exact(0),Exact(1),endpoint(Exact(0)),endpoint(Exact(1)),0,std::move(active)}};
         std::vector<FixedWidthBeadPiece> pieces;
-        Exact target_lower(0),target_upper(0),deposited(0);double maximum_gap=0,maximum_width=0,coordinate_error=0;
+        Exact target_lower(0),target_upper(0),deposited(0);double maximum_gap=0,maximum_width=0,coordinate_error=slice_error;
         const auto correction=Interval(1)-pi()/Interval(4);
         while (!pending.empty()) {
             poll();auto node=std::move(pending.back());pending.pop_back();
@@ -1404,7 +1406,7 @@ FirstHatchBeadResult FirstHatchBeadSnapshot::plan(const AffineHatchResult &reque
         const double numeric=(Interval(source->numerical_error_upper_mm)+Interval(coordinate_error)+Interval(maximum_gap)+Interval(maximum_width)).hi;
         if (error>limits.packets.maximum_volume_error.value()) reject("FIRST_HATCH_GLOBAL_VOLUME_ERROR");
         if (numeric>.05) reject("FIRST_HATCH_NUMERICAL_BUDGET");
-        poll();auto snapshot=std::shared_ptr<const FirstHatchBeadSnapshot>(new FirstHatchBeadSnapshot(source,line_index,domain,std::move(pieces),
+        poll();auto snapshot=std::shared_ptr<const FirstHatchBeadSnapshot>(new FirstHatchBeadSnapshot(source,line_index,domain,line.start,line.end,std::move(pieces),
             bounds(target),bounds(delivered),maximum_gap,maximum_width,error,numeric,segments,evaluations));
         poll();return {domain==FirstHatchRoofDomain::FiniteWidth ? "BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY" :
             "BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY",std::move(snapshot)};
@@ -1999,6 +2001,167 @@ MaterialDeficitResult locate_material_deficit(const MaterialFillResult &requeste
         poll();return {"BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) {return {e.what(),{}};}
     catch (const std::exception &e) {return {"MATERIAL_DEFICIT_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
+}
+
+RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &requested_hatches,size_t line_index,
+    const MaterialFillResult &requested_fill,const RemainingHatchPolicy &requested_policy,const RemainingHatchLimits &requested_limits)
+{
+    const auto hatches=requested_hatches.snapshot;const auto before=requested_fill.snapshot;
+    const auto policy=requested_policy;const auto limits=requested_limits;const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!hatches || !hatches->source || hatches->passes.empty() || line_index>=hatches->passes.front().lines.size() ||
+            !before || !before->target || !before->occupied || !limits.max_paths || limits.max_paths>256 ||
+            !limits.max_cells || limits.max_cells>65535 || !limits.max_evaluations || limits.max_evaluations>2000000 ||
+            !valid_timeout(limits.timeout) || !valid_timeout(limits.beads.timeout) || !valid_timeout(limits.beads.packets.timeout) ||
+            !valid_timeout(limits.volumes.timeout) || limits.maximum_result_width.value()<=0 ||
+            !limits.beads.max_evaluations || limits.beads.max_evaluations>200000 ||
+            !limits.beads.max_roof_segments || limits.beads.max_roof_segments>65535 || !limits.beads.max_depth || limits.beads.max_depth>32 ||
+            !limits.beads.packets.max_segments || limits.beads.packets.max_segments>65535 || !limits.beads.packets.max_depth || limits.beads.packets.max_depth>32 ||
+            limits.beads.maximum_gap_error.value()<=0 || limits.beads.maximum_gap_error.value()>.05 ||
+            limits.beads.packets.maximum_width_error.value()<=0 || limits.beads.packets.maximum_width_error.value()>.05 ||
+            limits.beads.packets.maximum_volume_error.value()<=0 || !limits.volumes.max_cells || limits.volumes.max_cells>65535 ||
+            !limits.volumes.max_evaluations || limits.volumes.max_evaluations>2000000 || !limits.volumes.max_depth || limits.volumes.max_depth>32 ||
+            limits.volumes.maximum_interval_width.value()<=0 ||
+            policy.xy_separation.value()<=0 || policy.minimum_covered_gain.value()<=0)
+            reject("INVALID_REMAINING_HATCH_INPUT");
+        const auto stack=hatches->source;const auto target=before->target;const auto cursor=before->occupied->source;
+        const auto sequence=cursor->sequence;
+        const auto poll=[&] {
+            stop(limits,sequence->revision,started);stop(limits.beads,sequence->revision,started);
+            stop(limits.beads.packets,sequence->revision,started);stop(limits.volumes,sequence->revision,started);
+        };poll();
+        const auto &a=target->target,&b=stack->surfaces.front().cell;
+        if (target->source!=stack->source || a.footprint.min_x!=b.footprint.min_x || a.footprint.max_x!=b.footprint.max_x ||
+            a.footprint.min_y!=b.footprint.min_y || a.footprint.max_y!=b.footprint.max_y || a.z00!=b.z00 || a.z10!=b.z10 || a.z01!=b.z01)
+            reject("REMAINING_HATCH_TARGET_SOURCE_MISMATCH");
+        const auto &line=hatches->passes.front().lines[line_index];
+        const bool x_axis=line.start.y()==line.end.y();
+        if (x_axis==(line.start.x()==line.end.x())) reject("REMAINING_HATCH_REQUIRES_AXIS_LINE");
+        const Exact begin(x_axis ? line.start.x() : line.start.y()),end(x_axis ? line.end.x() : line.end.y());
+        if (begin>=end) reject("REMAINING_HATCH_REQUIRES_FORWARD_LINE");
+        const Exact half=(Exact(hatches->policy.width.value())+Exact(limits.beads.packets.maximum_width_error.value()))/Exact(2);
+        const Exact x0=Exact(line.start.x())-(x_axis ? Exact(0) : half),x1=Exact(line.end.x())+(x_axis ? Exact(0) : half);
+        const Exact y0=Exact(line.start.y())-(x_axis ? half : Exact(0)),y1=Exact(line.end.y())+(x_axis ? half : Exact(0));
+        const Polygon strip{{x0,y0},{x1,y0},{x1,y1},{x0,y1}};
+        size_t work=0,cells=0,bead_work=0,leaves=0,packets=0;
+        const auto charge=[&](size_t count) {if (count>limits.max_evaluations-work) reject("REMAINING_HATCH_WORK_LIMIT");work+=count;poll();};
+        std::vector<std::pair<Exact,Exact>> blocked;
+        const size_t active=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence->records.size());
+        for (size_t i=0;i<active;++i) {
+            charge(1);const auto &row=sequence->records[i];if (!row.bead) continue;
+            const double fraction=i<cursor->completed_records ? 1 : cursor->current_progress;
+            const auto projected=roof_projection(row,sequence->model,strip,fraction,Representation::Upper);
+            if (!projected) continue;
+            Exact lo=projected->polygon.front()[x_axis ? 0 : 1],hi=lo;
+            for (const auto &p : projected->polygon) {lo=std::min(lo,p[x_axis ? 0 : 1]);hi=std::max(hi,p[x_axis ? 0 : 1]);}
+            blocked.emplace_back(std::max(begin,lo-Exact(policy.xy_separation.value())),std::min(end,hi+Exact(policy.xy_separation.value())));
+        }
+        std::sort(blocked.begin(),blocked.end(),[&](const auto &a,const auto &b) {charge(1);return a<b;});poll();
+        std::vector<std::pair<Exact,Exact>> free;Exact position=begin;
+        for (const auto &interval : blocked) {
+            if (interval.first>position) free.emplace_back(position,interval.first);
+            position=std::max(position,interval.second);
+        }
+        if (position<end) free.emplace_back(position,end);
+        if (free.empty()) reject("REMAINING_HATCH_NO_FREE_INTERVAL");
+        if (free.size()>limits.max_paths) reject("REMAINING_HATCH_PATH_LIMIT");
+        std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> paths;Exact amount_lower(0),amount_upper(0),delivered(0);
+        double numeric=sequence->model.numerical_coordinate_error.value();
+        const auto endpoint=[&](double along) {
+            const Exact t=(Exact(along)-begin)/(end-begin);
+            const auto z=stored_exact(Exact(line.start.z())+(Exact(line.end.z())-Exact(line.start.z()))*t);
+            return std::pair<PhysicalPosition,double>{x_axis ? PhysicalPosition(along,line.start.y(),z.first) :
+                PhysicalPosition(line.start.x(),along,z.first),z.second};
+        };
+        for (const auto &window : free) {
+            poll();const double lo=exact_interval(window.first).hi,hi=exact_interval(window.second).lo;
+            if (lo>=hi) reject("REMAINING_HATCH_UNREPRESENTABLE_INTERVAL");
+            // The first-bead solver hashes its full source and collects the
+            // active records before its reported roof queries.
+            charge(2*stack->source->sequence->records.size());
+            auto slice=line;const auto first=endpoint(lo),last=endpoint(hi);slice.start=first.first;slice.end=last.first;
+            auto remaining=limits.beads;
+            if (bead_work>=remaining.max_evaluations || leaves>=remaining.max_roof_segments || packets>=remaining.packets.max_segments)
+                reject("REMAINING_HATCH_BEAD_WORK_LIMIT");
+            remaining.max_evaluations=std::min(remaining.max_evaluations-bead_work,limits.max_evaluations-work);
+            remaining.max_roof_segments-=leaves;remaining.packets.max_segments-=packets;
+            // All fragments share the original whole-line amount budget.
+            const auto fraction=exact_interval((Exact(hi)-Exact(lo))/(end-begin));
+            remaining.packets.maximum_volume_error=Volume((Interval(limits.beads.packets.maximum_volume_error.value())*fraction/Interval(2)).lo);
+            const auto elapsed=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+            remaining.timeout-=elapsed;remaining.packets.timeout-=elapsed;
+            remaining.cancelled=[&] {poll();return false;};remaining.is_current={};remaining.packets.cancelled=remaining.cancelled;remaining.packets.is_current={};
+            const auto plan=FirstHatchBeadSnapshot::plan({"",hatches},line_index,remaining,FirstHatchRoofDomain::FiniteWidth,&slice,
+                (Interval(first.second)+Interval(last.second)).hi);
+            if (!plan.snapshot) throw Rejection(plan.reason);
+            charge(plan.snapshot->evaluations);bead_work+=plan.snapshot->evaluations;leaves+=plan.snapshot->roof_segments;packets+=plan.snapshot->pieces.size();
+            numeric=std::max(numeric,plan.snapshot->numerical_error_upper_mm);
+            amount_lower+=Exact(plan.snapshot->actual_target_volume_mm3.lower);amount_upper+=Exact(plan.snapshot->actual_target_volume_mm3.upper);
+            for (const auto &piece : plan.snapshot->pieces) delivered+=Exact(piece.volume.value());
+            paths.push_back(plan.snapshot);
+        }
+        const auto deviation=exact_interval(delivered)-Interval(exact_interval(amount_lower).lo,exact_interval(amount_upper).hi);
+        if (std::max(std::abs(deviation.lo),std::abs(deviation.hi))>limits.beads.packets.maximum_volume_error.value())
+            reject("REMAINING_HATCH_GLOBAL_AMOUNT_ERROR");
+        const MaterialRecord *context=nullptr;
+        for (const auto &row : sequence->records) {charge(1);if (row.bead) {context=&row;break;}}
+        if (!context) reject("REMAINING_HATCH_MISSING_DEPOSITION_CONTEXT");
+        const auto metadata=std::get<Deposition>(context->motion.payload);
+        std::vector<MaterialRecord> rows;
+        for (const auto &path : paths) {
+            if (!rows.empty()) {const size_t i=rows.size();rows.push_back({{i+1,i,0,rows.back().motion.end,path->path_start,
+                context->motion.speed_limit,context->motion.acceleration_limit,Travel{}},{}});}
+            for (const auto &piece : path->pieces) {
+                charge(1);const size_t i=rows.size();rows.push_back({{i+1,i,context->motion.source_patch_id,piece.start,piece.end,
+                    context->motion.speed_limit,context->motion.acceleration_limit,Deposition{piece.volume,piece.nominal_width,
+                    VerticalGap(std::min(piece.section.gap_begin_mm,piece.section.gap_end_mm)),VerticalGap(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm)),
+                    metadata.material,metadata.support_provenance_id,metadata.contact_model_id}},piece.section});
+            }
+        }
+        auto model=sequence->model;model.numerical_coordinate_error=Length(numeric);
+        MaterialLimits capture;capture.timeout=limits.timeout-std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        capture.cancelled=[&] {poll();return false;};
+        // Capture validates and hashes the rows; material_at walks the prefix.
+        charge(3*rows.size());
+        const auto ledger=capture_material_sequence(rows,model,sequence->revision,sequence->source_fingerprint,capture);
+        if (!ledger.snapshot) throw Rejection(ledger.reason);
+        const auto prefix=material_at(ledger.snapshot,rows.size(),0,capture);if (!prefix.nominal.snapshot) throw Rejection(prefix.reason);
+        auto volume_limits=limits.volumes;volume_limits.max_cells=std::min(volume_limits.max_cells,limits.max_cells);
+        volume_limits.max_evaluations=std::min(volume_limits.max_evaluations,limits.max_evaluations-work);
+        volume_limits.maximum_interval_width=Volume(limits.volumes.maximum_interval_width.value()/4);
+        volume_limits.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        volume_limits.cancelled=[&] {poll();return false;};volume_limits.is_current={};
+        const auto occupied=integrate_material_union(prefix.nominal,before->occupied->domain,volume_limits);
+        if (!occupied.snapshot) throw Rejection(occupied.reason);charge(occupied.evaluations);cells+=occupied.cells;
+        if (cells>=limits.max_cells) reject("REMAINING_HATCH_CELL_LIMIT");
+        MaterialFillLimits fill_limits;static_cast<MaterialUnionLimits &>(fill_limits)=volume_limits;
+        fill_limits.max_cells=std::min(limits.volumes.max_cells,limits.max_cells-cells);
+        fill_limits.max_evaluations=std::min(limits.volumes.max_evaluations,limits.max_evaluations-work);
+        fill_limits.maximum_interval_width=limits.volumes.maximum_interval_width;
+        fill_limits.timeout=limits.volumes.timeout-std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        MaterialIntegralResult target_result;target_result.proof=target;
+        const auto extra=reconcile_material_fill(target_result,occupied,fill_limits);
+        if (!extra.snapshot) throw Rejection(extra.reason);charge(extra.evaluations);cells+=extra.cells;
+        // Every new nominal footprint was excluded from every laid D_upper
+        // projection. Thus old/new sets are disjoint, including inside T. Keep
+        // both immutable prefixes; never round or rewrite the old current butt.
+        const auto covered=interval(before->covered_target_mm3)+interval(extra.snapshot->covered_target_mm3);
+        const auto spill=interval(before->outside_target_mm3)+interval(extra.snapshot->outside_target_mm3);
+        const Interval outside(std::max(0.,spill.lo),spill.hi);
+        const auto v=interval(before->target_volume_mm3),d=v-covered;
+        if (covered.lo>v.hi) reject("REMAINING_HATCH_INCONSISTENT_COVERAGE");
+        const Interval c(covered.lo,std::min(v.hi,covered.hi)),missing(std::max(0.,d.lo),std::min(v.hi,std::max(0.,d.hi)));
+        for (auto measure : {c,missing,outside}) if ((Interval(measure.hi)-Interval(measure.lo)).hi>limits.maximum_result_width.value())
+            reject("REMAINING_HATCH_RESULT_PRECISION");
+        const double gain=extra.snapshot->covered_target_mm3.lower;
+        if (gain<policy.minimum_covered_gain.value()) reject("REMAINING_HATCH_INSUFFICIENT_COVERED_GAIN");
+        if (outside.hi>policy.maximum_outside_target.value()) reject("REMAINING_HATCH_OUTSIDE_TARGET_LIMIT");
+        poll();auto snapshot=std::shared_ptr<const RemainingHatchSnapshot>(new RemainingHatchSnapshot(before,extra.snapshot,policy,std::move(paths),
+            bounds(c),bounds(missing),bounds(outside),gain,cells,work));
+        poll();return {"BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) {return {e.what(),{}};}
+    catch (const std::exception &e) {return {"REMAINING_HATCH_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
 }
 
 }

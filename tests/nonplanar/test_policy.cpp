@@ -2097,7 +2097,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2149,6 +2149,31 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE(plan.snapshot->maximum_gap_error_mm<=limits.maximum_gap_error.value());
     REQUIRE(plan.snapshot->maximum_width_error_mm<=limits.packets.maximum_width_error.value());
     REQUIRE(plan.snapshot->total_volume_error_mm3<=limits.packets.maximum_volume_error.value());
+    std::vector<MaterialRecord> rows;
+    for (const auto &piece : plan.snapshot->pieces) {
+        const size_t i=rows.size();rows.push_back({{i+1,i,33,piece.start,piece.end,Speed(20),Acceleration(100),Deposition{piece.volume,piece.nominal_width,
+            VerticalGap(std::min(piece.section.gap_begin_mm,piece.section.gap_end_mm)),VerticalGap(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm)),
+            parameters.material,7,8}},piece.section});
+    }
+    auto charged=material.snapshot->material->model;charged.numerical_coordinate_error=Length(plan.snapshot->numerical_error_upper_mm);
+    const auto ledger=capture_material_sequence(rows,charged,body.snapshot->revision,material.snapshot->material_fingerprint,capture);REQUIRE(ledger.snapshot);
+    const auto prefix=material_at(ledger.snapshot,rows.size()/2,.3,capture);REQUIRE(prefix.nominal.snapshot);
+    MaterialUnionLimits volume;volume.maximum_interval_width=Volume(.00025);volume.max_cells=65535;volume.timeout=std::chrono::seconds(5);
+    const SceneBox box{{roi->min_x,roi->min_y,4.0},{roi->max_x,roi->max_y,4.7}};
+    const auto occupied=integrate_material_union(prefix.nominal,box,volume);INFO(occupied.reason);REQUIRE(occupied.snapshot);
+    MaterialFillLimits fill_limits;fill_limits.maximum_interval_width=Volume(.001);fill_limits.max_cells=65535;fill_limits.timeout=std::chrono::seconds(5);
+    const auto fill=reconcile_material_fill(native.snapshot->hatches->source->first_pass,occupied,fill_limits);INFO(fill.reason);REQUIRE(fill.snapshot);
+    RemainingHatchLimits remainder;remainder.timeout=std::chrono::seconds(5);remainder.beads=limits;
+    remainder.volumes.max_cells=65535;remainder.volumes.timeout=std::chrono::seconds(5);
+    const auto repair=plan_remaining_first_hatch({"",native.snapshot->hatches},0,fill,{},remainder);INFO(repair.reason);REQUIRE(repair.snapshot);
+    REQUIRE(repair.snapshot->paths.size()==1);REQUIRE(repair.snapshot->before->occupied->source==prefix.nominal.snapshot);
+    REQUIRE(repair.snapshot->covered_target_mm3.lower>fill.snapshot->covered_target_mm3.upper);
+    REQUIRE(repair.snapshot->missing_target_mm3.upper<fill.snapshot->missing_target_mm3.lower);
+    REQUIRE(repair.snapshot->covered_gain_lower_mm3>.03);REQUIRE(repair.snapshot->outside_target_mm3.upper<=.001);
+    INFO("native remaining gain >= " << std::setprecision(18) << repair.snapshot->covered_gain_lower_mm3 <<
+        " covered=[" << repair.snapshot->covered_target_mm3.lower << ',' << repair.snapshot->covered_target_mm3.upper <<
+        "] missing=[" << repair.snapshot->missing_target_mm3.lower << ',' << repair.snapshot->missing_target_mm3.upper <<
+        "] cells=" << repair.snapshot->cells << " work=" << repair.snapshot->evaluations);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

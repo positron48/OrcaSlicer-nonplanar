@@ -103,9 +103,17 @@ comparisons pass. Constructing and qualifying the repair paths remains open.
 continuous roof across the complete finite width and explicitly distinguishes
 them from centerline diagnostics. Four analytical cases/74 assertions and one
 new actual native case/18 assertions pass, including an off-axis ridge refusal
-and a positive native flat-core path. Current selected CTest executes 297/297;
+and a positive native flat-core path. At that checkpoint selected CTest executes 297/297;
 six fresh OFF/ZAA comparisons pass. Rounded side-floor contact, target conformity
 and actual deficit repair remain open.
+
+`B07-remainder-hatch.md` constructs remaining first-hatch intervals separated
+from actual D_upper projections, re-proves finite widths and measures positive
+nominal target gain. Three analytical cases/178 assertions and the extended
+native case/29 assertions pass. Native added coverage is at least 0.06858 mm3;
+remaining deficit is still approximately 0.131 mm3. Current selected CTest
+executes 300/300 and six OFF/ZAA comparisons pass. Full 3D remainder, global
+replanning, seam/contact and order remain pending.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -118,9 +126,11 @@ Prior Linux native runs at d57e9325, 7df1d765, e7a46961, 23f00bfd,
 b35408ce, a083f2df, 63779b4f and 8bcbbd45 succeeded. Run 36809462993 confirms
 8bcbbd45 native tests and application. The latest saved snapshot records successful e2030e15 runs
 36812147275 and 36819847014 and successful 4b3da47d run 36820170446;
-run 36826154741 at 84a709ef is in progress and run 36828766748 at 7f454ba5 is pending. Earlier intermediate runs were cancelled by
-workflow concurrency. These records do not prove Linux execution of this
-finite-width roof revision.
+run 36826154741 at 84a709ef failed the native fill case on its unchanged
+20-second deadline. Run 36828766748 at 7f454ba5 was cancelled and run
+36831523726 at 7f71cc98 is in progress. These observations do not prove Linux
+execution of the constructive remainder revision; valid geometric bound
+tightening is next. The failed check annotation is archived in its evidence.
 Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;

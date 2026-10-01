@@ -1293,3 +1293,89 @@ TEST_CASE("B07 deficit localization keeps a rotated current butt and future ledg
     REQUIRE(cell.missing_lower_mm3>.079);REQUIRE(cell.missing_lower_mm3<=.080000000001);
     REQUIRE(map.snapshot->localized_missing_lower_mm3<=fill.snapshot->missing_target_mm3.upper);
 }
+
+namespace {
+struct RemainderFixture {AffineHatchResult hatches;MaterialFillResult fill;};
+RemainderFixture remainder_fixture(double progress,HatchDirection direction=HatchDirection::AlongX,bool transverse=false,bool sloped=false)
+{
+    const auto body=captured({bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto present=material_at(body,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.8,sloped ? 1.84 : 1.8,1.8},.9,policy);REQUIRE(stack.snapshot);
+    const auto hatches=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),direction});REQUIRE(hatches.snapshot);
+    const auto &line=hatches.snapshot->passes.front().lines.front();
+    const double h=line.start.z()-1;
+    auto row=bead(1,0,line.start,line.end,.45,h,h);
+    if (transverse) row=bead(1,0,{line.start.x(),line.start.y()+.24,line.start.z()-.1},
+        {line.end.x(),line.end.y()+.24,line.end.z()-.1},.02,.02,.02,BeadSectionKind::Rectangle);
+    const auto cap=captured({row});const auto prefix=material_at(cap,0,progress);
+    MaterialUnionLimits volume;volume.maximum_interval_width=Volume(.0001);
+    const auto occupied=integrate_material_union(prefix.nominal,{{1,-.4,.7},{3,.4,1.8}},volume);INFO(occupied.reason);REQUIRE(occupied.snapshot);
+    const auto fill=reconcile_material_fill(stack.snapshot->first_pass,occupied);INFO(fill.reason);REQUIRE(fill.snapshot);
+    return {hatches,fill};
+}
+}
+TEST_CASE("B07 remainder hatch constructs finite paths after the actual current butt and proves added fill", "[Nonplanar][B07][RemainderHatch]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<RemainingHatchSnapshot>::value);
+    for (const auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) for (double progress : {0.,.3,.5}) {
+        const auto f=remainder_fixture(progress,direction);
+        const auto result=plan_remaining_first_hatch(f.hatches,0,f.fill);INFO(result.reason);REQUIRE(result.snapshot);
+        const auto &r=*result.snapshot;REQUIRE(r.before==f.fill.snapshot);REQUIRE(r.paths.size()==1);
+        const auto &path=*r.paths.front();const auto &line=f.hatches.snapshot->passes.front().lines.front();
+        REQUIRE(path.roof_domain==FirstHatchRoofDomain::FiniteWidth);
+        const bool x=direction==HatchDirection::AlongX;
+        const double first=x ? line.start.x() : line.start.y(),last=x ? line.end.x() : line.end.y();
+        const double a=x ? path.path_start.x() : path.path_start.y(),b=x ? path.path_end.x() : path.path_end.y();
+        if (progress==0) REQUIRE(a>=first);
+        else REQUIRE(a>=first+(last-first)*progress+.02-1e-12); // .01 outer growth + .01 separation.
+        REQUIRE(b<=last);REQUIRE(r.covered_target_mm3.lower>r.before->covered_target_mm3.upper);
+        REQUIRE(r.missing_target_mm3.upper<r.before->missing_target_mm3.lower);
+        REQUIRE(r.covered_gain_lower_mm3>0);REQUIRE(r.outside_target_mm3.upper<=.001);
+        REQUIRE(r.before->occupied->source->current_progress==progress);
+        // Independent constant-gap rounded area over the accepted exact endpoints.
+        const long double h=static_cast<long double>(line.start.z())-1,k=1-std::acos(-1.L)/4;
+        const long double amount=(static_cast<long double>(b)-a)*h*(.45L-k*h);
+        REQUIRE(r.added->covered_target_mm3.lower<=amount);REQUIRE(r.added->covered_target_mm3.upper>=amount);
+    }
+}
+TEST_CASE("B07 remainder hatch retains upper transverse neighbours and refuses exhausted or incompatible proofs", "[Nonplanar][B07][RemainderHatch]")
+{
+    const auto transverse=remainder_fixture(1,HatchDirection::AlongX,true);
+    REQUIRE_FALSE(plan_remaining_first_hatch(transverse.hatches,0,transverse.fill).snapshot);
+    const auto full=remainder_fixture(1);REQUIRE_FALSE(plan_remaining_first_hatch(full.hatches,0,full.fill).snapshot);
+    auto f=remainder_fixture(.3);RemainingHatchLimits limits;
+    const auto source=f.fill.snapshot;const auto hatch=f.hatches.snapshot;
+    limits.cancelled=[&] {f.fill.snapshot.reset();f.hatches.snapshot.reset();limits.max_paths=0;return false;};
+    const auto owned=plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits);INFO(owned.reason);REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->before==source);f.fill.snapshot=source;f.hatches.snapshot=hatch;limits={};
+    REQUIRE_FALSE(plan_remaining_first_hatch({},0,f.fill).snapshot);
+    REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,{}).snapshot);
+    REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,10000,f.fill).snapshot);
+    limits.max_evaluations=1;REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits).snapshot);
+    limits={};limits.volumes.max_cells=1;REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits).snapshot);
+    limits={};limits.beads.packets.max_segments=0;REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounding=plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+    REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,f.fill,{Length(.01),Volume(.001),Volume(1)}).snapshot);
+    const auto other=remainder_fixture(.3);REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,other.fill).snapshot);
+    const auto sloped=remainder_fixture(0,HatchDirection::AlongY,false,true);
+    REQUIRE_FALSE(plan_remaining_first_hatch(sloped.hatches,0,sloped.fill,{Length(.01),Volume(.000001),Volume(.001)}).snapshot);
+}
+
+TEST_CASE("B07 remainder hatch preserves middle obstacles and shares packet and path limits", "[Nonplanar][B07][RemainderHatch]")
+{
+    const auto f=remainder_fixture(0);const auto &line=f.hatches.snapshot->passes.front().lines.front();
+    const double length=line.end.x()-line.start.x(),z=line.start.z();
+    const auto cap=captured({bead(1,0,{line.start.x()+.4*length,line.start.y(),z},{line.start.x()+.6*length,line.start.y(),z},.45,z-1,z-1)});
+    const auto prefix=material_at(cap,1,0);const auto occupied=integrate_material_union(prefix.nominal,{{1,-.4,.7},{3,.4,1.8}});REQUIRE(occupied.snapshot);
+    const auto fit=reconcile_material_fill(f.hatches.snapshot->source->first_pass,occupied);REQUIRE(fit.snapshot);
+    const auto planned=plan_remaining_first_hatch(f.hatches,0,fit);INFO(planned.reason);REQUIRE(planned.snapshot);
+    REQUIRE(planned.snapshot->paths.size()==2);REQUIRE(planned.snapshot->covered_gain_lower_mm3>0);
+    REQUIRE(planned.snapshot->paths.front()->path_end.x()<line.start.x()+.4*length);
+    REQUIRE(planned.snapshot->paths.back()->path_start.x()>line.start.x()+.6*length);
+    RemainingHatchLimits limits;limits.max_paths=1;REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,fit,{},limits).snapshot);
+    limits={};limits.beads.packets.max_segments=1;REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,fit,{},limits).snapshot);
+}

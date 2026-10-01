@@ -1,0 +1,520 @@
+{
+  "base_commit": "7f71cc981503a9da77592800ab8f22d93a29571b",
+  "upstream_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-remainder-hatch.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "16846ff69a8d7cb6ee3602b9f7d20bc3d4ae0524b8613377c892bbd0593508b0",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "786b06fab05b57d11574e486434c410d09e499002c428c2d2f235d859c8f6728",
+    "tests/nonplanar/test_deposition_model.cpp": "26c5e2be6175871ab7f1fdf34add73ecaa10e8fccb5f1a4cacf71ffa611dd331",
+    "tests/nonplanar/test_policy.cpp": "b2c01c990d4e18d669e638a177142db0ebf0c25e0703bb4e969f57ac85f4ccff",
+    "docs/nonplanar-dev/adr-0046-disjoint-remaining-hatch-construction.md": "41fc29206921d60b9eb5926203de330bc78a34fd836ffda36f908ba79b1cd387",
+    "docs/nonplanar-dev/B07-remainder-hatch.md": "b7716a0afb557fb560644a6bf0de27496f8ea75ccae1e8fc39628e0abd694c54",
+    "docs/nonplanar-dev/status.json": "fbf24086c1a9efd54f5316b9c8e7d6ed59a286b522f0f2bc9b94cfa165b27294",
+    "docs/nonplanar-dev/README.md": "434d8f58d25f73316e773401d826960999c4b348ecb21d3498d788c637644590",
+    "docs/nonplanar-dev/next-tasks.md": "0582038519d72b2a75c75d3eb613d9ce62bdd4e6d2622b13de14a13d087edc0e"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "68c8f45526b9fd47a9659dfbb83c4b0161e307a5e0ffc81ee702d540a49b4336",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "5c3b3f0a3f4c1e5650f2afc59da29b730e41b6343ae4b2ac207708f42d79e8a3"
+  },
+  "compiled_commit_label": "31461d50",
+  "compiled_commit_label_note": "Retained configure label; exact source/binary hashes bind this build. Full B13 provenance pending.",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "captured_utc": "2026-10-01T09:13:58.647941+00:00",
+  "internal_first_hatch_contract": 3,
+  "internal_remaining_hatch_contract": 1,
+  "new_geometric_cases": 3,
+  "new_geometric_assertions": 178,
+  "extended_native_cases": 1,
+  "extended_native_assertions": 29,
+  "material_suite_cases": 55,
+  "material_suite_assertions": 12358,
+  "body_suite_cases": 14,
+  "body_suite_assertions": 107917,
+  "ctest_discovered": 300,
+  "ctest_executed": 300,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "native_covered_gain_lower_mm3": 0.06858454570256423,
+  "native_combined_covered_mm3": [
+    0.12052052173081913,
+    0.12122258415834322
+  ],
+  "native_combined_missing_mm3": [
+    0.13076540743244636,
+    0.13146746985997773
+  ],
+  "default_policy": {
+    "xy_separation_mm": 0.01,
+    "maximum_outside_target_mm3": 0.001,
+    "minimum_covered_gain_mm3": 0.001,
+    "component_precision_mm3": 0.001,
+    "maximum_result_width_mm3": 0.01,
+    "max_paths": 64,
+    "max_cells": 65535,
+    "max_evaluations": 2000000,
+    "timeout_ms": 5000
+  },
+  "bound_scope": "PROSPECTIVE_XY_DISJOINT_FIRST_HATCH_WINDOWS_FINITE_WIDTH_AND_CERTIFIED_FILL_GAIN_ONLY",
+  "source_current_prefix": "RETAINED_EXACTLY_AND_SEPARATE_FROM_ADDED_LEDGER",
+  "complete_order": "NOT_IMPLEMENTED",
+  "independent_review": "NOT_RUN",
+  "Windows": "NOT_RUN",
+  "physical": "NOT_RUN",
+  "Linux": "84a709ef_NATIVE_FILL_DEADLINE_FAIL_7f71cc98_IN_PROGRESS_SAVED_2026_10_01_0836_UTC",
+  "public_export": "BLOCK",
+  "full_B01_B15": "IN_PROGRESS",
+  "raw_output_sha256": {
+    "build/nonplanar-evidence/B07-remainder-hatch/baseline-capture.log": "ab96cc67fe3fa6ec8e66122f755dc9bc9239ddc807c9f69b89dccbb66b886792",
+    "build/nonplanar-evidence/B07-remainder-hatch/baseline-capture.log.json": "0368bf8f31495f57a4738f4de6d55da40a80b09a304513066ad46479daf84a94",
+    "build/nonplanar-evidence/B07-remainder-hatch/baseline-compare.log": "14bdf3eb82fad8b4210bed868b9124996e150788e839c30f3c35e33189b88fe0",
+    "build/nonplanar-evidence/B07-remainder-hatch/baseline-compare.log.json": "4e0bb8da4e05a1eec2a9e2646bf2739dc9c7ab5c13679d65a16fd0271e1e576c",
+    "build/nonplanar-evidence/B07-remainder-hatch/body.log": "6ecbbf3f80fa00d48dbcbc9364b730c2f4af75e6f8fdcbbced323231c3b73531",
+    "build/nonplanar-evidence/B07-remainder-hatch/body.log.json": "66477e4ff65b2bbe0e6d813bc9d25dec2e688cc60a33b3a364e466df76ee8dfd",
+    "build/nonplanar-evidence/B07-remainder-hatch/body.xml": "5a9afab286ec181b83eadf8063b780a2bdf8bf653d1fc7f18a299cc12f33bf8c",
+    "build/nonplanar-evidence/B07-remainder-hatch/build1.log": "ba27949e797fb5bb2bf0b4cb8f1bd50a6d11cb50ae7ed6987450d22b1ac3e27e",
+    "build/nonplanar-evidence/B07-remainder-hatch/build1.log.json": "93dc03f361272d893d637600bda8cc8ae5c1517d8e4936bcceacb7911fefb298",
+    "build/nonplanar-evidence/B07-remainder-hatch/build2.log": "ba27949e797fb5bb2bf0b4cb8f1bd50a6d11cb50ae7ed6987450d22b1ac3e27e",
+    "build/nonplanar-evidence/B07-remainder-hatch/build2.log.json": "edb3eaecd17b1a9dda754f89fe3573b4a4d020b894aac71b36e238d36bc21cbc",
+    "build/nonplanar-evidence/B07-remainder-hatch/build3.log": "3ec10ee06e48e564702deaaedd783c2a0d4cb03e8f7c8ff10e832d2855148bc7",
+    "build/nonplanar-evidence/B07-remainder-hatch/build3.log.json": "ca40565582d5fc8c9375f6a9d1082abff2351411f80a920cefb4a64c4df3ef05",
+    "build/nonplanar-evidence/B07-remainder-hatch/ctest/discovery.json": "787bbbf149d967565b0d968ecf01ce60c0fc1fddfa9415d0c2d07d84b6b5d110",
+    "build/nonplanar-evidence/B07-remainder-hatch/ctest/results.xml": "9f74681a4abe33ec426a0c19848668b77f24b06a58ec51f7b64f126f5796761d",
+    "build/nonplanar-evidence/B07-remainder-hatch/ctest.log": "40be7e52e05b446a86958d986b447e26afa780002740058d301aadc87c571fb4",
+    "build/nonplanar-evidence/B07-remainder-hatch/ctest.log.json": "f2911454679d4d8a2fb1ac3fa0522c1f5ecf5cd669f84683cf534206e3cc62e3",
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry1.log": "baa90fa95c1182fe43301fa9c1ea71af22b3466b6f718bea8be8c9a55d5df1df",
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry1.log.json": "03083654ca5726179c9fa32f853595da8d1adedf731525c5e22dfc7a8d916f9e",
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry1.xml": "5eb612104fc0f4ca7a3f564e7fa795141af22a2dd37f75400658d84c297e4c94",
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry2.log": "81665ead0588ba0f7122a95c173aa16806ada349167cde05227af97d30220524",
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry2.log.json": "c9e6b653f59c75ff354353a97806625cc87814c74fdc0177e6e8f9902e2fe79f",
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry2.xml": "18896a4fc76e54e6e84b86e8700c358651f683a01d7924adbf66189a9e5e106c",
+    "build/nonplanar-evidence/B07-remainder-hatch/linux-annotations.json": "c88704d3c99a9e857c5b5d9c7149b2dc03c63b8d24396aa264f7f7a9e571f845",
+    "build/nonplanar-evidence/B07-remainder-hatch/linux-artifacts.json": "341fce516b38ffeb2eb740d73c795551486580694444d816a2152bdbeec72509",
+    "build/nonplanar-evidence/B07-remainder-hatch/linux-ci.json": "0976f51ae7a2644032f863124d4b77c3015db6a0324e09cb1914591b93ed5895",
+    "build/nonplanar-evidence/B07-remainder-hatch/linux-failed-jobs.json": "287369668d8fe6577e514e1540cd68f32fdde1827209f3773260bd63da831dd5",
+    "build/nonplanar-evidence/B07-remainder-hatch/material-final.log": "b9311f53c7c4019781893c38e342917e4725b506373eae6a556697a26eeae6c6",
+    "build/nonplanar-evidence/B07-remainder-hatch/material-final.log.json": "ac82a8c7a623321cdab3be4e7ed6bbf22f8e8165722513e09eb4abac5c7a0967",
+    "build/nonplanar-evidence/B07-remainder-hatch/material-final.xml": "4cf35a09f4423fb6d0c024a20c886460c9f6ad0c92f716518ff7d35d3281e4f6",
+    "build/nonplanar-evidence/B07-remainder-hatch/material.log": "b573a96d1a74945749f0549e9d8fcba34a9e894500b3048d233e7fa77268c661",
+    "build/nonplanar-evidence/B07-remainder-hatch/material.log.json": "f629cd7bc8edcf870e81048cd104f9858d8f3d5f0df7931a506c5abe3516bfd7",
+    "build/nonplanar-evidence/B07-remainder-hatch/material.xml": "73dd48ade5f3bad16f2791fdced40dfb54a758a0475771187051889e510d1e7a",
+    "build/nonplanar-evidence/B07-remainder-hatch/native1.log": "8e6e34bdc104eb24d7a80e80889927aeef2eb76e9bff3bbeda162b6845408af6",
+    "build/nonplanar-evidence/B07-remainder-hatch/native1.log.json": "3f4e3bb9bbc27febcd2bd443f71fa46b021686d363e9aca3fadab34f518de96b",
+    "build/nonplanar-evidence/B07-remainder-hatch/native1.xml": "fd7cd82b4344c1b53382a065a31662952dba8b619e182a0bd03139505ce24a2c",
+    "build/nonplanar-evidence/B07-remainder-hatch/package-validation.log": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "build/nonplanar-evidence/B07-remainder-hatch/package-validation.log.json": "33629a7203663443c0bb74cb11d76d13a3598ec73d0c8140c239cd724e703ae7",
+    "build/nonplanar-evidence/B07-remainder-hatch/red.log": "408c48bba35a537ab79349c0d6b1b2bd4e78c104753982e68175294b5f31c60b",
+    "build/nonplanar-evidence/B07-remainder-hatch/red.log.json": "d8ecd86384026b2b135444c89bf2e7061b37aac700ebaf8f44723a1917d83b3c",
+    "build/nonplanar-evidence/B07-remainder-hatch/source-audit.log": "21331b9dac869a78bf60c7087d251eccc45ca1d70e449b07d6381dc85f7cc5cb",
+    "build/nonplanar-evidence/B07-remainder-hatch/source-audit.log.json": "f9f8b78c671055c91402ffb49130c558685745065e3c03b73d5d6e01031b7c65",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-off/output/plate_1.gcode": "46badbfcf4a094a9f03c34b8eb22e072d6c4ab4ddf97a89cc84695914afb0f3a",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-off/run.log.json": "d959973bf9a8bb5af09facbf825fba695c940b0ca877fa84cd5ec78142ed4db5",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-zaa/output/plate_1.gcode": "11f9bfcd9c5e0a390d476d09d99dee2d698102a9b6ad5551022ddb59622400af",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-zaa/run.log.json": "d5c89d9f4cdba2d1cc80109191babd532a8f752a190b79d42a1700198735a055",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/manifest.json": "d061b2cbf29f9057dbec64e20188cc2dcf99ea3cbd878beb65ac972c7b5b6751",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/offline.sb": "d52b9dd4a47e59a1a38a4497988a681292ae146e6ae9a23c64e53f0051711fb3",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-off/output/plate_1.gcode": "a5adfc0f426ecaf29229c5c2200beac9361576cb4ede3880e0509c8752e19a64",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-off/run.log.json": "5a67a652d9fb49b9f0dec8ee1a299c86439ae84b0120ebd1996f27221df034f9",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-zaa/output/plate_1.gcode": "33985049a5db9210c03510e279427320a33d30b84312b1e1839551e21a032fa5",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-zaa/run.log.json": "7f8f07a914858a80f201ceba51a73a681c68041bd4a58d1ed303491bfbfa114b",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-off/output/plate_1.gcode": "a0a08268d66a9ae979dc694a1a3d70a259393cf7ddc6354f14a609b6a7e3626e",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-off/run.log.json": "1a6e658c75097e4f859443a3f9bec4d2243e0894a8bf08ac61196198398bcea7",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-zaa/output/plate_1.gcode": "ff0ac325617b644b169010453150302366ba2a85697aec2d16e53251d566c069",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-zaa/run.log.json": "06b91cb55ef5f7f0e7717c9e7aa6c91136fd292c99de2f6030a1a2711d6447af"
+  },
+  "raw_to_archive": {
+    "build/nonplanar-evidence/B07-remainder-hatch/baseline-capture.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baseline-capture.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/baseline-capture.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baseline-capture.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/baseline-compare.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baseline-compare.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/baseline-compare.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baseline-compare.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/body.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/body.txt.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/body.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/body.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/body.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/body.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/build1.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/build1.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/build1.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/build1.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/build2.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/build2.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/build2.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/build2.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/build3.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/build3.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/build3.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/build3.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/ctest/discovery.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/ctest/discovery.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/ctest/results.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/ctest/results.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/ctest.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/ctest.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/ctest.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/ctest.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry1.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry1.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry1.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry1.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry1.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry1.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry2.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry2.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry2.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry2.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/geometry2.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry2.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/linux-annotations.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/linux-annotations.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/linux-artifacts.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/linux-artifacts.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/linux-ci.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/linux-ci.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/linux-failed-jobs.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/linux-failed-jobs.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/material-final.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/material-final.txt.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/material-final.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/material-final.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/material-final.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/material-final.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/material.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/material.txt.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/material.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/material.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/material.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/material.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/native1.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/native1.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/native1.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/native1.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/native1.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/native1.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/package-validation.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/package-validation.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/package-validation.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/package-validation.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/red.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/red.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/red.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/red.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/source-audit.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/source-audit.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch/source-audit.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/source-audit.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-off/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-off/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-off/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-off/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-off/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-off/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-off/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-off/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-off/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-zaa/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-zaa/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-zaa/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-zaa/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-zaa/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-zaa/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-zaa/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/flat_block-zaa/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-zaa/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/manifest.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/manifest.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/offline.sb": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/offline.sb",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-off/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-off/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-off/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-off/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-off/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-off/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-off/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-off/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-off/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-zaa/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-zaa/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-zaa/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-zaa/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-zaa/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-zaa/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-zaa/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/shallow_sphere-zaa/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-zaa/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-off/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-off/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-off/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-off/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-off/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-off/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-off/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-off/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-off/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-zaa/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-zaa/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-zaa/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-zaa/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-zaa/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-zaa/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-zaa/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-remainder-hatch-baselines/wedge_5deg-zaa/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-zaa/run.log.json",
+      "compression": "none"
+    }
+  },
+  "archive_sha256": {
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baseline-capture.log.json": "0368bf8f31495f57a4738f4de6d55da40a80b09a304513066ad46479daf84a94",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baseline-capture.txt": "ab96cc67fe3fa6ec8e66122f755dc9bc9239ddc807c9f69b89dccbb66b886792",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baseline-compare.log.json": "4e0bb8da4e05a1eec2a9e2646bf2739dc9c7ab5c13679d65a16fd0271e1e576c",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baseline-compare.txt": "14bdf3eb82fad8b4210bed868b9124996e150788e839c30f3c35e33189b88fe0",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-off/output/plate_1.gcode.gz": "9d3ac7f5ca4f7ab4d8943d3fbe143522c258c47d5ff2bc25e7a842a090aef5d9",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-off/run.log.json": "d959973bf9a8bb5af09facbf825fba695c940b0ca877fa84cd5ec78142ed4db5",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-zaa/output/plate_1.gcode.gz": "3fcc7d2a9fb69bdf77daff1b1eec0b7d42bfdb40b774408da3273e2303520071",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-zaa/run.log.json": "d5c89d9f4cdba2d1cc80109191babd532a8f752a190b79d42a1700198735a055",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/flat_block-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/manifest.json": "d061b2cbf29f9057dbec64e20188cc2dcf99ea3cbd878beb65ac972c7b5b6751",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/offline.sb": "d52b9dd4a47e59a1a38a4497988a681292ae146e6ae9a23c64e53f0051711fb3",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-off/output/plate_1.gcode.gz": "4c73490d47e21eede05684ba78525107f02c86e55273e3eca09bb5955631af6c",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-off/run.log.json": "5a67a652d9fb49b9f0dec8ee1a299c86439ae84b0120ebd1996f27221df034f9",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-zaa/output/plate_1.gcode.gz": "09997d8866716ad3078399e697491028a020118b18aacf6217cbedf25eaa834b",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-zaa/run.log.json": "7f8f07a914858a80f201ceba51a73a681c68041bd4a58d1ed303491bfbfa114b",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/shallow_sphere-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-off/output/plate_1.gcode.gz": "afd95eb0c9b8602e84b025c4469e325aee2d706d0562f20a82b9bae6bcb4782b",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-off/run.log.json": "1a6e658c75097e4f859443a3f9bec4d2243e0894a8bf08ac61196198398bcea7",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-zaa/output/plate_1.gcode.gz": "147eb684dd9ee89c776bee240a888d320815ab501aaaa84a312102482e82f6fc",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-zaa/run.log.json": "06b91cb55ef5f7f0e7717c9e7aa6c91136fd292c99de2f6030a1a2711d6447af",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/baselines/wedge_5deg-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/body.log.json": "66477e4ff65b2bbe0e6d813bc9d25dec2e688cc60a33b3a364e466df76ee8dfd",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/body.txt.gz": "718a776cb0b2add578bf24d2c3e8be12d6fc82c0b90e221332ad1284c7a0886d",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/body.xml": "5a9afab286ec181b83eadf8063b780a2bdf8bf653d1fc7f18a299cc12f33bf8c",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/build1.log.json": "93dc03f361272d893d637600bda8cc8ae5c1517d8e4936bcceacb7911fefb298",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/build1.txt": "ba27949e797fb5bb2bf0b4cb8f1bd50a6d11cb50ae7ed6987450d22b1ac3e27e",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/build2.log.json": "edb3eaecd17b1a9dda754f89fe3573b4a4d020b894aac71b36e238d36bc21cbc",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/build2.txt": "ba27949e797fb5bb2bf0b4cb8f1bd50a6d11cb50ae7ed6987450d22b1ac3e27e",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/build3.log.json": "ca40565582d5fc8c9375f6a9d1082abff2351411f80a920cefb4a64c4df3ef05",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/build3.txt": "3ec10ee06e48e564702deaaedd783c2a0d4cb03e8f7c8ff10e832d2855148bc7",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/commands.json": "25d9916e7f524cf2f09876fbfc618fd48eed2bd2718ae974f977bd21e6b3db21",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/ctest/discovery.json": "787bbbf149d967565b0d968ecf01ce60c0fc1fddfa9415d0c2d07d84b6b5d110",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/ctest/results.xml": "9f74681a4abe33ec426a0c19848668b77f24b06a58ec51f7b64f126f5796761d",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/ctest.log.json": "f2911454679d4d8a2fb1ac3fa0522c1f5ecf5cd669f84683cf534206e3cc62e3",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/ctest.txt": "40be7e52e05b446a86958d986b447e26afa780002740058d301aadc87c571fb4",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry1.log.json": "03083654ca5726179c9fa32f853595da8d1adedf731525c5e22dfc7a8d916f9e",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry1.txt": "baa90fa95c1182fe43301fa9c1ea71af22b3466b6f718bea8be8c9a55d5df1df",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry1.xml": "5eb612104fc0f4ca7a3f564e7fa795141af22a2dd37f75400658d84c297e4c94",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry2.log.json": "c9e6b653f59c75ff354353a97806625cc87814c74fdc0177e6e8f9902e2fe79f",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry2.txt": "81665ead0588ba0f7122a95c173aa16806ada349167cde05227af97d30220524",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/geometry2.xml": "18896a4fc76e54e6e84b86e8700c358651f683a01d7924adbf66189a9e5e106c",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/linux-annotations.json": "c88704d3c99a9e857c5b5d9c7149b2dc03c63b8d24396aa264f7f7a9e571f845",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/linux-artifacts.json": "341fce516b38ffeb2eb740d73c795551486580694444d816a2152bdbeec72509",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/linux-ci.json": "0976f51ae7a2644032f863124d4b77c3015db6a0324e09cb1914591b93ed5895",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/linux-failed-jobs.json": "287369668d8fe6577e514e1540cd68f32fdde1827209f3773260bd63da831dd5",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/material-final.log.json": "ac82a8c7a623321cdab3be4e7ed6bbf22f8e8165722513e09eb4abac5c7a0967",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/material-final.txt.gz": "5ea2b0a4de6b5bc5ef3044e886114fdd65270e55866e23a8b4862fef2fabd93e",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/material-final.xml": "4cf35a09f4423fb6d0c024a20c886460c9f6ad0c92f716518ff7d35d3281e4f6",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/material.log.json": "f629cd7bc8edcf870e81048cd104f9858d8f3d5f0df7931a506c5abe3516bfd7",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/material.txt.gz": "2e1e23a1ffcc6930058f5f168a2c7f88f7287f2d799a7ff912ea938fa4293e22",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/material.xml": "73dd48ade5f3bad16f2791fdced40dfb54a758a0475771187051889e510d1e7a",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/native1.log.json": "3f4e3bb9bbc27febcd2bd443f71fa46b021686d363e9aca3fadab34f518de96b",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/native1.txt": "8e6e34bdc104eb24d7a80e80889927aeef2eb76e9bff3bbeda162b6845408af6",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/native1.xml": "fd7cd82b4344c1b53382a065a31662952dba8b619e182a0bd03139505ce24a2c",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/package-validation.log.json": "33629a7203663443c0bb74cb11d76d13a3598ec73d0c8140c239cd724e703ae7",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/package-validation.txt": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/red.log.json": "d8ecd86384026b2b135444c89bf2e7061b37aac700ebaf8f44723a1917d83b3c",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/red.txt": "408c48bba35a537ab79349c0d6b1b2bd4e78c104753982e68175294b5f31c60b",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/source-audit.log.json": "f9f8b78c671055c91402ffb49130c558685745065e3c03b73d5d6e01031b7c65",
+    "docs/nonplanar-dev/evidence/B07-remainder-hatch/source-audit.txt": "21331b9dac869a78bf60c7087d251eccc45ca1d70e449b07d6381dc85f7cc5cb"
+  }
+}

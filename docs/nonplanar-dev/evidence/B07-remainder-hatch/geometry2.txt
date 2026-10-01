@@ -1,0 +1,1248 @@
+Filters: [RemainderHatch]
+Randomness seeded to: 1262695694
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 remainder hatch preserves middle obstacles and shares packet and path
+limits
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1368
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x1082d32b8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x1082d3ae0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x849005810
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c018
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151180
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07980
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c0b8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1373: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151200
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1374: PASSED:
+  REQUIRE( fit.snapshot )
+with expansion:
+  0x848c07a20
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1375: PASSED:
+  REQUIRE( planned.snapshot )
+with expansion:
+  0x849036d00
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1376: PASSED:
+  REQUIRE( planned.snapshot->paths.size()==2 )
+with expansion:
+  2 == 2
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1376: PASSED:
+  REQUIRE( planned.snapshot->covered_gain_lower_mm3>0 )
+with expansion:
+  0.09321912075479 > 0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1377: PASSED:
+  REQUIRE( planned.snapshot->paths.front()->path_end.x()<line.start.x()+.4*length )
+with expansion:
+  1.83500000000000019 < 1.8550000000000002
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1378: PASSED:
+  REQUIRE( planned.snapshot->paths.back()->path_start.x()>line.start.x()+.6*length )
+with expansion:
+  2.16500000000000004 > 2.14499999999999957
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1379: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(f.hatches,0,fit,{},limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1380: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(f.hatches,0,fit,{},limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+-------------------------------------------------------------------------------
+B07 remainder hatch constructs finite paths after the actual current butt and
+proves added fill
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1318
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1320: PASSED:
+with message:
+  !(std::is_aggregate<RemainingHatchSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c158
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x1082d31e0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x8490057a0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c1f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151180
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07980
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1323: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x849036d00
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.before==f.fill.snapshot )
+with expansion:
+  0x848c07980 == 0x848c07980
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.paths.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1326: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1330: PASSED:
+  REQUIRE( a>=first )
+with expansion:
+  1.27500000000000169 >= 1.27500000000000169
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( b<=last )
+with expansion:
+  2.72499999999999787 <= 2.72499999999999787
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( r.covered_target_mm3.lower>r.before->covered_target_mm3.upper )
+with expansion:
+  0.12068546883432643 > 0.0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1333: PASSED:
+  REQUIRE( r.missing_target_mm3.upper<r.before->missing_target_mm3.lower )
+with expansion:
+  0.20731453116567461 < 0.32799999999999951
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.covered_gain_lower_mm3>0 )
+with expansion:
+  0.12068546883432645 > 0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000116 <= 0.001
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1335: PASSED:
+  REQUIRE( r.before->occupied->source->current_progress==progress )
+with expansion:
+  0.0 == 0.0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.lower<=amount )
+with expansion:
+  0.12068546883432645 <= 0.120685
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.upper>=amount )
+with expansion:
+  0.12068546883432762 >= 0.120685
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c158
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x1082d31e0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x849005810
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c1f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151180
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07980
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1323: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x849036d00
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.before==f.fill.snapshot )
+with expansion:
+  0x848c07980 == 0x848c07980
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.paths.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1326: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1331: PASSED:
+  REQUIRE( a>first+(last-first)*progress+.01 )
+with expansion:
+  1.73000000000000065 > 1.72000000000000064
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( b<=last )
+with expansion:
+  2.72499999999999787 <= 2.72499999999999787
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( r.covered_target_mm3.lower>r.before->covered_target_mm3.upper )
+with expansion:
+  0.11902084167799087 > 0.03620564065029828
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1333: PASSED:
+  REQUIRE( r.missing_target_mm3.upper<r.before->missing_target_mm3.lower )
+with expansion:
+  0.20897915832201017 < 0.29179435934970122
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.covered_gain_lower_mm3>0 )
+with expansion:
+  0.08281520102769296 > 0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000114 <= 0.001
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1335: PASSED:
+  REQUIRE( r.before->occupied->source->current_progress==progress )
+with expansion:
+  0.29999999999999999 == 0.29999999999999999
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.lower<=amount )
+with expansion:
+  0.08281520102769296 <= 0.0828152
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.upper>=amount )
+with expansion:
+  0.08281520102769377 >= 0.0828152
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c158
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x1082d31e0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x8490057a0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c1f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151180
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07980
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1323: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x849036d00
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.before==f.fill.snapshot )
+with expansion:
+  0x848c07980 == 0x848c07980
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.paths.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1326: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1331: PASSED:
+  REQUIRE( a>first+(last-first)*progress+.01 )
+with expansion:
+  2.02000000000000002 > 2.00999999999999979
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( b<=last )
+with expansion:
+  2.72499999999999787 <= 2.72499999999999787
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( r.covered_target_mm3.lower>r.before->covered_target_mm3.upper )
+with expansion:
+  0.11902084167799086 > 0.0603427344171638
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1333: PASSED:
+  REQUIRE( r.missing_target_mm3.upper<r.before->missing_target_mm3.lower )
+with expansion:
+  0.20897915832201017 < 0.2676572655828357
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.covered_gain_lower_mm3>0 )
+with expansion:
+  0.05867810726082766 > 0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000114 <= 0.001
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1335: PASSED:
+  REQUIRE( r.before->occupied->source->current_progress==progress )
+with expansion:
+  0.5 == 0.5
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.lower<=amount )
+with expansion:
+  0.05867810726082766 <= 0.0586781
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.upper>=amount )
+with expansion:
+  0.05867810726082823 >= 0.0586781
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c158
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x1082d31e0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x849005810
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c1f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151180
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07980
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1323: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x849036d00
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.before==f.fill.snapshot )
+with expansion:
+  0x848c07980 == 0x848c07980
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.paths.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1326: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1330: PASSED:
+  REQUIRE( a>=first )
+with expansion:
+  -0.12499999999999849
+  >=
+  -0.12499999999999849
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( b<=last )
+with expansion:
+  0.12499999999999849 <= 0.12499999999999849
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( r.covered_target_mm3.lower>r.before->covered_target_mm3.upper )
+with expansion:
+  0.02080783945419401 > 0.0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1333: PASSED:
+  REQUIRE( r.missing_target_mm3.upper<r.before->missing_target_mm3.lower )
+with expansion:
+  0.30719216054580706 < 0.32799999999999951
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.covered_gain_lower_mm3>0 )
+with expansion:
+  0.02080783945419401 > 0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.outside_target_mm3.upper<=.001 )
+with expansion:
+  0.0000000000000002 <= 0.001
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1335: PASSED:
+  REQUIRE( r.before->occupied->source->current_progress==progress )
+with expansion:
+  0.0 == 0.0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.lower<=amount )
+with expansion:
+  0.02080783945419401 <= 0.0208078
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.upper>=amount )
+with expansion:
+  0.02080783945419422 >= 0.0208078
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c158
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x8491b0000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x8490057a0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c1f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151180
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07980
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1323: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x849036d00
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.before==f.fill.snapshot )
+with expansion:
+  0x848c07980 == 0x848c07980
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.paths.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1326: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1331: PASSED:
+  REQUIRE( a>first+(last-first)*progress+.01 )
+with expansion:
+  -0.02999999999999937 > -0.0399999999999994
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( b<=last )
+with expansion:
+  0.12499999999999849 <= 0.12499999999999849
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( r.covered_target_mm3.lower>r.before->covered_target_mm3.upper )
+with expansion:
+  0.01914321229785847 > 0.00624235183625827
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1333: PASSED:
+  REQUIRE( r.missing_target_mm3.upper<r.before->missing_target_mm3.lower )
+with expansion:
+  0.30885678770214259 < 0.32175764816374125
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.covered_gain_lower_mm3>0 )
+with expansion:
+  0.01290086046160027 > 0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000018 <= 0.001
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1335: PASSED:
+  REQUIRE( r.before->occupied->source->current_progress==progress )
+with expansion:
+  0.29999999999999999 == 0.29999999999999999
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.lower<=amount )
+with expansion:
+  0.01290086046160027 <= 0.0129009
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.upper>=amount )
+with expansion:
+  0.01290086046160039 >= 0.0129009
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c158
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x8491b0000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x849005810
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c1f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151180
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07980
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1323: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x849036d00
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.before==f.fill.snapshot )
+with expansion:
+  0x848c07980 == 0x848c07980
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1324: PASSED:
+  REQUIRE( r.paths.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1326: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1331: PASSED:
+  REQUIRE( a>first+(last-first)*progress+.01 )
+with expansion:
+  0.02000000000000003 > 0.01
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( b<=last )
+with expansion:
+  0.12499999999999849 <= 0.12499999999999849
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1332: PASSED:
+  REQUIRE( r.covered_target_mm3.lower>r.before->covered_target_mm3.upper )
+with expansion:
+  0.01914321229785846 > 0.01040391972709711
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1333: PASSED:
+  REQUIRE( r.missing_target_mm3.upper<r.before->missing_target_mm3.lower )
+with expansion:
+  0.30885678770214259 < 0.31759608027290243
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.covered_gain_lower_mm3>0 )
+with expansion:
+  0.00873929257076146 > 0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1334: PASSED:
+  REQUIRE( r.outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000018 <= 0.001
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1335: PASSED:
+  REQUIRE( r.before->occupied->source->current_progress==progress )
+with expansion:
+  0.5 == 0.5
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.lower<=amount )
+with expansion:
+  0.00873929257076146 <= 0.00873929
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1339: PASSED:
+  REQUIRE( r.added->covered_target_mm3.upper>=amount )
+with expansion:
+  0.00873929257076155 >= 0.00873929
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+-------------------------------------------------------------------------------
+B07 remainder hatch retains upper transverse neighbours and refuses exhausted
+or incompatible proofs
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1342
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c0b8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x8491b0000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x8490057a0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c298
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151180
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07980
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1345: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(transverse.hatches,0,transverse.fill).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c338
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x8491b0300
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x8490058f0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c3d8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151380
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07a20
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1346: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(full.hatches,0,full.fill).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c478
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x8491b0600
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x849005a40
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c518
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151480
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07ac0
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1350: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0x849036d00
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1351: PASSED:
+  REQUIRE( owned.snapshot->before==source )
+with expansion:
+  0x848c07ac0 == 0x848c07ac0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1352: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch({},0,f.fill).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1353: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(f.hatches,0,{}).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1354: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(f.hatches,10000,f.fill).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1355: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1356: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1357: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1358: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1359: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(f.hatches,0,f.fill,{},limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1361: PASSED:
+  REQUIRE( std::fesetround(0x00000000)==0 )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1361: PASSED:
+  REQUIRE_FALSE( rounding.snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1362: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(f.hatches,0,f.fill,{Length(.01),Volume(.001),Volume(1)}).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c658
+with messages:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x8491b0900
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x849005b20
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c6f8
+with messages:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151800
+with messages:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07c00
+with messages:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1363: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(f.hatches,0,other.fill).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c798
+with messages:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x8491b0c00
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x849005c00
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x848d4c838
+with messages:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x849151a80
+with messages:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x848c07ca0
+with messages:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1365: PASSED:
+  REQUIRE_FALSE( plan_remaining_first_hatch(sloped.hatches,0,sloped.fill,{Length(.01),Volume(.000001),Volume(.001)}).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+===============================================================================
+All tests passed (178 assertions in 3 test cases)
+

@@ -337,7 +337,11 @@ struct FixedWidthBeadResult { std::string reason; std::shared_ptr<const FixedWid
 // Cell filling/overlap, actual gap reconstruction and export remain separate.
 FixedWidthBeadResult plan_fixed_width_bead(const FixedWidthBeadRequest &, const FixedWidthBeadLimits &limits = {});
 
-inline constexpr unsigned first_hatch_bead_contract_version=2;
+struct RemainingHatchResult;
+struct RemainingHatchPolicy;
+struct RemainingHatchLimits;
+struct MaterialFillResult;
+inline constexpr unsigned first_hatch_bead_contract_version=3;
 enum class FirstHatchRoofDomain { Centerline, FiniteWidth };
 struct FirstHatchBeadLimits : MaterialQueryLimits {
     FixedWidthBeadLimits packets;
@@ -349,20 +353,25 @@ struct FirstHatchBeadSnapshot {
     const std::shared_ptr<const AffineHatchSnapshot> source;
     const size_t line_index;
     const FirstHatchRoofDomain roof_domain;
+    const PhysicalPosition path_start, path_end; // May be a qualified subinterval of the parent line.
     const std::vector<FixedWidthBeadPiece> pieces;
     const ScalarBounds actual_target_volume_mm3, deposited_volume_mm3;
     const double maximum_gap_error_mm, maximum_width_error_mm, total_volume_error_mm3, numerical_error_upper_mm;
     const size_t roof_segments, evaluations;
 private:
-    FirstHatchBeadSnapshot(std::shared_ptr<const AffineHatchSnapshot> s, size_t index, FirstHatchRoofDomain domain, std::vector<FixedWidthBeadPiece> p,
+    FirstHatchBeadSnapshot(std::shared_ptr<const AffineHatchSnapshot> s, size_t index, FirstHatchRoofDomain domain,
+        PhysicalPosition start, PhysicalPosition end, std::vector<FixedWidthBeadPiece> p,
         ScalarBounds target, ScalarBounds deposited, double gap_error, double width_error, double volume_error,
         double numeric, size_t segments, size_t work)
-        : source(std::move(s)), line_index(index), roof_domain(domain), pieces(std::move(p)), actual_target_volume_mm3(target),
+        : source(std::move(s)), line_index(index), roof_domain(domain), path_start(start), path_end(end), pieces(std::move(p)), actual_target_volume_mm3(target),
           deposited_volume_mm3(deposited), maximum_gap_error_mm(gap_error), maximum_width_error_mm(width_error),
           total_volume_error_mm3(volume_error), numerical_error_upper_mm(numeric), roof_segments(segments), evaluations(work) {}
     friend FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &, size_t, const FirstHatchBeadLimits &);
     friend FirstHatchBeadResult plan_first_hatch_footprint_bead(const AffineHatchResult &, size_t, const FirstHatchBeadLimits &);
-    static FirstHatchBeadResult plan(const AffineHatchResult &, size_t, const FirstHatchBeadLimits &, FirstHatchRoofDomain);
+    friend RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &,size_t,const MaterialFillResult &,
+        const RemainingHatchPolicy &,const RemainingHatchLimits &);
+    static FirstHatchBeadResult plan(const AffineHatchResult &, size_t, const FirstHatchBeadLimits &, FirstHatchRoofDomain,
+        const AffineHatchLine *slice=nullptr,double coordinate_error=0);
 };
 struct FirstHatchBeadResult { std::string reason; std::shared_ptr<const FirstHatchBeadSnapshot> snapshot; };
 // Reconstruct the continuous highest nominal laid roof under one first-pass
@@ -467,5 +476,46 @@ struct MaterialDeficitResult {std::string reason;std::shared_ptr<const MaterialD
 // the owned fill domain. Cuts include both ends. No local-fill or path approval.
 MaterialDeficitResult locate_material_deficit(const MaterialFillResult &,const std::vector<double> &x_cuts,
     const std::vector<double> &y_cuts,const MaterialDeficitLimits &limits = {});
+
+inline constexpr unsigned remaining_hatch_contract_version=1;
+struct RemainingHatchPolicy {
+    Length xy_separation{.01}; // Additional nominal-strip separation from the existing D_upper projection.
+    Volume maximum_outside_target{.001},minimum_covered_gain{.001};
+};
+struct RemainingHatchLimits {
+    FirstHatchBeadLimits beads;
+    MaterialUnionLimits volumes;
+    Volume maximum_result_width{.01};
+    size_t max_paths=64,max_cells=65535,max_evaluations=2000000;
+    std::chrono::milliseconds timeout{5000};
+    std::function<bool()> cancelled;
+    std::function<bool(uint64_t)> is_current;
+};
+struct RemainingHatchSnapshot {
+    const std::shared_ptr<const MaterialFillSnapshot> before,added;
+    const RemainingHatchPolicy policy;
+    const std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> paths;
+    // Disjoint-set addition, not a fabricated single-prefix union/fill proof.
+    const ScalarBounds covered_target_mm3,missing_target_mm3,outside_target_mm3;
+    const double covered_gain_lower_mm3;
+    const size_t cells,evaluations;
+private:
+    RemainingHatchSnapshot(std::shared_ptr<const MaterialFillSnapshot> old,std::shared_ptr<const MaterialFillSnapshot> extra,RemainingHatchPolicy selected,
+        std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> p,ScalarBounds covered,ScalarBounds missing,
+        ScalarBounds outside,double gain,size_t count,size_t work)
+        : before(std::move(old)),added(std::move(extra)),policy(selected),paths(std::move(p)),covered_target_mm3(covered),missing_target_mm3(missing),
+          outside_target_mm3(outside),covered_gain_lower_mm3(gain),cells(count),evaluations(work) {}
+    friend RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &,size_t,const MaterialFillResult &,
+        const RemainingHatchPolicy &,const RemainingHatchLimits &);
+};
+struct RemainingHatchResult {std::string reason;std::shared_ptr<const RemainingHatchSnapshot> snapshot;};
+// Construct remaining intervals of one original first hatch, excluding every
+// laid D_upper XY projection. Re-prove finite nominal roof/amounts, integrate the
+// added ledger and require positive target coverage under the outside-volume
+// limit. Existing current geometry stays exact in its original prefix. This is
+// a prospective geometric augmentation; connectors, contact/head/order, seam,
+// complete target filling and export remain unqualified.
+RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &,size_t line_index,const MaterialFillResult &,
+    const RemainingHatchPolicy &policy={},const RemainingHatchLimits &limits={});
 
 }
