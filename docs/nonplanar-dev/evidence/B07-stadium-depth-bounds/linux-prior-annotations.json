@@ -1,0 +1,54 @@
+{
+  "observed_utc": "2026-10-01T09:18:12.881583+00:00",
+  "url": "https://api.github.com/repos/positron48/OrcaSlicer-nonplanar/check-runs/110270941389/annotations",
+  "response": [
+    {
+      "path": ".github",
+      "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/7f71cc981503a9da77592800ab8f22d93a29571b/.github",
+      "start_line": 2,
+      "start_column": null,
+      "end_line": 2,
+      "end_column": null,
+      "annotation_level": "warning",
+      "title": "",
+      "message": "Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/",
+      "raw_details": ""
+    },
+    {
+      "path": ".github",
+      "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/7f71cc981503a9da77592800ab8f22d93a29571b/.github",
+      "start_line": 8,
+      "start_column": null,
+      "end_line": 8,
+      "end_column": null,
+      "annotation_level": "failure",
+      "title": "Nonplanar native tests",
+      "message": "B07 native first-hatch union measures rounded overlap rather than summed extrusion\n\nFilters: \"B07 native first-hatch union measures rounded overlap rather than summed extrusion\"\nRandomness seeded to: 3876453382\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nfff_print_tests is a Catch2 v3.11.0 host application.\nRun with -? for options\n\n-------------------------------------------------------------------------------\nB07 native first-hatch union measures rounded overlap rather than summed\nextrusion\n-------------------------------------------------------------------------------\n/home/runner/work/OrcaSlicer-nonplanar/OrcaSlicer-nonplanar/tests/nonplanar/test_policy.cpp:2155\n...............................................................................\n\n/home/runner/work/OrcaSlicer-nonplanar/OrcaSlicer-nonplanar/tests/nonplanar/test_policy.cpp:2224: FAILED:\n  REQUIRE( fit.snapshot )\nwith expansion:\n  0\nwith messages:\n  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY\n  DECLARED_MATERIAL_MODEL_ONLY\n  provisional occupied=[1.31221597619643537,1.32221578176234544] excess=[0.\n  07347835507143477,0.0834781606373447838]\n  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY packets=2109\n  cells=32213 work=1598991\n  first lines=14 packets=2109 summed amount=1.39569413683378021 occupied=[1.\n  31221597619643537,1.32221578176234544] repeated=[0.07347835507143477,0.\n  0834781606373447838] cells=32213 work=1598991\n  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL\n  target cells=10377 target interval=[2.57885,2.57985]\n  provisional below=[0.0150537,0.0173945] above=[0,0]\n  MATERIAL_DEADLINE fill cells=38309 work=814580\n\n===============================================================================\ntest cases:  1 |  0 passed | 1 failed\nassertions: 40 | 39 passed | 1 failed",
+      "raw_details": ""
+    },
+    {
+      "path": ".github",
+      "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/7f71cc981503a9da77592800ab8f22d93a29571b/.github",
+      "start_line": 7,
+      "start_column": null,
+      "end_line": 7,
+      "end_column": null,
+      "annotation_level": "failure",
+      "title": "Nonplanar native tests",
+      "message": "CTest gate failed: CTest failed with exit code 8",
+      "raw_details": ""
+    },
+    {
+      "path": ".github",
+      "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/7f71cc981503a9da77592800ab8f22d93a29571b/.github",
+      "start_line": 9,
+      "start_column": null,
+      "end_line": 9,
+      "end_column": null,
+      "annotation_level": "failure",
+      "title": "",
+      "message": "Process completed with exit code 2.",
+      "raw_details": ""
+    }
+  ]
+}

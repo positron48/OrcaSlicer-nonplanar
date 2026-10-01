@@ -434,6 +434,9 @@ std::optional<NominalRoof> nominal_roof(const MaterialRecord &row, Projection pr
         };
         depth={std::max(0.,at(height.lo,normal.lo).lo),at(height.hi,normal.hi).hi};
     }
+    // A stadium shoulder has r - sqrt(r*r - u*u) >= 0. Uncoupled
+    // height/radicand intervals must not invent material above its axis top.
+    depth=detail::maximum(Interval(0),depth);
     return NominalRoof{top-depth,depth,whole,transverse_whole};
 }
 // Shared whole-cell nominal roof enclosure. The floor must already be a

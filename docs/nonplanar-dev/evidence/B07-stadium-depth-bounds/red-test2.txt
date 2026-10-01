@@ -1,0 +1,121 @@
+Filters: [StadiumDepthBounds]
+Randomness seeded to: 2593451813
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 variable stadium depth cannot create material above its affine top or below
+its flat floor
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1393
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x1047c95b8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1390: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0x728c05650
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x1047c9e98
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1401: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x72900c980
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1403: FAILED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  MATERIAL_UNION_CELL_LIMIT
+
+-------------------------------------------------------------------------------
+B07 stadium depth tightening retains genuine rounded material above the target
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1413
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x728cbc018
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1390: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0x728c05650
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x728cbc0b8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1418: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x72900c980
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1420: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x728c037a0
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1423: PASSED:
+  REQUIRE( fill.snapshot->above_surface_mm3.lower>.012 )
+with expansion:
+  0.0131619770121793 > 0.012
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1424: PASSED:
+  REQUIRE( fill.snapshot->above_surface_mm3.upper<.016 )
+with expansion:
+  0.01318686442015476 < 0.016
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1425: PASSED:
+  REQUIRE( fill.snapshot->below_roof_mm3.upper<1e-10 )
+with expansion:
+  0.0 < 0.0000000001
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1426: PASSED:
+  REQUIRE( fill.snapshot->covered_target_mm3.upper<occupied.snapshot->union_volume_mm3.lower )
+with expansion:
+  0.28966987605961669 < 0.30283185307179594
+with message:
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+===============================================================================
+test cases:  2 |  1 passed | 1 failed
+assertions: 14 | 13 passed | 1 failed
+

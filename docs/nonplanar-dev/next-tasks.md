@@ -17,8 +17,11 @@ Next software tasks, in dependency order:
    `B02-input-placement.md` connects owned inputs to the native placement/error
    chain and enforces source plate-index agreement; actual GUI membership and
    original file-to-job association remain pending.
-2. Resolve the inherited Linux native-fill deadline at 84a709ef without changing
-   budgets, then verify new milestones on Linux. The prior A02 correction at d57e9325 has a
+2. Resolve the inherited Linux native-fill deadline at 84a709ef and 7f71cc98
+   without changing budgets, then verify new milestones on Linux.
+   `B07-stadium-depth-bounds.md` tightens the exact nonnegative rounded depth
+   domain but makes only a small native work reduction; certified roof-query
+   optimization and successful Linux verification remain required. The prior A02 correction at d57e9325 has a
    successful native Linux run 36454696019; its earlier range-failure evidence
    remains historical and does not establish an exact exception call stack.
 3. Extend B03 nominal affine bounds to qualified error budgets, curved surfaces,

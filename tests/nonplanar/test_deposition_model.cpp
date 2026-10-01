@@ -1379,3 +1379,49 @@ TEST_CASE("B07 remainder hatch preserves middle obstacles and shares packet and 
     RemainingHatchLimits limits;limits.max_paths=1;REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,fit,{},limits).snapshot);
     limits={};limits.beads.packets.max_segments=1;REQUIRE_FALSE(plan_remaining_first_hatch(f.hatches,0,fit,{},limits).snapshot);
 }
+
+namespace {
+MaterialIntegralResult stadium_fill_target(double end_z)
+{
+    const auto body=captured({bead(1,0,{0,0,1},{10,0,1},4,.4,.4,BeadSectionKind::Rectangle)});
+    const auto state=material_at(body,1,0);
+    const auto target=integrate_material_first_pass(state.lower,{{1,-1,3,1},1.2,end_z,1.2},.9,
+        {VerticalGap(.1),VerticalGap(.6),Length(0)});
+    INFO(target.reason);REQUIRE(target.proof);return target;
+}
+}
+TEST_CASE("B07 variable stadium depth cannot create material above its affine top or below its flat floor", "[Nonplanar][B07][StadiumDepthBounds]")
+{
+    const auto target=stadium_fill_target(1.4);
+    const auto row=bead(1,0,{1,0,1.2},{3,0,1.4},.8,.2,.4);
+    const auto cap=captured({row});
+    for (double fraction : {.3,1.}) {
+        const auto present=material_at(cap,fraction==1 ? 1 : 0,fraction==1 ? 0 : fraction);
+        const auto occupied=integrate_material_union(present.nominal,{{1,-1,.7},{3,1,1.6}});
+        INFO(occupied.reason);REQUIRE(occupied.snapshot);
+        MaterialFillLimits limits;limits.maximum_interval_width=Volume(.00002);limits.max_cells=2;
+        const auto fill=reconcile_material_fill(target,occupied,limits);INFO(fill.reason);REQUIRE(fill.snapshot);
+        REQUIRE(fill.snapshot->below_roof_mm3.upper<1e-10);
+        REQUIRE(fill.snapshot->above_surface_mm3.upper<1e-10);
+        // Every real stadium section has nonnegative depth below its axis top.
+        // Its floor is 1 + depth, so the complete current/full amount lies in T.
+        const long double amount=static_cast<long double>(std::get<Deposition>(row.motion.payload).volume.value())*fraction;
+        volume_contains(fill.snapshot->covered_target_mm3,amount);
+        REQUIRE(fill.snapshot->cells==2);
+    }
+}
+TEST_CASE("B07 stadium depth tightening retains genuine rounded material above the target", "[Nonplanar][B07][StadiumDepthBounds]")
+{
+    const auto target=stadium_fill_target(1.2);
+    const auto row=bead(1,0,{1,0,1.21},{3,0,1.21},.8,.2,.2);
+    const auto present=material_at(captured({row}),1,0);
+    const auto occupied=integrate_material_union(present.nominal,{{1,-1,.7},{3,1,1.6}});REQUIRE(occupied.snapshot);
+    MaterialFillLimits limits;limits.maximum_interval_width=Volume(.0001);
+    const auto fill=reconcile_material_fill(target,occupied,limits);INFO(fill.reason);REQUIRE(fill.snapshot);
+    // Independent bounds: 2 mm length times .01 mm spill height, between
+    // the .6 mm flat core and the full .8 mm width (strictly rounded sides).
+    REQUIRE(fill.snapshot->above_surface_mm3.lower>.012);
+    REQUIRE(fill.snapshot->above_surface_mm3.upper<.016);
+    REQUIRE(fill.snapshot->below_roof_mm3.upper<1e-10);
+    REQUIRE(fill.snapshot->covered_target_mm3.upper<occupied.snapshot->union_volume_mm3.lower);
+}

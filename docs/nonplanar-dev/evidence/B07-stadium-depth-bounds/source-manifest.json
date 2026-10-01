@@ -1,0 +1,491 @@
+{
+  "base_commit": "807cda8eee1df6a7ee79a300cceda165d6079a3e",
+  "upstream_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-stadium-depth-bounds.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "16846ff69a8d7cb6ee3602b9f7d20bc3d4ae0524b8613377c892bbd0593508b0",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "1fb060af3d02d8d18ee9f9883a49ab28e6fede62f196472e0f02bda647f1e940",
+    "tests/nonplanar/test_deposition_model.cpp": "8cc2816eb952bddbb8eb296de5e6e651a1288ce4eff57207eae94d2e4fdc773b",
+    "tests/nonplanar/test_policy.cpp": "b2c01c990d4e18d669e638a177142db0ebf0c25e0703bb4e969f57ac85f4ccff",
+    "docs/nonplanar-dev/adr-0047-nonnegative-stadium-depth.md": "a20a9ea08f80658bf316d2b8d4639141bbbbf47f4825bf7ea4f4743da0aa742b",
+    "docs/nonplanar-dev/B07-stadium-depth-bounds.md": "fb977e4886dffc2070ce2425d93e6218015f1a9e725ea35898348e1550bd8455",
+    "docs/nonplanar-dev/status.json": "1dc95aab752c2538af2f732083ad78a525f1705b5aa70359f5e5a27a062c4226",
+    "docs/nonplanar-dev/README.md": "79a1ecad9d492d4bfb4ce5f5aadd2cedad03609e4749ad7bdf610ce6f68abee3",
+    "docs/nonplanar-dev/next-tasks.md": "5f96b0d34614a003302ad91b6678ab238b89281bef53c8ae6f4908b9c2523cf4"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "a495d56aa60126c7a27f4aa0f2acd9ad9a3e80bc627112977317900f044590bb",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "5ee59fc5788a499ff4b9fa2762c286f705e8d8b66038e9d974eb34dbc3627a2a"
+  },
+  "compiled_commit_label": "31461d50",
+  "compiled_commit_label_note": "Retained configure label; exact source/binary hashes bind this build. Full B13 provenance pending.",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "captured_utc": "2026-10-01T09:24:30.683025+00:00",
+  "suite_results": {
+    "geometry": {
+      "cases": 2,
+      "assertions": 26,
+      "failures": 0,
+      "skips": 0
+    },
+    "material": {
+      "cases": 57,
+      "assertions": 12384,
+      "failures": 0,
+      "skips": 0
+    },
+    "body": {
+      "cases": 14,
+      "assertions": 107917,
+      "failures": 0,
+      "skips": 0
+    }
+  },
+  "ctest_discovered": 302,
+  "ctest_executed": 302,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "geometric_bound": "DEPTH = r - sqrt(r*r-u*u) >= 0",
+  "budgets_and_margins": "UNCHANGED",
+  "geometry_model": "UNCHANGED_NOMINAL_STADIUM",
+  "public_API_and_contract_versions": "UNCHANGED",
+  "variable_gap_current_fraction": 0.3,
+  "current_and_full_fill_cells": 2,
+  "real_rounded_above_target_mm3": [
+    0.0131619770121793,
+    0.01318686442015476
+  ],
+  "independent_above_bounds_mm3": [
+    0.012,
+    0.016
+  ],
+  "native_fill_cells": 40960,
+  "native_fill_work": 865083,
+  "native_fill_above_upper_mm3": 1.17968e-14,
+  "native_case_elapsed_seconds": 26.573,
+  "native_fill_timeout_ms": 20000,
+  "Linux": "7f71cc98_RUN_36831523726_NATIVE_FILL_DEADLINE_FAILURE_CURRENT_REVISION_PENDING",
+  "Linux_deadline_repair": "NOT_ESTABLISHED",
+  "independent_review": "NOT_RUN",
+  "Windows": "NOT_RUN",
+  "physical": "NOT_RUN",
+  "public_export": "BLOCK",
+  "full_B01_B15": "IN_PROGRESS",
+  "raw_output_sha256": {
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/baseline-capture.log": "64f5f2e45dabca10c0df1f3e50be3233326b81ded1e286857f23ff404face80a",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/baseline-capture.log.json": "d403a5e4f7037771ac540d9d74f7b8d3db98125fb4ae0cd4d1dff8b02cad2e07",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/baseline-compare.log": "14bdf3eb82fad8b4210bed868b9124996e150788e839c30f3c35e33189b88fe0",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/baseline-compare.log.json": "119f17731c84fe2c8ff9c0bdfa75882bb7461fd1e50b252cf2f1d9d8e3953958",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/body.log": "6e872cb4c4ea25a8c0e33a40dbfceff3f89020a467a4fb4875dcb3f91a5059d8",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/body.log.json": "4910e23ff2e15d51d6bcaff6d034ddba0d24fe8331c15e63baf85243627789cd",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/body.xml": "4c2d64d5a7315fd16b92aae67550d85ca95e9cee9884b7929bb78035306d154e",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/build.log": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/build.log.json": "f4fdaf8d172660eb5912051c11f52a54363dd2d299302355651bf00f0ebb2a5e",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/ctest/discovery.json": "450f9bb899d41098cea8128a39d113ab4c078212140aef2ef6cedc957ddf35cd",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/ctest/results.xml": "d105c223ac5b21a2aa99f431a55fb05a2823d3a725fde9849209a9fea37abbe7",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/ctest.log": "56b70bc5fab089fb230ae8a71bdfbb3a30fb426af3d68bb3b170ff00b385b86b",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/ctest.log.json": "c56e4ddd1975390b22e6a8edcef3ca60e11f83aacfd172c179d3e3c7d7da1213",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/geometry.log": "4f6b4f2de964ff5a90552151c5dbc0144cade6a01ede7fb5a01088dffa8d8188",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/geometry.log.json": "f1ac94d168445dcbf6207fa3ff83941c0099e6a06fdbbfe23a50836ab3a10c09",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/geometry.xml": "299d3de4583dbf6b3dc4cd64c6c613a3a861a9a922d93cf012aa01c0a436b0b3",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/linux-prior-annotations.json": "6b01d8882b63c4eb26d7f3ed29d295920d8b51faea350f949e8e81215da84cf9",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/linux-prior-jobs.json": "32d6b808640e31c98e5c4f377f8a7e38b93f6624653c38853b42f044922123d5",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/linux-prior-run.json": "0fd3b2e67b4da024f357150a98083e0d5a8395fda9e57366dfeac2a74d0af3c9",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/material.log": "f079744478f4f0427f4f2f40c9d0af87f87f62ade383cd873465de066ebc851c",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/material.log.json": "bf253bf6a0915b4b9d0beda455a0e888f0da3173382600a0e29d3fb3e8cc3b2a",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/material.xml": "ba7e43b863a44d056e0c6370852aeb28014089c98c5e543712c4994408a2ed69",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/package-validation.log": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/package-validation.log.json": "dd5ad003dfce231d36540f4cba71d2e05590d0b20f07560a340f62a48bad138f",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-build.log": "3ec10ee06e48e564702deaaedd783c2a0d4cb03e8f7c8ff10e832d2855148bc7",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-build.log.json": "adbf4bdf30c126b45e0150d31e5e9bbd8e09d67dfc2d8ff3e6a4c17cac8268f0",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-build2.log": "3ec10ee06e48e564702deaaedd783c2a0d4cb03e8f7c8ff10e832d2855148bc7",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-build2.log.json": "0560e346395aa5d2394929b71600b339d0361472146a46732c1a8994a2017383",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test.log": "cbac63961431cf77bd49d54f84ba58db40068c3d44e6bd5f4cbb635469c04bc2",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test.log.json": "99a2bad1c53b902caaa5fa1e2bcf1a74cf4d52d4ebe0a59d0d8196e22ea3d907",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test.xml": "0164e657d80f7e7704a61151331133c49c4e5f5ff6750bcd8440c28b2fe2f610",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test2.log": "42cf04c63fb658fdb206dc6ffbf5c2f9dd19a16cb6479db08e2f782320314416",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test2.log.json": "90e7ad0f49c7f55b181f7d23174b1d6b4c7a3e70e53b0b4ceb1f5eb027d6a46f",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test2.xml": "dd3c99ad793d794d3c35675d81595abf94b752848019a35eef2280e40cb6c2d7",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/source-audit.log": "376aa9b583e3856a56fe158365fb47910542910bcabdf418250d74451ab07334",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/source-audit.log.json": "2780916f7bfaa686f6a4363f7b926e10288fff3a952f59bc47bc2f791aba99d2",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-off/output/plate_1.gcode": "82f6ad5869304cddb3de6093468b59bc74e96ba85e948103d4f14cbd8c52dad3",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-off/run.log.json": "c091c05f45cd88cba18f666419780ef672ae20540e626176da76bf5f30d74238",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-zaa/output/plate_1.gcode": "1e42398b1fb6a982d73fa42cab2be91720cc8d7de73709ce792fb13e5253f24c",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-zaa/run.log.json": "5298d3ba3ff7ca7345b85b79f554758ee2a25d0c6646c6b44e56fa6a504cdffa",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/manifest.json": "b3766a8c9fcbbde9f3e475767325723a8fdf0130518be3ab56cd8cdb2a58301d",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/offline.sb": "8039b55e0118f0cea97452b877d3ce24e4b5820f50fe797fda18218ba0e55227",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-off/output/plate_1.gcode": "838368838f7b5f7c883d64c4d09a95b5e932ba5f8611adbe5088382c7f622093",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-off/run.log.json": "1367bd4818c2c65b49ced7d72a25582750c49bf4feff02d70a79535baa684c1a",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-zaa/output/plate_1.gcode": "91d91d7764e3078fc31d2702a8cfbaa925b3749216448e325e593fcb6686bc5e",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-zaa/run.log.json": "910c7ccea5c2c1089c83f14a092dec1e8fb008776d6eb9204d2c03eeb4867ac7",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-off/output/plate_1.gcode": "c394f77f20849c3549de45e78b1d4b712e762805e95db6f6dd3879ebe5aabae4",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-off/run.log.json": "0a1dbb5e233a0a1ebedfecc18176f03e2d7ab445e336bb9cdaeb66c2f222ce53",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-zaa/output/plate_1.gcode": "6f93659cd34110054cc0d790f763486512a75bbfe97525bbb5eae00ec5076fbe",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-zaa/run.log.json": "dfc7cfffb3a7f010c94a26f4a4c23930bb48bc7669610ef1ade931ffb6f7dc35"
+  },
+  "raw_to_archive": {
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/baseline-capture.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baseline-capture.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/baseline-capture.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baseline-capture.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/baseline-compare.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baseline-compare.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/baseline-compare.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baseline-compare.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/body.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/body.txt.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/body.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/body.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/body.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/body.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/build.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/build.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/build.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/build.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/ctest/discovery.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/ctest/discovery.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/ctest/results.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/ctest/results.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/ctest.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/ctest.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/ctest.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/ctest.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/geometry.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/geometry.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/geometry.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/geometry.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/geometry.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/geometry.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/linux-prior-annotations.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/linux-prior-annotations.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/linux-prior-jobs.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/linux-prior-jobs.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/linux-prior-run.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/linux-prior-run.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/material.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/material.txt.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/material.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/material.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/material.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/material.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/package-validation.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/package-validation.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/package-validation.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/package-validation.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-build.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-build.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-build.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-build.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-build2.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-build2.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-build2.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-build2.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test2.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test2.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test2.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test2.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/red-test2.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test2.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/source-audit.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/source-audit.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds/source-audit.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/source-audit.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-off/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-off/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-off/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-off/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-off/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-off/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-off/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-off/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-off/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-zaa/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-zaa/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-zaa/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-zaa/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-zaa/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-zaa/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-zaa/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/flat_block-zaa/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-zaa/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/manifest.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/manifest.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/offline.sb": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/offline.sb",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-off/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-off/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-off/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-off/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-off/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-off/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-off/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-off/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-off/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-zaa/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-zaa/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-zaa/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-zaa/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-zaa/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-zaa/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-zaa/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/shallow_sphere-zaa/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-zaa/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-off/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-off/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-off/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-off/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-off/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-off/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-off/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-off/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-off/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-zaa/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-zaa/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-zaa/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-zaa/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-zaa/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-zaa/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-zaa/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-stadium-depth-bounds-baselines/wedge_5deg-zaa/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-zaa/run.log.json",
+      "compression": "none"
+    }
+  },
+  "archive_sha256": {
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baseline-capture.log.json": "d403a5e4f7037771ac540d9d74f7b8d3db98125fb4ae0cd4d1dff8b02cad2e07",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baseline-capture.txt": "64f5f2e45dabca10c0df1f3e50be3233326b81ded1e286857f23ff404face80a",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baseline-compare.log.json": "119f17731c84fe2c8ff9c0bdfa75882bb7461fd1e50b252cf2f1d9d8e3953958",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baseline-compare.txt": "14bdf3eb82fad8b4210bed868b9124996e150788e839c30f3c35e33189b88fe0",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-off/output/plate_1.gcode.gz": "46ae3cc16b847d7c3b0b3bfc8458dfa61b2f2bc1bddf525711620b18bcd3b2e0",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-off/run.log.json": "c091c05f45cd88cba18f666419780ef672ae20540e626176da76bf5f30d74238",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-zaa/output/plate_1.gcode.gz": "89e2b5def9546fbfab85274c548b1aba5fb9f7313a6acf84c174e77ea0b6f8e0",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-zaa/run.log.json": "5298d3ba3ff7ca7345b85b79f554758ee2a25d0c6646c6b44e56fa6a504cdffa",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/flat_block-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/manifest.json": "b3766a8c9fcbbde9f3e475767325723a8fdf0130518be3ab56cd8cdb2a58301d",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/offline.sb": "8039b55e0118f0cea97452b877d3ce24e4b5820f50fe797fda18218ba0e55227",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-off/output/plate_1.gcode.gz": "672d3c2fb968ee51d108e3c770a02119f9db4ba783e5838c731d88ee173739d3",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-off/run.log.json": "1367bd4818c2c65b49ced7d72a25582750c49bf4feff02d70a79535baa684c1a",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-zaa/output/plate_1.gcode.gz": "658f841510267e4e744976470490f47fcfec0540ad9f0dcb8092c95e7557fd5f",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-zaa/run.log.json": "910c7ccea5c2c1089c83f14a092dec1e8fb008776d6eb9204d2c03eeb4867ac7",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/shallow_sphere-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-off/output/plate_1.gcode.gz": "621854e3a12f0a0119934b92fbe1580a9746d6dd482c989efaee1088adeb9e81",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-off/run.log.json": "0a1dbb5e233a0a1ebedfecc18176f03e2d7ab445e336bb9cdaeb66c2f222ce53",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-zaa/output/plate_1.gcode.gz": "2f8a862aff4b188157cf1dcc0becefe5e1fb15b2a9eeefdbbf3f053782b9a385",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-zaa/run.log.json": "dfc7cfffb3a7f010c94a26f4a4c23930bb48bc7669610ef1ade931ffb6f7dc35",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/baselines/wedge_5deg-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/body.log.json": "4910e23ff2e15d51d6bcaff6d034ddba0d24fe8331c15e63baf85243627789cd",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/body.txt.gz": "2bcba5c2d607d95ff52b439a3231e219774b1edf5e846c373e3c121b46d0e807",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/body.xml": "4c2d64d5a7315fd16b92aae67550d85ca95e9cee9884b7929bb78035306d154e",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/build.log.json": "f4fdaf8d172660eb5912051c11f52a54363dd2d299302355651bf00f0ebb2a5e",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/build.txt": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/commands.json": "6aacbe5fa9f00e6d32b1f6c2923ca4880c272c1092c7d823ea7fa1b6d03a4329",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/ctest/discovery.json": "450f9bb899d41098cea8128a39d113ab4c078212140aef2ef6cedc957ddf35cd",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/ctest/results.xml": "d105c223ac5b21a2aa99f431a55fb05a2823d3a725fde9849209a9fea37abbe7",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/ctest.log.json": "c56e4ddd1975390b22e6a8edcef3ca60e11f83aacfd172c179d3e3c7d7da1213",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/ctest.txt": "56b70bc5fab089fb230ae8a71bdfbb3a30fb426af3d68bb3b170ff00b385b86b",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/geometry.log.json": "f1ac94d168445dcbf6207fa3ff83941c0099e6a06fdbbfe23a50836ab3a10c09",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/geometry.txt": "4f6b4f2de964ff5a90552151c5dbc0144cade6a01ede7fb5a01088dffa8d8188",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/geometry.xml": "299d3de4583dbf6b3dc4cd64c6c613a3a861a9a922d93cf012aa01c0a436b0b3",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/linux-prior-annotations.json": "6b01d8882b63c4eb26d7f3ed29d295920d8b51faea350f949e8e81215da84cf9",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/linux-prior-jobs.json": "32d6b808640e31c98e5c4f377f8a7e38b93f6624653c38853b42f044922123d5",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/linux-prior-run.json": "0fd3b2e67b4da024f357150a98083e0d5a8395fda9e57366dfeac2a74d0af3c9",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/material.log.json": "bf253bf6a0915b4b9d0beda455a0e888f0da3173382600a0e29d3fb3e8cc3b2a",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/material.txt.gz": "62a0c1d42364c2b089c6550d94a0d920e7ea50aec149c32a4e18aa8439fe4525",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/material.xml": "ba7e43b863a44d056e0c6370852aeb28014089c98c5e543712c4994408a2ed69",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/package-validation.log.json": "dd5ad003dfce231d36540f4cba71d2e05590d0b20f07560a340f62a48bad138f",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/package-validation.txt": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-build.log.json": "adbf4bdf30c126b45e0150d31e5e9bbd8e09d67dfc2d8ff3e6a4c17cac8268f0",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-build.txt": "3ec10ee06e48e564702deaaedd783c2a0d4cb03e8f7c8ff10e832d2855148bc7",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-build2.log.json": "0560e346395aa5d2394929b71600b339d0361472146a46732c1a8994a2017383",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-build2.txt": "3ec10ee06e48e564702deaaedd783c2a0d4cb03e8f7c8ff10e832d2855148bc7",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test.log.json": "99a2bad1c53b902caaa5fa1e2bcf1a74cf4d52d4ebe0a59d0d8196e22ea3d907",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test.txt": "cbac63961431cf77bd49d54f84ba58db40068c3d44e6bd5f4cbb635469c04bc2",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test.xml": "0164e657d80f7e7704a61151331133c49c4e5f5ff6750bcd8440c28b2fe2f610",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test2.log.json": "90e7ad0f49c7f55b181f7d23174b1d6b4c7a3e70e53b0b4ceb1f5eb027d6a46f",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test2.txt": "42cf04c63fb658fdb206dc6ffbf5c2f9dd19a16cb6479db08e2f782320314416",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/red-test2.xml": "dd3c99ad793d794d3c35675d81595abf94b752848019a35eef2280e40cb6c2d7",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/source-audit.log.json": "2780916f7bfaa686f6a4363f7b926e10288fff3a952f59bc47bc2f791aba99d2",
+    "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/source-audit.txt": "376aa9b583e3856a56fe158365fb47910542910bcabdf418250d74451ab07334"
+  }
+}

@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 263,
+    "new_native_cases": 265,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 300,
-    "final_ctest_executed": 300,
+    "final_ctest_discovered": 302,
+    "final_ctest_executed": 302,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -325,11 +325,17 @@
     "B07_native_remainder_hatch_cases": 1,
     "B07_native_remainder_hatch_assertions": 29,
     "B07_remainder_hatch_oracle": "INDEPENDENT_CONSTANT_ROUNDED_SECTION_AMOUNTS_CURRENT_BUTT_UPPER_NEIGHBOUR_MIDDLE_OBSTACLE_AND_NATIVE_POSITIVE_FILL_GAIN_PASS_FULL_3D_FILL_CONTACT_ORDER_PENDING",
-    "B07_remainder_hatch_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
+    "B07_remainder_hatch_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B07_stadium_depth_geometric_cases": 2,
+    "B07_stadium_depth_geometric_assertions": 26,
+    "B07_stadium_depth_oracle": "NONNEGATIVE_ROUNDED_DEPTH_CURRENT_FULL_AMOUNT_ENCLOSURE_AND_REAL_ABOVE_TARGET_SPILL_PASS",
+    "B07_stadium_depth_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B07_stadium_depth_native_fill_cells": 40960,
+    "B07_stadium_depth_native_fill_work": 865083
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
-    "linux_x86_64": "4B3DA47D_NATIVE_LINUX_CI_SUCCESS_84A709EF_IN_PROGRESS_NEW_DEFICIT_REVISION_NOT_VERIFIED"
+    "linux_x86_64": "4B3DA47D_NATIVE_LINUX_CI_SUCCESS_84A709EF_AND_7F71CC98_NATIVE_FILL_DEADLINE_FAILURE_CURRENT_REVISION_PENDING"
   },
   "physical": {
     "machine": "Snapmaker U1",
@@ -340,10 +346,10 @@
     "operator_profile": "UNCONFIRMED"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "RUN_36826154741_84A709EF_NATIVE_FILL_DEADLINE_FAILURE_RUN_36828766748_7F454BA5_CANCELLED_RUN_36831523726_7F71CC98_IN_PROGRESS_CURRENT_REMAINDER_REVISION_NOT_VERIFIED",
+  "ci": "RUN_36826154741_84A709EF_AND_RUN_36831523726_7F71CC98_NATIVE_FILL_DEADLINE_FAILURE_RUN_36828766748_7F454BA5_CANCELLED_CURRENT_DEPTH_BOUNDS_REVISION_NOT_VERIFIED",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Tighten valid rounded-section bounds to resolve the inherited Linux fill deadline without changing limits. Continue batch/global replanning and paths in remaining 3D space, then seam/edges and actual later support. Complete head CCD, contact/order/flow, final-byte replay/export and B01-B03 provenance/plate/worker scope. Independent review, current Linux and physical qualification remain pending.",
+  "next_step": "Optimize certified native roof queries without changing limits and verify Linux: 84a709ef and 7f71cc98 failed the unchanged 20-second native fill deadline; nonnegative stadium depth tightening is locally verified but does not establish repair. Continue batch/global replanning and remaining 3D paths, seam/edges and actual later support, full-head CCD/contact/order/flow, final-byte replay/export and B01-B03 job/plate/provenance binding. Independent review, Windows and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -411,7 +417,8 @@
     "B07_material_fill": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-material-fill.md",
     "B07_material_deficit": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-material-deficit.md",
     "B07_first_footprint": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-footprint.md",
-    "B07_remainder_hatch": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-remainder-hatch.md"
+    "B07_remainder_hatch": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-remainder-hatch.md",
+    "B07_stadium_depth_bounds": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-stadium-depth-bounds.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -476,5 +483,6 @@
   "B07_material_fill_evidence": "docs/nonplanar-dev/evidence/B07-material-fill/source-manifest.json",
   "B07_material_deficit_evidence": "docs/nonplanar-dev/evidence/B07-material-deficit/source-manifest.json",
   "B07_first_footprint_evidence": "docs/nonplanar-dev/evidence/B07-first-footprint/source-manifest.json",
-  "B07_remainder_hatch_evidence": "docs/nonplanar-dev/evidence/B07-remainder-hatch/source-manifest.json"
+  "B07_remainder_hatch_evidence": "docs/nonplanar-dev/evidence/B07-remainder-hatch/source-manifest.json",
+  "B07_stadium_depth_bounds_evidence": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/source-manifest.json"
 }

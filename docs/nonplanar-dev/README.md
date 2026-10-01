@@ -111,9 +111,17 @@ and actual deficit repair remain open.
 from actual D_upper projections, re-proves finite widths and measures positive
 nominal target gain. Three analytical cases/178 assertions and the extended
 native case/29 assertions pass. Native added coverage is at least 0.06858 mm3;
-remaining deficit is still approximately 0.131 mm3. Current selected CTest
+remaining deficit is still approximately 0.131 mm3. At that checkpoint selected CTest
 executes 300/300 and six OFF/ZAA comparisons pass. Full 3D remainder, global
 replanning, seam/contact and order remain pending.
+
+`B07-stadium-depth-bounds.md` intersects rounded nominal depth with its exact
+nonnegative domain. Two analytical cases/26 assertions pass: current/full
+material stays inside an affine target within two cells, while a real raised
+stadium retains positive spill. Current material/body suites execute 57/14 cases
+and selected CTest executes 302/302; six fresh OFF/ZAA comparisons pass. Native
+fill uses 40960 cells / 865083 work locally, a small reduction that does not prove
+the inherited Linux deadline is resolved. Limits and public export are unchanged.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -128,9 +136,10 @@ b35408ce, a083f2df, 63779b4f and 8bcbbd45 succeeded. Run 36809462993 confirms
 36812147275 and 36819847014 and successful 4b3da47d run 36820170446;
 run 36826154741 at 84a709ef failed the native fill case on its unchanged
 20-second deadline. Run 36828766748 at 7f454ba5 was cancelled and run
-36831523726 at 7f71cc98 is in progress. These observations do not prove Linux
-execution of the constructive remainder revision; valid geometric bound
-tightening is next. The failed check annotation is archived in its evidence.
+36831523726 at 7f71cc98 also failed that deadline (38309 cells / 814580 work).
+Current nonnegative depth tightening is locally verified; it does not establish
+Linux repair. Optimize certified native roof queries without changing limits
+and require a successful run. Both failed check annotations are archived.
 Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;

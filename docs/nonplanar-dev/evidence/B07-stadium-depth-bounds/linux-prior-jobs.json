@@ -1,0 +1,173 @@
+{
+  "observed_utc": "2026-10-01T09:18:12.523566+00:00",
+  "url": "https://api.github.com/repos/positron48/OrcaSlicer-nonplanar/actions/runs/36831523726/jobs",
+  "response": {
+    "total_count": 1,
+    "jobs": [
+      {
+        "id": 110270941389,
+        "run_id": 36831523726,
+        "workflow_name": "Nonplanar native Linux evidence",
+        "head_branch": "feature/nonplanar-bootstrap",
+        "run_url": "https://api.github.com/repos/positron48/OrcaSlicer-nonplanar/actions/runs/36831523726",
+        "run_attempt": 1,
+        "node_id": "CR_kwDOUvnGKs8AAAAZrKkIzQ",
+        "head_sha": "7f71cc981503a9da77592800ab8f22d93a29571b",
+        "url": "https://api.github.com/repos/positron48/OrcaSlicer-nonplanar/actions/jobs/110270941389",
+        "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/36831523726/job/110270941389",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-10-01T07:45:01Z",
+        "started_at": "2026-10-01T07:45:04Z",
+        "completed_at": "2026-10-01T08:41:11Z",
+        "name": "linux",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1,
+            "started_at": "2026-10-01T07:45:05Z",
+            "completed_at": "2026-10-01T07:45:05Z"
+          },
+          {
+            "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2,
+            "started_at": "2026-10-01T07:45:05Z",
+            "completed_at": "2026-10-01T07:47:13Z"
+          },
+          {
+            "name": "Pinned source and normative package",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3,
+            "started_at": "2026-10-01T07:47:13Z",
+            "completed_at": "2026-10-01T07:47:14Z"
+          },
+          {
+            "name": "System dependencies on disposable runner",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4,
+            "started_at": "2026-10-01T07:47:14Z",
+            "completed_at": "2026-10-01T07:47:58Z"
+          },
+          {
+            "name": "Identify exact dependency source and runner environment",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5,
+            "started_at": "2026-10-01T07:47:58Z",
+            "completed_at": "2026-10-01T07:47:59Z"
+          },
+          {
+            "name": "Restore exact installed dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6,
+            "started_at": "2026-10-01T07:47:59Z",
+            "completed_at": "2026-10-01T07:48:03Z"
+          },
+          {
+            "name": "Build pinned dependency sources",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7,
+            "started_at": "2026-10-01T07:48:03Z",
+            "completed_at": "2026-10-01T07:48:03Z"
+          },
+          {
+            "name": "Preserve completed dependency installation",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 8,
+            "started_at": "2026-10-01T07:48:03Z",
+            "completed_at": "2026-10-01T07:48:03Z"
+          },
+          {
+            "name": "Record dependency reuse separately from a fresh build",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9,
+            "started_at": "2026-10-01T07:48:03Z",
+            "completed_at": "2026-10-01T07:48:03Z"
+          },
+          {
+            "name": "Build native tests before the application",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 10,
+            "started_at": "2026-10-01T07:48:03Z",
+            "completed_at": "2026-10-01T08:40:06Z"
+          },
+          {
+            "name": "Execute nonempty selected native suites",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 11,
+            "started_at": "2026-10-01T08:40:06Z",
+            "completed_at": "2026-10-01T08:41:07Z"
+          },
+          {
+            "name": "Expose native failure diagnostics in check annotations",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12,
+            "started_at": "2026-10-01T08:41:07Z",
+            "completed_at": "2026-10-01T08:41:07Z"
+          },
+          {
+            "name": "Exercise native STL audit command",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 13,
+            "started_at": "2026-10-01T08:41:07Z",
+            "completed_at": "2026-10-01T08:41:07Z"
+          },
+          {
+            "name": "Build native application after test verification",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 14,
+            "started_at": "2026-10-01T08:41:07Z",
+            "completed_at": "2026-10-01T08:41:07Z"
+          },
+          {
+            "name": "Preserve observed results even on failure",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15,
+            "started_at": "2026-10-01T08:41:07Z",
+            "completed_at": "2026-10-01T08:41:08Z"
+          },
+          {
+            "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 30,
+            "started_at": "2026-10-01T08:41:08Z",
+            "completed_at": "2026-10-01T08:41:09Z"
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 31,
+            "started_at": "2026-10-01T08:41:09Z",
+            "completed_at": "2026-10-01T08:41:09Z"
+          }
+        ],
+        "check_run_url": "https://api.github.com/repos/positron48/OrcaSlicer-nonplanar/check-runs/110270941389",
+        "labels": [
+          "ubuntu-24.04"
+        ],
+        "runner_id": 1000007792,
+        "runner_name": "GitHub Actions 1000007792",
+        "runner_group_id": 0,
+        "runner_group_name": "GitHub Actions"
+      }
+    ]
+  }
+}
