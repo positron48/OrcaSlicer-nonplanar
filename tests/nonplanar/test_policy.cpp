@@ -2097,7 +2097,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2222,6 +2222,26 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     INFO("native whole end replan covered=[" << end_fill.covered_target_mm3.lower << ',' << end_fill.covered_target_mm3.upper <<
         "] missing=[" << end_fill.missing_target_mm3.lower << ',' << end_fill.missing_target_mm3.upper << "] gain=[" <<
         end_plan.covered_gain_mm3.lower << ',' << end_plan.covered_gain_mm3.upper << "] cells=" << end_plan.cells << " work=" << end_plan.evaluations);
+    const auto narrower=replan_first_hatch_width({"",end_plan.after},WidthXY(.4),{},layer_limits);INFO(narrower.reason);REQUIRE(narrower.snapshot);
+    const auto &width_plan=*narrower.snapshot;const auto &width_fill=*width_plan.after->fill;
+    REQUIRE(width_plan.before==end_plan.after);REQUIRE(width_plan.after->source->source==layer.source->source);
+    REQUIRE(width_fill.target==layer_fill.target);REQUIRE(width_plan.after->source->policy.width.value()==.45);
+    REQUIRE(width_plan.repeated_reduction_mm3.lower>.03);REQUIRE(width_plan.commanded_reduction_mm3.lower>.03);
+    REQUIRE(width_plan.covered_change_mm3.lower>=-.001);REQUIRE(width_fill.missing_target_mm3.lower>0);REQUIRE(width_fill.outside_target_mm3.upper<=.001);
+    LayerAmount width_sum=0,width_one=0,width_extra=0;
+    const LayerAmount width_separation=LayerAmount(center(width_plan.after->paths[1]->path_start))-center(width_plan.after->paths[0]->path_start);
+    for (size_t i=0;i<width_plan.after->paths.size();++i) for (const auto &piece : width_plan.after->paths[i]->pieces) {
+        REQUIRE(piece.nominal_width.value()==.4);width_sum+=piece.volume.value();
+        if (!i) {width_one+=piece.volume.value();width_extra+=width_separation*abs(LayerAmount(coordinate(piece.end))-coordinate(piece.start))*
+            (LayerAmount(piece.section.gap_begin_mm)+piece.section.gap_end_mm)/2;}
+    }
+    contains(width_fill.occupied->individual_volume_mm3,width_sum);contains(width_fill.occupied->union_volume_mm3,width_one+width_extra);
+    contains(width_fill.occupied->repeated_volume_mm3,width_one-width_extra);
+    REQUIRE(width_plan.after->global_volume_error_mm3<=layer_limits.beads.packets.maximum_volume_error.value());
+    INFO("native whole width replan covered=[" << width_fill.covered_target_mm3.lower << ',' << width_fill.covered_target_mm3.upper <<
+        "] missing=[" << width_fill.missing_target_mm3.lower << ',' << width_fill.missing_target_mm3.upper << "] repeated reduction=[" <<
+        width_plan.repeated_reduction_mm3.lower << ',' << width_plan.repeated_reduction_mm3.upper << "] covered change=[" <<
+        width_plan.covered_change_mm3.lower << ',' << width_plan.covered_change_mm3.upper << "] cells=" << width_plan.cells << " work=" << width_plan.evaluations);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

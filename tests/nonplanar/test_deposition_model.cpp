@@ -1739,3 +1739,143 @@ TEST_CASE("B07 end replan retains current material only in the newly extended ro
         REQUIRE(before.snapshot->source->source->source==present.nominal.snapshot);
     }
 }
+
+TEST_CASE("B07 first-width replan reduces actual overlap while retaining measured coverage", "[Nonplanar][B07][FirstHatchWidthReplan]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstHatchWidthReplanSnapshot>::value);
+    using Amount=boost::multiprecision::cpp_bin_float_quad;
+    for (bool x : {false,true}) {
+        const auto point=[&](double along,double normal,double z) {return x ? PhysicalPosition(along,normal,z) : PhysicalPosition(normal,along,z);};
+        const auto floor=bead(1,0,point(0,0,1),point(10,0,1),2,.4,.4,BeadSectionKind::Rectangle);
+        const auto ledger=captured({floor});const auto present=material_at(ledger,1,0);
+        const RectangleXY roi=x ? RectangleXY{1,-.3,3,.3} : RectangleXY{-.3,1,.3,3};
+        const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.0001)};
+        const auto stack=plan_affine_pass_stack(present.lower,{roi,1.8,1.8,1.8},.9,policy);REQUIRE(stack.snapshot);
+        const auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),x ? HatchDirection::AlongX : HatchDirection::AlongY});REQUIRE(hatch.snapshot);
+        const SceneBox box{{roi.min_x,roi.min_y,.7},{roi.max_x,roi.max_y,1.8}};
+        const auto initial=plan_first_hatch_layer(hatch,box);REQUIRE(initial.snapshot);
+        const auto ends=replan_first_hatch_ends(initial);REQUIRE(ends.snapshot);
+        const FirstHatchLayerResult before{"",ends.snapshot->after};
+        const auto result=replan_first_hatch_width(before,WidthXY(.4));INFO(result.reason);REQUIRE(result.snapshot);
+        const auto &r=*result.snapshot;const auto &next=*r.after;const auto &old=*r.before;
+        REQUIRE(r.before==before.snapshot);REQUIRE(next.source!=old.source);REQUIRE(next.source->source==old.source->source);
+        REQUIRE(next.fill->target==old.fill->target);REQUIRE(next.fill->occupied->source->sequence!=old.fill->occupied->source->sequence);
+        REQUIRE(next.source->policy.width.value()==.45); // Original generation policy is retained.
+        REQUIRE(next.source->first_pass_extent==old.source->first_pass_extent);
+        REQUIRE(next.paths.size()==2);REQUIRE(r.repeated_reduction_mm3.lower>.02);REQUIRE(r.commanded_reduction_mm3.lower>.02);
+        REQUIRE(r.covered_change_mm3.lower>=-.001);REQUIRE(next.fill->outside_target_mm3.upper<=.001);
+        const auto along=[&](PhysicalPosition p) {return x ? p.x() : p.y();};
+        const auto normal=[&](PhysicalPosition p) {return x ? p.y() : p.x();};
+        Amount sum=0,one=0,extra=0;
+        const Amount d=Amount(normal(next.paths[1]->path_start))-normal(next.paths[0]->path_start);
+        for (size_t i=0;i<next.paths.size();++i) {
+            REQUIRE(next.paths[i]->source==next.source);REQUIRE(next.source->passes.front().lines[i].width.value()==.4);
+            REQUIRE(along(next.paths[i]->path_start)==along(old.paths[i]->path_start));
+            REQUIRE(along(next.paths[i]->path_end)==along(old.paths[i]->path_end));
+            REQUIRE(normal(next.paths[i]->path_start)!=normal(old.paths[i]->path_start));
+            for (const auto &piece : next.paths[i]->pieces) {
+                REQUIRE(piece.nominal_width.value()==.4);sum+=piece.volume.value();
+                if (!i) {one+=piece.volume.value();extra+=d*abs(Amount(along(piece.end))-along(piece.start))*(Amount(piece.section.gap_begin_mm)+piece.section.gap_end_mm)/2;}
+            }
+        }
+        const auto contains=[&](ScalarBounds v,Amount amount) {REQUIRE(v.lower<=amount);REQUIRE(v.upper>=amount);};
+        contains(next.fill->occupied->individual_volume_mm3,sum);contains(next.fill->occupied->union_volume_mm3,one+extra);
+        contains(next.fill->occupied->repeated_volume_mm3,one-extra);
+        REQUIRE(next.fill->missing_target_mm3.lower>0);REQUIRE(next.global_volume_error_mm3<=.001);
+        for (size_t p=1;p<next.source->passes.size();++p) {
+            REQUIRE(next.source->passes[p].lines.size()==old.source->passes[p].lines.size());
+            for (size_t i=0;i<next.source->passes[p].lines.size();++i) {
+                const auto &a=next.source->passes[p].lines[i],&b=old.source->passes[p].lines[i];
+                REQUIRE(a.width.value()==b.width.value());REQUIRE(a.start.x()==b.start.x());REQUIRE(a.start.y()==b.start.y());REQUIRE(a.start.z()==b.start.z());
+            }
+        }
+        const auto cells=allocate_affine_hatch_cells({"",next.source});INFO(cells.reason);REQUIRE(cells.snapshot);
+        const auto &first=cells.snapshot->passes.front().finite_footprint;
+        const double low=x ? first.min_y : first.min_x,high=x ? first.max_y : first.max_x;
+        REQUIRE(low>=normal(next.paths[0]->path_start)-.2);REQUIRE(high<=normal(next.paths[1]->path_start)+.2);
+        const auto empty=material_at(next.fill->occupied->source->sequence,0,0);REQUIRE(empty.nominal.snapshot);
+        const auto empty_union=integrate_material_union(empty.nominal,box);REQUIRE(empty_union.snapshot);
+        const auto empty_fill=reconcile_material_fill(stack.snapshot->first_pass,empty_union);REQUIRE(empty_fill.snapshot);
+        const auto remainder=plan_remaining_first_hatch({"",next.source},0,empty_fill);INFO(remainder.reason);REQUIRE(remainder.snapshot);
+        REQUIRE(remainder.snapshot->paths.size()==1);
+        for (const auto &piece : remainder.snapshot->paths.front()->pieces) REQUIRE(piece.nominal_width.value()==.4);
+        const auto narrow_initial=replan_first_hatch_width(initial,WidthXY(.4));REQUIRE(narrow_initial.snapshot);
+        const auto narrow_ends=replan_first_hatch_ends({"",narrow_initial.snapshot->after});INFO(narrow_ends.reason);REQUIRE(narrow_ends.snapshot);
+        REQUIRE(narrow_ends.snapshot->after->source->policy.width.value()==.45);
+        for (const auto &path : narrow_ends.snapshot->after->paths)
+            for (const auto &piece : path->pieces) REQUIRE(piece.nominal_width.value()==.4);
+        REQUIRE_FALSE(replan_first_hatch_width({"",result.snapshot->after},WidthXY(.4)).snapshot);
+    }
+}
+
+TEST_CASE("B07 first-width replan captures immutable input and refuses loss or exhausted proofs", "[Nonplanar][B07][FirstHatchWidthReplan]")
+{
+    const auto f=remainder_fixture(0);const SceneBox box{{1,-.4,.7},{3,.4,1.8}};
+    auto before=plan_first_hatch_layer(f.hatches,box);REQUIRE(before.snapshot);const auto saved=before.snapshot;
+    FirstHatchLayerLimits limits;FirstHatchWidthReplanPolicy policy;policy.maximum_covered_loss=Volume(.1);
+    limits.cancelled=[&] {before.snapshot.reset();limits.max_paths=0;policy.minimum_repeated_reduction=Volume(100);return false;};
+    const auto retained=replan_first_hatch_width(before,WidthXY(.44),policy,limits);INFO(retained.reason);REQUIRE(retained.snapshot);
+    REQUIRE(retained.snapshot->before==saved);before.snapshot=saved;
+    // Narrow sections on this wider ROI create real new gaps; default coverage gate refuses them.
+    const auto loss=replan_first_hatch_width(before,WidthXY(.36));INFO(loss.reason);
+    REQUIRE_FALSE(loss.snapshot);REQUIRE(loss.reason=="FIRST_HATCH_WIDTH_REPLAN_COVERAGE_LOSS");
+    REQUIRE_FALSE(replan_first_hatch_width({},WidthXY(.4)).snapshot);
+    REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.45)).snapshot);
+    REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.5)).snapshot);
+    REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.1)).snapshot);
+    policy={};policy.minimum_repeated_reduction=Volume(1);REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy).snapshot);
+    policy.minimum_repeated_reduction=Volume(0);REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy).snapshot);
+    policy={};policy.maximum_covered_loss=Volume(.1);
+    limits={};limits.max_evaluations=1;REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot);
+    limits={};limits.max_paths=1;REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot);
+    limits={};limits.max_cells=1;REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot);
+    limits={};limits.max_records=1;REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot);
+    limits={};limits.beads.packets.max_segments=1;REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot);
+    limits={};limits.volumes.max_depth=0;REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot);
+    limits={};limits.max_evaluations=2000001;REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE_FALSE(replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounding=replan_first_hatch_width(before,WidthXY(.44),policy,limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+}
+
+TEST_CASE("B07 first-width replan repartitions displaced interior strip owners", "[Nonplanar][B07][FirstHatchWidthReplan]")
+{
+    const auto floor=bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle);
+    const auto ledger=captured({floor});const auto present=material_at(ledger,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.0001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.7,3,.7},1.8,1.8,1.8},.9,policy);REQUIRE(stack.snapshot);
+    const auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX});REQUIRE(hatch.snapshot);
+    const auto before=plan_first_hatch_layer(hatch,{{1,-.7,.7},{3,.7,1.8}});REQUIRE(before.snapshot);
+    const auto result=replan_first_hatch_width(before,WidthXY(.44));INFO(result.reason);REQUIRE(result.snapshot);
+    const auto &old=before.snapshot->source->passes.front().lines,&next=result.snapshot->after->source->passes.front().lines;
+    REQUIRE(next.size()==4);REQUIRE(next[0].volume_cell.max_y!=old[0].volume_cell.max_y);
+    using Amount=boost::multiprecision::cpp_bin_float_quad;Amount sum=0,repeat=0,previous=0;
+    for (size_t i=0;i<next.size();++i) {
+        if (i) {
+            REQUIRE(next[i].volume_cell.min_y==next[i-1].volume_cell.max_y);
+            const Amount middle=(Amount(next[i-1].start.y())+next[i].start.y())/2;
+            REQUIRE(abs(Amount(next[i].volume_cell.min_y)-middle)<1e-15);
+        }
+        REQUIRE(next[i].prospective_cell_volume_mm3.lower>0);
+        const auto &path=*result.snapshot->after->paths[i];REQUIRE(path.pieces.size()==1);
+        const auto &p=path.pieces[0];sum+=p.volume.value();
+        const Amount length=Amount(p.end.x())-p.start.x(),h=p.section.gap_begin_mm,A=Amount(p.volume.value())/length;
+        const Amount w=A/h+(1-acos(Amount(-1))/4)*h;
+        if (i) {
+            const Amount d=Amount(p.start.y())-previous,q=d-(w-h),r=h/2;
+            REQUIRE(q>0);REQUIRE(q<h);REQUIRE(2*d>w); // Adjacent circular lenses only.
+            repeat+=length*(2*r*r*acos(q/(2*r))-q*sqrt(4*r*r-q*q)/2);
+        }
+        previous=p.start.y();
+    }
+    const auto contains=[&](ScalarBounds v,Amount amount) {REQUIRE(v.lower<=amount);REQUIRE(v.upper>=amount);};
+    const auto &fill=*result.snapshot->after->fill;
+    contains(fill.occupied->individual_volume_mm3,sum);contains(fill.occupied->union_volume_mm3,sum-repeat);contains(fill.occupied->repeated_volume_mm3,repeat);
+    const auto cells=allocate_affine_hatch_cells({"",result.snapshot->after->source});INFO(cells.reason);REQUIRE(cells.snapshot);
+    REQUIRE(cells.snapshot->passes.front().finite_cells.size()==4);
+    REQUIRE(fill.covered_target_mm3.upper<before.snapshot->fill->covered_target_mm3.lower); // Small real loss is explicitly bounded, not called gain.
+    REQUIRE(result.snapshot->covered_change_mm3.lower>=-.001);REQUIRE(result.snapshot->repeated_reduction_mm3.lower>.005);
+}

@@ -214,12 +214,14 @@ struct AffinePassStackResult {
 AffinePassStackResult plan_affine_pass_stack(const LowerMaterialView &, const AffineCapCell &final_surface,
     double support_plane_z_mm, const AffinePassPolicy &, const MaterialIntegralLimits &limits = {});
 
-inline constexpr unsigned affine_hatch_contract_version=3;
+inline constexpr unsigned affine_hatch_contract_version=4;
 struct AffineHatchResult;
 struct FirstHatchLayerResult;
 struct FirstHatchLayerLimits;
 struct FirstHatchReplanPolicy;
 struct FirstHatchReplanResult;
+struct FirstHatchWidthReplanPolicy;
+struct FirstHatchWidthReplanResult;
 enum class HatchDirection { AlongX, AlongY };
 enum class FirstHatchExtent { CapsuleInset, FiniteButtInset };
 struct AffineHatchPolicy {
@@ -251,7 +253,7 @@ struct AffineHatchPass {
 };
 struct AffineHatchSnapshot {
     const std::shared_ptr<const AffinePassStackSnapshot> source;
-    const AffineHatchPolicy policy;
+    const AffineHatchPolicy policy; // Original generation policy; owned line widths are authoritative after replanning.
     const std::vector<AffineHatchPass> passes;
     const ScalarBounds total_prospective_volume_mm3;
     const size_t line_count;
@@ -265,6 +267,7 @@ private:
           line_count(count), numerical_error_upper_mm(numeric),first_pass_extent(extent) {}
     friend AffineHatchResult plan_affine_hatches(const AffinePassStackResult &, const AffineHatchPolicy &, const AffineHatchLimits &);
     friend FirstHatchReplanResult replan_first_hatch_ends(const FirstHatchLayerResult &,const FirstHatchReplanPolicy &,const FirstHatchLayerLimits &);
+    friend FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,const FirstHatchWidthReplanPolicy &,const FirstHatchLayerLimits &);
 };
 struct AffineHatchResult { std::string reason; std::shared_ptr<const AffineHatchSnapshot> snapshot; };
 // Construct finite fixed-width centerline alternatives on the selected affine
@@ -274,7 +277,7 @@ struct AffineHatchResult { std::string reason; std::shared_ptr<const AffineHatch
 AffineHatchResult plan_affine_hatches(const AffinePassStackResult &, const AffineHatchPolicy &,
                                       const AffineHatchLimits &limits = {});
 
-inline constexpr unsigned affine_hatch_cells_contract_version=1;
+inline constexpr unsigned affine_hatch_cells_contract_version=2;
 struct AffineHatchCellPass {
     RectangleXY finite_footprint;
     std::vector<IntegralStripVolume> finite_cells, remainder_cells;
@@ -349,7 +352,7 @@ struct RemainingHatchResult;
 struct RemainingHatchPolicy;
 struct RemainingHatchLimits;
 struct MaterialFillResult;
-inline constexpr unsigned first_hatch_bead_contract_version=3;
+inline constexpr unsigned first_hatch_bead_contract_version=4;
 enum class FirstHatchRoofDomain { Centerline, FiniteWidth };
 struct FirstHatchBeadLimits : MaterialQueryLimits {
     FixedWidthBeadLimits packets;
@@ -485,7 +488,7 @@ struct MaterialDeficitResult {std::string reason;std::shared_ptr<const MaterialD
 MaterialDeficitResult locate_material_deficit(const MaterialFillResult &,const std::vector<double> &x_cuts,
     const std::vector<double> &y_cuts,const MaterialDeficitLimits &limits = {});
 
-inline constexpr unsigned remaining_hatch_contract_version=1;
+inline constexpr unsigned remaining_hatch_contract_version=2;
 struct RemainingHatchPolicy {
     Length xy_separation{.01}; // Additional nominal-strip separation from the existing D_upper projection.
     Volume maximum_outside_target{.001},minimum_covered_gain{.001};
@@ -526,7 +529,7 @@ struct RemainingHatchResult {std::string reason;std::shared_ptr<const RemainingH
 RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &,size_t line_index,const MaterialFillResult &,
     const RemainingHatchPolicy &policy={},const RemainingHatchLimits &limits={});
 
-inline constexpr unsigned first_hatch_layer_contract_version=1;
+inline constexpr unsigned first_hatch_layer_contract_version=2;
 struct FirstHatchLayerLimits {
     // Packet volume error, packet/roof counts and bead work are shared by all lines.
     FirstHatchBeadLimits beads;
@@ -586,5 +589,32 @@ struct FirstHatchReplanResult {std::string reason;std::shared_ptr<const FirstHat
 // 3D repair/seam/later support/export remain unqualified.
 FirstHatchReplanResult replan_first_hatch_ends(const FirstHatchLayerResult &,
     const FirstHatchReplanPolicy &policy={},const FirstHatchLayerLimits &limits={});
+
+inline constexpr unsigned first_hatch_width_replan_contract_version=1;
+struct FirstHatchWidthReplanPolicy {
+    Volume minimum_repeated_reduction{.001},maximum_covered_loss{.001},maximum_outside_target{.001};
+};
+struct FirstHatchWidthReplanSnapshot {
+    const std::shared_ptr<const FirstHatchLayerSnapshot> before,after;
+    const WidthXY width;
+    const FirstHatchWidthReplanPolicy policy;
+    const ScalarBounds commanded_reduction_mm3,repeated_reduction_mm3,covered_change_mm3;
+    const size_t cells,evaluations;
+private:
+    FirstHatchWidthReplanSnapshot(std::shared_ptr<const FirstHatchLayerSnapshot> old,std::shared_ptr<const FirstHatchLayerSnapshot> next,
+        WidthXY w,FirstHatchWidthReplanPolicy p,ScalarBounds amount,ScalarBounds repeated,ScalarBounds covered,size_t count,size_t work)
+        : before(std::move(old)),after(std::move(next)),width(w),policy(p),commanded_reduction_mm3(amount),repeated_reduction_mm3(repeated),
+          covered_change_mm3(covered),cells(count),evaluations(work) {}
+    friend FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,const FirstHatchWidthReplanPolicy &,const FirstHatchLayerLimits &);
+};
+struct FirstHatchWidthReplanResult {std::string reason;std::shared_ptr<const FirstHatchWidthReplanSnapshot> snapshot;};
+// Replace a prospective first candidate using a narrower declared width and
+// redistributed centres inside its unchanged outer band. Retain line count,
+// longitudinal extent, actual body/target and later prospective lines. Recompute
+// strip ownership, whole-footprint amounts and joint S/U/R/C/M/spill; require
+// positive commanded/repeated-volume reduction and bounded coverage loss.
+// This does not repair an actually laid cap or qualify contact/seam/order/export.
+FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+    const FirstHatchWidthReplanPolicy &policy={},const FirstHatchLayerLimits &limits={});
 
 }

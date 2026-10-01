@@ -22,8 +22,9 @@ Next software tasks, in dependency order:
    as historical evidence. `B07-constant-section-roof.md` is now verified by
    successful run 36847680702 at 2d8bebaa: selected native suites, STL CLI and
    application pass with the original 20-second timeout. Run 36853913690 at
-   361ccdc8 is still building native tests in the saved observation; the current
-   end replan requires its own verification. The A02 correction at d57e9325 also
+   361ccdc8 also succeeds in native suites, STL CLI and application. Run
+   36858083109 at 05f4a887 is building native tests in the saved 12:23 UTC
+   observation; end and current width replans require their own verification. The A02 correction at d57e9325 also
    has successful native Linux run 36454696019.
 3. Extend B03 nominal affine bounds to qualified error budgets, curved surfaces,
    ROI and tool access. Existing masks, whole-footprint checks and isolated CLI
@@ -70,7 +71,13 @@ Next software tasks, in dependency order:
    and budgets. Native coverage rises by 0.0427173 mm3; deficit remains
    0.0709877 mm3. Do not append its old hypothetical cap to the new candidate;
    an actually laid partial prefix remains a separate construction obligation.
-   Resolve that deficit/excess by constructing paths in actual remaining space,
+   `B07-first-hatch-width-replan.md` now replaces that candidate with narrower
+   owned first-line widths and redistributed centres within the same band.
+   Native S/R decrease by 0.0398967 mm3 while C remains approximately 0.181000
+   mm3; M remains 0.0709876 mm3. Recompute complete strip owners and use owned
+   line widths in all consumers; original generation policy remains provenance.
+   Measured excessive coverage loss refuses replacement. Residual excess still
+   needs qualification. Construct paths in actual remaining 3D space and
    recheck union/fill, qualify
    finite-width floor/contact, then construct seam and later actual support;
    short-packet motion/flow limits remain unverified.

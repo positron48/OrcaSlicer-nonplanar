@@ -1,0 +1,1560 @@
+Filters: [FirstHatchWidthReplan]
+Randomness seeded to: 2693909864
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 first-width replan reduces actual overlap while retaining measured coverage
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1743
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1745: PASSED:
+with message:
+  !(std::is_aggregate<FirstHatchWidthReplanSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x75f0de1d8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1753: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x103d83140
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1754: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0x75f0098f0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1756: PASSED:
+  REQUIRE( initial.snapshot )
+with expansion:
+  0x75f080200
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1757: PASSED:
+  REQUIRE( ends.snapshot )
+with expansion:
+  0x75ecf0480
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1759: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x75ec09500
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1761: PASSED:
+  REQUIRE( r.before==before.snapshot )
+with expansion:
+  0x75f080280 == 0x75f080280
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1761: PASSED:
+  REQUIRE( next.source!=old.source )
+with expansion:
+  0x75f110850 != 0x75f0099d0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1761: PASSED:
+  REQUIRE( next.source->source==old.source->source )
+with expansion:
+  0x103d83140 == 0x103d83140
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1762: PASSED:
+  REQUIRE( next.fill->target==old.fill->target )
+with expansion:
+  0x75f009960 == 0x75f009960
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1762: PASSED:
+  REQUIRE( next.fill->occupied->source->sequence!=old.fill->occupied->source->sequence )
+with expansion:
+  0x75f0de3b8 != 0x75f0de318
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1763: PASSED:
+  REQUIRE( next.source->policy.width.value()==.45 )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1764: PASSED:
+  REQUIRE( next.source->first_pass_extent==old.source->first_pass_extent )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1765: PASSED:
+  REQUIRE( next.paths.size()==2 )
+with expansion:
+  2 == 2
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1765: PASSED:
+  REQUIRE( r.repeated_reduction_mm3.lower>.02 )
+with expansion:
+  0.03894999999999958 > 0.02
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1765: PASSED:
+  REQUIRE( r.commanded_reduction_mm3.lower>.02 )
+with expansion:
+  0.03894999999999998 > 0.02
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1766: PASSED:
+  REQUIRE( r.covered_change_mm3.lower>=-.001 )
+with expansion:
+  -0.00000000000000216 >= -0.001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1766: PASSED:
+  REQUIRE( next.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000173 <= 0.001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1772: PASSED:
+  REQUIRE( next.paths[i]->source==next.source )
+with expansion:
+  0x75f110850 == 0x75f110850
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1772: PASSED:
+  REQUIRE( next.source->passes.front().lines[i].width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1773: PASSED:
+  REQUIRE( along(next.paths[i]->path_start)==along(old.paths[i]->path_start) )
+with expansion:
+  1.05000000000000204 == 1.05000000000000204
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1774: PASSED:
+  REQUIRE( along(next.paths[i]->path_end)==along(old.paths[i]->path_end) )
+with expansion:
+  2.94999999999999796 == 2.94999999999999796
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1775: PASSED:
+  REQUIRE( normal(next.paths[i]->path_start)!=normal(old.paths[i]->path_start) )
+with expansion:
+  -0.04999999999999798
+  !=
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1777: PASSED:
+  REQUIRE( piece.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1772: PASSED:
+  REQUIRE( next.paths[i]->source==next.source )
+with expansion:
+  0x75f110850 == 0x75f110850
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1772: PASSED:
+  REQUIRE( next.source->passes.front().lines[i].width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1773: PASSED:
+  REQUIRE( along(next.paths[i]->path_start)==along(old.paths[i]->path_start) )
+with expansion:
+  1.05000000000000204 == 1.05000000000000204
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1774: PASSED:
+  REQUIRE( along(next.paths[i]->path_end)==along(old.paths[i]->path_end) )
+with expansion:
+  2.94999999999999796 == 2.94999999999999796
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1775: PASSED:
+  REQUIRE( normal(next.paths[i]->path_start)!=normal(old.paths[i]->path_start) )
+with expansion:
+  0.04999999999999798 != 0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1777: PASSED:
+  REQUIRE( piece.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.27732915970375527 <= 0.277329
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.27732915970375527 >= 0.277329
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.17761457985187601 <= 0.177615
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.17761457985187604 >= 0.177615
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.09971457985187923 <= 0.0997146
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.09971457985187925 >= 0.0997146
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1784: PASSED:
+  REQUIRE( next.fill->missing_target_mm3.lower>0 )
+with expansion:
+  0.0683854201481237 > 0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1784: PASSED:
+  REQUIRE( next.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000117 <= 0.001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1786: PASSED:
+  REQUIRE( next.source->passes[p].lines.size()==old.source->passes[p].lines.size() )
+with expansion:
+  5 == 5
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  1.27500000000000169 == 1.27500000000000169
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.40333333333333354 == 1.40333333333333354
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  1.63750000000000062 == 1.63750000000000062
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.40333333333333354 == 1.40333333333333354
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  1.99999999999999978 == 1.99999999999999978
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.40333333333333354 == 1.40333333333333354
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  2.36249999999999893 == 2.36249999999999893
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.40333333333333354 == 1.40333333333333354
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  2.72499999999999787 == 2.72499999999999787
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.40333333333333354 == 1.40333333333333354
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1786: PASSED:
+  REQUIRE( next.source->passes[p].lines.size()==old.source->passes[p].lines.size() )
+with expansion:
+  2 == 2
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  1.27500000000000169 == 1.27500000000000169
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.60166666666666679 == 1.60166666666666679
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  0.02499999999999846 == 0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  1.27500000000000169 == 1.27500000000000169
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.60166666666666679 == 1.60166666666666679
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1786: PASSED:
+  REQUIRE( next.source->passes[p].lines.size()==old.source->passes[p].lines.size() )
+with expansion:
+  5 == 5
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  1.27500000000000169 == 1.27500000000000169
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.80000000000000004 == 1.80000000000000004
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  1.63750000000000062 == 1.63750000000000062
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.80000000000000004 == 1.80000000000000004
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  1.99999999999999978 == 1.99999999999999978
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.80000000000000004 == 1.80000000000000004
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  2.36249999999999893 == 2.36249999999999893
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.80000000000000004 == 1.80000000000000004
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  2.72499999999999787 == 2.72499999999999787
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.80000000000000004 == 1.80000000000000004
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1792: PASSED:
+  REQUIRE( cells.snapshot )
+with expansion:
+  0x75ec2c7e0
+with messages:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1795: PASSED:
+  REQUIRE( low>=normal(next.paths[0]->path_start)-.2 )
+with expansion:
+  -0.24999999999999792 >= -0.249999999999998
+with messages:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1795: PASSED:
+  REQUIRE( high<=normal(next.paths[1]->path_start)+.2 )
+with expansion:
+  0.24999999999999792 <= 0.249999999999998
+with messages:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1796: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width({"",result.snapshot->after},WidthXY(.4)).snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x75f0de1d8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1753: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x103d82ce0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1754: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0x75f009960
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1756: PASSED:
+  REQUIRE( initial.snapshot )
+with expansion:
+  0x75f080200
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1757: PASSED:
+  REQUIRE( ends.snapshot )
+with expansion:
+  0x75ecf0480
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1759: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x75ec09480
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1761: PASSED:
+  REQUIRE( r.before==before.snapshot )
+with expansion:
+  0x75f080280 == 0x75f080280
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1761: PASSED:
+  REQUIRE( next.source!=old.source )
+with expansion:
+  0x75f110850 != 0x75f0099d0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1761: PASSED:
+  REQUIRE( next.source->source==old.source->source )
+with expansion:
+  0x103d82ce0 == 0x103d82ce0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1762: PASSED:
+  REQUIRE( next.fill->target==old.fill->target )
+with expansion:
+  0x75f0098f0 == 0x75f0098f0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1762: PASSED:
+  REQUIRE( next.fill->occupied->source->sequence!=old.fill->occupied->source->sequence )
+with expansion:
+  0x75f0de3b8 != 0x75f0de318
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1763: PASSED:
+  REQUIRE( next.source->policy.width.value()==.45 )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1764: PASSED:
+  REQUIRE( next.source->first_pass_extent==old.source->first_pass_extent )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1765: PASSED:
+  REQUIRE( next.paths.size()==2 )
+with expansion:
+  2 == 2
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1765: PASSED:
+  REQUIRE( r.repeated_reduction_mm3.lower>.02 )
+with expansion:
+  0.03894999999999958 > 0.02
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1765: PASSED:
+  REQUIRE( r.commanded_reduction_mm3.lower>.02 )
+with expansion:
+  0.03894999999999998 > 0.02
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1766: PASSED:
+  REQUIRE( r.covered_change_mm3.lower>=-.001 )
+with expansion:
+  -0.00000000000000216 >= -0.001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1766: PASSED:
+  REQUIRE( next.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000173 <= 0.001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1772: PASSED:
+  REQUIRE( next.paths[i]->source==next.source )
+with expansion:
+  0x75f110850 == 0x75f110850
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1772: PASSED:
+  REQUIRE( next.source->passes.front().lines[i].width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1773: PASSED:
+  REQUIRE( along(next.paths[i]->path_start)==along(old.paths[i]->path_start) )
+with expansion:
+  1.05000000000000204 == 1.05000000000000204
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1774: PASSED:
+  REQUIRE( along(next.paths[i]->path_end)==along(old.paths[i]->path_end) )
+with expansion:
+  2.94999999999999796 == 2.94999999999999796
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1775: PASSED:
+  REQUIRE( normal(next.paths[i]->path_start)!=normal(old.paths[i]->path_start) )
+with expansion:
+  -0.04999999999999798
+  !=
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1777: PASSED:
+  REQUIRE( piece.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1772: PASSED:
+  REQUIRE( next.paths[i]->source==next.source )
+with expansion:
+  0x75f110850 == 0x75f110850
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1772: PASSED:
+  REQUIRE( next.source->passes.front().lines[i].width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1773: PASSED:
+  REQUIRE( along(next.paths[i]->path_start)==along(old.paths[i]->path_start) )
+with expansion:
+  1.05000000000000204 == 1.05000000000000204
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1774: PASSED:
+  REQUIRE( along(next.paths[i]->path_end)==along(old.paths[i]->path_end) )
+with expansion:
+  2.94999999999999796 == 2.94999999999999796
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1775: PASSED:
+  REQUIRE( normal(next.paths[i]->path_start)!=normal(old.paths[i]->path_start) )
+with expansion:
+  0.04999999999999798 != 0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1777: PASSED:
+  REQUIRE( piece.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.27732915970375527 <= 0.277329
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.27732915970375527 >= 0.277329
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.17761457985187601 <= 0.177615
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.17761457985187604 >= 0.177615
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.09971457985187923 <= 0.0997146
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1781: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.09971457985187925 >= 0.0997146
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1784: PASSED:
+  REQUIRE( next.fill->missing_target_mm3.lower>0 )
+with expansion:
+  0.0683854201481237 > 0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1784: PASSED:
+  REQUIRE( next.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000117 <= 0.001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1786: PASSED:
+  REQUIRE( next.source->passes[p].lines.size()==old.source->passes[p].lines.size() )
+with expansion:
+  5 == 5
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  1.27500000000000169 == 1.27500000000000169
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.40333333333333354 == 1.40333333333333354
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  1.63750000000000062 == 1.63750000000000062
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.40333333333333354 == 1.40333333333333354
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  1.99999999999999978 == 1.99999999999999978
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.40333333333333354 == 1.40333333333333354
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  2.36249999999999893 == 2.36249999999999893
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.40333333333333354 == 1.40333333333333354
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  2.72499999999999787 == 2.72499999999999787
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.40333333333333354 == 1.40333333333333354
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1786: PASSED:
+  REQUIRE( next.source->passes[p].lines.size()==old.source->passes[p].lines.size() )
+with expansion:
+  2 == 2
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  1.27500000000000169 == 1.27500000000000169
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.60166666666666679 == 1.60166666666666679
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  1.27500000000000169 == 1.27500000000000169
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  0.02499999999999846 == 0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.60166666666666679 == 1.60166666666666679
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1786: PASSED:
+  REQUIRE( next.source->passes[p].lines.size()==old.source->passes[p].lines.size() )
+with expansion:
+  5 == 5
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  1.27500000000000169 == 1.27500000000000169
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.80000000000000004 == 1.80000000000000004
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  1.63750000000000062 == 1.63750000000000062
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.80000000000000004 == 1.80000000000000004
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  1.99999999999999978 == 1.99999999999999978
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.80000000000000004 == 1.80000000000000004
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  2.36249999999999893 == 2.36249999999999893
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.80000000000000004 == 1.80000000000000004
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.width.value()==b.width.value() )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.x()==b.start.x() )
+with expansion:
+  2.72499999999999787 == 2.72499999999999787
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.y()==b.start.y() )
+with expansion:
+  -0.02499999999999846
+  ==
+  -0.02499999999999846
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1789: PASSED:
+  REQUIRE( a.start.z()==b.start.z() )
+with expansion:
+  1.80000000000000004 == 1.80000000000000004
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1792: PASSED:
+  REQUIRE( cells.snapshot )
+with expansion:
+  0x75ec2c7e0
+with messages:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1795: PASSED:
+  REQUIRE( low>=normal(next.paths[0]->path_start)-.2 )
+with expansion:
+  -0.24999999999999792 >= -0.249999999999998
+with messages:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1795: PASSED:
+  REQUIRE( high<=normal(next.paths[1]->path_start)+.2 )
+with expansion:
+  0.24999999999999792 <= 0.249999999999998
+with messages:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1796: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width({"",result.snapshot->after},WidthXY(.4)).snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+
+-------------------------------------------------------------------------------
+B07 first-width replan captures immutable input and refuses loss or exhausted
+proofs
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1800
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x75f0de138
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x75f1d4000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1306: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x75f0098f0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x75f0de278
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x75ec08b00
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1315: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x75ec74140
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1803: PASSED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0x75f080200
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1806: PASSED:
+  REQUIRE( retained.snapshot )
+with expansion:
+  0x75ec09500
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1807: PASSED:
+  REQUIRE( retained.snapshot->before==saved )
+with expansion:
+  0x75f080200 == 0x75f080200
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1809: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.35)).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1810: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width({},WidthXY(.4)).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1811: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.45)).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1812: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.5)).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1813: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.1)).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1814: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1815: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1817: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1818: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1819: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1820: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1821: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1822: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1823: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1824: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1825: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1827: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_width(before,WidthXY(.44),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1829: PASSED:
+  REQUIRE( std::fesetround(0x00000000)==0 )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1829: PASSED:
+  REQUIRE_FALSE( rounding.snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+===============================================================================
+All tests passed (215 assertions in 2 test cases)
+

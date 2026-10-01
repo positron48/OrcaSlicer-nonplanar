@@ -1125,13 +1125,13 @@ AffineHatchCellsResult allocate_affine_hatch_cells(const AffineHatchResult &requ
         for (size_t p=0; p<source->passes.size(); ++p) {
             poll(); const auto &hatch=source->passes[p]; const bool x_axis=hatch.direction==HatchDirection::AlongX;
             const auto &first=hatch.lines.front(), &last=hatch.lines.back();
-            const auto radius=Interval(source->policy.width.value())/Interval(2);
+            const auto first_radius=Interval(first.width.value())/Interval(2),last_radius=Interval(last.width.value())/Interval(2);
             // Inward rounding keeps every owner inside the finite nominal
             // flat-ended path footprint. Rounded transverse voids are not filled.
-            const RectangleXY core=x_axis ? RectangleXY{first.start.x(),(Interval(first.start.y())-radius).hi,
-                    first.end.x(),(Interval(last.start.y())+radius).lo} :
-                RectangleXY{(Interval(first.start.x())-radius).hi,first.start.y(),
-                    (Interval(last.start.x())+radius).lo,first.end.y()};
+            const RectangleXY core=x_axis ? RectangleXY{first.start.x(),(Interval(first.start.y())-first_radius).hi,
+                    first.end.x(),(Interval(last.start.y())+last_radius).lo} :
+                RectangleXY{(Interval(first.start.x())-first_radius).hi,first.start.y(),
+                    (Interval(last.start.x())+last_radius).lo,first.end.y()};
             if (core.min_x<=r.min_x || core.max_x>=r.max_x || core.min_y<=r.min_y || core.max_y>=r.max_y ||
                 core.min_x>=core.max_x || core.min_y>=core.max_y) reject("HATCH_CELL_FINITE_DOMAIN");
             AffineHatchCellPass pass{core,{},{},{0,0},{0,0},{0,0}}; Exact covered(0);
@@ -1310,7 +1310,7 @@ FirstHatchBeadResult FirstHatchBeadSnapshot::plan(const AffineHatchResult &reque
         // Any admitted actual-gap width lies in nominal +/- this requested
         // error. Query its exact outer strip before deriving the gap/amount;
         // shrinking the query to the nominal centerline would be circular.
-        const Exact half=(Exact(source->policy.width.value())+Exact(limits.packets.maximum_width_error.value()))/Exact(2);
+        const Exact half=(Exact(line.width.value())+Exact(limits.packets.maximum_width_error.value()))/Exact(2);
         const auto footprint=[&](PhysicalPosition a,PhysicalPosition b) {
             if (domain==FirstHatchRoofDomain::Centerline)
                 return Polygon{{Exact(a.x()),Exact(a.y())},{Exact(b.x()),Exact(b.y())}};
@@ -1362,14 +1362,14 @@ FirstHatchBeadResult FirstHatchBeadSnapshot::plan(const AffineHatchResult &reque
             const auto fraction=exact_interval(node.end-node.begin);
             const double budget=(Interval(limits.packets.maximum_volume_error.value())*fraction).lo;
             bool accepted=false;FixedWidthBeadResult packets;Interval target(0);double width_error=0;
-            if (h0>0 && h1>0 && std::max(h0,h1)<source->policy.width.value() && gap_error<=limits.maximum_gap_error.value()) {
+            if (h0>0 && h1>0 && std::max(h0,h1)<line.width.value() && gap_error<=limits.maximum_gap_error.value()) {
                 auto packet_limits=limits.packets;
                 if (pieces.size()>=packet_limits.max_segments) reject("FIRST_HATCH_PACKET_COUNT_LIMIT");
                 packet_limits.max_segments-=pieces.size();packet_limits.maximum_volume_error=Volume(budget/4);
                 packet_limits.timeout=std::min(limits.timeout,limits.packets.timeout)-
                     std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
                 packet_limits.cancelled=[&] { poll();return false; };packet_limits.is_current={};
-                packets=plan_fixed_width_bead({node.a.point,node.b.point,source->policy.width,VerticalGap(h0),VerticalGap(h1),
+                packets=plan_fixed_width_bead({node.a.point,node.b.point,line.width,VerticalGap(h0),VerticalGap(h1),
                     BeadSectionKind::RoundedRectangle,sequence->revision,context},packet_limits);
                 poll();
                 if (packets.snapshot) {
@@ -1389,11 +1389,11 @@ FirstHatchBeadResult FirstHatchBeadSnapshot::plan(const AffineHatchResult &reque
                         const auto area=Interval(piece.volume.value())/detail::root(length_squared(piece.start,piece.end));
                         if (area.lo<=(pi()/Interval(4)*square(hmax)).hi) { domain=false;break; }
                         const auto wmin=section_width(area,hmax,BeadSectionKind::RoundedRectangle),wmax=section_width(area,hmin,BeadSectionKind::RoundedRectangle);
-                        width_error=std::max({width_error,(Interval(source->policy.width.value())-wmin).hi,(wmax-Interval(source->policy.width.value())).hi});
+                        width_error=std::max({width_error,(Interval(line.width.value())-wmin).hi,(wmax-Interval(line.width.value())).hi});
                     }
                     const auto length=detail::root(length_squared(node.a.point,node.b.point));
                     const auto maximum_h=Interval(std::max(h0,h1))+Interval(gap_error);
-                    const auto uncertainty=length*Interval(gap_error)*(Interval(source->policy.width.value())+Interval(2)*correction*maximum_h);
+                    const auto uncertainty=length*Interval(gap_error)*(Interval(line.width.value())+Interval(2)*correction*maximum_h);
                     target=interval(packets.snapshot->target_volume_mm3)+Interval(-uncertainty.hi,uncertainty.hi);
                     const auto difference=interval(packets.snapshot->deposited_volume_mm3)-target;
                     accepted=domain && target.lo>0 && gap_error<=limits.maximum_gap_error.value() &&
@@ -2101,7 +2101,7 @@ RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &request
         if (x_axis==(line.start.x()==line.end.x())) reject("REMAINING_HATCH_REQUIRES_AXIS_LINE");
         const Exact begin(x_axis ? line.start.x() : line.start.y()),end(x_axis ? line.end.x() : line.end.y());
         if (begin>=end) reject("REMAINING_HATCH_REQUIRES_FORWARD_LINE");
-        const Exact half=(Exact(hatches->policy.width.value())+Exact(limits.beads.packets.maximum_width_error.value()))/Exact(2);
+        const Exact half=(Exact(line.width.value())+Exact(limits.beads.packets.maximum_width_error.value()))/Exact(2);
         const Exact x0=Exact(line.start.x())-(x_axis ? Exact(0) : half),x1=Exact(line.end.x())+(x_axis ? Exact(0) : half);
         const Exact y0=Exact(line.start.y())-(x_axis ? half : Exact(0)),y1=Exact(line.end.y())+(x_axis ? half : Exact(0));
         const Polygon strip{{x0,y0},{x1,y0},{x1,y1},{x0,y1}};
@@ -2409,6 +2409,104 @@ FirstHatchReplanResult replan_first_hatch_ends(const FirstHatchLayerResult &requ
         poll();return {"BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) {return {e.what(),{}};}
     catch (const std::exception &e) {return {"FIRST_HATCH_REPLAN_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
+}
+
+FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &requested,WidthXY width,
+    const FirstHatchWidthReplanPolicy &requested_policy,const FirstHatchLayerLimits &requested_limits)
+{
+    const auto before=requested.snapshot;const auto policy=requested_policy;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!before || !before->source || !before->fill || !valid_first_hatch_layer_limits(limits) ||
+            width.value()<=0 || policy.minimum_repeated_reduction.value()<=0 || policy.maximum_covered_loss.value()<0 ||
+            policy.maximum_outside_target.value()<0) reject("INVALID_FIRST_HATCH_WIDTH_REPLAN_INPUT");
+        const auto hatches=before->source;const auto stack=hatches->source;const auto revision=stack->source->sequence->revision;
+        const auto poll=[&] {
+            stop(limits,revision,started);stop(limits.beads,revision,started);
+            stop(limits.beads.packets,revision,started);stop(limits.volumes,revision,started);
+        };poll();size_t work=0,cells=0;
+        const auto charge=[&](size_t count) {if (count>limits.max_evaluations-work) reject("FIRST_HATCH_WIDTH_REPLAN_WORK_LIMIT");work+=count;poll();};
+        const auto elapsed=[&] {return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);};
+        charge(hatches->line_count+hatches->passes.size());auto passes=hatches->passes;auto &pass=passes.front();
+        if (pass.lines.size()<2 || pass.lines.size()>limits.max_paths) reject("FIRST_HATCH_WIDTH_REPLAN_PATH_LIMIT");
+        if (!stack->first_pass.first_pass.gap_mm || width.value()<=stack->first_pass.first_pass.gap_mm->upper)
+            reject("FIRST_HATCH_WIDTH_REPLAN_WIDTH_HEIGHT_DOMAIN");
+        const auto &surface=stack->surfaces.front().cell;const auto &roi=surface.footprint;
+        const bool x=pass.direction==HatchDirection::AlongX;
+        const auto inset=Interval(width.value())/Interval(2)+Interval(hatches->policy.boundary_band.value())+Interval(hatches->numerical_error_upper_mm);
+        const double low=(Interval(x ? roi.min_y : roi.min_x)+inset).hi,high=(Interval(x ? roi.max_y : roi.max_x)-inset).lo;
+        if (low>=high) reject("FIRST_HATCH_WIDTH_REPLAN_TRANSVERSE_DOMAIN");
+        std::vector<double> centres,cuts{x ? roi.min_y : roi.min_x};double extra_error=0;
+        const auto point=[&](double along,double normal) {
+            const double px=x ? along : normal,py=x ? normal : along;
+            const Exact z=Exact(surface.z00)+(Exact(surface.z10)-Exact(surface.z00))*(Exact(px)-Exact(roi.min_x))/(Exact(roi.max_x)-Exact(roi.min_x))+
+                (Exact(surface.z01)-Exact(surface.z00))*(Exact(py)-Exact(roi.min_y))/(Exact(roi.max_y)-Exact(roi.min_y));
+            const auto stored=stored_exact(z);return std::pair<PhysicalPosition,double>{{px,py,stored.first},stored.second};
+        };
+        Interval pitch(0);
+        for (size_t i=0;i<pass.lines.size();++i) {
+            charge(1);auto &line=pass.lines[i];
+            if (width.value()>=line.width.value()) reject("FIRST_HATCH_WIDTH_REPLAN_REQUIRES_NARROWER_WIDTH");
+            const auto centre=stored_exact(Exact(low)+(Exact(high)-Exact(low))*Exact(int(i))/Exact(int(pass.lines.size()-1)));
+            centres.push_back(centre.first);
+            if (i) {
+                const auto gap=exact_interval(Exact(centres[i])-Exact(centres[i-1]));
+                if (gap.lo<=0 || gap.hi>hatches->policy.maximum_pitch.value() ||
+                    gap.hi>(Interval(width.value())-Interval(2)*Interval(hatches->numerical_error_upper_mm)).lo)
+                    reject("FIRST_HATCH_WIDTH_REPLAN_SPARSE_PITCH");
+                pitch=i==1 ? gap : Interval(std::min(pitch.lo,gap.lo),std::max(pitch.hi,gap.hi));
+                cuts.push_back(stored_exact((Exact(centres[i-1])+Exact(centres[i]))/Exact(2)).first);
+            }
+            const auto a=point(x ? line.start.x() : line.start.y(),centre.first),b=point(x ? line.end.x() : line.end.y(),centre.first);
+            const double error=(Interval(line.coordinate_error_upper_mm)+Interval(centre.second)+Interval(std::max(a.second,b.second))).hi;
+            line.start=a.first;line.end=b.first;line.reverse_start=b.first;line.reverse_end=a.first;line.width=width;
+            line.coordinate_error_upper_mm=error;extra_error=std::max(extra_error,error);
+        }
+        cuts.push_back(x ? roi.max_y : roi.max_x);pass.pitch_mm=bounds(pitch);
+        auto split_limits=limits.volumes;split_limits.max_evaluations=std::min({size_t(200000),split_limits.max_evaluations,limits.max_evaluations-work});
+        split_limits.max_cells=std::min(split_limits.max_cells,limits.max_cells);split_limits.timeout-=elapsed();
+        split_limits.cancelled=[&] {poll();return false;};split_limits.is_current={};
+        const auto split=split_material_integral(stack->first_pass,x ? IntegralSplitAxis::Y : IntegralSplitAxis::X,cuts,split_limits);
+        if (!split.snapshot) throw Rejection(split.reason);charge(split.snapshot->evaluations);cells+=split.snapshot->proof_cells;
+        for (size_t i=0;i<pass.lines.size();++i) {
+            charge(1);pass.lines[i].volume_cell=split.snapshot->strips[i].footprint;
+            pass.lines[i].prospective_cell_volume_mm3=split.snapshot->strips[i].volume_mm3;
+        }
+        pass.prospective_volume_mm3=split.snapshot->total_volume_mm3;
+        Exact total_lower(0),total_upper(0);
+        for (const auto &p : passes) {charge(1);total_lower+=Exact(p.prospective_volume_mm3.lower);total_upper+=Exact(p.prospective_volume_mm3.upper);}
+        const Interval total(exact_interval(total_lower).lo,exact_interval(total_upper).hi);
+        if (total.hi<stack->total_volume_mm3.lower || total.lo>stack->total_volume_mm3.upper ||
+            (Interval(total.hi)-Interval(total.lo)).hi>std::min(limits.volumes.maximum_interval_width.value(),stack->policy.total_volume_error.value()))
+            reject("FIRST_HATCH_WIDTH_REPLAN_QUOTA_PRECISION");
+        const double numeric=(Interval(hatches->numerical_error_upper_mm)+Interval(extra_error)).hi;
+        if (numeric>.05) reject("FIRST_HATCH_WIDTH_REPLAN_NUMERICAL_BUDGET");
+        const auto next=std::shared_ptr<const AffineHatchSnapshot>(new AffineHatchSnapshot(stack,hatches->policy,std::move(passes),
+            bounds(total),hatches->line_count,numeric,hatches->first_pass_extent));
+        if (work>=limits.max_evaluations || cells>=limits.max_cells) reject("FIRST_HATCH_WIDTH_REPLAN_SHARED_LIMIT");
+        auto remaining=limits;remaining.max_evaluations-=work;remaining.max_cells-=cells;
+        const auto used=elapsed();remaining.timeout-=used;remaining.beads.timeout-=used;remaining.beads.packets.timeout-=used;remaining.volumes.timeout-=used;
+        remaining.cancelled=[&] {poll();return false;};remaining.is_current={};
+        remaining.beads.cancelled={};remaining.beads.is_current={};remaining.beads.packets.cancelled={};remaining.beads.packets.is_current={};
+        remaining.volumes.cancelled={};remaining.volumes.is_current={};
+        const auto after=plan_first_hatch_layer({"",next},before->fill->occupied->domain,remaining);
+        if (!after.snapshot) throw Rejection(after.reason);charge(after.snapshot->evaluations);cells+=after.snapshot->cells;
+        if (after.snapshot->fill->target!=before->fill->target) reject("FIRST_HATCH_WIDTH_REPLAN_TARGET_CHANGED");
+        const auto amount=interval(before->fill->occupied->individual_volume_mm3)-interval(after.snapshot->fill->occupied->individual_volume_mm3);
+        const auto repeated=interval(before->fill->occupied->repeated_volume_mm3)-interval(after.snapshot->fill->occupied->repeated_volume_mm3);
+        const auto covered=interval(after.snapshot->fill->covered_target_mm3)-interval(before->fill->covered_target_mm3);
+        const auto missing=interval(after.snapshot->fill->missing_target_mm3)-interval(before->fill->missing_target_mm3);
+        if (amount.lo<policy.minimum_repeated_reduction.value() || repeated.lo<policy.minimum_repeated_reduction.value())
+            reject("FIRST_HATCH_WIDTH_REPLAN_INSUFFICIENT_REDUCTION");
+        if (covered.lo<-policy.maximum_covered_loss.value() || missing.hi>policy.maximum_covered_loss.value())
+            reject("FIRST_HATCH_WIDTH_REPLAN_COVERAGE_LOSS");
+        if (after.snapshot->fill->outside_target_mm3.upper>policy.maximum_outside_target.value()) reject("FIRST_HATCH_WIDTH_REPLAN_OUTSIDE_TARGET_LIMIT");
+        poll();auto snapshot=std::shared_ptr<const FirstHatchWidthReplanSnapshot>(new FirstHatchWidthReplanSnapshot(before,after.snapshot,width,policy,
+            bounds(amount),bounds(repeated),bounds(covered),cells,work));
+        poll();return {"BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) {return {e.what(),{}};}
+    catch (const std::exception &e) {return {"FIRST_HATCH_WIDTH_REPLAN_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
 }
 
 }

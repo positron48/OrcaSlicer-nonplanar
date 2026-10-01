@@ -151,10 +151,23 @@ native case/64 assertions pass. Native C rises to 0.181000 mm3 and M drops to
 0.0709877 mm3, with gain at least approximately 0.0427173 mm3. A ridge only in
 the new domain rejects the whole replan; future material remains absent. The
 new owned first-pass extent provenance increments the internal affine hatch
-contract 2 -> 3, with no persisted formats affected. Current material/body
+contract 2 -> 3, with no persisted formats affected. At that checkpoint material/body
 suites execute 67/14 cases, selected CTest executes 312/312 and six fresh OFF/ZAA
 comparisons pass. Remaining 3D repair, perimeter/contact/seam and actual later
 support are still required; this is prospective geometry, not printed material.
+
+`B07-first-hatch-width-replan.md` replaces the complete prospective first list
+with narrower owned widths and redistributed centres, preserving the actual
+body/target, original band/finite ends and later paths. Three analytical cases /
+279 assertions and the extended native case / 213 assertions pass. Native width
+0.45 -> 0.40 mm reduces S and repeated R by 0.0398967 mm3 while retaining C
+approximately 0.181000 mm3; M remains 0.0709876 mm3. Four-line independent circular
+lenses retain a real bounded loss; excessive loss refuses the candidate. Affine
+hatch 3 -> 4 and dependent consumers use owned line widths, retaining original
+generation policy as provenance. No persisted formats change. Current material/
+body suites pass 70/14 cases; selected CTest passes 315/315 without skips.
+Six fresh OFF/ZAA G-code/modal comparisons pass. Actual contact, 3D remainder,
+perimeter/seam, later support and order/export remain required.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -174,8 +187,10 @@ Run 36842571249 at 946d3da7 also failed the native fill deadline
 (40862 cells / 857455 work), with check annotations retained in the new first-
 hatch-layer archive. Run 36847680702 at 2d8bebaa now succeeds in selected
 native suites, native STL CLI and application build, retaining the original
-20-second fill limit. Run 36853913690 at 361ccdc8 is building native tests in
-the saved 11:37 UTC observation. This new end replan is not yet Linux-verified.
+20-second fill limit. Run 36853913690 at 361ccdc8 now also succeeds in native
+suites, STL CLI and application. Run 36858083109 at 05f4a887 is building native
+tests in the saved 12:23 UTC observation. End and width replans await their
+own Linux verification.
 Both failed check annotations are archived.
 Windows remains NOT_RUN.
 
