@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="63" hostname="tbd" time="0.123" timestamp="2026-10-01T11:30:18Z">
+    <properties>
+      <property name="random-seed" value="3059986243"/>
+      <property name="filters" value="[FirstHatchEndReplan]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 whole first-hatch end replan reduces measured deficit without appending old future material" time="0.000" status="run">
+      <failure message="next.upper>=old.lower*new_length/old_length" type="REQUIRE">
+FAILED:
+  REQUIRE( next.upper>=old.lower*new_length/old_length )
+with expansion:
+  0.31627915970375525 >= 0.31627915970375531
+BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1673
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 first-hatch end replan captures sources and refuses invalid or exhausted global proofs" time="0.075" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

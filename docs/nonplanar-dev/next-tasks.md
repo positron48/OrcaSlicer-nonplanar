@@ -17,16 +17,14 @@ Next software tasks, in dependency order:
    `B02-input-placement.md` connects owned inputs to the native placement/error
    chain and enforces source plate-index agreement; actual GUI membership and
    original file-to-job association remain pending.
-2. Resolve the inherited Linux native-fill deadline at 84a709ef, 7f71cc98 and 946d3da7
-   without changing budgets, then verify new milestones on Linux.
-   `B07-stadium-depth-bounds.md` tightens the exact nonnegative rounded depth
-   domain but makes only a small native work reduction; certified roof-query
-   optimization was followed by `B07-constant-section-roof.md`: direct constant-
-   Z/gap interior queries preserve volume/work bounds and take 16.01 seconds
-   for native fill locally. Successful Linux verification remains required.
-   The prior A02 correction at d57e9325 has a
-   successful native Linux run 36454696019; its earlier range-failure evidence
-   remains historical and does not establish an exact exception call stack.
+2. Verify new milestones on Linux with all budgets unchanged. The inherited
+   native-fill deadline failures at 84a709ef, 7f71cc98 and 946d3da7 are retained
+   as historical evidence. `B07-constant-section-roof.md` is now verified by
+   successful run 36847680702 at 2d8bebaa: selected native suites, STL CLI and
+   application pass with the original 20-second timeout. Run 36853913690 at
+   361ccdc8 is still building native tests in the saved observation; the current
+   end replan requires its own verification. The A02 correction at d57e9325 also
+   has successful native Linux run 36454696019.
 3. Extend B03 nominal affine bounds to qualified error budgets, curved surfaces,
    ROI and tool access. Existing masks, whole-footprint checks and isolated CLI
    results remain diagnostic geometry, without export permission.
@@ -67,6 +65,11 @@ Next software tasks, in dependency order:
    packet unions preserve actual S/U/R, while C/M/spill remain measured rather
    than nominal quotas. The native two-line candidate still has 0.113705 mm3
    deficit; it does not certify sequential contact or a filled first pass.
+   `B07-first-hatch-end-replan.md` now replaces that complete prospective list
+   with longer finite butts under the unchanged source band, actual body/target
+   and budgets. Native coverage rises by 0.0427173 mm3; deficit remains
+   0.0709877 mm3. Do not append its old hypothetical cap to the new candidate;
+   an actually laid partial prefix remains a separate construction obligation.
    Resolve that deficit/excess by constructing paths in actual remaining space,
    recheck union/fill, qualify
    finite-width floor/contact, then construct seam and later actual support;

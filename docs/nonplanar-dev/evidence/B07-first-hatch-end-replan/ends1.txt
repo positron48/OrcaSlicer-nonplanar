@@ -1,0 +1,465 @@
+Filters: [FirstHatchEndReplan]
+Randomness seeded to: 3059986243
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 whole first-hatch end replan reduces measured deficit without appending old
+future material
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1641
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1643: PASSED:
+with message:
+  !(std::is_aggregate<FirstHatchReplanSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xbcf1100b8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x1047fed40
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1306: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x1047fe7c0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xbcf110158
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xbcf068280
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1315: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xbced5e260
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1646: PASSED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0xbcf068380
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1647: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xbceda0000
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1648: PASSED:
+  REQUIRE( r.before==before.snapshot )
+with expansion:
+  0xbcf068380 == 0xbcf068380
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1648: PASSED:
+  REQUIRE( r.after->source!=r.before->source )
+with expansion:
+  0x1047fe830 != 0x1047fe7c0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1649: PASSED:
+  REQUIRE( r.after->source->source==r.before->source->source )
+with expansion:
+  0x1047fed40 == 0x1047fed40
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1649: PASSED:
+  REQUIRE( r.after->fill->target==r.before->fill->target )
+with expansion:
+  0x1047fadd0 == 0x1047fadd0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1650: PASSED:
+  REQUIRE( r.before->source->first_pass_extent==FirstHatchExtent::CapsuleInset )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1651: PASSED:
+  REQUIRE( r.after->source->first_pass_extent==FirstHatchExtent::FiniteButtInset )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1652: PASSED:
+  REQUIRE( r.after->source->policy.boundary_band.value()==r.before->source->policy.boundary_band.value() )
+with expansion:
+  0.05 == 0.05
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1653: PASSED:
+  REQUIRE( r.after->paths.size()==r.before->paths.size() )
+with expansion:
+  2 == 2
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1654: PASSED:
+  REQUIRE( r.covered_gain_mm3.lower>.001 )
+with expansion:
+  0.06026794383223454 > 0.001
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1654: PASSED:
+  REQUIRE( r.missing_reduction_mm3.lower>.001 )
+with expansion:
+  0.06026794383223306 > 0.001
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1655: PASSED:
+  REQUIRE( r.after->fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000231 <= 0.001
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1655: PASSED:
+  REQUIRE( r.after->fill->missing_target_mm3.lower>0 )
+with expansion:
+  0.07231662994228776 > 0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1656: PASSED:
+  REQUIRE( r.after->fill->occupied->source->sequence!=r.before->fill->occupied->source->sequence )
+with expansion:
+  0xbcf110298 != 0xbcf1101f8
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1663: PASSED:
+  REQUIRE( new_length>old_length )
+with expansion:
+  1.89999999999999591 > 1.44999999999999618
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1666: PASSED:
+  REQUIRE( center(next.path_start)==center(old.path_start) )
+with expansion:
+  -0.12499999999999849
+  ==
+  -0.12499999999999849
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1666: PASSED:
+  REQUIRE( center(next.path_end)==center(old.path_end) )
+with expansion:
+  -0.12499999999999849
+  ==
+  -0.12499999999999849
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1667: PASSED:
+  REQUIRE( axis(next.path_start)<axis(old.path_start) )
+with expansion:
+  1.05000000000000204 < 1.27500000000000169
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1667: PASSED:
+  REQUIRE( axis(next.path_end)>axis(old.path_end) )
+with expansion:
+  2.94999999999999796 > 2.72499999999999787
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1668: PASSED:
+  REQUIRE( next.source==r.after->source )
+with expansion:
+  0x1047fe830 == 0x1047fe830
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1668: PASSED:
+  REQUIRE( coordinates(next.path_start)==coordinates(r.after->source->passes.front().lines[i].start) )
+with expansion:
+  { 1.05000000000000204, -0.12499999999999849, 1.20500000000000029 }
+  ==
+  { 1.05000000000000204, -0.12499999999999849, 1.20500000000000029 }
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1669: PASSED:
+  REQUIRE( coordinates(next.path_end)==coordinates(r.after->source->passes.front().lines[i].end) )
+with expansion:
+  { 2.94999999999999796, -0.12499999999999849, 1.20500000000000029 }
+  ==
+  { 2.94999999999999796, -0.12499999999999849, 1.20500000000000029 }
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1666: PASSED:
+  REQUIRE( center(next.path_start)==center(old.path_start) )
+with expansion:
+  0.12499999999999849 == 0.12499999999999849
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1666: PASSED:
+  REQUIRE( center(next.path_end)==center(old.path_end) )
+with expansion:
+  0.12499999999999849 == 0.12499999999999849
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1667: PASSED:
+  REQUIRE( axis(next.path_start)<axis(old.path_start) )
+with expansion:
+  1.05000000000000204 < 1.27500000000000169
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1667: PASSED:
+  REQUIRE( axis(next.path_end)>axis(old.path_end) )
+with expansion:
+  2.94999999999999796 > 2.72499999999999787
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1668: PASSED:
+  REQUIRE( next.source==r.after->source )
+with expansion:
+  0x1047fe830 == 0x1047fe830
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1668: PASSED:
+  REQUIRE( coordinates(next.path_start)==coordinates(r.after->source->passes.front().lines[i].start) )
+with expansion:
+  { 1.05000000000000204, 0.12499999999999849, 1.20500000000000029 }
+  ==
+  { 1.05000000000000204, 0.12499999999999849, 1.20500000000000029 }
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1669: PASSED:
+  REQUIRE( coordinates(next.path_end)==coordinates(r.after->source->passes.front().lines[i].end) )
+with expansion:
+  { 2.94999999999999796, 0.12499999999999849, 1.20500000000000029 }
+  ==
+  { 2.94999999999999796, 0.12499999999999849, 1.20500000000000029 }
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1673: PASSED:
+  REQUIRE( next.lower<=old.upper*new_length/old_length )
+with expansion:
+  0.31627915970375525 <= 0.31627915970375531
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1673: FAILED:
+  REQUIRE( next.upper>=old.lower*new_length/old_length )
+with expansion:
+  0.31627915970375525 >= 0.31627915970375531
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+-------------------------------------------------------------------------------
+B07 first-hatch end replan captures sources and refuses invalid or exhausted
+global proofs
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1681
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xbcf1100b8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x1047fece0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1306: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0xbceda8070
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xbcf110158
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xbcf068280
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1315: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xbced5e1c0
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1684: PASSED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0xbcf068300
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1687: PASSED:
+  REQUIRE( captured.snapshot )
+with expansion:
+  0xbced9c060
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1688: PASSED:
+  REQUIRE( captured.snapshot->before==saved )
+with expansion:
+  0xbcf068300 == 0xbcf068300
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1689: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends({}).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1690: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1691: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1692: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1693: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1694: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1695: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1696: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1697: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1698: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1699: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1700: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1702: PASSED:
+  REQUIRE_FALSE( replan_first_hatch_ends(before,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1704: PASSED:
+  REQUIRE( std::fesetround(0x00000000)==0 )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1704: PASSED:
+  REQUIRE_FALSE( rounding.snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+===============================================================================
+test cases:  2 |  1 passed | 1 failed
+assertions: 63 | 62 passed | 1 failed
+

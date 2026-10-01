@@ -1637,3 +1637,105 @@ TEST_CASE("B07 congruent rounded packet pairs integrate affine gaps and preserve
         REQUIRE_FALSE(integrate_material_union(changed_prefix.nominal,box,limits).snapshot);
     }
 }
+
+TEST_CASE("B07 whole first-hatch end replan reduces measured deficit without appending old future material", "[Nonplanar][B07][FirstHatchEndReplan]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstHatchReplanSnapshot>::value);
+    for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) {
+        const auto f=remainder_fixture(0,direction);const SceneBox box{{1,-.4,.7},{3,.4,1.8}};
+        const auto before=plan_first_hatch_layer(f.hatches,box);REQUIRE(before.snapshot);
+        const auto result=replan_first_hatch_ends(before);INFO(result.reason);REQUIRE(result.snapshot);
+        const auto &r=*result.snapshot;REQUIRE(r.before==before.snapshot);REQUIRE(r.after->source!=r.before->source);
+        REQUIRE(r.after->source->source==r.before->source->source);REQUIRE(r.after->fill->target==r.before->fill->target);
+        REQUIRE(r.before->source->first_pass_extent==FirstHatchExtent::CapsuleInset);
+        REQUIRE(r.after->source->first_pass_extent==FirstHatchExtent::FiniteButtInset);
+        REQUIRE(r.after->source->policy.boundary_band.value()==r.before->source->policy.boundary_band.value());
+        REQUIRE(r.after->paths.size()==r.before->paths.size());
+        REQUIRE(r.covered_gain_mm3.lower>.001);REQUIRE(r.missing_reduction_mm3.lower>.001);
+        REQUIRE(r.after->fill->outside_target_mm3.upper<=.001);REQUIRE(r.after->fill->missing_target_mm3.lower>0);
+        REQUIRE(r.after->fill->occupied->source->sequence!=r.before->fill->occupied->source->sequence);
+        const bool x=direction==HatchDirection::AlongX;
+        const auto coordinates=[](PhysicalPosition p) {return std::array<double,3>{p.x(),p.y(),p.z()};};
+        const auto axis=[&](PhysicalPosition p) {return x ? p.x() : p.y();};
+        const auto center=[&](PhysicalPosition p) {return x ? p.y() : p.x();};
+        const auto old_length=axis(r.before->paths[0]->path_end)-axis(r.before->paths[0]->path_start);
+        const auto new_length=axis(r.after->paths[0]->path_end)-axis(r.after->paths[0]->path_start);
+        REQUIRE(new_length>old_length);
+        for (size_t i=0;i<r.after->paths.size();++i) {
+            const auto &old=*r.before->paths[i],&next=*r.after->paths[i];
+            REQUIRE(center(next.path_start)==center(old.path_start));REQUIRE(center(next.path_end)==center(old.path_end));
+            REQUIRE(axis(next.path_start)<axis(old.path_start));REQUIRE(axis(next.path_end)>axis(old.path_end));
+            REQUIRE(next.source==r.after->source);REQUIRE(coordinates(next.path_start)==coordinates(r.after->source->passes.front().lines[i].start));
+            REQUIRE(coordinates(next.path_end)==coordinates(r.after->source->passes.front().lines[i].end));
+        }
+        // Independent stadium measures use actual new binary amounts; ideal
+        // area scaling would incorrectly assume identical packet rounding.
+        using Amount=boost::multiprecision::cpp_bin_float_quad;
+        Amount sum=0,repeated=0,previous=0,area=0,h=0,w=0,length=0;
+        for (size_t i=0;i<r.after->paths.size();++i) {
+            const auto &path=*r.after->paths[i];REQUIRE(path.pieces.size()==1);const auto &piece=path.pieces[0];
+            const Amount next_length=Amount(axis(piece.end))-axis(piece.start),next_h=piece.section.gap_begin_mm;
+            const Amount next_area=Amount(piece.volume.value())/next_length,next_width=next_area/next_h+(1-acos(Amount(-1))/4)*next_h;
+            sum+=piece.volume.value();
+            if (i==0) {area=next_area;h=next_h;w=next_width;length=next_length;}
+            else {
+                REQUIRE(area==next_area);REQUIRE(h==next_h);REQUIRE(w==next_width);REQUIRE(length==next_length);
+                const Amount d=Amount(center(piece.start))-previous,q=d-(w-h),radius=h/2;
+                REQUIRE(d>0);if (i>1) REQUIRE(2*d>w);
+                const Amount overlap=q<=0 ? area-h*d : q>=h ? Amount(0) :
+                    2*radius*radius*acos(q/(2*radius))-q*sqrt(4*radius*radius-q*q)/2;
+                repeated+=length*overlap;
+            }
+            previous=center(piece.start);
+        }
+        const auto contains=[&](ScalarBounds measured,Amount amount) {REQUIRE(measured.lower<=amount);REQUIRE(measured.upper>=amount);};
+        contains(r.after->fill->occupied->individual_volume_mm3,sum);contains(r.after->fill->occupied->union_volume_mm3,sum-repeated);
+        contains(r.after->fill->occupied->repeated_volume_mm3,repeated);
+        REQUIRE_FALSE(replan_first_hatch_ends({"",r.after}).snapshot); // Already replaced this extent.
+    }
+}
+TEST_CASE("B07 first-hatch end replan captures sources and refuses invalid or exhausted global proofs", "[Nonplanar][B07][FirstHatchEndReplan]")
+{
+    const auto f=remainder_fixture(0);const SceneBox box{{1,-.4,.7},{3,.4,1.8}};
+    auto before=plan_first_hatch_layer(f.hatches,box);REQUIRE(before.snapshot);const auto saved=before.snapshot;
+    FirstHatchLayerLimits limits;FirstHatchReplanPolicy policy;
+    limits.cancelled=[&] {before.snapshot.reset();limits.max_evaluations=0;policy.minimum_covered_gain=Volume(100);return false;};
+    const auto captured=replan_first_hatch_ends(before,policy,limits);INFO(captured.reason);REQUIRE(captured.snapshot);
+    REQUIRE(captured.snapshot->before==saved);before.snapshot=saved;policy={};limits={};
+    REQUIRE_FALSE(replan_first_hatch_ends({}).snapshot);
+    policy.minimum_covered_gain=Volume(1);REQUIRE_FALSE(replan_first_hatch_ends(before,policy).snapshot);
+    policy.minimum_covered_gain=Volume(0);REQUIRE_FALSE(replan_first_hatch_ends(before,policy).snapshot);policy={};
+    limits.max_evaluations=1;REQUIRE_FALSE(replan_first_hatch_ends(before,policy,limits).snapshot);
+    limits={};limits.max_paths=1;REQUIRE_FALSE(replan_first_hatch_ends(before,policy,limits).snapshot);
+    limits={};limits.max_cells=1;REQUIRE_FALSE(replan_first_hatch_ends(before,policy,limits).snapshot);
+    limits={};limits.max_records=1;REQUIRE_FALSE(replan_first_hatch_ends(before,policy,limits).snapshot);
+    limits={};limits.beads.packets.max_segments=1;REQUIRE_FALSE(replan_first_hatch_ends(before,policy,limits).snapshot);
+    limits={};limits.volumes.max_depth=0;REQUIRE_FALSE(replan_first_hatch_ends(before,policy,limits).snapshot);
+    limits={};limits.max_evaluations=2000001;REQUIRE_FALSE(replan_first_hatch_ends(before,policy,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t) {return false;};REQUIRE_FALSE(replan_first_hatch_ends(before,policy,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(replan_first_hatch_ends(before,policy,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE_FALSE(replan_first_hatch_ends(before,policy,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounding=replan_first_hatch_ends(before,policy,limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+}
+TEST_CASE("B07 end replan retains current material only in the newly extended roof domain", "[Nonplanar][B07][FirstHatchEndReplan]")
+{
+    const auto floor=bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle);
+    const auto ridge=bead(3,2,{0,-.125,1.06},{10,-.125,1.06},.06,.05,.05,BeadSectionKind::Rectangle);
+    const MaterialRecord travel{{2,1,0,floor.motion.end,ridge.motion.start,Speed(10),Acceleration(100),Travel{}},{}};
+    const auto ledger=captured({floor,travel,ridge});
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.0001)};
+    const SceneBox box{{1,-.4,.7},{3,.4,1.8}};
+    FirstHatchLayerLimits limits;limits.beads.max_roof_segments=32;
+    for (double progress : {0.,.1,.12}) {
+        const auto present=material_at(ledger,2,progress);
+        const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.8,1.8,1.8},.9,policy);REQUIRE(stack.snapshot);
+        const auto hatches=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX});REQUIRE(hatches.snapshot);
+        const auto before=plan_first_hatch_layer(hatches,box,limits);INFO(before.reason);REQUIRE(before.snapshot);
+        const auto next=replan_first_hatch_ends(before,{},limits);INFO(next.reason);
+        if (progress<=.1) REQUIRE(next.snapshot); // The actual butt is before the new start.
+        else REQUIRE_FALSE(next.snapshot); // The narrow ridge is inside only the newly extended footprint.
+        REQUIRE(before.snapshot->source->source->source==present.nominal.snapshot);
+    }
+}

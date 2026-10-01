@@ -214,9 +214,14 @@ struct AffinePassStackResult {
 AffinePassStackResult plan_affine_pass_stack(const LowerMaterialView &, const AffineCapCell &final_surface,
     double support_plane_z_mm, const AffinePassPolicy &, const MaterialIntegralLimits &limits = {});
 
-inline constexpr unsigned affine_hatch_contract_version=2;
+inline constexpr unsigned affine_hatch_contract_version=3;
 struct AffineHatchResult;
+struct FirstHatchLayerResult;
+struct FirstHatchLayerLimits;
+struct FirstHatchReplanPolicy;
+struct FirstHatchReplanResult;
 enum class HatchDirection { AlongX, AlongY };
+enum class FirstHatchExtent { CapsuleInset, FiniteButtInset };
 struct AffineHatchPolicy {
     WidthXY width;
     Length maximum_pitch, boundary_band;
@@ -251,12 +256,15 @@ struct AffineHatchSnapshot {
     const ScalarBounds total_prospective_volume_mm3;
     const size_t line_count;
     const double numerical_error_upper_mm;
+    const FirstHatchExtent first_pass_extent;
 private:
     AffineHatchSnapshot(std::shared_ptr<const AffinePassStackSnapshot> s, AffineHatchPolicy p,
-        std::vector<AffineHatchPass> passes_, ScalarBounds total, size_t count, double numeric)
+        std::vector<AffineHatchPass> passes_, ScalarBounds total, size_t count, double numeric,
+        FirstHatchExtent extent=FirstHatchExtent::CapsuleInset)
         : source(std::move(s)), policy(p), passes(std::move(passes_)), total_prospective_volume_mm3(total),
-          line_count(count), numerical_error_upper_mm(numeric) {}
+          line_count(count), numerical_error_upper_mm(numeric),first_pass_extent(extent) {}
     friend AffineHatchResult plan_affine_hatches(const AffinePassStackResult &, const AffineHatchPolicy &, const AffineHatchLimits &);
+    friend FirstHatchReplanResult replan_first_hatch_ends(const FirstHatchLayerResult &,const FirstHatchReplanPolicy &,const FirstHatchLayerLimits &);
 };
 struct AffineHatchResult { std::string reason; std::shared_ptr<const AffineHatchSnapshot> snapshot; };
 // Construct finite fixed-width centerline alternatives on the selected affine
@@ -555,5 +563,28 @@ struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatc
 // remain separate. This is a measured whole-pass candidate, not a filled job.
 FirstHatchLayerResult plan_first_hatch_layer(const AffineHatchResult &,const SceneBox &,
     const FirstHatchLayerLimits &limits={});
+
+inline constexpr unsigned first_hatch_replan_contract_version=1;
+struct FirstHatchReplanPolicy {Volume minimum_covered_gain{.001},maximum_outside_target{.001};};
+struct FirstHatchReplanSnapshot {
+    const std::shared_ptr<const FirstHatchLayerSnapshot> before,after;
+    const FirstHatchReplanPolicy policy;
+    const ScalarBounds covered_gain_mm3,missing_reduction_mm3;
+    const size_t cells,evaluations;
+private:
+    FirstHatchReplanSnapshot(std::shared_ptr<const FirstHatchLayerSnapshot> old,std::shared_ptr<const FirstHatchLayerSnapshot> next,
+        FirstHatchReplanPolicy selected,ScalarBounds gain,ScalarBounds reduction,size_t count,size_t work)
+        : before(std::move(old)),after(std::move(next)),policy(selected),covered_gain_mm3(gain),missing_reduction_mm3(reduction),cells(count),evaluations(work) {}
+    friend FirstHatchReplanResult replan_first_hatch_ends(const FirstHatchLayerResult &,const FirstHatchReplanPolicy &,const FirstHatchLayerLimits &);
+};
+struct FirstHatchReplanResult {std::string reason;std::shared_ptr<const FirstHatchReplanSnapshot> snapshot;};
+// Replace the complete prospective first candidate, extending its finite butts
+// longitudinally inside the same supported ROI and unchanged source boundary
+// band. Recompute all gaps/amounts and the joint union/fill; require measured
+// coverage gain and deficit reduction. Original actual body/target stay owned;
+// old prospective material is not appended. Tool/contact/order and complete
+// 3D repair/seam/later support/export remain unqualified.
+FirstHatchReplanResult replan_first_hatch_ends(const FirstHatchLayerResult &,
+    const FirstHatchReplanPolicy &policy={},const FirstHatchLayerLimits &limits={});
 
 }

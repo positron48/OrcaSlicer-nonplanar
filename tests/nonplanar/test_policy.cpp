@@ -2097,7 +2097,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2204,6 +2204,24 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         "] missing=[" << layer_fill.missing_target_mm3.lower << ',' << layer_fill.missing_target_mm3.upper << "] repeated=[" <<
         layer_fill.occupied->repeated_volume_mm3.lower << ',' << layer_fill.occupied->repeated_volume_mm3.upper <<
         "] cells=" << layer.cells << " work=" << layer.evaluations);
+    const auto replanned=replan_first_hatch_ends(complete,{},layer_limits);INFO(replanned.reason);REQUIRE(replanned.snapshot);
+    const auto &end_plan=*replanned.snapshot;const auto &end_fill=*end_plan.after->fill;
+    REQUIRE(end_plan.before==complete.snapshot);REQUIRE(end_plan.after->source->source==layer.source->source);
+    REQUIRE(end_fill.target==layer_fill.target);REQUIRE(end_plan.after->source->first_pass_extent==FirstHatchExtent::FiniteButtInset);
+    REQUIRE(end_plan.after->source->policy.boundary_band.value()==layer.source->policy.boundary_band.value());
+    REQUIRE(end_plan.after->paths.size()==layer.paths.size());REQUIRE(end_plan.covered_gain_mm3.lower>.04);
+    REQUIRE(end_plan.missing_reduction_mm3.lower>.04);REQUIRE(end_fill.missing_target_mm3.lower>0);REQUIRE(end_fill.outside_target_mm3.upper<=.001);
+    LayerAmount end_one=0,end_extra=0,end_sum=0;
+    for (size_t i=0;i<end_plan.after->paths.size();++i) for (const auto &piece : end_plan.after->paths[i]->pieces) {
+        end_sum+=piece.volume.value();if (i==0) {end_one+=piece.volume.value();end_extra+=separation*abs(LayerAmount(coordinate(piece.end))-coordinate(piece.start))*
+            (LayerAmount(piece.section.gap_begin_mm)+piece.section.gap_end_mm)/2;}
+    }
+    contains(end_fill.occupied->individual_volume_mm3,end_sum);contains(end_fill.occupied->union_volume_mm3,end_one+end_extra);
+    contains(end_fill.occupied->repeated_volume_mm3,end_one-end_extra);
+    REQUIRE(end_plan.after->global_volume_error_mm3<=layer_limits.beads.packets.maximum_volume_error.value());
+    INFO("native whole end replan covered=[" << end_fill.covered_target_mm3.lower << ',' << end_fill.covered_target_mm3.upper <<
+        "] missing=[" << end_fill.missing_target_mm3.lower << ',' << end_fill.missing_target_mm3.upper << "] gain=[" <<
+        end_plan.covered_gain_mm3.lower << ',' << end_plan.covered_gain_mm3.upper << "] cells=" << end_plan.cells << " work=" << end_plan.evaluations);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

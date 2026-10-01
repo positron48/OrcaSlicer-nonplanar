@@ -2225,6 +2225,21 @@ RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &request
     catch (const std::exception &e) {return {"REMAINING_HATCH_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
 }
 
+namespace {
+bool valid_first_hatch_layer_limits(const FirstHatchLayerLimits &l)
+{
+    return l.max_paths && l.max_paths<=4096 && l.max_records && l.max_records<=200000 && l.max_cells && l.max_cells<=65535 &&
+        l.max_evaluations && l.max_evaluations<=2000000 && valid_timeout(l.timeout) && valid_timeout(l.beads.timeout) &&
+        valid_timeout(l.beads.packets.timeout) && valid_timeout(l.volumes.timeout) && l.beads.max_evaluations && l.beads.max_evaluations<=200000 &&
+        l.beads.max_roof_segments && l.beads.max_roof_segments<=65535 && l.beads.max_depth && l.beads.max_depth<=32 &&
+        l.beads.packets.max_segments && l.beads.packets.max_segments<=65535 && l.beads.packets.max_depth && l.beads.packets.max_depth<=32 &&
+        l.beads.maximum_gap_error.value()>0 && l.beads.maximum_gap_error.value()<=.05 &&
+        l.beads.packets.maximum_width_error.value()>0 && l.beads.packets.maximum_width_error.value()<=.05 && l.beads.packets.maximum_volume_error.value()>0 &&
+        l.volumes.max_cells && l.volumes.max_cells<=65535 && l.volumes.max_evaluations && l.volumes.max_evaluations<=2000000 &&
+        l.volumes.max_depth && l.volumes.max_depth<=32 && l.volumes.maximum_interval_width.value()>0;
+}
+}
+
 FirstHatchLayerResult plan_first_hatch_layer(const AffineHatchResult &requested,const SceneBox &requested_box,
                                             const FirstHatchLayerLimits &requested_limits)
 {
@@ -2233,18 +2248,8 @@ FirstHatchLayerResult plan_first_hatch_layer(const AffineHatchResult &requested,
     try {
         detail::require_interval_environment();
         if (!hatches || !hatches->source || hatches->passes.empty() || hatches->passes.front().lines.empty() ||
-            !hatches->source->first_pass.proof || !limits.max_paths || limits.max_paths>4096 ||
-            !limits.max_records || limits.max_records>200000 || !limits.max_cells || limits.max_cells>65535 ||
-            !limits.max_evaluations || limits.max_evaluations>2000000 || !valid_timeout(limits.timeout) ||
-            !valid_timeout(limits.beads.timeout) || !valid_timeout(limits.beads.packets.timeout) || !valid_timeout(limits.volumes.timeout) ||
-            !limits.beads.max_evaluations || limits.beads.max_evaluations>200000 ||
-            !limits.beads.max_roof_segments || limits.beads.max_roof_segments>65535 || !limits.beads.max_depth || limits.beads.max_depth>32 ||
-            !limits.beads.packets.max_segments || limits.beads.packets.max_segments>65535 || !limits.beads.packets.max_depth || limits.beads.packets.max_depth>32 ||
-            limits.beads.maximum_gap_error.value()<=0 || limits.beads.maximum_gap_error.value()>.05 ||
-            limits.beads.packets.maximum_width_error.value()<=0 || limits.beads.packets.maximum_width_error.value()>.05 ||
-            limits.beads.packets.maximum_volume_error.value()<=0 || !limits.volumes.max_cells || limits.volumes.max_cells>65535 ||
-            !limits.volumes.max_evaluations || limits.volumes.max_evaluations>2000000 || !limits.volumes.max_depth || limits.volumes.max_depth>32 ||
-            limits.volumes.maximum_interval_width.value()<=0 || box.min.x()>=box.max.x() || box.min.y()>=box.max.y() || box.min.z()>=box.max.z())
+            !hatches->source->first_pass.proof || !valid_first_hatch_layer_limits(limits) ||
+            box.min.x()>=box.max.x() || box.min.y()>=box.max.y() || box.min.z()>=box.max.z())
             reject("INVALID_FIRST_HATCH_LAYER_INPUT");
         const auto stack=hatches->source;const auto cursor=stack->source;const auto sequence=cursor->sequence;
         const auto &lines=hatches->passes.front().lines;const auto &roi=stack->surfaces.front().cell.footprint;
@@ -2338,6 +2343,72 @@ FirstHatchLayerResult plan_first_hatch_layer(const AffineHatchResult &requested,
         poll();return {"BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) {return {e.what(),{}};}
     catch (const std::exception &e) {return {"FIRST_HATCH_LAYER_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
+}
+
+FirstHatchReplanResult replan_first_hatch_ends(const FirstHatchLayerResult &requested,const FirstHatchReplanPolicy &requested_policy,
+                                             const FirstHatchLayerLimits &requested_limits)
+{
+    const auto before=requested.snapshot;const auto policy=requested_policy;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!before || !before->source || !before->fill || !valid_first_hatch_layer_limits(limits) ||
+            policy.minimum_covered_gain.value()<=0 || policy.maximum_outside_target.value()<0)
+            reject("INVALID_FIRST_HATCH_REPLAN_INPUT");
+        const auto hatches=before->source;const auto stack=hatches->source;
+        if (hatches->first_pass_extent!=FirstHatchExtent::CapsuleInset) reject("FIRST_HATCH_EXTENT_ALREADY_REPLANNED");
+        const auto revision=stack->source->sequence->revision;
+        const auto poll=[&] {
+            stop(limits,revision,started);stop(limits.beads,revision,started);
+            stop(limits.beads.packets,revision,started);stop(limits.volumes,revision,started);
+        };poll();size_t work=0;
+        const auto charge=[&](size_t count) {if (count>limits.max_evaluations-work) reject("FIRST_HATCH_REPLAN_WORK_LIMIT");work+=count;poll();};
+        charge(hatches->line_count+hatches->passes.size());auto passes=hatches->passes;
+        if (passes.front().lines.size()>limits.max_paths) reject("FIRST_HATCH_REPLAN_PATH_LIMIT");
+        const auto &cell=stack->surfaces.front().cell;const auto &roi=cell.footprint;
+        const auto inset=Interval(hatches->policy.boundary_band.value())+Interval(hatches->numerical_error_upper_mm);
+        const auto point=[&](double x,double y) {
+            const Exact z=Exact(cell.z00)+(Exact(cell.z10)-Exact(cell.z00))*(Exact(x)-Exact(roi.min_x))/(Exact(roi.max_x)-Exact(roi.min_x))+
+                (Exact(cell.z01)-Exact(cell.z00))*(Exact(y)-Exact(roi.min_y))/(Exact(roi.max_y)-Exact(roi.min_y));
+            const auto stored=stored_exact(z);return std::pair<PhysicalPosition,double>{{x,y,stored.first},stored.second};
+        };
+        double extra_error=0;
+        for (auto &line : passes.front().lines) {
+            charge(1);const bool x=line.start.y()==line.end.y();
+            if (x==(line.start.x()==line.end.x())) reject("FIRST_HATCH_REPLAN_REQUIRES_AXIS");
+            const double low=(Interval(x ? roi.min_x : roi.min_y)+inset).hi,high=(Interval(x ? roi.max_x : roi.max_y)-inset).lo;
+            const double a=x ? line.start.x() : line.start.y(),b=x ? line.end.x() : line.end.y();
+            if (low>=std::min(a,b) || high<=std::max(a,b)) reject("FIRST_HATCH_REPLAN_NO_EXTENSION_DOMAIN");
+            const auto first=point(x ? (a<b ? low : high) : line.start.x(),x ? line.start.y() : (a<b ? low : high));
+            const auto last=point(x ? (a<b ? high : low) : line.end.x(),x ? line.end.y() : (a<b ? high : low));
+            line.start=first.first;line.end=last.first;line.reverse_start=line.end;line.reverse_end=line.start;
+            line.projected_length_mm=bounds(exact_interval(Exact(high)-Exact(low)));
+            const double error=std::max(first.second,last.second);extra_error=std::max(extra_error,error);
+            line.coordinate_error_upper_mm=(Interval(line.coordinate_error_upper_mm)+Interval(error)).hi;
+        }
+        const double numeric=(Interval(hatches->numerical_error_upper_mm)+Interval(extra_error)).hi;
+        if (numeric>.05) reject("FIRST_HATCH_REPLAN_NUMERICAL_BUDGET");
+        const auto next=std::shared_ptr<const AffineHatchSnapshot>(new AffineHatchSnapshot(stack,hatches->policy,std::move(passes),
+            hatches->total_prospective_volume_mm3,hatches->line_count,numeric,FirstHatchExtent::FiniteButtInset));
+        if (work>=limits.max_evaluations) reject("FIRST_HATCH_REPLAN_WORK_LIMIT");
+        auto remaining=limits;remaining.max_evaluations-=work;
+        const auto elapsed=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        remaining.timeout-=elapsed;remaining.beads.timeout-=elapsed;remaining.beads.packets.timeout-=elapsed;remaining.volumes.timeout-=elapsed;
+        remaining.cancelled=[&] {poll();return false;};remaining.is_current={};
+        remaining.beads.cancelled={};remaining.beads.is_current={};remaining.beads.packets.cancelled={};remaining.beads.packets.is_current={};
+        remaining.volumes.cancelled={};remaining.volumes.is_current={};
+        const auto after=plan_first_hatch_layer({"",next},before->fill->occupied->domain,remaining);
+        if (!after.snapshot) throw Rejection(after.reason);charge(after.snapshot->evaluations);
+        if (after.snapshot->fill->target!=before->fill->target) reject("FIRST_HATCH_REPLAN_TARGET_CHANGED");
+        const auto gain=interval(after.snapshot->fill->covered_target_mm3)-interval(before->fill->covered_target_mm3);
+        const auto reduction=interval(before->fill->missing_target_mm3)-interval(after.snapshot->fill->missing_target_mm3);
+        if (gain.lo<policy.minimum_covered_gain.value() || reduction.lo<policy.minimum_covered_gain.value()) reject("FIRST_HATCH_REPLAN_INSUFFICIENT_GAIN");
+        if (after.snapshot->fill->outside_target_mm3.upper>policy.maximum_outside_target.value()) reject("FIRST_HATCH_REPLAN_OUTSIDE_TARGET_LIMIT");
+        poll();auto snapshot=std::shared_ptr<const FirstHatchReplanSnapshot>(new FirstHatchReplanSnapshot(before,after.snapshot,policy,
+            bounds(gain),bounds(reduction),after.snapshot->cells,work));
+        poll();return {"BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) {return {e.what(),{}};}
+    catch (const std::exception &e) {return {"FIRST_HATCH_REPLAN_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
 }
 
 }

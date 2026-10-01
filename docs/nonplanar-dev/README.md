@@ -139,10 +139,22 @@ layer analytical cases/145 assertions and one exact congruent-union case/56
 assertions pass. The unchanged native wedge produces both lines/122 packets;
 the extended case passes 46 assertions, independently enclosing commanded
 S/U/R and keeping section targets distinct. Nominal C is 0.138283 mm3, M
-0.113705 mm3 and R 0.107875 mm3, with 63 cells/17802 work. Current material/body
+0.113705 mm3 and R 0.107875 mm3, with 63 cells/17802 work. At that checkpoint material/body
 suites execute 64/14 cases; selected CTest executes 309/309 and six fresh OFF/ZAA
 comparisons pass. Failed integration trials remain diagnostic evidence. Complete
 3D repair/contact/seam, curved/later support and order/export remain pending.
+
+`B07-first-hatch-end-replan.md` replaces the complete prospective first list
+with longer finite butts, preserving the original band, transverse centres,
+actual body and target. Three analytical cases/183 assertions and the extended
+native case/64 assertions pass. Native C rises to 0.181000 mm3 and M drops to
+0.0709877 mm3, with gain at least approximately 0.0427173 mm3. A ridge only in
+the new domain rejects the whole replan; future material remains absent. The
+new owned first-pass extent provenance increments the internal affine hatch
+contract 2 -> 3, with no persisted formats affected. Current material/body
+suites execute 67/14 cases, selected CTest executes 312/312 and six fresh OFF/ZAA
+comparisons pass. Remaining 3D repair, perimeter/contact/seam and actual later
+support are still required; this is prospective geometry, not printed material.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -160,9 +172,10 @@ run 36826154741 at 84a709ef failed the native fill case on its unchanged
 36831523726 at 7f71cc98 also failed that deadline (38309 cells / 814580 work).
 Run 36842571249 at 946d3da7 also failed the native fill deadline
 (40862 cells / 857455 work), with check annotations retained in the new first-
-hatch-layer archive. Run 36847680702 at 2d8bebaa is still building native tests.
-Current local verification does not establish Linux repair; keep all limits
-and require a successful run.
+hatch-layer archive. Run 36847680702 at 2d8bebaa now succeeds in selected
+native suites, native STL CLI and application build, retaining the original
+20-second fill limit. Run 36853913690 at 361ccdc8 is building native tests in
+the saved 11:37 UTC observation. This new end replan is not yet Linux-verified.
 Both failed check annotations are archived.
 Windows remains NOT_RUN.
 
