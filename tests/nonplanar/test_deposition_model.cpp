@@ -8,6 +8,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/nowide/fstream.hpp>
 #include <nlohmann/json.hpp>
+#include <boost/multiprecision/cpp_bin_float.hpp>
 
 using namespace Slic3r::nptop;
 namespace {
@@ -1524,4 +1525,115 @@ TEST_CASE("B07 flat roof queries exclude a higher rectangular neighbour outside 
     const auto target=integrate_material_first_pass(present.lower,{{1,-.4,3,.4},1.2,1.2,1.2},.9,
         {VerticalGap(.1),VerticalGap(.4),Length(0)});INFO(target.reason);REQUIRE(target.proof);
     volume_contains(*target.nominal_volume_mm3,2.L*(2.L*.4)*(static_cast<long double>(double(1.2))-1));
+}
+
+TEST_CASE("B07 complete first hatch layer measures rounded overlap rather than summing line coverage", "[Nonplanar][B07][FirstHatchLayer]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstHatchLayerSnapshot>::value);
+    for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) {
+        const auto f=remainder_fixture(0,direction);
+        const auto result=plan_first_hatch_layer(f.hatches,{{1,-.4,.7},{3,.4,1.8}});INFO(result.reason);REQUIRE(result.snapshot);
+        const auto &layer=*result.snapshot;const auto &lines=f.hatches.snapshot->passes.front().lines;
+        REQUIRE(layer.source==f.hatches.snapshot);REQUIRE(layer.paths.size()==lines.size());REQUIRE(layer.paths.size()>1);
+        const bool x=direction==HatchDirection::AlongX;
+        long double sum=0,overlap=0,previous=0,first_width=0,first_height=0,length=0;
+        for (size_t i=0;i<layer.paths.size();++i) {
+            const auto &path=*layer.paths[i];REQUIRE(path.line_index==i);REQUIRE(path.source==layer.source);
+            REQUIRE(path.roof_domain==FirstHatchRoofDomain::FiniteWidth);REQUIRE(path.pieces.size()==1);
+            const auto &piece=path.pieces.front();const long double h=piece.section.gap_begin_mm;
+            REQUIRE(piece.section.gap_end_mm==h);
+            const long double l=x ? static_cast<long double>(piece.end.x())-piece.start.x() : static_cast<long double>(piece.end.y())-piece.start.y();
+            const long double area=piece.volume.value()/l,k=1-std::acos(-1.L)/4,w=area/h+k*h;
+            const long double center=x ? piece.start.y() : piece.start.x();sum+=piece.volume.value();
+            if (i==0) {first_width=w;first_height=h;length=l;}
+            else {
+                REQUIRE(w==first_width);REQUIRE(h==first_height);REQUIRE(l==length);
+                const long double d=center-previous,core=w-h,r=h/2,q=d-core;
+                REQUIRE(d>0);if (i>1) REQUIRE(2*d>w); // No triple intersection in this fixture.
+                const long double shared=q<=0 ? area-h*d : q>=h ? 0 :
+                    2*r*r*std::acos(q/(2*r))-q*std::sqrt(4*r*r-q*q)/2;
+                overlap+=l*shared;
+            }
+            previous=center;
+        }
+        const auto &fill=*layer.fill;const auto &occupied=*fill.occupied;
+        volume_contains(occupied.individual_volume_mm3,sum);volume_contains(occupied.union_volume_mm3,sum-overlap);
+        volume_contains(occupied.repeated_volume_mm3,overlap);volume_contains(fill.covered_target_mm3,sum-overlap);
+        REQUIRE(occupied.repeated_volume_mm3.lower>0);REQUIRE(fill.missing_target_mm3.lower>0);
+        REQUIRE(fill.outside_target_mm3.upper<=.001);REQUIRE(layer.global_volume_error_mm3<=.001);
+        REQUIRE(fill.occupied->source->completed_records==fill.occupied->source->sequence->records.size());
+    }
+}
+TEST_CASE("B07 complete first hatch layer captures shared budgets and refuses partial or clipped candidates", "[Nonplanar][B07][FirstHatchLayer]")
+{
+    auto f=remainder_fixture(0);const auto source=f.hatches.snapshot;const SceneBox box{{1,-.4,.7},{3,.4,1.8}};
+    FirstHatchLayerLimits limits;
+    limits.cancelled=[&] {f.hatches.snapshot.reset();limits.max_paths=0;return false;};
+    const auto owned=plan_first_hatch_layer(f.hatches,box,limits);INFO(owned.reason);REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->source==source);f.hatches.snapshot=source;
+    REQUIRE_FALSE(plan_first_hatch_layer({},box).snapshot);
+    REQUIRE_FALSE(plan_first_hatch_layer(f.hatches,{{1,-.4,1.1},{3,.4,1.8}}).snapshot);
+    REQUIRE_FALSE(plan_first_hatch_layer(f.hatches,{{1.1,-.4,.7},{3,.4,1.8}}).snapshot);
+    limits={};limits.max_paths=1;REQUIRE_FALSE(plan_first_hatch_layer(f.hatches,box,limits).snapshot);
+    limits={};limits.max_records=1;REQUIRE_FALSE(plan_first_hatch_layer(f.hatches,box,limits).snapshot);
+    limits={};limits.beads.packets.max_segments=1;REQUIRE_FALSE(plan_first_hatch_layer(f.hatches,box,limits).snapshot);
+    limits={};limits.beads.max_roof_segments=1;REQUIRE_FALSE(plan_first_hatch_layer(f.hatches,box,limits).snapshot);
+    limits={};limits.max_evaluations=1;REQUIRE_FALSE(plan_first_hatch_layer(f.hatches,box,limits).snapshot);
+    limits={};limits.max_cells=1;REQUIRE_FALSE(plan_first_hatch_layer(f.hatches,box,limits).snapshot);
+    limits={};limits.volumes.max_depth=0;REQUIRE_FALSE(plan_first_hatch_layer(f.hatches,box,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_layer(f.hatches,box,limits).snapshot);
+    size_t polls=0;limits={};limits.cancelled=[&] {return ++polls==8;};
+    REQUIRE_FALSE(plan_first_hatch_layer(f.hatches,box,limits).snapshot);REQUIRE(polls==8);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounding=plan_first_hatch_layer(f.hatches,box,limits);
+    REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+    const auto floor=bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle);
+    const auto ridge=bead(3,2,{0,.3,1.06},{10,.3,1.06},.06,.05,.05,BeadSectionKind::Rectangle);
+    const MaterialRecord travel{{2,1,0,floor.motion.end,ridge.motion.start,Speed(10),Acceleration(100),Travel{}},{}};
+    const auto ledger=captured({floor,travel,ridge});
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.0001)};
+    for (double progress : {0.,.1,.3,1.}) {
+        const auto present=material_at(ledger,2,progress);
+        const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.8,1.8,1.8},.9,policy);REQUIRE(stack.snapshot);
+        const auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX});REQUIRE(hatch.snapshot);
+        limits={};limits.beads.max_roof_segments=32;
+        REQUIRE(plan_first_hatch_footprint_bead(hatch,0,limits.beads).snapshot); // The first line misses the ridge.
+        const auto layer=plan_first_hatch_layer(hatch,box,limits);INFO(layer.reason);
+        // Future material and the current event after its true butt are absent.
+        // Once the ridge intersects the second line, refuse the whole candidate.
+        if (progress<=.1) REQUIRE(layer.snapshot);
+        else REQUIRE_FALSE(layer.snapshot);
+    }
+}
+
+TEST_CASE("B07 congruent rounded packet pairs integrate affine gaps and preserve missing longitudinal space", "[Nonplanar][B07][MaterialUnion][CongruentUnion]")
+{
+    using Amount=boost::multiprecision::cpp_bin_float_quad;
+    for (bool x : {false,true}) for (bool reverse : {false,true}) {
+        std::vector<MaterialRecord> rows;Amount one=0,extra=0;
+        const auto point=[&](double along,double normal,double z) {return x ? PhysicalPosition(along,normal,z) : PhysicalPosition(normal,along,z);};
+        for (double center : {0.,.125}) for (size_t n=0;n<2;++n) {
+            const double a=n ? 3. : 0.,b=n ? 5. : 1.,h0=n ? .25 : .2,h1=n ? .3 : .25,z0=n ? 1.8 : 1.,z1=n ? 2.4 : 1.5;
+            const auto start=point(reverse ? b : a,center,reverse ? z1 : z0),end=point(reverse ? a : b,center,reverse ? z0 : z1);
+            if (!rows.empty()) {const size_t i=rows.size();rows.push_back({{i+1,i,0,rows.back().motion.end,start,Speed(10),Acceleration(100),Travel{}},{}});}
+            const size_t i=rows.size();rows.push_back(bead(i+1,i,start,end,.9,reverse ? h1 : h0,reverse ? h0 : h1));
+            if (center==0) {one+=std::get<Deposition>(rows.back().motion.payload).volume.value();extra+=Amount(.125)*(Amount(b)-a)*(Amount(h0)+h1)/2;}
+        }
+        const auto ledger=captured(rows);const auto prefix=material_at(ledger,rows.size(),0);
+        MaterialUnionLimits limits;limits.max_cells=2;limits.maximum_interval_width=Volume(1e-12);
+        const SceneBox box{{-2,-2,-1},{6,6,4}};
+        const auto result=integrate_material_union(prefix.nominal,box,limits);INFO(result.reason);REQUIRE(result.snapshot);
+        volume_contains(result.snapshot->individual_volume_mm3,(2*one).convert_to<long double>());
+        volume_contains(result.snapshot->union_volume_mm3,(one+extra).convert_to<long double>());
+        volume_contains(result.snapshot->repeated_volume_mm3,(one-extra).convert_to<long double>());REQUIRE(result.cells==2);
+        limits.max_cells=1;REQUIRE_FALSE(integrate_material_union(prefix.nominal,box,limits).snapshot);
+        limits.max_cells=2;
+        const auto empty=integrate_material_union(prefix.nominal,x ? SceneBox{{1,-2,-1},{3,2,4}} : SceneBox{{-2,1,-1},{2,3,4}},limits);
+        REQUIRE(empty.snapshot);REQUIRE(empty.snapshot->union_volume_mm3.upper==0);
+        // Different profiles require the general solver; never reuse the exact identity.
+        const auto &last=rows.back();
+        rows.back()=bead(last.motion.event_id,last.motion.sequence_index,last.motion.start,last.motion.end,.91,last.bead->gap_begin_mm,last.bead->gap_end_mm);
+        const auto changed=captured(rows);const auto changed_prefix=material_at(changed,rows.size(),0);
+        REQUIRE_FALSE(integrate_material_union(changed_prefix.nominal,box,limits).snapshot);
+    }
 }

@@ -518,4 +518,42 @@ struct RemainingHatchResult {std::string reason;std::shared_ptr<const RemainingH
 RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &,size_t line_index,const MaterialFillResult &,
     const RemainingHatchPolicy &policy={},const RemainingHatchLimits &limits={});
 
+inline constexpr unsigned first_hatch_layer_contract_version=1;
+struct FirstHatchLayerLimits {
+    // Packet volume error, packet/roof counts and bead work are shared by all lines.
+    FirstHatchBeadLimits beads;
+    MaterialUnionLimits volumes;
+    size_t max_paths=4096,max_records=65535,max_cells=65535,max_evaluations=2000000;
+    std::chrono::milliseconds timeout{5000};
+    std::function<bool()> cancelled;
+    std::function<bool(uint64_t)> is_current;
+};
+struct FirstHatchLayerResult;
+struct FirstHatchLayerSnapshot {
+    const std::shared_ptr<const AffineHatchSnapshot> source;
+    const std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> paths;
+    const std::shared_ptr<const MaterialFillSnapshot> fill;
+    // Sum of section targets, distinct from the whole-cell target in fill.
+    const ScalarBounds section_target_volume_mm3,deposited_volume_mm3;
+    const double global_volume_error_mm3,numerical_error_upper_mm;
+    const size_t roof_segments,cells,evaluations;
+private:
+    FirstHatchLayerSnapshot(std::shared_ptr<const AffineHatchSnapshot> s,std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> p,
+        std::shared_ptr<const MaterialFillSnapshot> f,ScalarBounds target,ScalarBounds delivered,double error,double numeric,
+        size_t roofs,size_t count,size_t work)
+        : source(std::move(s)),paths(std::move(p)),fill(std::move(f)),section_target_volume_mm3(target),deposited_volume_mm3(delivered),
+          global_volume_error_mm3(error),numerical_error_upper_mm(numeric),roof_segments(roofs),cells(count),evaluations(work) {}
+    friend FirstHatchLayerResult plan_first_hatch_layer(const AffineHatchResult &,const SceneBox &,const FirstHatchLayerLimits &);
+};
+struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+// Construct every first-pass finite-width hatch against the same actual body
+// prefix, then capture and measure the complete prospective ledger together.
+// Preserve measured union/repetition, target coverage/deficit and spill; do not
+// sum per-line coverage or silently omit a refused line. The box must contain
+// the complete nominal ledger and target. Connectors and the proposed order
+// are unqualified; sequential contact, repair/seam, later support and export
+// remain separate. This is a measured whole-pass candidate, not a filled job.
+FirstHatchLayerResult plan_first_hatch_layer(const AffineHatchResult &,const SceneBox &,
+    const FirstHatchLayerLimits &limits={});
+
 }

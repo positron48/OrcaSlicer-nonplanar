@@ -1,0 +1,1032 @@
+Filters: [FirstHatchLayer]
+Randomness seeded to: 2682895826
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 complete first hatch layer measures rounded overlap rather than summing
+line coverage
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1529
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1531: PASSED:
+with message:
+  !(std::is_aggregate<FirstHatchLayerSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa5cd0c798
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x108b10f20
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0xa5d110a10
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa5cd0c838
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa5d075080
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa5ccca300
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1534: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa5d140680
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1536: PASSED:
+  REQUIRE( layer.source==f.hatches.snapshot )
+with expansion:
+  0xa5d110a10 == 0xa5d110a10
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1536: PASSED:
+  REQUIRE( layer.paths.size()==lines.size() )
+with expansion:
+  2 == 2
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1536: PASSED:
+  REQUIRE( layer.paths.size()>1 )
+with expansion:
+  2 > 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.line_index==i )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.source==layer.source )
+with expansion:
+  0xa5d110a10 == 0xa5d110a10
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1543: PASSED:
+  REQUIRE( piece.section.gap_end_mm==h )
+with expansion:
+  0.20500000000000029 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.line_index==i )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.source==layer.source )
+with expansion:
+  0xa5d110a10 == 0xa5d110a10
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1543: PASSED:
+  REQUIRE( piece.section.gap_end_mm==h )
+with expansion:
+  0.20500000000000029 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( w==first_width )
+with expansion:
+  0.45 == 0.45
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( h==first_height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( l==length )
+with expansion:
+  1.45 == 1.45
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1551: PASSED:
+  REQUIRE( d>0 )
+with expansion:
+  0.25 > 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.24137093766865525 <= 0.241371
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.24137093766865525 >= 0.241371
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.1949183756986122 <= 0.194998
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.19516712500907274 >= 0.194998
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.04620381265958251 <= 0.0463731
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.04645256197004304 >= 0.0463731
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.19491837569861029 <= 0.194998
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.19516712500907274 >= 0.194998
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1561: PASSED:
+  REQUIRE( occupied.repeated_volume_mm3.lower>0 )
+with expansion:
+  0.04620381265958251 > 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1561: PASSED:
+  REQUIRE( fill.missing_target_mm3.lower>0 )
+with expansion:
+  0.1328328749909268 > 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1562: PASSED:
+  REQUIRE( fill.outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000188 <= 0.001
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1562: PASSED:
+  REQUIRE( layer.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000103 <= 0.001
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1563: PASSED:
+  REQUIRE( fill.occupied->source->completed_records==fill.occupied->source->sequence->records.size() )
+with expansion:
+  3 == 3
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa5cd0c798
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x108b10e20
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0xa5d110a10
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa5cd0c838
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa5d075080
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa5ccca300
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1534: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa5d140700
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1536: PASSED:
+  REQUIRE( layer.source==f.hatches.snapshot )
+with expansion:
+  0xa5d110a10 == 0xa5d110a10
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1536: PASSED:
+  REQUIRE( layer.paths.size()==lines.size() )
+with expansion:
+  5 == 5
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1536: PASSED:
+  REQUIRE( layer.paths.size()>1 )
+with expansion:
+  5 > 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.line_index==i )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.source==layer.source )
+with expansion:
+  0xa5d110a10 == 0xa5d110a10
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1543: PASSED:
+  REQUIRE( piece.section.gap_end_mm==h )
+with expansion:
+  0.20500000000000029 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.line_index==i )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.source==layer.source )
+with expansion:
+  0xa5d110a10 == 0xa5d110a10
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1543: PASSED:
+  REQUIRE( piece.section.gap_end_mm==h )
+with expansion:
+  0.20500000000000029 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( w==first_width )
+with expansion:
+  0.45 == 0.45
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( h==first_height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( l==length )
+with expansion:
+  0.25 == 0.25
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1551: PASSED:
+  REQUIRE( d>0 )
+with expansion:
+  0.3625 > 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.line_index==i )
+with expansion:
+  2 == 2
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.source==layer.source )
+with expansion:
+  0xa5d110a10 == 0xa5d110a10
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1543: PASSED:
+  REQUIRE( piece.section.gap_end_mm==h )
+with expansion:
+  0.20500000000000029 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( w==first_width )
+with expansion:
+  0.45 == 0.45
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( h==first_height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( l==length )
+with expansion:
+  0.25 == 0.25
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1551: PASSED:
+  REQUIRE( d>0 )
+with expansion:
+  0.3625 > 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1551: PASSED:
+  REQUIRE( 2*d>w )
+with expansion:
+  0.725 > 0.45
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.line_index==i )
+with expansion:
+  3 == 3
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.source==layer.source )
+with expansion:
+  0xa5d110a10 == 0xa5d110a10
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1543: PASSED:
+  REQUIRE( piece.section.gap_end_mm==h )
+with expansion:
+  0.20500000000000029 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( w==first_width )
+with expansion:
+  0.45 == 0.45
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( h==first_height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( l==length )
+with expansion:
+  0.25 == 0.25
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1551: PASSED:
+  REQUIRE( d>0 )
+with expansion:
+  0.3625 > 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1551: PASSED:
+  REQUIRE( 2*d>w )
+with expansion:
+  0.725 > 0.45
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.line_index==i )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1540: PASSED:
+  REQUIRE( path.source==layer.source )
+with expansion:
+  0xa5d110a10 == 0xa5d110a10
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1541: PASSED:
+  REQUIRE( path.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1543: PASSED:
+  REQUIRE( piece.section.gap_end_mm==h )
+with expansion:
+  0.20500000000000029 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( w==first_width )
+with expansion:
+  0.45 == 0.45
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( h==first_height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1549: PASSED:
+  REQUIRE( l==length )
+with expansion:
+  0.25 == 0.25
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1551: PASSED:
+  REQUIRE( d>0 )
+with expansion:
+  0.3625 > 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1551: PASSED:
+  REQUIRE( 2*d>w )
+with expansion:
+  0.725 > 0.45
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.10403919727097109 <= 0.104039
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.10403919727097109 >= 0.104039
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.09362085199113747 <= 0.0937273
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.09387039279664249 >= 0.0937273
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.01016880447432862 <= 0.0103119
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.01041834527983361 >= 0.0103119
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.09362085199113665 <= 0.0937273
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.09387039279664249 >= 0.0937273
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1561: PASSED:
+  REQUIRE( occupied.repeated_volume_mm3.lower>0 )
+with expansion:
+  0.01016880447432862 > 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1561: PASSED:
+  REQUIRE( fill.missing_target_mm3.lower>0 )
+with expansion:
+  0.23412960720335704 > 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1562: PASSED:
+  REQUIRE( fill.outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000081 <= 0.001
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1562: PASSED:
+  REQUIRE( layer.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000042 <= 0.001
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1563: PASSED:
+  REQUIRE( fill.occupied->source->completed_records==fill.occupied->source->sequence->records.size() )
+with expansion:
+  9 == 9
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+-------------------------------------------------------------------------------
+B07 complete first hatch layer captures shared budgets and refuses partial or
+clipped candidates
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1566
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa5cd0c6f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1304: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x108b10e20
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0xa5d110bd0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa5cd0c8d8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1313: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xa5d075080
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xa5ccca300
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1571: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0xa5d140700
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1572: PASSED:
+  REQUIRE( owned.snapshot->source==source )
+with expansion:
+  0xa5d110bd0 == 0xa5d110bd0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1573: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer({},box).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1574: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer(f.hatches,{{1,-.4,1.1},{3,.4,1.8}}).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1575: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer(f.hatches,{{1.1,-.4,.7},{3,.4,1.8}}).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1576: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer(f.hatches,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1577: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer(f.hatches,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1578: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer(f.hatches,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1579: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer(f.hatches,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1580: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer(f.hatches,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1581: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer(f.hatches,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1582: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer(f.hatches,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1583: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer(f.hatches,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1585: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_layer(f.hatches,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1585: PASSED:
+  REQUIRE( polls==8 )
+with expansion:
+  8 == 8
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1588: PASSED:
+  REQUIRE( std::fesetround(0x00000000)==0 )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1588: PASSED:
+  REQUIRE_FALSE( rounding.snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa5cd0ca18
+with messages:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1596: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0xa5d298000
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1597: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xa5d110a80
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1599: PASSED:
+  REQUIRE( plan_first_hatch_footprint_bead(hatch,0,limits.beads).snapshot )
+with expansion:
+  0xa5d063540
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1603: PASSED:
+  REQUIRE( layer.snapshot )
+with expansion:
+  0xa5d140900
+with messages:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1596: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0xa5d298000
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1597: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xa5d110a80
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1599: PASSED:
+  REQUIRE( plan_first_hatch_footprint_bead(hatch,0,limits.beads).snapshot )
+with expansion:
+  0xa5d063540
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1603: PASSED:
+  REQUIRE( layer.snapshot )
+with expansion:
+  0xa5d140900
+with messages:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1596: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0xa5d298000
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1597: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xa5d110a80
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1599: PASSED:
+  REQUIRE( plan_first_hatch_footprint_bead(hatch,0,limits.beads).snapshot )
+with expansion:
+  0xa5d063540
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1604: PASSED:
+  REQUIRE_FALSE( layer.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+  FIRST_HATCH_ROOF_DEPTH_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1596: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0xa5d298000
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1597: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xa5d110a80
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1599: PASSED:
+  REQUIRE( plan_first_hatch_footprint_bead(hatch,0,limits.beads).snapshot )
+with expansion:
+  0xa5d063540
+with message:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1604: PASSED:
+  REQUIRE_FALSE( layer.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+  FIRST_HATCH_ROOF_DEPTH_LIMIT
+
+===============================================================================
+All tests passed (145 assertions in 2 test cases)
+

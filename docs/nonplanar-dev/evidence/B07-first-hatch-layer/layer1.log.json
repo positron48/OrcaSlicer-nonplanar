@@ -1,0 +1,21 @@
+{
+  "command": [
+    "build/arm64/tests/nonplanar/nonplanar_tests",
+    "[FirstHatchLayer]",
+    "--warn",
+    "NoAssertions",
+    "--reporter",
+    "junit",
+    "--out",
+    "build/nonplanar-evidence/B07-first-hatch-layer/layer1.xml",
+    "--reporter",
+    "console::out=-",
+    "--success"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-01T10:38:38.120056+00:00",
+  "status": "ERROR",
+  "exit_code": 127,
+  "error": "[Errno 2] No such file or directory: 'build/arm64/tests/nonplanar/nonplanar_tests'",
+  "elapsed_seconds": 0.001
+}

@@ -21,7 +21,7 @@
     "B04": "OWNED_EXACT_PARTITION_NATIVE_BODY_MATERIAL_AND_INTERIOR_DENSE_COVERAGE_PASS_SEAM_WIDER_NATIVE_DOMAIN_JOB_WORKER_PENDING",
     "B05": "OWNED_ORDERED_CONSTANT_FLUX_PREFIX_NATIVE_BODY_AND_CONTINUOUS_UNION_COVERAGE_PASS_CONTACT_CCD_FULL_SCOPE_PENDING",
     "B06": "ACTUAL_FIRST_GAP_REFINED_INTEGRAL_SOURCE_BOUND_AFFINE_SURFACES_AND_PROTECTED_STRIP_VOLUMES_PASS_LATER_SUPPORT_SEAM_FULL_SCOPE_PENDING",
-    "B07": "BOUNDED_REMAINING_FIRST_HATCH_CONSTRUCTION_FINITE_WIDTH_SOURCE_PRESERVATION_POSITIVE_NOMINAL_FILL_GAIN_PASS_FULL_3D_REPAIR_CONTACT_SEAM_CURVED_LATER_SUPPORT_ORDER_PENDING",
+    "B07": "BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_SHARED_BUDGETS_ACTUAL_SOURCE_AND_MEASURED_UNION_FILL_PASS_FULL_3D_REPAIR_CONTACT_SEAM_CURVED_LATER_SUPPORT_ORDER_PENDING",
     "B08": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B09": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B10": "NOT_IMPLEMENTED_FULL_SCOPE",
@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 269,
+    "new_native_cases": 272,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 306,
-    "final_ctest_executed": 306,
+    "final_ctest_discovered": 309,
+    "final_ctest_executed": 309,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -337,11 +337,22 @@
     "B07_constant_section_roof_oracle": "INDEPENDENT_CIRCLE_SEGMENT_AND_PRISM_MEASURES_CURRENT_FUTURE_REVERSE_DIAGONAL_BOTH_CAP_AXES_AND_OUTSIDE_RECTANGLE_NEIGHBOUR_PASS",
     "B07_constant_section_roof_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
     "B07_constant_section_roof_native_fill_seconds": 16.01,
-    "B07_constant_section_roof_native_union_seconds": 6.99115
+    "B07_constant_section_roof_native_union_seconds": 6.99115,
+    "B07_first_hatch_layer_cases": 2,
+    "B07_first_hatch_layer_assertions": 145,
+    "B07_congruent_union_cases": 1,
+    "B07_congruent_union_assertions": 56,
+    "B07_native_first_hatch_layer_cases": 1,
+    "B07_native_first_hatch_layer_assertions": 46,
+    "B07_first_hatch_layer_oracle": "INDEPENDENT_STADIUM_S_U_R_C_BOTH_AXES_CURRENT_FUTURE_LATE_LINE_REFUSAL_AND_NATIVE_COMMAND_SECTION_TARGET_DISTINCTION_PASS",
+    "B07_first_hatch_layer_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B07_first_hatch_layer_native_cells": 63,
+    "B07_first_hatch_layer_native_work": 17802,
+    "B07_first_hatch_layer_native_case_seconds": 0.281
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
-    "linux_x86_64": "4B3DA47D_NATIVE_LINUX_CI_SUCCESS_84A709EF_AND_7F71CC98_FILL_DEADLINE_FAILURE_946D3DA7_IN_PROGRESS_CURRENT_REVISION_PENDING"
+    "linux_x86_64": "4B3DA47D_NATIVE_LINUX_CI_SUCCESS_84A709EF_7F71CC98_946D3DA7_FILL_DEADLINE_FAILURE_2D8BEBAA_IN_PROGRESS_CURRENT_REVISION_PENDING"
   },
   "physical": {
     "machine": "Snapmaker U1",
@@ -352,10 +363,10 @@
     "operator_profile": "UNCONFIRMED"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "84A709EF_AND_7F71CC98_NATIVE_FILL_DEADLINE_FAILURE_RUN_36842571249_946D3DA7_NATIVE_TEST_BUILD_IN_PROGRESS_SAVED_2026_10_01_1005_UTC_CURRENT_CONSTANT_SECTION_REVISION_PENDING",
+  "ci": "946D3DA7_RUN_36842571249_NATIVE_FILL_DEADLINE_FAILURE_2D8BEBAA_RUN_36847680702_NATIVE_TEST_BUILD_IN_PROGRESS_CURRENT_REVISION_PENDING",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Verify the constant-section roof optimization on Linux without changing the 20-second fill timeout or numerical/work limits. Continue full remaining-space path construction and global replanning, qualified floor/contact, seam/edges and later actual support, complete head CCD/motion/order/flow, final-byte replay/export and B01-B03 job/plate/provenance binding. Independent review, Windows and physical qualification remain pending.",
+  "next_step": "Verify Linux without changing the native 20-second fill timeout or numerical/work limits. Continue complete remaining-space/global repair from measured whole-first-candidate deficit/excess; qualify floor/contact, seam/edges and later actual support, full head CCD/motion/order/flow, final-byte replay/export and B01-B03 job/plate/provenance binding. Independent review, Windows and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -425,7 +436,8 @@
     "B07_first_footprint": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-footprint.md",
     "B07_remainder_hatch": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-remainder-hatch.md",
     "B07_stadium_depth_bounds": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-stadium-depth-bounds.md",
-    "B07_constant_section_roof": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-constant-section-roof.md"
+    "B07_constant_section_roof": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-constant-section-roof.md",
+    "B07_first_hatch_layer": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-hatch-layer.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -492,5 +504,6 @@
   "B07_first_footprint_evidence": "docs/nonplanar-dev/evidence/B07-first-footprint/source-manifest.json",
   "B07_remainder_hatch_evidence": "docs/nonplanar-dev/evidence/B07-remainder-hatch/source-manifest.json",
   "B07_stadium_depth_bounds_evidence": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/source-manifest.json",
-  "B07_constant_section_roof_evidence": "docs/nonplanar-dev/evidence/B07-constant-section-roof/source-manifest.json"
+  "B07_constant_section_roof_evidence": "docs/nonplanar-dev/evidence/B07-constant-section-roof/source-manifest.json",
+  "B07_first_hatch_layer_evidence": "docs/nonplanar-dev/evidence/B07-first-hatch-layer/source-manifest.json"
 }

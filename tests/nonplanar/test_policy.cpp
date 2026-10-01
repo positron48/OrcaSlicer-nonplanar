@@ -2097,7 +2097,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2174,6 +2174,36 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         " covered=[" << repair.snapshot->covered_target_mm3.lower << ',' << repair.snapshot->covered_target_mm3.upper <<
         "] missing=[" << repair.snapshot->missing_target_mm3.lower << ',' << repair.snapshot->missing_target_mm3.upper <<
         "] cells=" << repair.snapshot->cells << " work=" << repair.snapshot->evaluations);
+    FirstHatchLayerLimits layer_limits;layer_limits.beads=limits;
+    layer_limits.volumes.max_cells=65535;layer_limits.volumes.max_evaluations=2000000;layer_limits.volumes.timeout=std::chrono::seconds(5);
+    const auto complete=plan_first_hatch_layer({"",native.snapshot->hatches},box,layer_limits);INFO(complete.reason);REQUIRE(complete.snapshot);
+    const auto &layer=*complete.snapshot;const auto &layer_fill=*layer.fill;
+    REQUIRE(layer.paths.size()==native.snapshot->hatches->passes.front().lines.size());REQUIRE(layer.paths.size()==2);
+    REQUIRE(layer.section_target_volume_mm3.lower<=2*expected);REQUIRE(layer.section_target_volume_mm3.upper>=2*expected);
+    using LayerAmount=boost::multiprecision::cpp_bin_float_quad;LayerAmount commanded=0,one=0,extra=0;
+    const bool along_x=direction==HatchDirection::AlongX;
+    const auto coordinate=[&](PhysicalPosition p) {return along_x ? p.x() : p.y();};
+    const auto center=[&](PhysicalPosition p) {return along_x ? p.y() : p.x();};
+    const LayerAmount separation=LayerAmount(center(layer.paths[1]->path_start))-center(layer.paths[0]->path_start);
+    for (size_t i=0;i<layer.paths.size();++i) for (const auto &piece : layer.paths[i]->pieces) {
+        commanded+=piece.volume.value();if (i==0) {
+            one+=piece.volume.value();extra+=separation*abs(LayerAmount(coordinate(piece.end))-coordinate(piece.start))*
+                (LayerAmount(piece.section.gap_begin_mm)+piece.section.gap_end_mm)/2;
+        }
+    }
+    const auto contains=[&](ScalarBounds measured,LayerAmount amount) {REQUIRE(measured.lower<=amount);REQUIRE(measured.upper>=amount);};
+    contains(layer_fill.occupied->individual_volume_mm3,commanded);contains(layer_fill.occupied->union_volume_mm3,one+extra);
+    contains(layer_fill.occupied->repeated_volume_mm3,one-extra);
+    REQUIRE(layer.global_volume_error_mm3<=layer_limits.beads.packets.maximum_volume_error.value());
+    REQUIRE(layer_fill.occupied->repeated_volume_mm3.lower>0);
+    REQUIRE(layer_fill.occupied->union_volume_mm3.upper<layer_fill.occupied->individual_volume_mm3.lower);
+    REQUIRE(layer_fill.covered_target_mm3.lower>fill.snapshot->covered_target_mm3.upper);
+    REQUIRE(layer_fill.missing_target_mm3.lower>0);REQUIRE(layer_fill.outside_target_mm3.upper<=.001);
+    INFO("native complete first layer paths=" << layer.paths.size() << " amount=[" << layer.deposited_volume_mm3.lower << ',' <<
+        layer.deposited_volume_mm3.upper << "] covered=[" << layer_fill.covered_target_mm3.lower << ',' << layer_fill.covered_target_mm3.upper <<
+        "] missing=[" << layer_fill.missing_target_mm3.lower << ',' << layer_fill.missing_target_mm3.upper << "] repeated=[" <<
+        layer_fill.occupied->repeated_volume_mm3.lower << ',' << layer_fill.occupied->repeated_volume_mm3.upper <<
+        "] cells=" << layer.cells << " work=" << layer.evaluations);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

@@ -17,7 +17,7 @@ Next software tasks, in dependency order:
    `B02-input-placement.md` connects owned inputs to the native placement/error
    chain and enforces source plate-index agreement; actual GUI membership and
    original file-to-job association remain pending.
-2. Resolve the inherited Linux native-fill deadline at 84a709ef and 7f71cc98
+2. Resolve the inherited Linux native-fill deadline at 84a709ef, 7f71cc98 and 946d3da7
    without changing budgets, then verify new milestones on Linux.
    `B07-stadium-depth-bounds.md` tightens the exact nonnegative rounded depth
    domain but makes only a small native work reduction; certified roof-query
@@ -62,6 +62,11 @@ Next software tasks, in dependency order:
    with measured positive nominal fill gain and exact preservation of the old
    current prefix. Extend to batch/global replanning and remaining vertical voids
    under occupied footprints; this does not resolve the complete native deficit.
+   `B07-first-hatch-layer.md` now constructs every first source line with shared
+   budgets and measures one fresh complete candidate together. Exact congruent
+   packet unions preserve actual S/U/R, while C/M/spill remain measured rather
+   than nominal quotas. The native two-line candidate still has 0.113705 mm3
+   deficit; it does not certify sequential contact or a filled first pass.
    Resolve that deficit/excess by constructing paths in actual remaining space,
    recheck union/fill, qualify
    finite-width floor/contact, then construct seam and later actual support;

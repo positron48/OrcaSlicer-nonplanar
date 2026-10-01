@@ -1545,6 +1545,51 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
             if (x_axis ? delta.hi<0 : delta.lo>0) normal=Interval(0)-normal;
             return Projection{along/absolute(delta),normal,Interval(0)};
         };
+        if (clip_kind==UnionClip::Box && full_individual && !active.empty()) {
+            // Two congruent stadia shifted by d within their flat core have
+            // union area A+h*d. Integrate the affine gap exactly over aligned,
+            // interior-disjoint packets. No nominal geometry is approximated.
+            std::map<std::pair<bool,double>,std::vector<size_t>> groups;bool supported=true;
+            for (size_t i : active) {
+                evaluate();const auto &row=sequence->records[i];const auto &m=row.motion;
+                const bool x=m.start.y()==m.end.y(),y=m.start.x()==m.end.x();
+                if (x==y || progress(i)!=1 || row.bead->kind!=BeadSectionKind::RoundedRectangle) {supported=false;break;}
+                groups[{x,x ? m.start.y() : m.start.x()}].push_back(i);
+            }
+            if (supported && groups.size()==2 && groups.begin()->first.first==groups.rbegin()->first.first &&
+                groups.begin()->second.size()==groups.rbegin()->second.size()) {
+                const bool x=groups.begin()->first.first;
+                const auto coordinate=[&](PhysicalPosition p) {return x ? p.x() : p.y();};
+                for (auto &group : groups) std::sort(group.second.begin(),group.second.end(),[&](size_t a,size_t b) {
+                    evaluate();const auto &ma=sequence->records[a].motion,&mb=sequence->records[b].motion;
+                    return std::min(coordinate(ma.start),coordinate(ma.end))<std::min(coordinate(mb.start),coordinate(mb.end));
+                });
+                const Exact separation=Exact(groups.rbegin()->first.second)-Exact(groups.begin()->first.second);
+                Exact occupied(0);std::optional<Exact> previous;
+                for (size_t n=0;n<groups.begin()->second.size();++n) {
+                    evaluate();const auto &a=sequence->records[groups.begin()->second[n]],&b=sequence->records[groups.rbegin()->second[n]];
+                    const auto &ma=a.motion,&mb=b.motion;const auto &sa=*a.bead,&sb=*b.bead;
+                    const Exact begin(std::min(coordinate(ma.start),coordinate(ma.end))),end(std::max(coordinate(ma.start),coordinate(ma.end)));
+                    const double amount=std::get<Deposition>(ma.payload).volume.value();
+                    if ((previous && begin<*previous) || coordinate(ma.start)!=coordinate(mb.start) || coordinate(ma.end)!=coordinate(mb.end) ||
+                        ma.start.z()!=mb.start.z() || ma.end.z()!=mb.end.z() || sa.gap_begin_mm!=sb.gap_begin_mm || sa.gap_end_mm!=sb.gap_end_mm ||
+                        amount!=std::get<Deposition>(mb.payload).volume.value()) {supported=false;break;}
+                    const auto maximum_gap=Interval(std::max(sa.gap_begin_mm,sa.gap_end_mm));
+                    const auto core=section_width(exact_interval(Exact(amount)/(end-begin)),maximum_gap,sa.kind)-maximum_gap;
+                    if (exact_interval(separation).hi>core.lo) {supported=false;break;}
+                    occupied+=Exact(amount)+separation*(end-begin)*(Exact(sa.gap_begin_mm)+Exact(sa.gap_end_mm))/Exact(2);previous=end;
+                }
+                if (supported) {
+                    const size_t count=groups.begin()->second.size();if (count>limits.max_cells-cells) reject("MATERIAL_UNION_CELL_LIMIT");cells+=count;
+                    const auto united=exact_interval(occupied),individual=exact_interval(*full_individual),repeated=exact_interval(*full_individual-occupied);
+                    for (auto v : {united,individual,repeated}) if (v.lo<0 || (Interval(v.hi)-Interval(v.lo)).hi>limits.maximum_interval_width.value())
+                        reject("MATERIAL_UNION_CONGRUENT_PRECISION");
+                    provisional_union=bounds(united);provisional_excess=bounds(repeated);poll();
+                    return {"BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY",
+                        std::array<ScalarBounds,3>{bounds(united),bounds(individual),bounds(repeated)},cells,evaluations,provisional_union,provisional_excess};
+                }
+            }
+        }
         // A constant-gap axis-aligned rectangular loft has exact finite XY
         // bounds and affine top/bottom. Clip at the original Z planes and reuse
         // polygon moments; an interval grid would unnecessarily destroy this
@@ -2178,6 +2223,121 @@ RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &request
         poll();return {"BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) {return {e.what(),{}};}
     catch (const std::exception &e) {return {"REMAINING_HATCH_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
+}
+
+FirstHatchLayerResult plan_first_hatch_layer(const AffineHatchResult &requested,const SceneBox &requested_box,
+                                            const FirstHatchLayerLimits &requested_limits)
+{
+    const auto hatches=requested.snapshot;const auto box=requested_box;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!hatches || !hatches->source || hatches->passes.empty() || hatches->passes.front().lines.empty() ||
+            !hatches->source->first_pass.proof || !limits.max_paths || limits.max_paths>4096 ||
+            !limits.max_records || limits.max_records>200000 || !limits.max_cells || limits.max_cells>65535 ||
+            !limits.max_evaluations || limits.max_evaluations>2000000 || !valid_timeout(limits.timeout) ||
+            !valid_timeout(limits.beads.timeout) || !valid_timeout(limits.beads.packets.timeout) || !valid_timeout(limits.volumes.timeout) ||
+            !limits.beads.max_evaluations || limits.beads.max_evaluations>200000 ||
+            !limits.beads.max_roof_segments || limits.beads.max_roof_segments>65535 || !limits.beads.max_depth || limits.beads.max_depth>32 ||
+            !limits.beads.packets.max_segments || limits.beads.packets.max_segments>65535 || !limits.beads.packets.max_depth || limits.beads.packets.max_depth>32 ||
+            limits.beads.maximum_gap_error.value()<=0 || limits.beads.maximum_gap_error.value()>.05 ||
+            limits.beads.packets.maximum_width_error.value()<=0 || limits.beads.packets.maximum_width_error.value()>.05 ||
+            limits.beads.packets.maximum_volume_error.value()<=0 || !limits.volumes.max_cells || limits.volumes.max_cells>65535 ||
+            !limits.volumes.max_evaluations || limits.volumes.max_evaluations>2000000 || !limits.volumes.max_depth || limits.volumes.max_depth>32 ||
+            limits.volumes.maximum_interval_width.value()<=0 || box.min.x()>=box.max.x() || box.min.y()>=box.max.y() || box.min.z()>=box.max.z())
+            reject("INVALID_FIRST_HATCH_LAYER_INPUT");
+        const auto stack=hatches->source;const auto cursor=stack->source;const auto sequence=cursor->sequence;
+        const auto &lines=hatches->passes.front().lines;const auto &roi=stack->surfaces.front().cell.footprint;
+        if (lines.size()>limits.max_paths) reject("FIRST_HATCH_LAYER_PATH_LIMIT");
+        if (box.min.x()!=roi.min_x || box.max.x()!=roi.max_x || box.min.y()!=roi.min_y || box.max.y()!=roi.max_y)
+            reject("FIRST_HATCH_LAYER_XY_DOMAIN_MISMATCH");
+        const auto poll=[&] {
+            stop(limits,sequence->revision,started);stop(limits.beads,sequence->revision,started);
+            stop(limits.beads.packets,sequence->revision,started);stop(limits.volumes,sequence->revision,started);
+        };poll();
+        size_t work=0,bead_work=0,roofs=0,packets=0,cells=0;
+        const auto charge=[&](size_t count) {if (count>limits.max_evaluations-work) reject("FIRST_HATCH_LAYER_WORK_LIMIT");work+=count;poll();};
+        const auto elapsed=[&] {return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);};
+        std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> paths;
+        Exact target_lower(0),target_upper(0),amount(0);double numeric=sequence->model.numerical_coordinate_error.value();
+        for (size_t i=0;i<lines.size();++i) {
+            poll();charge(2*sequence->records.size()); // Source hash and candidate collection in each bead solver.
+            if (bead_work>=limits.beads.max_evaluations || roofs>=limits.beads.max_roof_segments || packets>=limits.beads.packets.max_segments)
+                reject("FIRST_HATCH_LAYER_BEAD_WORK_LIMIT");
+            auto bead_limits=limits.beads;
+            bead_limits.max_evaluations=std::min(limits.beads.max_evaluations-bead_work,limits.max_evaluations-work);
+            bead_limits.max_roof_segments-=roofs;bead_limits.packets.max_segments-=packets;
+            bead_limits.packets.maximum_volume_error=Volume((Interval(limits.beads.packets.maximum_volume_error.value())/Interval(double(lines.size()))/Interval(2)).lo);
+            bead_limits.timeout-=elapsed();bead_limits.packets.timeout-=elapsed();
+            bead_limits.cancelled=[&] {poll();return false;};bead_limits.is_current={};bead_limits.packets.cancelled=bead_limits.cancelled;bead_limits.packets.is_current={};
+            const auto path=plan_first_hatch_footprint_bead({"",hatches},i,bead_limits);
+            if (!path.snapshot) throw Rejection(path.reason);
+            charge(path.snapshot->evaluations);bead_work+=path.snapshot->evaluations;roofs+=path.snapshot->roof_segments;packets+=path.snapshot->pieces.size();
+            target_lower+=Exact(path.snapshot->actual_target_volume_mm3.lower);target_upper+=Exact(path.snapshot->actual_target_volume_mm3.upper);
+            for (const auto &piece : path.snapshot->pieces) amount+=Exact(piece.volume.value());
+            numeric=std::max(numeric,path.snapshot->numerical_error_upper_mm);paths.push_back(path.snapshot);
+        }
+        const Interval target(exact_interval(target_lower).lo,exact_interval(target_upper).hi),delivered=exact_interval(amount);
+        const auto difference=delivered-target;const double error=std::max(std::abs(difference.lo),std::abs(difference.hi));
+        if (error>limits.beads.packets.maximum_volume_error.value()) reject("FIRST_HATCH_LAYER_GLOBAL_AMOUNT_ERROR");
+        const MaterialRecord *context=nullptr;
+        const size_t active=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence->records.size());
+        for (size_t i=0;i<active;++i) {charge(1);if (sequence->records[i].bead) {context=&sequence->records[i];break;}}
+        if (!context) reject("FIRST_HATCH_LAYER_MISSING_DEPOSITION_CONTEXT");
+        const auto metadata=std::get<Deposition>(context->motion.payload);
+        std::vector<MaterialRecord> rows;
+        const auto append=[&](MaterialRecord row) {
+            if (rows.size()>=limits.max_records) reject("FIRST_HATCH_LAYER_RECORD_LIMIT");
+            charge(1);rows.push_back(std::move(row));
+        };
+        for (const auto &path : paths) {
+            if (!rows.empty()) {const size_t i=rows.size();append({{i+1,i,0,rows.back().motion.end,path->path_start,
+                context->motion.speed_limit,context->motion.acceleration_limit,Travel{}},{}});}
+            for (const auto &piece : path->pieces) {
+                const bool x=piece.start.y()==piece.end.y();
+                if (x==(piece.start.x()==piece.end.x())) reject("FIRST_HATCH_LAYER_REQUIRES_AXIS_PACKETS");
+                const auto half=Interval(piece.section.width_mm.upper)/Interval(2);
+                const auto xmin=Interval(std::min(piece.start.x(),piece.end.x()))-(x ? Interval(0) : half);
+                const auto xmax=Interval(std::max(piece.start.x(),piece.end.x()))+(x ? Interval(0) : half);
+                const auto ymin=Interval(std::min(piece.start.y(),piece.end.y()))-(x ? half : Interval(0));
+                const auto ymax=Interval(std::max(piece.start.y(),piece.end.y()))+(x ? half : Interval(0));
+                const auto bottom=Interval(std::min(piece.start.z(),piece.end.z()))-Interval(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm));
+                if (xmin.lo<box.min.x() || xmax.hi>box.max.x() || ymin.lo<box.min.y() || ymax.hi>box.max.y() ||
+                    bottom.lo<box.min.z() || std::max(piece.start.z(),piece.end.z())>box.max.z())
+                    reject("FIRST_HATCH_LAYER_INCOMPLETE_NOMINAL_DOMAIN");
+                const size_t i=rows.size();append({{i+1,i,context->motion.source_patch_id,piece.start,piece.end,
+                    context->motion.speed_limit,context->motion.acceleration_limit,Deposition{piece.volume,piece.nominal_width,
+                    VerticalGap(std::min(piece.section.gap_begin_mm,piece.section.gap_end_mm)),VerticalGap(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm)),
+                    metadata.material,metadata.support_provenance_id,metadata.contact_model_id}},piece.section});
+            }
+        }
+        auto model=sequence->model;model.numerical_coordinate_error=Length(numeric);
+        MaterialLimits capture;capture.max_records=limits.max_records;capture.timeout=limits.timeout-elapsed();capture.cancelled=[&] {poll();return false;};
+        charge(3*rows.size()); // Validation/hash, then prefix walk.
+        const auto ledger=capture_material_sequence(rows,model,sequence->revision,sequence->source_fingerprint,capture);
+        if (!ledger.snapshot) throw Rejection(ledger.reason);
+        const auto prefix=material_at(ledger.snapshot,rows.size(),0,capture);if (!prefix.nominal.snapshot) throw Rejection(prefix.reason);
+        auto volume=limits.volumes;volume.max_cells=std::min(volume.max_cells,limits.max_cells);
+        volume.max_evaluations=std::min(volume.max_evaluations,limits.max_evaluations-work);volume.timeout-=elapsed();
+        volume.maximum_interval_width=Volume(limits.volumes.maximum_interval_width.value()/4);
+        volume.cancelled=[&] {poll();return false;};volume.is_current={};
+        const auto occupied=integrate_material_union(prefix.nominal,box,volume);
+        if (!occupied.snapshot) throw Rejection(occupied.reason+" paths="+std::to_string(paths.size())+" packets="+std::to_string(packets)+
+            " cells="+std::to_string(occupied.cells)+" work="+std::to_string(occupied.evaluations)+
+            (occupied.provisional_union_mm3 ? " union_width="+std::to_string(occupied.provisional_union_mm3->upper-occupied.provisional_union_mm3->lower) : ""));
+        charge(occupied.evaluations);cells+=occupied.cells;
+        if (cells>=limits.max_cells) reject("FIRST_HATCH_LAYER_CELL_LIMIT");
+        MaterialFillLimits fill;static_cast<MaterialUnionLimits &>(fill)=volume;
+        fill.max_cells=std::min(limits.volumes.max_cells,limits.max_cells-cells);
+        fill.max_evaluations=std::min(limits.volumes.max_evaluations,limits.max_evaluations-work);fill.timeout=limits.volumes.timeout-elapsed();
+        fill.maximum_interval_width=limits.volumes.maximum_interval_width;
+        const auto measured=reconcile_material_fill(stack->first_pass,occupied,fill);
+        if (!measured.snapshot) throw Rejection(measured.reason);charge(measured.evaluations);cells+=measured.cells;
+        poll();auto snapshot=std::shared_ptr<const FirstHatchLayerSnapshot>(new FirstHatchLayerSnapshot(hatches,std::move(paths),measured.snapshot,
+            bounds(target),bounds(delivered),error,numeric,roofs,cells,work));
+        poll();return {"BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) {return {e.what(),{}};}
+    catch (const std::exception &e) {return {"FIRST_HATCH_LAYER_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
 }
 
 }

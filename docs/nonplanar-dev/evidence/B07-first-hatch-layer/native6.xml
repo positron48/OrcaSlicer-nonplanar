@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="32" hostname="tbd" time="0.239" timestamp="2026-10-01T10:59:55Z">
+    <properties>
+      <property name="random-seed" value="1053381246"/>
+      <property name="filters" value="[NativeFirstHatchLayer]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B07 native first footprint derives bounded amounts inside an actual flat bead core" time="0.000" status="run">
+      <failure message="layer_fill.occupied->individual_volume_mm3.lower&lt;=2*expected" type="REQUIRE">
+FAILED:
+  REQUIRE( layer_fill.occupied->individual_volume_mm3.lower&lt;=2*expected )
+with expansion:
+  0.24615758653415748 &lt;= 0.246157
+DECLARED_NATIVE_BODY_MATERIAL_ONLY
+SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+native footprint packets=61 roof leaves=1 work=1911 expected amount=0.12307872665804441
+BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+native remaining gain >= 0.0688508719117390672 covered=[0.121222584158338378,0.121222584158343222] missing=[0.130765407432446357,0.130765407432458486] cells=3 work=12474
+BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2182
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

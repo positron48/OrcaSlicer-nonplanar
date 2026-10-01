@@ -128,10 +128,21 @@ when the full polygon lies strictly between actual finite butts. Rounded shoulde
 and all budgets remain unchanged; other domains retain exact XY clipping. Four
 analytical cases/157 assertions pass, including real spill, reverse diagonal
 current support, outside rectangular neighbours and interrupted/mutated inputs.
-Current material/body suites execute 61/14 cases and selected CTest executes
+At that checkpoint material/body suites execute 61/14 cases and selected CTest executes
 306/306; six fresh OFF/ZAA comparisons pass. Native fill uses the same 40960 cells / 865083 work and takes 16.01
 seconds locally. Linux repair remains pending; discarded index trials are only
 diagnostic evidence.
+
+`B07-first-hatch-layer.md` constructs every first source line under shared
+budgets and measures a fresh complete prospective ledger together. Two first-
+layer analytical cases/145 assertions and one exact congruent-union case/56
+assertions pass. The unchanged native wedge produces both lines/122 packets;
+the extended case passes 46 assertions, independently enclosing commanded
+S/U/R and keeping section targets distinct. Nominal C is 0.138283 mm3, M
+0.113705 mm3 and R 0.107875 mm3, with 63 cells/17802 work. Current material/body
+suites execute 64/14 cases; selected CTest executes 309/309 and six fresh OFF/ZAA
+comparisons pass. Failed integration trials remain diagnostic evidence. Complete
+3D repair/contact/seam, curved/later support and order/export remain pending.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -147,9 +158,11 @@ b35408ce, a083f2df, 63779b4f and 8bcbbd45 succeeded. Run 36809462993 confirms
 run 36826154741 at 84a709ef failed the native fill case on its unchanged
 20-second deadline. Run 36828766748 at 7f454ba5 was cancelled and run
 36831523726 at 7f71cc98 also failed that deadline (38309 cells / 814580 work).
-Run 36842571249 at 946d3da7 is building native tests in the saved 10:05 UTC
-snapshot. Current constant-section roof optimization is locally verified but
-does not establish Linux repair. Keep the limits and require a successful run.
+Run 36842571249 at 946d3da7 also failed the native fill deadline
+(40862 cells / 857455 work), with check annotations retained in the new first-
+hatch-layer archive. Run 36847680702 at 2d8bebaa is still building native tests.
+Current local verification does not establish Linux repair; keep all limits
+and require a successful run.
 Both failed check annotations are archived.
 Windows remains NOT_RUN.
 

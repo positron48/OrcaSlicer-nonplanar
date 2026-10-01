@@ -1,0 +1,320 @@
+Filters: [NativeFirstHatchLayer]
+Randomness seeded to: 747297354
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 native first footprint derives bounded amounts inside an actual flat bead
+core
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2100
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1363: PASSED:
+  REQUIRE( file.source )
+with expansion:
+  0xb2b0c1aa8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1364: PASSED:
+  REQUIRE( imported.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1365: PASSED:
+  REQUIRE( load_stl(path.string().c_str(),&model) )
+with expansion:
+  true
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1371: PASSED:
+  REQUIRE( placed.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+with message:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1374: PASSED:
+  REQUIRE( partition.status==VolumePartitionStatus::Partitioned )
+with expansion:
+  0 == 0
+with messages:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+  NOMINAL_BODY_CAP_PARTITION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2106: PASSED:
+  REQUIRE( body.snapshot )
+with expansion:
+  0xb2b0b8a98
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2110: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0xb2ac6d878
+with message:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2130: PASSED:
+  REQUIRE( roi )
+with expansion:
+  {?}
+with message:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2137: PASSED:
+  REQUIRE( native.snapshot )
+with expansion:
+  0xb2ad26198
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2140: PASSED:
+  REQUIRE( plan.snapshot )
+with expansion:
+  0xb2ac08cc0
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2141: PASSED:
+  REQUIRE( plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2141: PASSED:
+  REQUIRE( plan.snapshot->source==native.snapshot->hatches )
+with expansion:
+  0xb2b0d0c40 == 0xb2b0d0c40
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2148: PASSED:
+  REQUIRE( plan.snapshot->actual_target_volume_mm3.lower<=expected )
+with expansion:
+  0.12307872665803841 <= 0.123079
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2148: PASSED:
+  REQUIRE( plan.snapshot->actual_target_volume_mm3.upper>=expected )
+with expansion:
+  0.12307872665805043 >= 0.123079
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2149: PASSED:
+  REQUIRE( plan.snapshot->maximum_gap_error_mm<=limits.maximum_gap_error.value() )
+with expansion:
+  0.00000000000000711 <= 0.0001
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2150: PASSED:
+  REQUIRE( plan.snapshot->maximum_width_error_mm<=limits.packets.maximum_width_error.value() )
+with expansion:
+  0.00197223722468054 <= 0.002
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2151: PASSED:
+  REQUIRE( plan.snapshot->total_volume_error_mm3<=limits.packets.maximum_volume_error.value() )
+with expansion:
+  0.00000006660904034 <= 0.0001
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2159: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0xb2ac6d918
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2160: PASSED:
+  REQUIRE( prefix.nominal.snapshot )
+with expansion:
+  0xb2b0c1eb8
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2163: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xb2ad8c300
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2165: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xb2ac3a620
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2168: PASSED:
+  REQUIRE( repair.snapshot )
+with expansion:
+  0xb2b0e0500
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2169: PASSED:
+  REQUIRE( repair.snapshot->paths.size()==1 )
+with expansion:
+  1 == 1
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2169: PASSED:
+  REQUIRE( repair.snapshot->before->occupied->source==prefix.nominal.snapshot )
+with expansion:
+  0xb2b0c1eb8 == 0xb2b0c1eb8
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2170: PASSED:
+  REQUIRE( repair.snapshot->covered_target_mm3.lower>fill.snapshot->covered_target_mm3.upper )
+with expansion:
+  0.12122258415833838 > 0.05237171224660148
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2171: PASSED:
+  REQUIRE( repair.snapshot->missing_target_mm3.upper<fill.snapshot->missing_target_mm3.lower )
+with expansion:
+  0.13076540743245849 < 0.1996162793441881
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2172: PASSED:
+  REQUIRE( repair.snapshot->covered_gain_lower_mm3>.03 )
+with expansion:
+  0.06885087191173907 > 0.03
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2172: PASSED:
+  REQUIRE( repair.snapshot->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000479 <= 0.001
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2179: FAILED:
+  REQUIRE( complete.snapshot )
+with expansion:
+  0
+with messages:
+  DECLARED_NATIVE_BODY_MATERIAL_ONLY
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  native footprint packets=61 roof leaves=1 work=1911 expected amount=0.
+  12307872665804441
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+  native remaining gain >= 0.0688508719117390672 covered=[0.121222584158338378,
+  0.121222584158343222] missing=[0.130765407432446357,0.130765407432458486]
+  cells=3 work=12444
+  MATERIAL_UNION_CELL_LIMIT
+
+===============================================================================
+test cases:  1 |  0 passed | 1 failed
+assertions: 29 | 28 passed | 1 failed
+
