@@ -2098,7 +2098,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2109,7 +2109,7 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
     MaterialLimits capture;capture.timeout=std::chrono::seconds(5);
     const auto material=reconstruct_planar_body_material(body,parameters,capture);INFO(material.reason);REQUIRE(material.snapshot);
-    std::optional<RectangleXY> roi;HatchDirection direction=HatchDirection::AlongX;long double flat_top=0;
+    std::optional<RectangleXY> roi;size_t support_row=0;HatchDirection direction=HatchDirection::AlongX;long double flat_top=0;
     // Independent source-section calculation chooses a real native flat core.
     // No model or golden fixture is replaced with an idealized solid slab.
     for (const auto &row : material.snapshot->material->records) {
@@ -2126,7 +2126,7 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
             row.motion.start.x()>19 && row.motion.start.x()<21) {
             roi=RectangleXY{row.motion.start.x()-.3,19,row.motion.start.x()+.3,21};direction=HatchDirection::AlongY;
         }
-        if (roi) {flat_top=row.motion.start.z();break;}
+        if (roi) {flat_top=row.motion.start.z();support_row=row.motion.sequence_index;break;}
     }
     REQUIRE(roi);
     const NativeAffinePassRequest request{*roi,0,4.1,
@@ -2349,6 +2349,23 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     test::independent_run_box(*run.snapshot,whole);
     INFO("native continuous-run joins=" << run_joins.snapshot->joins.size() << " smallest box=" << smallest <<
         " cells=" << run_joins.cells << " work=" << run_joins.evaluations << " whole long run cells=" << continuous.cells << " work=" << continuous.evaluations);
+    const FirstCapInterfacePolicy interface_policy{Length(.02),Length(.125),Length(.003),Length(.003),Length(.05)};
+    const auto interface=assess_first_cap_interface(first_cap,interface_policy);INFO(interface.reason);REQUIRE(interface.snapshot);
+    REQUIRE(interface.snapshot->source==first_cap.snapshot);REQUIRE(interface.snapshot->packets.size()==cap_packets);
+    test::independent_lower_box(*interface.snapshot->body,support_row,interface.snapshot->anchor);
+    for (const auto &p : interface.snapshot->packets) {
+        const auto &piece=cap.paths[p.path]->pieces[p.packet];
+        const LayerAmount error=LayerAmount(interface.snapshot->body->sequence->model.numerical_coordinate_error.value())+cap.numerical_error_upper_mm;
+        for (auto endpoint : {std::pair<PhysicalPosition,double>{piece.start,piece.section.gap_begin_mm},{piece.end,piece.section.gap_end_mm}}) {
+            const LayerAmount floor=LayerAmount(endpoint.first.z())-endpoint.second;
+            REQUIRE(p.nominal_floor_mm.lower<=floor-error);REQUIRE(p.nominal_floor_mm.upper>=floor+error);
+            REQUIRE(p.nominal_separation_mm.lower<=floor-LayerAmount(flat_top)-error);
+            REQUIRE(p.nominal_separation_mm.upper>=floor-LayerAmount(flat_top)+error);
+        }
+        REQUIRE(p.support_distance_mm.upper<=interface_policy.maximum_support_separation.value());
+    }
+    INFO("native cap/body flat-floor packets=" << interface.snapshot->packets.size() << " anchor volume=[" << interface.snapshot->anchor_volume_mm3.lower << ',' <<
+        interface.snapshot->anchor_volume_mm3.upper << "] cells=" << interface.cells << " work=" << interface.evaluations);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

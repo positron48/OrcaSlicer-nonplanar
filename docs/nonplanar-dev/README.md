@@ -221,6 +221,15 @@ model is not calibrated physical bonding. Final counts and fresh OFF/ZAA evidenc
 are in that report; allowable excess, floor/body bonding, seam, remaining 3D
 fill and later actual support are the next dependencies.
 
+`B06-cap-interface.md` now binds every complete varying flat floor to a positive
+3D D_lower anchor in the original actual body. Explicit geometric gap/overlap,
+minimum width and support-distance criteria charge original XYZ uncertainty;
+future body and cap material cannot anchor themselves. The unchanged native
+candidate passes all 161 floors, with a 0.03 mm3 body anchor (162 cells/5661 work).
+Three new analytical cases/4669 assertions retain coarse-source refusal and
+actual partial-prefix semantics. This does not qualify rounded shoulders,
+complete seam/fill, allowable repeated material or physical bonding.
+
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
 compatibility, dense coverage, material replay, ordering and guarded hybrid

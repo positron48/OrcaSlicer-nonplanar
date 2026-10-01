@@ -2411,3 +2411,89 @@ TEST_CASE("B07 run joining retains whole-prefix losses across packet cuts and sh
     const auto invalid_pair=find_material_run_join(first,second,domain);REQUIRE(std::fesetround(rounding)==0);
     REQUIRE_FALSE(invalid_capture.snapshot);REQUIRE_FALSE(invalid_cover.snapshot);REQUIRE_FALSE(invalid_pair.snapshot);
 }
+
+TEST_CASE("B06 first-cap flat floors retain volumetric body anchors and continuous nominal contact bounds", "[Nonplanar][B06][FirstCapInterface]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapInterfaceSnapshot>::value);
+    const FirstCapInterfacePolicy policy{Length(.02),Length(.125),Length(.003),Length(.003),Length(.05)};
+    for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) for (bool sloped : {false,true}) {
+        FirstHatchLayerLimits construction;construction.beads.packets.maximum_width_error=Length(.002);
+        const auto cap=plan_first_cap(first_cap_fixture(direction,sloped),{WidthXY(.45),1,true,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}},construction);REQUIRE(cap.snapshot);
+        INFO("direction=" << int(direction) << " sloped=" << sloped << " numeric=" << cap.snapshot->numerical_error_upper_mm);
+        const auto result=assess_first_cap_interface(cap,policy);INFO(result.reason);REQUIRE(result.snapshot);
+        const auto &proof=*result.snapshot;REQUIRE(proof.source==cap.snapshot);REQUIRE(proof.body==cap.snapshot->source->source->source);
+        REQUIRE(proof.anchor_volume_mm3.lower>0);REQUIRE(proof.packets.size()==cap.snapshot->fill->occupied->source->completed_records-(cap.snapshot->paths.size()-4));
+        test::independent_lower_box(*proof.body,0,proof.anchor);
+        using Q=boost::multiprecision::cpp_bin_float_quad;
+        const Q volume=(Q(proof.anchor.max.x())-proof.anchor.min.x())*(Q(proof.anchor.max.y())-proof.anchor.min.y())*(Q(proof.anchor.max.z())-proof.anchor.min.z());
+        REQUIRE(proof.anchor_volume_mm3.lower<=volume);REQUIRE(proof.anchor_volume_mm3.upper>=volume);
+        for (const auto &p : proof.packets) {
+            const auto &piece=cap.snapshot->paths[p.path]->pieces[p.packet];
+            const Q loss=Q(proof.body->sequence->model.numerical_coordinate_error.value())+cap.snapshot->numerical_error_upper_mm;
+            for (auto endpoint : {std::pair<PhysicalPosition,double>{piece.start,piece.section.gap_begin_mm},{piece.end,piece.section.gap_end_mm}}) {
+                const Q floor=Q(endpoint.first.z())-endpoint.second;
+                REQUIRE(p.nominal_floor_mm.lower<=floor-loss);REQUIRE(p.nominal_floor_mm.upper>=floor+loss);
+                REQUIRE(p.nominal_separation_mm.lower<=floor-1-loss);REQUIRE(p.nominal_separation_mm.upper>=floor-1+loss);
+            }
+            REQUIRE(p.support_distance_mm.upper<=policy.maximum_support_separation.value());
+            REQUIRE(p.nominal_separation_mm.upper<=policy.maximum_nominal_gap.value());REQUIRE(p.nominal_separation_mm.lower>=-policy.maximum_nominal_overlap.value());
+            const bool x=piece.start.y()==piece.end.y();
+            const Q length=abs(Q(x ? piece.end.x() : piece.end.y())-Q(x ? piece.start.x() : piece.start.y()));
+            const Q area=Q(piece.volume.value())/length,h=std::max(Q(piece.section.gap_begin_mm),Q(piece.section.gap_end_mm));
+            const Q half=(area/h-acos(Q(-1))*h/4)/2,hmin=std::min(Q(piece.section.gap_begin_mm),Q(piece.section.gap_end_mm));
+            const Q maximum=(area/hmin-acos(Q(-1))*hmin/4)/2,centre=x ? piece.start.y() : piece.start.x();
+            REQUIRE(p.flat_floor_width_mm.lower<=2*half);REQUIRE(p.flat_floor_width_mm.upper>=2*maximum);
+            REQUIRE(p.flat_floor_width_mm.lower>=policy.minimum_flat_floor_width.value());
+            REQUIRE(Q(x ? p.floor.min_y : p.floor.min_x)<=centre-maximum);REQUIRE(Q(x ? p.floor.max_y : p.floor.max_x)>=centre+maximum);
+        }
+    }
+}
+
+TEST_CASE("B06 first-cap interface refuses missing volume floating floors and exhausted publication budgets", "[Nonplanar][B06][FirstCapInterface]")
+{
+    const auto cap=plan_first_cap(first_cap_fixture(HatchDirection::AlongX),{WidthXY(.45),1,true,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
+    const FirstCapInterfacePolicy policy{Length(.02),Length(.125),Length(.003),Length(.003),Length(.05)};
+    const auto result=assess_first_cap_interface(cap,policy);REQUIRE(result.snapshot);
+    auto bad=policy;bad.support_depth=Length(.5);REQUIRE_FALSE(assess_first_cap_interface(cap,bad).snapshot);
+    bad=policy;bad.maximum_support_separation=Length(.05);REQUIRE_FALSE(assess_first_cap_interface(cap,bad).snapshot);
+    const auto coarse=plan_first_cap(first_cap_fixture(HatchDirection::AlongX,true),{WidthXY(.45),1,true,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(coarse.snapshot);
+    REQUIRE(coarse.snapshot->numerical_error_upper_mm>policy.maximum_nominal_gap.value());REQUIRE_FALSE(assess_first_cap_interface(coarse,policy).snapshot);
+    bad=policy;bad.minimum_flat_floor_width=Length(.5);REQUIRE_FALSE(assess_first_cap_interface(cap,bad).snapshot);
+    bad=policy;bad.support_depth=Length(0);REQUIRE_FALSE(assess_first_cap_interface(cap,bad).snapshot);
+    REQUIRE_FALSE(assess_first_cap_interface({},policy).snapshot);
+    FirstCapInterfaceLimits limits;limits.max_evaluations=result.evaluations-1;REQUIRE_FALSE(assess_first_cap_interface(cap,policy,limits).snapshot);
+    limits={};limits.max_cells=1;REQUIRE_FALSE(assess_first_cap_interface(cap,policy,limits).snapshot);
+    limits={};limits.max_patches=1;REQUIRE_FALSE(assess_first_cap_interface(cap,policy,limits).snapshot);
+    limits={};limits.max_records=2;REQUIRE_FALSE(assess_first_cap_interface(cap,policy,limits).snapshot);
+    limits={};limits.max_depth=0;REQUIRE_FALSE(assess_first_cap_interface(cap,policy,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(assess_first_cap_interface(cap,policy,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(assess_first_cap_interface(cap,policy,limits).snapshot);
+    auto wrapper=cap;auto supplied=policy;limits={};limits.cancelled=[&] {wrapper.snapshot.reset();supplied.support_depth=Length(0);limits.max_cells=0;return false;};
+    const auto owned=assess_first_cap_interface(wrapper,supplied,limits);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==cap.snapshot);
+    size_t calls=0;limits={};limits.cancelled=[&] {++calls;return false;};REQUIRE(assess_first_cap_interface(cap,policy,limits).snapshot);
+    size_t late=0;limits.cancelled=[&] {return ++late==calls;};REQUIRE_FALSE(assess_first_cap_interface(cap,policy,limits).snapshot);
+}
+
+TEST_CASE("B06 cap interface uses the actual body prefix and keeps future high roofs absent", "[Nonplanar][B06][FirstCapInterface]")
+{
+    auto first=bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle);
+    MaterialRecord lift{{2,1,0,first.motion.end,{10,0,1.01},Speed(20),Acceleration(100),Travel{}},{}};
+    auto later=bead(3,2,{10,0,1.01},{0,0,1.01},2,.4,.4,BeadSectionKind::Rectangle);
+    const auto body=captured({first,lift,later});
+    const AffinePassPolicy pass{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const FirstCapInterfacePolicy policy{Length(.02),Length(.125),Length(.003),Length(.003),Length(.05)};
+    for (auto state : {std::pair<size_t,double>{1,0},{2,.5},{3,0}}) {
+        const auto present=material_at(body,state.first,state.second);
+        const auto stack=plan_affine_pass_stack(present.lower,{{1,-.8,3,.8},1.8,1.8,1.8},.9,pass);REQUIRE(stack.snapshot);
+        const auto hatches=plan_affine_hatches(stack,{WidthXY(.45),Length(.2),Length(.05),HatchDirection::AlongX});REQUIRE(hatches.snapshot);
+        const auto cap=plan_first_cap(hatches,{WidthXY(.45),1,true,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
+        const auto interface=assess_first_cap_interface(cap,policy);INFO(interface.reason);REQUIRE(interface.snapshot);
+        REQUIRE(interface.snapshot->body==present.lower.snapshot);test::independent_lower_box(*interface.snapshot->body,0,interface.snapshot->anchor);
+        const double roof=state.first==3 ? 1.01 : 1;
+        for (const auto &p : interface.snapshot->packets) {REQUIRE(p.nominal_floor_mm.lower<=roof);REQUIRE(p.nominal_floor_mm.upper>=roof);}
+        FirstCapInterfaceLimits limits;limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(2));return false;};
+        REQUIRE_FALSE(assess_first_cap_interface(cap,policy,limits).snapshot);
+        const int previous=std::fegetround();REQUIRE(std::fesetround(FE_UPWARD)==0);
+        const auto invalid=assess_first_cap_interface(cap,policy);REQUIRE(std::fesetround(previous)==0);REQUIRE_FALSE(invalid.snapshot);
+    }
+}

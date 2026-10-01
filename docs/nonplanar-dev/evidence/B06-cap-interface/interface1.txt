@@ -1,0 +1,1025 @@
+Filters: [FirstCapInterface]
+Randomness seeded to: 2361278740
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B06 first-cap interface refuses missing volume floating floors and exhausted
+publication budgets
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2447
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xc66c44b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2069: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x106548a70
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2070: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x1065482b0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2449: PASSED:
+  REQUIRE( cap.snapshot )
+with expansion:
+  0xc66cce040
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2451: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xc67006340
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2452: PASSED:
+  REQUIRE_FALSE( assess_first_cap_interface(cap,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2453: PASSED:
+  REQUIRE_FALSE( assess_first_cap_interface(cap,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2454: FAILED:
+  REQUIRE_FALSE( assess_first_cap_interface(cap,bad).snapshot )
+with expansion:
+  !0xc67006400
+
+-------------------------------------------------------------------------------
+B06 first-cap flat floors retain volumetric body anchors and continuous nominal
+contact bounds
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2415
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2417: PASSED:
+with message:
+  !(std::is_aggregate<FirstCapInterfaceSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xc66c44b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2069: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x106549f90
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2070: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0xc66d60000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2420: PASSED:
+  REQUIRE( cap.snapshot )
+with expansion:
+  0xc66cce040
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2421: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xc67006340
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2422: PASSED:
+  REQUIRE( proof.source==cap.snapshot )
+with expansion:
+  0xc66cce040 == 0xc66cce040
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2422: PASSED:
+  REQUIRE( proof.body==cap.snapshot->source->source->source )
+with expansion:
+  0xc66d3c568 == 0xc66d3c568
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2423: PASSED:
+  REQUIRE( proof.anchor_volume_mm3.lower>0 )
+with expansion:
+  0.0640000000000004 > 0
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2423: PASSED:
+  REQUIRE( proof.packets.size()==cap.snapshot->fill->occupied->source->completed_records-(cap.snapshot->paths.size()-4) )
+with expansion:
+  9 == 9
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:26: PASSED:
+  REQUIRE( tlo>xy/l )
+with expansion:
+  0.1 > 0.001
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:26: PASSED:
+  REQUIRE( thi<progress-xy/l )
+with expansion:
+  0.3 < 0.999
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:43: PASSED:
+  REQUIRE( nmax<half )
+with expansion:
+  0.8 < 0.99
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:44: PASSED:
+  REQUIRE( Q(box.max.z())<std::min(top0,top1)-ze-abs(dz)*shift )
+with expansion:
+  0.9 < 0.99
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:45: PASSED:
+  REQUIRE( Q(box.min.z())>std::max(top0-hl,top1-hh)+ze+abs(dz-dh)*shift )
+with expansion:
+  0.88 > 0.61
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2427: PASSED:
+  REQUIRE( proof.anchor_volume_mm3.lower<=volume )
+with expansion:
+  0.0640000000000004 <= 0.064
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2427: PASSED:
+  REQUIRE( proof.anchor_volume_mm3.upper>=volume )
+with expansion:
+  0.06400000000000042 >= 0.064
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2436: PASSED:
+  REQUIRE( p.support_distance_mm.upper<=policy.maximum_support_separation.value() )
+with expansion:
+  0.10000000000000354 <= 0.125
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper<=policy.maximum_nominal_gap.value() )
+with expansion:
+  0.0000000000000035 <= 0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower>=-policy.maximum_nominal_overlap.value() )
+with expansion:
+  -0.00000000000000361 >= -0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.min_y : p.floor.min_x)>=centre-half )
+with expansion:
+  -0.645 >= -0.645
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.max_y : p.floor.max_x)<=centre+half )
+with expansion:
+  -0.4 <= -0.4
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2436: PASSED:
+  REQUIRE( p.support_distance_mm.upper<=policy.maximum_support_separation.value() )
+with expansion:
+  0.10000000000000354 <= 0.125
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper<=policy.maximum_nominal_gap.value() )
+with expansion:
+  0.0000000000000035 <= 0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower>=-policy.maximum_nominal_overlap.value() )
+with expansion:
+  -0.00000000000000361 >= -0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.min_y : p.floor.min_x)>=centre-half )
+with expansion:
+  1.155 >= 1.155
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.max_y : p.floor.max_x)<=centre+half )
+with expansion:
+  1.4 <= 1.4
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2436: PASSED:
+  REQUIRE( p.support_distance_mm.upper<=policy.maximum_support_separation.value() )
+with expansion:
+  0.10000000000000354 <= 0.125
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper<=policy.maximum_nominal_gap.value() )
+with expansion:
+  0.0000000000000035 <= 0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower>=-policy.maximum_nominal_overlap.value() )
+with expansion:
+  -0.00000000000000361 >= -0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.min_y : p.floor.min_x)>=centre-half )
+with expansion:
+  0.4 >= 0.4
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.max_y : p.floor.max_x)<=centre+half )
+with expansion:
+  0.645 <= 0.645
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2436: PASSED:
+  REQUIRE( p.support_distance_mm.upper<=policy.maximum_support_separation.value() )
+with expansion:
+  0.10000000000000354 <= 0.125
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper<=policy.maximum_nominal_gap.value() )
+with expansion:
+  0.0000000000000035 <= 0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower>=-policy.maximum_nominal_overlap.value() )
+with expansion:
+  -0.00000000000000361 >= -0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.min_y : p.floor.min_x)>=centre-half )
+with expansion:
+  2.6 >= 2.6
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.max_y : p.floor.max_x)<=centre+half )
+with expansion:
+  2.845 <= 2.845
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2436: PASSED:
+  REQUIRE( p.support_distance_mm.upper<=policy.maximum_support_separation.value() )
+with expansion:
+  0.10000000000000354 <= 0.125
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper<=policy.maximum_nominal_gap.value() )
+with expansion:
+  0.0000000000000035 <= 0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower>=-policy.maximum_nominal_overlap.value() )
+with expansion:
+  -0.00000000000000361 >= -0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.min_y : p.floor.min_x)>=centre-half )
+with expansion:
+  -0.4725 >= -0.4725
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.max_y : p.floor.max_x)<=centre+half )
+with expansion:
+  -0.2275 <= -0.2275
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2436: PASSED:
+  REQUIRE( p.support_distance_mm.upper<=policy.maximum_support_separation.value() )
+with expansion:
+  0.10000000000000354 <= 0.125
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper<=policy.maximum_nominal_gap.value() )
+with expansion:
+  0.0000000000000035 <= 0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower>=-policy.maximum_nominal_overlap.value() )
+with expansion:
+  -0.00000000000000361 >= -0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.min_y : p.floor.min_x)>=centre-half )
+with expansion:
+  -0.2975 >= -0.2975
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.max_y : p.floor.max_x)<=centre+half )
+with expansion:
+  -0.0525 <= -0.0525
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2436: PASSED:
+  REQUIRE( p.support_distance_mm.upper<=policy.maximum_support_separation.value() )
+with expansion:
+  0.10000000000000354 <= 0.125
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper<=policy.maximum_nominal_gap.value() )
+with expansion:
+  0.0000000000000035 <= 0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower>=-policy.maximum_nominal_overlap.value() )
+with expansion:
+  -0.00000000000000361 >= -0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.min_y : p.floor.min_x)>=centre-half )
+with expansion:
+  -0.1225 >= -0.1225
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.max_y : p.floor.max_x)<=centre+half )
+with expansion:
+  0.1225 <= 0.1225
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2436: PASSED:
+  REQUIRE( p.support_distance_mm.upper<=policy.maximum_support_separation.value() )
+with expansion:
+  0.10000000000000354 <= 0.125
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper<=policy.maximum_nominal_gap.value() )
+with expansion:
+  0.0000000000000035 <= 0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower>=-policy.maximum_nominal_overlap.value() )
+with expansion:
+  -0.00000000000000361 >= -0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.min_y : p.floor.min_x)>=centre-half )
+with expansion:
+  0.0525 >= 0.0525
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.max_y : p.floor.max_x)<=centre+half )
+with expansion:
+  0.2975 <= 0.2975
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.lower<=floor-loss )
+with expansion:
+  0.99999999999999645 <= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2433: PASSED:
+  REQUIRE( p.nominal_floor_mm.upper>=floor+loss )
+with expansion:
+  1.00000000000000355 >= 1
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower<=floor-1-loss )
+with expansion:
+  -0.00000000000000361 <= -3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2434: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper>=floor-1+loss )
+with expansion:
+  0.0000000000000035 >= 3.38618e-15
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2436: PASSED:
+  REQUIRE( p.support_distance_mm.upper<=policy.maximum_support_separation.value() )
+with expansion:
+  0.10000000000000354 <= 0.125
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.upper<=policy.maximum_nominal_gap.value() )
+with expansion:
+  0.0000000000000035 <= 0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2437: PASSED:
+  REQUIRE( p.nominal_separation_mm.lower>=-policy.maximum_nominal_overlap.value() )
+with expansion:
+  -0.00000000000000361 >= -0.003
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.min_y : p.floor.min_x)>=centre-half )
+with expansion:
+  0.2275 >= 0.2275
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2442: PASSED:
+  REQUIRE( Q(x ? p.floor.max_y : p.floor.max_x)<=centre+half )
+with expansion:
+  0.4725 <= 0.4725
+with message:
+  BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xc66c44b58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2069: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x1065488f0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2070: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0xc66d60000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2420: PASSED:
+  REQUIRE( cap.snapshot )
+with expansion:
+  0xc66cce040
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2421: FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+with message:
+  FIRST_CAP_INTERFACE_NOMINAL_SEPARATION_NOT_CERTIFIED
+
+===============================================================================
+test cases:   2 |   0 passed | 2 failed
+assertions: 147 | 145 passed | 2 failed
+

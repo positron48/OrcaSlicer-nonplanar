@@ -25,9 +25,10 @@ Next software tasks, in dependency order:
    361ccdc8 also succeeds in native suites, STL CLI and application. Run
    36858083109 at 05f4a887 also succeeds in native suites, STL CLI and application.
    Run 36861891679 at 4e6cddd7 also succeeds in native suites, STL CLI and application.
-   Run 36871942001 at 9a243279 now succeeds. Run 36878746418 at a165f0c3 is
-   in progress in the saved 15:32 UTC observation; joint cap and new material
-   joins require their own verification. The A02 correction at d57e9325 also
+   Run 36871942001 at 9a243279 now succeeds. Run 36878746418 at a165f0c3
+   succeeds. The saved 17:07 UTC observation retains d02d7544 material joins in
+   progress and 3d3f97a4 continuous runs pending. The new floor/body interface
+   requires its own Linux verification. The A02 correction at d57e9325 also
    has successful native Linux run 36454696019.
 3. Extend B03 nominal affine bounds to qualified error budgets, curved surfaces,
    ROI and tool access. Existing masks, whole-footprint checks and isolated CLI
@@ -98,8 +99,12 @@ Next software tasks, in dependency order:
    cuts. The same native cap has all six local joins and whole long-side lower
    coverage; the original per-event negative remains. This declared run model
    does not calibrate extrusion disturbances or physical bonding.
-   Qualify allowable overlap, finite-width floor/body bonding and volumetric
-   seam, construct paths for remaining 3D voids and reconstruct later support;
+   `B06-cap-interface.md` now proves 3D lower body anchors and complete varying
+   flat-floor nominal gap/overlap bounds from the original actual prefix. This
+   retains the native 161 packets and their actual amounts; rounded shoulders
+   and physical bonding remain unqualified.
+   Qualify allowable repeated material and complete shoulder/seam volumes,
+   construct paths for remaining 3D voids and reconstruct later support;
    short-packet motion/flow limits remain unverified.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.

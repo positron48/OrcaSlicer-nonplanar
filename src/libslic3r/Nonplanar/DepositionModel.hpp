@@ -801,4 +801,38 @@ struct FirstCapRunJoinsResult {std::string reason;std::shared_ptr<const FirstCap
 // Neither contract qualifies allowable excess, body bonding, head/order or export.
 FirstCapRunJoinsResult assess_first_cap_run_joins(const FirstCapResult &,const FirstCapJoinLimits &limits={});
 
+inline constexpr unsigned first_cap_interface_contract_version=1;
+struct FirstCapInterfacePolicy {
+    Length support_depth,maximum_support_separation;
+    Length maximum_nominal_gap,maximum_nominal_overlap,minimum_flat_floor_width;
+};
+struct FirstCapInterfaceLimits : MaterialCoverageLimits {size_t max_records=200000,max_patches=65535;};
+struct FirstCapFloorPatch {
+    size_t path,packet;
+    RectangleXY floor; // Outer enclosure of the complete varying flat floor.
+    ScalarBounds flat_floor_width_mm,nominal_floor_mm,nominal_separation_mm,support_distance_mm;
+};
+struct FirstCapInterfaceResult;
+struct FirstCapInterfaceSnapshot {
+    const std::shared_ptr<const FirstCapSnapshot> source;
+    const std::shared_ptr<const MaterialPrefixSnapshot> body;
+    const FirstCapInterfacePolicy policy;
+    const SceneBox anchor;
+    const ScalarBounds anchor_volume_mm3;
+    const std::vector<FirstCapFloorPatch> packets;
+    const size_t cells,evaluations;
+private:
+    FirstCapInterfaceSnapshot(std::shared_ptr<const FirstCapSnapshot> s,std::shared_ptr<const MaterialPrefixSnapshot> b,
+        FirstCapInterfacePolicy p,SceneBox box,ScalarBounds volume,std::vector<FirstCapFloorPatch> patches,size_t count,size_t work)
+        : source(std::move(s)),body(std::move(b)),policy(p),anchor(box),anchor_volume_mm3(volume),packets(std::move(patches)),cells(count),evaluations(work) {}
+    friend FirstCapInterfaceResult assess_first_cap_interface(const FirstCapResult &,const FirstCapInterfacePolicy &,const FirstCapInterfaceLimits &);
+};
+struct FirstCapInterfaceResult {std::string reason;std::shared_ptr<const FirstCapInterfaceSnapshot> snapshot;size_t cells=0,evaluations=0;};
+// Require a positive 3D body D_lower anchor under the complete ROI. Bound every
+// packet's complete varying flat floor against the original highest nominal body
+// roof and anchor plane, charging original body/cap numerical errors. Explicit
+// declared policy only; rounded shoulders, bonding, seam fill/head/order/export
+// remain separate. No future body or prospective cap can supply its own anchor.
+FirstCapInterfaceResult assess_first_cap_interface(const FirstCapResult &,const FirstCapInterfacePolicy &,const FirstCapInterfaceLimits &limits={});
+
 }

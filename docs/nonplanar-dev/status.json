@@ -20,7 +20,7 @@
     "B03": "BOUNDED_NOMINAL_MASKS_FOOTPRINT_AFFINE_CURVATURE_AND_ISOLATED_CLI_PASS_CURVED_SURFACES_TOOL_ROI_AND_PLANNING_PENDING",
     "B04": "OWNED_EXACT_PARTITION_NATIVE_BODY_MATERIAL_AND_INTERIOR_DENSE_COVERAGE_PASS_SEAM_WIDER_NATIVE_DOMAIN_JOB_WORKER_PENDING",
     "B05": "OWNED_ACTUAL_PREFIX_NATIVE_BODY_PER_EVENT_AND_CONTINUOUS_RUN_LOWER_BOXES_PASS_FULL_CONTACT_CCD_JOB_REPLAY_PENDING",
-    "B06": "ACTUAL_FIRST_GAP_REFINED_INTEGRAL_SOURCE_BOUND_AFFINE_SURFACES_AND_PROTECTED_STRIP_VOLUMES_PASS_LATER_SUPPORT_SEAM_FULL_SCOPE_PENDING",
+    "B06": "ACTUAL_PREFIX_AFFINE_GAP_INTEGRAL_PASS_STACK_AND_COMPLETE_VARIABLE_FLAT_FLOOR_INTERFACE_TO_3D_BODY_LOWER_ANCHOR_PASS_STEPPED_SHOULDER_SEAM_LATER_SUPPORT_FULL_SCOPE_PENDING",
     "B07": "PROTECTED_FIRST_CONTOUR_INFILL_MEASURED_FILL_SIX_NATIVE_CONTINUOUS_RUN_JOINS_AND_WHOLE_LONG_RUN_LOWER_PASS_ORIGINAL_PER_EVENT_NEGATIVE_RETAINED_ALLOWED_EXCESS_BODY_BONDING_SEAM_FULL_3D_LATER_SUPPORT_ORDER_PENDING",
     "B08": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B09": "NOT_IMPLEMENTED_FULL_SCOPE",
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 328,
-    "final_ctest_executed": 328,
+    "final_ctest_discovered": 331,
+    "final_ctest_executed": 331,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -495,11 +495,37 @@
     "B07_material_run_final_build": "BUILD5_RELEASE_APPLICATION_AND_NATIVE_TARGETS_FINAL_CONFIRMATIONS_AFTER_REMAINING_DEPTH_NUMERICAL_LOSS_AND_PLANE_CHECKS",
     "B07_material_run_linux": "NOT_YET_VERIFIED",
     "B07_material_run_review": "INDEPENDENT_REVIEW_PENDING",
-    "B07_material_run_ctest": 328
+    "B07_material_run_ctest": 328,
+    "B06_cap_interface_contract": 1,
+    "B06_cap_interface_cases": 3,
+    "B06_cap_interface_assertions": 4669,
+    "B06_cap_interface_oracle": "INDEPENDENT_113_BIT_WHOLE_LOWER_ANCHOR_BOX_TRUE_MIN_MAX_FLAT_WIDTH_FULL_VARIABLE_FLOOR_ENCLOSURE_AFFINE_FLOOR_AND_NOMINAL_SEPARATION_BOUNDS_PASS",
+    "B06_cap_interface_source": "ORIGINAL_PROTECTED_TARGET_PROOF_BODY_PREFIX_FUTURE_HIGH_ROOF_AND_PARTIAL_CURRENT_OUTSIDE_ROI_ABSENT_COMPLETING_IT_CHANGES_EXPECTED_FLOOR",
+    "B06_cap_interface_policy": "DECLARED_SIMULATION_DEPTH_0_02_MM_DISTANCE_0_125_MM_NOMINAL_GAP_OVERLAP_0_003_MM_MINIMUM_FLAT_WIDTH_0_05_MM_NOT_CALIBRATED_BONDING",
+    "B06_cap_interface_numerical": "ORIGINAL_BODY_PLUS_CAP_ERROR_EXPANDS_FULL_FLOOR_QUERIES_IN_XY_AND_SEPARATION_IN_Z_WITHOUT_MARGIN_REDUCTION",
+    "B06_cap_interface_limits": "4095_SHARED_CELLS_200000_WORK_DEPTH32_ONE_SECOND_SOURCE_COVERAGE_ROOF_REFINEMENT_AND_PUBLICATION_NO_PARTIAL_LIST",
+    "B06_cap_interface_native_packets": 161,
+    "B06_cap_interface_native_anchor_approx_mm3": 0.03,
+    "B06_cap_interface_native_cells": 162,
+    "B06_cap_interface_native_work": 5661,
+    "B06_cap_interface_native_before_pruning_work": 129792,
+    "B06_cap_interface_native_case_assertions": 2912,
+    "B06_cap_interface_native_standalone_case_seconds": 0.622,
+    "B06_cap_interface_negatives": "NO_3D_ANCHOR_DISTANCE_WIDTH_COARSE_UNCERTAINTY_0_00348669_EXCEEDS_0_003_ROUNDING_TIMEOUT_RECORD_PATCH_WORK_CELLS_CANCEL_STALE_LATE_PUBLICATION",
+    "B06_cap_interface_positive_slope": "WIDTH_APPROXIMATION_TIGHTENED_0_005_TO_0_002_MM_ALL_OTHER_BUDGETS_UNCHANGED_COARSE_NEGATIVE_RETAINED",
+    "B06_cap_interface_final_material_cases": 86,
+    "B06_cap_interface_final_material_assertions": 24261,
+    "B06_cap_interface_final_body_cases": 14,
+    "B06_cap_interface_final_body_assertions": 110800,
+    "B06_cap_interface_OFF_ZAA": "SIX_GCODE_AND_MODAL_REPLAY_PASS_FINAL_BUILD6_ORIGINAL_NORMALIZATION_ESTABLISHED_ADDITIVE_OFF_DEFAULT_ONLY",
+    "B06_cap_interface_final_build": "BUILD6_RELEASE_APPLICATION_AND_NATIVE_TARGETS_FULL_VARIABLE_MAXIMUM_FLOOR_ENCLOSURE_CURRENT_FINAL_CONFIRMATIONS",
+    "B06_cap_interface_linux": "NOT_YET_VERIFIED",
+    "B06_cap_interface_review": "INDEPENDENT_REVIEW_PENDING",
+    "B06_cap_interface_ctest": 331
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
-    "linux_x86_64": "A165F0C3_36878746418_NATIVE_SUITES_STL_CLI_APPLICATION_SUCCESS_D02D7544_36887521770_IN_PROGRESS_SAVED_2026_10_01_1623_UTC_CURRENT_MATERIAL_RUN_PENDING"
+    "linux_x86_64": "A165F0C3_36878746418_SUCCESS_D02D7544_36887521770_IN_PROGRESS_3D3F97A4_36894070655_PENDING_SAVED_2026_10_01_1707_UTC_CURRENT_CAP_INTERFACE_PENDING"
   },
   "physical": {
     "machine": "Snapmaker U1",
@@ -510,10 +536,10 @@
     "operator_profile": "UNCONFIRMED"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "A165F0C3_36878746418_SUCCESS_D02D7544_36887521770_IN_PROGRESS_SAVED_2026_10_01_1623_UTC_CURRENT_CONTINUOUS_RUN_PENDING",
+  "ci": "A165F0C3_36878746418_SUCCESS_D02D7544_36887521770_IN_PROGRESS_3D3F97A4_36894070655_PENDING_SAVED_2026_10_01_1707_UTC_CURRENT_CAP_INTERFACE_PENDING",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Qualify allowable overlap, finite-width floor/body bonding and volumetric seam from the unchanged actual first-cap candidate; continuous-run lower now proves six native local joins and whole long-side coverage while retaining the original per-event low-corner negative. Then construct remaining 3D fill and later actual curved/stepped support. Complete full-head CCD/motion/order/flow, final-byte replay/export and B01-B03 job/plate/provenance binding. Verify new stages on Linux without relaxed budgets. Independent review, Windows and physical qualification remain pending.",
+  "next_step": "Qualify complete rounded-shoulder and planar/nonplanar seam volumes and allowable repeated material; current original-body 3D anchor and full varying flat-floor nominal interface pass all 161 native packets but do not close the volumetric seam. Construct remaining 3D fill and later actual curved/stepped support. Complete full-head CCD/motion/order/flow, final-byte replay/export and B01-B03 job/plate/provenance binding. Verify new stages on Linux without relaxed budgets. Independent review, Windows and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -589,7 +615,8 @@
     "B07_first_contour": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-contour.md",
     "B07_first_cap": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-cap.md",
     "B07_material_join": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-material-joins.md",
-    "B07_material_runs": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-material-runs.md"
+    "B07_material_runs": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-material-runs.md",
+    "B06_cap_interface": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-cap-interface.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -662,5 +689,6 @@
   "B07_first_contour_evidence": "docs/nonplanar-dev/evidence/B07-first-contour/source-manifest.json",
   "B07_first_cap_evidence": "docs/nonplanar-dev/evidence/B07-first-cap/source-manifest.json",
   "B07_material_join_evidence": "docs/nonplanar-dev/evidence/B07-material-joins/source-manifest.json",
-  "B07_material_runs_evidence": "docs/nonplanar-dev/evidence/B07-material-runs/source-manifest.json"
+  "B07_material_runs_evidence": "docs/nonplanar-dev/evidence/B07-material-runs/source-manifest.json",
+  "B06_cap_interface_evidence": "docs/nonplanar-dev/evidence/B06-cap-interface/source-manifest.json"
 }

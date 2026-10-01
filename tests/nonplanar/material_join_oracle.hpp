@@ -8,11 +8,11 @@ namespace Slic3r::nptop::test {
 // box, then use the smallest local eroded stadium core/radius. Derivative losses
 // retain the full actual-prefix height domain, including the finite-butt shift.
 // This is a continuous bound, rather than a sample of witness points.
-inline void independent_join_box(const MaterialJoinSnapshot &join)
+inline void independent_lower_box(const MaterialPrefixSnapshot &source,size_t index,const SceneBox &box)
 {
     using Q=boost::multiprecision::cpp_bin_float_quad;
-    const auto &sequence=*join.source->sequence;const auto &box=join.witness;
-    for (size_t index : {join.first_record,join.second_record}) {
+    const auto &sequence=*source.sequence;
+    {
         const auto &row=sequence.records[index];const auto &m=row.motion;const auto &b=*row.bead;
         const Q dx=Q(m.end.x())-m.start.x(),dy=Q(m.end.y())-m.start.y(),l=sqrt(dx*dx+dy*dy);
         Q tlo=2,thi=-1,nmax=0;
@@ -20,7 +20,7 @@ inline void independent_join_box(const MaterialJoinSnapshot &join)
             const Q px=Q(x)-m.start.x(),py=Q(y)-m.start.y(),t=(dx*px+dy*py)/(l*l);
             tlo=std::min(tlo,t);thi=std::max(thi,t);nmax=std::max(nmax,abs((dx*py-dy*px)/l));
         }
-        const Q progress=index<join.source->completed_records ? 1 : join.source->current_progress;
+        const Q progress=index<source.completed_records ? 1 : source.current_progress;
         const Q xy=Q(sequence.model.inner_xy_loss.value())+sequence.model.numerical_coordinate_error.value();
         const Q ze=Q(sequence.model.inner_z_loss.value())+sequence.model.numerical_coordinate_error.value();
         REQUIRE(tlo>xy/l);REQUIRE(thi<progress-xy/l);
@@ -45,6 +45,11 @@ inline void independent_join_box(const MaterialJoinSnapshot &join)
             REQUIRE(Q(box.min.z())>std::max(top0-hl,top1-hh)+ze+abs(dz-dh)*shift);
         }
     }
+}
+inline void independent_join_box(const MaterialJoinSnapshot &join)
+{
+    using Q=boost::multiprecision::cpp_bin_float_quad;const auto &box=join.witness;
+    for (size_t index : {join.first_record,join.second_record}) independent_lower_box(*join.source,index,box);
     const Q volume=(Q(box.max.x())-box.min.x())*(Q(box.max.y())-box.min.y())*(Q(box.max.z())-box.min.z());
     REQUIRE(join.box_volume_mm3.lower>0);REQUIRE(join.box_volume_mm3.lower<=volume);REQUIRE(join.box_volume_mm3.upper>=volume);
 }

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="2" skipped="0" tests="147" hostname="tbd" time="0.095" timestamp="2026-10-01T17:03:05Z">
+    <properties>
+      <property name="random-seed" value="343431054"/>
+      <property name="filters" value="[FirstCapInterface]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B06 first-cap flat floors retain volumetric body anchors and continuous nominal contact bounds" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+direction=0 sloped=1 numeric=0.00348669
+FIRST_CAP_INTERFACE_NOMINAL_SEPARATION_NOT_CERTIFIED
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2422
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B06 first-cap interface refuses missing volume floating floors and exhausted publication budgets" time="0.000" status="run">
+      <failure message="!(assess_first_cap_interface(cap,bad).snapshot)" type="REQUIRE_FALSE">
+FAILED:
+  REQUIRE_FALSE( assess_first_cap_interface(cap,bad).snapshot )
+with expansion:
+  !0xbe11ac0c0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2455
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

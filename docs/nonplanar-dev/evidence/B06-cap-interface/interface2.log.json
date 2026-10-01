@@ -1,0 +1,20 @@
+{
+  "command": [
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+    "[FirstCapInterface]",
+    "--warn",
+    "NoAssertions",
+    "--reporter",
+    "junit",
+    "--out",
+    "build/nonplanar-evidence/B06-cap-interface/interface2.xml",
+    "--reporter",
+    "console::out=-",
+    "--success"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-01T17:03:05.399901+00:00",
+  "status": "COMPLETED",
+  "exit_code": 42,
+  "elapsed_seconds": 0.127
+}

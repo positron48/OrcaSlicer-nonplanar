@@ -628,6 +628,7 @@ MaterialCoverageResult cover_material(const LowerMaterialView &v, const SceneBox
 // closed leaf partition and nominal roof bounds remain owned and immutable;
 // caller-edited result fields cannot replace the source or geometry.
 class MaterialIntegralProof {
+    friend FirstCapInterfaceResult assess_first_cap_interface(const FirstCapResult &,const FirstCapInterfacePolicy &,const FirstCapInterfaceLimits &);
     struct Cell { Polygon polygon; Interval roof; };
     const std::shared_ptr<const MaterialPrefixSnapshot> source;
     const AffineCapCell target;
@@ -3259,6 +3260,120 @@ FirstCapRunJoinsResult assess_first_cap_run_joins(const FirstCapResult &requeste
         search.poll();return {"ALL_REQUESTED_LOCAL_FIRST_CAP_JOINS_HAVE_COMMON_CONTINUOUS_RUN_LOWER_BOXES_ONLY",std::move(snapshot),search.cells,search.evaluations};
     } catch (const Rejection &e) {return {e.what(),{},search.cells,search.evaluations};}
     catch (const std::exception &e) {return {"FIRST_CAP_RUN_JOIN_NUMERIC_FAILURE: "+std::string(e.what()),{},search.cells,search.evaluations};}
+}
+
+FirstCapInterfaceResult assess_first_cap_interface(const FirstCapResult &requested,const FirstCapInterfacePolicy &requested_policy,
+    const FirstCapInterfaceLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto policy=requested_policy;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();size_t cells=0,work=0;
+    try {
+        detail::require_interval_environment();
+        if (!source || !source->source || !source->source->source || !source->fill || !source->fill->target ||
+            !valid_coverage_limits(limits) || !limits.max_records || limits.max_records>200000 ||
+            !limits.max_patches || limits.max_patches>65535 || policy.support_depth.value()<=0 ||
+            policy.maximum_support_separation.value()<=0 || policy.maximum_nominal_gap.value()<=0 ||
+            policy.minimum_flat_floor_width.value()<=0) reject("INVALID_FIRST_CAP_INTERFACE");
+        for (auto v : {policy.support_depth,policy.maximum_support_separation,policy.maximum_nominal_gap,
+            policy.maximum_nominal_overlap,policy.minimum_flat_floor_width}) coordinate(v.value());
+        const auto stack=source->source->source;const auto body=stack->source;
+        if (!body || !body->sequence || body->sequence->records.size()>limits.max_records || stack->surfaces.empty() ||
+            !source->fill->occupied || !source->fill->occupied->source ||
+            source->fill->occupied->source->sequence->records.size()>limits.max_records ||
+            source->fill->target->source!=body || stack->first_pass.proof!=source->fill->target) reject("FIRST_CAP_INTERFACE_BODY_MISMATCH");
+        const auto &roi=stack->surfaces.front().cell.footprint;const double plane=stack->support_plane_z_mm;
+        const SceneBox anchor{{roi.min_x,roi.min_y,(Interval(plane)-Interval(policy.support_depth.value())).lo},{roi.max_x,roi.max_y,plane}};
+        const auto poll=[&] {stop(limits,body->sequence->revision,started);};poll();
+        const auto charge=[&](size_t count=1) {
+            if (count>limits.max_evaluations-work) reject("FIRST_CAP_INTERFACE_WORK_LIMIT");work+=count;poll();
+        };
+        const auto visit=[&] {poll();if (cells>=limits.max_cells) reject("FIRST_CAP_INTERFACE_CELL_LIMIT");++cells;};
+        const size_t end=body->completed_records+(body->current_progress>0 && body->completed_records<body->sequence->records.size());
+        charge(end); // Coverage also walks the active source before its section evaluations.
+        MaterialCoverageLimits support=limits;support.max_evaluations-=work;
+        support.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        support.cancelled=[&] {poll();return false;};support.is_current={};
+        const auto covered=cover_material(LowerMaterialView{body},anchor,support);
+        charge(covered.evaluations);cells+=covered.cells;
+        if (covered.status!=MaterialCoverageStatus::Covered) throw Rejection("FIRST_CAP_INTERFACE_ANCHOR_NOT_CERTIFIED: "+covered.reason);
+        const auto volume=join_box_volume(anchor);if (volume.lower<=0) reject("FIRST_CAP_INTERFACE_EMPTY_ANCHOR");
+        std::vector<size_t> active;
+        for (size_t i=0;i<end;++i) {
+            charge();const auto &row=body->sequence->records[i];if (!row.bead) continue;
+            const auto top=Interval(row.motion.start.z())+(Interval(row.motion.end.z())-Interval(row.motion.start.z()))*Interval(run_progress(*body,i));
+            if (std::max(row.motion.start.z(),top.hi)<plane) continue;
+            // Nominal outer AABB only prunes distant rows; it never certifies
+            // support or contact. Retain the actual partial current endpoint.
+            const Interval fraction(run_progress(*body,i)),half=Interval(row.bead->width_mm.upper)/Interval(2);
+            const auto px=Interval(row.motion.start.x())+(Interval(row.motion.end.x())-Interval(row.motion.start.x()))*fraction;
+            const auto py=Interval(row.motion.start.y())+(Interval(row.motion.end.y())-Interval(row.motion.start.y()))*fraction;
+            if ((detail::maximum(Interval(row.motion.start.x()),px)+half).hi<roi.min_x ||
+                (detail::minimum(Interval(row.motion.start.x()),px)-half).lo>roi.max_x ||
+                (detail::maximum(Interval(row.motion.start.y()),py)+half).hi<roi.min_y ||
+                (detail::minimum(Interval(row.motion.start.y()),py)-half).lo>roi.max_y) continue;
+            active.push_back(i);
+        }
+        const auto error=Interval(body->sequence->model.numerical_coordinate_error.value())+Interval(source->numerical_error_upper_mm);
+        std::vector<FirstCapFloorPatch> patches;
+        for (size_t path_index=0;path_index<source->paths.size();++path_index) {
+            charge();const auto &path=source->paths[path_index];
+            if (!path || path->source!=source->source || path->roof_domain!=FirstHatchRoofDomain::FiniteWidth) reject("FIRST_CAP_INTERFACE_PATH_MISMATCH");
+            for (size_t index=0;index<path->pieces.size();++index) {
+                charge();if (patches.size()>=limits.max_patches) reject("FIRST_CAP_INTERFACE_PATCH_LIMIT");
+                const auto &piece=path->pieces[index];const auto &b=piece.section;
+                const bool x=piece.start.y()==piece.end.y();if (x==(piece.start.x()==piece.end.x())) reject("FIRST_CAP_INTERFACE_AXIS_DOMAIN");
+                const auto area=Interval(piece.volume.value())/detail::root(length_squared(piece.start,piece.end));
+                const auto half_at=[&](Interval h) {return b.kind==BeadSectionKind::RoundedRectangle ?
+                    (section_width(area,h,b.kind)-h)/Interval(2) : area/h/Interval(2);};
+                const auto minimum=half_at(Interval(std::max(b.gap_begin_mm,b.gap_end_mm)));
+                const auto maximum=half_at(Interval(std::min(b.gap_begin_mm,b.gap_end_mm)));
+                const double centre=x ? piece.start.y() : piece.start.x();
+                const double low=(Interval(centre)-Interval(maximum.hi)).lo,high=(Interval(centre)+Interval(maximum.hi)).hi;
+                const ScalarBounds widths=bounds(Interval(2)*Interval(minimum.lo,maximum.hi));
+                if (widths.lower<policy.minimum_flat_floor_width.value()) reject("FIRST_CAP_INTERFACE_FLAT_FLOOR_TOO_NARROW");
+                const RectangleXY floor=x ? RectangleXY{std::min(piece.start.x(),piece.end.x()),low,std::max(piece.start.x(),piece.end.x()),high} :
+                                            RectangleXY{low,std::min(piece.start.y(),piece.end.y()),high,std::max(piece.start.y(),piece.end.y())};
+                const Exact xy(error.hi);
+                if (Exact(floor.min_x)-xy<Exact(roi.min_x) || Exact(floor.max_x)+xy>Exact(roi.max_x) ||
+                    Exact(floor.min_y)-xy<Exact(roi.min_y) || Exact(floor.max_y)+xy>Exact(roi.max_y)) reject("FIRST_CAP_INTERFACE_FLOOR_OUTSIDE_ANCHOR");
+                const Exact z0=Exact(piece.start.z())-Exact(b.gap_begin_mm),dz=Exact(piece.end.z())-Exact(b.gap_end_mm)-z0;
+                const auto floor_height=Interval(exact_interval(std::min(z0,z0+dz)).lo,exact_interval(std::max(z0,z0+dz)).hi)+Interval(-error.hi,error.hi);
+                const auto distance=floor_height-Interval(plane);
+                if (distance.lo<0 || distance.hi>policy.maximum_support_separation.value()) reject("FIRST_CAP_INTERFACE_SUPPORT_DISTANCE_NOT_CERTIFIED");
+                struct Node {Exact a,b;size_t depth;std::vector<size_t> candidates;};std::vector<Node> pending{{Exact(0),Exact(1),0,active}};
+                double gap_lower=std::numeric_limits<double>::infinity(),gap_upper=-std::numeric_limits<double>::infinity();
+                while (!pending.empty()) {
+                    visit();auto node=std::move(pending.back());pending.pop_back();
+                    const auto along=[&](const Exact &t) {return Exact(x ? piece.start.x() : piece.start.y())+
+                        (Exact(x ? piece.end.x() : piece.end.y())-Exact(x ? piece.start.x() : piece.start.y()))*t;};
+                    const Exact a=along(node.a),bb=along(node.b),lo=std::min(a,bb),hi=std::max(a,bb);
+                    const Exact ha=Exact(b.gap_begin_mm)+(Exact(b.gap_end_mm)-Exact(b.gap_begin_mm))*node.a;
+                    const Exact hb=Exact(b.gap_begin_mm)+(Exact(b.gap_end_mm)-Exact(b.gap_begin_mm))*node.b;
+                    const auto local=half_at(exact_interval(std::min(ha,hb)));
+                    const Exact transverse_lo((Interval(centre)-Interval(local.hi)).lo),transverse_hi((Interval(centre)+Interval(local.hi)).hi);
+                    // Include original coordinate uncertainty on every axis,
+                    // rather than checking only the nominal floor centre.
+                    const Polygon polygon=x ? Polygon{{lo-xy,transverse_lo-xy},{hi+xy,transverse_lo-xy},{hi+xy,transverse_hi+xy},{lo-xy,transverse_hi+xy}} :
+                                              Polygon{{transverse_lo-xy,lo-xy},{transverse_hi+xy,lo-xy},{transverse_hi+xy,hi+xy},{transverse_lo-xy,hi+xy}};
+                    auto roof=nominal_roof_bounds(*body,polygon,node.candidates,plane,[&] {charge();});
+                    const Exact fa=z0+dz*node.a,fb=z0+dz*node.b;
+                    const auto separation=Interval(exact_interval(std::min(fa,fb)).lo,exact_interval(std::max(fa,fb)).hi)-roof.height+Interval(-error.hi,error.hi);
+                    if (separation.lo>=-policy.maximum_nominal_overlap.value() && separation.hi<=policy.maximum_nominal_gap.value()) {
+                        gap_lower=std::min(gap_lower,separation.lo);gap_upper=std::max(gap_upper,separation.hi);continue;
+                    }
+                    if (node.depth>=limits.max_depth) reject("FIRST_CAP_INTERFACE_NOMINAL_SEPARATION_NOT_CERTIFIED");
+                    const Exact mid=(node.a+node.b)/Exact(2);
+                    pending.push_back({mid,node.b,node.depth+1,roof.active});pending.push_back({node.a,mid,node.depth+1,std::move(roof.active)});
+                }
+                patches.push_back({path_index,index,floor,widths,bounds(floor_height),{gap_lower,gap_upper},bounds(distance)});
+            }
+        }
+        if (patches.empty()) reject("FIRST_CAP_INTERFACE_EMPTY_CAP");
+        poll();auto snapshot=std::shared_ptr<const FirstCapInterfaceSnapshot>(new FirstCapInterfaceSnapshot(source,body,policy,anchor,volume,
+            std::move(patches),cells,work));poll();
+        return {"BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY",std::move(snapshot),cells,work};
+    } catch (const Rejection &e) {return {e.what(),{},cells,work};}
+    catch (const std::exception &e) {return {"FIRST_CAP_INTERFACE_NUMERIC_FAILURE: "+std::string(e.what()),{},cells,work};}
 }
 
 }
