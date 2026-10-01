@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="905" hostname="tbd" time="0.044" timestamp="2026-10-01T23:06:15Z">
+    <properties>
+      <property name="random-seed" value="2190485902"/>
+      <property name="filters" value="[FirstCapMaterial]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 composed cap refuses partial body and stale invalid or exhausted requests" time="0.008" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 body and active first cap form one exact material prefix for later local support" time="0.000" status="run">
+      <failure message="classify_material(NominalMaterialView{a.material},future).membership==MaterialMembership::Inside" type="REQUIRE">
+FAILED:
+  REQUIRE( classify_material(NominalMaterialView{a.material},future).membership==MaterialMembership::Inside )
+with expansion:
+  2 == 0
+BOUNDED_FIRST_CONTOUR_AND_INTERIOR_HATCH_CANDIDATE_WITH_MEASURED_JOINT_FILL_ONLY
+EXACT_BODY_AND_SELECTED_CAP_PREFIX_ONLY
+WHOLE_BOX_IN_SELECTED_ACTUAL_CAP_RUN_LOWER
+LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+EXACT_BODY_AND_SELECTED_CAP_PREFIX_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3117
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

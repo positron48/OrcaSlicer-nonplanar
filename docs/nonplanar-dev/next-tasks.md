@@ -122,6 +122,13 @@ Next software tasks, in dependency order:
    joins, 173 interface packets and fresh void classification pass. Use actual
    owned packet widths, not original policy.width, after replacement. Wider
    analytic extended-shadow budget refusals still need bounded refinement.
+   `B07-first-cap-material.md` now preserves the completed original body and
+   selected actual cap fraction in one source-mapped prefix, excluding future
+   material. One actual continuous run or the original independent-event lower
+   union certifies local boxes; the native original second surface has a qualified
+   local footprint. Full-ROI/future-cap support still refuses. Extend to general
+   run-union lower planes, exact partial-body continuation and actual later bead
+   construction after solving the unchanged shoulder/seam deficit.
    Qualify allowable repeated material and complete shoulder/seam volumes,
    construct/replan paths for both remaining 3D volumes and reconstruct later support;
    short-packet motion/flow limits remain unverified.

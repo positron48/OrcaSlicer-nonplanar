@@ -15,6 +15,10 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B07-first-cap-material.md` and ADR-0060 now compose exact completed body
+and selected active cap material, with explicit continuous-run lower support
+and local later-surface feasibility. Future material and full-ROI unsupported
+requests refuse; actual later beads and complete cap fill remain pending.
 `B07-first-cap-width-replan.md` and ADR-0059 now narrow only central packets,
 retaining original XYZ/gaps, contour snapshots, end doses and body/target/band/losses.
 The native .40 -> .38 mm candidate changes 53 of 173 packets and reduces S/R by

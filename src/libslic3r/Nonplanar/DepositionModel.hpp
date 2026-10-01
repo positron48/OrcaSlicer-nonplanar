@@ -803,6 +803,79 @@ struct FirstCapResult {std::string reason;std::shared_ptr<const FirstCapSnapshot
 FirstCapResult plan_first_cap(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,
     const FirstHatchLayerLimits &limits={});
 
+inline constexpr unsigned first_cap_material_contract_version=1;
+struct FirstCapMaterialLimits : MaterialLimits {size_t max_evaluations=2000000;};
+enum class FirstCapMaterialOriginKind { Body,Connector,FirstCap };
+struct FirstCapMaterialOrigin {FirstCapMaterialOriginKind kind;size_t source_record;};
+struct FirstCapMaterialRun {size_t path;std::shared_ptr<const MaterialRunSnapshot> material;};
+struct FirstCapMaterialResult;
+struct FirstCapMaterialSnapshot {
+    const std::shared_ptr<const FirstCapSnapshot> source;
+    const std::shared_ptr<const MaterialPrefixSnapshot> body,material;
+    const size_t body_records,cap_start_record;
+    const std::vector<FirstCapMaterialOrigin> origins;
+    const std::vector<FirstCapMaterialRun> runs;
+private:
+    FirstCapMaterialSnapshot(std::shared_ptr<const FirstCapSnapshot> cap,std::shared_ptr<const MaterialPrefixSnapshot> original,
+        std::shared_ptr<const MaterialPrefixSnapshot> active,size_t count,size_t start,std::vector<FirstCapMaterialOrigin> mapping,
+        std::vector<FirstCapMaterialRun> paths)
+        : source(std::move(cap)),body(std::move(original)),material(std::move(active)),body_records(count),cap_start_record(start),
+          origins(std::move(mapping)),runs(std::move(paths)) {}
+    friend FirstCapMaterialResult reconstruct_first_cap_material(const FirstCapResult &,std::optional<size_t>,double,const FirstCapMaterialLimits &);
+};
+struct FirstCapMaterialResult {std::string reason;std::shared_ptr<const FirstCapMaterialSnapshot> snapshot;size_t evaluations=0;};
+// Preserve completed body records exactly, omit its future records, then append
+// the original cap ledger with unique global IDs and an explicit origin map.
+// A missing cap count selects its complete prefix; otherwise only the selected
+// records/current fraction exist. Partial body events are refused, never rounded
+// into replacement beads. The connector is declared travel, without motion approval.
+FirstCapMaterialResult reconstruct_first_cap_material(const FirstCapResult &,std::optional<size_t> completed_cap_records={},
+    double current_progress=0,const FirstCapMaterialLimits &limits={});
+
+inline constexpr unsigned first_cap_support_contract_version=1;
+struct FirstCapSupportResult;
+struct FirstCapSupportSnapshot {
+    const std::shared_ptr<const FirstCapMaterialSnapshot> source;
+    const SceneBox domain;
+    const std::shared_ptr<const MaterialRunCoverSnapshot> run;
+    const std::optional<MaterialCoverageResult> independent_events;
+private:
+    FirstCapSupportSnapshot(std::shared_ptr<const FirstCapMaterialSnapshot> s,SceneBox box,
+        std::shared_ptr<const MaterialRunCoverSnapshot> continuous,std::optional<MaterialCoverageResult> events)
+        : source(std::move(s)),domain(box),run(std::move(continuous)),independent_events(std::move(events)) {}
+    friend FirstCapSupportResult cover_first_cap_material_lower(const FirstCapMaterialResult &,const SceneBox &,const MaterialCoverageLimits &);
+};
+struct FirstCapSupportResult {std::string reason;std::shared_ptr<const FirstCapSupportSnapshot> snapshot;size_t cells=0,evaluations=0;};
+// Whole-box support from one actual cap run or the original independent-event
+// lower union of body/cap. These two erosion models retain distinct certificates.
+// No inference from prospective surfaces or combined partial run certificates.
+FirstCapSupportResult cover_first_cap_material_lower(const FirstCapMaterialResult &,const SceneBox &,const MaterialCoverageLimits &limits={});
+
+inline constexpr unsigned first_cap_next_pass_contract_version=1;
+struct FirstCapNextPassResult;
+struct FirstCapNextPassSnapshot {
+    const std::shared_ptr<const FirstCapMaterialSnapshot> source;
+    const size_t pass_index;
+    const AffineCapCell cell;
+    const TransitionPolicy policy;
+    const double support_plane_z_mm,nominal_roof_ceiling_mm,upper_roof_ceiling_mm;
+    const ScalarBounds gap_mm,nominal_volume_mm3;
+    const std::shared_ptr<const FirstCapSupportSnapshot> support;
+private:
+    FirstCapNextPassSnapshot(std::shared_ptr<const FirstCapMaterialSnapshot> s,size_t index,AffineCapCell surface,TransitionPolicy p,double plane,
+        double nominal,double upper,ScalarBounds gap,ScalarBounds volume,std::shared_ptr<const FirstCapSupportSnapshot> lower)
+        : source(std::move(s)),pass_index(index),cell(surface),policy(p),support_plane_z_mm(plane),nominal_roof_ceiling_mm(nominal),
+          upper_roof_ceiling_mm(upper),gap_mm(gap),nominal_volume_mm3(volume),support(std::move(lower)) {}
+    friend FirstCapNextPassResult assess_first_cap_next_pass(const FirstCapMaterialResult &,size_t,const RectangleXY &,double,const MaterialCoverageLimits &);
+};
+struct FirstCapNextPassResult {std::string reason;std::shared_ptr<const FirstCapNextPassSnapshot> snapshot;size_t cells=0,evaluations=0;};
+// Assess a local rectangle on an original later prospective surface against the
+// assembled actual prefix and original later vertical-gap policy. The original target/ROI
+// remains owned, unchanged. Local feasibility does not construct later beads,
+// certify normal thickness, complete pass coverage, motion/contact, bonding or export.
+FirstCapNextPassResult assess_first_cap_next_pass(const FirstCapMaterialResult &,size_t pass_index,const RectangleXY &,
+    double support_plane_z_mm,const MaterialCoverageLimits &limits={});
+
 inline constexpr unsigned first_cap_replan_contract_version=1;
 struct FirstCapReplanPolicy {Volume minimum_covered_gain{.001},maximum_outside_target{.001};};
 struct FirstCapReplanSnapshot {

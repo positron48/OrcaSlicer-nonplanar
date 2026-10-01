@@ -2098,7 +2098,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan][NativeFirstCapWidthReplan]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan][NativeFirstCapWidthReplan][NativeFirstCapMaterial]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2517,6 +2517,40 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         " void cells=" << narrow_voids.cells << " void work=" << narrow_voids.evaluations <<
         " joins cells=" << narrow_joins.cells << " work=" << narrow_joins.evaluations <<
         " interface cells=" << narrow_interface.cells << " work=" << narrow_interface.evaluations);
+    FirstCapMaterialLimits assembly_limits;assembly_limits.timeout=std::chrono::seconds(5);
+    const auto assembled=reconstruct_first_cap_material(narrow_result,{},0,assembly_limits);
+    INFO(assembled.reason << " work=" << assembled.evaluations);REQUIRE(assembled.snapshot);
+    REQUIRE(assembled.snapshot->body==narrow.source->source->source);
+    REQUIRE(assembled.snapshot->body->sequence==material.snapshot->material);
+    REQUIRE(assembled.snapshot->body_records==material.snapshot->material->records.size());
+    for (size_t i=0;i<assembled.snapshot->body_records;++i)
+        REQUIRE(assembled.snapshot->material->sequence->canonical_record(i)==material.snapshot->material->canonical_record(i));
+    REQUIRE(assembled.snapshot->runs.size()==narrow.paths.size());
+    const auto &active_run=*assembled.snapshot->runs[4].material;REQUIRE(active_run.last_record>active_run.first_record);
+    const auto &run_start=active_run.source->sequence->records[active_run.first_record].motion.start;
+    const auto &run_end=active_run.source->sequence->records[active_run.last_record].motion.end;
+    const auto p=[&](double t) {return PhysicalPosition{run_start.x()+(run_end.x()-run_start.x())*t,
+        run_start.y()+(run_end.y()-run_start.y())*t,run_start.z()+(run_end.z()-run_start.z())*t};};
+    const auto support_begin=p(.47),support_end=p(.53);const bool rx=active_run.axis==MaterialRunAxis::X;
+    const double support_z=std::min(support_begin.z(),support_end.z())-.015;
+    const SceneBox next_support{{std::min(support_begin.x(),support_end.x())-(rx ? 0 : .01),std::min(support_begin.y(),support_end.y())-(rx ? .01 : 0),support_z},
+        {std::max(support_begin.x(),support_end.x())+(rx ? 0 : .01),std::max(support_begin.y(),support_end.y())+(rx ? .01 : 0),support_z}};
+    MaterialCoverageLimits next_limits;next_limits.timeout=std::chrono::seconds(5);next_limits.max_cells=65535;
+    const auto supported=cover_first_cap_material_lower(assembled,next_support,next_limits);
+    INFO(supported.reason << " cells=" << supported.cells << " work=" << supported.evaluations);REQUIRE(supported.snapshot);
+    REQUIRE(supported.snapshot->run);test::independent_run_box(*supported.snapshot->run->source,next_support);
+    auto one_cell=next_limits;one_cell.max_cells=1;REQUIRE_FALSE(cover_first_cap_material_lower(assembled,next_support,one_cell).snapshot);
+    const RectangleXY next_region{next_support.min.x(),next_support.min.y(),next_support.max.x(),next_support.max.y()};
+    const auto next=assess_first_cap_next_pass(assembled,1,next_region,support_z,next_limits);
+    INFO(next.reason << " cells=" << next.cells << " work=" << next.evaluations);REQUIRE(next.snapshot);
+    REQUIRE(next.snapshot->source==assembled.snapshot);REQUIRE(next.snapshot->gap_mm.lower>.14);REQUIRE(next.snapshot->gap_mm.upper<.24);
+    REQUIRE(next.snapshot->nominal_volume_mm3.lower>0);
+    const auto future_cap=reconstruct_first_cap_material(narrow_result,0,0,assembly_limits);REQUIRE(future_cap.snapshot);
+    REQUIRE(future_cap.snapshot->runs.empty());
+    REQUIRE_FALSE(assess_first_cap_next_pass(future_cap,1,next_region,support_z,next_limits).snapshot);
+    REQUIRE_FALSE(assess_first_cap_next_pass(assembled,1,narrow.source->source->final_surface.footprint,support_z,next_limits).snapshot);
+    INFO("native composed body records=" << assembled.snapshot->body_records << " active cap runs=" << assembled.snapshot->runs.size() <<
+        " support cells=" << supported.cells << " work=" << supported.evaluations << " next gap=[" << next.snapshot->gap_mm.lower << ',' << next.snapshot->gap_mm.upper << ']');
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

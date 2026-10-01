@@ -161,6 +161,12 @@ pipeline integration or physical evidence.
 - PHY-03: Контролируемая первая крышка. Expected: Нет касаний/сдвига/видимых задиров; дефекты фиксируются по сегменту. Oracle: Реальные наблюдения; не симуляция.
 - PRF-07: Неплоский стол при identity mesh contract. Expected: REJECT предусловия; не считать mesh OFF гарантией. Oracle: Независимая измерительная карта плоскости.
 
+B07 actual body/cap continuation: B07-first-cap-material.md / ADR-0060 retain
+exact completed body rows and selected cap material. Whole local continuous-run
+support and local later original-surface feasibility pass; unsupported complete
+ROI and future-cap queries refuse. This does not close complete fill or later
+bead, motion/contact/order/export requirements.
+
 Implementation order follows dependencies, starting with the shared input/job
 boundary, followed by qualified upper analysis/body partition/material/planning,
 then complete replay/gate/UI. Preserve useful positive fixtures and all negative

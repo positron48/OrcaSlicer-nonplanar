@@ -677,6 +677,48 @@ class MaterialIntegralProof {
     }
 };
 
+namespace {
+struct MaterialRoofCeilings {std::optional<double> nominal,upper;};
+template<class Charge,class Poll>
+MaterialRoofCeilings material_roof_ceilings(const MaterialPrefixSnapshot &cursor,const RectangleXY &r,Charge charge,Poll poll)
+{
+    MaterialRoofCeilings result;const auto &sequence=*cursor.sequence;
+    const Polygon footprint{{Exact(r.min_x),Exact(r.min_y)},{Exact(r.max_x),Exact(r.min_y)},
+                            {Exact(r.max_x),Exact(r.max_y)},{Exact(r.min_x),Exact(r.max_y)}};
+    const size_t end=cursor.completed_records+(cursor.current_progress>0 && cursor.completed_records<sequence.records.size());
+    for (size_t i=0;i<end;++i) {
+        if (i%128==0) poll();const auto &row=sequence.records[i];if (!row.bead) continue;
+        if (!sequence.geometry[i] || !std::holds_alternative<Deposition>(row.motion.payload)) reject("INVALID_MATERIAL_TRANSITION_GEOMETRY");
+        const double progress=i<cursor.completed_records ? 1 : cursor.current_progress;
+        for (auto rep : {Representation::Nominal,Representation::Upper}) {
+            charge();const auto ceiling=roof_ceiling(row,sequence.model,footprint,progress,rep);
+            auto &target=rep==Representation::Nominal ? result.nominal : result.upper;
+            if (ceiling) target=target ? std::max(*target,*ceiling) : *ceiling;
+        }
+    }
+    return result;
+}
+struct MaterialGapBounds {ScalarBounds gap,volume;TransitionStatus status;const char *reason;};
+MaterialGapBounds material_gap_bounds(const AffineCapCell &cell,double plane,double nominal,double upper,const TransitionPolicy &policy)
+{
+    if (nominal<plane || upper<nominal) reject("MATERIAL_TRANSITION_INCONSISTENT_ROOF");
+    const Interval error(-policy.corner_height_error.value(),policy.corner_height_error.value());
+    const auto h00=Interval(cell.z00)+error,h10=Interval(cell.z10)+error,h01=Interval(cell.z01)+error;
+    const std::array<Interval,4> corners{h00,h10,h01,h10+h01-h00};auto cap=corners[0];bool small=false,large=false;
+    for (auto corner : corners) {
+        coordinate(corner.lo);coordinate(corner.hi);cap=Interval(std::min(cap.lo,corner.lo),std::max(cap.hi,corner.hi));
+        small|=(corner-Interval(plane)).hi<policy.minimum.value();large|=(corner-Interval(upper)).lo>policy.maximum.value();
+    }
+    const auto gap=cap-Interval(plane,upper);const auto &r=cell.footprint;
+    const auto area=(Interval(r.max_x)-Interval(r.min_x))*(Interval(r.max_y)-Interval(r.min_y));
+    const auto volume=area*((Interval(cell.z10)+Interval(cell.z01))/Interval(2)-Interval(plane,nominal));
+    if (small || large) return {bounds(gap),bounds(volume),TransitionStatus::Rejected,small ? "MATERIAL_GAP_TOO_SMALL" : "MATERIAL_GAP_TOO_LARGE"};
+    if (gap.lo>policy.minimum.value() && gap.hi<policy.maximum.value() && volume.lo>0)
+        return {bounds(gap),bounds(volume),TransitionStatus::Compatible,"CONTINUOUS_MATERIAL_FIRST_PASS_FEASIBLE"};
+    return {bounds(gap),bounds(volume),TransitionStatus::Unknown,"MATERIAL_TRANSITION_UNCERTAIN_GAP"};
+}
+}
+
 MaterialTransitionResult assess_material_first_pass(const LowerMaterialView &view, const AffineCapCell &requested_cell,
     double plane, const TransitionPolicy &requested_policy, const MaterialCoverageLimits &requested_limits)
 {
@@ -699,23 +741,11 @@ MaterialTransitionResult assess_material_first_pass(const LowerMaterialView &vie
         for (double v : {r.min_x,r.min_y,r.max_x,r.max_y,cell.z00,cell.z10,cell.z01,plane}) coordinate(v);
         const auto sequence=cursor->sequence; const auto poll=[&] { stop(limits,sequence->revision,started); };
         poll();
-        const Polygon footprint{{Exact(r.min_x),Exact(r.min_y)},{Exact(r.max_x),Exact(r.min_y)},
-                                {Exact(r.max_x),Exact(r.max_y)},{Exact(r.min_x),Exact(r.max_y)}};
-        const size_t end=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence->records.size());
-        for (size_t i=0; i<end; ++i) {
-            if (i%128==0) poll();
-            const auto &row=sequence->records[i]; if (!row.bead) continue;
-            if (!sequence->geometry[i] || !std::holds_alternative<Deposition>(row.motion.payload))
-                reject("INVALID_MATERIAL_TRANSITION_GEOMETRY");
-            const double progress=i<cursor->completed_records ? 1 : cursor->current_progress;
-            for (auto rep : {Representation::Nominal,Representation::Upper}) {
-                if (result.roof_evaluations>=limits.max_evaluations) reject("MATERIAL_TRANSITION_WORK_LIMIT");
-                if (result.roof_evaluations%128==0) poll(); ++result.roof_evaluations;
-                const auto ceiling=roof_ceiling(row,sequence->model,footprint,progress,rep);
-                auto &target=rep==Representation::Nominal ? result.nominal_roof_ceiling_mm : result.upper_roof_ceiling_mm;
-                if (ceiling) target=target ? std::max(*target,*ceiling) : *ceiling;
-            }
-        }
+        const auto roofs=material_roof_ceilings(*cursor,r,[&] {
+            if (result.roof_evaluations>=limits.max_evaluations) reject("MATERIAL_TRANSITION_WORK_LIMIT");
+            if (result.roof_evaluations%128==0) poll();++result.roof_evaluations;
+        },poll);
+        result.nominal_roof_ceiling_mm=roofs.nominal;result.upper_roof_ceiling_mm=roofs.upper;
         poll();
         if (result.roof_evaluations>=limits.max_evaluations) reject("MATERIAL_TRANSITION_WORK_LIMIT");
         auto remaining=limits; remaining.max_evaluations-=result.roof_evaluations;
@@ -727,29 +757,9 @@ MaterialTransitionResult assess_material_first_pass(const LowerMaterialView &vie
             result.status=TransitionStatus::Rejected; result.reason="UNSUPPORTED_MATERIAL_TRANSITION_FOOTPRINT"; return result;
         }
         if (result.support.status!=MaterialCoverageStatus::Covered) { result.reason=result.support.reason; return result; }
-        if (!result.nominal_roof_ceiling_mm || !result.upper_roof_ceiling_mm ||
-            *result.nominal_roof_ceiling_mm<plane || *result.upper_roof_ceiling_mm<*result.nominal_roof_ceiling_mm)
-            reject("MATERIAL_TRANSITION_INCONSISTENT_ROOF");
-        const Interval error(-policy.corner_height_error.value(),policy.corner_height_error.value());
-        const auto h00=Interval(cell.z00)+error, h10=Interval(cell.z10)+error, h01=Interval(cell.z01)+error;
-        const std::array<Interval,4> corners{h00,h10,h01,h10+h01-h00};
-        auto cap=corners[0]; bool too_small=false,too_large=false;
-        for (auto corner : corners) {
-            coordinate(corner.lo); coordinate(corner.hi);
-            cap=Interval(std::min(cap.lo,corner.lo),std::max(cap.hi,corner.hi));
-            too_small|=(corner-Interval(plane)).hi<policy.minimum.value();
-            too_large|=(corner-Interval(*result.upper_roof_ceiling_mm)).lo>policy.maximum.value();
-        }
-        const auto gap=cap-Interval(plane,*result.upper_roof_ceiling_mm); result.gap_mm=bounds(gap);
-        const auto area=(Interval(r.max_x)-Interval(r.min_x))*(Interval(r.max_y)-Interval(r.min_y));
-        const auto mean=(Interval(cell.z10)+Interval(cell.z01))/Interval(2);
-        result.nominal_volume_mm3=bounds(area*(mean-Interval(plane,*result.nominal_roof_ceiling_mm)));
-        poll();
-        if (too_small || too_large) {
-            result.status=TransitionStatus::Rejected;result.reason=too_small ? "MATERIAL_GAP_TOO_SMALL" : "MATERIAL_GAP_TOO_LARGE";
-        } else if (gap.lo>policy.minimum.value() && gap.hi<policy.maximum.value() && result.nominal_volume_mm3->lower>0) {
-            result.status=TransitionStatus::Compatible;result.reason="CONTINUOUS_MATERIAL_FIRST_PASS_FEASIBLE";
-        } else result.reason="MATERIAL_TRANSITION_UNCERTAIN_GAP";
+        if (!roofs.nominal || !roofs.upper) reject("MATERIAL_TRANSITION_INCONSISTENT_ROOF");
+        const auto gap=material_gap_bounds(cell,plane,*roofs.nominal,*roofs.upper,policy);
+        result.gap_mm=gap.gap;result.nominal_volume_mm3=gap.volume;result.status=gap.status;result.reason=gap.reason;poll();
     } catch (const Rejection &e) { result.status=TransitionStatus::Unknown;result.reason=e.what(); }
     catch (const std::exception &e) { result.status=TransitionStatus::Unknown;result.reason="MATERIAL_TRANSITION_NUMERIC_FAILURE: "+std::string(e.what()); }
     return result;
@@ -4089,6 +4099,174 @@ FirstCapInterfaceResult assess_first_cap_interface(const FirstCapResult &request
         return {"BOUNDED_FLAT_FLOOR_BODY_ANCHOR_AND_NOMINAL_INTERFACE_ONLY",std::move(snapshot),cells,work};
     } catch (const Rejection &e) {return {e.what(),{},cells,work};}
     catch (const std::exception &e) {return {"FIRST_CAP_INTERFACE_NUMERIC_FAILURE: "+std::string(e.what()),{},cells,work};}
+}
+
+FirstCapMaterialResult reconstruct_first_cap_material(const FirstCapResult &requested,std::optional<size_t> requested_count,
+    double progress,const FirstCapMaterialLimits &requested_limits)
+{
+    const auto cap=requested.snapshot;const auto count=requested_count;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();size_t work=0;
+    try {
+        detail::require_interval_environment();
+        if (!cap || !cap->source || !cap->source->source || !cap->fill || !cap->fill->occupied ||
+            !limits.max_records || limits.max_records>200000 || !limits.max_evaluations || limits.max_evaluations>2000000 ||
+            !valid_timeout(limits.timeout) || !std::isfinite(progress) || progress<0 || progress>1 || (!count && progress!=0))
+            reject("INVALID_FIRST_CAP_MATERIAL");
+        const auto body=cap->source->source->source,original=cap->fill->occupied->source;
+        if (!body || !original || !body->sequence || !original->sequence || cap->fill->target!=cap->source->source->first_pass.proof ||
+            original->completed_records!=original->sequence->records.size() || original->current_progress!=0)
+            reject("FIRST_CAP_MATERIAL_SOURCE_MISMATCH");
+        if (body->current_progress!=0) reject("FIRST_CAP_MATERIAL_PARTIAL_BODY_UNSUPPORTED");
+        const auto &before=*body->sequence,&after=*original->sequence;
+        const size_t complete=count.value_or(after.records.size());
+        if (complete>after.records.size() || (complete==after.records.size() && progress!=0)) reject("INVALID_FIRST_CAP_MATERIAL_PREFIX");
+        const auto &bm=before.model,&cm=after.model;
+        if (before.revision!=after.revision || before.source_fingerprint!=after.source_fingerprint || bm.model_id!=cm.model_id ||
+            bm.outer_xy_growth.value()!=cm.outer_xy_growth.value() || bm.outer_z_growth.value()!=cm.outer_z_growth.value() ||
+            bm.inner_xy_loss.value()!=cm.inner_xy_loss.value() || bm.inner_z_loss.value()!=cm.inner_z_loss.value())
+            reject("FIRST_CAP_MATERIAL_CONTEXT_MISMATCH");
+        const auto poll=[&] {stop(limits,before.revision,started);};
+        const auto charge=[&](size_t n=1) {poll();if (n>limits.max_evaluations-work) reject("FIRST_CAP_MATERIAL_WORK_LIMIT");work+=n;};
+        const auto remaining=[&] {
+            MaterialLimits next=limits;next.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+            if (!valid_timeout(next.timeout)) reject("MATERIAL_DEADLINE");next.cancelled=[&] {poll();return false;};next.is_current={};return next;
+        };
+        poll();std::vector<MaterialRecord> rows;std::vector<FirstCapMaterialOrigin> origins;uint64_t id=0;
+        const auto append=[&](MaterialRecord row,FirstCapMaterialOrigin origin) {
+            charge();if (rows.size()>=limits.max_records) reject("FIRST_CAP_MATERIAL_RECORD_LIMIT");
+            rows.push_back(std::move(row));origins.push_back(origin);
+        };
+        for (size_t i=0;i<body->completed_records;++i) {
+            id=std::max(id,before.records[i].motion.event_id);append(before.records[i],{FirstCapMaterialOriginKind::Body,i});
+        }
+        const auto append_cap=[&](MaterialRecord row,FirstCapMaterialOrigin origin) {
+            if (id==std::numeric_limits<uint64_t>::max()) reject("FIRST_CAP_MATERIAL_EVENT_ID_LIMIT");
+            row.motion.event_id=++id;row.motion.sequence_index=rows.size();append(std::move(row),origin);
+        };
+        if (!rows.empty() && !after.records.empty()) {
+            const auto &last=rows.back().motion;const auto start=after.records.front().motion.start;
+            if (last.end.x()!=start.x() || last.end.y()!=start.y() || last.end.z()!=start.z())
+                append_cap({{0,0,0,last.end,start,last.speed_limit,last.acceleration_limit,Travel{}},{}},{FirstCapMaterialOriginKind::Connector,0});
+        }
+        const size_t cap_start=rows.size();
+        for (size_t i=0;i<after.records.size();++i) append_cap(after.records[i],{FirstCapMaterialOriginKind::FirstCap,i});
+        auto model=bm;model.numerical_coordinate_error=Length(std::max(bm.numerical_coordinate_error.value(),cm.numerical_coordinate_error.value()));
+        charge(3*rows.size());const auto captured=capture_material_sequence(rows,model,before.revision,before.source_fingerprint,remaining());
+        if (!captured.snapshot) throw Rejection(captured.reason);
+        const auto active=material_at(captured.snapshot,cap_start+complete,progress,remaining());
+        if (!active.nominal.snapshot) throw Rejection(active.reason);
+        std::vector<FirstCapMaterialRun> runs;size_t offset=0;
+        for (size_t path=0;path<cap->paths.size();++path) {
+            charge();const auto &pieces=cap->paths[path]->pieces;
+            if (offset<after.records.size() && !after.records[offset].bead) {
+                if (!std::holds_alternative<Travel>(after.records[offset].motion.payload)) reject("FIRST_CAP_MATERIAL_PATH_MISMATCH");++offset;
+            }
+            const size_t first=offset;
+            for (const auto &piece : pieces) {
+                charge();if (offset>=after.records.size()) reject("FIRST_CAP_MATERIAL_PATH_MISMATCH");
+                const auto &row=after.records[offset++];
+                if (!row.bead || row.motion.start.x()!=piece.start.x() || row.motion.start.y()!=piece.start.y() || row.motion.start.z()!=piece.start.z() ||
+                    row.motion.end.x()!=piece.end.x() || row.motion.end.y()!=piece.end.y() || row.motion.end.z()!=piece.end.z() ||
+                    std::get<Deposition>(row.motion.payload).volume.value()!=piece.volume.value()) reject("FIRST_CAP_MATERIAL_PATH_MISMATCH");
+            }
+            const size_t active_end=std::min(offset,complete+(progress>0));
+            if (active_end>first) {
+                charge(active_end-first); // Reserve the complete child walk before executing it.
+                const auto run=reconstruct_material_run(active.nominal,cap_start+first,cap_start+active_end-1,remaining());
+                if (!run.snapshot) throw Rejection(run.reason);runs.push_back({path,run.snapshot});
+            }
+        }
+        if (offset!=after.records.size()) reject("FIRST_CAP_MATERIAL_PATH_MISMATCH");
+        poll();auto snapshot=std::shared_ptr<const FirstCapMaterialSnapshot>(new FirstCapMaterialSnapshot(cap,body,active.nominal.snapshot,
+            body->completed_records,cap_start,std::move(origins),std::move(runs)));poll();
+        return {"EXACT_BODY_AND_SELECTED_CAP_PREFIX_ONLY",std::move(snapshot),work};
+    } catch (const Rejection &e) {return {e.what(),{},work};}
+    catch (const std::exception &e) {return {"FIRST_CAP_MATERIAL_NUMERIC_FAILURE: "+std::string(e.what()),{},work};}
+}
+
+FirstCapSupportResult cover_first_cap_material_lower(const FirstCapMaterialResult &requested,const SceneBox &requested_box,
+    const MaterialCoverageLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto box=requested_box;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();size_t cells=0,work=0;
+    try {
+        detail::require_interval_environment();
+        if (!source || !valid_coverage_limits(limits) || box.min.x()>box.max.x() || box.min.y()>box.max.y() || box.min.z()>box.max.z())
+            reject("INVALID_FIRST_CAP_SUPPORT");
+        for (const auto &p : {box.min,box.max}) {coordinate(p.x());coordinate(p.y());coordinate(p.z());}
+        const auto poll=[&] {stop(limits,source->material->sequence->revision,started);};
+        const auto remaining=[&] {
+            poll();if (work>=limits.max_evaluations) reject("FIRST_CAP_SUPPORT_WORK_LIMIT");
+            if (cells>=limits.max_cells) reject("FIRST_CAP_SUPPORT_CELL_LIMIT");
+            auto next=limits;next.max_evaluations-=work;next.max_cells-=cells;
+            next.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+            if (!valid_timeout(next.timeout)) reject("MATERIAL_DEADLINE");next.cancelled=[&] {poll();return false;};next.is_current={};return next;
+        };
+        poll();
+        for (const auto &path : source->runs) {
+            if (work>=limits.max_evaluations) reject("FIRST_CAP_SUPPORT_WORK_LIMIT");++work;poll();
+            const auto &outer=path.material->nominal_bounds;
+            if (box.min.x()<outer.min.x() || box.max.x()>outer.max.x() || box.min.y()<outer.min.y() || box.max.y()>outer.max.y() ||
+                box.min.z()<outer.min.z() || box.max.z()>outer.max.z()) continue; // Enclosure only prunes; never certifies.
+            const auto covered=cover_material_run_lower({"",path.material},box,remaining());work+=covered.evaluations;cells+=covered.cells;poll();
+            if (covered.snapshot) {
+                auto snapshot=std::shared_ptr<const FirstCapSupportSnapshot>(new FirstCapSupportSnapshot(source,box,covered.snapshot,{}));poll();
+                return {"WHOLE_BOX_IN_SELECTED_ACTUAL_CAP_RUN_LOWER",std::move(snapshot),cells,work};
+            }
+            if (covered.reason!="MATERIAL_RUN_LOWER_NOT_CERTIFIED") throw Rejection(covered.reason);
+        }
+        const auto covered=cover_material(LowerMaterialView{source->material},box,remaining());work+=covered.evaluations;cells+=covered.cells;poll();
+        if (covered.status!=MaterialCoverageStatus::Covered) return {covered.reason,{},cells,work};
+        auto snapshot=std::shared_ptr<const FirstCapSupportSnapshot>(new FirstCapSupportSnapshot(source,box,{},covered));poll();
+        return {"WHOLE_BOX_IN_COMPOSED_INDEPENDENT_EVENT_LOWER",std::move(snapshot),cells,work};
+    } catch (const Rejection &e) {return {e.what(),{},cells,work};}
+    catch (const std::exception &e) {return {"FIRST_CAP_SUPPORT_NUMERIC_FAILURE: "+std::string(e.what()),{},cells,work};}
+}
+
+FirstCapNextPassResult assess_first_cap_next_pass(const FirstCapMaterialResult &requested,size_t index,const RectangleXY &requested_region,
+    double plane,const MaterialCoverageLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto region=requested_region;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();size_t cells=0,work=0;
+    try {
+        detail::require_interval_environment();
+        if (!source || !valid_coverage_limits(limits) || index==0 || region.min_x>=region.max_x || region.min_y>=region.max_y)
+            reject("INVALID_FIRST_CAP_NEXT_PASS");
+        const auto &stack=*source->source->source->source;
+        if (index>=stack.surfaces.size()) reject("INVALID_FIRST_CAP_NEXT_PASS");
+        const auto &original=stack.surfaces[index].cell;const auto &r=original.footprint;
+        for (double v : {region.min_x,region.max_x,region.min_y,region.max_y,plane}) coordinate(v);
+        if (region.min_x<r.min_x || region.max_x>r.max_x || region.min_y<r.min_y || region.max_y>r.max_y) reject("FIRST_CAP_NEXT_PASS_OUTSIDE_ORIGINAL_ROI");
+        const auto poll=[&] {stop(limits,source->material->sequence->revision,started);};
+        const auto charge=[&] {poll();if (work>=limits.max_evaluations) reject("FIRST_CAP_NEXT_PASS_WORK_LIMIT");++work;};poll();
+        TransitionPolicy policy{stack.policy.later_vertical_minimum,stack.policy.later_vertical_maximum,
+            stack.policy.first_gap.corner_height_error};double error=0;
+        const auto height=[&](double x,double y) {
+            charge();const Exact u=(Exact(x)-Exact(r.min_x))/(Exact(r.max_x)-Exact(r.min_x));
+            const Exact v=(Exact(y)-Exact(r.min_y))/(Exact(r.max_y)-Exact(r.min_y));
+            const auto stored=stored_exact((Exact(1)-u-v)*Exact(original.z00)+u*Exact(original.z10)+v*Exact(original.z01));
+            const Exact weights=abs(Exact(1)-u-v)+abs(u)+abs(v);
+            // Preserve the original independent corner error and stack storage
+            // error through the crop. The original final target is unchanged.
+            const Exact uncertainty=weights*(Exact(policy.corner_height_error.value())+Exact(stack.numerical_error_upper_mm))+Exact(stored.second);
+            error=std::max(error,exact_interval(uncertainty).hi);return stored.first;
+        };
+        const AffineCapCell cell{region,height(region.min_x,region.min_y),height(region.max_x,region.min_y),height(region.min_x,region.max_y)};
+        policy.corner_height_error=Length(error);
+        const auto roofs=material_roof_ceilings(*source->material,region,charge,poll);poll();
+        if (!roofs.nominal || !roofs.upper) reject("FIRST_CAP_NEXT_PASS_MISSING_ACTUAL_ROOF");
+        auto remaining=limits;
+        if (work>=limits.max_evaluations) reject("FIRST_CAP_NEXT_PASS_WORK_LIMIT");remaining.max_evaluations-=work;
+        remaining.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        if (!valid_timeout(remaining.timeout)) reject("MATERIAL_DEADLINE");remaining.cancelled=[&] {poll();return false;};remaining.is_current={};
+        const auto support=cover_first_cap_material_lower({"",source},{{region.min_x,region.min_y,plane},{region.max_x,region.max_y,plane}},remaining);
+        work+=support.evaluations;cells+=support.cells;poll();if (!support.snapshot) throw Rejection(support.reason);
+        const auto gap=material_gap_bounds(cell,plane,*roofs.nominal,*roofs.upper,policy);
+        if (gap.status!=TransitionStatus::Compatible) throw Rejection(gap.reason);
+        poll();auto snapshot=std::shared_ptr<const FirstCapNextPassSnapshot>(new FirstCapNextPassSnapshot(source,index,cell,policy,plane,*roofs.nominal,*roofs.upper,
+            gap.gap,gap.volume,support.snapshot));poll();return {"LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX",std::move(snapshot),cells,work};
+    } catch (const Rejection &e) {return {e.what(),{},cells,work};}
+    catch (const std::exception &e) {return {"FIRST_CAP_NEXT_PASS_NUMERIC_FAILURE: "+std::string(e.what()),{},cells,work};}
 }
 
 }
