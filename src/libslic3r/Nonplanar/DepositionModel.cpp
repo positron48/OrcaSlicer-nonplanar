@@ -203,7 +203,7 @@ Projection project(const MaterialRecord &row, Interval x, Interval y, Interval z
     x=x-Interval(m.start.x()); y=y-Interval(m.start.y());
     return {(dx*x+dy*y)/length2,(dx*y-dy*x)/detail::root(length2),z};
 }
-MaterialMembership piece(const MaterialRecord &row, const MaterialModel &model, Projection projection, double progress, Representation rep)
+MaterialMembership piece(const MaterialRecord &row, const MaterialModel &model, Projection projection, double progress, Representation rep,bool closed_nominal=false)
 {
     const auto &b=*row.bead; const auto &m=row.motion;
     const auto length=detail::root(length_squared(row));
@@ -217,7 +217,7 @@ MaterialMembership piece(const MaterialRecord &row, const MaterialModel &model, 
         else { begin=Interval(erosion.hi);end=Interval((end-erosion).lo); }
     }
     if (begin.lo>=end.hi || t.hi<begin.lo || t.lo>end.hi) return MaterialMembership::Outside;
-    const bool along_inside=t.lo>begin.hi && t.hi<end.lo;
+    const bool along_inside=closed_nominal && rep==Representation::Nominal ? t.lo>=begin.hi && t.hi<=end.lo : t.lo>begin.hi && t.hi<end.lo;
     const auto local=detail::maximum(Interval(0),detail::minimum(t,Interval(progress)));
     const auto dh=Interval(b.gap_end_mm)-Interval(b.gap_begin_mm), dz=Interval(m.end.z())-Interval(m.start.z());
     const auto h=Interval(b.gap_begin_mm)+dh*local, top=Interval(m.start.z())+dz*local;
@@ -2882,10 +2882,63 @@ FirstCapResult plan_first_cap(const AffineHatchResult &requested,const FirstCont
 }
 
 namespace {
-bool valid_join_limits(const MaterialJoinLimits &limits)
+double run_coordinate(PhysicalPosition p,MaterialRunAxis axis) {return axis==MaterialRunAxis::X ? p.x() : p.y();}
+double run_progress(const MaterialPrefixSnapshot &source,size_t index) {return index<source.completed_records ? 1 : source.current_progress;}
+Exact run_end(const MaterialRunSnapshot &run)
+{
+    const auto &m=run.source->sequence->records[run.last_record].motion;
+    return Exact(run_coordinate(m.start,run.axis))+(Exact(run_coordinate(m.end,run.axis))-Exact(run_coordinate(m.start,run.axis)))*Exact(run_progress(*run.source,run.last_record));
+}
+SceneBox expand_run_box(const MaterialRunSnapshot &run,const SceneBox &box)
+{
+    const auto &model=run.source->sequence->model;
+    const auto xy=Interval(model.inner_xy_loss.value())+Interval(model.numerical_coordinate_error.value());
+    const auto z=Interval(model.inner_z_loss.value())+Interval(model.numerical_coordinate_error.value());
+    return {{(Interval(box.min.x())-xy).lo,(Interval(box.min.y())-xy).lo,(Interval(box.min.z())-z).lo},
+            {(Interval(box.max.x())+xy).hi,(Interval(box.max.y())+xy).hi,(Interval(box.max.z())+z).hi}};
+}
+// Certify the inflated box against every actual nominal section that owns a
+// longitudinal slice. Internal butt faces are closed; the real ends are strict.
+// Callbacks share the caller's counters and deadline, including nested join searches.
+bool cover_run_box(const MaterialRunSnapshot &run,const SceneBox &domain,size_t max_depth,
+    const std::function<void()> &charge,const std::function<void()> &visit)
+{
+    const auto box=expand_run_box(run,domain);const auto &sequence=*run.source->sequence;
+    const Exact lo(run_coordinate(box.min,run.axis)),hi(run_coordinate(box.max,run.axis));
+    const Exact start(run_coordinate(sequence.records[run.first_record].motion.start,run.axis)),end=run_end(run);
+    if (lo<=std::min(start,end) || hi>=std::max(start,end)) return false;
+    for (size_t index=run.first_record;index<=run.last_record;++index) {
+        charge();const auto &row=sequence.records[index];const auto &m=row.motion;
+        const Exact a(run_coordinate(m.start,run.axis)),delta=Exact(run_coordinate(m.end,run.axis))-a;
+        const double fraction=run_progress(*run.source,index);const Exact b=a+delta*Exact(fraction);
+        const Exact left=std::max(lo,std::min(a,b)),right=std::min(hi,std::max(a,b));
+        if (left>right) continue;
+        struct Slice {Exact lo,hi;size_t depth;};std::vector<Slice> pending{{left,right,0}};
+        while (!pending.empty()) {
+            visit();charge();const auto node=pending.back();pending.pop_back();
+            const Exact ta=(node.lo-a)/delta,tb=(node.hi-a)/delta;
+            // Clip exact longitudinal coordinates before rounding. 0, 1 and
+            // current_progress are exact binary bounds on these closed slices.
+            Projection projection{{std::max(0.,exact_interval(std::min(ta,tb)).lo),std::min(fraction,exact_interval(std::max(ta,tb)).hi)},
+                run.axis==MaterialRunAxis::X ? Interval(box.min.y(),box.max.y())-Interval(m.start.y()) :
+                    Interval(box.min.x(),box.max.x())-Interval(m.start.x()),{box.min.z(),box.max.z()}};
+            const auto membership=piece(row,sequence.model,projection,fraction,Representation::Nominal,true);
+            if (membership==MaterialMembership::Inside) continue;
+            if (membership==MaterialMembership::Outside || node.depth>=max_depth || node.lo==node.hi) return false;
+            const Exact mid=(node.lo+node.hi)/Exact(2);
+            pending.push_back({mid,node.hi,node.depth+1});pending.push_back({node.lo,mid,node.depth+1});
+        }
+    }
+    return true;
+}
+bool valid_coverage_limits(const MaterialCoverageLimits &limits)
 {
     return limits.max_cells && limits.max_cells<=65535 && limits.max_depth && limits.max_depth<=32 &&
-        limits.max_evaluations && limits.max_evaluations<=200000 && valid_timeout(limits.timeout) && limits.minimum_box_volume.value()>0;
+        limits.max_evaluations && limits.max_evaluations<=200000 && valid_timeout(limits.timeout);
+}
+bool valid_join_limits(const MaterialJoinLimits &limits)
+{
+    return valid_coverage_limits(limits) && limits.minimum_box_volume.value()>0;
 }
 void validate_join_source(const std::shared_ptr<const MaterialPrefixSnapshot> &source,const SceneBox &box)
 {
@@ -2906,6 +2959,7 @@ struct JoinSearch {
     MaterialJoinLimits limits;
     std::chrono::steady_clock::time_point started;
     size_t cells=0,evaluations=0;
+    std::vector<std::shared_ptr<const MaterialRunSnapshot>> runs;
     void poll() const {stop(limits,source->sequence->revision,started);}
     void charge(size_t count=1) {
         if (count>limits.max_evaluations-evaluations) reject("MATERIAL_JOIN_WORK_LIMIT");evaluations+=count;poll();
@@ -2917,6 +2971,16 @@ struct JoinSearch {
         return index<source->completed_records ? 1 : source->current_progress;
     }
     std::optional<SceneBox> outer(size_t index,double fraction) const {
+        if (!runs.empty()) {
+            auto box=runs.at(index)->nominal_bounds;const auto &run=*runs[index];
+            const Exact a(run_coordinate(source->sequence->records[run.first_record].motion.start,run.axis)),b=run_end(run);
+            const Exact loss=Exact(source->sequence->model.inner_xy_loss.value())+Exact(source->sequence->model.numerical_coordinate_error.value());
+            const auto lo=exact_interval(std::min(a,b)+loss),hi=exact_interval(std::max(a,b)-loss);
+            if (lo.lo>=hi.hi) return {};
+            if (run.axis==MaterialRunAxis::X) box={{lo.lo,box.min.y(),box.min.z()},{hi.hi,box.max.y(),box.max.z()}};
+            else box={{box.min.x(),lo.lo,box.min.z()},{box.max.x(),hi.hi,box.max.z()}};
+            return box;
+        }
         const auto &row=source->sequence->records[index];const auto &m=row.motion;const auto &b=*row.bead;
         const auto dx=Interval(m.end.x())-Interval(m.start.x()),dy=Interval(m.end.y())-Interval(m.start.y()),length=detail::root(length_squared(row));
         const auto loss=(Interval(source->sequence->model.inner_xy_loss.value())+Interval(source->sequence->model.numerical_coordinate_error.value()))/length;
@@ -2937,7 +3001,7 @@ struct JoinSearch {
         for (size_t i : first) for (size_t j : second) {
             charge(2);if (i==j) reject("MATERIAL_JOIN_REQUIRES_DISTINCT_BEADS");
             auto region=domain;
-            const auto one=outer(i,progress(i)),two=outer(j,progress(j));if (!one || !two) continue;
+            const auto one=outer(i,runs.empty() ? progress(i) : 1),two=outer(j,runs.empty() ? progress(j) : 1);if (!one || !two) continue;
             // Nominal transverse bounds, but the original D_lower finite-butt
             // erosion already prunes impossible endpoint slivers. This never
             // substitutes an enclosure for continuous inner certification.
@@ -2954,7 +3018,11 @@ struct JoinSearch {
             if (cells>=limits.max_cells) reject("MATERIAL_JOIN_CELL_LIMIT");++cells;
             const auto volume=join_box_volume(node.box);if (volume.upper<limits.minimum_box_volume.value()) continue;
             charge(2);const auto &sequence=*source->sequence;
-            const auto p=[&](size_t index,const SceneBox &box) {return piece(sequence.records[index],sequence.model,
+            const auto p=[&](size_t index,const SceneBox &box) {
+                if (!runs.empty()) return cover_run_box(*runs.at(index),box,limits.max_depth-node.depth,[&]{charge();},[&] {
+                    poll();if (cells>=limits.max_cells) reject("MATERIAL_JOIN_CELL_LIMIT");++cells;
+                }) ? MaterialMembership::Inside : MaterialMembership::Unknown;
+                return piece(sequence.records[index],sequence.model,
                 project(sequence.records[index],{box.min.x(),box.max.x()},{box.min.y(),box.max.y()},
                     {box.min.z(),box.max.z()}),progress(index),Representation::Lower);};
             const auto one=p(node.first,node.box),two=p(node.second,node.box);
@@ -2989,6 +3057,95 @@ struct JoinSearch {
 };
 }
 
+MaterialRunResult reconstruct_material_run(const NominalMaterialView &requested,size_t first,size_t last,const MaterialLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto limits=requested_limits;const auto started=std::chrono::steady_clock::now();size_t work=0;
+    try {
+        detail::require_interval_environment();
+        if (!source || !source->sequence || !limits.max_records || limits.max_records>200000 || !valid_timeout(limits.timeout) ||
+            first>last || last>=source->sequence->records.size() || last-first>=limits.max_records ||
+            source->sequence->geometry.size()!=source->sequence->records.size() || source->sequence->records.size()>200000 ||
+            source->completed_records>source->sequence->records.size() || !std::isfinite(source->current_progress) ||
+            source->current_progress<0 || source->current_progress>1 ||
+            (source->completed_records==source->sequence->records.size() && source->current_progress!=0)) reject("INVALID_MATERIAL_RUN");
+        if (last>=source->completed_records && (last!=source->completed_records || source->current_progress==0)) reject("MATERIAL_RUN_FUTURE_RECORD");
+        const auto poll=[&] {stop(limits,source->sequence->revision,started);};poll();
+        const auto &rows=source->sequence->records;const auto &origin=rows[first];const auto &m=origin.motion;
+        const auto *deposition=std::get_if<Deposition>(&m.payload);
+        if (!deposition || !origin.bead || !source->sequence->geometry[first]) reject("MATERIAL_RUN_REQUIRES_DEPOSITION");
+        const bool x=m.start.y()==m.end.y(),y=m.start.x()==m.end.x();if (x==y) reject("MATERIAL_RUN_AXIS_DOMAIN");
+        const auto axis=x ? MaterialRunAxis::X : MaterialRunAxis::Y;const bool positive=run_coordinate(m.end,axis)>run_coordinate(m.start,axis);
+        SceneBox box{m.start,m.start};
+        for (size_t i=first;i<=last;++i) {
+            poll();++work;const auto &row=rows[i];const auto &event=row.motion;const auto *d=std::get_if<Deposition>(&event.payload);
+            if (!d || !row.bead || !source->sequence->geometry[i]) reject("MATERIAL_RUN_REQUIRES_DEPOSITION");
+            if ((x ? event.start.y()!=event.end.y() || event.start.y()!=m.start.y() : event.start.x()!=event.end.x() || event.start.x()!=m.start.x()) ||
+                (event.start.x()==event.end.x() && event.start.y()==event.end.y()) ||
+                (run_coordinate(event.end,axis)>run_coordinate(event.start,axis))!=positive) reject("MATERIAL_RUN_DIRECTION_DOMAIN");
+            if (i>first) {
+                const auto &p=rows[i-1].motion.end;
+                if (p.x()!=event.start.x() || p.y()!=event.start.y() || p.z()!=event.start.z()) reject("MATERIAL_RUN_DISCONTINUITY");
+            }
+            if (row.bead->kind!=origin.bead->kind || event.source_patch_id!=m.source_patch_id || event.nominal_layer_label!=m.nominal_layer_label ||
+                d->material.nominal.value()!=deposition->material.nominal.value() || d->material.upper.value()!=deposition->material.upper.value() ||
+                d->material.lower.value()!=deposition->material.lower.value() || d->support_provenance_id!=deposition->support_provenance_id ||
+                d->contact_model_id!=deposition->contact_model_id) reject("MATERIAL_RUN_CONTEXT_MISMATCH");
+            const Interval fraction(run_progress(*source,i));const auto &b=*row.bead;
+            const auto px=Interval(event.start.x())+(Interval(event.end.x())-Interval(event.start.x()))*fraction;
+            const auto py=Interval(event.start.y())+(Interval(event.end.y())-Interval(event.start.y()))*fraction;
+            const auto pz=Interval(event.start.z())+(Interval(event.end.z())-Interval(event.start.z()))*fraction;
+            const auto height=detail::maximum(Interval(b.gap_begin_mm),Interval(b.gap_begin_mm)+(Interval(b.gap_end_mm)-Interval(b.gap_begin_mm))*fraction);
+            const auto hx=x ? Interval(0) : Interval(b.width_mm.upper)/Interval(2),hy=x ? Interval(b.width_mm.upper)/Interval(2) : Interval(0);
+            const SceneBox current{{(detail::minimum(Interval(event.start.x()),px)-hx).lo,(detail::minimum(Interval(event.start.y()),py)-hy).lo,
+                                    (detail::minimum(Interval(event.start.z()),pz)-height).lo},
+                                   {(detail::maximum(Interval(event.start.x()),px)+hx).hi,(detail::maximum(Interval(event.start.y()),py)+hy).hi,
+                                    detail::maximum(Interval(event.start.z()),pz).hi}};
+            if (i==first) box=current;
+            else box={{std::min(box.min.x(),current.min.x()),std::min(box.min.y(),current.min.y()),std::min(box.min.z(),current.min.z())},
+                      {std::max(box.max.x(),current.max.x()),std::max(box.max.y(),current.max.y()),std::max(box.max.z(),current.max.z())}};
+        }
+        poll();auto snapshot=std::shared_ptr<const MaterialRunSnapshot>(new MaterialRunSnapshot(source,first,last,axis,positive,box));poll();
+        return {"QUALIFIED_DECLARED_CONTINUOUS_AXIS_RUN_ONLY",std::move(snapshot),work};
+    } catch (const Rejection &e) {return {e.what(),{},work};}
+    catch (const std::exception &e) {return {"MATERIAL_RUN_NUMERIC_FAILURE: "+std::string(e.what()),{},work};}
+}
+
+MaterialRunCoverResult cover_material_run_lower(const MaterialRunResult &requested,const SceneBox &requested_box,const MaterialCoverageLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto box=requested_box;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();size_t cells=0,work=0;
+    try {
+        detail::require_interval_environment();
+        if (!source || !valid_coverage_limits(limits) || box.min.x()>box.max.x() || box.min.y()>box.max.y() || box.min.z()>box.max.z()) reject("INVALID_MATERIAL_RUN_COVERAGE");
+        for (const auto &p : {box.min,box.max}) {coordinate(p.x());coordinate(p.y());coordinate(p.z());}
+        const auto poll=[&] {stop(limits,source->source->sequence->revision,started);};poll();
+        const auto charge=[&] {poll();if (work>=limits.max_evaluations) reject("MATERIAL_RUN_WORK_LIMIT");++work;};
+        const auto visit=[&] {poll();if (cells>=limits.max_cells) reject("MATERIAL_RUN_CELL_LIMIT");++cells;};
+        if (!cover_run_box(*source,box,limits.max_depth,charge,visit)) reject("MATERIAL_RUN_LOWER_NOT_CERTIFIED");
+        poll();auto snapshot=std::shared_ptr<const MaterialRunCoverSnapshot>(new MaterialRunCoverSnapshot(source,box,expand_run_box(*source,box),cells,work));poll();
+        return {"WHOLE_INFLATED_BOX_IN_ACTUAL_NOMINAL_RUN_ONLY",std::move(snapshot),cells,work};
+    } catch (const Rejection &e) {return {e.what(),{},cells,work};}
+    catch (const std::exception &e) {return {"MATERIAL_RUN_COVER_NUMERIC_FAILURE: "+std::string(e.what()),{},cells,work};}
+}
+
+MaterialRunJoinResult find_material_run_join(const MaterialRunResult &requested_first,const MaterialRunResult &requested_second,
+    const SceneBox &requested_box,const MaterialJoinLimits &requested_limits)
+{
+    const auto first=requested_first.snapshot,second=requested_second.snapshot;const auto box=requested_box;const auto limits=requested_limits;
+    JoinSearch search{first ? first->source : nullptr,limits,std::chrono::steady_clock::now()};
+    try {
+        detail::require_interval_environment();
+        if (!first || !second || first->source!=second->source || !(first->last_record<second->first_record || second->last_record<first->first_record) ||
+            !valid_join_limits(limits)) reject("INVALID_MATERIAL_RUN_JOIN");
+        validate_join_source(search.source,box);search.poll();search.runs={first,second};
+        const auto witness=search.find({0},{1},box);if (!witness) reject("MATERIAL_RUN_JOIN_NOT_CERTIFIED");
+        search.poll();auto snapshot=std::shared_ptr<const MaterialRunJoinSnapshot>(new MaterialRunJoinSnapshot(first,second,box,witness->box,
+            join_box_volume(witness->box),search.cells,search.evaluations));search.poll();
+        return {"COMMON_POSITIVE_CONTINUOUS_RUN_LOWER_BOX_ONLY",std::move(snapshot),search.cells,search.evaluations};
+    } catch (const Rejection &e) {return {e.what(),{},search.cells,search.evaluations};}
+    catch (const std::exception &e) {return {"MATERIAL_RUN_JOIN_NUMERIC_FAILURE: "+std::string(e.what()),{},search.cells,search.evaluations};}
+}
+
 MaterialJoinResult find_material_join(const LowerMaterialView &requested,size_t first,size_t second,
     const SceneBox &requested_box,const MaterialJoinLimits &requested_limits)
 {
@@ -3004,6 +3161,44 @@ MaterialJoinResult find_material_join(const LowerMaterialView &requested,size_t 
     catch (const std::exception &e) {return {"MATERIAL_JOIN_NUMERIC_FAILURE: "+std::string(e.what()),{},search.cells,search.evaluations};}
 }
 
+namespace {
+struct CapJoinRequest {
+    std::vector<std::vector<size_t>> records;
+    std::vector<std::pair<size_t,size_t>> pairs;
+};
+CapJoinRequest first_cap_join_request(const FirstCapSnapshot &source,size_t max_records,JoinSearch &search)
+{
+    const auto &rows=search.source->sequence->records;
+    if (rows.size()>max_records || search.source->completed_records!=rows.size() || search.source->current_progress!=0)
+        reject("FIRST_CAP_JOIN_INCOMPLETE_CANDIDATE");
+    std::vector<std::vector<size_t>> records;size_t row=0;
+    for (const auto &path : source.paths) {
+        search.charge();records.emplace_back();
+        if (row<rows.size() && !rows[row].bead) {search.charge();++row;}
+        for (const auto &packet : path->pieces) {
+            search.charge();if (row>=rows.size() || !rows[row].bead || std::get<Deposition>(rows[row].motion.payload).volume.value()!=packet.volume.value())
+                reject("FIRST_CAP_JOIN_LEDGER_MISMATCH");
+            records.back().push_back(row++);
+        }
+    }
+    if (row!=rows.size()) reject("FIRST_CAP_JOIN_LEDGER_MISMATCH");
+    std::vector<std::pair<size_t,size_t>> pairs;
+    for (size_t i=0;i<4;++i) pairs.emplace_back(i,(i+1)%4);
+    for (size_t i=4;i<source.paths.size();++i) for (const auto &point : {source.paths[i]->path_start,source.paths[i]->path_end}) {
+        search.charge();const bool x=source.paths[i]->path_start.y()==source.paths[i]->path_end.y();std::optional<size_t> edge;
+        for (size_t j=0;j<4;++j) {
+            search.charge();const auto a=source.paths[j]->path_start,b=source.paths[j]->path_end;
+            if ((x ? a.x()==b.x() && a.x()==point.x() && point.y()>=std::min(a.y(),b.y()) && point.y()<=std::max(a.y(),b.y()) :
+                a.y()==b.y() && a.y()==point.y() && point.x()>=std::min(a.x(),b.x()) && point.x()<=std::max(a.x(),b.x()))) {
+                if (edge) reject("FIRST_CAP_JOIN_AMBIGUOUS_EDGE");edge=j;
+            }
+        }
+        if (!edge) reject("FIRST_CAP_JOIN_MISSING_EDGE");pairs.emplace_back(i,*edge);
+    }
+    return {std::move(records),std::move(pairs)};
+}
+}
+
 FirstCapJoinsResult assess_first_cap_joins(const FirstCapResult &requested,const FirstCapJoinLimits &requested_limits)
 {
     const auto source=requested.snapshot;const auto limits=requested_limits;
@@ -3014,33 +3209,8 @@ FirstCapJoinsResult assess_first_cap_joins(const FirstCapResult &requested,const
             !limits.max_records || limits.max_records>200000 || source->paths.size()<5 ||
             source->paths.size()-4>(limits.max_joins-4)/2) reject("INVALID_FIRST_CAP_JOIN_INPUT");
         const auto domain=source->fill->occupied->domain;validate_join_source(search.source,domain);search.poll();
-        const auto &rows=search.source->sequence->records;
-        if (rows.size()>limits.max_records || search.source->completed_records!=rows.size() || search.source->current_progress!=0)
-            reject("FIRST_CAP_JOIN_INCOMPLETE_CANDIDATE");
-        std::vector<std::vector<size_t>> records;size_t row=0;
-        for (const auto &path : source->paths) {
-            search.charge();records.emplace_back();
-            if (row<rows.size() && !rows[row].bead) {search.charge();++row;}
-            for (const auto &packet : path->pieces) {
-                search.charge();if (row>=rows.size() || !rows[row].bead || std::get<Deposition>(rows[row].motion.payload).volume.value()!=packet.volume.value())
-                    reject("FIRST_CAP_JOIN_LEDGER_MISMATCH");
-                records.back().push_back(row++);
-            }
-        }
-        if (row!=rows.size()) reject("FIRST_CAP_JOIN_LEDGER_MISMATCH");
-        std::vector<std::pair<size_t,size_t>> pairs;
-        for (size_t i=0;i<4;++i) pairs.emplace_back(i,(i+1)%4);
-        for (size_t i=4;i<source->paths.size();++i) for (const auto &point : {source->paths[i]->path_start,source->paths[i]->path_end}) {
-            search.charge();const bool x=source->paths[i]->path_start.y()==source->paths[i]->path_end.y();std::optional<size_t> edge;
-            for (size_t j=0;j<4;++j) {
-                search.charge();const auto a=source->paths[j]->path_start,b=source->paths[j]->path_end;
-                if ((x ? a.x()==b.x() && a.x()==point.x() && point.y()>=std::min(a.y(),b.y()) && point.y()<=std::max(a.y(),b.y()) :
-                    a.y()==b.y() && a.y()==point.y() && point.x()>=std::min(a.x(),b.x()) && point.x()<=std::max(a.x(),b.x()))) {
-                    if (edge) reject("FIRST_CAP_JOIN_AMBIGUOUS_EDGE");edge=j;
-                }
-            }
-            if (!edge) reject("FIRST_CAP_JOIN_MISSING_EDGE");pairs.emplace_back(i,*edge);
-        }
+        const auto request=first_cap_join_request(*source,limits.max_records,search);
+        const auto &records=request.records;const auto &pairs=request.pairs;
         std::vector<FirstCapJoin> joins;
         for (const auto &pair : pairs) {
             const size_t cells=search.cells,work=search.evaluations;
@@ -3055,6 +3225,40 @@ FirstCapJoinsResult assess_first_cap_joins(const FirstCapResult &requested,const
         search.poll();return {"ALL_REQUESTED_LOCAL_FIRST_CAP_JOINS_HAVE_COMMON_D_LOWER_BOXES_ONLY",std::move(snapshot),search.cells,search.evaluations};
     } catch (const Rejection &e) {return {e.what(),{},search.cells,search.evaluations};}
     catch (const std::exception &e) {return {"FIRST_CAP_JOIN_NUMERIC_FAILURE: "+std::string(e.what()),{},search.cells,search.evaluations};}
+}
+
+FirstCapRunJoinsResult assess_first_cap_run_joins(const FirstCapResult &requested,const FirstCapJoinLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto limits=requested_limits;
+    JoinSearch search{source && source->fill && source->fill->occupied ? source->fill->occupied->source : nullptr,limits,std::chrono::steady_clock::now()};
+    try {
+        detail::require_interval_environment();
+        if (!source || !search.source || !valid_join_limits(limits) || limits.max_joins<4 || limits.max_joins>8192 ||
+            !limits.max_records || limits.max_records>200000 || source->paths.size()<5 ||
+            source->paths.size()-4>(limits.max_joins-4)/2) reject("INVALID_FIRST_CAP_RUN_JOIN_INPUT");
+        const auto domain=source->fill->occupied->domain;validate_join_source(search.source,domain);search.poll();
+        const auto request=first_cap_join_request(*source,limits.max_records,search);
+        for (const auto &records : request.records) {
+            if (records.empty()) reject("FIRST_CAP_RUN_JOIN_EMPTY_PATH");
+            MaterialLimits capture;capture.max_records=std::min(limits.max_records,limits.max_evaluations-search.evaluations);
+            capture.timeout=limits.timeout;capture.cancelled=[&] {search.poll();return false;};
+            const auto run=reconstruct_material_run({search.source},records.front(),records.back(),capture);
+            search.charge(run.evaluations);if (!run.snapshot) throw Rejection(run.reason);
+            search.runs.push_back(run.snapshot);
+        }
+        std::vector<FirstCapRunJoin> joins;
+        for (const auto &pair : request.pairs) {
+            const size_t cells=search.cells,work=search.evaluations;std::optional<JoinSearch::Witness> witness;
+            try {witness=search.find({pair.first},{pair.second},domain);}
+            catch (const Rejection &e) {throw Rejection(std::string(e.what())+" paths="+std::to_string(pair.first)+","+std::to_string(pair.second));}
+            if (!witness) throw Rejection("FIRST_CAP_RUN_JOIN_NOT_CERTIFIED paths="+std::to_string(pair.first)+","+std::to_string(pair.second));
+            auto proof=std::shared_ptr<const MaterialRunJoinSnapshot>(new MaterialRunJoinSnapshot(search.runs[pair.first],search.runs[pair.second],domain,witness->box,
+                join_box_volume(witness->box),search.cells-cells,search.evaluations-work));joins.push_back({pair.first,pair.second,std::move(proof)});
+        }
+        search.poll();auto snapshot=std::shared_ptr<const FirstCapRunJoinsSnapshot>(new FirstCapRunJoinsSnapshot(source,std::move(joins),search.cells,search.evaluations));
+        search.poll();return {"ALL_REQUESTED_LOCAL_FIRST_CAP_JOINS_HAVE_COMMON_CONTINUOUS_RUN_LOWER_BOXES_ONLY",std::move(snapshot),search.cells,search.evaluations};
+    } catch (const Rejection &e) {return {e.what(),{},search.cells,search.evaluations};}
+    catch (const std::exception &e) {return {"FIRST_CAP_RUN_JOIN_NUMERIC_FAILURE: "+std::string(e.what()),{},search.cells,search.evaluations};}
 }
 
 }

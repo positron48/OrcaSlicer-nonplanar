@@ -48,4 +48,44 @@ inline void independent_join_box(const MaterialJoinSnapshot &join)
     const Q volume=(Q(box.max.x())-box.min.x())*(Q(box.max.y())-box.min.y())*(Q(box.max.z())-box.min.z());
     REQUIRE(join.box_volume_mm3.lower>0);REQUIRE(join.box_volume_mm3.lower<=volume);REQUIRE(join.box_volume_mm3.upper>=volume);
 }
+
+// Independent 113-bit continuous bound of the mathematically inflated box.
+// Use actual binary packet flux, not nominal_width or production predicates.
+inline void independent_run_box(const MaterialRunSnapshot &run,const SceneBox &box)
+{
+    using Q=boost::multiprecision::cpp_bin_float_quad;
+    const auto &source=*run.source;const auto &sequence=*source.sequence;
+    const auto s=[&](PhysicalPosition p) {return Q(run.axis==MaterialRunAxis::X ? p.x() : p.y());};
+    const auto n=[&](PhysicalPosition p) {return Q(run.axis==MaterialRunAxis::X ? p.y() : p.x());};
+    const Q xy=Q(sequence.model.inner_xy_loss.value())+sequence.model.numerical_coordinate_error.value();
+    const Q ze=Q(sequence.model.inner_z_loss.value())+sequence.model.numerical_coordinate_error.value();
+    const Q lo=s(box.min)-xy,hi=s(box.max)+xy,nlo=n(box.min)-xy,nhi=n(box.max)+xy;
+    const Q zlo=Q(box.min.z())-ze,zhi=Q(box.max.z())+ze;
+    const auto fraction=[&](size_t i) {return i<source.completed_records ? Q(1) : Q(source.current_progress);};
+    const auto &last=sequence.records[run.last_record].motion;
+    const Q start=s(sequence.records[run.first_record].motion.start),end=s(last.start)+(s(last.end)-s(last.start))*fraction(run.last_record);
+    REQUIRE(lo>std::min(start,end));REQUIRE(hi<std::max(start,end));Q covered=0;
+    for (size_t i=run.first_record;i<=run.last_record;++i) {
+        REQUIRE((i<source.completed_records || (i==source.completed_records && source.current_progress>0)));
+        const auto &row=sequence.records[i];const auto &m=row.motion;const auto &b=*row.bead;
+        const Q a=s(m.start),delta=s(m.end)-a,endpoint=a+delta*fraction(i);
+        const Q left=std::max(lo,std::min(a,endpoint)),right=std::min(hi,std::max(a,endpoint));if (left>right) continue;
+        covered+=right-left;const Q t0=(left-a)/delta,t1=(right-a)/delta;
+        REQUIRE(std::min(t0,t1)>=0);REQUIRE(std::max(t0,t1)<=fraction(i));
+        const Q dh=Q(b.gap_end_mm)-b.gap_begin_mm,dz=Q(m.end.z())-m.start.z();
+        const Q h0=Q(b.gap_begin_mm)+dh*t0,h1=Q(b.gap_begin_mm)+dh*t1,hmin=std::min(h0,h1),hmax=std::max(h0,h1);
+        const Q top0=Q(m.start.z())+dz*t0,top1=Q(m.start.z())+dz*t1;
+        const Q area=Q(std::get<Deposition>(m.payload).volume.value())/abs(delta),normal=std::max(abs(nlo-n(m.start)),abs(nhi-n(m.start)));
+        if (b.kind==BeadSectionKind::RoundedRectangle) {
+            const Q core=(area/hmax-acos(Q(-1))*hmax/4)/2,radius=hmin/2;
+            const Q c0=top0-h0/2,c1=top1-h1/2;
+            const Q vertical=std::max(abs(zlo-std::max(c0,c1)),abs(zhi-std::min(c0,c1))),horizontal=std::max(Q(0),normal-core);
+            REQUIRE(core>=0);REQUIRE(radius>0);REQUIRE(horizontal*horizontal+vertical*vertical<radius*radius);
+        } else {
+            REQUIRE(normal<area/hmax/2);REQUIRE(zlo>std::max(top0-h0,top1-h1));REQUIRE(zhi<std::min(top0,top1));
+        }
+    }
+    // Only accumulated high-precision arithmetic rounding is tolerated here.
+    REQUIRE(abs(covered-(hi-lo))<Q("1e-30"));
+}
 }

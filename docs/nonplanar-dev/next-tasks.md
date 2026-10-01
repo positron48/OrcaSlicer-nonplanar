@@ -93,10 +93,12 @@ Next software tasks, in dependency order:
    at every requested local corner/interior end in analytical candidates. The
    unchanged native high corner has a positive witness, but full joining refuses
    the low corner: all nine relevant packets are shorter than twice their eroded
-   finite-butt loss. Reconstruct lower material for a qualified continuous run
-   across internal packet cuts, retaining actual flux/sections, real ends,
-   current/future semantics and uncertainty; do not simply remove erosion.
-   Then qualify allowable overlap, finite-width floor/body bonding and volumetric
+   finite-butt loss. `B07-material-runs.md` now separately certifies actual
+   continuous runs with unchanged losses and all flux/sections across internal
+   cuts. The same native cap has all six local joins and whole long-side lower
+   coverage; the original per-event negative remains. This declared run model
+   does not calibrate extrusion disturbances or physical bonding.
+   Qualify allowable overlap, finite-width floor/body bonding and volumetric
    seam, construct paths for remaining 3D voids and reconstruct later support;
    short-packet motion/flow limits remain unverified.
 5. Continue the dependent planner, safety/replay and guarded export integration

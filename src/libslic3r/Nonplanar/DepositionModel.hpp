@@ -133,6 +133,58 @@ struct MaterialJoinResult {
 MaterialJoinResult find_material_join(const LowerMaterialView &,size_t first_record,size_t second_record,
     const SceneBox &,const MaterialJoinLimits &limits={});
 
+inline constexpr unsigned material_run_contract_version=1;
+enum class MaterialRunAxis { X,Y };
+struct MaterialRunResult;
+struct MaterialRunSnapshot {
+    const std::shared_ptr<const MaterialPrefixSnapshot> source;
+    const size_t first_record,last_record;
+    const MaterialRunAxis axis;
+    const bool positive;
+    const SceneBox nominal_bounds;
+private:
+    MaterialRunSnapshot(std::shared_ptr<const MaterialPrefixSnapshot> s,size_t a,size_t b,MaterialRunAxis direction,bool forward,SceneBox box)
+        : source(std::move(s)),first_record(a),last_record(b),axis(direction),positive(forward),nominal_bounds(box) {}
+    friend MaterialRunResult reconstruct_material_run(const NominalMaterialView &,size_t,size_t,const MaterialLimits &);
+};
+struct MaterialRunResult {std::string reason;std::shared_ptr<const MaterialRunSnapshot> snapshot;size_t evaluations=0;};
+// Own one contiguous, consistently directed axis-aligned extrusion run. Retain
+// every actual packet's flux/section and the current fraction; no travel, turn,
+// foreign provenance or future packet is joined. Independent-event D_lower is unchanged.
+MaterialRunResult reconstruct_material_run(const NominalMaterialView &,size_t first_record,size_t last_record,const MaterialLimits &limits={});
+struct MaterialRunCoverResult;
+struct MaterialRunCoverSnapshot {
+    const std::shared_ptr<const MaterialRunSnapshot> source;
+    const SceneBox domain,expanded_domain;
+    const size_t cells,evaluations;
+private:
+    MaterialRunCoverSnapshot(std::shared_ptr<const MaterialRunSnapshot> s,SceneBox box,SceneBox expanded,size_t count,size_t work)
+        : source(std::move(s)),domain(box),expanded_domain(expanded),cells(count),evaluations(work) {}
+    friend MaterialRunCoverResult cover_material_run_lower(const MaterialRunResult &,const SceneBox &,const MaterialCoverageLimits &);
+};
+struct MaterialRunCoverResult {std::string reason;std::shared_ptr<const MaterialRunCoverSnapshot> snapshot;size_t cells=0,evaluations=0;};
+// Prove domain + [-loss_xy,loss_xy]^2 x [-loss_z,loss_z] inside the complete
+// nominal run, including every internal cut. Losses include original numerical
+// error. Closed internal packet faces are covered by adjacent actual sections;
+// real run ends and the actual current front remain eroded. No bonding/tool approval.
+MaterialRunCoverResult cover_material_run_lower(const MaterialRunResult &,const SceneBox &,const MaterialCoverageLimits &limits={});
+struct MaterialRunJoinResult;
+struct FirstCapRunJoinsResult;
+struct MaterialRunJoinSnapshot {
+    const std::shared_ptr<const MaterialRunSnapshot> first_run,second_run;
+    const SceneBox domain,witness;
+    const ScalarBounds box_volume_mm3;
+    const size_t cells,evaluations;
+private:
+    MaterialRunJoinSnapshot(std::shared_ptr<const MaterialRunSnapshot> a,std::shared_ptr<const MaterialRunSnapshot> b,
+        SceneBox region,SceneBox box,ScalarBounds volume,size_t count,size_t work)
+        : first_run(std::move(a)),second_run(std::move(b)),domain(region),witness(box),box_volume_mm3(volume),cells(count),evaluations(work) {}
+    friend MaterialRunJoinResult find_material_run_join(const MaterialRunResult &,const MaterialRunResult &,const SceneBox &,const MaterialJoinLimits &);
+    friend FirstCapRunJoinsResult assess_first_cap_run_joins(const FirstCapResult &,const FirstCapJoinLimits &);
+};
+struct MaterialRunJoinResult {std::string reason;std::shared_ptr<const MaterialRunJoinSnapshot> snapshot;size_t cells=0,evaluations=0;};
+MaterialRunJoinResult find_material_run_join(const MaterialRunResult &,const MaterialRunResult &,const SceneBox &,const MaterialJoinLimits &limits={});
+
 inline constexpr unsigned material_transition_contract_version=1;
 struct MaterialTransitionResult {
     TransitionStatus status=TransitionStatus::Unknown;
@@ -732,5 +784,21 @@ struct FirstCapJoinsResult {std::string reason;std::shared_ptr<const FirstCapJoi
 // local joins only: internal packet continuity, allowable excess, actual body
 // bonding, head contact/motion and complete fill/export remain separate.
 FirstCapJoinsResult assess_first_cap_joins(const FirstCapResult &,const FirstCapJoinLimits &limits={});
+
+struct FirstCapRunJoin {size_t first_path,second_path;std::shared_ptr<const MaterialRunJoinSnapshot> material;};
+struct FirstCapRunJoinsSnapshot {
+    const std::shared_ptr<const FirstCapSnapshot> source;
+    const std::vector<FirstCapRunJoin> joins;
+    const size_t cells,evaluations;
+private:
+    FirstCapRunJoinsSnapshot(std::shared_ptr<const FirstCapSnapshot> s,std::vector<FirstCapRunJoin> j,size_t count,size_t work)
+        : source(std::move(s)),joins(std::move(j)),cells(count),evaluations(work) {}
+    friend FirstCapRunJoinsResult assess_first_cap_run_joins(const FirstCapResult &,const FirstCapJoinLimits &);
+};
+struct FirstCapRunJoinsResult {std::string reason;std::shared_ptr<const FirstCapRunJoinsSnapshot> snapshot;size_t cells=0,evaluations=0;};
+// Same owned cap/joins as the independent-event query, now with explicit
+// continuous nominal-run erosion. Original per-event proofs remain separate.
+// Neither contract qualifies allowable excess, body bonding, head/order or export.
+FirstCapRunJoinsResult assess_first_cap_run_joins(const FirstCapResult &,const FirstCapJoinLimits &limits={});
 
 }

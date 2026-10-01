@@ -2098,7 +2098,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2330,6 +2330,25 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     INFO("native high-corner common lower box=[" << high_join.snapshot->box_volume_mm3.lower << ',' << high_join.snapshot->box_volume_mm3.upper <<
         "] cells=" << high_join.cells << " work=" << high_join.evaluations << " low-corner empty packets=" << empty_packets <<
         " whole candidate join refusal cells=" << joined.cells << " work=" << joined.evaluations);
+    const auto run_joins=assess_first_cap_run_joins(first_cap);INFO(run_joins.reason);REQUIRE(run_joins.snapshot);
+    REQUIRE(run_joins.snapshot->source==first_cap.snapshot);REQUIRE(run_joins.snapshot->joins.size()==6);
+    double smallest=1;
+    for (const auto &join : run_joins.snapshot->joins) {
+        REQUIRE(join.material->first_run->source==cap_prefix);REQUIRE(join.material->second_run->source==cap_prefix);
+        REQUIRE(join.material->box_volume_mm3.lower>=1e-6);smallest=std::min(smallest,join.material->box_volume_mm3.lower);
+        test::independent_run_box(*join.material->first_run,join.material->witness);
+        test::independent_run_box(*join.material->second_run,join.material->witness);
+    }
+    const auto run=reconstruct_material_run({cap_prefix},0,high_end);REQUIRE(run.snapshot);
+    const auto a=cap.paths[0]->path_start,b=cap.paths[0]->path_end;const bool x=run.snapshot->axis==MaterialRunAxis::X;
+    const SceneBox whole=x ? SceneBox{{std::min(a.x(),b.x())+.03,a.y()-.025,double(flat_top)+.025},
+                                     {std::max(a.x(),b.x())-.03,a.y()+.025,double(flat_top)+.035}} :
+                            SceneBox{{a.x()-.025,std::min(a.y(),b.y())+.03,double(flat_top)+.025},
+                                     {a.x()+.025,std::max(a.y(),b.y())-.03,double(flat_top)+.035}};
+    const auto continuous=cover_material_run_lower(run,whole);INFO(continuous.reason);REQUIRE(continuous.snapshot);
+    test::independent_run_box(*run.snapshot,whole);
+    INFO("native continuous-run joins=" << run_joins.snapshot->joins.size() << " smallest box=" << smallest <<
+        " cells=" << run_joins.cells << " work=" << run_joins.evaluations << " whole long run cells=" << continuous.cells << " work=" << continuous.evaluations);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

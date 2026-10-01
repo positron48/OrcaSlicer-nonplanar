@@ -2283,3 +2283,131 @@ TEST_CASE("B07 first-cap joins retain every corner and both interior ends with c
     INFO(lost.reason);REQUIRE(lost.snapshot);REQUIRE(lost.snapshot->fill->covered_target_mm3.lower>0);
     const auto no_join=assess_first_cap_joins(lost);INFO(no_join.reason);REQUIRE_FALSE(no_join.snapshot);
 }
+
+TEST_CASE("B07 continuous lower runs retain actual short packets and erode only the owned real ends", "[Nonplanar][B07][MaterialRun]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialRunSnapshot>::value);
+    STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialRunCoverSnapshot>::value);
+    for (bool x : {false,true}) for (bool reverse : {false,true}) for (auto kind : {BeadSectionKind::Rectangle,BeadSectionKind::RoundedRectangle}) {
+        const auto point=[&](double s,double z) {return PhysicalPosition{x ? s : 0,x ? 0 : s,z};};
+        std::vector<MaterialRecord> rows;
+        for (size_t i=0;i<10;++i) {
+            const double a=(reverse ? 10-i : i)*.02,b=(reverse ? 9-i : i+1)*.02;
+            rows.push_back(bead(i+1,i,point(a,1+a*.1),point(b,1+b*.1),i%2 ? .48 : .5,.2+a*.1,.2+b*.1,kind));
+        }
+        const auto sequence=captured(rows,model(.02,.02));const auto prefix=material_at(sequence,10,0);
+        REQUIRE(classify_material(prefix.lower,point(.1,.91)).membership==MaterialMembership::Outside);
+        const auto run=reconstruct_material_run(prefix.nominal,0,9);INFO(run.reason);REQUIRE(run.snapshot);
+        REQUIRE(run.snapshot->source==prefix.nominal.snapshot);REQUIRE(run.snapshot->first_record==0);REQUIRE(run.snapshot->last_record==9);
+        const SceneBox volume=x ? SceneBox{{.06,-.015,.87},{.14,.015,.93}} : SceneBox{{-.015,.06,.87},{.015,.14,.93}};
+        const auto covered=cover_material_run_lower(run,volume);INFO(covered.reason);REQUIRE(covered.snapshot);
+        REQUIRE(covered.snapshot->source==run.snapshot);test::independent_run_box(*run.snapshot,volume);
+        const SceneBox end=x ? SceneBox{{0,-.01,.87},{.03,.01,.93}} : SceneBox{{-.01,0,.87},{.01,.03,.93}};
+        REQUIRE_FALSE(cover_material_run_lower(run,end).snapshot);
+        const auto partial=material_at(sequence,5,.5);const auto active=reconstruct_material_run(partial.nominal,0,5);INFO(active.reason);REQUIRE(active.snapshot);
+        const double lo=reverse ? .12 : .05,hi=reverse ? .15 : .08;
+        const SceneBox early=x ? SceneBox{{lo,-.01,.88},{hi,.01,.92}} : SceneBox{{-.01,lo,.88},{.01,hi,.92}};
+        const auto now=cover_material_run_lower(active,early);INFO(now.reason);REQUIRE(now.snapshot);test::independent_run_box(*active.snapshot,early);
+        const SceneBox future=x ? SceneBox{{.09,-.01,.88},{.11,.01,.92}} : SceneBox{{-.01,.09,.88},{.01,.11,.92}};
+        REQUIRE_FALSE(cover_material_run_lower(active,future).snapshot);
+        REQUIRE_FALSE(reconstruct_material_run(partial.nominal,0,6).snapshot);
+        REQUIRE_FALSE(reconstruct_material_run(material_at(sequence,5,0).nominal,0,5).snapshot);
+    }
+}
+
+TEST_CASE("B07 run reconstruction refuses interrupted reversed foreign or unsupported packets and inflated-box gaps", "[Nonplanar][B07][MaterialRun]")
+{
+    auto a=bead(1,0,{0,0,1},{.03,0,1},.5,.2,.2),b=bead(2,1,{.03,0,1},{.06,0,1},.5,.2,.2);
+    const auto source=captured({a,b});auto view=material_at(source,2,0).nominal;MaterialLimits capture;
+    const auto run=reconstruct_material_run(view,0,1);INFO(run.reason);REQUIRE(run.snapshot);
+    REQUIRE_FALSE(reconstruct_material_run({},0,1).snapshot);REQUIRE_FALSE(reconstruct_material_run(view,1,0).snapshot);
+    capture.max_records=1;REQUIRE_FALSE(reconstruct_material_run(view,0,1,capture).snapshot);
+    capture={};capture.cancelled=[] {return true;};REQUIRE_FALSE(reconstruct_material_run(view,0,1,capture).snapshot);
+    capture={};capture.is_current=[](uint64_t){return false;};REQUIRE_FALSE(reconstruct_material_run(view,0,1,capture).snapshot);
+    auto reversed=b;reversed=bead(2,1,{.03,0,1},{0,0,1},.5,.2,.2);
+    REQUIRE_FALSE(reconstruct_material_run(material_at(captured({a,reversed}),2,0).nominal,0,1).snapshot);
+    auto kink=bead(2,1,{.03,0,1},{.03,.03,1},.5,.2,.2);
+    REQUIRE_FALSE(reconstruct_material_run(material_at(captured({a,kink}),2,0).nominal,0,1).snapshot);
+    auto foreign=b;foreign.motion.source_patch_id=99;
+    REQUIRE_FALSE(reconstruct_material_run(material_at(captured({a,foreign}),2,0).nominal,0,1).snapshot);
+    MaterialRecord travel{{2,1,0,a.motion.end,b.motion.start,Speed(20),Acceleration(100),Travel{}},{}};
+    b.motion.event_id=3;b.motion.sequence_index=2;
+    REQUIRE_FALSE(reconstruct_material_run(material_at(captured({a,travel,b}),3,0).nominal,0,2).snapshot);
+    const SceneBox box{{.02,-.01,.88},{.04,.01,.92}};MaterialCoverageLimits limits;
+    const SceneBox plane{{.02,-.01,.9},{.04,.01,.9}};
+    REQUIRE(cover_material_run_lower(run,plane).snapshot);test::independent_run_box(*run.snapshot,plane);
+    auto numeric=model();numeric.numerical_coordinate_error=Length(.002);
+    const auto charged=reconstruct_material_run(material_at(captured(source->records,numeric),2,0).nominal,0,1);
+    const SceneBox skin{{.0105,-.01,.88},{.04,.01,.92}};
+    REQUIRE(cover_material_run_lower(run,skin).snapshot);REQUIRE_FALSE(cover_material_run_lower(charged,skin).snapshot);
+    limits.max_evaluations=1;REQUIRE_FALSE(cover_material_run_lower(run,box,limits).snapshot);
+    limits={};limits.max_cells=1;REQUIRE_FALSE(cover_material_run_lower(run,box,limits).snapshot);
+    limits={};limits.max_depth=0;REQUIRE_FALSE(cover_material_run_lower(run,box,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(cover_material_run_lower(run,box,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(cover_material_run_lower(run,box,limits).snapshot);
+    auto wrapper=run;limits={};limits.cancelled=[&] {wrapper.snapshot.reset();limits.max_cells=0;return false;};
+    const auto owned=cover_material_run_lower(wrapper,box,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==run.snapshot);
+    size_t calls=0;capture={};capture.cancelled=[&] {++calls;return false;};REQUIRE(reconstruct_material_run(view,0,1,capture).snapshot);
+    size_t late=0;capture.cancelled=[&] {return ++late==calls;};REQUIRE_FALSE(reconstruct_material_run(view,0,1,capture).snapshot);
+    calls=0;limits={};limits.cancelled=[&] {++calls;return false;};REQUIRE(cover_material_run_lower(run,box,limits).snapshot);
+    late=0;limits.cancelled=[&] {return ++late==calls;};REQUIRE_FALSE(cover_material_run_lower(run,box,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(2));return false;};
+    REQUIRE_FALSE(cover_material_run_lower(run,box,limits).snapshot);
+    REQUIRE_FALSE(cover_material_run_lower(run,{{.04,-.01,.88},{.02,.01,.92}}).snapshot);
+    const auto narrow=captured({bead(1,0,{0,0,1},{.03,0,1},.5,.2,.2),bead(2,1,{.03,0,1},{.06,0,1},.25,.2,.2)});
+    const auto thin=reconstruct_material_run(material_at(narrow,2,0).nominal,0,1);REQUIRE(thin.snapshot);
+    REQUIRE_FALSE(cover_material_run_lower(thin,{{.022,.11,.88},{.028,.12,.92}}).snapshot);
+    const auto floor=captured({bead(1,0,{0,0,1},{.03,0,1},.5,.3,.3),bead(2,1,{.03,0,1},{.06,0,1},.5,.1,.1)});
+    const auto stepped=reconstruct_material_run(material_at(floor,2,0).nominal,0,1);REQUIRE(stepped.snapshot);
+    REQUIRE_FALSE(cover_material_run_lower(stepped,{{.022,-.01,.8},{.028,.01,.82}}).snapshot);
+}
+
+TEST_CASE("B07 run joining retains whole-prefix losses across packet cuts and shared cap proofs", "[Nonplanar][B07][MaterialRunJoin]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialRunJoinSnapshot>::value);
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapRunJoinsSnapshot>::value);
+    for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) for (bool sloped : {false,true}) {
+        const auto cap=plan_first_cap(first_cap_fixture(direction,sloped),{WidthXY(.45),1,true,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
+        const auto joined=assess_first_cap_run_joins(cap);INFO(joined.reason);REQUIRE(joined.snapshot);
+        REQUIRE(joined.snapshot->source==cap.snapshot);REQUIRE(joined.snapshot->joins.size()==4+2*(cap.snapshot->paths.size()-4));
+        for (const auto &j : joined.snapshot->joins) {
+            REQUIRE(j.material->box_volume_mm3.lower>=1e-6);
+            test::independent_run_box(*j.material->first_run,j.material->witness);test::independent_run_box(*j.material->second_run,j.material->witness);
+        }
+        const auto &proof=*joined.snapshot->joins.front().material;
+        MaterialRunResult first{"",proof.first_run},second{"",proof.second_run};
+        const auto local=find_material_run_join(first,second,proof.domain);INFO(local.reason);REQUIRE(local.snapshot);
+        test::independent_run_box(*first.snapshot,local.snapshot->witness);test::independent_run_box(*second.snapshot,local.snapshot->witness);
+        REQUIRE_FALSE(find_material_run_join(first,first,proof.domain).snapshot);REQUIRE_FALSE(find_material_run_join({},second,proof.domain).snapshot);
+        REQUIRE_FALSE(find_material_run_join(first,second,{{1,0,1},{1,1,2}}).snapshot);
+        MaterialJoinLimits generic;generic.minimum_box_volume=Volume(100);REQUIRE_FALSE(find_material_run_join(first,second,proof.domain,generic).snapshot);
+        generic={};generic.max_evaluations=1;REQUIRE_FALSE(find_material_run_join(first,second,proof.domain,generic).snapshot);
+        generic={};generic.max_cells=1;REQUIRE_FALSE(find_material_run_join(first,second,proof.domain,generic).snapshot);
+        generic={};generic.is_current=[](uint64_t){return false;};REQUIRE_FALSE(find_material_run_join(first,second,proof.domain,generic).snapshot);
+        generic={};generic.cancelled=[&] {first.snapshot.reset();second.snapshot.reset();generic.max_cells=0;return false;};
+        REQUIRE(find_material_run_join(first,second,proof.domain,generic).snapshot);
+        FirstCapJoinLimits limits;limits.max_evaluations=joined.evaluations-1;REQUIRE_FALSE(assess_first_cap_run_joins(cap,limits).snapshot);
+        limits={};limits.max_cells=1;REQUIRE_FALSE(assess_first_cap_run_joins(cap,limits).snapshot);
+        limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(assess_first_cap_run_joins(cap,limits).snapshot);
+        limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(assess_first_cap_run_joins(cap,limits).snapshot);
+        size_t calls=0;limits={};limits.cancelled=[&] {++calls;return false;};REQUIRE(assess_first_cap_run_joins(cap,limits).snapshot);
+        size_t late=0;limits.cancelled=[&] {return ++late==calls;};REQUIRE_FALSE(assess_first_cap_run_joins(cap,limits).snapshot);
+    }
+    REQUIRE_FALSE(assess_first_cap_run_joins({}).snapshot);
+    const auto sequence=captured({bead(1,0,{0,0,1},{1,0,1},.5,.2,.2),bead(2,1,{1,0,1},{1,1,1},.5,.2,.2)});
+    const SceneBox domain{{.7,-.2,.75},{1.2,.3,1}};
+    const auto partial=material_at(sequence,1,.5);
+    const auto first=reconstruct_material_run(partial.nominal,0,0),second=reconstruct_material_run(partial.nominal,1,1);
+    const auto joined=find_material_run_join(first,second,domain);INFO(joined.reason);REQUIRE(joined.snapshot);
+    test::independent_run_box(*first.snapshot,joined.snapshot->witness);test::independent_run_box(*second.snapshot,joined.snapshot->witness);
+    const auto tiny=material_at(sequence,1,.001);
+    REQUIRE_FALSE(find_material_run_join(reconstruct_material_run(tiny.nominal,0,0),reconstruct_material_run(tiny.nominal,1,1),domain).snapshot);
+    REQUIRE_FALSE(find_material_run_join(first,reconstruct_material_run(material_at(sequence,1,.5).nominal,1,1),domain).snapshot);
+    size_t calls=0;MaterialJoinLimits limits;limits.cancelled=[&] {++calls;return false;};REQUIRE(find_material_run_join(first,second,domain,limits).snapshot);
+    size_t late=0;limits.cancelled=[&] {return ++late==calls;};REQUIRE_FALSE(find_material_run_join(first,second,domain,limits).snapshot);
+    const int rounding=std::fegetround();REQUIRE(std::fesetround(FE_UPWARD)==0);
+    const auto invalid_capture=reconstruct_material_run(partial.nominal,0,0);
+    const auto invalid_cover=cover_material_run_lower(first,domain);
+    const auto invalid_pair=find_material_run_join(first,second,domain);REQUIRE(std::fesetround(rounding)==0);
+    REQUIRE_FALSE(invalid_capture.snapshot);REQUIRE_FALSE(invalid_cover.snapshot);REQUIRE_FALSE(invalid_pair.snapshot);
+}

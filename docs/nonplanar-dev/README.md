@@ -210,6 +210,17 @@ not override this refusal. Final material/body suites pass 80/14 cases with
 pass. Native case: 586 assertions. Remaining 3D fill, seam, allowable excess,
 floor/body bonding, physical contact and complete job/export remain open.
 
+`B07-material-runs.md` now certifies whole boxes expanded by unchanged inner
+and numerical losses against actual continuous nominal runs. Separate protected
+contract 1 retains real eroded ends/current fronts, all varying flux/sections,
+future absence and the original per-event negative. The same native candidate
+now has six local run joins (45 cells/731 work; minimum box 0.000724661 mm3),
+plus whole lower coverage through 53 long-side packets (53 cells/106 work).
+Independent 113-bit whole-slice bounds certify these results. The declared run
+model is not calibrated physical bonding. Final counts and fresh OFF/ZAA evidence
+are in that report; allowable excess, floor/body bonding, seam, remaining 3D
+fill and later actual support are the next dependencies.
+
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
 compatibility, dense coverage, material replay, ordering and guarded hybrid
@@ -232,8 +243,10 @@ native suites, native STL CLI and application build, retaining the original
 suites, STL CLI and application. Run 36858083109 at 05f4a887 also succeeds in
 native suites, STL CLI and application. Run 36861891679 at 4e6cddd7 also completes
 native suites, STL CLI and application successfully. Run 36871942001 at
-9a243279 now succeeds. The saved 15:32 UTC observation shows run 36878746418
-at a165f0c3 in progress; joint cap and new material joins await their own Linux verification.
+9a243279 now succeeds. The saved 16:23 UTC observation confirms run 36878746418
+at a165f0c3 succeeds in native suites, STL CLI and application. Material-join run
+36887521770 at d02d7544 is in progress; the new continuous-run contract awaits
+its own Linux verification.
 Both failed check annotations are archived.
 Windows remains NOT_RUN.
 
