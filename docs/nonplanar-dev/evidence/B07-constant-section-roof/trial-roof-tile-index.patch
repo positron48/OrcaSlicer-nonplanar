@@ -1,0 +1,188 @@
+diff --git a/src/libslic3r/Nonplanar/DepositionModel.cpp b/src/libslic3r/Nonplanar/DepositionModel.cpp
+index 3cbbe529..e03509e1 100644
+--- a/src/libslic3r/Nonplanar/DepositionModel.cpp
++++ b/src/libslic3r/Nonplanar/DepositionModel.cpp
+@@ -325,6 +325,20 @@ Projection project_polygon(const MaterialRecord &row, const Polygon &polygon, In
+     }
+     return projection;
+ }
++std::array<double,4> polygon_bounds(const Polygon &polygon,const std::array<Vertex,2> *basis=nullptr)
++{
++    const auto at=[&](const Vertex &point,size_t axis) {
++        return basis ? exact_interval((*basis)[axis][0]*point[0]+(*basis)[axis][1]*point[1]) : exact_interval(point[axis]);
++    };
++    const auto x=at(polygon.front(),0),y=at(polygon.front(),1);
++    std::array<double,4> box{x.lo,x.hi,y.lo,y.hi};
++    for (const auto &point : polygon) {
++        const auto x=at(point,0),y=at(point,1);
++        box[0]=std::min(box[0],x.lo);box[1]=std::max(box[1],x.hi);
++        box[2]=std::min(box[2],y.lo);box[3]=std::max(box[3],y.hi);
++    }
++    return box;
++}
+ Polygon clip(const Polygon &polygon, const Vertex &normal, const Exact &offset, bool positive)
+ {
+     Polygon result;
+@@ -615,7 +629,7 @@ MaterialCoverageResult cover_material(const LowerMaterialView &v, const SceneBox
+ // closed leaf partition and nominal roof bounds remain owned and immutable;
+ // caller-edited result fields cannot replace the source or geometry.
+ class MaterialIntegralProof {
+-    struct Cell { Polygon polygon; Interval roof; };
++    struct Cell { Polygon polygon; Interval roof;size_t splitter; };
+     const std::shared_ptr<const MaterialPrefixSnapshot> source;
+     const AffineCapCell target;
+     const ScalarBounds total_volume;
+@@ -792,7 +806,7 @@ MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &vi
+             std::pop_heap(heap.begin(),heap.end(),compare); auto node=std::move(heap.back()); heap.pop_back();
+             // Keep terminal cells in the exact total, even when other cells can
+             // still narrow enough to satisfy the requested global tolerance.
+-            if (node.depth>=limits.max_depth) { terminal.push_back({std::move(node.polygon),node.roof}); continue; }
++            if (node.depth>=limits.max_depth) { terminal.push_back({std::move(node.polygon),node.roof,node.splitter}); continue; }
+             const auto &row=sequence->records[node.splitter]; const auto &m=row.motion;
+             const Exact dx=Exact(m.end.x())-Exact(m.start.x()),dy=Exact(m.end.y())-Exact(m.start.y());
+             Vertex normal{-dy,dx};
+@@ -819,7 +833,7 @@ MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &vi
+         }
+         poll();
+         if (result.nominal_volume_mm3->lower<=0) reject("MATERIAL_INTEGRAL_UNCERTAIN_POSITIVE_VOLUME");
+-        for (auto &node : heap) { poll(); terminal.push_back({std::move(node.polygon),node.roof}); }
++        for (auto &node : heap) { poll(); terminal.push_back({std::move(node.polygon),node.roof,node.splitter}); }
+         auto proof=std::shared_ptr<const MaterialIntegralProof>(new MaterialIntegralProof(cursor,cell,*result.nominal_volume_mm3,std::move(terminal)));
+         poll(); result.proof=std::move(proof);
+         result.status=MaterialIntegralStatus::Bounded;result.reason="BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL";
+@@ -1419,7 +1433,9 @@ FirstHatchBeadResult FirstHatchBeadSnapshot::plan(const AffineHatchResult &reque
+ 
+ namespace {
+ enum class UnionClip { Box, BelowRoof, AboveSurface };
+-struct UnionRoof {std::shared_ptr<const MaterialPrefixSnapshot> source;double minimum;};
++struct RoofTile {std::array<double,4> box;Interval height;size_t splitter;};
++struct RoofTileNode {RoofTile bound;size_t left,right;};
++struct UnionRoof {std::shared_ptr<const MaterialPrefixSnapshot> source;double minimum;std::vector<RoofTile> tiles;std::array<Vertex,2> basis;std::vector<RoofTileNode> tree;};
+ struct UnionAmountsResult {
+     std::string reason;
+     std::optional<std::array<ScalarBounds,3>> amounts;
+@@ -1589,28 +1605,46 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+             const size_t end=roof_source->source->completed_records+(roof_source->source->current_progress>0 && roof_source->source->completed_records<body.records.size());
+             for (size_t i=0;i<end;++i) {evaluate();if (body.records[i].bead) body_active.push_back(i);}
+         }
++        // Cached roof uncertainty contributes at most half this component's
++        // width over the full XY domain. Coarser cells use the direct kernel.
++        const double cached_span=(Interval(limits.maximum_interval_width.value())/Interval(2)/
++            ((Interval(domain.max.x())-Interval(domain.min.x()))*(Interval(domain.max.y())-Interval(domain.min.y())))).lo;
+         const auto surface_q=clip_kind==UnionClip::AboveSurface ? exact_interval(Exact(surface->z00)-shear_x*Exact(surface->footprint.min_x)-
+             shear_y*Exact(surface->footprint.min_y)) : Interval(0);
+-        struct Node {Polygon polygon;std::vector<size_t> candidates;Exact union_lo,union_hi,sum_lo,sum_hi,repeated_lo,repeated_hi;size_t depth,id,splitter;double uncertainty;bool potential_chain;Interval roof;std::vector<size_t> body_candidates;size_t roof_splitter;};
+-        const auto make_node=[&](Polygon polygon,const std::vector<size_t> &candidates,size_t depth,const std::vector<size_t> &body_candidates) {
++        using BodyCandidates=std::shared_ptr<const std::vector<size_t>>;
++        struct Node {Polygon polygon;std::vector<size_t> candidates;Exact union_lo,union_hi,sum_lo,sum_hi,repeated_lo,repeated_hi;size_t depth,id,splitter;double uncertainty;bool potential_chain;Interval roof;BodyCandidates body_candidates;size_t roof_splitter;};
++        const auto make_node=[&](Polygon polygon,const std::vector<size_t> &candidates,size_t depth,const BodyCandidates &body_candidates) {
+             poll();if (cells>=limits.max_cells) reject("MATERIAL_UNION_CELL_LIMIT");const size_t id=cells++;
+             Exact area(0);affine_integral(polygon,flat,&area);
+-            std::array<double,4> cell_bounds{exact_interval(polygon.front()[0]).lo,exact_interval(polygon.front()[0]).hi,
+-                exact_interval(polygon.front()[1]).lo,exact_interval(polygon.front()[1]).hi};
+-            for (const auto &p : polygon) {
+-                const auto x=exact_interval(p[0]),y=exact_interval(p[1]);cell_bounds[0]=std::min(cell_bounds[0],x.lo);cell_bounds[1]=std::max(cell_bounds[1],x.hi);
+-                cell_bounds[2]=std::min(cell_bounds[2],y.lo);cell_bounds[3]=std::max(cell_bounds[3],y.hi);
+-            }
++            const auto cell_bounds=polygon_bounds(polygon);
+             auto reference=exact_interval(shear_x*polygon.front()[0]+shear_y*polygon.front()[1]);
+             for (const auto &p : polygon) {
+                 const auto value=exact_interval(shear_x*p[0]+shear_y*p[1]);reference={std::min(reference.lo,value.lo),std::max(reference.hi,value.hi)};
+             }
+-            Interval roof(0);std::vector<size_t> next_body;size_t roof_splitter=0;
++            Interval roof(0);auto next_body=body_candidates;size_t roof_splitter=0;
+             if (clip_kind==UnionClip::BelowRoof) {
+-                // Refine the protected actual source with the target
+-                // integrator's same continuous whole-cell roof bounds.
+-                auto bound=nominal_roof_bounds(*roof_source->source,polygon,body_candidates,roof_source->minimum,evaluate);
+-                roof=bound.height;next_body=std::move(bound.active);roof_splitter=bound.splitter;
++                for (size_t i=0;i<polygon.size();++i) evaluate();
++                const auto tile_bounds=polygon_bounds(polygon,&roof_source->basis);
++                double lo=0,hi=0;bool have=false;std::vector<size_t> pending{0};
++                while (!pending.empty()) {
++                    evaluate();const auto &node=roof_source->tree[pending.back()];pending.pop_back();
++                    const auto &tile=node.bound;const auto &box=tile.box;
++                    if (box[1]<=tile_bounds[0] || box[0]>=tile_bounds[1] || box[3]<=tile_bounds[2] || box[2]>=tile_bounds[3]) continue;
++                    if (node.left!=node.right && (Interval(tile.height.hi)-Interval(tile.height.lo)).hi>cached_span) {
++                        pending.push_back(node.left);pending.push_back(node.right);continue;
++                    }
++                    if (!have) {lo=tile.height.lo;hi=tile.height.hi;roof_splitter=tile.splitter;have=true;}
++                    else {lo=std::min(lo,tile.height.lo);if (tile.height.hi>hi) {hi=tile.height.hi;roof_splitter=tile.splitter;}}
++                    if ((Interval(hi)-Interval(lo)).hi>cached_span) break; // Direct refinement of this complete cell.
++                }
++                // The protected leaves exactly partition this same target XY
++                // domain. Outer AABB overlap can only widen their roof range;
++                // zero-area boundary contacts do not affect a volume integral.
++                if (have && (Interval(hi)-Interval(lo)).hi<=cached_span) roof=Interval(lo,hi);
++                else {
++                    auto bound=nominal_roof_bounds(*roof_source->source,polygon,*body_candidates,roof_source->minimum,evaluate);
++                    roof=bound.height;next_body=std::make_shared<const std::vector<size_t>>(std::move(bound.active));roof_splitter=bound.splitter;
++                }
+             }
+             const auto span=[&](double lo,double hi,bool guaranteed=false) {
+                 if (full_individual) return Span{lo,hi}; // Every complete bead is inside the original XYZ box.
+@@ -1788,7 +1822,8 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+         const auto compare=[](const Node &a,const Node &b) {return a.uncertainty==b.uncertainty ? a.id>b.id : a.uncertainty<b.uncertainty;};
+         std::vector<Node> heap;
+         auto root=make_node({{Exact(domain.min.x()),Exact(domain.min.y())},{Exact(domain.max.x()),Exact(domain.min.y())},
+-            {Exact(domain.max.x()),Exact(domain.max.y())},{Exact(domain.min.x()),Exact(domain.max.y())}},active,0,body_active);
++            {Exact(domain.max.x()),Exact(domain.max.y())},{Exact(domain.min.x()),Exact(domain.max.y())}},active,0,
++            std::make_shared<const std::vector<size_t>>(std::move(body_active)));
+         Exact union_lo=root.union_lo,union_hi=root.union_hi,sum_lo=root.sum_lo,sum_hi=root.sum_hi,repeated_lower=root.repeated_lo,repeated_upper=root.repeated_hi;
+         heap.push_back(std::move(root));
+         while (true) {
+@@ -1904,16 +1939,52 @@ MaterialFillResult reconcile_material_fill(const MaterialIntegralResult &request
+         const auto &r=target->target.footprint;const auto &box=occupied->domain;
+         if (box.min.x()!=r.min_x || box.max.x()!=r.max_x || box.min.y()!=r.min_y || box.max.y()!=r.max_y)
+             reject("MATERIAL_FILL_XY_DOMAIN_MISMATCH");
+-        UnionRoof roof{target->source,target->cells.front().roof.lo};
++        UnionRoof roof{target->source,target->cells.front().roof.lo,{},{{{Exact(1),Exact(0)},{Exact(0),Exact(1)}}},{}};
++        const auto splitter=target->cells.front().splitter;
++        if (splitter<body.records.size()) {
++            const auto &motion=body.records[splitter].motion;
++            const Exact dx=Exact(motion.end.x())-Exact(motion.start.x()),dy=Exact(motion.end.y())-Exact(motion.start.y());
++            roof.basis={Vertex{dx,dy},Vertex{-dy,dx}};
++        }
+         const auto &surface=target->target;
+         const auto z11=Interval(surface.z10)+Interval(surface.z01)-Interval(surface.z00);
+         const double maximum_top=std::max({surface.z00,surface.z10,surface.z01,z11.hi});
+         if (box.max.z()<maximum_top) reject("MATERIAL_FILL_INCOMPLETE_Z_DOMAIN");
+         for (const auto &leaf : target->cells) {
+             poll();if (box.min.z()>leaf.roof.lo) reject("MATERIAL_FILL_INCOMPLETE_Z_DOMAIN");
+-            if (result.evaluations>=limits.max_evaluations) reject("MATERIAL_FILL_WORK_LIMIT");++result.evaluations;
++            const size_t work=1+leaf.polygon.size();
++            if (work>limits.max_evaluations-result.evaluations) reject("MATERIAL_FILL_WORK_LIMIT");result.evaluations+=work;
+             roof.minimum=std::min(roof.minimum,leaf.roof.lo);
++            roof.tiles.push_back({polygon_bounds(leaf.polygon,&roof.basis),leaf.roof,leaf.splitter});
+         }
++        const auto evaluate=[&] {
++            if (result.evaluations>=limits.max_evaluations) reject("MATERIAL_FILL_WORK_LIMIT");
++            if (result.evaluations%128==0) poll();++result.evaluations;
++        };
++        std::function<size_t(size_t,size_t)> build_tiles=[&](size_t first,size_t last) {
++            evaluate();const size_t id=roof.tree.size();roof.tree.push_back({roof.tiles[first],0,0});
++            if (last-first==1) return id;
++            auto bound=roof.tiles[first];
++            std::array<double,4> centers{};
++            for (size_t axis=0;axis<2;++axis) centers[2*axis]=centers[2*axis+1]=(Interval(bound.box[2*axis])+Interval(bound.box[2*axis+1])).lo;
++            for (size_t i=first+1;i<last;++i) {
++                evaluate();const auto &tile=roof.tiles[i];
++                for (size_t axis=0;axis<2;++axis) {
++                    bound.box[2*axis]=std::min(bound.box[2*axis],tile.box[2*axis]);bound.box[2*axis+1]=std::max(bound.box[2*axis+1],tile.box[2*axis+1]);
++                    const auto center=(Interval(tile.box[2*axis])+Interval(tile.box[2*axis+1])).lo;
++                    centers[2*axis]=std::min(centers[2*axis],center);centers[2*axis+1]=std::max(centers[2*axis+1],center);
++                }
++                bound.height.lo=std::min(bound.height.lo,tile.height.lo);
++                if (tile.height.hi>bound.height.hi) {bound.height.hi=tile.height.hi;bound.splitter=tile.splitter;}
++            }
++            const size_t axis=centers[1]-centers[0]>=centers[3]-centers[2] ? 0 : 1,middle=first+(last-first)/2;
++            std::nth_element(roof.tiles.begin()+first,roof.tiles.begin()+middle,roof.tiles.begin()+last,[&](const RoofTile &a,const RoofTile &b) {
++                evaluate();return (Interval(a.box[2*axis])+Interval(a.box[2*axis+1])).lo<(Interval(b.box[2*axis])+Interval(b.box[2*axis+1])).lo;
++            });
++            const auto left=build_tiles(first,middle),right=build_tiles(middle,last);
++            roof.tree[id]={bound,left,right};return id;
++        };
++        build_tiles(0,roof.tiles.size());poll();
+         const auto target_volume=interval(target->total_volume),total=interval(occupied->union_volume_mm3);
+         const auto available=Interval(limits.maximum_interval_width.value())-(Interval(target_volume.hi)-Interval(target_volume.lo))-(Interval(total.hi)-Interval(total.lo));
+         if (available.lo<=0) reject("MATERIAL_FILL_INPUT_PRECISION_TOO_COARSE");

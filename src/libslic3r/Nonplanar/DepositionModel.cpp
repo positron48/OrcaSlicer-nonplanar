@@ -453,14 +453,27 @@ RoofCellBounds nominal_roof_bounds(const MaterialPrefixSnapshot &cursor,const Po
         evaluate();const auto &row=sequence.records[i];const double progress=i<cursor.completed_records ? 1 : cursor.current_progress;
         const auto end=Interval(row.motion.start.z())+(Interval(row.motion.end.z())-Interval(row.motion.start.z()))*Interval(progress);
         if (std::max(row.motion.start.z(),end.hi)<floor) continue;
-        const auto clipped=roof_projection(row,sequence.model,polygon,progress,Representation::Nominal);
-        if (!clipped) continue;
-        const auto possible=nominal_roof(row,clipped->projected,progress);
+        const auto projected=project_polygon(row,polygon,Interval(0));
+        const bool interior_flat=row.motion.start.z()==row.motion.end.z() && row.bead->gap_begin_mm==row.bead->gap_end_mm &&
+            projected.t.lo>0 && projected.t.hi<progress;
+        // With constant Z/h and the whole cell between the finite butts, the
+        // roof depends only on normal distance. Its full polygon projection
+        // supplies the same possible height without exact XY clipping.
+        std::optional<NominalRoof> possible;
+        if (interior_flat) {
+            const auto area=Interval(std::get<Deposition>(row.motion.payload).volume.value())/detail::root(length_squared(row));
+            if (absolute(projected.normal).lo>(section_width(area,Interval(row.bead->gap_begin_mm),row.bead->kind)/Interval(2)).hi) continue;
+            possible=nominal_roof(row,projected,progress,area);
+        }
+        else {
+            const auto clipped=roof_projection(row,sequence.model,polygon,progress,Representation::Nominal);
+            if (clipped) possible=nominal_roof(row,clipped->projected,progress);
+        }
         if (!possible || possible->height.hi<floor) continue;
         active.push_back(i);
         if (splitter==sequence.records.size() || possible->height.hi>upper) splitter=i;
         upper=std::max(upper,possible->height.hi);
-        const auto guaranteed=nominal_roof(row,project_polygon(row,polygon,Interval(0)),progress);
+        const auto guaranteed=interior_flat ? possible : nominal_roof(row,projected,progress);
         if (guaranteed && guaranteed->whole_footprint) lower=std::max(lower,guaranteed->height.lo);
     }
     return {Interval(lower,upper),std::move(active),splitter};

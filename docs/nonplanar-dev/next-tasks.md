@@ -21,7 +21,10 @@ Next software tasks, in dependency order:
    without changing budgets, then verify new milestones on Linux.
    `B07-stadium-depth-bounds.md` tightens the exact nonnegative rounded depth
    domain but makes only a small native work reduction; certified roof-query
-   optimization and successful Linux verification remain required. The prior A02 correction at d57e9325 has a
+   optimization was followed by `B07-constant-section-roof.md`: direct constant-
+   Z/gap interior queries preserve volume/work bounds and take 16.01 seconds
+   for native fill locally. Successful Linux verification remains required.
+   The prior A02 correction at d57e9325 has a
    successful native Linux run 36454696019; its earlier range-failure evidence
    remains historical and does not establish an exact exception call stack.
 3. Extend B03 nominal affine bounds to qualified error budgets, curved surfaces,

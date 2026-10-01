@@ -1,0 +1,705 @@
+{
+  "base_commit": "946d3da799ee3af5e81bb4e115f8e2879db93363",
+  "upstream_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-constant-section-roof.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "16846ff69a8d7cb6ee3602b9f7d20bc3d4ae0524b8613377c892bbd0593508b0",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "f612f372bac6361f126716ee756387b06d2a14f54d65276c734cb190effe99d4",
+    "tests/nonplanar/test_deposition_model.cpp": "6b717d44206f343b7e83a79a9f3740195da10ed46dcc1a8f2de31cb4cb83067b",
+    "tests/nonplanar/test_policy.cpp": "5e3a5aea5668bdb9ae532e4e213ac293d814a9e84a18c9f1602ff608f7ef8340",
+    "docs/nonplanar-dev/adr-0048-constant-section-roof-queries.md": "8b72f517034498be5bd85b4d1aa0279102c7bfaa8ba5944067ab51d2d57eb584",
+    "docs/nonplanar-dev/B07-constant-section-roof.md": "fd875fe9d7757b9e3f653893a9b8dcc3640926bf62ef45e9babdcdd997b087c6",
+    "docs/nonplanar-dev/status.json": "0d167ad91d9474602aa0ee59fcde245a0bc0eb58171103d4f81245a741e12b65",
+    "docs/nonplanar-dev/README.md": "3a712ffef3fd20bdd98170f09e80f3d44cd3dbd128e7d5fe2cc3cb3e29d36fc9",
+    "docs/nonplanar-dev/next-tasks.md": "ee30cb9eaf11a82edbe038dd52d1f6d281bddc329e31fb487db12caed239dd11"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "e6b950109f9f1cb5d5bba18bda012bdea60e00b39081391a6666d315a111f019",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "c44e4311709858b3e3dca02660ca5e82bf24a0fcb06c56d189a352f55bfbbb20"
+  },
+  "compiled_commit_label": "31461d50",
+  "compiled_commit_label_note": "Retained configure label; exact source/binary hashes bind this build. Full B13 provenance pending.",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "captured_utc": "2026-10-01T10:11:42.352783+00:00",
+  "suite_results": {
+    "flat-geometry": {
+      "cases": 4,
+      "assertions": 157,
+      "failures": 0,
+      "skips": 0
+    },
+    "material-final": {
+      "cases": 61,
+      "assertions": 12541,
+      "failures": 0,
+      "skips": 0
+    },
+    "body-final": {
+      "cases": 14,
+      "assertions": 107917,
+      "failures": 0,
+      "skips": 0
+    }
+  },
+  "ctest_discovered": 306,
+  "ctest_executed": 306,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "bound_scope": "CONSTANT_AXIAL_Z_AND_GAP_WHOLE_POLYGON_STRICTLY_INSIDE_FINITE_BUTTS_NOMINAL_NORMAL_PROJECTION_ONLY",
+  "actual_width": "COMMAND_VOLUME_DIVIDED_BY_XY_LENGTH_AND_SECTION_GAP",
+  "rounded_shoulders": "PRESERVED",
+  "varying_or_end_contact_cases": "EXACT_XY_CLIPPING_RETAINED",
+  "budgets_and_margins": "UNCHANGED",
+  "public_API_and_contract_versions": "UNCHANGED",
+  "native_fill_cells": 40960,
+  "native_fill_work": 865083,
+  "native_fill_above_upper_mm3": 1.17968e-14,
+  "native_case_elapsed_seconds": 24.882,
+  "prior_native_case_elapsed_seconds": 26.573,
+  "native_union_elapsed_seconds": 6.99115,
+  "native_fill_elapsed_seconds": 16.01,
+  "native_fill_timeout_ms": 20000,
+  "performance_scope": "LOCAL_OBSERVATIONS_NOT_PORTABLE_TIMING_GUARANTEES",
+  "discarded_trials": {
+    "native1": "WORLD_AABB_TILE_LIST_WORK_LIMIT",
+    "native2": "ORIENTED_TILE_LIST_WORK_LIMIT",
+    "native3": "ORIENTED_BVH_EXTENT_SPLIT_WORK_LIMIT",
+    "native4": "ORIENTED_BVH_CENTER_SPREAD_SPLIT_WORK_LIMIT",
+    "final_trial_source_diff": "trial-roof-tile-index.patch",
+    "binding_note": "Final trial diff applies to base commit. Earlier intermediate logs are diagnostic only; no accepted final proof depends on them. Final source/binary hashes refer to the selected direct section query."
+  },
+  "Linux": "946d3da7_RUN_36842571249_NATIVE_TEST_BUILD_IN_PROGRESS_SAVED_2026_10_01_1005_UTC_CURRENT_REVISION_PENDING",
+  "Linux_deadline_repair": "NOT_ESTABLISHED",
+  "independent_review": "NOT_RUN",
+  "Windows": "NOT_RUN",
+  "physical": "NOT_RUN",
+  "public_export": "BLOCK",
+  "full_B01_B15": "IN_PROGRESS",
+  "raw_output_sha256": {
+    "build/nonplanar-evidence/B07-roof-tile-fill/baseline-capture.log": "d0a294edf4c971540fd4a9bf386ed7f49c298e79bae9d99d6b84f41483decda6",
+    "build/nonplanar-evidence/B07-roof-tile-fill/baseline-capture.log.json": "2fb704704b39762f8475905e72fe6a6eb07d17f7aff449430b4155e8e0133163",
+    "build/nonplanar-evidence/B07-roof-tile-fill/baseline-compare.log": "14bdf3eb82fad8b4210bed868b9124996e150788e839c30f3c35e33189b88fe0",
+    "build/nonplanar-evidence/B07-roof-tile-fill/baseline-compare.log.json": "2f46f606b49ca5f0f349e996254a487b96576ab19dd9cbb7e0290d2147c93811",
+    "build/nonplanar-evidence/B07-roof-tile-fill/before-build.log": "3ec10ee06e48e564702deaaedd783c2a0d4cb03e8f7c8ff10e832d2855148bc7",
+    "build/nonplanar-evidence/B07-roof-tile-fill/before-build.log.json": "845cce0a5c6996b8bdd9bef819f7eaf484284ce297cb1d85da7b5619acc102f2",
+    "build/nonplanar-evidence/B07-roof-tile-fill/before-geometry.log": "86e27089fbed7e919e0bd2294d18084cf5ae16b5e85fa2a2ef87fc971bd5b230",
+    "build/nonplanar-evidence/B07-roof-tile-fill/before-geometry.log.json": "37e489f100f88660e1da45b11683bb46c5287039275afdec3d50f92cadffbea7",
+    "build/nonplanar-evidence/B07-roof-tile-fill/before-geometry.xml": "46dd6d245dbbfbb77aef5e083045b3e19dd3580f86cd426106b653786c4fa7f8",
+    "build/nonplanar-evidence/B07-roof-tile-fill/body-final.log": "392b496631e7ec121c52faa70b2c937fb1fb91ac1962d9422bbd42f880f7dc5b",
+    "build/nonplanar-evidence/B07-roof-tile-fill/body-final.log.json": "ffbcaf1a270ba91ded9714ccf572d478f20ed3e9829a2a4197bc45fe57be32ac",
+    "build/nonplanar-evidence/B07-roof-tile-fill/body-final.xml": "dd9097da899483b6349768c28ea15cd55fb246a3ac738f08f9e9e3f786ec7796",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build1.log": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build1.log.json": "5671b651f25733526966bbc379932e68b535c56da260c88ecfe1c026e3e363ef",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build2.log": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build2.log.json": "b99b30bda9440e95ea76db395e5b72b3870d238b060711e1e152bb89f116e7b0",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build3.log": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build3.log.json": "b3777e2268c4966dd90162cdc6c617c0181ecfac2460caff1c5c90ccbb249382",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build4.log": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build4.log.json": "d9b051999f1196a52c4d6ae3f17835463cffe1f4796984b921c5d82dbec4f201",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build5-flat.log": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build5-flat.log.json": "948fb751de791b7d36762b44c98867deab0edf2eadfa3b1430961ab366446a99",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build6-flat.log": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build6-flat.log.json": "cd2381d2ef15a95818f7ec0719e68337a37de5c6df57d1637452c7ca11d2f4f2",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build7-timing.log": "fa10a0bb253157da6d6b1fa962a8e443c8299db2572516be8a84410d888c9828",
+    "build/nonplanar-evidence/B07-roof-tile-fill/build7-timing.log.json": "cf320d4f3b4301465ab612bc52da4ac86717e4b66c5c0c33f7a5ac0d44bd9b03",
+    "build/nonplanar-evidence/B07-roof-tile-fill/ctest/discovery.json": "68ad0d250a7b74da5176d430cb790eebd7529dab52b585ef9fd52f77fe8e8f0b",
+    "build/nonplanar-evidence/B07-roof-tile-fill/ctest/results.xml": "2cb7ab30d64c7db3ee2124494fc8d1171348b258da791293e8d441dee6d5d904",
+    "build/nonplanar-evidence/B07-roof-tile-fill/ctest.log": "9d0bd923b04147c1bb93c301be6525811000046103d8af421e85fb745b90b0bd",
+    "build/nonplanar-evidence/B07-roof-tile-fill/ctest.log.json": "0f4621afe97ee03ab85d2d29c1be7d8d481c86b5ac74c08050e042073100fa8f",
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-geometry.log": "7589d06a891905d72baca4d77cebe0d62a61efe0ded9b8f3a00b0a8cc93f483a",
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-geometry.log.json": "8ce7d232af9dc92500173676e490224aa86154cabe755ef1065c1c198b989765",
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-geometry.xml": "59b0f88bc416af66d3e9c38921570bcf50ab75d28875fdf2881baa228c13f7b2",
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-native.log": "21224a27024073d41523e1603cf434ae1afc43d87c227d1e2908e7eec51e45c8",
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-native.log.json": "5ffc3d2610676e24ce2b616071e8aba7b14e1c478f27dd8bab7ee72112b29d7c",
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-native.xml": "78061f5704d8b8924f19a348ac6fbc3a3233de1cfc7b75612e6caf1349f2ee12",
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry1.log": "b557f4c7d205e0cdee48fe25613c83a252a41508f32b3746cc97ae3703b472fc",
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry1.log.json": "18c001174355658abe60e2c0a75bfda495680b2062ce6ca65c95ce72f86f6db8",
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry1.xml": "4242a109366780a044669c9fa9f169434394f316feccf4d4e8051b92520ffc0d",
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry3.log": "a5bdfb9e4a44ae1d0ca530424dde2c23c27d9430d5a6bf97af8a2c1c2288464b",
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry3.log.json": "d6faba5dad7f1807b98d6d297bd431f8ea63d4ff81052b0ea3c40211eeb0d097",
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry3.xml": "b7f72955bcff514d4bdfcf6ff5d8ef538fe15fd55af885cf652ac79fd6f7678c",
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry4.log": "eb2ad205b8a1b334029e52dd28fb04364b13accbcb6a9129ea867d1d9fb5d972",
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry4.log.json": "2bba81de7b66c76d4921bd9701a17325fd9007e0292cd0a03aa14d4cf9755051",
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry4.xml": "b6f457f09504c82cd8ae548b0b537770f5bd432a7192bc50a0a260d71cf58a24",
+    "build/nonplanar-evidence/B07-roof-tile-fill/linux-prior-jobs.json": "213663cd9771d0162aeb6d844429afc41e4583da28c97c4e7f594d7adac9a277",
+    "build/nonplanar-evidence/B07-roof-tile-fill/linux-prior-run-final.json": "831d51c00e78961dbdd7c46c515bf5f61c316a8be03e223266ff0e12d8c61767",
+    "build/nonplanar-evidence/B07-roof-tile-fill/linux-prior-run.json": "e9b5e66d2d4fc26a6fb5218b9407099c1e65705476762d2a235ecd4f54b2c389",
+    "build/nonplanar-evidence/B07-roof-tile-fill/material-final.log": "9d20432589d2a7d3d90e53affe228c6e31093886ba6690f2a56838de8a45551d",
+    "build/nonplanar-evidence/B07-roof-tile-fill/material-final.log.json": "3c9e0735eba3dd207dbc65f5761eada8904310b1b14a86bd53823c2c54daf2ca",
+    "build/nonplanar-evidence/B07-roof-tile-fill/material-final.xml": "7a80ca82cc3bc6d2bdc7d666a0fb07e685d896d31f0a8a7df4e92fa28bf301da",
+    "build/nonplanar-evidence/B07-roof-tile-fill/material1.log": "0b8419d8f32e42f8a72f8e695e77de2bdc7e63a02604c8a52a26e748cb187283",
+    "build/nonplanar-evidence/B07-roof-tile-fill/material1.log.json": "551f5802bbb922023ea403aa5a52cf11b9a719d8bbc0f4cb6fc25cea53a7067e",
+    "build/nonplanar-evidence/B07-roof-tile-fill/material1.xml": "9219078ffbd40fdcf12a83551ad79b4c68b9475551f15a96d20183c58bbdb0ab",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native1.log": "01b0cd6ed519f5dbed4d7a35a478b300e5a871bcc0c9cf4f3edaad2faebd74d2",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native1.log.json": "ccb6f8a2e93eb42a1c693b2aaae1aee57dd04f96b85a6462681bd2d61a529dec",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native1.xml": "58aa0cbf52aa96dd340583076bc45c7735bb0b377346f02bddb63625476992c1",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native2.log": "a819099d3c5546e57b1b39535f15c1c407dfb55fa983c42b508e2bf548c5d445",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native2.log.json": "8dbf8705fa86f608f64f81c6f31e1887c65c7385213c50758faec97e9db646a8",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native2.xml": "7dcb655d19b58c85dcdbaf9e5e5fa76be355e3b868ee066d26aeb8ceb7a09f97",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native3.log": "13fa0adb71094a036937327f6ef9af68d0ed270c05640a272d5496143eb4d751",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native3.log.json": "e0bd7aa23f5ca864e9e2030c1e6337b4d286824d55faf7d2a5799f1bd62fc75d",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native3.xml": "699ec191e922247fb2972a5ca3d6a82aec57cc96f0e288c73a40b0d40722a744",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native4.log": "6f36a617553ce2d29d1fe1abb7d76805a59548af88d75e11e63873d210974ec9",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native4.log.json": "21c7f35b2bffbcaf3de824e200be0e7a43023fdba88f9e9307a7e851a4e543b7",
+    "build/nonplanar-evidence/B07-roof-tile-fill/native4.xml": "41904b2bbf55221dcadf486595dd96a583b6c1c3fa0e76e9c01cdf94ec7fb841",
+    "build/nonplanar-evidence/B07-roof-tile-fill/package-validation.log": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "build/nonplanar-evidence/B07-roof-tile-fill/package-validation.log.json": "2903b6223de91100e4d681b041481779608e73071eef23c83d2a7b691f1f2ad7",
+    "build/nonplanar-evidence/B07-roof-tile-fill/source-audit.log": "cb9c50de0bff46bb62e113c0eb6bcb11994946852594b460aac82be4d6bc48ff",
+    "build/nonplanar-evidence/B07-roof-tile-fill/source-audit.log.json": "eda93b763ebf51a36afbf2349667b81d21443fe9eac7fb6d3d993e2343488b50",
+    "build/nonplanar-evidence/B07-roof-tile-fill/trial-roof-tile-index.patch": "a2fb1aa330d51b99a9d49e413f31b715164f59f29b2f1fc426c6045685208bf1",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-off/output/plate_1.gcode": "78ea4d585de23a9566787e12c4dbddf04f44bbf9c294c0d45d110530d67e3172",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-off/run.log.json": "5dd9134dd28a38285197a0a7943170b86e6c6a92f05e74860463b2d9d788dae0",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-zaa/output/plate_1.gcode": "b79ffcb65673ab22ebddd02fcb100e76ee8813c43565b6a0c12bef4e7560099d",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-zaa/run.log.json": "4b2dd89531a5cbeee3d6bac78df582c74a58586fc08cc5e9d895b0cecb836440",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/manifest.json": "3a96597ffd8ea680ff7a23a97a76d2ee05ca9b3f14473b2c13c2b20c0a16d953",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/offline.sb": "787aa82d4e34922d889b35bff682f6b42f4553500152f863b9f7ef266cc5b40a",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-off/output/plate_1.gcode": "70fd45a09a661ef00c57d5d265feb5e148f658c2013f65c4d0ad2ef5aabb0321",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-off/run.log.json": "416874845cada4a442e15dbf3ef2438114f8a6b2ac1568dfbbebb91e90cdabc5",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-zaa/output/plate_1.gcode": "1fd048649c2bfe2c8fa5181691b706fe07f63a165302736fd3759185c73c3b6f",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-zaa/run.log.json": "4038551312b3de14d96ec7f388404f0521ff38c5ac74e19995418abf455b8587",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-off/output/plate_1.gcode": "938f6733d4a21ec6de04a8aec5313c0d8b8930f1bf3adef18e13f48c4ac512f8",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-off/run.log.json": "a2464d4170b06dff2c7e0875defcfb9e576a45b944b77744f5f9785210d9ee2a",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-zaa/output/plate_1.gcode": "a7ad7f21e605b29f3dc8eb675c7a3812598acc864c9e47783e4c9f8076fb0154",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-zaa/run.log.json": "a09be19e3171edc9808705cc97242ba0c2df98dd954be248234723576983f52c"
+  },
+  "raw_to_archive": {
+    "build/nonplanar-evidence/B07-roof-tile-fill/baseline-capture.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baseline-capture.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/baseline-capture.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baseline-capture.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/baseline-compare.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baseline-compare.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/baseline-compare.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baseline-compare.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/before-build.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/before-build.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/before-build.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/before-build.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/before-geometry.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/before-geometry.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/before-geometry.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/before-geometry.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/before-geometry.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/before-geometry.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/body-final.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/body-final.txt.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/body-final.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/body-final.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/body-final.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/body-final.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build1.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build1.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build1.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build1.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build2.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build2.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build2.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build2.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build3.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build3.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build3.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build3.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build4.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build4.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build4.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build4.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build5-flat.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build5-flat.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build5-flat.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build5-flat.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build6-flat.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build6-flat.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build6-flat.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build6-flat.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build7-timing.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build7-timing.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/build7-timing.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/build7-timing.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/ctest/discovery.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/ctest/discovery.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/ctest/results.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/ctest/results.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/ctest.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/ctest.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/ctest.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/ctest.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-geometry.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-geometry.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-geometry.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-geometry.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-geometry.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-geometry.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-native.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-native.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-native.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-native.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/flat-native.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-native.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry1.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry1.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry1.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry1.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry1.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry1.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry3.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry3.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry3.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry3.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry3.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry3.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry4.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry4.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry4.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry4.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/geometry4.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry4.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/linux-prior-jobs.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/linux-prior-jobs.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/linux-prior-run-final.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/linux-prior-run-final.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/linux-prior-run.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/linux-prior-run.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/material-final.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/material-final.txt.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/material-final.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/material-final.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/material-final.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/material-final.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/material1.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/material1.txt.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/material1.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/material1.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/material1.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/material1.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native1.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native1.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native1.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native1.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native1.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native1.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native2.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native2.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native2.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native2.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native2.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native2.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native3.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native3.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native3.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native3.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native3.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native3.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native4.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native4.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native4.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native4.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/native4.xml": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/native4.xml",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/package-validation.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/package-validation.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/package-validation.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/package-validation.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/source-audit.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/source-audit.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/source-audit.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/source-audit.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-roof-tile-fill/trial-roof-tile-index.patch": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/trial-roof-tile-index.patch",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-off/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-off/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-off/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-off/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-off/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-off/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-off/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-off/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-off/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-zaa/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-zaa/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-zaa/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-zaa/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-zaa/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-zaa/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-zaa/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/flat_block-zaa/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-zaa/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/manifest.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/manifest.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/offline.sb": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/offline.sb",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-off/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-off/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-off/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-off/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-off/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-off/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-off/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-off/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-off/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-zaa/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-zaa/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-zaa/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-zaa/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-zaa/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-zaa/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-zaa/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/shallow_sphere-zaa/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-zaa/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-off/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-off/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-off/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-off/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-off/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-off/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-off/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-off/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-off/run.log.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-zaa/00000.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-zaa/00000.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-zaa/output/plate_1.gcode": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-zaa/resolved.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-zaa/resolved.json",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-zaa/run.log": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-zaa/run.txt",
+      "compression": "none"
+    },
+    "build/nonplanar-evidence/B07-constant-section-roof-baselines/wedge_5deg-zaa/run.log.json": {
+      "archive_file": "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-zaa/run.log.json",
+      "compression": "none"
+    }
+  },
+  "archive_sha256": {
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baseline-capture.log.json": "2fb704704b39762f8475905e72fe6a6eb07d17f7aff449430b4155e8e0133163",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baseline-capture.txt": "d0a294edf4c971540fd4a9bf386ed7f49c298e79bae9d99d6b84f41483decda6",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baseline-compare.log.json": "2f46f606b49ca5f0f349e996254a487b96576ab19dd9cbb7e0290d2147c93811",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baseline-compare.txt": "14bdf3eb82fad8b4210bed868b9124996e150788e839c30f3c35e33189b88fe0",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-off/output/plate_1.gcode.gz": "aee54c8912bb92ff04b747df08024b22d7797c9a287e116432180eef29594ecd",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-off/run.log.json": "5dd9134dd28a38285197a0a7943170b86e6c6a92f05e74860463b2d9d788dae0",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-zaa/output/plate_1.gcode.gz": "31d95f923b43f27786506f2b1b8dc9088ff4bfdb2a1f12e815656bb4b82e2e72",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-zaa/run.log.json": "4b2dd89531a5cbeee3d6bac78df582c74a58586fc08cc5e9d895b0cecb836440",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/flat_block-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/manifest.json": "3a96597ffd8ea680ff7a23a97a76d2ee05ca9b3f14473b2c13c2b20c0a16d953",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/offline.sb": "787aa82d4e34922d889b35bff682f6b42f4553500152f863b9f7ef266cc5b40a",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-off/output/plate_1.gcode.gz": "1d91c64d71b96650a31bcb1ae69c2525f64cf13ddd0880fc11c6e93cb79169ab",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-off/run.log.json": "416874845cada4a442e15dbf3ef2438114f8a6b2ac1568dfbbebb91e90cdabc5",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-zaa/output/plate_1.gcode.gz": "5233965b35e0c745b205f3cc652f20bff007fbb25eca45a1a4fd10f2abb24b2e",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-zaa/run.log.json": "4038551312b3de14d96ec7f388404f0521ff38c5ac74e19995418abf455b8587",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/shallow_sphere-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-off/output/plate_1.gcode.gz": "4865b970c0cfb3c5419a70b34d8ca0eb24ce2d9a327098b836bd040d71da817e",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-off/run.log.json": "a2464d4170b06dff2c7e0875defcfb9e576a45b944b77744f5f9785210d9ee2a",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-zaa/output/plate_1.gcode.gz": "fa59c00cd1fb2d44b44a41db2f8c08490a7965780ab859c06297e69951b22f57",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-zaa/run.log.json": "a09be19e3171edc9808705cc97242ba0c2df98dd954be248234723576983f52c",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/baselines/wedge_5deg-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/before-build.log.json": "845cce0a5c6996b8bdd9bef819f7eaf484284ce297cb1d85da7b5619acc102f2",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/before-build.txt": "3ec10ee06e48e564702deaaedd783c2a0d4cb03e8f7c8ff10e832d2855148bc7",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/before-geometry.log.json": "37e489f100f88660e1da45b11683bb46c5287039275afdec3d50f92cadffbea7",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/before-geometry.txt": "86e27089fbed7e919e0bd2294d18084cf5ae16b5e85fa2a2ef87fc971bd5b230",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/before-geometry.xml": "46dd6d245dbbfbb77aef5e083045b3e19dd3580f86cd426106b653786c4fa7f8",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/body-final.log.json": "ffbcaf1a270ba91ded9714ccf572d478f20ed3e9829a2a4197bc45fe57be32ac",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/body-final.txt.gz": "d419b8f1ea5da4706bfce1a33b6ea91953044e15b74629e770357bd3f7249d54",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/body-final.xml": "dd9097da899483b6349768c28ea15cd55fb246a3ac738f08f9e9e3f786ec7796",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build1.log.json": "5671b651f25733526966bbc379932e68b535c56da260c88ecfe1c026e3e363ef",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build1.txt": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build2.log.json": "b99b30bda9440e95ea76db395e5b72b3870d238b060711e1e152bb89f116e7b0",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build2.txt": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build3.log.json": "b3777e2268c4966dd90162cdc6c617c0181ecfac2460caff1c5c90ccbb249382",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build3.txt": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build4.log.json": "d9b051999f1196a52c4d6ae3f17835463cffe1f4796984b921c5d82dbec4f201",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build4.txt": "f0336aa0afa41bb8e4b502cef00330cad85c7310da854bf36d042ee2c7654a13",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build5-flat.log.json": "948fb751de791b7d36762b44c98867deab0edf2eadfa3b1430961ab366446a99",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build5-flat.txt": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build6-flat.log.json": "cd2381d2ef15a95818f7ec0719e68337a37de5c6df57d1637452c7ca11d2f4f2",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build6-flat.txt": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build7-timing.log.json": "cf320d4f3b4301465ab612bc52da4ac86717e4b66c5c0c33f7a5ac0d44bd9b03",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/build7-timing.txt": "fa10a0bb253157da6d6b1fa962a8e443c8299db2572516be8a84410d888c9828",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/commands.json": "be167ae2c506c639b8332e86969f434f39aa09beae3dc8eb76cd5322b2a57a35",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/ctest/discovery.json": "68ad0d250a7b74da5176d430cb790eebd7529dab52b585ef9fd52f77fe8e8f0b",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/ctest/results.xml": "2cb7ab30d64c7db3ee2124494fc8d1171348b258da791293e8d441dee6d5d904",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/ctest.log.json": "0f4621afe97ee03ab85d2d29c1be7d8d481c86b5ac74c08050e042073100fa8f",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/ctest.txt": "9d0bd923b04147c1bb93c301be6525811000046103d8af421e85fb745b90b0bd",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-geometry.log.json": "8ce7d232af9dc92500173676e490224aa86154cabe755ef1065c1c198b989765",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-geometry.txt": "7589d06a891905d72baca4d77cebe0d62a61efe0ded9b8f3a00b0a8cc93f483a",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-geometry.xml": "59b0f88bc416af66d3e9c38921570bcf50ab75d28875fdf2881baa228c13f7b2",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-native.log.json": "5ffc3d2610676e24ce2b616071e8aba7b14e1c478f27dd8bab7ee72112b29d7c",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-native.txt": "21224a27024073d41523e1603cf434ae1afc43d87c227d1e2908e7eec51e45c8",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/flat-native.xml": "78061f5704d8b8924f19a348ac6fbc3a3233de1cfc7b75612e6caf1349f2ee12",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry1.log.json": "18c001174355658abe60e2c0a75bfda495680b2062ce6ca65c95ce72f86f6db8",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry1.txt": "b557f4c7d205e0cdee48fe25613c83a252a41508f32b3746cc97ae3703b472fc",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry1.xml": "4242a109366780a044669c9fa9f169434394f316feccf4d4e8051b92520ffc0d",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry3.log.json": "d6faba5dad7f1807b98d6d297bd431f8ea63d4ff81052b0ea3c40211eeb0d097",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry3.txt": "a5bdfb9e4a44ae1d0ca530424dde2c23c27d9430d5a6bf97af8a2c1c2288464b",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry3.xml": "b7f72955bcff514d4bdfcf6ff5d8ef538fe15fd55af885cf652ac79fd6f7678c",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry4.log.json": "2bba81de7b66c76d4921bd9701a17325fd9007e0292cd0a03aa14d4cf9755051",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry4.txt": "eb2ad205b8a1b334029e52dd28fb04364b13accbcb6a9129ea867d1d9fb5d972",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/geometry4.xml": "b6f457f09504c82cd8ae548b0b537770f5bd432a7192bc50a0a260d71cf58a24",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/linux-prior-jobs.json": "213663cd9771d0162aeb6d844429afc41e4583da28c97c4e7f594d7adac9a277",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/linux-prior-run-final.json": "831d51c00e78961dbdd7c46c515bf5f61c316a8be03e223266ff0e12d8c61767",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/linux-prior-run.json": "e9b5e66d2d4fc26a6fb5218b9407099c1e65705476762d2a235ecd4f54b2c389",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/material-final.log.json": "3c9e0735eba3dd207dbc65f5761eada8904310b1b14a86bd53823c2c54daf2ca",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/material-final.txt.gz": "c017371ba2da039a179f77d03b489bcf332f4f39115abc24a2f80ccaeadac764",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/material-final.xml": "7a80ca82cc3bc6d2bdc7d666a0fb07e685d896d31f0a8a7df4e92fa28bf301da",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/material1.log.json": "551f5802bbb922023ea403aa5a52cf11b9a719d8bbc0f4cb6fc25cea53a7067e",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/material1.txt.gz": "de9fdfba2e3184031afd6f7a4f7e5776eb4e172e00804e9737cb7c9bfc01b48c",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/material1.xml": "9219078ffbd40fdcf12a83551ad79b4c68b9475551f15a96d20183c58bbdb0ab",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native1.log.json": "ccb6f8a2e93eb42a1c693b2aaae1aee57dd04f96b85a6462681bd2d61a529dec",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native1.txt": "01b0cd6ed519f5dbed4d7a35a478b300e5a871bcc0c9cf4f3edaad2faebd74d2",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native1.xml": "58aa0cbf52aa96dd340583076bc45c7735bb0b377346f02bddb63625476992c1",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native2.log.json": "8dbf8705fa86f608f64f81c6f31e1887c65c7385213c50758faec97e9db646a8",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native2.txt": "a819099d3c5546e57b1b39535f15c1c407dfb55fa983c42b508e2bf548c5d445",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native2.xml": "7dcb655d19b58c85dcdbaf9e5e5fa76be355e3b868ee066d26aeb8ceb7a09f97",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native3.log.json": "e0bd7aa23f5ca864e9e2030c1e6337b4d286824d55faf7d2a5799f1bd62fc75d",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native3.txt": "13fa0adb71094a036937327f6ef9af68d0ed270c05640a272d5496143eb4d751",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native3.xml": "699ec191e922247fb2972a5ca3d6a82aec57cc96f0e288c73a40b0d40722a744",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native4.log.json": "21c7f35b2bffbcaf3de824e200be0e7a43023fdba88f9e9307a7e851a4e543b7",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native4.txt": "6f36a617553ce2d29d1fe1abb7d76805a59548af88d75e11e63873d210974ec9",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/native4.xml": "41904b2bbf55221dcadf486595dd96a583b6c1c3fa0e76e9c01cdf94ec7fb841",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/package-validation.log.json": "2903b6223de91100e4d681b041481779608e73071eef23c83d2a7b691f1f2ad7",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/package-validation.txt": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/source-audit.log.json": "eda93b763ebf51a36afbf2349667b81d21443fe9eac7fb6d3d993e2343488b50",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/source-audit.txt": "cb9c50de0bff46bb62e113c0eb6bcb11994946852594b460aac82be4d6bc48ff",
+    "docs/nonplanar-dev/evidence/B07-constant-section-roof/trial-roof-tile-index.patch": "a2fb1aa330d51b99a9d49e413f31b715164f59f29b2f1fc426c6045685208bf1"
+  }
+}

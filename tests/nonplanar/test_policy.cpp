@@ -2220,7 +2220,9 @@ TEST_CASE("B07 native first-hatch union measures rounded overlap rather than sum
     INFO(ledger.reason);REQUIRE(ledger.snapshot);const auto prefix=material_at(ledger.snapshot,rows.size(),0,capture);REQUIRE(prefix.nominal.snapshot);
     MaterialUnionLimits limits;limits.max_cells=65535;limits.max_evaluations=2000000;limits.timeout=std::chrono::seconds(10);
     limits.maximum_interval_width=Volume(.01);
+    const auto union_started=std::chrono::steady_clock::now();
     const auto result=integrate_material_union(prefix.nominal,{{19,17,4.0},{21,23,4.7}},limits);
+    INFO("native union seconds=" << std::chrono::duration<double>(std::chrono::steady_clock::now()-union_started).count());
     const auto occupied=result.provisional_union_mm3.value_or(ScalarBounds{0,0}),excess=result.provisional_excess_mm3.value_or(ScalarBounds{0,0});
     INFO("provisional occupied=[" << std::setprecision(18) << occupied.lower << ',' << occupied.upper << "] excess=[" << excess.lower << ',' << excess.upper << ']');
     INFO(result.reason << " packets=" << packets << " cells=" << result.cells << " work=" << result.evaluations);REQUIRE(result.snapshot);
@@ -2243,7 +2245,9 @@ TEST_CASE("B07 native first-hatch union measures rounded overlap rather than sum
     const auto first=integrate_material_first_pass({stack.source},stack.surfaces.front().cell,stack.support_plane_z_mm,stack.policy.first_gap,target_limits);
     INFO(first.reason);REQUIRE(first.proof);
     INFO("target cells=" << first.cells << " target interval=[" << first.nominal_volume_mm3->lower << ',' << first.nominal_volume_mm3->upper << ']');
+    const auto fill_started=std::chrono::steady_clock::now();
     const auto fit=reconcile_material_fill(first,result,fill_limits);
+    INFO("native fill seconds=" << std::chrono::duration<double>(std::chrono::steady_clock::now()-fill_started).count());
     const auto below=fit.provisional_below_roof_mm3.value_or(ScalarBounds{0,0}),above=fit.provisional_above_surface_mm3.value_or(ScalarBounds{0,0});
     INFO("provisional below=[" << below.lower << ',' << below.upper << "] above=[" << above.lower << ',' << above.upper << ']');
     INFO(fit.reason << " fill cells=" << fit.cells << " work=" << fit.evaluations);REQUIRE(fit.snapshot);

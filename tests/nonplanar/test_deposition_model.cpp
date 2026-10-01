@@ -1425,3 +1425,103 @@ TEST_CASE("B07 stadium depth tightening retains genuine rounded material above t
     REQUIRE(fill.snapshot->below_roof_mm3.upper<1e-10);
     REQUIRE(fill.snapshot->covered_target_mm3.upper<occupied.snapshot->union_volume_mm3.lower);
 }
+
+namespace {
+struct FlatRoofFixture {MaterialIntegralResult target;MaterialUnionResult occupied;long double amount,below,above;};
+FlatRoofFixture flat_roof_fixture(double fraction,bool raised=false)
+{
+    const auto body=bead(1,0,{0,0,1},{10,0,1},.8,.2,.2);
+    const MaterialRecord travel{{2,1,0,body.motion.end,{0,0,1.1},Speed(20),Acceleration(100),Travel{}},{}};
+    const auto future=bead(3,2,{0,0,1.1},{10,0,1.1},.8,.2,.2);
+    const auto laid=material_at(captured({body,travel,future}),1,0);
+    MaterialIntegralLimits target_limits;target_limits.maximum_interval_width=Volume(.0001);
+    target_limits.max_cells=65535;target_limits.timeout=std::chrono::seconds(5);
+    const auto target=integrate_material_first_pass(laid.lower,{{1,-.34,3,.34},1.2,1.2,1.2},.85,
+        {VerticalGap(.1),VerticalGap(.4),Length(0)},target_limits);
+    INFO(target.reason);REQUIRE(target.proof);REQUIRE(target.cells>1);
+    const double top=raised ? 1.205 : 1.195;
+    const auto row=bead(1,0,{1,0,top},{3,0,top},.66,.2,.2,BeadSectionKind::Rectangle);
+    const auto cap=material_at(captured({row}),fraction==1 ? 1 : 0,fraction==1 ? 0 : fraction);
+    const auto occupied=integrate_material_union(cap.nominal,{{1,-.34,.8},{3,.34,1.4}});REQUIRE(occupied.snapshot);
+    // Independent circle-segment integral over the actual rounded body's
+    // shoulders. Its future raised row is absent from this target prefix.
+    const long double h=body.bead->gap_begin_mm,r=h/2,k=1-std::acos(-1.L)/4;
+    const long double area=std::get<Deposition>(body.motion.payload).volume.value()/10.L,core=(area/h+k*h-h)/2;
+    const long double cap_area=std::get<Deposition>(row.motion.payload).volume.value()/2.L;
+    const long double width=cap_area/row.bead->gap_begin_mm,floor=static_cast<long double>(top)-row.bead->gap_begin_mm;
+    const long double offset=floor-(1-r),length=2.L*fraction;
+    long double below=0;
+    if (floor<1) {
+        const long double u=std::min(width/2-core,std::sqrt(r*r-offset*offset));
+        const long double shoulder=(u*std::sqrt(r*r-u*u)+r*r*std::asin(u/r))/2-offset*u;
+        below=length*(2*core*(1-floor)+2*shoulder);
+    }
+    return {target,occupied,length*cap_area,below,raised ? length*width*(static_cast<long double>(top)-1.2) : 0};
+}
+}
+TEST_CASE("B07 flat roof queries retain curved shoulders for current material at both precisions", "[Nonplanar][B07][FlatRoofQueries]")
+{
+    for (double fraction : {.3,1.}) for (bool raised : {false,true}) {
+        auto f=flat_roof_fixture(fraction,raised);
+        for (double precision : {.01,.0004}) {
+            MaterialFillLimits limits;limits.maximum_interval_width=Volume(precision);limits.max_cells=65535;
+            const auto fill=reconcile_material_fill(f.target,f.occupied,limits);INFO(fill.reason);REQUIRE(fill.snapshot);
+            volume_contains(fill.snapshot->below_roof_mm3,f.below);volume_contains(fill.snapshot->above_surface_mm3,f.above);
+            volume_contains(fill.snapshot->covered_target_mm3,f.amount-f.below-f.above);
+            REQUIRE(fill.snapshot->occupied==f.occupied.snapshot);REQUIRE(fill.snapshot->target==f.target.proof);
+        }
+    }
+}
+TEST_CASE("B07 flat roof queries preserve owned sources and shared interruption budgets", "[Nonplanar][B07][FlatRoofQueries]")
+{
+    auto f=flat_roof_fixture(.3);const auto source=f.target.proof;const auto occupied=f.occupied.snapshot;
+    MaterialFillLimits limits;
+    limits.cancelled=[&] {f.target.proof.reset();f.target.nominal_volume_mm3=ScalarBounds{0,0};f.occupied.snapshot.reset();return false;};
+    const auto owned=reconcile_material_fill(f.target,f.occupied,limits);INFO(owned.reason);REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->target==source);REQUIRE(owned.snapshot->occupied==occupied);
+    volume_contains(owned.snapshot->below_roof_mm3,f.below);
+    f.target.proof=source;f.occupied.snapshot=occupied;
+    limits={};limits.max_evaluations=1;REQUIRE_FALSE(reconcile_material_fill(f.target,f.occupied,limits).snapshot);
+    limits={};limits.max_cells=1;REQUIRE_FALSE(reconcile_material_fill(f.target,f.occupied,limits).snapshot);
+    size_t polls=0;limits={};limits.cancelled=[&] {return ++polls==8;};
+    REQUIRE_FALSE(reconcile_material_fill(f.target,f.occupied,limits).snapshot);REQUIRE(polls==8);
+    limits={};limits.is_current=[](uint64_t) {return false;};REQUIRE_FALSE(reconcile_material_fill(f.target,f.occupied,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_UPWARD);return false;};
+    const auto rounding=reconcile_material_fill(f.target,f.occupied,limits);
+    REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+}
+
+TEST_CASE("B07 flat roof queries retain reverse diagonal current support for both cap axes", "[Nonplanar][B07][FlatRoofQueries]")
+{
+    for (bool reverse : {false,true}) for (bool x_axis : {false,true}) {
+        const auto body=bead(1,0,reverse ? PhysicalPosition(10,10,1) : PhysicalPosition(0,0,1),
+            reverse ? PhysicalPosition(0,0,1) : PhysicalPosition(10,10,1),.8,.2,.2);
+        const auto laid=material_at(captured({body}),0,.55);
+        MaterialIntegralLimits target_limits;target_limits.maximum_interval_width=Volume(.0001);
+        const auto target=integrate_material_first_pass(laid.lower,{{4.76,4.76,5.24,5.24},1.2,1.2,1.2},.85,
+            {VerticalGap(.1),VerticalGap(.4),Length(0)},target_limits);INFO(target.reason);REQUIRE(target.proof);REQUIRE(target.cells>1);
+        const auto cap=bead(1,0,x_axis ? PhysicalPosition(4.8,5,1.195) : PhysicalPosition(5,4.8,1.195),
+            x_axis ? PhysicalPosition(5.2,5,1.195) : PhysicalPosition(5,5.2,1.195),.44,.2,.2,BeadSectionKind::Rectangle);
+        const auto present=material_at(captured({cap}),0,.4);
+        const auto occupied=integrate_material_union(present.nominal,{{4.76,4.76,.8},{5.24,5.24,1.4}});REQUIRE(occupied.snapshot);
+        const auto fill=reconcile_material_fill(target,occupied);INFO(fill.reason);REQUIRE(fill.snapshot);
+        // The complete cap footprint has |normal| <= .42/sqrt(2) < .3,
+        // inside the diagonal body's flat core despite curved target corners.
+        const long double amount=static_cast<long double>(std::get<Deposition>(cap.motion.payload).volume.value())*.4;
+        const long double floor=static_cast<long double>(cap.motion.start.z())-cap.bead->gap_begin_mm;
+        const long double below=amount*(1-floor)/cap.bead->gap_begin_mm;
+        volume_contains(fill.snapshot->below_roof_mm3,below);volume_contains(fill.snapshot->covered_target_mm3,amount-below);
+        REQUIRE(fill.snapshot->above_surface_mm3.upper<1e-10);
+    }
+}
+
+TEST_CASE("B07 flat roof queries exclude a higher rectangular neighbour outside the complete footprint", "[Nonplanar][B07][FlatRoofQueries]")
+{
+    const auto body=bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle);
+    const MaterialRecord travel{{2,1,0,body.motion.end,{0,.8,1.15},Speed(20),Acceleration(100),Travel{}},{}};
+    const auto ridge=bead(3,2,{0,.8,1.15},{10,.8,1.15},.1,.05,.05,BeadSectionKind::Rectangle);
+    const auto present=material_at(captured({body,travel,ridge}),3,0);
+    const auto target=integrate_material_first_pass(present.lower,{{1,-.4,3,.4},1.2,1.2,1.2},.9,
+        {VerticalGap(.1),VerticalGap(.4),Length(0)});INFO(target.reason);REQUIRE(target.proof);
+    volume_contains(*target.nominal_volume_mm3,2.L*(2.L*.4)*(static_cast<long double>(double(1.2))-1));
+}
