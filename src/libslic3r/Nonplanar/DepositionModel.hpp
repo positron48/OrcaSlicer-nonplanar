@@ -125,8 +125,9 @@ struct MaterialTransitionResult {
 MaterialTransitionResult assess_material_first_pass(const LowerMaterialView &, const AffineCapCell &,
     double support_plane_z_mm, const TransitionPolicy &, const MaterialCoverageLimits &limits = {});
 
-inline constexpr unsigned material_integral_contract_version=1;
+inline constexpr unsigned material_integral_contract_version=2;
 enum class MaterialIntegralStatus { Bounded, Rejected, Unknown };
+class MaterialIntegralProof;
 struct MaterialIntegralLimits : MaterialCoverageLimits {
     Volume maximum_interval_width{.001}; // Total mm3 interval width, not per cell.
 };
@@ -137,6 +138,7 @@ struct MaterialIntegralResult {
     double maximum_interval_width_mm3=0;
     std::optional<ScalarBounds> nominal_volume_mm3;
     size_t cells=0, evaluations=0;
+    std::shared_ptr<const MaterialIntegralProof> proof;
 };
 // Refine the signed nominal vertical-cell integral above the highest laid roof.
 // Bounded requires the continuous first-pass feasibility proof and the requested
@@ -144,6 +146,24 @@ struct MaterialIntegralResult {
 // bead amount, perimeter/seam allocation, V-to-E or export permission is provided.
 MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &, const AffineCapCell &,
     double support_plane_z_mm, const TransitionPolicy &, const MaterialIntegralLimits &limits = {});
+
+enum class IntegralSplitAxis { X, Y };
+struct IntegralStripVolume { RectangleXY footprint; ScalarBounds volume_mm3; };
+struct IntegralStripsSnapshot {
+    const std::shared_ptr<const MaterialIntegralProof> source;
+    const IntegralSplitAxis axis;
+    const std::vector<double> cuts;
+    const std::vector<IntegralStripVolume> strips;
+    const ScalarBounds total_volume_mm3;
+    const size_t proof_cells, evaluations;
+};
+struct IntegralStripsResult { std::string reason; std::shared_ptr<const IntegralStripsSnapshot> snapshot; };
+// Exact, complete strip partition of one owned bounded integral. Reuses all
+// continuous leaf roof bounds; does not rerun material queries, select E or
+// assert that finite beads/perimeters can fill the strips. Cuts include both
+// parent boundaries and must be strictly increasing. Total precision still gates.
+IntegralStripsResult split_material_integral(const MaterialIntegralResult &, IntegralSplitAxis,
+    const std::vector<double> &cuts, const MaterialIntegralLimits &limits = {});
 
 inline constexpr unsigned affine_pass_stack_contract_version=1;
 struct AffinePassPolicy {

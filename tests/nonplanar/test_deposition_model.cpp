@@ -486,3 +486,65 @@ TEST_CASE("B06 pass stack owns policy and rejects stale work exhausted precision
     policy.first_gap.corner_height_error=Length(.00001); policy.total_volume_error=Volume(0);
     REQUIRE_FALSE(plan_affine_pass_stack(state.lower,target,.9,policy).snapshot);
 }
+
+TEST_CASE("B06 strip quotas conserve a refined rounded roof integral without repeating material queries", "[Nonplanar][B06][IntegralStrips]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},.8,.2,.2)}); const auto state=material_at(ledger,1,0);
+    const AffineCapCell cell{{1,-.35,9,.35},1.2,1.2,1.2};
+    MaterialIntegralLimits limits; limits.maximum_interval_width=Volume(.0001);
+    const auto amount=integrate_material_first_pass(state.lower,cell,.9,{VerticalGap(.1),VerticalGap(.4),Length(0)},limits);
+    REQUIRE(amount.status==MaterialIntegralStatus::Bounded); REQUIRE(amount.proof);
+    const auto split=split_material_integral(amount,IntegralSplitAxis::Y,{-.35,-.3,0,.3,.35},limits);
+    INFO(split.reason); REQUIRE(split.snapshot); const auto &s=*split.snapshot; REQUIRE(s.strips.size()==4);
+    const long double h=ledger->records.front().bead->gap_begin_mm;
+    const long double area=std::get<Deposition>(ledger->records.front().motion.payload).volume.value()/10.L;
+    const long double width=area/h+(1-std::acos(-1.L)/4)*h,core=(width-h)/2,r=h/2;
+    const auto primitive=[&](long double y) {
+        const long double edge=std::max(0.L,y-core);
+        const long double circle=.5L*(edge*std::sqrt(r*r-edge*edge)+r*r*std::asin(edge/r));
+        return std::min(y,core)+(1-h/2)*edge+circle;
+    };
+    const long double edge=8*(.05L*1.2L-(primitive(.35L)-primitive(.3L)));
+    volume_contains(s.strips[0].volume_mm3,edge); volume_contains(s.strips[3].volume_mm3,edge);
+    volume_contains(s.strips[1].volume_mm3,8*.3L*.2L); volume_contains(s.strips[2].volume_mm3,8*.3L*.2L);
+    REQUIRE(s.source==amount.proof); REQUIRE(s.total_volume_mm3.lower<=amount.nominal_volume_mm3->upper);
+    REQUIRE(s.total_volume_mm3.upper>=amount.nominal_volume_mm3->lower);
+    REQUIRE(s.total_volume_mm3.upper-s.total_volume_mm3.lower<=limits.maximum_interval_width.value());
+    REQUIRE(s.proof_cells>0); REQUIRE(s.evaluations<=limits.max_evaluations);
+    const auto along=split_material_integral(amount,IntegralSplitAxis::X,{1,3,6,9},limits); INFO(along.reason); REQUIRE(along.snapshot);
+    REQUIRE(along.snapshot->strips.size()==3);
+    volume_contains(along.snapshot->strips[0].volume_mm3,edge/2+2*.6L*.2L);
+    const auto affine=integrate_material_first_pass(state.lower,{{1,-.35,9,.35},1.2,1.28,1.2},.9,
+        {VerticalGap(.1),VerticalGap(.4),Length(0)},limits); REQUIRE(affine.proof);
+    const auto varying=split_material_integral(affine,IntegralSplitAxis::X,{1,3,9},limits); REQUIRE(varying.snapshot);
+    volume_contains(varying.snapshot->strips[0].volume_mm3,edge/2+2*.6L*.2L+2*.7L*.01L);
+}
+
+TEST_CASE("B06 strip partition owns its proof cuts and limits and refuses incomplete or exhausted allocation", "[Nonplanar][B06][IntegralStrips]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},.8,.2,.2)}); const auto state=material_at(ledger,1,0);
+    MaterialIntegralLimits limits; limits.maximum_interval_width=Volume(.0001);
+    auto amount=integrate_material_first_pass(state.lower,{{1,-.35,9,.35},1.2,1.2,1.2},.9,
+        {VerticalGap(.1),VerticalGap(.4),Length(0)},limits); REQUIRE(amount.proof);
+    std::vector<double> cuts{-.35,0,.35};
+    limits.cancelled=[&] { amount.proof.reset();cuts[1]=.5;limits.max_cells=1;return false; };
+    const auto owned=split_material_integral(amount,IntegralSplitAxis::Y,cuts,limits); INFO(owned.reason); REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->cuts[1]==0); REQUIRE(owned.snapshot->source);
+    amount=integrate_material_first_pass(state.lower,{{1,-.35,9,.35},1.2,1.2,1.2},.9,
+        {VerticalGap(.1),VerticalGap(.4),Length(0)});
+    limits={}; limits.maximum_interval_width=Volume(.001);
+    REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.3,0,.35},limits).snapshot);
+    REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,.2,.1,.35},limits).snapshot);
+    REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,0,0,.35},limits).snapshot);
+    REQUIRE_FALSE(split_material_integral({},IntegralSplitAxis::Y,{-.35,0,.35},limits).snapshot);
+    limits.max_cells=1; REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,0,.35},limits).snapshot);
+    limits={}; limits.max_evaluations=1; REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,0,.35},limits).snapshot);
+    limits={}; limits.is_current=[](uint64_t){return false;}; REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,0,.35},limits).snapshot);
+    limits={}; limits.maximum_interval_width=Volume(.000000001);
+    REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,0,.35},limits).snapshot);
+    limits={}; limits.cancelled=[] { return true; };
+    REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,0,.35},limits).snapshot);
+    limits={}; limits.timeout=std::chrono::milliseconds(1);
+    limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(3));return false; };
+    REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,0,.35},limits).snapshot);
+}

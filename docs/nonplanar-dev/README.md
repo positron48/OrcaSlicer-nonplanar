@@ -64,6 +64,12 @@ assertions pass, including a physical-frame translation and a native reserved
 interior. Current selected CTest executes 258/258; six fresh OFF/ZAA comparisons
 pass. Subsequent actual cap support, finite paths and volumetric seam remain open.
 
+`B06-integral-strips.md` retains an opaque continuous roof proof and derives
+complete X/Y strip volume bounds without repeating material queries. Three new
+cases/119 assertions and six added selected-first-pass assertions pass. Current
+selected CTest executes 261/261; six fresh OFF/ZAA comparisons pass. Finite bead
+allocation and seam corrections remain open; volume cells do not authorize E.
+
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
 compatibility, dense coverage, material replay, ordering and guarded hybrid
@@ -73,9 +79,10 @@ nozzle are user-declared in `B15-u1-declared-setup.md`, without measurement clai
 
 Prior Linux runs 36454696019 at d57e9325 and 36758101513 at 7df1d765 succeeded.
 Runs 36767506583 at e7a46961 and 36786738740 at 23f00bfd succeeded. In the saved
-snapshot, 36791501134 at b35408ce is in_progress, 36793524250 at 22478ec6
-is cancelled, and 36796275758 at a083f2df is pending. These records do not prove
-Linux execution of this pass-selection patch. Windows remains NOT_RUN.
+snapshot, 36791501134 at b35408ce succeeded, 36793524250 at 22478ec6 is cancelled,
+36796275758 at a083f2df is in_progress, and 36800464013 at 3310bde1 is pending.
+These records do not prove Linux execution of this strip-allocation patch.
+Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;
 `status.json` and this checkpoint describe the current state.

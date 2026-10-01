@@ -1,0 +1,26 @@
+Filters: [NativeIntegralStrips]
+Randomness seeded to: 1364367007
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B06 native refined integral allocates complete X and Y strips from the same
+owned proof
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1830
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1846: FAILED:
+  REQUIRE( split.snapshot )
+with expansion:
+  0
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  INTEGRAL_STRIP_CELL_LIMIT
+
+===============================================================================
+test cases:  1 |  0 passed | 1 failed
+assertions: 11 | 10 passed | 1 failed
+

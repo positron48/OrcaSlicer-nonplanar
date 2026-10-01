@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="11" hostname="tbd" time="1.155" timestamp="2026-10-01T01:31:42Z">
+    <properties>
+      <property name="random-seed" value="1364367007"/>
+      <property name="filters" value="[NativeIntegralStrips]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B06 native refined integral allocates complete X and Y strips from the same owned proof" time="0.000" status="run">
+      <failure message="split.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( split.snapshot )
+with expansion:
+  0
+BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+INTEGRAL_STRIP_CELL_LIMIT
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1846
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

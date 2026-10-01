@@ -1793,6 +1793,14 @@ TEST_CASE("B06 native pass stack derives the target from the owned source and st
     REQUIRE(stack.total_allocation_error_mm3<=request.policy.total_volume_error.value());
     REQUIRE(owned.source_projection->revision==body.snapshot->revision);
     REQUIRE(owned.reservation_tests>0);
+    auto strip_limits=limits.material; strip_limits.max_cells=32768;
+    const auto first_strips=split_material_integral(stack.first_pass,IntegralSplitAxis::X,
+        {17,17.5,18,18.5,19,19.5,20,20.5,21,21.5,22,22.5,23},strip_limits);
+    INFO(first_strips.reason); REQUIRE(first_strips.snapshot); REQUIRE(first_strips.snapshot->strips.size()==12);
+    REQUIRE(first_strips.snapshot->source==stack.first_pass.proof);
+    REQUIRE(first_strips.snapshot->total_volume_mm3.lower<=stack.first_pass.nominal_volume_mm3->upper);
+    REQUIRE(first_strips.snapshot->total_volume_mm3.upper>=stack.first_pass.nominal_volume_mm3->lower);
+    REQUIRE(first_strips.snapshot->total_volume_mm3.upper-first_strips.snapshot->total_volume_mm3.lower<=.01);
     auto invalid=request; invalid.patch=100; REQUIRE_FALSE(plan_native_affine_pass_stack(material,invalid,limits).snapshot);
     invalid=request; invalid.policy.passes=2; REQUIRE_FALSE(plan_native_affine_pass_stack(material,invalid,limits).snapshot);
     invalid=request; invalid.footprint={15,17,23,23}; REQUIRE_FALSE(plan_native_affine_pass_stack(material,invalid,limits).snapshot);
@@ -1825,4 +1833,38 @@ TEST_CASE("B06 native pass stack derives the target from the owned source and st
     limits.material.cancelled=[&] { material.snapshot.reset();return false; };
     const auto retained=plan_native_affine_pass_stack(material,request,limits); INFO(retained.reason); REQUIRE(retained.snapshot);
     REQUIRE(retained.snapshot->body_material); REQUIRE(retained.snapshot->stack->final_surface.z00==4);
+}
+
+TEST_CASE("B06 native refined integral allocates complete X and Y strips from the same owned proof", "[Nonplanar][B06][NativeIntegralStrips]")
+{
+    const auto body=generate_planar_body(native_body_partition(planar_body_config())); REQUIRE(body.snapshot);
+    const BodyMaterialParameters parameters{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits capture; capture.timeout=std::chrono::seconds(5);
+    const auto material=reconstruct_planar_body_material(body,parameters,capture); REQUIRE(material.snapshot);
+    const auto present=material_at(material.snapshot->material,material.snapshot->material->records.size(),0,capture);
+    REQUIRE(present.lower.snapshot);
+    MaterialIntegralLimits limits; limits.timeout=std::chrono::seconds(5); limits.max_cells=8191;
+    limits.maximum_interval_width=Volume(.01);
+    auto integral=integrate_material_first_pass(present.lower,{{17,17,23,23},2.2,2.2,2.2},1.9,
+        {VerticalGap(.1),VerticalGap(.4),Length(.00001)},limits);
+    INFO(integral.reason); REQUIRE(integral.status==MaterialIntegralStatus::Bounded); REQUIRE(integral.proof);
+    std::vector<double> cuts; for (size_t i=0; i<=12; ++i) cuts.push_back(17+double(i)/2);
+    REQUIRE(split_material_integral(integral,IntegralSplitAxis::X,cuts,limits).reason=="INTEGRAL_STRIP_CELL_LIMIT");
+    limits.max_cells=32768; // Orthogonal strips split each long proof leaf.
+    for (auto axis : {IntegralSplitAxis::X,IntegralSplitAxis::Y}) {
+        const auto split=split_material_integral(integral,axis,cuts,limits); INFO(split.reason); REQUIRE(split.snapshot);
+        const auto &s=*split.snapshot; REQUIRE(s.strips.size()==12); REQUIRE(s.source==integral.proof);
+        INFO(s.proof_cells); INFO(s.evaluations); INFO(s.total_volume_mm3.lower); INFO(s.total_volume_mm3.upper);
+        REQUIRE(s.total_volume_mm3.lower<=7.37753727144254245);
+        REQUIRE(s.total_volume_mm3.upper>=7.37927018186442929);
+        REQUIRE(s.total_volume_mm3.upper-s.total_volume_mm3.lower<=.01);
+        REQUIRE(s.evaluations<=limits.max_evaluations); REQUIRE(s.proof_cells<=limits.max_cells);
+        for (const auto &strip : s.strips) {
+            REQUIRE(strip.volume_mm3.lower>.6); REQUIRE(strip.volume_mm3.upper<.7);
+        }
+    }
+    integral.nominal_volume_mm3=ScalarBounds{100,100}; integral.first_pass.source.reset();
+    const auto retained=split_material_integral(integral,IntegralSplitAxis::X,cuts,limits); REQUIRE(retained.snapshot);
+    REQUIRE(retained.snapshot->total_volume_mm3.upper<8);
 }

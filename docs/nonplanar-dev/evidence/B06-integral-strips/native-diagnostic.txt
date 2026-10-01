@@ -1,0 +1,843 @@
+Filters: [NativeIntegralStrips]
+Randomness seeded to: 489543326
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B06 native refined integral allocates complete X and Y strips from the same
+owned proof
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1838
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1361: PASSED:
+  REQUIRE( file.source )
+with expansion:
+  0xa79038bf8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1362: PASSED:
+  REQUIRE( imported.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1363: PASSED:
+  REQUIRE( load_stl(path.string().c_str(),&model) )
+with expansion:
+  true
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1369: PASSED:
+  REQUIRE( placed.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+with message:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1372: PASSED:
+  REQUIRE( partition.status==VolumePartitionStatus::Partitioned )
+with expansion:
+  0 == 0
+with messages:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+  NOMINAL_BODY_CAP_PARTITION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1840: PASSED:
+  REQUIRE( body.snapshot )
+with expansion:
+  0xa790cf6d8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1844: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0xa79080f18
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1846: PASSED:
+  REQUIRE( present.lower.snapshot )
+with expansion:
+  0xa78c48bf8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1851: PASSED:
+  REQUIRE( integral.status==MaterialIntegralStatus::Bounded )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1851: PASSED:
+  REQUIRE( integral.proof )
+with expansion:
+  0xa78c1b720
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1853: PASSED:
+  REQUIRE( split_material_integral(integral,IntegralSplitAxis::X,cuts,limits).reason=="INTEGRAL_STRIP_CELL_LIMIT" )
+with expansion:
+  "INTEGRAL_STRIP_CELL_LIMIT"
+  ==
+  "INTEGRAL_STRIP_CELL_LIMIT"
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1856: PASSED:
+  REQUIRE( split.snapshot )
+with expansion:
+  0xa78cc4798
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1857: PASSED:
+  REQUIRE( s.strips.size()==12 )
+with expansion:
+  12 == 12
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1857: PASSED:
+  REQUIRE( s.source==integral.proof )
+with expansion:
+  0xa78c1b720 == 0xa78c1b720
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1859: PASSED:
+  REQUIRE( s.total_volume_mm3.lower<=7.37753727144254245 )
+with expansion:
+  7.37352050100695777 <= 7.37753727144254245
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1860: PASSED:
+  REQUIRE( s.total_volume_mm3.upper>=7.37927018186442929 )
+with expansion:
+  7.3835184321566949 >= 7.37927018186442929
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1861: PASSED:
+  REQUIRE( s.total_volume_mm3.upper-s.total_volume_mm3.lower<=.01 )
+with expansion:
+  0.00999793114973713 <= 0.01
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1862: PASSED:
+  REQUIRE( s.evaluations<=limits.max_evaluations )
+with expansion:
+  27252 (0x6a74) <= 200000 (0x30d40)
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1862: PASSED:
+  REQUIRE( s.proof_cells<=limits.max_cells )
+with expansion:
+  17620 (0x44d4) <= 32768 (0x8000)
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61436763255976246 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.6154041592166889 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61443386216997753 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61532360471365655 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61446780800040202 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.6152846464054802 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.614487690125325 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61526103907997931 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61449903538859407 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61524743612909816 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61450412396216192 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61524086054218918 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61450414798681463 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61524088754177486 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61449905295641416 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.6152469532626812 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61448770697766442 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61526004296467218 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.6144678267011483 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61528360179560659 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61443399189662706 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61532239226338326 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61436762228206676 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61540280824148452 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17620
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1856: PASSED:
+  REQUIRE( split.snapshot )
+with expansion:
+  0xa78cc4918
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1857: PASSED:
+  REQUIRE( s.strips.size()==12 )
+with expansion:
+  12 == 12
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1857: PASSED:
+  REQUIRE( s.source==integral.proof )
+with expansion:
+  0xa78c1b720 == 0xa78c1b720
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1859: PASSED:
+  REQUIRE( s.total_volume_mm3.lower<=7.37753727144254245 )
+with expansion:
+  7.37352050100695777 <= 7.37753727144254245
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1860: PASSED:
+  REQUIRE( s.total_volume_mm3.upper>=7.37927018186442929 )
+with expansion:
+  7.3835184321566949 >= 7.37927018186442929
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1861: PASSED:
+  REQUIRE( s.total_volume_mm3.upper-s.total_volume_mm3.lower<=.01 )
+with expansion:
+  0.00999793114973713 <= 0.01
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1862: PASSED:
+  REQUIRE( s.evaluations<=limits.max_evaluations )
+with expansion:
+  27252 (0x6a74) <= 200000 (0x30d40)
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1862: PASSED:
+  REQUIRE( s.proof_cells<=limits.max_cells )
+with expansion:
+  17614 (0x44ce) <= 32768 (0x8000)
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61436763781861958 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61540416458741487 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61443385980268128 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61532360243162609 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61446780264616108 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61528464097248492 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.6144876918348493 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61526104079504007 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61449903762309277 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61524743837378804 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61450412344742744 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61524085995936573 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61450414748155791 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61524088697169721 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61449905014303952 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61524695030787457 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61448770489089843 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61526004078585006 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61446782522751309 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61528360031247298 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61443399289001177 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61532239339495576 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.lower>.6 )
+with expansion:
+  0.61436762720110616 > 0.59999999999999998
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1864: PASSED:
+  REQUIRE( strip.volume_mm3.upper<.7 )
+with expansion:
+  0.61540281326412438 < 0.69999999999999996
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY
+  17614
+  27252
+  7.37352
+  7.38352
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1868: PASSED:
+  REQUIRE( retained.snapshot )
+with expansion:
+  0xa78cc4798
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1869: PASSED:
+  REQUIRE( retained.snapshot->total_volume_mm3.upper<8 )
+with expansion:
+  7.3835184321566949 < 8
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+===============================================================================
+All tests passed (77 assertions in 1 test case)
+

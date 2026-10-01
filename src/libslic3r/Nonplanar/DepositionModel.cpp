@@ -412,7 +412,7 @@ std::optional<NominalRoof> nominal_roof(const MaterialRecord &row, Projection pr
     // cell. A lower roof is usable only if that bead covers the entire XY cell.
     return NominalRoof{top-height/Interval(2)+detail::root(radicand),whole};
 }
-std::pair<Interval,Interval> affine_integral(const Polygon &polygon, const AffineCapCell &cell)
+std::pair<Interval,Interval> affine_integral(const Polygon &polygon, const AffineCapCell &cell, Exact *exact_area=nullptr)
 {
     Exact twice_area(0), x_moment(0), y_moment(0);
     for (size_t i=0; i<polygon.size(); ++i) {
@@ -420,12 +420,14 @@ std::pair<Interval,Interval> affine_integral(const Polygon &polygon, const Affin
         const Exact cross=a[0]*b[1]-b[0]*a[1];
         twice_area+=cross; x_moment+=(a[0]+b[0])*cross; y_moment+=(a[1]+b[1])*cross;
     }
+    if (twice_area==0 && exact_area) { *exact_area=Exact(0);return {Interval(0),Interval(0)}; }
     if (twice_area<=0) reject("MATERIAL_INTEGRAL_DEGENERATE_CELL");
     const Exact x=x_moment/(Exact(3)*twice_area), y=y_moment/(Exact(3)*twice_area);
     const auto &r=cell.footprint;
     const Exact mean=Exact(cell.z00)+(Exact(cell.z10)-Exact(cell.z00))*(x-Exact(r.min_x))/(Exact(r.max_x)-Exact(r.min_x))+
         (Exact(cell.z01)-Exact(cell.z00))*(y-Exact(r.min_y))/(Exact(r.max_y)-Exact(r.min_y));
     const Exact area=twice_area/Exact(2);
+    if (exact_area) *exact_area=area;
     return {exact_interval(area),exact_interval(area*mean)};
 }
 MaterialCoverageResult coverage(std::shared_ptr<const MaterialPrefixSnapshot> cursor, const SceneBox &requested,
@@ -550,6 +552,23 @@ MaterialCoverageResult cover_material(const UpperMaterialView &v, const SceneBox
 MaterialCoverageResult cover_material(const LowerMaterialView &v, const SceneBox &d, const MaterialCoverageLimits &l)
 { return coverage(v.snapshot,d,Representation::Lower,l); }
 
+// The proof is constructible only by the continuous integrator. Its exact
+// closed leaf partition and nominal roof bounds remain owned and immutable;
+// caller-edited result fields cannot replace the source or geometry.
+class MaterialIntegralProof {
+    struct Cell { Polygon polygon; Interval roof; };
+    const std::shared_ptr<const MaterialPrefixSnapshot> source;
+    const AffineCapCell target;
+    const ScalarBounds total_volume;
+    const std::vector<Cell> cells;
+    MaterialIntegralProof(std::shared_ptr<const MaterialPrefixSnapshot> s, AffineCapCell t, ScalarBounds v, std::vector<Cell> c)
+        : source(std::move(s)), target(t), total_volume(v), cells(std::move(c)) {}
+    friend MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &, const AffineCapCell &,
+        double, const TransitionPolicy &, const MaterialIntegralLimits &);
+    friend IntegralStripsResult split_material_integral(const MaterialIntegralResult &, IntegralSplitAxis,
+        const std::vector<double> &, const MaterialIntegralLimits &);
+};
+
 MaterialTransitionResult assess_material_first_pass(const LowerMaterialView &view, const AffineCapCell &requested_cell,
     double plane, const TransitionPolicy &requested_policy, const MaterialCoverageLimits &requested_limits)
 {
@@ -651,7 +670,7 @@ MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &vi
             if (result.evaluations%128==0) poll(); ++result.evaluations;
         };
         const auto fraction=[&](size_t i) { return i<cursor->completed_records ? 1 : cursor->current_progress; };
-        struct Node { Polygon polygon; std::vector<size_t> candidates; Interval volume; size_t depth, id, splitter; double uncertainty; };
+        struct Node { Polygon polygon; std::vector<size_t> candidates; Interval volume, roof; size_t depth, id, splitter; double uncertainty; };
         const auto make_node=[&](Polygon polygon, const std::vector<size_t> &candidates, size_t depth) {
             poll();
             if (result.cells+result.first_pass.support.cells>=limits.max_cells) reject("MATERIAL_INTEGRAL_CELL_LIMIT");
@@ -674,7 +693,7 @@ MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &vi
             if (active.empty() || lower>upper) reject("MATERIAL_INTEGRAL_INCONSISTENT_ROOF");
             const auto integral=affine_integral(polygon,cell);
             const auto volume=integral.second-integral.first*Interval(lower,upper);
-            return Node{std::move(polygon),std::move(active),volume,depth,id,splitter,(Interval(volume.hi)-Interval(volume.lo)).hi};
+            return Node{std::move(polygon),std::move(active),volume,Interval(lower,upper),depth,id,splitter,(Interval(volume.hi)-Interval(volume.lo)).hi};
         };
         std::vector<size_t> active;
         const size_t end=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence->records.size());
@@ -686,6 +705,7 @@ MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &vi
         const auto total=[&] { return Interval(exact_interval(total_lower).lo,exact_interval(total_upper).hi); };
         const auto compare=[](const Node &a, const Node &b) { return a.uncertainty==b.uncertainty ? a.id>b.id : a.uncertainty<b.uncertainty; };
         std::vector<Node> heap; heap.push_back(std::move(root));
+        std::vector<MaterialIntegralProof::Cell> terminal;
         while (true) {
             poll(); const auto amount=total(); result.nominal_volume_mm3=bounds(amount);
             if ((Interval(amount.hi)-Interval(amount.lo)).hi<=limits.maximum_interval_width.value()) break;
@@ -693,7 +713,7 @@ MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &vi
             std::pop_heap(heap.begin(),heap.end(),compare); auto node=std::move(heap.back()); heap.pop_back();
             // Keep terminal cells in the exact total, even when other cells can
             // still narrow enough to satisfy the requested global tolerance.
-            if (node.depth>=limits.max_depth) continue;
+            if (node.depth>=limits.max_depth) { terminal.push_back({std::move(node.polygon),node.roof}); continue; }
             const auto &row=sequence->records[node.splitter]; const auto &m=row.motion;
             const Exact dx=Exact(m.end.x())-Exact(m.start.x()),dy=Exact(m.end.y())-Exact(m.start.y());
             Vertex normal{-dy,dx};
@@ -720,10 +740,72 @@ MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &vi
         }
         poll();
         if (result.nominal_volume_mm3->lower<=0) reject("MATERIAL_INTEGRAL_UNCERTAIN_POSITIVE_VOLUME");
+        for (auto &node : heap) { poll(); terminal.push_back({std::move(node.polygon),node.roof}); }
+        auto proof=std::shared_ptr<const MaterialIntegralProof>(new MaterialIntegralProof(cursor,cell,*result.nominal_volume_mm3,std::move(terminal)));
+        poll(); result.proof=std::move(proof);
         result.status=MaterialIntegralStatus::Bounded;result.reason="BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL";
-    } catch (const Rejection &e) { result.status=MaterialIntegralStatus::Unknown;result.reason=e.what(); }
-    catch (const std::exception &e) { result.status=MaterialIntegralStatus::Unknown;result.reason="MATERIAL_INTEGRAL_NUMERIC_FAILURE: "+std::string(e.what()); }
+    } catch (const Rejection &e) { result.proof.reset();result.status=MaterialIntegralStatus::Unknown;result.reason=e.what(); }
+    catch (const std::exception &e) { result.proof.reset();result.status=MaterialIntegralStatus::Unknown;result.reason="MATERIAL_INTEGRAL_NUMERIC_FAILURE: "+std::string(e.what()); }
     return result;
+}
+
+IntegralStripsResult split_material_integral(const MaterialIntegralResult &requested, IntegralSplitAxis axis,
+    const std::vector<double> &requested_cuts, const MaterialIntegralLimits &requested_limits)
+{
+    const auto proof=requested.proof; const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        // Check the size before copying caller data, as in the other bounded
+        // captures. No callback runs until all inputs are owned.
+        if (!proof || requested.status!=MaterialIntegralStatus::Bounded || requested_cuts.size()<2 || requested_cuts.size()>4097 ||
+            (axis!=IntegralSplitAxis::X && axis!=IntegralSplitAxis::Y) || !limits.max_evaluations || limits.max_evaluations>200000 ||
+            !limits.max_cells || limits.max_cells>65535 || !valid_timeout(limits.timeout) || limits.maximum_interval_width.value()<=0)
+            reject("INVALID_INTEGRAL_STRIP_PARTITION");
+        const auto cuts=requested_cuts; const auto poll=[&] { stop(limits,proof->source->sequence->revision,started); };
+        poll(); const auto &r=proof->target.footprint;
+        const bool x_axis=axis==IntegralSplitAxis::X;
+        if (cuts.front()!=(x_axis ? r.min_x : r.min_y) || cuts.back()!=(x_axis ? r.max_x : r.max_y))
+            reject("INCOMPLETE_INTEGRAL_STRIP_PARTITION");
+        for (size_t i=0; i<cuts.size(); ++i) {
+            coordinate(cuts[i]); if (i && cuts[i]<=cuts[i-1]) reject("UNORDERED_INTEGRAL_STRIP_PARTITION");
+        }
+        const Vertex normal=x_axis ? Vertex{Exact(1),Exact(0)} : Vertex{Exact(0),Exact(1)};
+        std::vector<IntegralStripVolume> strips; Exact all_lower(0),all_upper(0); size_t cells=0,evaluations=0;
+        for (size_t i=1; i<cuts.size(); ++i) {
+            poll(); RectangleXY strip=r;
+            if (x_axis) { strip.min_x=cuts[i-1];strip.max_x=cuts[i]; }
+            else { strip.min_y=cuts[i-1];strip.max_y=cuts[i]; }
+            Exact covered_area(0),lower(0),upper(0);
+            for (const auto &leaf : proof->cells) {
+                poll(); if (evaluations>=limits.max_evaluations) reject("INTEGRAL_STRIP_WORK_LIMIT"); ++evaluations;
+                auto polygon=clip(leaf.polygon,normal,Exact(cuts[i-1]),true);
+                if (polygon.size()<3) continue;
+                polygon=clip(polygon,normal,Exact(cuts[i]),false);
+                if (polygon.size()<3) continue;
+                Exact area(0); const auto integral=affine_integral(polygon,proof->target,&area);
+                if (area==0) continue; // Closed boundary contacts carry no volume.
+                if (cells>=limits.max_cells) reject("INTEGRAL_STRIP_CELL_LIMIT"); ++cells;
+                covered_area+=area;
+                const auto volume=integral.second-integral.first*leaf.roof;
+                lower+=Exact(volume.lo); upper+=Exact(volume.hi);
+            }
+            const Exact area=(Exact(strip.max_x)-Exact(strip.min_x))*(Exact(strip.max_y)-Exact(strip.min_y));
+            if (covered_area!=area) reject("INTEGRAL_STRIP_DOMAIN_MISMATCH");
+            const auto amount=Interval(exact_interval(lower).lo,exact_interval(upper).hi);
+            if (amount.lo<=0) reject("INTEGRAL_STRIP_UNCERTAIN_POSITIVE_VOLUME");
+            strips.push_back({strip,bounds(amount)});
+            all_lower+=Exact(amount.lo);all_upper+=Exact(amount.hi);
+        }
+        const auto total=Interval(exact_interval(all_lower).lo,exact_interval(all_upper).hi);
+        if (total.hi<proof->total_volume.lower || total.lo>proof->total_volume.upper) reject("INTEGRAL_STRIP_INCONSISTENT_VOLUME");
+        if ((Interval(total.hi)-Interval(total.lo)).hi>limits.maximum_interval_width.value())
+            reject("INTEGRAL_STRIP_GLOBAL_PRECISION");
+        poll();
+        auto snapshot=std::make_shared<const IntegralStripsSnapshot>(IntegralStripsSnapshot{proof,axis,cuts,std::move(strips),bounds(total),cells,evaluations});
+        poll(); return {"BOUNDED_COMPLETE_NOMINAL_STRIP_VOLUMES_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) { return {e.what(),{}}; }
+    catch (const std::exception &e) { return {"INTEGRAL_STRIP_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
 }
 
 AffinePassStackResult plan_affine_pass_stack(const LowerMaterialView &view, const AffineCapCell &requested_target,

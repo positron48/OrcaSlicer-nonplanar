@@ -1,0 +1,113 @@
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:496:77: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  496 |     REQUIRE(amount.status==MaterialIntegralStatus::Bounded); REQUIRE(amount.proof);
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:496:77: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  496 |     REQUIRE(amount.status==MaterialIntegralStatus::Bounded); REQUIRE(amount.proof);
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:496:77: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  496 |     REQUIRE(amount.status==MaterialIntegralStatus::Bounded); REQUIRE(amount.proof);
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:496:77: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  496 |     REQUIRE(amount.status==MaterialIntegralStatus::Bounded); REQUIRE(amount.proof);
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:496:77: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  496 |     REQUIRE(amount.status==MaterialIntegralStatus::Bounded); REQUIRE(amount.proof);
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:497:53: error: use of undeclared identifier 'IntegralSplitAxis'
+  497 |     const auto split=split_material_integral(amount,IntegralSplitAxis::Y,{-.35,-.3,0,.3,.35},limits);
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:497:53: error: use of undeclared identifier 'IntegralSplitAxis'
+  497 |     const auto split=split_material_integral(amount,IntegralSplitAxis::Y,{-.35,-.3,0,.3,.35},limits);
+      |                                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:511:30: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  511 |     REQUIRE(s.source==amount.proof); REQUIRE(s.total_volume_mm3.lower<=amount.nominal_volume_mm3->upper);
+      |                                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:511:30: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  511 |     REQUIRE(s.source==amount.proof); REQUIRE(s.total_volume_mm3.lower<=amount.nominal_volume_mm3->upper);
+      |                       ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:511:30: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  511 |     REQUIRE(s.source==amount.proof); REQUIRE(s.total_volume_mm3.lower<=amount.nominal_volume_mm3->upper);
+      |                       ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:511:30: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  511 |     REQUIRE(s.source==amount.proof); REQUIRE(s.total_volume_mm3.lower<=amount.nominal_volume_mm3->upper);
+      |                       ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:511:30: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  511 |     REQUIRE(s.source==amount.proof); REQUIRE(s.total_volume_mm3.lower<=amount.nominal_volume_mm3->upper);
+      |                       ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:511:30: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  511 |     REQUIRE(s.source==amount.proof); REQUIRE(s.total_volume_mm3.lower<=amount.nominal_volume_mm3->upper);
+      |                       ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:515:53: error: use of undeclared identifier 'IntegralSplitAxis'
+  515 |     const auto along=split_material_integral(amount,IntegralSplitAxis::X,{1,3,6,9},limits); INFO(along.reason); REQUIRE(along.snapshot);
+      |                       ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:515:53: error: use of undeclared identifier 'IntegralSplitAxis'
+  515 |     const auto along=split_material_integral(amount,IntegralSplitAxis::X,{1,3,6,9},limits); INFO(along.reason); REQUIRE(along.snapshot);
+      |                                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:525:77: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  525 |         {VerticalGap(.1),VerticalGap(.4),Length(0)},limits); REQUIRE(amount.proof);
+      |                                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:525:77: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  525 |         {VerticalGap(.1),VerticalGap(.4),Length(0)},limits); REQUIRE(amount.proof);
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:525:77: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  525 |         {VerticalGap(.1),VerticalGap(.4),Length(0)},limits); REQUIRE(amount.proof);
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:525:77: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  525 |         {VerticalGap(.1),VerticalGap(.4),Length(0)},limits); REQUIRE(amount.proof);
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:525:77: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  525 |         {VerticalGap(.1),VerticalGap(.4),Length(0)},limits); REQUIRE(amount.proof);
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:525:77: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  525 |         {VerticalGap(.1),VerticalGap(.4),Length(0)},limits); REQUIRE(amount.proof);
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:527:35: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  527 |     limits.cancelled=[&] { amount.proof.reset();cuts[1]=.5;limits.max_cells=1;return false; };
+      |                                                                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:527:35: error: no member named 'proof' in 'Slic3r::nptop::MaterialIntegralResult'
+  527 |     limits.cancelled=[&] { amount.proof.reset();cuts[1]=.5;limits.max_cells=1;return false; };
+      |                            ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:528:53: error: use of undeclared identifier 'IntegralSplitAxis'
+  528 |     const auto owned=split_material_integral(amount,IntegralSplitAxis::Y,cuts,limits); INFO(owned.reason); REQUIRE(owned.snapshot);
+      |                            ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:528:53: error: use of undeclared identifier 'IntegralSplitAxis'
+  528 |     const auto owned=split_material_integral(amount,IntegralSplitAxis::Y,cuts,limits); INFO(owned.reason); REQUIRE(owned.snapshot);
+      |                                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:533:50: error: use of undeclared identifier 'IntegralSplitAxis'
+  533 |     REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.3,0,.35},limits).snapshot);
+      |                                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:533:50: error: use of undeclared identifier 'IntegralSplitAxis'
+  533 |     REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.3,0,.35},limits).snapshot);
+      |                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:533:50: error: use of undeclared identifier 'IntegralSplitAxis'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:533:50: error: use of undeclared identifier 'IntegralSplitAxis'
+      |                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:533:50: error: use of undeclared identifier 'IntegralSplitAxis'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:533:50: error: use of undeclared identifier 'IntegralSplitAxis'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:534:50: error: use of undeclared identifier 'IntegralSplitAxis'
+  534 |     REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,.2,.1,.35},limits).snapshot);
+      |                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:533:50: error: use of undeclared identifier 'IntegralSplitAxis'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:533:50: error: use of undeclared identifier 'IntegralSplitAxis'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:534:50: error: use of undeclared identifier 'IntegralSplitAxis'
+  534 |     REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,.2,.1,.35},limits).snapshot);
+      |                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:534:50: error: use of undeclared identifier 'IntegralSplitAxis'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:533:50: error: use of undeclared identifier 'IntegralSplitAxis'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:534:50: error: use of undeclared identifier 'IntegralSplitAxis'
+  534 |     REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,.2,.1,.35},limits).snapshot);
+      |                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:534:50: error: use of undeclared identifier 'IntegralSplitAxis'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:534:50: error: use of undeclared identifier 'IntegralSplitAxis'
+      |                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:534:50: error: use of undeclared identifier 'IntegralSplitAxis'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:534:50: error: use of undeclared identifier 'IntegralSplitAxis'
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:534:50: error: use of undeclared identifier 'IntegralSplitAxis'
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:534:50: error: use of undeclared identifier 'IntegralSplitAxis'
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:534:50: error: use of undeclared identifier 'IntegralSplitAxis'
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.

@@ -37,7 +37,9 @@ Next software tasks, in dependency order:
    against that actual prefix. `B06-material-integral.md` refines the nominal roof
    integral to a global mm3 interval width. `B06-pass-stack.md` selects source-bound
    prospective affine surfaces and whole-cell quotas within a total error budget.
-   Subdivide stepped support into qualified cells, allocate finite paths and solve
+   `B06-integral-strips.md` now allocates complete strip volume bounds from its
+   owned continuous proof. Subdivide stepped support into qualified cells, derive
+   finite fixed-width path/bead geometry from these bounds and solve
    seam/edge domains; prospective surfaces alone do not prove later cap support.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.
