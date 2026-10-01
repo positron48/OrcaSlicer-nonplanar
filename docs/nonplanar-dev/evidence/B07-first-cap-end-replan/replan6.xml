@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="2" skipped="0" tests="13" hostname="tbd" time="6.869" timestamp="2026-10-01T19:22:30Z">
+    <properties>
+      <property name="random-seed" value="1719131531"/>
+      <property name="filters" value="[FirstCapEndReplan]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan refuses stale repeated coarse and exhausted requests" time="0.000" status="run">
+      <failure message="owned.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0
+MATERIAL_UNION_CELL_LIMIT paths=9 packets=9 cells=65535 work=267607 union_width=0.004373
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2746
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan preserves contours and replaces the whole prospective ledger" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+MATERIAL_UNION_CELL_LIMIT paths=9 packets=9 cells=65535 work=267607 union_width=0.004373
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2692
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

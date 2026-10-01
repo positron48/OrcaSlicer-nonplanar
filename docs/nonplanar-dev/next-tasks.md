@@ -109,6 +109,13 @@ Next software tasks, in dependency order:
    [.0986354,.0992278] mm3 clear deficit with unchanged .001 mm3 precision.
    The original short work policy refuses; complete candidate budgets bound the
    measure. These nominal clear columns do not certify tool access or support.
+   `B07-first-cap-end-replan.md` now retains all original contour/central packets
+   and qualifies new finite end strips in one whole replacement ledger. Native
+   missing volume falls to [.0955759,.0959988] mm3 and clear deficit to
+   [.0863185,.0868956] mm3 with the same target/band/losses/.001 mm3 precision.
+   All six run joins and 173 complete interface packets pass; actual
+   under-material voids and repeated material remain. Shared original work/time
+   budgets and all old negative cases remain.
    Qualify allowable repeated material and complete shoulder/seam volumes,
    construct/replan paths for both remaining 3D volumes and reconstruct later support;
    short-packet motion/flow limits remain unverified.

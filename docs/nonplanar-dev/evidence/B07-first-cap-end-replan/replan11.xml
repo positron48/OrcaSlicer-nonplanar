@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="3" skipped="0" tests="134" hostname="tbd" time="12.076" timestamp="2026-10-01T19:51:12Z">
+    <properties>
+      <property name="random-seed" value="25299997"/>
+      <property name="filters" value="[FirstCapEndReplan],[ParallelMultiplicity]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan refuses stale repeated coarse and exhausted requests" time="0.000" status="run">
+      <failure message="owned.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0
+MATERIAL_UNION_WORK_LIMIT paths=9 packets=9 cells=42403 work=1999891 union_width=0.005897
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2804
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan checks ridges outside the original contour footprint" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+BOUNDED_FIRST_CONTOUR_AND_INTERIOR_HATCH_CANDIDATE_WITH_MEASURED_JOINT_FILL_ONLY
+MATERIAL_UNION_WORK_LIMIT paths=9 packets=9 cells=42158 work=1999871 union_width=0.006584
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2871
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan preserves contours and replaces the whole prospective ledger" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+MATERIAL_UNION_WORK_LIMIT paths=9 packets=9 cells=42403 work=1999891 union_width=0.005897
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2740
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 parallel triple multiplicity agrees with a separate flat-section integral" time="0.082" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

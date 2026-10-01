@@ -1,0 +1,173 @@
+[1/2] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2683:20: error: static assertion failed due to requirement 'first_cap_contract_version == 2': first_cap_contract_version==2
+ 2683 |     STATIC_REQUIRE(first_cap_contract_version==2);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:171:58: note: expanded from macro 'STATIC_REQUIRE'
+  171 |     #define STATIC_REQUIRE( ... )       static_assert(   __VA_ARGS__,  #__VA_ARGS__ ); SUCCEED( #__VA_ARGS__ )
+      |                                                          ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2683:46: note: expression evaluates to '1 == 2'
+ 2683 |     STATIC_REQUIRE(first_cap_contract_version==2);
+      |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:171:58: note: expanded from macro 'STATIC_REQUIRE'
+  171 |     #define STATIC_REQUIRE( ... )       static_assert(   __VA_ARGS__,  #__VA_ARGS__ ); SUCCEED( #__VA_ARGS__ )
+      |                                                          ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2684:20: error: use of undeclared identifier 'first_cap_replan_contract_version'; did you mean 'first_hatch_replan_contract_version'?
+ 2684 |     STATIC_REQUIRE(first_cap_replan_contract_version==1);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                    first_hatch_replan_contract_version
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:171:58: note: expanded from macro 'STATIC_REQUIRE'
+  171 |     #define STATIC_REQUIRE( ... )       static_assert(   __VA_ARGS__,  #__VA_ARGS__ ); SUCCEED( #__VA_ARGS__ )
+      |                                                          ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:684:27: note: 'first_hatch_replan_contract_version' declared here
+  684 | inline constexpr unsigned first_hatch_replan_contract_version=1;
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2685:44: error: unknown type name 'FirstCapReplanSnapshot'; did you mean 'FirstHatchReplanSnapshot'?
+ 2685 |     STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapReplanSnapshot>::value);
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~
+      |                                            FirstHatchReplanSnapshot
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:172:58: note: expanded from macro 'STATIC_REQUIRE_FALSE'
+  172 |     #define STATIC_REQUIRE_FALSE( ... ) static_assert( !(__VA_ARGS__), "!(" #__VA_ARGS__ ")" ); SUCCEED( "!(" #__VA_ARGS__ ")" )
+      |                                                          ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:686:8: note: 'FirstHatchReplanSnapshot' declared here
+  686 | struct FirstHatchReplanSnapshot {
+      |        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2690:27: error: use of undeclared identifier 'replan_first_cap_ends'; did you mean 'replan_first_hatch_ends'?
+ 2690 |         const auto result=replan_first_cap_ends(before);INFO(result.reason);REQUIRE(result.snapshot);
+      |                           ^~~~~~~~~~~~~~~~~~~~~
+      |                           replan_first_hatch_ends
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:704:24: note: 'replan_first_hatch_ends' declared here
+  704 | FirstHatchReplanResult replan_first_hatch_ends(const FirstHatchLayerResult &,
+      |                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2690:49: error: no viable conversion from 'const FirstCapResult' to 'const FirstHatchLayerResult'
+ 2690 |         const auto result=replan_first_cap_ends(before);INFO(result.reason);REQUIRE(result.snapshot);
+      |                                                 ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:673:8: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'const FirstCapResult' to 'const FirstHatchLayerResult &' for 1st argument
+  673 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:673:8: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'const FirstCapResult' to 'FirstHatchLayerResult &&' for 1st argument
+  673 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:704:77: note: passing argument to parameter here
+  704 | FirstHatchReplanResult replan_first_hatch_ends(const FirstHatchLayerResult &,
+      |                                                                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:41: error: use of undeclared identifier 'FirstCapHatchExtent'; did you mean 'FirstHatchExtent'?
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                         ^~~~~~~~~~~~~~~~~~~
+      |                                         FirstHatchExtent
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:308:12: note: 'FirstHatchExtent' declared here
+  308 | enum class FirstHatchExtent { CapsuleInset, FiniteButtInset };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:62: error: no member named 'ContourCentres' in 'Slic3r::nptop::FirstHatchExtent'
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                                              ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:41: error: use of undeclared identifier 'FirstCapHatchExtent'; did you mean 'FirstHatchExtent'?
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                         ^~~~~~~~~~~~~~~~~~~
+      |                                         FirstHatchExtent
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:308:12: note: 'FirstHatchExtent' declared here
+  308 | enum class FirstHatchExtent { CapsuleInset, FiniteButtInset };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:62: error: no member named 'ContourCentres' in 'Slic3r::nptop::FirstHatchExtent'
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                                              ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:41: error: use of undeclared identifier 'FirstCapHatchExtent'; did you mean 'FirstHatchExtent'?
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                         ^~~~~~~~~~~~~~~~~~~
+      |                                         FirstHatchExtent
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:308:12: note: 'FirstHatchExtent' declared here
+  308 | enum class FirstHatchExtent { CapsuleInset, FiniteButtInset };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:62: error: no member named 'ContourCentres' in 'Slic3r::nptop::FirstHatchExtent'
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                                              ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:106: error: use of undeclared identifier 'FirstCapHatchExtent'; did you mean 'FirstHatchExtent'?
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                                                                                          ^~~~~~~~~~~~~~~~~~~
+      |                                                                                                          FirstHatchExtent
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:308:12: note: 'FirstHatchExtent' declared here
+  308 | enum class FirstHatchExtent { CapsuleInset, FiniteButtInset };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:127: error: no member named 'BoundaryBand' in 'Slic3r::nptop::FirstHatchExtent'
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                                                                                                               ^~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:106: error: use of undeclared identifier 'FirstCapHatchExtent'; did you mean 'FirstHatchExtent'?
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                                                                                          ^~~~~~~~~~~~~~~~~~~
+      |                                                                                                          FirstHatchExtent
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:308:12: note: 'FirstHatchExtent' declared here
+  308 | enum class FirstHatchExtent { CapsuleInset, FiniteButtInset };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:127: error: no member named 'BoundaryBand' in 'Slic3r::nptop::FirstHatchExtent'
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                                                                                                               ^~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:106: error: use of undeclared identifier 'FirstCapHatchExtent'; did you mean 'FirstHatchExtent'?
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                                                                                          ^~~~~~~~~~~~~~~~~~~
+      |                                                                                                          FirstHatchExtent
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:308:12: note: 'FirstHatchExtent' declared here
+  308 | enum class FirstHatchExtent { CapsuleInset, FiniteButtInset };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2693:127: error: no member named 'BoundaryBand' in 'Slic3r::nptop::FirstHatchExtent'
+ 2693 |         REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+      |                                                                                                                               ^~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2733:39: error: unknown type name 'FirstCapReplanPolicy'; did you mean 'FirstHatchReplanPolicy'?
+ 2733 |     const auto source=before.snapshot;FirstCapReplanPolicy policy;FirstHatchLayerLimits limits;
+      |                                       ^~~~~~~~~~~~~~~~~~~~
+      |                                       FirstHatchReplanPolicy
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:685:8: note: 'FirstHatchReplanPolicy' declared here
+  685 | struct FirstHatchReplanPolicy {Volume minimum_covered_gain{.001},maximum_outside_target{.001};};
+      |        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2735:22: error: use of undeclared identifier 'replan_first_cap_ends'; did you mean 'replan_first_hatch_ends'?
+ 2735 |     const auto owned=replan_first_cap_ends(before,policy,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->before==source);
+      |                      ^~~~~~~~~~~~~~~~~~~~~
+      |                      replan_first_hatch_ends
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:704:24: note: 'replan_first_hatch_ends' declared here
+  704 | FirstHatchReplanResult replan_first_hatch_ends(const FirstHatchLayerResult &,
+      |                        ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+ninja: build stopped: subcommand failed.

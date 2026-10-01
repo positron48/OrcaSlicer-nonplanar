@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="239" hostname="tbd" time="8.086" timestamp="2026-10-01T20:05:47Z">
+    <properties>
+      <property name="random-seed" value="2869887204"/>
+      <property name="filters" value="&quot;B07 first cap end replan preserves contours and replaces the whole prospective ledger&quot;"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan preserves contours and replaces the whole prospective ledger" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+MATERIAL_UNION_WORK_LIMIT paths=9 packets=58 cells=52753 work=1999646 union_width=0.004619
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2740
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="2727" hostname="tbd" time="19.387" timestamp="2026-10-01T21:17:28Z">
+    <properties>
+      <property name="random-seed" value="4031707585"/>
+      <property name="filters" value="[FirstCapEndReplan],[ParallelMultiplicity]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan preserves contours and replaces the whole prospective ledger" time="10.954" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan checks ridges outside the original contour footprint" time="2.420" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan refuses stale repeated coarse and exhausted requests" time="6.003" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 parallel triple multiplicity agrees with a separate flat-section integral" time="0.010" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 affine triple multiplicity encloses the independently integrated merged cores" time="0.001" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

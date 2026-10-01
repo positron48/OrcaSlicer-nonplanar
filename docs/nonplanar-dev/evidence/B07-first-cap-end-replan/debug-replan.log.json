@@ -1,0 +1,20 @@
+{
+  "command": [
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+    "[FirstCapEndReplan]",
+    "--warn",
+    "NoAssertions",
+    "--reporter",
+    "junit",
+    "--out",
+    "build/nonplanar-evidence/B07-first-cap-end-replan/debug-replan.xml",
+    "--reporter",
+    "console::out=-",
+    "--success"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-01T19:16:46.039923+00:00",
+  "status": "COMPLETED",
+  "exit_code": 42,
+  "elapsed_seconds": 4.879
+}

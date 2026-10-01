@@ -2677,3 +2677,236 @@ TEST_CASE("B07 variable-gap shoulder deficit matches an independent cubic integr
         limited={};limited.max_depth=1;REQUIRE_FALSE(classify_material_voids(fill,limited).snapshot);
     }
 }
+
+namespace {
+using CapAmount=boost::multiprecision::cpp_bin_float_quad;
+std::pair<CapAmount,CapAmount> independent_flat_union(const std::vector<MaterialRecord> &rows)
+{
+    using Q=CapAmount;const Q pi=acos(Q(-1));std::optional<Q> height,top;
+    struct Section {bool x;Q lo,hi,centre,core;};std::vector<Section> sections;
+    for (const auto &row : rows) {
+        if (!row.bead) continue;const auto &p=row.motion;const auto &b=*row.bead;
+        REQUIRE(b.kind==BeadSectionKind::RoundedRectangle);REQUIRE(b.gap_begin_mm==b.gap_end_mm);REQUIRE(p.start.z()==p.end.z());
+        if (!height) {height=b.gap_begin_mm;top=p.start.z();}
+        REQUIRE(Q(b.gap_begin_mm)==*height);REQUIRE(Q(p.start.z())==*top);
+        const bool x=p.start.y()==p.end.y();const Q a=x ? p.start.x() : p.start.y(),z=x ? p.end.x() : p.end.y();
+        const Q area=Q(std::get<Deposition>(p.payload).volume.value())/abs(z-a);
+        const Q core=(area/ *height+(1-pi/4)* *height- *height)/2;REQUIRE(core>=0);
+        sections.push_back({x,std::min(a,z),std::max(a,z),x ? Q(p.start.y()) : Q(p.start.x()),core});
+    }
+    REQUIRE(height);const Q h=*height,r=h/2;
+    const auto area=[&](const Q &depth) {
+        const Q radius=sqrt(depth*(h-depth));std::vector<std::array<Q,4>> rectangles;std::vector<Q> cuts;
+        for (const auto &p : sections) {
+            const Q a=p.centre-p.core-radius,b=p.centre+p.core+radius;
+            const std::array<Q,4> box=p.x ? std::array<Q,4>{p.lo,p.hi,a,b} : std::array<Q,4>{a,b,p.lo,p.hi};
+            rectangles.push_back(box);cuts.push_back(box[0]);cuts.push_back(box[1]);
+        }
+        std::sort(cuts.begin(),cuts.end());cuts.erase(std::unique(cuts.begin(),cuts.end()),cuts.end());Q result=0;
+        for (size_t i=1;i<cuts.size();++i) {
+            const Q mid=(cuts[i-1]+cuts[i])/2;std::vector<std::pair<Q,Q>> intervals;
+            for (const auto &p : rectangles) if (p[0]<mid && mid<p[1]) intervals.emplace_back(p[2],p[3]);
+            std::sort(intervals.begin(),intervals.end());std::optional<std::pair<Q,Q>> current;Q length=0;
+            for (auto p : intervals) {
+                if (!current) current=p;
+                else if (p.first<=current->second) current->second=std::max(current->second,p.second);
+                else {length+=current->second-current->first;current=p;}
+            }
+            if (current) length+=current->second-current->first;result+=(cuts[i]-cuts[i-1])*length;
+        }
+        return result;
+    };
+    // All constant-height cross-sections grow monotonically on the lower
+    // half. Independent exact rectangle sweeps at 2048 height levels bracket
+    // the integral by left/right sums, including all triple multiplicity.
+    const size_t count=2048;Q low=0,high=0,previous=area(Q(0));
+    for (size_t i=1;i<=count;++i) {const Q next=area(r*Q(i)/Q(count));low+=previous;high+=next;previous=next;}
+    const Q pad("1e-20");low=low*h/Q(count)-pad;high=high*h/Q(count)+pad;
+    REQUIRE(high-low<Q(.0001));return {low,high};
+}
+}
+
+TEST_CASE("B07 first cap end replan preserves contours and replaces the whole prospective ledger", "[Nonplanar][B07][FirstCapEndReplan]")
+{
+    STATIC_REQUIRE(first_cap_contract_version==2);
+    STATIC_REQUIRE(first_cap_replan_contract_version==1);
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapReplanSnapshot>::value);
+    const SceneBox box{{1,-.8,.7},{3,.8,1.84}};
+    for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) for (bool sloped : {false,true}) {
+        const auto hatches=first_cap_fixture(direction,sloped);
+        const auto before=plan_first_cap(hatches,{WidthXY(.45),direction==HatchDirection::AlongX ? 0u : 2u,sloped,Volume(.001)},box);REQUIRE(before.snapshot);
+        FirstHatchLayerLimits complete;complete.max_cells=65535;complete.volumes.max_cells=65535;complete.volumes.max_evaluations=2000000;
+        complete.timeout=complete.beads.timeout=complete.beads.packets.timeout=complete.volumes.timeout=std::chrono::seconds(5);
+        const auto result=replan_first_cap_ends(before,{},complete);INFO(result.reason);REQUIRE(result.snapshot);
+        const auto &r=*result.snapshot;const auto &after=*r.after;
+        REQUIRE(r.before==before.snapshot);REQUIRE(after.source==r.before->source);
+        REQUIRE(r.before->hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(after.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+        REQUIRE(after.fill->target==r.before->fill->target);REQUIRE(after.paths.size()==r.before->paths.size());
+        REQUIRE(after.replaced_boundary_lines==r.before->replaced_boundary_lines);
+        REQUIRE(after.fill->occupied->source->sequence!=r.before->fill->occupied->source->sequence);
+        REQUIRE(after.global_volume_error_mm3<=.001);REQUIRE(after.fill->outside_target_mm3.upper<=.001);
+        REQUIRE(r.covered_gain_mm3.lower>=.001);REQUIRE(r.missing_reduction_mm3.lower>=.001);
+        REQUIRE(after.fill->missing_target_mm3.lower>0);
+        using Q=boost::multiprecision::cpp_bin_float_quad;Q amount=0;
+        const bool x=direction==HatchDirection::AlongX;const auto axis=[&](PhysicalPosition p) {return x ? p.x() : p.y();};
+        for (size_t i=0;i<after.paths.size();++i) {
+            const auto &path=*after.paths[i],&old=*r.before->paths[i];REQUIRE(path.source==after.source);
+            if (i<4) REQUIRE(after.paths[i]==r.before->paths[i]);
+            else {
+                REQUIRE(path.line_index==old.line_index);REQUIRE(axis(path.path_start)<axis(old.path_start));REQUIRE(axis(path.path_end)>axis(old.path_end));
+                REQUIRE(path.path_start.z()<=old.path_start.z());REQUIRE(path.path_end.z()>=old.path_end.z());
+                const auto values=[](const FixedWidthBeadPiece &p) {
+                    return std::make_tuple(p.start.x(),p.start.y(),p.start.z(),p.end.x(),p.end.y(),p.end.z(),
+                        p.nominal_width.value(),p.volume.value(),p.section.kind,p.section.gap_begin_mm,p.section.gap_end_mm,
+                        p.section.width_mm.lower,p.section.width_mm.upper,p.width_error_upper_mm,p.coordinate_error_upper_mm);
+                };
+                size_t offset=0;
+                while (offset<path.pieces.size() && values(path.pieces[offset])!=values(old.pieces.front())) ++offset;
+                REQUIRE(offset>0);REQUIRE(offset+old.pieces.size()<path.pieces.size());
+                for (size_t n=0;n<old.pieces.size();++n) REQUIRE(values(path.pieces[offset+n])==values(old.pieces[n]));
+                const auto &roi=after.source->source->surfaces.front().cell.footprint;
+                const Q band=after.source->policy.boundary_band.value(),numeric=after.source->numerical_error_upper_mm;
+                REQUIRE(Q(axis(path.path_start))>=Q(x ? roi.min_x : roi.min_y)+band+numeric);
+                REQUIRE(Q(axis(path.path_end))<=Q(x ? roi.max_x : roi.max_y)-band-numeric);
+            }
+            const Q h0=Q(path.path_start.z())-1,h1=Q(path.path_end.z())-1;
+            const Q length=sqrt(pow(Q(path.path_end.x())-path.path_start.x(),2)+pow(Q(path.path_end.y())-path.path_start.y(),2));
+            const Q ideal=length*(Q(.45)*(h0+h1)/2-(1-acos(Q(-1))/4)*(h0*h0+h0*h1+h1*h1)/3);
+            REQUIRE(Q(path.actual_target_volume_mm3.lower)<=ideal);REQUIRE(Q(path.actual_target_volume_mm3.upper)>=ideal);
+            for (const auto &p : path.pieces) amount+=p.volume.value();
+        }
+        REQUIRE(Q(after.deposited_volume_mm3.lower)<=amount);REQUIRE(Q(after.deposited_volume_mm3.upper)>=amount);
+        const auto cursor=after.fill->occupied->source;const auto &rows=cursor->sequence->records;Q ledger=0;size_t index=0;
+        for (const auto &path : after.paths) {
+            if (index && (rows[index-1].motion.end.x()!=path->path_start.x() || rows[index-1].motion.end.y()!=path->path_start.y() || rows[index-1].motion.end.z()!=path->path_start.z())) {
+                REQUIRE(std::holds_alternative<Travel>(rows[index].motion.payload));++index;
+            }
+            for (const auto &p : path->pieces) {
+                REQUIRE(index<rows.size());
+                REQUIRE(rows[index].motion.start.x()==p.start.x());REQUIRE(rows[index].motion.start.y()==p.start.y());REQUIRE(rows[index].motion.start.z()==p.start.z());
+                REQUIRE(rows[index].motion.end.x()==p.end.x());REQUIRE(rows[index].motion.end.y()==p.end.y());REQUIRE(rows[index].motion.end.z()==p.end.z());
+                REQUIRE(std::get<Deposition>(rows[index].motion.payload).volume.value()==p.volume.value());ledger+=p.volume.value();++index;
+            }
+        }
+        REQUIRE(index==rows.size());REQUIRE(ledger==amount);REQUIRE(cursor->completed_records==rows.size());REQUIRE(cursor->current_progress==0);
+        if (!sloped) {
+            const auto integral=independent_flat_union(rows);
+            const auto overlaps=[&](ScalarBounds v,const Q &low,const Q &high) {REQUIRE(Q(v.lower)<=high);REQUIRE(Q(v.upper)>=low);};
+            overlaps(after.fill->occupied->union_volume_mm3,integral.first,integral.second);
+            overlaps(after.fill->covered_target_mm3,integral.first,integral.second);
+            overlaps(after.fill->occupied->repeated_volume_mm3,amount-integral.second,amount-integral.first);
+            const auto &surface=after.source->source->surfaces.front().cell;const auto &roi=surface.footprint;
+            const Q target=(Q(roi.max_x)-roi.min_x)*(Q(roi.max_y)-roi.min_y)*(Q(surface.z00)-1);
+            overlaps(after.fill->missing_target_mm3,target-integral.second,target-integral.first);
+        }
+    }
+}
+
+TEST_CASE("B07 first cap end replan refuses stale repeated coarse and exhausted requests", "[Nonplanar][B07][FirstCapEndReplan]")
+{
+    auto before=plan_first_cap(first_cap_fixture(HatchDirection::AlongX),{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(before.snapshot);
+    const auto source=before.snapshot;FirstCapReplanPolicy policy;
+    FirstHatchLayerLimits complete;complete.max_cells=65535;complete.volumes.max_cells=65535;complete.volumes.max_evaluations=2000000;
+    complete.timeout=complete.beads.timeout=complete.beads.packets.timeout=complete.volumes.timeout=std::chrono::seconds(5);
+    FirstHatchLayerLimits limits=complete;
+    limits.cancelled=[&] {before.snapshot.reset();policy.minimum_covered_gain=Volume(10);limits.max_paths=0;return false;};
+    const auto owned=replan_first_cap_ends(before,policy,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->before==source);
+    before.snapshot=source;policy={};limits=complete;REQUIRE_FALSE(replan_first_cap_ends({},policy,limits).snapshot);
+    REQUIRE_FALSE(replan_first_cap_ends({"",owned.snapshot->after},policy,limits).snapshot);
+    policy.minimum_covered_gain=Volume(10);REQUIRE_FALSE(replan_first_cap_ends(before,policy,limits).snapshot);
+    policy={};policy.maximum_outside_target=Volume(0);REQUIRE_FALSE(replan_first_cap_ends(before,policy,limits).snapshot);
+    policy={};policy.minimum_covered_gain=Volume(0);REQUIRE_FALSE(replan_first_cap_ends(before,policy,limits).snapshot);
+    policy={};const auto retained=source->paths.front()->actual_target_volume_mm3;
+    REQUIRE(retained.upper>retained.lower);limits.beads.packets.maximum_volume_error=Volume((retained.upper-retained.lower)/16);REQUIRE_FALSE(replan_first_cap_ends(before,policy,limits).snapshot);
+    for (int mode=0;mode<9;++mode) {
+        limits=complete;
+        if (mode==0) limits.max_paths=4;
+        if (mode==1) limits.max_records=1;
+        if (mode==2) limits.max_evaluations=1;
+        if (mode==3) limits.max_cells=1;
+        if (mode==4) limits.beads.packets.max_segments=1;
+        if (mode==5) limits.cancelled=[] {return true;};
+        if (mode==6) limits.is_current=[](uint64_t) {return false;};
+        if (mode==7) {limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if (mode==8) limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+        const auto result=replan_first_cap_ends(before,policy,limits);
+        if (mode==8) REQUIRE(std::fesetround(FE_TONEAREST)==0);
+        INFO(mode << ' ' << result.reason);REQUIRE_FALSE(result.snapshot);
+    }
+    limits=complete;size_t callbacks=0;limits.cancelled=[&] {++callbacks;return false;};REQUIRE(replan_first_cap_ends(before,policy,limits).snapshot);
+    const auto total=callbacks;callbacks=0;limits.cancelled=[&] {return ++callbacks==total;};
+    REQUIRE_FALSE(replan_first_cap_ends(before,policy,limits).snapshot);REQUIRE(callbacks==total);
+}
+
+TEST_CASE("B07 parallel triple multiplicity agrees with a separate flat-section integral", "[Nonplanar][B07][MaterialUnion][ParallelMultiplicity]")
+{
+    using Q=CapAmount;
+    for (bool x : {false,true}) for (bool reverse : {false,true}) {
+        std::vector<MaterialRecord> rows;Q sum=0;
+        for (size_t i=0;i<3;++i) {
+            const double centre=-.09+.11*i;auto a=x ? PhysicalPosition(0,centre,1.2) : PhysicalPosition(centre,0,1.2);
+            auto b=x ? PhysicalPosition(2,centre,1.2) : PhysicalPosition(centre,2,1.2);if (reverse) std::swap(a,b);
+            if (!rows.empty()) {const size_t n=rows.size();rows.push_back({{n+1,n,0,rows.back().motion.end,a,Speed(10),Acceleration(100),Travel{}},{}});}
+            auto row=bead(rows.size()+1,rows.size(),a,b,.45+.02*i,.2,.2);sum+=std::get<Deposition>(row.motion.payload).volume.value();rows.push_back(row);
+        }
+        const auto ledger=captured(rows);const auto integral=independent_flat_union(rows);const auto state=material_at(ledger,rows.size(),0);
+        MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.0001);
+        const auto result=integrate_material_union(state.nominal,{{-1,-1,.7},{3,3,1.5}},limits);INFO(result.reason);REQUIRE(result.snapshot);
+        REQUIRE(Q(result.snapshot->union_volume_mm3.lower)<=integral.second);REQUIRE(Q(result.snapshot->union_volume_mm3.upper)>=integral.first);
+        REQUIRE(Q(result.snapshot->repeated_volume_mm3.lower)<=sum-integral.first);REQUIRE(Q(result.snapshot->repeated_volume_mm3.upper)>=sum-integral.second);
+        REQUIRE(Q(result.snapshot->individual_volume_mm3.lower)<=sum);REQUIRE(Q(result.snapshot->individual_volume_mm3.upper)>=sum);
+        limits.max_cells=1;REQUIRE_FALSE(integrate_material_union(state.nominal,{{-1,-1,.7},{3,3,1.5}},limits).snapshot);
+    }
+}
+
+TEST_CASE("B07 first cap end replan checks ridges outside the original contour footprint", "[Nonplanar][B07][FirstCapEndReplan]")
+{
+    for (bool x : {false,true}) {
+        const auto point=[&](double a,double b,double z) {return x ? PhysicalPosition(a,b,z) : PhysicalPosition(b,a,z);};
+        const auto floor=bead(1,0,point(0,0,1),point(10,0,1),2,.4,.4,BeadSectionKind::Rectangle);
+        const auto ridge=bead(3,2,point(1.1,.55,1.06),point(1.2,.55,1.06),.02,.05,.05,BeadSectionKind::Rectangle);
+        const MaterialRecord travel{{2,1,0,floor.motion.end,ridge.motion.start,Speed(10),Acceleration(100),Travel{}},{}};
+        const auto ledger=captured({floor,travel,ridge});const RectangleXY roi=x ? RectangleXY{1,-.8,3,.8} : RectangleXY{-.8,1,.8,3};
+        const SceneBox box{{roi.min_x,roi.min_y,.7},{roi.max_x,roi.max_y,1.84}};
+        const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.0001)};
+        FirstHatchLayerLimits complete;complete.volumes.max_cells=65535;complete.volumes.max_evaluations=2000000;
+        complete.beads.timeout=complete.beads.packets.timeout=complete.volumes.timeout=std::chrono::seconds(5);
+        for (bool present : {false,true}) {
+            const auto state=material_at(ledger,present ? 3 : 1,0);
+            const auto stack=plan_affine_pass_stack(state.lower,{roi,1.8,1.8,1.8},.9,policy);INFO(stack.reason);REQUIRE(stack.snapshot);
+            const auto hatches=plan_affine_hatches(stack,{WidthXY(.45),Length(.2),Length(.05),x ? HatchDirection::AlongX : HatchDirection::AlongY});REQUIRE(hatches.snapshot);
+            const auto cap=plan_first_cap(hatches,{WidthXY(.45),0,false,Volume(.001)},box,complete);INFO(cap.reason);REQUIRE(cap.snapshot);
+            const auto result=replan_first_cap_ends(cap,{},complete);INFO(result.reason);
+            if (present) REQUIRE_FALSE(result.snapshot);else REQUIRE(result.snapshot);
+        }
+    }
+}
+
+TEST_CASE("B07 affine triple multiplicity encloses the independently integrated merged cores", "[Nonplanar][B07][MaterialUnion][ParallelMultiplicity]")
+{
+    using Q=boost::multiprecision::cpp_bin_float_quad;
+    for (bool x : {false,true}) for (bool reverse : {false,true}) {
+        std::vector<MaterialRecord> rows;std::vector<Q> amounts;Q sum=0;
+        for (size_t i=0;i<3;++i) {
+            const double centre=-.09+.11*i;auto a=x ? PhysicalPosition(0,centre,1.125) : PhysicalPosition(centre,0,1.125);
+            auto b=x ? PhysicalPosition(2,centre,1.1875) : PhysicalPosition(centre,2,1.1875);if (reverse) std::swap(a,b);
+            if (!rows.empty()) {const size_t n=rows.size();rows.push_back({{n+1,n,0,rows.back().motion.end,a,Speed(10),Acceleration(100),Travel{}},{}});}
+            auto row=bead(rows.size()+1,rows.size(),a,b,.45+.02*i,reverse ? .1875 : .125,reverse ? .125 : .1875);
+            amounts.emplace_back(std::get<Deposition>(row.motion.payload).volume.value());sum+=amounts.back();rows.push_back(row);
+        }
+        const Q h0=.125,h1=.1875,pi=acos(Q(-1));
+        for (size_t i=1;i<3;++i) {
+            const Q separation=Q(-.09+.11*i)-Q(-.09+.11*(i-1));
+            const Q core0=amounts[i-1]/2/h1/2-pi*h1/8,core1=amounts[i]/2/h1/2-pi*h1/8;
+            REQUIRE(separation<=core0+core1);
+            REQUIRE(separation>(amounts[i]-amounts[i-1])/2/h0/2); // Outer edges retain the first/last owners.
+        }
+        const Q span=Q(-.09+.11*2)-Q(-.09),united=(amounts.front()+amounts.back())/2+2*span*(h0+h1)/2;
+        const auto ledger=captured(rows);const auto state=material_at(ledger,rows.size(),0);
+        MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.0001);limits.max_cells=65535;limits.max_evaluations=2000000;limits.timeout=std::chrono::seconds(5);
+        const auto result=integrate_material_union(state.nominal,{{-1,-1,.7},{3,3,1.5}},limits);INFO(result.reason);REQUIRE(result.snapshot);
+        REQUIRE(Q(result.snapshot->union_volume_mm3.lower)<=united);REQUIRE(Q(result.snapshot->union_volume_mm3.upper)>=united);
+        REQUIRE(Q(result.snapshot->repeated_volume_mm3.lower)<=sum-united);REQUIRE(Q(result.snapshot->repeated_volume_mm3.upper)>=sum-united);
+        limits.max_cells=1;REQUIRE_FALSE(integrate_material_union(state.nominal,{{-1,-1,.7},{3,3,1.5}},limits).snapshot);
+    }
+}

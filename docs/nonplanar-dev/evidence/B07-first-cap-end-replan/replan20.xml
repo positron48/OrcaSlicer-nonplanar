@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="583" hostname="tbd" time="17.218" timestamp="2026-10-01T21:09:37Z">
+    <properties>
+      <property name="random-seed" value="2689917848"/>
+      <property name="filters" value="[FirstCapEndReplan],[ParallelMultiplicity]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 parallel triple multiplicity agrees with a separate flat-section integral" time="0.011" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan checks ridges outside the original contour footprint" time="3.022" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan refuses stale repeated coarse and exhausted requests" time="7.621" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 affine triple multiplicity encloses the independently integrated merged cores" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap end replan preserves contours and replaces the whole prospective ledger" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+MATERIAL_DEADLINE end=1 width=0.000384 paths=9 packets=68 cells=40366 work=1667325
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2740
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

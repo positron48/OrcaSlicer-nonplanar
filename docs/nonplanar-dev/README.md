@@ -13,15 +13,17 @@ Branch: `feature/nonplanar-bootstrap`, published to
 Bootstrap: `1ad7bdad`; A04: `93192ca7`. `status.json` is the current checkpoint; its `SELF`
 revision resolves with the included Git command.
 
-## Current checkpoint — 2026-10-01
+## Current checkpoint — 2026-10-02
 
-`B07-material-voids.md` and ADR-0057 now partition nominal target deficit into
-under-material and vertically clear volumes from the original occupied prefix.
-Six analytical cases / 516 assertions include independent circular/cubic
-variable-gap integrals. The unchanged native 161-packet cap retains approximately
-.0084 mm3 under-material and .0989 mm3 clear deficit with .001 mm3 precision.
-The short work policy still refuses; the existing complete candidate policy
-bounds the full measure. Complete fill/seam/contact and export remain pending.
+`B07-first-cap-end-replan.md` and ADR-0058 now retain all contour/central packets
+and qualify two new finite end strips per interior owner. One fresh whole ledger
+measures positive coverage gain with the original target, band, losses and
+.001 mm3 native precision. The native cap grows from 161 to 173 packets; missing
+volume falls from about .1074 to .0958 mm3 and clear deficit to about .0866 mm3.
+All six run joins and 173 complete flat-floor interface packets pass. Five new
+cases / 2727 assertions, combined 97 material / 14 native-body cases and selected
+342/342 CTest pass; six fresh OFF/ZAA comparisons pass. Under-material voids,
+allowable repeated material, full 3D seam/fill/contact and export remain pending.
 
 
 The current implementation boundary is exact pre-apply native source ownership

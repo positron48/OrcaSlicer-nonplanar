@@ -1,0 +1,263 @@
+Filters: [FirstCapEndReplan],[ParallelMultiplicity]
+Randomness seeded to: 381708472
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 parallel triple multiplicity agrees with a separate flat-section integral
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2831
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa9ec8ec78
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20000000000000001 == 0.20000000000000001
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.19999999999999996 == 1.19999999999999996
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.2 == 0.2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.2 == 1.2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.125 >= 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20000000000000001 == 0.20000000000000001
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.19999999999999996 == 1.19999999999999996
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.2 == 0.2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.2 == 1.2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.135 >= 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20000000000000001 == 0.20000000000000001
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.19999999999999996 == 1.19999999999999996
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.2 == 0.2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.2 == 1.2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.145 >= 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2697: PASSED:
+  REQUIRE( height )
+with expansion:
+  {?}
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2725: PASSED:
+  REQUIRE( high-low<Q(.0001) )
+with expansion:
+  3.90625e-05 < 0.0001
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2844: FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+with message:
+  MATERIAL_UNION_CELL_LIMIT
+
+-------------------------------------------------------------------------------
+B07 first cap end replan refuses stale repeated coarse and exhausted requests
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2796
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa9ec8ec78
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2069: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x104d9e3b0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2070: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0xa9f027790
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2798: PASSED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0xa9ec09bc0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2804: FAILED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0
+with message:
+  MATERIAL_UNION_CELL_LIMIT paths=9 packets=9 cells=65535 work=937271
+  union_width=0.001571
+
+-------------------------------------------------------------------------------
+B07 first cap end replan preserves contours and replaces the whole prospective
+ledger
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2729
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2731: PASSED:
+with message:
+  first_cap_contract_version==2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2732: PASSED:
+with message:
+  first_cap_replan_contract_version==1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2733: PASSED:
+with message:
+  !(std::is_aggregate<FirstCapReplanSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa9ec8ec78
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2069: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x104da1610
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2070: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0xaa00bc000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2737: PASSED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0xa9ec09bc0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2740: FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+with message:
+  MATERIAL_UNION_CELL_LIMIT paths=9 packets=9 cells=65535 work=937271
+  union_width=0.001571
+
+-------------------------------------------------------------------------------
+B07 first cap end replan checks ridges outside the original contour footprint
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2852
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa9ec8ec78
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2866: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0xa9cf68000
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2867: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0xa9f027790
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2868: PASSED:
+  REQUIRE( cap.snapshot )
+with expansion:
+  0xa9ec09bc0
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CONTOUR_AND_INTERIOR_HATCH_CANDIDATE_WITH_MEASURED_JOINT_FILL_-
+  ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2870: FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CONTOUR_AND_INTERIOR_HATCH_CANDIDATE_WITH_MEASURED_JOINT_FILL_-
+  ONLY
+  MATERIAL_UNION_CELL_LIMIT paths=9 packets=9 cells=65535 work=947151
+  union_width=0.002578
+
+===============================================================================
+test cases:  4 |  0 passed | 4 failed
+assertions: 40 | 36 passed | 4 failed
+

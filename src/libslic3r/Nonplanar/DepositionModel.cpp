@@ -1684,6 +1684,56 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                         std::array<ScalarBounds,3>{bounds(united),bounds(individual),bounds(repeated)},cells,evaluations,provisional_union,provisional_excess};
                 }
             }
+            // Parallel stadia sharing affine top/gap graphs fill the span
+            // between their centres when adjacent flat cores merge. Unequal
+            // actual doses are allowed only if every outer shoulder retains
+            // its centre order throughout the whole positive gap interval.
+            if (supported && groups.size()>=3 && groups.begin()->first.first==groups.rbegin()->first.first) {
+                const bool x=groups.begin()->first.first;bool qualified=true;
+                struct Profile {double lo,hi,z0,z1,h0,h1,amount;};
+                const auto profile=[&](size_t i) {
+                    const auto &m=sequence->records[i].motion;const auto &b=*sequence->records[i].bead;
+                    const double a=x ? m.start.x() : m.start.y(),z=x ? m.end.x() : m.end.y();const bool forward=a<z;
+                    return Profile{std::min(a,z),std::max(a,z),forward ? m.start.z() : m.end.z(),forward ? m.end.z() : m.start.z(),
+                        forward ? b.gap_begin_mm : b.gap_end_mm,forward ? b.gap_end_mm : b.gap_begin_mm,std::get<Deposition>(m.payload).volume.value()};
+                };
+                for (auto &g : groups) {
+                    evaluate();if (g.second.size()!=groups.begin()->second.size()) {qualified=false;break;}
+                    std::sort(g.second.begin(),g.second.end(),[&](size_t a,size_t b) {evaluate();return profile(a).lo<profile(b).lo;});
+                }
+                Exact occupied(0);std::optional<double> previous;
+                const Exact span=Exact(groups.rbegin()->first.second)-Exact(groups.begin()->first.second);
+                for (size_t n=0;qualified && n<groups.begin()->second.size();++n) {
+                    evaluate();const auto first=profile(groups.begin()->second[n]),last=profile(groups.rbegin()->second[n]);
+                    if (previous && first.lo<*previous) {qualified=false;break;}
+                    const Exact length=Exact(first.hi)-Exact(first.lo),minimum_gap(std::min(first.h0,first.h1));
+                    const Interval maximum_gap(std::max(first.h0,first.h1));
+                    std::optional<std::pair<double,Profile>> prior;
+                    for (const auto &g : groups) {
+                        evaluate();const auto p=profile(g.second[n]);
+                        if (std::tie(p.lo,p.hi,p.z0,p.z1,p.h0,p.h1)!=std::tie(first.lo,first.hi,first.z0,first.z1,first.h0,first.h1)) {qualified=false;break;}
+                        if (prior) {
+                            const Exact separation=Exact(g.first.second)-Exact(prior->first);
+                            const auto a=section_width(exact_interval(Exact(p.amount)/length),maximum_gap,BeadSectionKind::RoundedRectangle)-maximum_gap;
+                            const auto b=section_width(exact_interval(Exact(prior->second.amount)/length),maximum_gap,BeadSectionKind::RoundedRectangle)-maximum_gap;
+                            if (a.lo<0 || b.lo<0 || exact_interval(separation).hi>((a+b)/Interval(2)).lo ||
+                                separation<abs(Exact(p.amount)-Exact(prior->second.amount))/(Exact(2)*length*minimum_gap)) {qualified=false;break;}
+                        }
+                        prior=std::pair<double,Profile>{g.first.second,p};
+                    }
+                    if (!qualified) break;
+                    occupied+=(Exact(first.amount)+Exact(last.amount))/Exact(2)+span*length*(Exact(first.h0)+Exact(first.h1))/Exact(2);previous=first.hi;
+                }
+                if (qualified) {
+                    const size_t count=active.size();if (count>limits.max_cells-cells) reject("MATERIAL_UNION_CELL_LIMIT");cells+=count;
+                    const auto united=exact_interval(occupied),individual=exact_interval(*full_individual),repeated=exact_interval(*full_individual-occupied);
+                    for (auto v : {united,individual,repeated}) if (v.lo<0 || (Interval(v.hi)-Interval(v.lo)).hi>limits.maximum_interval_width.value())
+                        reject("MATERIAL_UNION_PARALLEL_PRECISION");
+                    provisional_union=bounds(united);provisional_excess=bounds(repeated);poll();
+                    return {"BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY",
+                        std::array<ScalarBounds,3>{bounds(united),bounds(individual),bounds(repeated)},cells,evaluations,provisional_union,provisional_excess};
+                }
+            }
             // A loop with congruent primary packets and two constant
             // transverse ends. Adjacent flat cores must merge, so the primary
             // union fills its whole centre span even with multiple infill rows
@@ -1713,10 +1763,17 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                             return LoopPacket{std::min(a,z),std::max(a,z),forward ? m.start.z() : m.end.z(),forward ? m.end.z() : m.start.z(),
                                 forward ? b.gap_begin_mm : b.gap_end_mm,forward ? b.gap_end_mm : b.gap_begin_mm,std::get<Deposition>(m.payload).volume.value()};
                         };
-                        std::vector<std::vector<size_t>> lists;bool loop=true;
+                        const double begin=ends[0]->first.second,last=ends[1]->first.second;
+                        std::vector<std::vector<size_t>> lists;bool loop=begin<last,extended=false;
                         for (const auto *group : main) {
-                            evaluate();if (group->second.size()!=main.front()->second.size()) {loop=false;break;}
-                            lists.push_back(group->second);
+                            evaluate();lists.emplace_back();
+                            for (size_t i : group->second) {
+                                evaluate();const auto p=packet(i);
+                                if (p.lo>=begin && p.hi<=last) lists.back().push_back(i);
+                                else if ((p.hi<=begin || p.lo>=last) && group!=main.front() && group!=main.back()) extended=true;
+                                else {loop=false;break;}
+                            }
+                            if (!loop || lists.back().empty() || lists.back().size()!=lists.front().size()) {loop=false;break;}
                             std::sort(lists.back().begin(),lists.back().end(),[&](size_t a,size_t b) {evaluate();return packet(a).lo<packet(b).lo;});
                         }
                         const Exact span=Exact(main.back()->first.second)-Exact(main.front()->first.second);std::vector<LoopPacket> lofts;Exact volume(0);
@@ -1733,14 +1790,14 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                             if (!loop) break;
                             volume+=Exact(a.amount)+span*(Exact(a.hi)-Exact(a.lo))*(Exact(a.h0)+Exact(a.h1))/Exact(2);lofts.push_back(a);
                         }
-                        struct LoopEnd {Exact centre,zmid;Interval core,radius,half;};std::vector<LoopEnd> sides;
+                        struct LoopEnd {Exact centre,zmid;Interval core,radius,half;};std::vector<LoopEnd> sides;Exact end_amount(0);
                         for (size_t n=0;loop && n<2;++n) {
                             evaluate();const auto &row=sequence->records[ends[n]->second[0]];const auto &m=row.motion;const auto &b=*row.bead;
                             const double a=x ? m.start.y() : m.start.x(),z=x ? m.end.y() : m.end.x();
                             if (std::min(a,z)!=main.front()->first.second || std::max(a,z)!=main.back()->first.second || m.start.z()!=m.end.z() ||
                                 b.gap_begin_mm!=b.gap_end_mm || ends[n]->first.second!=(n ? lofts.back().hi : lofts.front().lo) ||
                                 m.start.z()!=(n ? lofts.back().z1 : lofts.front().z0)) {loop=false;break;}
-                            const Exact amount(std::get<Deposition>(m.payload).volume.value());volume+=amount;
+                            const Exact amount(std::get<Deposition>(m.payload).volume.value());volume+=amount;end_amount+=amount;
                             const auto h=Interval(b.gap_begin_mm),r=exact_interval(Exact(b.gap_begin_mm)/Exact(2));
                             const auto c=(section_width(exact_interval(amount/span),h,b.kind)-h)/Interval(2);
                             if (c.lo<0) {loop=false;break;}
@@ -1791,9 +1848,45 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                                 if (raw.lo>individual.hi) reject("MATERIAL_UNION_LOFT_LOOP_INCONSISTENT");
                                 const Interval united(std::max(0.,raw.lo),std::min(raw.hi,individual.hi));const auto excess=individual-united;
                                 const Interval repeated(std::max(0.,excess.lo),std::max(0.,excess.hi));
-                                provisional_union=bounds(united);provisional_excess=bounds(repeated);
-                                if ((Interval(united.hi)-Interval(united.lo)).hi<=limits.maximum_interval_width.value() &&
-                                    (Interval(repeated.hi)-Interval(repeated.lo)).hi<=limits.maximum_interval_width.value()) {
+                                if (!extended) {provisional_union=bounds(united);provisional_excess=bounds(repeated);}
+                                const double precision=extended ? (Interval(limits.maximum_interval_width.value())/Interval(8)).lo : limits.maximum_interval_width.value();
+                                if ((Interval(united.hi)-Interval(united.lo)).hi<=precision &&
+                                    (Interval(repeated.hi)-Interval(repeated.lo)).hi<=precision) {
+                                    if (extended) {
+                                        // Disjoint spatial partition at the original end centrelines.
+                                        // The old loop formula includes each outer half end section;
+                                        // remove those halves before adding the two clipped new unions.
+                                        // All children share the original deadline and remaining work.
+                                        Interval total=united-exact_interval(end_amount/Exact(2));
+                                        // Reserve the measured central width and one percent for
+                                        // outward arithmetic; share only the remaining width.
+                                        const double end_precision=((Interval(limits.maximum_interval_width.value())-
+                                            (Interval(united.hi)-Interval(united.lo)))*Interval(.99)/Interval(2)).lo;
+                                        for (size_t e=0;e<2;++e) {
+                                            poll();if (cells>=limits.max_cells || evaluations>=limits.max_evaluations) reject("MATERIAL_UNION_WORK_LIMIT");
+                                            auto remaining=limits;remaining.max_cells-=cells;remaining.max_evaluations-=evaluations;
+                                            remaining.maximum_interval_width=Volume(end_precision);
+                                            const double cut=e ? last : begin;
+                                            const SceneBox part{
+                                                PhysicalPosition{e && x ? cut : domain.min.x(),e && !x ? cut : domain.min.y(),domain.min.z()},
+                                                PhysicalPosition{!e && x ? cut : domain.max.x(),!e && !x ? cut : domain.max.y(),domain.max.z()}};
+                                            const auto child=union_integral(cursor,part,remaining,started);
+                                            cells+=child.cells;evaluations+=child.evaluations;
+                                            if (!child.amounts) throw Rejection(child.reason+" end="+std::to_string(e)+
+                                                (child.provisional_union ? " width="+std::to_string(child.provisional_union->upper-child.provisional_union->lower) : ""));
+                                            poll();
+                                            total=total+interval((*child.amounts)[0]);
+                                        }
+                                        const auto excess=individual-total;
+                                        const Interval repeated_total(std::max(0.,excess.lo),std::max(0.,excess.hi));
+                                        if (total.lo<0 || total.lo>individual.hi ||
+                                            (Interval(total.hi)-Interval(total.lo)).hi>limits.maximum_interval_width.value() ||
+                                            (Interval(repeated_total.hi)-Interval(repeated_total.lo)).hi>limits.maximum_interval_width.value())
+                                            reject("MATERIAL_UNION_EXTENDED_LOOP_PRECISION");
+                                        provisional_union=bounds(total);provisional_excess=bounds(repeated_total);poll();
+                                        return {"BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY",
+                                            std::array<ScalarBounds,3>{bounds(total),bounds(individual),bounds(repeated_total)},cells,evaluations,provisional_union,provisional_excess};
+                                    }
                                     poll();return {"BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY",
                                         std::array<ScalarBounds,3>{bounds(united),bounds(individual),bounds(repeated)},cells,evaluations,provisional_union,provisional_excess};
                                 }
@@ -1858,6 +1951,47 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                 poll();return {"BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY",amounts,cells,evaluations,provisional_union,provisional_excess};
             }
         }
+        // Exact individual mass remains available when a box clips only a
+        // finite longitudinal strip, or bisects a constant axis section on its
+        // symmetry plane. This does not prove union occupancy or fill gaps.
+        if (clip_kind==UnionClip::Box && !full_individual) {
+            Exact amount(0);bool exact=true;
+            for (size_t i : active) {
+                evaluate();const auto &row=sequence->records[i];const auto &m=row.motion;const auto &b=*row.bead;
+                const bool x=m.start.y()==m.end.y(),y=m.start.x()==m.end.x();
+                if (x==y || !whole_vertical[i]) {exact=false;break;}
+                const size_t axis=x ? 0 : 1,normal=1-axis;const auto &box=xy_bounds[i];
+                const double low[2]{domain.min.x(),domain.min.y()},high[2]{domain.max.x(),domain.max.y()};
+                const Exact start(x ? m.start.x() : m.start.y()),end(x ? m.end.x() : m.end.y());
+                const Exact current=start+(end-start)*Exact(progress(i));
+                const Exact lo=std::max(std::min(start,current),Exact(low[axis])),hi=std::min(std::max(start,current),Exact(high[axis]));
+                if (lo>=hi) continue;
+                Exact fraction(1);
+                if (box[normal*2]<low[normal] || box[normal*2+1]>high[normal]) {
+                    const double centre=x ? m.start.y() : m.start.x();
+                    if (b.gap_begin_mm!=b.gap_end_mm ||
+                        !((low[normal]==centre && box[normal*2+1]<=high[normal]) ||
+                          (high[normal]==centre && box[normal*2]>=low[normal]))) {exact=false;break;}
+                    fraction=Exact(1)/Exact(2);
+                }
+                const Exact length=end>start ? end-start : start-end;
+                amount+=Exact(std::get<Deposition>(m.payload).volume.value())*(hi-lo)/length*fraction;
+            }
+            if (exact) full_individual=amount;
+        }
+        // Envelopes choose finite-end split planes only, never occupancy.
+        // Keep internal packet seams out of this hint; the continuous solver
+        // below still retains real holes and every packet's actual profile.
+        std::map<std::pair<bool,double>,std::array<double,4>> group_envelopes;
+        if (clip_kind==UnionClip::Box) for (size_t i : active) {
+            evaluate();const auto &m=sequence->records[i].motion;const bool x=m.start.y()==m.end.y(),y=m.start.x()==m.end.x();
+            if (x==y) continue;const auto key=std::make_pair(x,x ? m.start.y() : m.start.x());
+            const auto inserted=group_envelopes.emplace(key,xy_bounds[i]);
+            if (!inserted.second) for (size_t axis=0;axis<2;++axis) {
+                inserted.first->second[axis*2]=std::min(inserted.first->second[axis*2],xy_bounds[i][axis*2]);
+                inserted.first->second[axis*2+1]=std::max(inserted.first->second[axis*2+1],xy_bounds[i][axis*2+1]);
+            }
+        }
         const AffineCapCell flat{{domain.min.x(),domain.min.y(),domain.max.x(),domain.max.y()},0,0,0};
         const auto body_fraction=[&](size_t i) {return i<roof_source->source->completed_records ? 1 : roof_source->source->current_progress;};
         std::vector<size_t> body_active;
@@ -1868,7 +2002,7 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
         }
         const auto surface_q=(clip_kind==UnionClip::AboveSurface || clip_kind==UnionClip::TargetShadow) ? exact_interval(Exact(surface->z00)-shear_x*Exact(surface->footprint.min_x)-
             shear_y*Exact(surface->footprint.min_y)) : Interval(0);
-        struct Node {Polygon polygon;std::vector<size_t> candidates;Exact union_lo,union_hi,sum_lo,sum_hi,repeated_lo,repeated_hi;size_t depth,id,splitter;double uncertainty;bool potential_chain;Interval roof;std::vector<size_t> body_candidates;size_t roof_splitter;};
+        struct Node {Polygon polygon;std::vector<size_t> candidates;Exact union_lo,union_hi,sum_lo,sum_hi,repeated_lo,repeated_hi;size_t depth,id,splitter;double uncertainty;bool potential_chain;std::optional<Exact> packet_cut;bool packet_x,convex_excess;Interval roof;std::vector<size_t> body_candidates;size_t roof_splitter;};
         const auto make_node=[&](Polygon polygon,const std::vector<size_t> &candidates,size_t depth,const std::vector<size_t> &body_candidates,
                                  std::optional<Interval> inherited_roof={}) {
             poll();if (cells>=limits.max_cells) reject("MATERIAL_UNION_CELL_LIMIT");const size_t id=cells++;
@@ -1897,7 +2031,7 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                 }
             }
             const auto span=[&](double lo,double hi,bool guaranteed=false) {
-                if (full_individual) return Span{lo,hi}; // Every complete bead is inside the original XYZ box.
+                if (full_individual) return Span{lo,hi}; // Every active section is inside the original Z interval.
                 double bottom=guaranteed ? (Interval(domain.min.z())-Interval(reference.lo)).hi : (Interval(domain.min.z())-Interval(reference.hi)).lo;
                 double top=guaranteed ? (Interval(domain.max.z())-Interval(reference.hi)).lo : (Interval(domain.max.z())-Interval(reference.lo)).hi;
                 if (clip_kind==UnionClip::BelowRoof) top=std::min(top,guaranteed ? (Interval(roof.lo)-Interval(reference.hi)).lo : (Interval(roof.hi)-Interval(reference.lo)).hi);
@@ -1918,6 +2052,8 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
             double shadow_top_lower=-std::numeric_limits<double>::infinity(),shadow_top_upper=shadow_top_lower;
             std::map<std::pair<bool,double>,std::vector<Strip>> strips;
             std::vector<Span> count_lower,count_upper;
+            struct Refinement {size_t index;double transverse,partial;std::pair<bool,double> group;};
+            std::vector<Refinement> refinement;
             size_t splitter=sequence->records.size();double worst=-1;
             for (size_t i : candidates) {
                 evaluate();const auto &row=sequence->records[i];const double fraction=progress(i);
@@ -1974,7 +2110,7 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                     if (inside && inside->second.whole_footprint) count_lower.push_back(span(inside->first.hi,inside->second.height.lo,true));
                 }
                 double uncertainty=outside.second-outside.first;
-                if (!full_individual) {
+                {
                     // Reuse the already clipped finite XY enclosure. A whole
                     // parent area must never be charged to a short packet.
                     Exact clipped_area(0);affine_integral(footprint->polygon,flat,&clipped_area);
@@ -1985,12 +2121,14 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                         if (s.first<s.second) individual_lo=clipped_area*(Exact(s.second)-Exact(s.first));
                     }
                     sum_lo+=individual_lo;largest_lower=std::max(largest_lower,individual_lo);
-                    uncertainty=exact_interval(individual_hi-individual_lo).hi;
-                } else if (inside && inside->second.whole_transverse) {
+                    if (!full_individual) uncertainty=exact_interval(individual_hi-individual_lo).hi;
+                }
+                if (full_individual && inside && inside->second.whole_transverse) {
                     const auto s=span(inside->first.hi,inside->second.height.lo,true);
                     uncertainty-=std::max(0.,s.second-s.first);
                 }
-                if (uncertainty>worst) {worst=uncertainty;splitter=i;}
+                const double partial=full_individual && x_axis!=y_axis && !longitudinal(row,polygon,fraction) ? outside.second-outside.first : 0.;
+                refinement.push_back({i,uncertainty,partial,{x_axis,x_axis ? row.motion.start.y() : row.motion.start.x()}});
             }
             std::set<std::pair<bool,double>> potential_chains;
             std::vector<std::pair<bool,std::vector<Strip>>> covered_chains;
@@ -2031,7 +2169,14 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                     }
                 }
             }
-            Exact union_lo=std::max(area*measure(lower),largest_lower),union_hi=full_individual ? area*measure(upper) : std::min(area*measure(upper),sum_hi);
+            for (const auto &hint : refinement) {
+                // A flat transverse section can still end inside this cell.
+                // Prefer that real finite discontinuity unless an actual packet
+                // chain spans the whole cell. This chooses a split only.
+                const double uncertainty=std::max(hint.transverse,potential_chains.count(hint.group) ? 0. : hint.partial);
+                if (uncertainty>worst) {worst=uncertainty;splitter=hint.index;}
+            }
+            Exact union_lo=std::max(area*measure(lower),largest_lower),union_hi=std::min(area*measure(upper),sum_hi);
             if (clip_kind==UnionClip::TargetShadow) {
                 // A full finite packet/chain bounds the top in the surface's
                 // sheared frame. Integrate its affine column above the original
@@ -2112,18 +2257,127 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                 Exact sum(0);for (auto s : spans) if (s.first<s.second) sum+=Exact(s.second)-Exact(s.first);
                 return sum-measure(spans);
             };
-            Exact repeated_lo=area*excess(count_lower),repeated_hi=area*excess(count_upper);
-            if (clip_kind==UnionClip::Box && count_upper.size()==2 && covered_chains.size()==2 && repeated_lo>0 &&
-                covered_chains[0].first==covered_chains[1].first) {
+            // Local clipped individual bounds tighten multiplicity even when
+            // the complete ledger amount is already exact. Partial footprints
+            // must not be charged as a whole-cell overlapping profile.
+            Exact repeated_lo=std::max(area*excess(count_lower),std::max(Exact(0),sum_lo-union_hi));
+            Exact repeated_hi=std::min(area*excess(count_upper),std::max(Exact(0),sum_hi-union_lo));
+            std::optional<Exact> packet_cut;bool packet_x=false,convex_excess=false;
+            double common_bottom=-std::numeric_limits<double>::infinity(),common_top=std::numeric_limits<double>::infinity();
+            for (const auto &profile : count_lower) {common_bottom=std::max(common_bottom,profile.first);common_top=std::min(common_top,profile.second);}
+            if (clip_kind==UnionClip::Box && !count_upper.empty() && covered_chains.size()==count_upper.size() && common_bottom<common_top) {
                 Exact xmin=polygon.front()[0],xmax=xmin,ymin=polygon.front()[1],ymax=ymin;
                 for (const auto &p : polygon) {xmin=std::min(xmin,p[0]);xmax=std::max(xmax,p[0]);ymin=std::min(ymin,p[1]);ymax=std::max(ymax,p[1]);}
                 if (area==(xmax-xmin)*(ymax-ymin)) {
-                    // For each fixed longitudinal point the two guaranteed
-                    // convex sections have concave intersection height. On a
-                    // rectangle, Hermite-Hadamard bounds its transverse mean
-                    // between endpoint trapezoid and midpoint height. Interval
-                    // envelopes retain all longitudinal packets and Z clipping.
-                    const bool x_axis=covered_chains.front().first;
+                    std::optional<Exact> best_distance;
+                    for (const auto &chain : covered_chains) if (chain.second.size()>1) {
+                        const Exact a=chain.first ? xmin : ymin,b=chain.first ? xmax : ymax,mid=(a+b)/Exact(2);
+                        for (const auto &strip : chain.second) for (const auto &end : {strip.begin,strip.end}) {
+                            evaluate();if (end<=a || end>=b) continue;const Exact distance=abs(end-mid);
+                            if (!best_distance || distance<*best_distance) {best_distance=distance;packet_cut=end;packet_x=chain.first;}
+                        }
+                    }
+                    if (!packet_cut) {
+                        // A stadium loft with affine width, gap and axis is
+                        // convex. At constant flux w(h)=A/h+(1-pi/4)*h is convex
+                        // in positive h. Its tangent below and secant above
+                        // define affine inner/outer lofts, enclosing actual
+                        // multiplicity without declaring the actual loft convex.
+                        struct WidthEnvelope {Exact slope,intercept;};
+                        struct Envelope {size_t index;WidthEnvelope inner,outer;double error;};
+                        std::vector<Envelope> widths;bool eligible=true;
+                        const auto affine_section=[&](size_t i,Projection projection,const WidthEnvelope &envelope) -> std::optional<std::pair<Interval,Interval>> {
+                            evaluate();const auto &row=sequence->records[i];const auto &b=*row.bead;const auto &c=coefficients[i];
+                            const auto t=detail::maximum(Interval(0),detail::minimum(projection.t,Interval(progress(i))));
+                            const auto h=Interval(b.gap_begin_mm)+(Interval(b.gap_end_mm)-Interval(b.gap_begin_mm))*t;
+                            const auto width=exact_interval(envelope.slope)*h+exact_interval(envelope.intercept);
+                            if (width.lo<h.hi || absolute(projection.normal).hi>=(width/Interval(2)).lo) return {};
+                            const auto radius=h/Interval(2),core=(width-h)/Interval(2),offset=detail::maximum(Interval(0),absolute(projection.normal)-core);
+                            const auto radicand=square(radius)-square(offset);if (radicand.hi<0) return {};
+                            const auto depth=offset.hi==0 ? Interval(0) : detail::maximum(Interval(0),radius-detail::root(radicand));
+                            const auto z=c.start+c.along*t-c.normal*projection.normal;
+                            return std::pair<Interval,Interval>{z-h+depth,z-depth};
+                        };
+                        double inner_bottom=-std::numeric_limits<double>::infinity(),inner_top=std::numeric_limits<double>::infinity();
+                        for (const auto &chain : covered_chains) {
+                            if (chain.second.size()!=1) {eligible=false;break;}const auto &strip=chain.second.front();const auto &row=sequence->records[strip.index];
+                            if (row.bead->kind!=BeadSectionKind::RoundedRectangle) {eligible=false;break;}
+                            const auto &b=*row.bead;const auto p=project_polygon(row,polygon,Interval(0));
+                            const auto t=detail::maximum(Interval(0),detail::minimum(p.t,Interval(progress(strip.index))));
+                            const auto h=Interval(b.gap_begin_mm)+(Interval(b.gap_end_mm)-Interval(b.gap_begin_mm))*t;
+                            if (h.lo<=0) {eligible=false;break;}
+                            const Exact lo(h.lo),hi(h.hi),mid=(lo+hi)/Exact(2);const auto k=Interval(1)-pi()/Interval(4);
+                            const auto A=coefficients[strip.index].area;
+                            const WidthEnvelope lower{Exact(k.lo)-Exact(A.lo)/(mid*mid),Exact(2)*Exact(A.lo)/mid};
+                            const WidthEnvelope upper{Exact(k.hi)-Exact(A.hi)/(lo*hi),Exact(A.hi)/lo+Exact(A.hi)/hi};
+                            const auto inner=affine_section(strip.index,p,lower);if (!inner) {eligible=false;break;}
+                            const auto profile=span(inner->first.hi,inner->second.lo,true);
+                            const auto error=exact_interval((upper.slope-lower.slope)*mid+upper.intercept-lower.intercept);
+                            inner_bottom=std::max(inner_bottom,profile.first);inner_top=std::min(inner_top,profile.second);
+                            widths.push_back({strip.index,lower,upper,error.hi});
+                        }
+                        if (eligible && inner_bottom<inner_top) {
+                            convex_excess=true;double widest=-1;
+                            for (const auto &entry : widths) {
+                                const auto &section=*sequence->records[entry.index].bead;
+                                if (section.gap_begin_mm!=section.gap_end_mm && entry.error>widest) {widest=entry.error;splitter=entry.index;}
+                            }
+                            std::array<Exact,5> low{Exact(0),Exact(0),Exact(0),Exact(0),Exact(0)},high=low,union_low=low,union_high=low;
+                            const std::array<Vertex,5> samples{{{xmin,ymin},{xmax,ymin},{xmax,ymax},{xmin,ymax},{(xmin+xmax)/Exact(2),(ymin+ymax)/Exact(2)}}};
+                            for (size_t n=0;n<samples.size();++n) {
+                                const std::array<double,4> point{exact_interval(samples[n][0]).lo,exact_interval(samples[n][0]).hi,
+                                    exact_interval(samples[n][1]).lo,exact_interval(samples[n][1]).hi};std::vector<Span> lower_profiles,upper_profiles;
+                                for (const auto &entry : widths) {
+                                    const auto p=project_bounds(sequence->records[entry.index],point);
+                                    const auto inner=affine_section(entry.index,p,entry.inner),outer=affine_section(entry.index,p,entry.outer);
+                                    if (!inner || !outer) reject("MATERIAL_UNION_INCONSISTENT_CONVEX_ENVELOPE");
+                                    lower_profiles.push_back(span(inner->first.hi,inner->second.lo,true));
+                                    upper_profiles.push_back(span(outer->first.lo,outer->second.hi));
+                                }
+                                low[n]=excess(lower_profiles);high[n]=excess(upper_profiles);
+                                if (widths.size()==1) {union_low[n]=measure(lower_profiles);union_high[n]=measure(upper_profiles);}
+                            }
+                            // Concave excess of commonly intersecting convex
+                            // vertical profiles: corner mean <= mean <= midpoint.
+                            repeated_lo=std::max(repeated_lo,area*(low[0]+low[1]+low[2]+low[3])/Exact(4));
+                            repeated_hi=std::min(repeated_hi,area*high[4]);
+                            if (widths.size()==1) {
+                                // One complete convex profile has a concave
+                                // vertical section length. Its corner mean
+                                // and midpoint bound union itself; no maximum
+                                // of multiple roofs is declared concave.
+                                union_lo=std::max(union_lo,area*(union_low[0]+union_low[1]+union_low[2]+union_low[3])/Exact(4));
+                                union_hi=std::min(union_hi,area*union_high[4]);
+                            }
+                        }
+                    }
+                }
+            }
+            std::optional<bool> excess_axis;
+            if (clip_kind==UnionClip::Box && count_upper.size()>=2 && covered_chains.size()==count_upper.size() && common_bottom<common_top) {
+                for (bool axis : {true,false}) if (std::all_of(covered_chains.begin(),covered_chains.end(),[&](const auto &chain) {
+                    if (chain.first==axis) return true;
+                    if (chain.second.size()!=1) return false;
+                    const auto &section=*sequence->records[chain.second.front().index].bead;
+                    return section.gap_begin_mm==section.gap_end_mm;
+                })) {excess_axis=axis;break;}
+            }
+            if (excess_axis) {
+                Exact xmin=polygon.front()[0],xmax=xmin,ymin=polygon.front()[1],ymax=ymin;
+                for (const auto &p : polygon) {xmin=std::min(xmin,p[0]);xmax=std::max(xmax,p[0]);ymin=std::min(ymin,p[1]);ymax=std::max(ymax,p[1]);}
+                if (area==(xmax-xmin)*(ymax-ymin)) {
+                    // All complete profiles share a positive vertical
+                    // interval throughout this rectangle. Their union is one
+                    // interval, so multiplicity excess is sum(height)-span:
+                    // min_i(sum_{j!=i} top_j)-max_i(sum_{j!=i} bottom_j).
+                    // Tops are concave and bottoms convex transversely at each
+                    // longitudinal point, hence this excess is concave for any
+                    // number of profiles. Hermite-Hadamard bounds its mean;
+                    // retain every finite packet and original Z clipping. A
+                    // perpendicular chain is allowed only as one constant-gap
+                    // packet covering this cell: its section is affine along
+                    // this integration direction, without an internal seam.
+                    const bool x_axis=*excess_axis;
                     const Exact first=x_axis ? ymin : xmin,last=x_axis ? ymax : xmax;
                     std::array<Exact,3> low{Exact(0),Exact(0),Exact(0)},high=low;
                     for (size_t sample=0;sample<3;++sample) {
@@ -2134,9 +2388,16 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                             for (const auto &strip : chain.second) {
                                 evaluate();const auto &row=sequence->records[strip.index];const auto &m=row.motion;
                                 auto projection=strip.projected;
-                                auto normal=coordinate-Interval(x_axis ? m.start.y() : m.start.x());
-                                if (x_axis ? m.end.x()<m.start.x() : m.end.y()>m.start.y()) normal=Interval(0)-normal;
-                                projection.normal=normal;
+                                if (chain.first==x_axis) {
+                                    auto normal=coordinate-Interval(x_axis ? m.start.y() : m.start.x());
+                                    if (x_axis ? m.end.x()<m.start.x() : m.end.y()>m.start.y()) normal=Interval(0)-normal;
+                                    projection.normal=normal;
+                                } else {
+                                    const auto delta=Interval(x_axis ? m.end.y() : m.end.x())-Interval(x_axis ? m.start.y() : m.start.x());
+                                    auto along=coordinate-Interval(x_axis ? m.start.y() : m.start.x());
+                                    if (delta.hi<0) along=Interval(0)-along;
+                                    projection.t=along/absolute(delta);
+                                }
                                 const auto section=vertical(strip.index,projection,progress(strip.index));
                                 if (!section) reject("MATERIAL_UNION_INCONSISTENT_CONCAVE_SECTION");
                                 const auto inner=span(section->first.hi,section->second.height.lo,true),outer=span(section->first.lo,section->second.height.hi);
@@ -2152,14 +2413,14 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                     repeated_hi=std::min(repeated_hi,area*high[2]);
                 }
             }
-            if (repeated_lo>repeated_hi) reject("MATERIAL_UNION_INCONSISTENT_SECTION_EXCESS");
+            if (union_lo>union_hi || repeated_lo>repeated_hi) reject("MATERIAL_UNION_INCONSISTENT_SECTION_EXCESS");
             const double uncertainty=exact_interval(clip_kind!=UnionClip::Box ? union_hi-union_lo : full_individual ? repeated_hi-repeated_lo : union_hi-union_lo+sum_hi-sum_lo).hi;
             bool splitter_chain=false;
             if (splitter<sequence->records.size()) {
                 const auto &m=sequence->records[splitter].motion;const bool x_axis=m.start.y()==m.end.y();
                 splitter_chain=potential_chains.count({x_axis,x_axis ? m.start.y() : m.start.x()})!=0;
             }
-            return Node{std::move(polygon),std::move(next),union_lo,union_hi,sum_lo,sum_hi,repeated_lo,repeated_hi,depth,id,splitter,uncertainty,splitter_chain,roof,std::move(next_body),roof_splitter};
+            return Node{std::move(polygon),std::move(next),union_lo,union_hi,sum_lo,sum_hi,repeated_lo,repeated_hi,depth,id,splitter,uncertainty,splitter_chain,std::move(packet_cut),packet_x,convex_excess,roof,std::move(next_body),roof_splitter};
         };
         const auto compare=[](const Node &a,const Node &b) {return a.uncertainty==b.uncertainty ? a.id>b.id : a.uncertainty<b.uncertainty;};
         std::vector<Node> heap;
@@ -2190,7 +2451,7 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
             const auto p=project_polygon(row,node.polygon,Interval(0));
             const auto finite_end=(!node.potential_chain && (p.t.lo<=0 || p.t.hi>=progress(node.splitter)) &&
                 p.normal.hi-p.normal.lo<row.bead->width_mm.lower/2 &&
-                (clip_kind!=UnionClip::TargetShadow || !longitudinal(row,node.polygon,progress(node.splitter))));
+                !longitudinal(row,node.polygon,progress(node.splitter)));
             bool along=finite_end;
             if (clip_kind==UnionClip::TargetShadow && !finite_end) {
                 // The affine column integral already accounts for the target
@@ -2225,6 +2486,18 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                 along=uncertainty(longitudinal)>uncertainty(transverse);
             } else if (clip_kind!=UnionClip::BelowRoof)
                 along=along || std::max(std::abs(m.end.z()-m.start.z()),std::abs(row.bead->gap_end_mm-row.bead->gap_begin_mm))*(p.t.hi-p.t.lo)>p.normal.hi-p.normal.lo;
+            if (node.convex_excess && !finite_end && row.bead->gap_begin_mm!=row.bead->gap_end_mm) {
+                // Tight corner/midpoint quadrature leaves width-envelope error
+                // as the longitudinal uncertainty. Split that axis before
+                // repeatedly refining an already small transverse curvature.
+                // This balance is a hint only, never a replacement for bounds.
+                evaluate();const auto t=detail::maximum(Interval(0),detail::minimum(p.t,Interval(progress(node.splitter))));
+                const auto h=Interval(row.bead->gap_begin_mm)+(Interval(row.bead->gap_end_mm)-Interval(row.bead->gap_begin_mm))*t;
+                const Exact lo(h.lo),hi(h.hi),mid=(lo+hi)/Exact(2),A(coefficients[node.splitter].area.hi);
+                const auto error=exact_interval(A/lo+A/hi-Exact(2)*A/mid);
+                const double transverse=p.normal.hi-p.normal.lo;
+                along=along || error.hi>transverse*transverse/h.hi/10;
+            }
             if (along) normal={dx,dy};
             if ((clip_kind==UnionClip::BelowRoof || clip_kind==UnionClip::TargetShadow) && node.depth%2==0 && node.roof.hi-node.roof.lo>1e-12 &&
                 node.roof_splitter<roof_source->source->sequence->records.size()) {
@@ -2235,15 +2508,49 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                     std::max(std::abs(m.end.z()-m.start.z()),std::abs(support.bead->gap_end_mm-support.bead->gap_begin_mm))*(projected.t.hi-projected.t.lo)>span)
                     normal={x,y};
             }
+            if (node.packet_cut) normal=node.packet_x ? Vertex{Exact(1),Exact(0)} : Vertex{Exact(0),Exact(1)};
             auto lo=normal[0]*node.polygon.front()[0]+normal[1]*node.polygon.front()[1],hi=lo;
             for (auto point : node.polygon) {const Exact value=normal[0]*point[0]+normal[1]*point[1];lo=std::min(lo,value);hi=std::max(hi,value);}
-            if (lo==hi) reject("MATERIAL_UNION_INVALID_SPLIT");const Exact middle=(lo+hi)/Exact(2);
+            if (lo==hi) reject("MATERIAL_UNION_INVALID_SPLIT");Exact middle=(lo+hi)/Exact(2);
+            if (node.packet_cut) middle=*node.packet_cut;
+            else if (clip_kind==UnionClip::Box && (dx==0 || dy==0)) {
+                // Place refinement on finite group envelope faces when possible.
+                // A midpoint grid needlessly straddles unequal cap/contour ends.
+                // These are split hints only; both children retain all original
+                // continuous occupancy and multiplicity bounds and shared limits.
+                const bool split_x=normal[1]==0;const size_t axis=split_x ? 0 : 1;
+                const bool x_axis=dy==0;
+                const auto &bounds=group_envelopes.at({x_axis,x_axis ? m.start.y() : m.start.x()});
+                std::optional<Exact> cut;
+                for (size_t face=0;face<2;++face) {
+                    evaluate();const Exact value=normal[axis]*Exact(bounds[axis*2+face]);
+                    if (value>lo && value<hi && (!cut || abs(value-middle)<abs(*cut-middle))) cut=value;
+                }
+                if (cut) middle=*cut;
+            }
             std::optional<Interval> inherited;
             const auto domain_area=(Interval(domain.max.x())-Interval(domain.min.x()))*(Interval(domain.max.y())-Interval(domain.min.y()));
             if (clip_kind==UnionClip::TargetShadow && ((Interval(node.roof.hi)-Interval(node.roof.lo))*domain_area).hi<=limits.maximum_interval_width.value()/32)
                 inherited=node.roof;
             auto first=make_node(clip(node.polygon,normal,middle,false),node.candidates,node.depth+1,node.body_candidates,inherited);
             auto second=make_node(clip(node.polygon,normal,middle,true),node.candidates,node.depth+1,node.body_candidates,inherited);
+            if (clip_kind==UnionClip::Box && node.convex_excess && !node.packet_cut &&
+                row.bead->gap_begin_mm!=row.bead->gap_end_mm && (dx==0 || dy==0) &&
+                first.uncertainty+second.uncertainty>node.uncertainty*.75 &&
+                limits.max_cells>=2 && cells<=limits.max_cells-2) {
+                // Coupled affine gap and rounded shoulders can make a geometric
+                // split hint ineffective. Compare actual bounds in the other
+                // axis; discarded queries consume the same root budget.
+                const Vertex alternative=normal[0]==0 ? Vertex{Exact(1),Exact(0)} : Vertex{Exact(0),Exact(1)};
+                Exact a=alternative[0]*node.polygon.front()[0]+alternative[1]*node.polygon.front()[1],b=a;
+                for (const auto &point : node.polygon) {const Exact v=alternative[0]*point[0]+alternative[1]*point[1];a=std::min(a,v);b=std::max(b,v);}
+                if (a<b) {
+                    const Exact cut=(a+b)/Exact(2);
+                    auto left=make_node(clip(node.polygon,alternative,cut,false),node.candidates,node.depth+1,node.body_candidates);
+                    auto right=make_node(clip(node.polygon,alternative,cut,true),node.candidates,node.depth+1,node.body_candidates);
+                    if (left.uncertainty+right.uncertainty<first.uncertainty+second.uncertainty) {first=std::move(left);second=std::move(right);}
+                }
+            }
             union_lo+=first.union_lo+second.union_lo-node.union_lo;union_hi+=first.union_hi+second.union_hi-node.union_hi;
             sum_lo+=first.sum_lo+second.sum_lo-node.sum_lo;sum_hi+=first.sum_hi+second.sum_hi-node.sum_hi;
             repeated_lower+=first.repeated_lo+second.repeated_lo-node.repeated_lo;repeated_upper+=first.repeated_hi+second.repeated_hi-node.repeated_hi;
@@ -2919,7 +3226,8 @@ FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult
 
 std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> FirstHatchBeadSnapshot::construct_first_paths(
     const std::shared_ptr<const AffineHatchSnapshot> &source,const FirstContourPolicy &policy,const FirstHatchLayerLimits &limits,
-    bool with_infill,std::chrono::steady_clock::time_point started,size_t &work,std::vector<size_t> &replaced)
+    bool with_infill,std::chrono::steady_clock::time_point started,size_t &work,std::vector<size_t> &replaced,
+    FirstCapHatchExtent extent,const std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> *retained)
 {
     const auto stack=source->source;const auto sequence=stack->source->sequence;
     const auto &surface=stack->surfaces.front().cell;const auto &roi=surface.footprint;
@@ -2931,8 +3239,20 @@ std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> FirstHatchBeadSnapsho
     const auto elapsed=[&] {return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);};
     const auto inset=(Interval(policy.width.value())+Interval(limits.beads.packets.maximum_width_error.value()))/Interval(2)+
         Interval(source->policy.boundary_band.value())+Interval(source->numerical_error_upper_mm);
-    const RectangleXY centres{(Interval(roi.min_x)+inset).hi,(Interval(roi.min_y)+inset).hi,
+    RectangleXY centres{(Interval(roi.min_x)+inset).hi,(Interval(roi.min_y)+inset).hi,
         (Interval(roi.max_x)-inset).lo,(Interval(roi.max_y)-inset).lo};
+    if (retained) {
+        if (!with_infill || extent!=FirstCapHatchExtent::BoundaryBand || retained->size()<5 || !retained->front()) reject("FIRST_CAP_REPLAN_CONTOUR_SOURCE");
+        const auto first=retained->front()->path_start;centres={first.x(),first.y(),first.x(),first.y()};
+        for (size_t i=0;i<4;++i) {
+            charge(1);const auto &p=retained->at(i);
+            if (!p || p->source!=source || p->line_index || p->roof_domain!=FirstHatchRoofDomain::FiniteWidth ||
+                p->maximum_gap_error_mm>limits.beads.maximum_gap_error.value() ||
+                p->maximum_width_error_mm>limits.beads.packets.maximum_width_error.value()) reject("FIRST_CAP_REPLAN_CONTOUR_PROOF_LIMIT");
+            centres.min_x=std::min(centres.min_x,p->path_start.x());centres.max_x=std::max(centres.max_x,p->path_start.x());
+            centres.min_y=std::min(centres.min_y,p->path_start.y());centres.max_y=std::max(centres.max_y,p->path_start.y());
+        }
+    }
     if (centres.min_x>=centres.max_x || centres.min_y>=centres.max_y) reject("FIRST_CONTOUR_ROI_TOO_THIN");
     const auto point=[&](double x,double y) {
         const Exact z=Exact(surface.z00)+(Exact(surface.z10)-Exact(surface.z00))*(Exact(x)-Exact(roi.min_x))/(Exact(roi.max_x)-Exact(roi.min_x))+
@@ -2952,7 +3272,12 @@ std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> FirstHatchBeadSnapsho
     }
     if (with_infill) {
         const bool x=source->passes.front().direction==HatchDirection::AlongX;
-        const double lo=x ? centres.min_x : centres.min_y,hi=x ? centres.max_x : centres.max_y;
+        const auto end_inset=Interval(source->policy.boundary_band.value())+Interval(source->numerical_error_upper_mm);
+        const double lo=extent==FirstCapHatchExtent::ContourCentres ? (x ? centres.min_x : centres.min_y) :
+            (Interval(x ? roi.min_x : roi.min_y)+end_inset).hi;
+        const double hi=extent==FirstCapHatchExtent::ContourCentres ? (x ? centres.max_x : centres.max_y) :
+            (Interval(x ? roi.max_x : roi.max_y)-end_inset).lo;
+        if (lo>=hi) reject("FIRST_CAP_REPLAN_NO_EXTENSION_DOMAIN");
         const double low=x ? centres.min_y : centres.min_x,high=x ? centres.max_y : centres.max_x;
         const auto &lines=source->passes.front().lines;
         for (size_t i=0;i<lines.size();++i) {
@@ -2961,7 +3286,8 @@ std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> FirstHatchBeadSnapsho
             if ((x ? line.start.y()!=line.end.y() : line.start.x()!=line.end.x()) ||
                 (x ? line.start.x()>=line.end.x() : line.start.y()>=line.end.y())) reject("FIRST_CAP_REQUIRES_FORWARD_SOURCE_HATCHES");
             if (centre<=low || centre>=high) {replaced.push_back(i);continue;}
-            if (lo<(x ? line.start.x() : line.start.y()) || hi>(x ? line.end.x() : line.end.y())) reject("FIRST_CAP_INCOMPLETE_PARENT_EXTENT");
+            if (extent==FirstCapHatchExtent::ContourCentres &&
+                (lo<(x ? line.start.x() : line.start.y()) || hi>(x ? line.end.x() : line.end.y()))) reject("FIRST_CAP_INCOMPLETE_PARENT_EXTENT");
             const auto first=point(x ? lo : centre,x ? centre : lo),last=point(x ? hi : centre,x ? centre : hi);
             auto slice=line;slice.start=first.first;slice.end=last.first;slice.reverse_start=last.first;slice.reverse_end=first.first;
             slice.projected_length_mm=bounds(exact_interval(Exact(hi)-Exact(lo)));
@@ -2971,18 +3297,60 @@ std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> FirstHatchBeadSnapsho
     }
     if (geometry.size()>limits.max_paths) reject("FIRST_CONTOUR_PATH_LIMIT");
     size_t bead_work=0,roofs=0,packets=0;std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> paths;
-    for (const auto &g : geometry) {
-        charge(2*sequence->records.size()); // Source hash and active-prefix walks in each first-bead solver.
-        if (bead_work>=limits.beads.max_evaluations || roofs>=limits.beads.max_roof_segments || packets>=limits.beads.packets.max_segments)
-            reject("FIRST_CONTOUR_BEAD_WORK_LIMIT");
-        auto remaining=limits.beads;remaining.max_evaluations=std::min(remaining.max_evaluations-bead_work,limits.max_evaluations-work);
-        remaining.max_roof_segments-=roofs;remaining.packets.max_segments-=packets;
-        remaining.packets.maximum_volume_error=Volume((Interval(limits.beads.packets.maximum_volume_error.value())/Interval(double(geometry.size()))/Interval(2)).lo);
-        remaining.timeout-=elapsed();remaining.packets.timeout-=elapsed();remaining.cancelled=[&] {poll();return false;};remaining.is_current={};
-        remaining.packets.cancelled=remaining.cancelled;remaining.packets.is_current={};
-        const auto bead=plan({"",source},g.owner,remaining,FirstHatchRoofDomain::FiniteWidth,&g.line,g.error);
-        if (!bead.snapshot) throw Rejection(bead.reason);charge(bead.snapshot->evaluations);
-        bead_work+=bead.snapshot->evaluations;roofs+=bead.snapshot->roof_segments;packets+=bead.snapshot->pieces.size();paths.push_back(bead.snapshot);
+    for (size_t i=0;i<geometry.size();++i) {
+        const auto &g=geometry[i];
+        std::shared_ptr<const FirstHatchBeadSnapshot> middle;
+        if (retained) {
+            if (i>=retained->size()) reject("FIRST_CAP_REPLAN_PATH_SOURCE");
+            middle=retained->at(i);
+            if (!middle || middle->source!=source || middle->line_index!=g.owner ||
+                middle->roof_domain!=FirstHatchRoofDomain::FiniteWidth ||
+                middle->maximum_gap_error_mm>limits.beads.maximum_gap_error.value() ||
+                middle->maximum_width_error_mm>limits.beads.packets.maximum_width_error.value())
+                reject("FIRST_CAP_REPLAN_RETAINED_PROOF_LIMIT");
+        }
+        if (middle) {
+            const auto &p=middle;charge(1);
+            if (p->pieces.size()>limits.beads.packets.max_segments-packets || p->roof_segments>limits.beads.max_roof_segments-roofs)
+                reject("FIRST_CAP_REPLAN_RETAINED_PROOF_LIMIT");
+            roofs+=p->roof_segments;packets+=p->pieces.size();
+            if (i<4) {paths.push_back(p);continue;}
+        }
+        const auto solve=[&](const AffineHatchLine &line) {
+            charge(2*sequence->records.size()); // Source hash and active-prefix walks in each first-bead solver.
+            if (bead_work>=limits.beads.max_evaluations || roofs>=limits.beads.max_roof_segments || packets>=limits.beads.packets.max_segments)
+                reject("FIRST_CONTOUR_BEAD_WORK_LIMIT");
+            auto remaining=limits.beads;remaining.max_evaluations=std::min(remaining.max_evaluations-bead_work,limits.max_evaluations-work);
+            remaining.max_roof_segments-=roofs;remaining.packets.max_segments-=packets;
+            remaining.packets.maximum_volume_error=Volume((Interval(limits.beads.packets.maximum_volume_error.value())/Interval(double(geometry.size()))/Interval(middle ? 4 : 2)).lo);
+            remaining.timeout-=elapsed();remaining.packets.timeout-=elapsed();remaining.cancelled=[&] {poll();return false;};remaining.is_current={};
+            remaining.packets.cancelled=remaining.cancelled;remaining.packets.is_current={};
+            const auto bead=plan({"",source},g.owner,remaining,FirstHatchRoofDomain::FiniteWidth,&line,g.error);
+            if (!bead.snapshot) throw Rejection(bead.reason);charge(bead.snapshot->evaluations);
+            bead_work+=bead.snapshot->evaluations;roofs+=bead.snapshot->roof_segments;packets+=bead.snapshot->pieces.size();return bead.snapshot;
+        };
+        if (!middle) {paths.push_back(solve(g.line));continue;}
+        // Retain every already qualified central packet and its actual dose.
+        // Only the two new finite strips need another body-roof proof.
+        const auto fragment=[&](PhysicalPosition start,PhysicalPosition end) {
+            auto line=g.line;line.start=start;line.end=end;line.reverse_start=end;line.reverse_end=start;
+            line.projected_length_mm=bounds(detail::root(length_squared(start,end)));return solve(line);
+        };
+        const auto low=fragment(g.line.start,middle->path_start),high=fragment(middle->path_end,g.line.end);
+        std::vector<FixedWidthBeadPiece> pieces;Exact target_lo(0),target_hi(0),deposited(0);
+        double gap=0,width=0,numeric=0;size_t segments=0,proof_work=0;
+        for (const auto &p : {low,middle,high}) {
+            charge(p->pieces.size()+1);pieces.insert(pieces.end(),p->pieces.begin(),p->pieces.end());
+            target_lo+=Exact(p->actual_target_volume_mm3.lower);target_hi+=Exact(p->actual_target_volume_mm3.upper);
+            for (const auto &piece : p->pieces) deposited+=Exact(piece.volume.value());
+            gap=std::max(gap,p->maximum_gap_error_mm);width=std::max(width,p->maximum_width_error_mm);
+            numeric=std::max(numeric,p->numerical_error_upper_mm);segments+=p->roof_segments;proof_work+=p->evaluations;
+        }
+        const Interval target(exact_interval(target_lo).lo,exact_interval(target_hi).hi),delivered=exact_interval(deposited);
+        const auto difference=delivered-target;const double error=std::max(std::abs(difference.lo),std::abs(difference.hi));
+        paths.push_back(std::shared_ptr<const FirstHatchBeadSnapshot>(new FirstHatchBeadSnapshot(source,g.owner,
+            FirstHatchRoofDomain::FiniteWidth,g.line.start,g.line.end,std::move(pieces),bounds(target),bounds(delivered),
+            gap,width,error,numeric,segments,proof_work)));
     }
     poll();return paths;
 }
@@ -3045,6 +3413,59 @@ FirstCapResult plan_first_cap(const AffineHatchResult &requested,const FirstCont
         poll();return {"BOUNDED_FIRST_CONTOUR_AND_INTERIOR_HATCH_CANDIDATE_WITH_MEASURED_JOINT_FILL_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) {return {e.what(),{}};}
     catch (const std::exception &e) {return {"FIRST_CAP_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
+}
+
+FirstCapReplanResult replan_first_cap_ends(const FirstCapResult &requested,const FirstCapReplanPolicy &requested_policy,
+    const FirstHatchLayerLimits &requested_limits)
+{
+    const auto before=requested.snapshot;const auto policy=requested_policy;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!before || !before->source || !before->source->source || !before->fill || !valid_first_hatch_layer_limits(limits) ||
+            policy.minimum_covered_gain.value()<=0 || policy.maximum_outside_target.value()<0) reject("INVALID_FIRST_CAP_REPLAN_INPUT");
+        if (before->hatch_extent!=FirstCapHatchExtent::ContourCentres) reject("FIRST_CAP_EXTENT_ALREADY_REPLANNED");
+        const auto source=before->source;const auto sequence=source->source->source->sequence;
+        const auto poll=[&] {
+            stop(limits,sequence->revision,started);stop(limits.beads,sequence->revision,started);
+            stop(limits.beads.packets,sequence->revision,started);stop(limits.volumes,sequence->revision,started);
+        };poll();size_t work=0;std::vector<size_t> replaced;
+        auto paths=FirstHatchBeadSnapshot::construct_first_paths(source,before->policy,limits,true,started,work,replaced,
+            FirstCapHatchExtent::BoundaryBand,&before->paths);
+        if (paths.size()!=before->paths.size() || replaced!=before->replaced_boundary_lines) reject("FIRST_CAP_REPLAN_OWNER_MISMATCH");
+        const bool x=source->passes.front().direction==HatchDirection::AlongX;
+        const auto &roi=source->source->surfaces.front().cell.footprint;
+        const Exact band=Exact(source->policy.boundary_band.value())+Exact(source->numerical_error_upper_mm);
+        for (size_t i=0;i<paths.size();++i) {
+            poll();const auto &old=*before->paths[i],&next=*paths[i];
+            if (i>=4 && (next.line_index!=old.line_index || (x ? next.path_start.x()>=old.path_start.x() || next.path_end.x()<=old.path_end.x() :
+                next.path_start.y()>=old.path_start.y() || next.path_end.y()<=old.path_end.y()))) reject("FIRST_CAP_REPLAN_NO_EXTENSION_DOMAIN");
+            for (const auto &p : next.pieces) {
+                if (work>=limits.max_evaluations) reject("FIRST_CAP_REPLAN_WORK_LIMIT");++work;poll();
+                const bool along_x=p.start.y()==p.end.y();const Exact half=Exact(p.section.width_mm.upper)/Exact(2);
+                const Exact xmin=Exact(std::min(p.start.x(),p.end.x()))-(along_x ? Exact(0) : half);
+                const Exact xmax=Exact(std::max(p.start.x(),p.end.x()))+(along_x ? Exact(0) : half);
+                const Exact ymin=Exact(std::min(p.start.y(),p.end.y()))-(along_x ? half : Exact(0));
+                const Exact ymax=Exact(std::max(p.start.y(),p.end.y()))+(along_x ? half : Exact(0));
+                if (xmin<Exact(roi.min_x)+band || xmax>Exact(roi.max_x)-band || ymin<Exact(roi.min_y)+band || ymax>Exact(roi.max_y)-band)
+                    reject("FIRST_CAP_REPLAN_FINITE_WIDTH_BOUNDARY_BAND");
+            }
+        }
+        const auto measured=measure_first_candidate(source,paths,before->fill->occupied->domain,limits,started,work);
+        if (measured.fill->outside_target_mm3.upper>std::min(before->policy.maximum_outside_target.value(),policy.maximum_outside_target.value()))
+            reject("FIRST_CAP_REPLAN_OUTSIDE_TARGET_LIMIT");
+        const auto gain=interval(measured.fill->covered_target_mm3)-interval(before->fill->covered_target_mm3);
+        const auto reduction=interval(before->fill->missing_target_mm3)-interval(measured.fill->missing_target_mm3);
+        if (gain.lo<policy.minimum_covered_gain.value() || reduction.lo<policy.minimum_covered_gain.value()) reject("FIRST_CAP_REPLAN_INSUFFICIENT_GAIN");
+        const auto amount=interval(measured.fill->occupied->individual_volume_mm3)-interval(before->fill->occupied->individual_volume_mm3);
+        const auto repeated=interval(measured.fill->occupied->repeated_volume_mm3)-interval(before->fill->occupied->repeated_volume_mm3);
+        poll();auto after=std::shared_ptr<const FirstCapSnapshot>(new FirstCapSnapshot(source,before->policy,std::move(paths),std::move(replaced),
+            measured.fill,measured.target,measured.delivered,measured.error,measured.numeric,measured.roofs,measured.cells,work,FirstCapHatchExtent::BoundaryBand));
+        poll();auto snapshot=std::shared_ptr<const FirstCapReplanSnapshot>(new FirstCapReplanSnapshot(before,after,policy,bounds(gain),bounds(reduction),
+            bounds(amount),bounds(repeated),measured.cells,work));
+        poll();return {"BOUNDED_WHOLE_FIRST_CAP_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) {return {e.what(),{}};}
+    catch (const std::exception &e) {return {"FIRST_CAP_REPLAN_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
 }
 
 namespace {
@@ -3354,8 +3775,14 @@ CapJoinRequest first_cap_join_request(const FirstCapSnapshot &source,size_t max_
         search.charge();const bool x=source.paths[i]->path_start.y()==source.paths[i]->path_end.y();std::optional<size_t> edge;
         for (size_t j=0;j<4;++j) {
             search.charge();const auto a=source.paths[j]->path_start,b=source.paths[j]->path_end;
-            if ((x ? a.x()==b.x() && a.x()==point.x() && point.y()>=std::min(a.y(),b.y()) && point.y()<=std::max(a.y(),b.y()) :
-                a.y()==b.y() && a.y()==point.y() && point.x()>=std::min(a.x(),b.x()) && point.x()<=std::max(a.x(),b.x()))) {
+            const auto coordinate=[&](PhysicalPosition p) {return x ? p.x() : p.y();};
+            const Exact first(coordinate(source.paths[i]->path_start)),last(coordinate(source.paths[i]->path_end));
+            const bool start=coordinate(point)==coordinate(source.paths[i]->path_start);
+            const bool crossing=source.hatch_extent==FirstCapHatchExtent::ContourCentres ? coordinate(a)==coordinate(point) :
+                start ? Exact(coordinate(a))>=first && Exact(coordinate(a))<(first+last)/Exact(2) :
+                        Exact(coordinate(a))<=last && Exact(coordinate(a))>(first+last)/Exact(2);
+            if (crossing && (x ? a.x()==b.x() && point.y()>=std::min(a.y(),b.y()) && point.y()<=std::max(a.y(),b.y()) :
+                a.y()==b.y() && point.x()>=std::min(a.x(),b.x()) && point.x()<=std::max(a.x(),b.x()))) {
                 if (edge) reject("FIRST_CAP_JOIN_AMBIGUOUS_EDGE");edge=j;
             }
         }

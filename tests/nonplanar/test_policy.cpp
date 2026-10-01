@@ -2098,7 +2098,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2386,6 +2386,67 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     INFO("native cap under-material deficit=[" << v.under_material_missing_mm3.lower << ',' << v.under_material_missing_mm3.upper <<
         "] vertical-clear deficit=[" << v.vertical_clear_missing_mm3.lower << ',' << v.vertical_clear_missing_mm3.upper <<
         "] shadow=[" << v.shadow_target_mm3.lower << ',' << v.shadow_target_mm3.upper << "] cells=" << voids.cells << " work=" << voids.evaluations);
+    const auto cap_replan=replan_first_cap_ends(first_cap,{},layer_limits);
+    INFO(cap_replan.reason);REQUIRE(cap_replan.snapshot);
+    const auto &extended=*cap_replan.snapshot->after;
+    REQUIRE(extended.paths.size()==cap.paths.size());
+    REQUIRE(cap_replan.snapshot->covered_gain_mm3.lower>=.001);
+    INFO("native extended first cap C=[" << extended.fill->covered_target_mm3.lower << ',' << extended.fill->covered_target_mm3.upper <<
+        "] M=[" << extended.fill->missing_target_mm3.lower << ',' << extended.fill->missing_target_mm3.upper <<
+        "] outside=[" << extended.fill->outside_target_mm3.lower << ',' << extended.fill->outside_target_mm3.upper <<
+        "] cells=" << cap_replan.snapshot->cells << " work=" << cap_replan.snapshot->evaluations);
+    REQUIRE(cap_replan.snapshot->before==first_cap.snapshot);REQUIRE(extended.source==cap.source);
+    REQUIRE(extended.fill->target==cap.fill->target);REQUIRE(extended.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+    REQUIRE(cap.hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(cap_packets==161);
+    REQUIRE(extended.fill->occupied->source->sequence!=cap.fill->occupied->source->sequence);
+    LayerAmount extended_amount=0;size_t extended_packets=0;
+    for (size_t i=0;i<extended.paths.size();++i) {
+        const auto &path=*extended.paths[i];if (i<4) REQUIRE(extended.paths[i]==cap.paths[i]);
+        else {
+            const auto axis=[&](PhysicalPosition p) {return along_x ? p.x() : p.y();};
+            REQUIRE(path.line_index==cap.paths[i]->line_index);REQUIRE(axis(path.path_start)<axis(cap.paths[i]->path_start));
+            REQUIRE(axis(path.path_end)>axis(cap.paths[i]->path_end));
+            const LayerAmount band=extended.source->policy.boundary_band.value(),numeric=extended.source->numerical_error_upper_mm;
+            REQUIRE(LayerAmount(axis(path.path_start))>=LayerAmount(along_x ? wide.min_x : wide.min_y)+band+numeric);
+            REQUIRE(LayerAmount(axis(path.path_end))<=LayerAmount(along_x ? wide.max_x : wide.max_y)-band-numeric);
+        }
+        const LayerAmount h0=LayerAmount(path.path_start.z())-flat_top,h1=LayerAmount(path.path_end.z())-flat_top;
+        const LayerAmount l=sqrt(pow(LayerAmount(path.path_end.x())-path.path_start.x(),2)+pow(LayerAmount(path.path_end.y())-path.path_start.y(),2));
+        const LayerAmount k=1-acos(LayerAmount(-1))/4,ideal=l*(LayerAmount(.4)*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3);
+        contains(path.actual_target_volume_mm3,ideal);
+        for (const auto &p : path.pieces) {REQUIRE(p.nominal_width.value()==.4);extended_amount+=p.volume.value();++extended_packets;}
+    }
+    contains(extended.deposited_volume_mm3,extended_amount);contains(extended.fill->occupied->individual_volume_mm3,extended_amount);
+    REQUIRE(extended.global_volume_error_mm3<=layer_limits.beads.packets.maximum_volume_error.value());
+    REQUIRE(extended.fill->outside_target_mm3.upper<=cap.policy.maximum_outside_target.value());
+    REQUIRE(extended.fill->covered_target_mm3.lower>cap.fill->covered_target_mm3.upper);
+    REQUIRE(extended.fill->missing_target_mm3.upper<cap.fill->missing_target_mm3.lower);
+    const FirstCapResult extended_result{"",cap_replan.snapshot->after};
+    const auto extended_joins=assess_first_cap_run_joins(extended_result);INFO(extended_joins.reason);REQUIRE(extended_joins.snapshot);
+    REQUIRE(extended_joins.snapshot->joins.size()==6);
+    for (const auto &join : extended_joins.snapshot->joins) {
+        REQUIRE(join.material->first_run->source==extended.fill->occupied->source);
+        REQUIRE(join.material->second_run->source==extended.fill->occupied->source);
+        test::independent_run_box(*join.material->first_run,join.material->witness);
+        test::independent_run_box(*join.material->second_run,join.material->witness);
+    }
+    const auto extended_interface=assess_first_cap_interface(extended_result,interface_policy);INFO(extended_interface.reason);REQUIRE(extended_interface.snapshot);
+    REQUIRE(extended_interface.snapshot->packets.size()==extended_packets);
+    test::independent_lower_box(*extended_interface.snapshot->body,support_row,extended_interface.snapshot->anchor);
+    const auto extended_voids=classify_material_voids({"",extended.fill},void_limits);
+    INFO(extended_voids.reason << " cells=" << extended_voids.cells << " work=" << extended_voids.evaluations);REQUIRE(extended_voids.snapshot);
+    REQUIRE(extended_voids.snapshot->source==extended.fill);
+    REQUIRE(extended_voids.snapshot->vertical_clear_missing_mm3.upper<v.vertical_clear_missing_mm3.lower);
+    REQUIRE(extended_voids.snapshot->under_material_missing_mm3.lower>0);
+    INFO("native extended cap packets=" << extended_packets << " S=[" << extended.deposited_volume_mm3.lower << ',' << extended.deposited_volume_mm3.upper <<
+        "] R=[" << extended.fill->occupied->repeated_volume_mm3.lower << ',' << extended.fill->occupied->repeated_volume_mm3.upper <<
+        "] gain=[" << cap_replan.snapshot->covered_gain_mm3.lower << ',' << cap_replan.snapshot->covered_gain_mm3.upper <<
+        "] under=[" << extended_voids.snapshot->under_material_missing_mm3.lower << ',' << extended_voids.snapshot->under_material_missing_mm3.upper <<
+        "] clear=[" << extended_voids.snapshot->vertical_clear_missing_mm3.lower << ',' << extended_voids.snapshot->vertical_clear_missing_mm3.upper <<
+        "] void cells=" << extended_voids.cells << " void work=" << extended_voids.evaluations <<
+        " run joins cells=" << extended_joins.cells << " work=" << extended_joins.evaluations <<
+        " interface cells=" << extended_interface.cells << " work=" << extended_interface.evaluations);
+    REQUIRE(extended.fill->missing_target_mm3.lower>0);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
