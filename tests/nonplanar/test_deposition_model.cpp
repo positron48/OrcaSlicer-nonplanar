@@ -620,3 +620,100 @@ TEST_CASE("B07 finite hatch capture refuses thin sparse stale cancelled and exha
     limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(3));return false; };
     REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
 }
+
+TEST_CASE("B07 finite hatch cells conserve interior and boundary volumes without charging ends to a bead", "[Nonplanar][B07][HatchCells]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},1.2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto present=material_at(ledger,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),
+        NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.76,1.8,1.76},.9,policy); REQUIRE(stack.snapshot);
+    const auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX}); REQUIRE(hatch.snapshot);
+    const auto result=allocate_affine_hatch_cells(hatch); INFO(result.reason); REQUIRE(result.snapshot);
+    const auto &allocation=*result.snapshot; REQUIRE(allocation.source==hatch.snapshot); REQUIRE(allocation.passes.size()==4);
+    long double expected_inside=0,expected_remainder=0;
+    for (size_t p=0; p<4; ++p) {
+        const auto &pass=allocation.passes[p]; const auto &lines=hatch.snapshot->passes[p].lines;
+        REQUIRE(pass.finite_cells.size()==lines.size()); REQUIRE(pass.remainder_cells.size()==4);
+        const auto &r=pass.finite_footprint; long double before=p ? stack.snapshot->surfaces[p-1].cell.z00 : 1;
+        const auto &above=stack.snapshot->surfaces[p].cell;
+        const long double lower_gradient=p ?
+            (static_cast<long double>(stack.snapshot->surfaces[p-1].cell.z10)-before)/2 : 0;
+        const long double slope=(static_cast<long double>(above.z10)-above.z00)/2-lower_gradient;
+        const long double base=static_cast<long double>(above.z00)-before;
+        const auto oracle=[&](const RectangleXY &box) {
+            return (static_cast<long double>(box.max_x)-box.min_x)*(static_cast<long double>(box.max_y)-box.min_y)*
+                (base+slope*((static_cast<long double>(box.min_x)+box.max_x)/2-1));
+        };
+        for (size_t i=0; i<lines.size(); ++i) {
+            const auto &cell=pass.finite_cells[i]; REQUIRE(cell.volume_mm3.lower>0);
+            REQUIRE(cell.footprint.min_x>=r.min_x); REQUIRE(cell.footprint.max_x<=r.max_x);
+            REQUIRE(cell.footprint.min_y>=r.min_y); REQUIRE(cell.footprint.max_y<=r.max_y);
+            if (hatch.snapshot->passes[p].direction==HatchDirection::AlongX) {
+                REQUIRE(cell.footprint.min_x>=lines[i].start.x()); REQUIRE(cell.footprint.max_x<=lines[i].end.x());
+                REQUIRE(cell.footprint.min_y>=lines[i].start.y()-.225); REQUIRE(cell.footprint.max_y<=lines[i].start.y()+.225);
+            } else {
+                REQUIRE(cell.footprint.min_y>=lines[i].start.y()); REQUIRE(cell.footprint.max_y<=lines[i].end.y());
+                REQUIRE(cell.footprint.min_x>=lines[i].start.x()-.225); REQUIRE(cell.footprint.max_x<=lines[i].start.x()+.225);
+            }
+            volume_contains(cell.volume_mm3,oracle(cell.footprint));
+        }
+        volume_contains(pass.finite_volume_mm3,oracle(r)); expected_inside+=oracle(r);
+        const RectangleXY whole{1,-.4,3,.4}; const auto remainder=oracle(whole)-oracle(r);
+        volume_contains(pass.remainder_volume_mm3,remainder); expected_remainder+=remainder;
+        REQUIRE(pass.remainder_volume_mm3.lower>0); REQUIRE(pass.finite_volume_mm3.upper<pass.total_volume_mm3.lower);
+        for (const auto &cell : pass.remainder_cells) volume_contains(cell.volume_mm3,oracle(cell.footprint));
+    }
+    volume_contains(allocation.finite_volume_mm3,expected_inside);
+    volume_contains(allocation.remainder_volume_mm3,expected_remainder);
+    volume_contains(allocation.total_volume_mm3,expected_inside+expected_remainder);
+    REQUIRE(allocation.total_volume_mm3.upper-allocation.total_volume_mm3.lower<=.001);
+}
+
+TEST_CASE("B07 finite cell allocation owns its parent and rejects stale cancelled or exhausted proofs", "[Nonplanar][B07][HatchCells]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},1.2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto present=material_at(ledger,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),
+        NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.76,1.8,1.76},.9,policy);
+    auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX}); REQUIRE(hatch.snapshot);
+    MaterialIntegralLimits limits; limits.cancelled=[&] { hatch.snapshot.reset();limits.max_cells=1;return false; };
+    const auto owned=allocate_affine_hatch_cells(hatch,limits); INFO(owned.reason); REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->source); hatch.snapshot=owned.snapshot->source; limits={};
+    REQUIRE_FALSE(allocate_affine_hatch_cells({}).snapshot);
+    limits.max_cells=1; REQUIRE_FALSE(allocate_affine_hatch_cells(hatch,limits).snapshot);
+    limits={}; limits.max_evaluations=1; REQUIRE_FALSE(allocate_affine_hatch_cells(hatch,limits).snapshot);
+    limits={}; limits.maximum_interval_width=Volume(1e-17); REQUIRE_FALSE(allocate_affine_hatch_cells(hatch,limits).snapshot);
+    limits={}; limits.is_current=[](uint64_t){return false;}; REQUIRE_FALSE(allocate_affine_hatch_cells(hatch,limits).snapshot);
+    limits={}; limits.cancelled=[] { return true; }; REQUIRE_FALSE(allocate_affine_hatch_cells(hatch,limits).snapshot);
+    limits={}; limits.timeout=std::chrono::milliseconds(1);
+    limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(3));return false; };
+    REQUIRE_FALSE(allocate_affine_hatch_cells(hatch,limits).snapshot);
+}
+
+TEST_CASE("B07 finite cells retain rounded source shoulders in the boundary remainder", "[Nonplanar][B07][HatchCells]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},.8,.2,.2)}); const auto present=material_at(ledger,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),
+        NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.35,3,.35},1.76,1.8,1.76},.9,policy); REQUIRE(stack.snapshot);
+    const auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX}); REQUIRE(hatch.snapshot);
+    const auto cells=allocate_affine_hatch_cells(hatch); INFO(cells.reason); REQUIRE(cells.snapshot);
+    const auto &core=cells.snapshot->passes.front().finite_footprint;
+    REQUIRE(core.min_y>-.3); REQUIRE(core.max_y<.3);
+    // Independent circular primitive for the two 0.05 mm shoulders. The
+    // finite first-pass core lies wholly over the flat nominal section.
+    const long double radius=.1L,u=.05L;
+    const long double roof=.6L+.1L*.9L+u*std::sqrt(radius*radius-u*u)+radius*radius*std::asin(u/radius);
+    const long double final_mean=(static_cast<long double>(double(1.76))+double(1.8))/2;
+    const long double whole=2*(.7L*final_mean-roof);
+    volume_contains(cells.snapshot->total_volume_mm3,whole);
+    const auto &first=stack.snapshot->surfaces.front().cell;
+    const long double mean=static_cast<long double>(first.z00)+(static_cast<long double>(first.z10)-first.z00)*
+        ((static_cast<long double>(core.min_x)+core.max_x)/2-1)/2;
+    const long double finite=(static_cast<long double>(core.max_x)-core.min_x)*(static_cast<long double>(core.max_y)-core.min_y)*(mean-1);
+    const long double first_whole=2*(.7L*(static_cast<long double>(first.z00)+first.z10)/2-roof);
+    volume_contains(cells.snapshot->passes.front().finite_volume_mm3,finite);
+    volume_contains(cells.snapshot->passes.front().remainder_volume_mm3,first_whole-finite);
+}

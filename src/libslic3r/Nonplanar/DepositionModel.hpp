@@ -214,7 +214,8 @@ struct AffinePassStackResult {
 AffinePassStackResult plan_affine_pass_stack(const LowerMaterialView &, const AffineCapCell &final_surface,
     double support_plane_z_mm, const AffinePassPolicy &, const MaterialIntegralLimits &limits = {});
 
-inline constexpr unsigned affine_hatch_contract_version=1;
+inline constexpr unsigned affine_hatch_contract_version=2;
+struct AffineHatchResult;
 enum class HatchDirection { AlongX, AlongY };
 struct AffineHatchPolicy {
     WidthXY width;
@@ -250,6 +251,12 @@ struct AffineHatchSnapshot {
     const ScalarBounds total_prospective_volume_mm3;
     const size_t line_count;
     const double numerical_error_upper_mm;
+private:
+    AffineHatchSnapshot(std::shared_ptr<const AffinePassStackSnapshot> s, AffineHatchPolicy p,
+        std::vector<AffineHatchPass> passes_, ScalarBounds total, size_t count, double numeric)
+        : source(std::move(s)), policy(p), passes(std::move(passes_)), total_prospective_volume_mm3(total),
+          line_count(count), numerical_error_upper_mm(numeric) {}
+    friend AffineHatchResult plan_affine_hatches(const AffinePassStackResult &, const AffineHatchPolicy &, const AffineHatchLimits &);
 };
 struct AffineHatchResult { std::string reason; std::shared_ptr<const AffineHatchSnapshot> snapshot; };
 // Construct finite fixed-width centerline alternatives on the selected affine
@@ -258,4 +265,30 @@ struct AffineHatchResult { std::string reason; std::shared_ptr<const AffineHatch
 // subsequent support, contact/head clearance, travel or motion order is selected.
 AffineHatchResult plan_affine_hatches(const AffinePassStackResult &, const AffineHatchPolicy &,
                                       const AffineHatchLimits &limits = {});
+
+inline constexpr unsigned affine_hatch_cells_contract_version=1;
+struct AffineHatchCellPass {
+    RectangleXY finite_footprint;
+    std::vector<IntegralStripVolume> finite_cells, remainder_cells;
+    ScalarBounds finite_volume_mm3, remainder_volume_mm3, total_volume_mm3;
+};
+struct AffineHatchCellsResult;
+struct AffineHatchCellsSnapshot {
+    const std::shared_ptr<const AffineHatchSnapshot> source;
+    const std::vector<AffineHatchCellPass> passes;
+    const ScalarBounds finite_volume_mm3, remainder_volume_mm3, total_volume_mm3;
+    const size_t proof_cells, evaluations;
+private:
+    AffineHatchCellsSnapshot(std::shared_ptr<const AffineHatchSnapshot> s, std::vector<AffineHatchCellPass> p,
+        ScalarBounds finite, ScalarBounds remainder, ScalarBounds total, size_t cells, size_t work)
+        : source(std::move(s)), passes(std::move(p)), finite_volume_mm3(finite), remainder_volume_mm3(remainder),
+          total_volume_mm3(total), proof_cells(cells), evaluations(work) {}
+    friend AffineHatchCellsResult allocate_affine_hatch_cells(const AffineHatchResult &, const MaterialIntegralLimits &);
+};
+struct AffineHatchCellsResult { std::string reason; std::shared_ptr<const AffineHatchCellsSnapshot> snapshot; };
+// Partition every whole-pass volume into finite rectangular path-owned cells
+// and an explicit boundary/end remainder. No amount outside a finite footprint
+// is charged to that path. Rounded-section/overlap corrections, filled beads/E,
+// seam construction, actual later support and motion order remain separate.
+AffineHatchCellsResult allocate_affine_hatch_cells(const AffineHatchResult &, const MaterialIntegralLimits &limits = {});
 }

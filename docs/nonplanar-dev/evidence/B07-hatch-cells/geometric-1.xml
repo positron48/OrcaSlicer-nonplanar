@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="491" hostname="tbd" time="0.086" timestamp="2026-10-01T02:30:54Z">
+    <properties>
+      <property name="random-seed" value="2273012994"/>
+      <property name="filters" value="[HatchCells],[IntegralStrips],[AffineHatches]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 finite hatch cells conserve interior and boundary volumes without charging ends to a bead" time="0.002" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 strip partition owns its proof cuts and limits and refuses incomplete or exhausted allocation" time="0.023" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 finite fixed-width hatch candidates retain affine Z strip volumes and both direction choices" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 finite cell allocation owns its parent and rejects stale cancelled or exhausted proofs" time="0.006" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 finite hatch capture refuses thin sparse stale cancelled and exhausted candidates" time="0.005" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 strip quotas conserve a refined rounded roof integral without repeating material queries" time="0.049" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

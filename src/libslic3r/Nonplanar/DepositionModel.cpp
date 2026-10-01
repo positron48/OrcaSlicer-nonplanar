@@ -567,6 +567,35 @@ class MaterialIntegralProof {
         double, const TransitionPolicy &, const MaterialIntegralLimits &);
     friend IntegralStripsResult split_material_integral(const MaterialIntegralResult &, IntegralSplitAxis,
         const std::vector<double> &, const MaterialIntegralLimits &);
+    friend AffineHatchCellsResult allocate_affine_hatch_cells(const AffineHatchResult &, const MaterialIntegralLimits &);
+    ScalarBounds rectangle_volume(const RectangleXY &r, const MaterialIntegralLimits &limits,
+        size_t &fragments, size_t &evaluations, const std::function<void()> &poll, const char *reason_prefix) const
+    {
+        const auto fail=[&](const char *suffix) { throw Rejection(std::string(reason_prefix)+suffix); };
+        Exact covered_area(0),lower(0),upper(0);
+        for (const auto &leaf : cells) {
+            poll(); if (evaluations>=limits.max_evaluations) fail("_WORK_LIMIT"); ++evaluations;
+            auto polygon=leaf.polygon;
+            for (const auto &plane : {std::pair<Vertex,Exact>{{Exact(1),Exact(0)},Exact(r.min_x)},
+                    {{Exact(-1),Exact(0)},-Exact(r.max_x)},{{Exact(0),Exact(1)},Exact(r.min_y)},
+                    {{Exact(0),Exact(-1)},-Exact(r.max_y)}}) {
+                polygon=clip(polygon,plane.first,plane.second,true);
+                if (polygon.size()<3) break;
+            }
+            if (polygon.size()<3) continue;
+            Exact area(0); const auto integral=affine_integral(polygon,target,&area);
+            if (area==0) continue;
+            if (fragments>=limits.max_cells) fail("_CELL_LIMIT"); ++fragments;
+            covered_area+=area;
+            const auto volume=integral.second-integral.first*leaf.roof;
+            lower+=Exact(volume.lo); upper+=Exact(volume.hi);
+        }
+        const Exact area=(Exact(r.max_x)-Exact(r.min_x))*(Exact(r.max_y)-Exact(r.min_y));
+        if (covered_area!=area) fail("_DOMAIN_MISMATCH");
+        const auto volume=Interval(exact_interval(lower).lo,exact_interval(upper).hi);
+        if (volume.lo<=0) fail("_UNCERTAIN_POSITIVE_VOLUME");
+        return bounds(volume);
+    }
 };
 
 MaterialTransitionResult assess_material_first_pass(const LowerMaterialView &view, const AffineCapCell &requested_cell,
@@ -770,32 +799,14 @@ IntegralStripsResult split_material_integral(const MaterialIntegralResult &reque
         for (size_t i=0; i<cuts.size(); ++i) {
             coordinate(cuts[i]); if (i && cuts[i]<=cuts[i-1]) reject("UNORDERED_INTEGRAL_STRIP_PARTITION");
         }
-        const Vertex normal=x_axis ? Vertex{Exact(1),Exact(0)} : Vertex{Exact(0),Exact(1)};
         std::vector<IntegralStripVolume> strips; Exact all_lower(0),all_upper(0); size_t cells=0,evaluations=0;
         for (size_t i=1; i<cuts.size(); ++i) {
             poll(); RectangleXY strip=r;
             if (x_axis) { strip.min_x=cuts[i-1];strip.max_x=cuts[i]; }
             else { strip.min_y=cuts[i-1];strip.max_y=cuts[i]; }
-            Exact covered_area(0),lower(0),upper(0);
-            for (const auto &leaf : proof->cells) {
-                poll(); if (evaluations>=limits.max_evaluations) reject("INTEGRAL_STRIP_WORK_LIMIT"); ++evaluations;
-                auto polygon=clip(leaf.polygon,normal,Exact(cuts[i-1]),true);
-                if (polygon.size()<3) continue;
-                polygon=clip(polygon,normal,Exact(cuts[i]),false);
-                if (polygon.size()<3) continue;
-                Exact area(0); const auto integral=affine_integral(polygon,proof->target,&area);
-                if (area==0) continue; // Closed boundary contacts carry no volume.
-                if (cells>=limits.max_cells) reject("INTEGRAL_STRIP_CELL_LIMIT"); ++cells;
-                covered_area+=area;
-                const auto volume=integral.second-integral.first*leaf.roof;
-                lower+=Exact(volume.lo); upper+=Exact(volume.hi);
-            }
-            const Exact area=(Exact(strip.max_x)-Exact(strip.min_x))*(Exact(strip.max_y)-Exact(strip.min_y));
-            if (covered_area!=area) reject("INTEGRAL_STRIP_DOMAIN_MISMATCH");
-            const auto amount=Interval(exact_interval(lower).lo,exact_interval(upper).hi);
-            if (amount.lo<=0) reject("INTEGRAL_STRIP_UNCERTAIN_POSITIVE_VOLUME");
-            strips.push_back({strip,bounds(amount)});
-            all_lower+=Exact(amount.lo);all_upper+=Exact(amount.hi);
+            const auto amount=proof->rectangle_volume(strip,limits,cells,evaluations,poll,"INTEGRAL_STRIP");
+            strips.push_back({strip,amount});
+            all_lower+=Exact(amount.lower);all_upper+=Exact(amount.upper);
         }
         const auto total=Interval(exact_interval(all_lower).lo,exact_interval(all_upper).hi);
         if (total.hi<proof->total_volume.lower || total.lo>proof->total_volume.upper) reject("INTEGRAL_STRIP_INCONSISTENT_VOLUME");
@@ -1030,9 +1041,96 @@ AffineHatchResult plan_affine_hatches(const AffinePassStackResult &requested, co
         if (total.hi<source->total_volume_mm3.lower || total.lo>source->total_volume_mm3.upper ||
             (Interval(total.hi)-Interval(total.lo)).hi>std::min(limits.volumes.maximum_interval_width.value(),source->policy.total_volume_error.value()))
             reject("AFFINE_HATCH_TOTAL_VOLUME_PRECISION");
-        poll(); auto snapshot=std::make_shared<const AffineHatchSnapshot>(AffineHatchSnapshot{source,policy,std::move(passes),bounds(total),line_count,numeric});
+        poll(); auto snapshot=std::shared_ptr<const AffineHatchSnapshot>(new AffineHatchSnapshot(source,policy,std::move(passes),bounds(total),line_count,numeric));
         poll(); return {"OWNED_FIXED_WIDTH_AFFINE_HATCH_CANDIDATES_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) { return {e.what(),{}}; }
     catch (const std::exception &e) { return {"AFFINE_HATCH_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
+}
+
+AffineHatchCellsResult allocate_affine_hatch_cells(const AffineHatchResult &requested, const MaterialIntegralLimits &requested_limits)
+{
+    const auto source=requested.snapshot; const auto limits=requested_limits; const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!source || !limits.max_evaluations || limits.max_evaluations>200000 || !limits.max_cells || limits.max_cells>65535 ||
+            !valid_timeout(limits.timeout) || limits.maximum_interval_width.value()<=0) reject("INVALID_HATCH_CELL_PARTITION");
+        const auto stack=source->source; const auto proof=stack->first_pass.proof;
+        const auto poll=[&] { stop(limits,stack->source->sequence->revision,started); };
+        poll(); const auto &r=stack->final_surface.footprint;
+        const auto area=[](const RectangleXY &v) { return (Exact(v.max_x)-Exact(v.min_x))*(Exact(v.max_y)-Exact(v.min_y)); };
+        const auto sum=[](const std::vector<IntegralStripVolume> &cells) {
+            Exact lower(0),upper(0); for (const auto &cell : cells) { lower+=Exact(cell.volume_mm3.lower);upper+=Exact(cell.volume_mm3.upper); }
+            return ScalarBounds{exact_interval(lower).lo,exact_interval(upper).hi};
+        };
+        std::vector<AffineHatchCellPass> passes; size_t fragments=0,evaluations=0;
+        Exact all_finite_lower(0),all_finite_upper(0),all_remainder_lower(0),all_remainder_upper(0);
+        for (size_t p=0; p<source->passes.size(); ++p) {
+            poll(); const auto &hatch=source->passes[p]; const bool x_axis=hatch.direction==HatchDirection::AlongX;
+            const auto &first=hatch.lines.front(), &last=hatch.lines.back();
+            const auto radius=Interval(source->policy.width.value())/Interval(2);
+            // Inward rounding keeps every owner inside the finite nominal
+            // flat-ended path footprint. Rounded transverse voids are not filled.
+            const RectangleXY core=x_axis ? RectangleXY{first.start.x(),(Interval(first.start.y())-radius).hi,
+                    first.end.x(),(Interval(last.start.y())+radius).lo} :
+                RectangleXY{(Interval(first.start.x())-radius).hi,first.start.y(),
+                    (Interval(last.start.x())+radius).lo,first.end.y()};
+            if (core.min_x<=r.min_x || core.max_x>=r.max_x || core.min_y<=r.min_y || core.max_y>=r.max_y ||
+                core.min_x>=core.max_x || core.min_y>=core.max_y) reject("HATCH_CELL_FINITE_DOMAIN");
+            AffineHatchCellPass pass{core,{},{},{0,0},{0,0},{0,0}}; Exact covered(0);
+            const auto append=[&](const RectangleXY &cell, std::vector<IntegralStripVolume> &destination) {
+                poll(); if (cell.min_x>=cell.max_x || cell.min_y>=cell.max_y || cell.min_x<r.min_x || cell.max_x>r.max_x ||
+                    cell.min_y<r.min_y || cell.max_y>r.max_y) reject("HATCH_CELL_DOMAIN_MISMATCH");
+                ScalarBounds amount{0,0};
+                if (!p) amount=proof->rectangle_volume(cell,limits,fragments,evaluations,poll,"HATCH_CELL");
+                else {
+                    if (evaluations>=limits.max_evaluations) reject("HATCH_CELL_WORK_LIMIT"); ++evaluations;
+                    if (fragments>=limits.max_cells) reject("HATCH_CELL_CELL_LIMIT"); ++fragments;
+                    const Polygon polygon{{Exact(cell.min_x),Exact(cell.min_y)},{Exact(cell.max_x),Exact(cell.min_y)},
+                        {Exact(cell.max_x),Exact(cell.max_y)},{Exact(cell.min_x),Exact(cell.max_y)}};
+                    amount=bounds(affine_integral(polygon,stack->surfaces[p].cell).second-
+                        affine_integral(polygon,stack->surfaces[p-1].cell).second);
+                    if (amount.lower<=0) reject("HATCH_CELL_UNCERTAIN_POSITIVE_VOLUME");
+                }
+                covered+=area(cell);destination.push_back({cell,amount});
+            };
+            double previous=x_axis ? core.min_y : core.min_x;
+            for (const auto &line : hatch.lines) {
+                poll(); RectangleXY cell=core;
+                if (x_axis) { cell.min_y=std::max(core.min_y,line.volume_cell.min_y);cell.max_y=std::min(core.max_y,line.volume_cell.max_y); }
+                else { cell.min_x=std::max(core.min_x,line.volume_cell.min_x);cell.max_x=std::min(core.max_x,line.volume_cell.max_x); }
+                const Exact half=Exact(line.width.value())/Exact(2);
+                const bool inside=x_axis ? cell.min_x>=line.start.x() && cell.max_x<=line.end.x() &&
+                    Exact(cell.min_y)>=Exact(line.start.y())-half && Exact(cell.max_y)<=Exact(line.start.y())+half :
+                    cell.min_y>=line.start.y() && cell.max_y<=line.end.y() &&
+                    Exact(cell.min_x)>=Exact(line.start.x())-half && Exact(cell.max_x)<=Exact(line.start.x())+half;
+                if (!inside) reject("HATCH_CELL_OUTSIDE_FINITE_PATH");
+                if ((x_axis ? cell.min_y : cell.min_x)!=previous) reject("HATCH_CELL_NONCONTIGUOUS_PARTITION");
+                previous=x_axis ? cell.max_y : cell.max_x;append(cell,pass.finite_cells);
+            }
+            if (previous!=(x_axis ? core.max_y : core.max_x)) reject("HATCH_CELL_INCOMPLETE_PARTITION");
+            for (const auto &cell : {RectangleXY{r.min_x,r.min_y,core.min_x,r.max_y},
+                    {core.max_x,r.min_y,r.max_x,r.max_y},{core.min_x,r.min_y,core.max_x,core.min_y},
+                    {core.min_x,core.max_y,core.max_x,r.max_y}}) append(cell,pass.remainder_cells);
+            if (covered!=area(r)) reject("HATCH_CELL_INCOMPLETE_PARTITION");
+            pass.finite_volume_mm3=sum(pass.finite_cells);pass.remainder_volume_mm3=sum(pass.remainder_cells);
+            pass.total_volume_mm3={exact_interval(Exact(pass.finite_volume_mm3.lower)+Exact(pass.remainder_volume_mm3.lower)).lo,
+                exact_interval(Exact(pass.finite_volume_mm3.upper)+Exact(pass.remainder_volume_mm3.upper)).hi};
+            const auto &parent=stack->surfaces[p].volume_mm3;
+            if (pass.total_volume_mm3.upper<parent.lower || pass.total_volume_mm3.lower>parent.upper) reject("HATCH_CELL_INCONSISTENT_VOLUME");
+            all_finite_lower+=Exact(pass.finite_volume_mm3.lower);all_finite_upper+=Exact(pass.finite_volume_mm3.upper);
+            all_remainder_lower+=Exact(pass.remainder_volume_mm3.lower);all_remainder_upper+=Exact(pass.remainder_volume_mm3.upper);
+            passes.push_back(std::move(pass));
+        }
+        const ScalarBounds finite{exact_interval(all_finite_lower).lo,exact_interval(all_finite_upper).hi};
+        const ScalarBounds remainder{exact_interval(all_remainder_lower).lo,exact_interval(all_remainder_upper).hi};
+        const ScalarBounds total{exact_interval(all_finite_lower+all_remainder_lower).lo,exact_interval(all_finite_upper+all_remainder_upper).hi};
+        if (total.upper<stack->total_volume_mm3.lower || total.lower>stack->total_volume_mm3.upper ||
+            (Interval(total.upper)-Interval(total.lower)).hi>std::min(limits.maximum_interval_width.value(),stack->policy.total_volume_error.value()))
+            reject("HATCH_CELL_GLOBAL_PRECISION");
+        poll(); auto snapshot=std::shared_ptr<const AffineHatchCellsSnapshot>(new AffineHatchCellsSnapshot(source,
+            std::move(passes),finite,remainder,total,fragments,evaluations));
+        poll();return {"BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) { return {e.what(),{}}; }
+    catch (const std::exception &e) { return {"HATCH_CELL_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
 }
 }

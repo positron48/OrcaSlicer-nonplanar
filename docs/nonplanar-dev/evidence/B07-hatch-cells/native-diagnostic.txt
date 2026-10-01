@@ -1,0 +1,899 @@
+Filters: [NativeHatchCells]
+Randomness seeded to: 2686467561
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 native finite hatch cells keep end and boundary volume in an explicit
+remainder
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1919
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1921: PASSED:
+with message:
+  !(std::is_aggregate<AffineHatchSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1922: PASSED:
+with message:
+  !(std::is_aggregate<AffineHatchCellsSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1362: PASSED:
+  REQUIRE( file.source )
+with expansion:
+  0xa9ac1d8c8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1363: PASSED:
+  REQUIRE( imported.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1364: PASSED:
+  REQUIRE( load_stl(path.string().c_str(),&model) )
+with expansion:
+  true
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1370: PASSED:
+  REQUIRE( placed.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+with message:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1373: PASSED:
+  REQUIRE( partition.status==VolumePartitionStatus::Partitioned )
+with expansion:
+  0 == 0
+with messages:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+  NOMINAL_BODY_CAP_PARTITION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1924: PASSED:
+  REQUIRE( body.snapshot )
+with expansion:
+  0xa9ae5c018
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1928: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0xa9ac07678
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1936: PASSED:
+  REQUIRE( native.snapshot )
+with expansion:
+  0xa9b0d8218
+with message:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1937: PASSED:
+  REQUIRE( cells.snapshot )
+with expansion:
+  0xa9b260000
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1938: PASSED:
+  REQUIRE( allocation.source==native.snapshot->hatches )
+with expansion:
+  0xa9ada8000 == 0xa9ada8000
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1938: PASSED:
+  REQUIRE( allocation.passes.size()==4 )
+with expansion:
+  4 == 4
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1943: PASSED:
+  REQUIRE( allocation.finite_volume_mm3.lower>0 )
+with expansion:
+  5.88913621094819195 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1943: PASSED:
+  REQUIRE( allocation.remainder_volume_mm3.lower>0 )
+with expansion:
+  3.76563665695931649 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1944: PASSED:
+  REQUIRE( allocation.finite_volume_mm3.upper<allocation.total_volume_mm3.lower )
+with expansion:
+  5.89412551467974843 < 9.65477286790750888
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1945: PASSED:
+  REQUIRE( allocation.total_volume_mm3.upper-allocation.total_volume_mm3.lower<=.01 )
+with expansion:
+  0.00998794209589704 <= 0.01
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1947: PASSED:
+  REQUIRE( allocation.total_volume_mm3.lower<=parent.upper )
+with expansion:
+  9.65477286790750888 <= 9.6647608100034077
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1947: PASSED:
+  REQUIRE( allocation.total_volume_mm3.upper>=parent.lower )
+with expansion:
+  9.66476081000340592 >= 9.65477286790751243
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1949: PASSED:
+  REQUIRE( pass.finite_cells.size()==native.snapshot->hatches->passes[p].lines.size() )
+with expansion:
+  14 == 14
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1950: PASSED:
+  REQUIRE( pass.remainder_cells.size()==4 )
+with expansion:
+  4 == 4
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.10423879144282826 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09777394077296656 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09782030429693882 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09781974898254982 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09765117898194429 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09772429222296826 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09782767439687531 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09782777359942274 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09772425879274917 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09765151203005881 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09781979221530857 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09782035820479137 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09777391366776278 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.10423880413168508 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.42151518566043894 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.67254443988852231 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.04944025625597907 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.04944044608094015 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1949: PASSED:
+  REQUIRE( pass.finite_cells.size()==native.snapshot->hatches->passes[p].lines.size() )
+with expansion:
+  4 == 4
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1950: PASSED:
+  REQUIRE( pass.remainder_cells.size()==4 )
+with expansion:
+  4 == 4
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.42200514526778216 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.38823316756946363 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.38823316756946363 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.42200514526778038 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.23604143767343364 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.23604143767343364 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.13374028220311593 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.13374028220311593 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1961: PASSED:
+  REQUIRE( pass.finite_volume_mm3.lower<=expected )
+with expansion:
+  1.6204766256744898 <= 1.62048
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1961: PASSED:
+  REQUIRE( pass.finite_volume_mm3.upper>=expected )
+with expansion:
+  1.62047662567450446 >= 1.62048
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1949: PASSED:
+  REQUIRE( pass.finite_cells.size()==native.snapshot->hatches->passes[p].lines.size() )
+with expansion:
+  14 == 14
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1950: PASSED:
+  REQUIRE( pass.remainder_cells.size()==4 )
+with expansion:
+  4 == 4
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09568169129553537 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910668 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910668 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910757 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910668 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910668 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910757 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910757 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910668 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910668 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910757 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910668 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.08959226943910668 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.09568169129553537 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.50154594503403505 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.50154594503403505 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.0452387797495819 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.0452387797495819 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1961: PASSED:
+  REQUIRE( pass.finite_volume_mm3.lower<=expected )
+with expansion:
+  1.26647061586035448 <= 1.26647
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1961: PASSED:
+  REQUIRE( pass.finite_volume_mm3.upper>=expected )
+with expansion:
+  1.26647061586036735 >= 1.26647
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1949: PASSED:
+  REQUIRE( pass.finite_cells.size()==native.snapshot->hatches->passes[p].lines.size() )
+with expansion:
+  4 == 4
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1950: PASSED:
+  REQUIRE( pass.remainder_cells.size()==4 )
+with expansion:
+  4 == 4
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.42200514526778393 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.38823316756946541 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.38823316756946541 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1951: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.42200514526778393 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.23604143767343541 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.23604143767343452 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.13374028220311682 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1952: PASSED:
+  REQUIRE( cell.volume_mm3.lower>0 )
+with expansion:
+  0.13374028220311682 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1961: PASSED:
+  REQUIRE( pass.finite_volume_mm3.lower<=expected )
+with expansion:
+  1.62047662567449868 <= 1.62048
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1961: PASSED:
+  REQUIRE( pass.finite_volume_mm3.upper>=expected )
+with expansion:
+  1.62047662567451334 >= 1.62048
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1965: PASSED:
+  REQUIRE_FALSE( allocate_affine_hatch_cells({"",native.snapshot->hatches},limits).snapshot )
+with expansion:
+  !0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  BOUNDED_FINITE_HATCH_CELLS_AND_EXPLICIT_REMAINDER_ONLY
+  finite=[5.88913621094819195,5.89412551467974843] remainder=[3.
+  76563665695931649,3.77063529532365616] total=[9.65477286790750888,9.
+  66476081000340592] cells=3006 work=10294
+
+===============================================================================
+All tests passed (86 assertions in 1 test case)
+

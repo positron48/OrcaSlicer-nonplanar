@@ -1915,3 +1915,52 @@ TEST_CASE("B07 native affine wedge creates finite nonplanar hatch candidates fro
     const auto retained=plan_native_affine_hatches(material,request,policy,pass_limits,hatch_limits);INFO(retained.reason);REQUIRE(retained.snapshot);
     REQUIRE(retained.snapshot->passes->body_material);
 }
+
+TEST_CASE("B07 native finite hatch cells keep end and boundary volume in an explicit remainder", "[Nonplanar][B07][NativeHatchCells]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<AffineHatchSnapshot>::value);
+    STATIC_REQUIRE_FALSE(std::is_aggregate<AffineHatchCellsSnapshot>::value);
+    const auto body=generate_planar_body(native_body_partition(planar_body_config(),{},{},4.2,
+        "tests/nonplanar/data/affine-wedge-1-in-16.stl")); REQUIRE(body.snapshot);
+    const BodyMaterialParameters parameters{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits capture; capture.timeout=std::chrono::seconds(5);
+    const auto material=reconstruct_planar_body_material(body,parameters,capture); REQUIRE(material.snapshot);
+    const NativeAffinePassRequest request{{19,17,21,23},0,4.1,
+        {4,{VerticalGap(.1),VerticalGap(.4),Length(.00001)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.01)}};
+    NativeAffinePassLimits pass_limits;pass_limits.material.max_cells=8191;pass_limits.material.timeout=std::chrono::seconds(5);
+    pass_limits.material.maximum_interval_width=Volume(.01);
+    AffineHatchLimits hatch_limits;hatch_limits.timeout=std::chrono::seconds(10);hatch_limits.volumes.max_cells=32768;
+    hatch_limits.volumes.timeout=std::chrono::seconds(5);hatch_limits.volumes.maximum_interval_width=Volume(.01);
+    const auto native=plan_native_affine_hatches(material,request,{WidthXY(.45),Length(.4),Length(.2),HatchDirection::AlongX},
+        pass_limits,hatch_limits); INFO(native.reason); REQUIRE(native.snapshot);
+    const auto cells=allocate_affine_hatch_cells({"",native.snapshot->hatches},hatch_limits.volumes); INFO(cells.reason); REQUIRE(cells.snapshot);
+    const auto &allocation=*cells.snapshot; REQUIRE(allocation.source==native.snapshot->hatches); REQUIRE(allocation.passes.size()==4);
+    INFO("finite=[" << std::setprecision(18) << allocation.finite_volume_mm3.lower << ',' << allocation.finite_volume_mm3.upper <<
+        "] remainder=[" << allocation.remainder_volume_mm3.lower << ',' << allocation.remainder_volume_mm3.upper <<
+        "] total=[" << allocation.total_volume_mm3.lower << ',' << allocation.total_volume_mm3.upper <<
+        "] cells=" << allocation.proof_cells << " work=" << allocation.evaluations);
+    REQUIRE(allocation.finite_volume_mm3.lower>0); REQUIRE(allocation.remainder_volume_mm3.lower>0);
+    REQUIRE(allocation.finite_volume_mm3.upper<allocation.total_volume_mm3.lower);
+    REQUIRE(allocation.total_volume_mm3.upper-allocation.total_volume_mm3.lower<=.01);
+    const auto &parent=native.snapshot->hatches->total_prospective_volume_mm3;
+    REQUIRE(allocation.total_volume_mm3.lower<=parent.upper); REQUIRE(allocation.total_volume_mm3.upper>=parent.lower);
+    for (size_t p=0; p<4; ++p) {
+        const auto &pass=allocation.passes[p]; REQUIRE(pass.finite_cells.size()==native.snapshot->hatches->passes[p].lines.size());
+        REQUIRE(pass.remainder_cells.size()==4);
+        for (const auto &cell : pass.finite_cells) REQUIRE(cell.volume_mm3.lower>0);
+        for (const auto &cell : pass.remainder_cells) REQUIRE(cell.volume_mm3.lower>0);
+        if (p) {
+            const auto &above=native.snapshot->passes->stack->surfaces[p].cell;
+            const auto &below=native.snapshot->passes->stack->surfaces[p-1].cell;
+            const auto &r=pass.finite_footprint;
+            const long double x=(static_cast<long double>(r.min_x)+r.max_x)/2, y=(static_cast<long double>(r.min_y)+r.max_y)/2;
+            const auto z=[&](const AffineCapCell &c) { return static_cast<long double>(c.z00)+
+                (static_cast<long double>(c.z10)-c.z00)*(x-19)/2+(static_cast<long double>(c.z01)-c.z00)*(y-17)/6; };
+            const long double expected=(static_cast<long double>(r.max_x)-r.min_x)*(static_cast<long double>(r.max_y)-r.min_y)*(z(above)-z(below));
+            REQUIRE(pass.finite_volume_mm3.lower<=expected); REQUIRE(pass.finite_volume_mm3.upper>=expected);
+        }
+    }
+    auto limits=hatch_limits.volumes; limits.is_current=[](uint64_t){return false;};
+    REQUIRE_FALSE(allocate_affine_hatch_cells({"",native.snapshot->hatches},limits).snapshot);
+}

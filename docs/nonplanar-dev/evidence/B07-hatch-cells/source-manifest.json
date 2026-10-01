@@ -1,0 +1,64 @@
+{
+  "base_commit": "12d8c81f9e1b1b66796619f2d4a9d916deca9194",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-hatch-cells.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "b7f0a7f4e3f6e887e9ce566b0743aed602230b5c6506473ad99df8fcb864d906",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "d9cfbc1347fba0eb63ac6002b274e2f5b89e7cd3b79513e8e24ce99fa75905bf",
+    "tests/nonplanar/test_deposition_model.cpp": "6dcee7b0817d57a38cc88c8880d573430fcbef8afd926fdbd5e5e7d5081fdbd9",
+    "tests/nonplanar/test_policy.cpp": "b9dc1f6091adad88b0a9397b4267f9d28e2993f67bc73edd1742093f012d13ca",
+    "docs/nonplanar-dev/adr-0039-finite-hatch-cell-remainder.md": "9fb05bbe9b671296b988d0a5dec14a4796215834f4d529b896e9665f90084e23",
+    "docs/nonplanar-dev/B07-hatch-cells.md": "835a1426e5b6ba7288ca3eeab670efacc06598885366e8e83edfd0652f9b4516",
+    "docs/nonplanar-dev/status.json": "670d9f6031580ec5f780d7eea99073dd81fb74e8465d5e6278e37a28e0035ebf"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "ba3b531340d1d4269ed2b7228b97824c33fb3fd240ae9e553b754df3f2a17a01",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "9532e6afdda239720fabe2bb00e6750467e463703b4b3731c3e870da4532495e"
+  },
+  "compiled_commit_label": "31461d50",
+  "compiled_commit_label_note": "Retained configure label; exact source/binary hashes bind this build. B13 full software provenance remains pending.",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "internal_material_integral_contract": 2,
+  "internal_affine_pass_stack_contract": 2,
+  "internal_affine_hatch_contract": 2,
+  "internal_affine_hatch_cells_contract": 1,
+  "new_geometric_cases": 3,
+  "new_geometric_assertions": 254,
+  "new_native_cases": 1,
+  "new_native_assertions": 86,
+  "material_suite_cases": 27,
+  "material_suite_assertions": 5205,
+  "body_suite_cases": 10,
+  "body_suite_assertions": 54703,
+  "ctest_discovered": 268,
+  "ctest_executed": 268,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "native_finite_cell_volume_mm3": [
+    5.889136210948192,
+    5.894125514679748
+  ],
+  "native_complete_remainder_volume_mm3": [
+    3.7656366569593165,
+    3.770635295323656
+  ],
+  "native_total_volume_mm3": [
+    9.654772867907509,
+    9.664760810003406
+  ],
+  "native_first_proof_fragments_and_later_cells": 3006,
+  "native_evaluations": 10294,
+  "native_limits": {
+    "max_cells": 32768,
+    "max_evaluations": 200000,
+    "timeout_ms": 5000,
+    "maximum_total_interval_width_mm3": 0.01
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "windows": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "full_B07": "NOT_IMPLEMENTED_FINITE_ROUNDED_BEAD_VOLUME_TRANSVERSE_VOID_OVERLAP_SEAM_CURVED_SUPPORT_ORDER_PENDING",
+  "export": "EXISTING_SAFE_HYBRID_BLOCKER_RETAINED"
+}
