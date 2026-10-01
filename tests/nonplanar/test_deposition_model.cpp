@@ -2057,3 +2057,143 @@ TEST_CASE("B07 sloped loop union matches independent circle-line spill and prese
         const auto holes=captured(gapped);REQUIRE_FALSE(integrate_material_union(material_at(holes,gapped.size(),0).nominal,box,limits).snapshot);
     }
 }
+
+namespace {
+AffineHatchResult first_cap_fixture(HatchDirection direction,bool sloped=false)
+{
+    const auto body=captured({bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto state=material_at(body,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const bool x=direction==HatchDirection::AlongX;
+    const auto stack=plan_affine_pass_stack(state.lower,{{1,-.8,3,.8},1.8,sloped && x ? 1.84 : 1.8,sloped && !x ? 1.84 : 1.8},.9,policy);REQUIRE(stack.snapshot);
+    const auto hatches=plan_affine_hatches(stack,{WidthXY(.45),Length(.2),Length(.05),direction});REQUIRE(hatches.snapshot);return hatches;
+}
+}
+TEST_CASE("B07 first cap replaces boundary hatches and measures contour plus interior in one ordered ledger", "[Nonplanar][B07][FirstCap]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapSnapshot>::value);
+    const SceneBox box{{1,-.8,.7},{3,.8,1.84}};
+    for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) for (bool sloped : {false,true}) {
+        const auto hatches=first_cap_fixture(direction,sloped);const auto source=hatches.snapshot;
+        const auto result=plan_first_cap(hatches,{WidthXY(.45),1,true,Volume(.001)},box);INFO(result.reason);REQUIRE(result.snapshot);
+        const auto &cap=*result.snapshot;const auto &lines=source->passes.front().lines;
+        REQUIRE(cap.source==source);REQUIRE(cap.paths.size()==lines.size()+2);REQUIRE((cap.replaced_boundary_lines==std::vector<size_t>{0,lines.size()-1}));
+        REQUIRE(cap.fill->target==source->source->first_pass.proof);REQUIRE(cap.global_volume_error_mm3<=.001);
+        REQUIRE(cap.fill->covered_target_mm3.lower>0);REQUIRE(cap.fill->missing_target_mm3.lower>0);REQUIRE(cap.fill->outside_target_mm3.upper<=.001);
+        using Amount=boost::multiprecision::cpp_bin_float_quad;Amount sum=0;
+        const bool x=direction==HatchDirection::AlongX;
+        const auto axis=[&](PhysicalPosition p) {return x ? p.x() : p.y();};
+        const auto normal=[&](PhysicalPosition p) {return x ? p.y() : p.x();};
+        double lo=1e10,hi=-lo,first=lo,last=hi;
+        for (size_t i=0;i<4;++i) {
+            const auto &edge=*cap.paths[i],&next=*cap.paths[(i+1)%4];REQUIRE_FALSE(edge.line_index.has_value());
+            REQUIRE(edge.path_end.x()==next.path_start.x());REQUIRE(edge.path_end.y()==next.path_start.y());REQUIRE(edge.path_end.z()==next.path_start.z());
+            lo=std::min(lo,axis(edge.path_start));hi=std::max(hi,axis(edge.path_start));first=std::min(first,normal(edge.path_start));last=std::max(last,normal(edge.path_start));
+        }
+        for (size_t i=4;i<cap.paths.size();++i) {
+            const auto &path=*cap.paths[i];REQUIRE(path.line_index==i-3);REQUIRE(path.source==source);REQUIRE(path.roof_domain==FirstHatchRoofDomain::FiniteWidth);
+            const auto &line=lines[*path.line_index];REQUIRE(normal(path.path_start)==normal(line.start));REQUIRE(normal(path.path_end)==normal(line.end));
+            REQUIRE(axis(path.path_start)==lo);REQUIRE(axis(path.path_end)==hi);REQUIRE(lo>=axis(line.start));REQUIRE(hi<=axis(line.end));
+            REQUIRE(normal(path.path_start)>first);REQUIRE(normal(path.path_start)<last);
+        }
+        for (const auto &path : cap.paths) for (const auto &piece : path->pieces) {REQUIRE(piece.nominal_width.value()==.45);sum+=piece.volume.value();}
+        const auto contains=[&](ScalarBounds v,Amount value) {REQUIRE(v.lower<=value);REQUIRE(v.upper>=value);};
+        contains(cap.fill->occupied->individual_volume_mm3,sum);contains(cap.deposited_volume_mm3,sum);
+        // The fresh ledger owns the declared path order, including connectors.
+        const auto &rows=cap.fill->occupied->source->sequence->records;size_t row=0;
+        for (const auto &path : cap.paths) {
+            if (row<rows.size() && !rows[row].bead) {REQUIRE(std::holds_alternative<Travel>(rows[row].motion.payload));++row;}
+            for (const auto &piece : path->pieces) {REQUIRE(row<rows.size());REQUIRE(rows[row].motion.start.x()==piece.start.x());REQUIRE(rows[row].motion.start.y()==piece.start.y());
+                REQUIRE(rows[row].motion.end.z()==piece.end.z());REQUIRE(std::get<Deposition>(rows[row].motion.payload).volume.value()==piece.volume.value());++row;}
+        }
+        REQUIRE(row==rows.size());REQUIRE(cap.fill->occupied->source->completed_records==rows.size());
+        if (!sloped) {
+            Amount primary=0,transverse=0;std::vector<Amount> centres;std::optional<Amount> h;
+            for (const auto &path : cap.paths) {
+                REQUIRE(path->pieces.size()==1);const auto &p=path->pieces[0];h=p.section.gap_begin_mm;REQUIRE(p.section.gap_end_mm==*h);
+                if (normal(p.start)==normal(p.end)) {primary=p.volume.value();centres.emplace_back(normal(p.start));}
+                else transverse=p.volume.value();
+            }
+            std::sort(centres.begin(),centres.end());const Amount a=Amount(hi)-lo,b=Amount(last)-first,k=1-acos(Amount(-1))/4;
+            const Amount core=primary/a/ *h+k* *h- *h;
+            for (size_t i=1;i<centres.size();++i) REQUIRE(centres[i]-centres[i-1]<=core);
+            const Amount united=primary+transverse+a*b* *h;
+            contains(cap.fill->occupied->union_volume_mm3,united);contains(cap.fill->occupied->repeated_volume_mm3,sum-united);contains(cap.fill->covered_target_mm3,united);
+            const auto contour=plan_first_contour(hatches,{WidthXY(.45),1,true,Volume(.001)},box);INFO(contour.reason);REQUIRE(contour.snapshot);
+            REQUIRE(cap.fill->covered_target_mm3.lower>contour.snapshot->fill->covered_target_mm3.upper);
+            REQUIRE(cap.fill->missing_target_mm3.upper<contour.snapshot->fill->missing_target_mm3.lower);
+        }
+    }
+}
+
+TEST_CASE("B07 first cap refuses absent interiors later infill roofs and shared construction limits", "[Nonplanar][B07][FirstCap]")
+{
+    auto hatches=first_cap_fixture(HatchDirection::AlongX);const auto source=hatches.snapshot;const SceneBox box{{1,-.8,.7},{3,.8,1.84}};
+    FirstContourPolicy policy{WidthXY(.45),0,false,Volume(.001)};FirstHatchLayerLimits limits;
+    limits.cancelled=[&] {hatches.snapshot.reset();policy.width=WidthXY(.1);limits.max_paths=0;return false;};
+    const auto owned=plan_first_cap(hatches,policy,box,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==source);
+    hatches.snapshot=source;policy={WidthXY(.45),0,false,Volume(.001)};limits={};
+    REQUIRE_FALSE(plan_first_cap({},policy,box).snapshot);policy.width=WidthXY(.4);REQUIRE_FALSE(plan_first_cap(hatches,policy,box).snapshot);policy.width=WidthXY(.45);
+    const auto thin=remainder_fixture(0);const auto no_interior=plan_first_cap(thin.hatches,policy,{{1,-.4,.7},{3,.4,1.8}});
+    REQUIRE_FALSE(no_interior.snapshot);REQUIRE(no_interior.reason=="FIRST_CAP_NO_INTERIOR_HATCH");
+    REQUIRE_FALSE(plan_first_cap(hatches,policy,{{1.1,-.8,.7},{3,.8,1.84}}).snapshot);
+    REQUIRE_FALSE(plan_first_cap(hatches,policy,{{1,-.8,1.1},{3,.8,1.84}}).snapshot);
+    limits.max_paths=4;REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+    limits={};limits.max_records=4;REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+    limits={};limits.max_cells=1;REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+    limits={};limits.max_evaluations=1;REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+    limits={};limits.beads.packets.max_segments=4;REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+    limits={};limits.beads.max_roof_segments=4;REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+    limits={};limits.volumes.max_depth=0;REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};const auto rounding=plan_first_cap(hatches,policy,box,limits);
+    REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+    const auto floor=bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle);
+    const auto ridge=bead(3,2,{1.7,0,1.06},{2.3,0,1.06},.06,.05,.05,BeadSectionKind::Rectangle);
+    const MaterialRecord travel{{2,1,0,floor.motion.end,ridge.motion.start,Speed(10),Acceleration(100),Travel{}},{}};
+    const auto body=captured({floor,travel,ridge});
+    const AffinePassPolicy passes{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.0001)};
+    for (double progress : {0.,.5,1.}) {
+        const auto stack=plan_affine_pass_stack(material_at(body,2,progress).lower,{{1,-.8,3,.8},1.8,1.8,1.8},.9,passes);REQUIRE(stack.snapshot);
+        const auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.2),Length(.05),HatchDirection::AlongX});REQUIRE(hatch.snapshot);
+        const auto contour=plan_first_contour(hatch,policy,box);INFO(contour.reason);INFO("ridge progress=" << progress);
+        REQUIRE(contour.snapshot); // The local ridge is outside all contour footprints.
+        const auto cap=plan_first_cap(hatch,policy,box);INFO(cap.reason);if (progress==0) REQUIRE(cap.snapshot);else REQUIRE_FALSE(cap.snapshot);
+    }
+}
+
+TEST_CASE("B07 merged infill-loop union encloses total multiplicity and refuses an unmerged or unequal interior", "[Nonplanar][B07][MaterialUnion][InfillLoopUnion]")
+{
+    using Amount=boost::multiprecision::cpp_bin_float_quad;
+    for (bool rotate : {false,true}) for (bool reverse : {false,true}) {
+        const auto point=[&](double a,double b) {return rotate ? PhysicalPosition(b,a,1.25) : PhysicalPosition(a,b,1.25);};
+        const std::array<PhysicalPosition,4> corners{point(0,0),point(2,0),point(2,.875),point(0,.875)};
+        std::vector<MaterialRecord> rows;
+        for (size_t i=0;i<4;++i) {const size_t a=reverse ? (4-i)%4 : i,b=reverse ? (3-i)%4 : (i+1)%4;
+            rows.push_back(bead(i+1,i,corners[a],corners[b],.9,.25,.25));}
+        rows.push_back({{5,4,0,rows.back().motion.end,point(reverse ? 2 : 0,.4375),Speed(10),Acceleration(100),Travel{}},{}});
+        rows.push_back(bead(6,5,rows.back().motion.end,point(reverse ? 0 : 2,.4375),.9,.25,.25));
+        const auto ledger=captured(rows);const auto present=material_at(ledger,rows.size(),0);
+        MaterialUnionLimits limits;limits.max_cells=511;limits.maximum_interval_width=Volume(.0001);const SceneBox box{{-1,-1,.7},{3,3,1.6}};
+        const auto result=integrate_material_union(present.nominal,box,limits);INFO(result.reason);REQUIRE(result.snapshot);
+        const Amount primary=std::get<Deposition>(rows[0].motion.payload).volume.value(),transverse=std::get<Deposition>(rows[1].motion.payload).volume.value();
+        const Amount vp=reverse ? transverse : primary,vt=reverse ? primary : transverse,h=.25,a=2,b=.875,pi=acos(Amount(-1));
+        const Amount core=vp/a/h+(1-pi/4)*h-h;REQUIRE(core<b);REQUIRE(core>=b/2);
+        const Amount sum=3*vp+2*vt,united=vp+vt+a*b*h;
+        const auto contains=[&](ScalarBounds bounds,Amount value) {REQUIRE(bounds.lower<=value);REQUIRE(bounds.upper>=value);};
+        contains(result.snapshot->individual_volume_mm3,sum);contains(result.snapshot->union_volume_mm3,united);contains(result.snapshot->repeated_volume_mm3,sum-united);
+        limits.max_cells=1;REQUIRE_FALSE(integrate_material_union(present.nominal,box,limits).snapshot);
+        limits.max_cells=4;limits.maximum_interval_width=Volume(1e-10);
+        REQUIRE_FALSE(integrate_material_union(material_at(ledger,5,.5).nominal,box,limits).snapshot);
+        auto unequal=rows;unequal.back()=bead(6,5,rows.back().motion.start,rows.back().motion.end,.91,.25,.25);
+        REQUIRE_FALSE(integrate_material_union(material_at(captured(unequal),6,0).nominal,box,limits).snapshot);
+        // The outer pair alone has a real vertical void; a misplaced interior
+        // cannot turn it into a merged slab even though all three rows exist.
+        auto unmerged=rows;unmerged[4].motion.end=point(reverse ? 2 : 0,.02);
+        unmerged[5]=bead(6,5,unmerged[4].motion.end,point(reverse ? 0 : 2,.02),.9,.25,.25);
+        REQUIRE_FALSE(integrate_material_union(material_at(captured(unmerged),6,0).nominal,box,limits).snapshot);
+    }
+}

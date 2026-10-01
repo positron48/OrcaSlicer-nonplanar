@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="1446" hostname="tbd" time="0.108" timestamp="2026-10-01T14:14:52Z">
+    <properties>
+      <property name="random-seed" value="1211325568"/>
+      <property name="filters" value="[FirstCap]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap replaces boundary hatches and measures contour plus interior in one ordered ledger" time="0.089" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first cap refuses absent interiors later infill roofs and shared construction limits" time="0.000" status="run">
+      <failure message="plan_first_contour(hatch,policy,box).snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( plan_first_contour(hatch,policy,box).snapshot )
+with expansion:
+  0
+BOUNDED_FIRST_CONTOUR_AND_INTERIOR_HATCH_CANDIDATE_WITH_MEASURED_JOINT_FILL_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2162
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

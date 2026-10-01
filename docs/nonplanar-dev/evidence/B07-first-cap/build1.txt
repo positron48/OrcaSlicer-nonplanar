@@ -1,0 +1,278 @@
+[1/11] Checking source files encodings for target libslic3r
+[2/11] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Nonplanar/DepositionModel.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.cpp:1:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Transition.hpp:3:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Contracts.hpp:3:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Point.hpp:4:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../libslic3r.h:11:
+In file included from /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:946:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:81: warning: destructor called on non-final 'Slic3r::Polyline' that has virtual functions but non-virtual destructor [-Wdelete-non-abstract-non-virtual-dtor]
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator_traits.h:308:9: note: in instantiation of member function 'std::allocator<Slic3r::Polyline>::destroy' requested here
+  308 |     __a.destroy(__p);
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:314:21: note: in instantiation of function template specialization 'std::allocator_traits<std::allocator<Slic3r::Polyline>>::destroy<Slic3r::Polyline, 0>' requested here
+  314 |     __alloc_traits::destroy(__alloc_, std::__to_address(--__end_));
+      |                     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:178:5: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::__destruct_at_end' requested here
+  178 |     __destruct_at_end(__new_last, false_type());
+      |     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:120:80: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::__destruct_at_end' requested here
+  120 |   _LIBCPP_CONSTEXPR_SINCE_CXX20 _LIBCPP_HIDE_FROM_ABI void clear() _NOEXCEPT { __destruct_at_end(__begin_); }
+      |                                                                                ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:340:3: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::clear' requested here
+  340 |   clear();
+      |   ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:1100:49: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::~__split_buffer' requested here
+ 1100 |     __split_buffer<value_type, allocator_type&> __v(__n, size(), this->__alloc_);
+      |                                                 ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Polyline.hpp:199:9: note: in instantiation of member function 'std::vector<Slic3r::Polyline>::reserve' requested here
+  199 |     out.reserve(paths.size());
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:87: note: qualify call to silence this warning
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                       ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:81: warning: destructor called on non-final 'Slic3r::ThickPolyline' that has virtual functions but non-virtual destructor [-Wdelete-non-abstract-non-virtual-dtor]
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator_traits.h:308:9: note: in instantiation of member function 'std::allocator<Slic3r::ThickPolyline>::destroy' requested here
+  308 |     __a.destroy(__p);
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:763:23: note: in instantiation of function template specialization 'std::allocator_traits<std::allocator<Slic3r::ThickPolyline>>::destroy<Slic3r::ThickPolyline, 0>' requested here
+  763 |       __alloc_traits::destroy(this->__alloc_, std::__to_address(--__soon_to_be_end));
+      |                       ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:543:5: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::__base_destruct_at_end' requested here
+  543 |     __base_destruct_at_end(this->__begin_);
+      |     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:251:16: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::clear' requested here
+  251 |         __vec_.clear();
+      |                ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:262:67: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::__destroy_vector::operator()' requested here
+  262 |   _LIBCPP_CONSTEXPR_SINCE_CXX20 _LIBCPP_HIDE_FROM_ABI ~vector() { __destroy_vector (*this)(); }
+      |                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Polyline.hpp:281:20: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::~vector' requested here
+  281 |     ThickPolylines out;
+      |                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:87: note: qualify call to silence this warning
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                       ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.cpp:1:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Transition.hpp:3:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Contracts.hpp:3:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Point.hpp:12:
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/oneapi/tbb/scalable_allocator.h:254:31: warning: destructor called on non-final 'Slic3r::Polygon' that has virtual functions but non-virtual destructor [-Wdelete-non-abstract-non-virtual-dtor]
+  254 |     void destroy(pointer p) { p->~value_type(); }
+      |                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator_traits.h:308:9: note: in instantiation of member function 'tbb::detail::d1::scalable_allocator<Slic3r::Polygon>::destroy' requested here
+  308 |     __a.destroy(__p);
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/destroy.h:50:31: note: in instantiation of function template specialization 'std::allocator_traits<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::destroy<Slic3r::Polygon, 0>' requested here
+   50 |     allocator_traits<_Alloc>::destroy(__alloc, std::addressof(*__first));
+      |                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:523:10: note: in instantiation of function template specialization 'std::__allocator_destroy<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, std::reverse_iterator<Slic3r::Polygon *>, std::reverse_iterator<Slic3r::Polygon *>>' requested here
+  523 |     std::__allocator_destroy(__alloc_, std::reverse_iterator<_Iter>(__last_), std::reverse_iterator<_Iter>(__first_));
+      |          ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__utility/exception_guard.h:136:10: note: in instantiation of member function 'std::__exception_guard_exceptions<std::_AllocatorDestroyRangeReverse<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, Slic3r::Polygon *>>::~__exception_guard_exceptions' requested here
+  136 |   return __exception_guard<_Rollback>(std::move(__rollback));
+      |          ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:582:33: note: in instantiation of function template specialization 'std::__uninitialized_allocator_copy_impl<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, const Slic3r::Polygon *, const Slic3r::Polygon *, Slic3r::Polygon *>' requested here
+  582 |   auto __result          = std::__uninitialized_allocator_copy_impl(
+      |                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:945:22: note: in instantiation of function template specialization 'std::__uninitialized_allocator_copy<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>, Slic3r::Polygon *>' requested here
+  945 |   __tx.__pos_ = std::__uninitialized_allocator_copy(this->__alloc_, std::move(__first), std::move(__last), __tx.__pos_);
+      |                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:1338:11: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::__construct_at_end<std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>>' requested here
+ 1338 |           __construct_at_end(__m, __last, __n - __dx);
+      |           ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:515:12: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::__insert_with_size<std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>>' requested here
+  515 |     return __insert_with_size(__position, __first, __last, std::distance(__first, __last));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Polygon.hpp:148:71: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::insert<std::__wrap_iter<const Slic3r::Polygon *>, 0>' requested here
+  148 | inline void polygons_append(Polygons &dst, const Polygons &src) { dst.insert(dst.end(), src.begin(), src.end()); }
+      |                                                                       ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/oneapi/tbb/scalable_allocator.h:254:35: note: qualify call to silence this warning
+  254 |     void destroy(pointer p) { p->~value_type(); }
+      |                                   ^
+3 warnings generated.
+[3/11] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Nonplanar/PlanarBody.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/PlanarBody.cpp:7:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Print.hpp:923:25: warning: 'export_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  923 |     int                 export_cached_data(const std::string& dir_path, bool with_space=false);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../PrintBase.hpp:428:29: note: overridden virtual function is here
+  428 |     virtual int             export_cached_data(const std::string& dir_path, bool with_space=false) { return 0;}
+      |                             ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/PlanarBody.cpp:7:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Print.hpp:924:25: warning: 'load_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  924 |     int                 load_cached_data(const std::string& directory);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../PrintBase.hpp:429:28: note: overridden virtual function is here
+  429 |     virtual int            load_cached_data(const std::string& directory) { return 0;}
+      |                            ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/PlanarBody.cpp:1:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/PlanarBody.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/VolumePartition.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/MeshPlacement.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/StlImport.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/MeshAudit.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../TriangleMesh.hpp:4:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../libslic3r.h:11:
+In file included from /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:946:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:81: warning: destructor called on non-final 'Slic3r::Polyline' that has virtual functions but non-virtual destructor [-Wdelete-non-abstract-non-virtual-dtor]
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator_traits.h:308:9: note: in instantiation of member function 'std::allocator<Slic3r::Polyline>::destroy' requested here
+  308 |     __a.destroy(__p);
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:314:21: note: in instantiation of function template specialization 'std::allocator_traits<std::allocator<Slic3r::Polyline>>::destroy<Slic3r::Polyline, 0>' requested here
+  314 |     __alloc_traits::destroy(__alloc_, std::__to_address(--__end_));
+      |                     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:178:5: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::__destruct_at_end' requested here
+  178 |     __destruct_at_end(__new_last, false_type());
+      |     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:120:80: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::__destruct_at_end' requested here
+  120 |   _LIBCPP_CONSTEXPR_SINCE_CXX20 _LIBCPP_HIDE_FROM_ABI void clear() _NOEXCEPT { __destruct_at_end(__begin_); }
+      |                                                                                ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:340:3: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::clear' requested here
+  340 |   clear();
+      |   ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:1100:49: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::~__split_buffer' requested here
+ 1100 |     __split_buffer<value_type, allocator_type&> __v(__n, size(), this->__alloc_);
+      |                                                 ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Polyline.hpp:199:9: note: in instantiation of member function 'std::vector<Slic3r::Polyline>::reserve' requested here
+  199 |     out.reserve(paths.size());
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:87: note: qualify call to silence this warning
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                       ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:81: warning: destructor called on non-final 'Slic3r::ThickPolyline' that has virtual functions but non-virtual destructor [-Wdelete-non-abstract-non-virtual-dtor]
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator_traits.h:308:9: note: in instantiation of member function 'std::allocator<Slic3r::ThickPolyline>::destroy' requested here
+  308 |     __a.destroy(__p);
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:763:23: note: in instantiation of function template specialization 'std::allocator_traits<std::allocator<Slic3r::ThickPolyline>>::destroy<Slic3r::ThickPolyline, 0>' requested here
+  763 |       __alloc_traits::destroy(this->__alloc_, std::__to_address(--__soon_to_be_end));
+      |                       ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:543:5: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::__base_destruct_at_end' requested here
+  543 |     __base_destruct_at_end(this->__begin_);
+      |     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:251:16: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::clear' requested here
+  251 |         __vec_.clear();
+      |                ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:262:67: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::__destroy_vector::operator()' requested here
+  262 |   _LIBCPP_CONSTEXPR_SINCE_CXX20 _LIBCPP_HIDE_FROM_ABI ~vector() { __destroy_vector (*this)(); }
+      |                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Polyline.hpp:281:20: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::~vector' requested here
+  281 |     ThickPolylines out;
+      |                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:87: note: qualify call to silence this warning
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                       ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/PlanarBody.cpp:1:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/PlanarBody.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/VolumePartition.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/MeshPlacement.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/StlImport.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/MeshAudit.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../TriangleMesh.hpp:8:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../BoundingBox.hpp:6:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Point.hpp:12:
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/oneapi/tbb/scalable_allocator.h:254:31: warning: destructor called on non-final 'Slic3r::Polygon' that has virtual functions but non-virtual destructor [-Wdelete-non-abstract-non-virtual-dtor]
+  254 |     void destroy(pointer p) { p->~value_type(); }
+      |                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator_traits.h:308:9: note: in instantiation of member function 'tbb::detail::d1::scalable_allocator<Slic3r::Polygon>::destroy' requested here
+  308 |     __a.destroy(__p);
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/destroy.h:50:31: note: in instantiation of function template specialization 'std::allocator_traits<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::destroy<Slic3r::Polygon, 0>' requested here
+   50 |     allocator_traits<_Alloc>::destroy(__alloc, std::addressof(*__first));
+      |                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:523:10: note: in instantiation of function template specialization 'std::__allocator_destroy<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, std::reverse_iterator<Slic3r::Polygon *>, std::reverse_iterator<Slic3r::Polygon *>>' requested here
+  523 |     std::__allocator_destroy(__alloc_, std::reverse_iterator<_Iter>(__last_), std::reverse_iterator<_Iter>(__first_));
+      |          ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__utility/exception_guard.h:136:10: note: in instantiation of member function 'std::__exception_guard_exceptions<std::_AllocatorDestroyRangeReverse<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, Slic3r::Polygon *>>::~__exception_guard_exceptions' requested here
+  136 |   return __exception_guard<_Rollback>(std::move(__rollback));
+      |          ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:582:33: note: in instantiation of function template specialization 'std::__uninitialized_allocator_copy_impl<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, const Slic3r::Polygon *, const Slic3r::Polygon *, Slic3r::Polygon *>' requested here
+  582 |   auto __result          = std::__uninitialized_allocator_copy_impl(
+      |                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:945:22: note: in instantiation of function template specialization 'std::__uninitialized_allocator_copy<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>, Slic3r::Polygon *>' requested here
+  945 |   __tx.__pos_ = std::__uninitialized_allocator_copy(this->__alloc_, std::move(__first), std::move(__last), __tx.__pos_);
+      |                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:1338:11: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::__construct_at_end<std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>>' requested here
+ 1338 |           __construct_at_end(__m, __last, __n - __dx);
+      |           ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:515:12: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::__insert_with_size<std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>>' requested here
+  515 |     return __insert_with_size(__position, __first, __last, std::distance(__first, __last));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Polygon.hpp:148:71: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::insert<std::__wrap_iter<const Slic3r::Polygon *>, 0>' requested here
+  148 | inline void polygons_append(Polygons &dst, const Polygons &src) { dst.insert(dst.end(), src.begin(), src.end()); }
+      |                                                                       ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/oneapi/tbb/scalable_allocator.h:254:35: note: qualify call to silence this warning
+  254 |     void destroy(pointer p) { p->~value_type(); }
+      |                                   ^
+5 warnings generated.
+[4/11] Linking CXX static library src/libslic3r/Release/liblibslic3r.a
+[5/11] Linking CXX executable src/nonplanar_import/Release/nonplanar_import_worker
+ld: warning: ignoring duplicate libraries: '-lc++', '-lm', 'deps_src/libnest2d/Release/liblibnest2d.a', 'src/libslic3r/Release/liblibslic3r.a'
+[6/11] Linking CXX executable src/nonplanar_import/Release/nonplanar_stl_audit
+ld: warning: ignoring duplicate libraries: '-lc++', '-lm', 'deps_src/libnest2d/Release/liblibnest2d.a', 'src/libslic3r/Release/liblibslic3r.a'
+[7/11] Linking CXX executable src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer; Symlinking the resources directory into the build tree
+ld: warning: ignoring duplicate libraries: '-lc++', '-lm', '/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/lib/libjpeg.a', '/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/lib/libpng.a', 'deps_src/libnest2d/Release/liblibnest2d.a', 'src/libslic3r/Release/liblibslic3r.a'
+[8/11] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2107:127: error: invalid operands to binary expression ('const Volume' (aka 'const Measure<struct VolumeTag>') and 'const Volume')
+ 2107 |                 REQUIRE(rows[row].motion.end.z()==piece.end.z());REQUIRE(std::get<Deposition>(rows[row].motion.payload).volume==piece.volume);++row;}
+      |                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^ ~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2107:127: error: invalid operands to binary expression ('ExprLhs<const Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag> &>' and 'const Volume' (aka 'const Measure<struct VolumeTag>'))
+ 2107 |                 REQUIRE(rows[row].motion.end.z()==piece.end.z());REQUIRE(std::get<Deposition>(rows[row].motion.payload).volume==piece.volume);++row;}
+      |                                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                               ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_decomposer.hpp:341:9: note: candidate template ignored: requirement 'Detail::conjunction<Catch::Detail::is_eq_comparable<const Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag> &, const Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag> &, void>, std::negation<Catch::capture_by_value<Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag>>>>::value' was not satisfied [with RhsT = const Volume &]
+  341 |         CATCH_INTERNAL_DEFINE_EXPRESSION_EQUALITY_OPERATOR( eq, == )
+      |         ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_decomposer.hpp:295:27: note: expanded from macro 'CATCH_INTERNAL_DEFINE_EXPRESSION_EQUALITY_OPERATOR'
+  295 |     constexpr friend auto operator op( ExprLhs&& lhs, RhsT&& rhs )             \
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_decomposer.hpp:341:9: note: candidate template ignored: requirement 'Detail::conjunction<Catch::Detail::is_eq_comparable<const Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag> &, Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag>, void>, Catch::capture_by_value<Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag>>>::value' was not satisfied [with RhsT = Volume]
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_decomposer.hpp:305:27: note: expanded from macro 'CATCH_INTERNAL_DEFINE_EXPRESSION_EQUALITY_OPERATOR'
+  305 |     constexpr friend auto operator op( ExprLhs&& lhs, RhsT rhs )               \
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_decomposer.hpp:341:9: note: candidate template ignored: requirement 'Detail::conjunction<std::negation<Catch::Detail::is_eq_comparable<const Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag> &, Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag>, void>>, Catch::Detail::is_eq_0_comparable<const Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag> &, void>, std::disjunction<std::is_same<Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag>, int>, std::is_same<Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag>, long>>>::value' was not satisfied [with RhsT = Volume]
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_decomposer.hpp:314:27: note: expanded from macro 'CATCH_INTERNAL_DEFINE_EXPRESSION_EQUALITY_OPERATOR'
+  314 |     constexpr friend auto operator op( ExprLhs&& lhs, RhsT rhs )               \
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_decomposer.hpp:341:9: note: candidate template ignored: requirement 'Detail::conjunction<std::negation<Catch::Detail::is_eq_comparable<const Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag> &, Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag>, void>>, Catch::Detail::is_eq_0_comparable<Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag>, void>, std::disjunction<std::is_same<const Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag> &, int>, std::is_same<const Slic3r::nptop::Measure<Slic3r::nptop::VolumeTag> &, long>>>::value' was not satisfied [with RhsT = Volume]
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_decomposer.hpp:328:27: note: expanded from macro 'CATCH_INTERNAL_DEFINE_EXPRESSION_EQUALITY_OPERATOR'
+  328 |     constexpr friend auto operator op( ExprLhs&& lhs, RhsT rhs )               \
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2107:127: error: invalid operands to binary expression ('const Volume' (aka 'const Measure<struct VolumeTag>') and 'const Volume')
+ 2107 |                 REQUIRE(rows[row].motion.end.z()==piece.end.z());REQUIRE(std::get<Deposition>(rows[row].motion.payload).volume==piece.volume);++row;}
+      |                                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^ ~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+3 errors generated.
+[9/11] Building CXX object tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_policy.cpp.o
+ninja: build stopped: subcommand failed.

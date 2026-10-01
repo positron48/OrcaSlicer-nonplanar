@@ -2097,7 +2097,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2264,6 +2264,49 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         "] missing=[" << loop.fill->missing_target_mm3.lower << ',' << loop.fill->missing_target_mm3.upper <<
         "] outside=[" << loop.fill->outside_target_mm3.lower << ',' << loop.fill->outside_target_mm3.upper <<
         "] cells=" << loop.cells << " work=" << loop.evaluations);
+    // A wider ROI on the same actual sliced bead admits an interior owner.
+    // The original narrow ROI and all its earlier obligations remain tested.
+    auto wide=*roi;
+    const double centre=along_x ? (wide.min_y+wide.max_y)/2 : (wide.min_x+wide.max_x)/2;
+    if (along_x) {wide.min_y=centre-.375;wide.max_y=centre+.375;}
+    else {wide.min_x=centre-.375;wide.max_x=centre+.375;}
+    bool wide_actual_core=false;
+    for (const auto &row : material.snapshot->material->records) {
+        if (!row.bead || row.motion.start.z()!=flat_top || row.motion.end.z()!=flat_top || row.bead->gap_begin_mm!=row.bead->gap_end_mm) continue;
+        const bool x=row.motion.start.y()==row.motion.end.y(),y=row.motion.start.x()==row.motion.end.x();if (x==y || x!=along_x) continue;
+        const LayerAmount l=sqrt(pow(LayerAmount(row.motion.end.x())-row.motion.start.x(),2)+pow(LayerAmount(row.motion.end.y())-row.motion.start.y(),2));
+        const LayerAmount h=row.bead->gap_begin_mm,k=1-acos(LayerAmount(-1))/4;
+        const LayerAmount core=(LayerAmount(std::get<Deposition>(row.motion.payload).volume.value())/l/h+k*h-h)/2;
+        const LayerAmount normal=x ? row.motion.start.y() : row.motion.start.x();
+        wide_actual_core=abs(LayerAmount(x ? wide.min_y : wide.min_x)-normal)<core && abs(LayerAmount(x ? wide.max_y : wide.max_x)-normal)<core &&
+            (x ? wide.min_x : wide.min_y)>std::min(x ? row.motion.start.x() : row.motion.start.y(),x ? row.motion.end.x() : row.motion.end.y()) &&
+            (x ? wide.max_x : wide.max_y)<std::max(x ? row.motion.start.x() : row.motion.start.y(),x ? row.motion.end.x() : row.motion.end.y());
+        if (wide_actual_core) break;
+    }
+    REQUIRE(wide_actual_core);
+    auto wide_request=request;wide_request.footprint=wide;
+    const auto wide_hatches=plan_native_affine_hatches(material,wide_request,{WidthXY(.4),Length(.15),Length(.05),direction},pass_limits,hatch_limits);
+    INFO(wide_hatches.reason);REQUIRE(wide_hatches.snapshot);REQUIRE(wide_hatches.snapshot->passes->body_material==native.snapshot->passes->body_material);
+    const SceneBox wide_box{{wide.min_x,wide.min_y,4.0},{wide.max_x,wide.max_y,4.7}};
+    const auto first_cap=plan_first_cap({"",wide_hatches.snapshot->hatches},{WidthXY(.4),0,false,Volume(.001)},wide_box,layer_limits);
+    INFO(first_cap.reason);REQUIRE(first_cap.snapshot);const auto &cap=*first_cap.snapshot;
+    REQUIRE(cap.paths.size()==5);REQUIRE(cap.paths.back()->line_index==1);REQUIRE((cap.replaced_boundary_lines==std::vector<size_t>{0,2}));
+    REQUIRE(cap.source==wide_hatches.snapshot->hatches);REQUIRE(cap.fill->target==cap.source->source->first_pass.proof);
+    LayerAmount cap_sum=0;size_t cap_packets=0;
+    for (size_t i=0;i<cap.paths.size();++i) {
+        const auto &path=*cap.paths[i];REQUIRE(path.line_index.has_value()==(i>=4));REQUIRE(path.roof_domain==FirstHatchRoofDomain::FiniteWidth);
+        const LayerAmount h0=LayerAmount(path.path_start.z())-flat_top,h1=LayerAmount(path.path_end.z())-flat_top;
+        const LayerAmount l=sqrt(pow(LayerAmount(path.path_end.x())-path.path_start.x(),2)+pow(LayerAmount(path.path_end.y())-path.path_start.y(),2));
+        const LayerAmount k=1-acos(LayerAmount(-1))/4,ideal=l*(LayerAmount(.4)*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3);
+        contains(path.actual_target_volume_mm3,ideal);
+        for (const auto &p : path.pieces) {REQUIRE(p.nominal_width.value()==.4);cap_sum+=p.volume.value();++cap_packets;}
+    }
+    contains(cap.deposited_volume_mm3,cap_sum);contains(cap.fill->occupied->individual_volume_mm3,cap_sum);
+    REQUIRE(cap.fill->occupied->repeated_volume_mm3.lower>0);REQUIRE(cap.fill->covered_target_mm3.lower>0);REQUIRE(cap.fill->missing_target_mm3.lower>0);
+    REQUIRE(cap.fill->outside_target_mm3.upper<=.001);REQUIRE(cap.global_volume_error_mm3<=layer_limits.beads.packets.maximum_volume_error.value());
+    INFO("native combined first cap paths=" << cap.paths.size() << " packets=" << cap_packets << " amount=[" << cap.deposited_volume_mm3.lower << ',' << cap.deposited_volume_mm3.upper <<
+        "] covered=[" << cap.fill->covered_target_mm3.lower << ',' << cap.fill->covered_target_mm3.upper << "] missing=[" << cap.fill->missing_target_mm3.lower << ',' << cap.fill->missing_target_mm3.upper <<
+        "] outside=[" << cap.fill->outside_target_mm3.lower << ',' << cap.fill->outside_target_mm3.upper << "] cells=" << cap.cells << " work=" << cap.evaluations);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

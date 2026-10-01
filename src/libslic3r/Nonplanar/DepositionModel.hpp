@@ -354,6 +354,7 @@ struct RemainingHatchLimits;
 struct MaterialFillResult;
 struct FirstContourPolicy;
 struct FirstContourResult;
+struct FirstCapResult;
 inline constexpr unsigned first_hatch_bead_contract_version=5;
 enum class FirstHatchRoofDomain { Centerline, FiniteWidth };
 struct FirstHatchBeadLimits : MaterialQueryLimits {
@@ -384,8 +385,12 @@ private:
     friend RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &,size_t,const MaterialFillResult &,
         const RemainingHatchPolicy &,const RemainingHatchLimits &);
     friend FirstContourResult plan_first_contour(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,const FirstHatchLayerLimits &);
+    friend FirstCapResult plan_first_cap(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,const FirstHatchLayerLimits &);
     static FirstHatchBeadResult plan(const AffineHatchResult &, std::optional<size_t>, const FirstHatchBeadLimits &, FirstHatchRoofDomain,
         const AffineHatchLine *slice=nullptr,double coordinate_error=0);
+    static std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> construct_first_paths(
+        const std::shared_ptr<const AffineHatchSnapshot> &,const FirstContourPolicy &,const FirstHatchLayerLimits &,bool with_infill,
+        std::chrono::steady_clock::time_point,size_t &work,std::vector<size_t> &replaced_boundary_lines);
 };
 struct FirstHatchBeadResult { std::string reason; std::shared_ptr<const FirstHatchBeadSnapshot> snapshot; };
 // Reconstruct the continuous highest nominal laid roof under one first-pass
@@ -645,6 +650,37 @@ struct FirstContourResult {std::string reason;std::shared_ptr<const FirstContour
 // starting vertex, not qualified joining material, head/contact/order/flow or
 // export. Infill, 3D repair and later support remain separate constructions.
 FirstContourResult plan_first_contour(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,
+    const FirstHatchLayerLimits &limits={});
+
+inline constexpr unsigned first_cap_contract_version=1;
+struct FirstCapSnapshot {
+    const std::shared_ptr<const AffineHatchSnapshot> source;
+    const FirstContourPolicy policy;
+    // First four paths are the closed contour, followed by original interior
+    // hatch owners in source order. Boundary owners are replaced, not appended.
+    const std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> paths;
+    const std::vector<size_t> replaced_boundary_lines;
+    const std::shared_ptr<const MaterialFillSnapshot> fill;
+    const ScalarBounds section_target_volume_mm3,deposited_volume_mm3;
+    const double global_volume_error_mm3,numerical_error_upper_mm;
+    const size_t roof_segments,cells,evaluations;
+private:
+    FirstCapSnapshot(std::shared_ptr<const AffineHatchSnapshot> s,FirstContourPolicy p,std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> paths_,
+        std::vector<size_t> replaced,std::shared_ptr<const MaterialFillSnapshot> f,ScalarBounds target,ScalarBounds amount,double error,double numeric,
+        size_t roofs,size_t count,size_t work)
+        : source(std::move(s)),policy(p),paths(std::move(paths_)),replaced_boundary_lines(std::move(replaced)),fill(std::move(f)),
+          section_target_volume_mm3(target),deposited_volume_mm3(amount),global_volume_error_mm3(error),numerical_error_upper_mm(numeric),
+          roof_segments(roofs),cells(count),evaluations(work) {}
+    friend FirstCapResult plan_first_cap(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,const FirstHatchLayerLimits &);
+};
+struct FirstCapResult {std::string reason;std::shared_ptr<const FirstCapSnapshot> snapshot;};
+// Construct one prospective first contour/infill candidate with common fixed
+// width, replacing outer hatch owners and trimming interior finite butts to
+// contour centre extents. Re-prove every whole footprint against the original
+// actual body; jointly measure all overlaps and retain real missing/spill.
+// Joining/contact/order/flow, complete 3D fill, later support and export remain
+// separate obligations. No actual partial cap is replaced by this factory.
+FirstCapResult plan_first_cap(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,
     const FirstHatchLayerLimits &limits={});
 
 }

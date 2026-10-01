@@ -1,0 +1,63 @@
+[1/2] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2074:44: error: use of undeclared identifier 'FirstCapSnapshot'
+ 2074 |     STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapSnapshot>::value);
+      |                                            ^~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2078:27: error: use of undeclared identifier 'plan_first_cap'
+ 2078 |         const auto result=plan_first_cap(hatches,{WidthXY(.45),1,true,Volume(.001)},box);INFO(result.reason);REQUIRE(result.snapshot);
+      |                           ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2134:22: error: use of undeclared identifier 'plan_first_cap'
+ 2134 |     const auto owned=plan_first_cap(hatches,policy,box,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==source);
+      |                      ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2136:19: error: use of undeclared identifier 'plan_first_cap'
+ 2136 |     REQUIRE_FALSE(plan_first_cap({},policy,box).snapshot);policy.width=WidthXY(.4);REQUIRE_FALSE(plan_first_cap(hatches,policy,box).snapshot);policy.width=WidthXY(.45);
+      |                   ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2136:19: error: use of undeclared identifier 'plan_first_cap'
+ 2136 |     REQUIRE_FALSE(plan_first_cap({},policy,box).snapshot);policy.width=WidthXY(.4);REQUIRE_FALSE(plan_first_cap(hatches,policy,box).snapshot);policy.width=WidthXY(.45);
+      |                   ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2136:19: error: use of undeclared identifier 'plan_first_cap'
+ 2136 |     REQUIRE_FALSE(plan_first_cap({},policy,box).snapshot);policy.width=WidthXY(.4);REQUIRE_FALSE(plan_first_cap(hatches,policy,box).snapshot);policy.width=WidthXY(.45);
+      |                   ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2136:98: error: use of undeclared identifier 'plan_first_cap'
+ 2136 |     REQUIRE_FALSE(plan_first_cap({},policy,box).snapshot);policy.width=WidthXY(.4);REQUIRE_FALSE(plan_first_cap(hatches,policy,box).snapshot);policy.width=WidthXY(.45);
+      |                                                                                                  ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2136:98: error: use of undeclared identifier 'plan_first_cap'
+ 2136 |     REQUIRE_FALSE(plan_first_cap({},policy,box).snapshot);policy.width=WidthXY(.4);REQUIRE_FALSE(plan_first_cap(hatches,policy,box).snapshot);policy.width=WidthXY(.45);
+      |                                                                                                  ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2136:98: error: use of undeclared identifier 'plan_first_cap'
+ 2136 |     REQUIRE_FALSE(plan_first_cap({},policy,box).snapshot);policy.width=WidthXY(.4);REQUIRE_FALSE(plan_first_cap(hatches,policy,box).snapshot);policy.width=WidthXY(.45);
+      |                                                                                                  ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2137:65: error: use of undeclared identifier 'plan_first_cap'
+ 2137 |     const auto thin=remainder_fixture(0);const auto no_interior=plan_first_cap(thin.hatches,policy,{{1,-.4,.7},{3,.4,1.8}});
+      |                                                                 ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2139:19: error: use of undeclared identifier 'plan_first_cap'
+ 2139 |     REQUIRE_FALSE(plan_first_cap(hatches,policy,{{1.1,-.8,.7},{3,.8,1.84}}).snapshot);
+      |                   ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2139:19: error: use of undeclared identifier 'plan_first_cap'
+ 2139 |     REQUIRE_FALSE(plan_first_cap(hatches,policy,{{1.1,-.8,.7},{3,.8,1.84}}).snapshot);
+      |                   ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2139:19: error: use of undeclared identifier 'plan_first_cap'
+ 2139 |     REQUIRE_FALSE(plan_first_cap(hatches,policy,{{1.1,-.8,.7},{3,.8,1.84}}).snapshot);
+      |                   ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2140:19: error: use of undeclared identifier 'plan_first_cap'
+ 2140 |     REQUIRE_FALSE(plan_first_cap(hatches,policy,{{1,-.8,1.1},{3,.8,1.84}}).snapshot);
+      |                   ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2140:19: error: use of undeclared identifier 'plan_first_cap'
+ 2140 |     REQUIRE_FALSE(plan_first_cap(hatches,policy,{{1,-.8,1.1},{3,.8,1.84}}).snapshot);
+      |                   ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2140:19: error: use of undeclared identifier 'plan_first_cap'
+ 2140 |     REQUIRE_FALSE(plan_first_cap(hatches,policy,{{1,-.8,1.1},{3,.8,1.84}}).snapshot);
+      |                   ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2141:38: error: use of undeclared identifier 'plan_first_cap'
+ 2141 |     limits.max_paths=4;REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+      |                                      ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2141:38: error: use of undeclared identifier 'plan_first_cap'
+ 2141 |     limits.max_paths=4;REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+      |                                      ^~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2141:38: error: use of undeclared identifier 'plan_first_cap'
+ 2141 |     limits.max_paths=4;REQUIRE_FALSE(plan_first_cap(hatches,policy,box,limits).snapshot);
+      |                                      ^~~~~~~~~~~~~~
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+ninja: build stopped: subcommand failed.

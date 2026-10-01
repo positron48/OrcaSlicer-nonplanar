@@ -179,9 +179,22 @@ and real gaps/current prefixes remain enforced. The extended native case passes
 M [0.102361,0.102772] mm3 and real positive outside volume, with 145 cells/30635
 work. This separate contour is not yet combined with infill and does not improve
 its deficit. First-bead 4 -> 5 retains optional original infill ownership; contour
-contract 1 has no persisted format. Current material/body suites pass 74/14 cases;
+contract 1 has no persisted format. At that checkpoint material/body suites pass 74/14 cases;
 selected CTest passes 319/319 and six fresh OFF/ZAA comparisons pass. Joining
 material, contact, remaining 3D repair and curved/later actual support remain open.
+
+`B07-first-cap.md` combines four contour edges with original interior hatch
+owners in one fresh ordered ledger, replacing outer owners and trimming finite
+interior butts to the contour extents. Three new analytical cases/1515 assertions
+prove both axes, flat/sloped surfaces, merged multiple-row S/U/R/C, preserved
+order/owners and later-infill ridge refusal. A wider ROI on the same actual
+native wedge/core yields five paths/161 packets, C [0.207411,0.207818] mm3 and
+M [0.107167,0.107574] mm3, with real positive spill and 293 cells/38258 work.
+This target differs from earlier narrow metrics. First-cap contract 1 retains
+all existing owner/union/fill meanings and has no persisted format. The extended
+native case passes 559 assertions. Current material/body suites pass 77/14 cases;
+selected CTest passes 322/322 and six fresh OFF/ZAA comparisons pass. Volumetric
+joining/contact, remaining 3D voids and later actual support remain required.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -203,9 +216,10 @@ hatch-layer archive. Run 36847680702 at 2d8bebaa now succeeds in selected
 native suites, native STL CLI and application build, retaining the original
 20-second fill limit. Run 36853913690 at 361ccdc8 now also succeeds in native
 suites, STL CLI and application. Run 36858083109 at 05f4a887 also succeeds in
-native suites, STL CLI and application. Run 36861891679 at 4e6cddd7 is building
-native tests in the saved 13:47 UTC observation. Width replan and the new contour
-await their own Linux verification.
+native suites, STL CLI and application. Run 36861891679 at 4e6cddd7 also completes
+native suites, STL CLI and application successfully. Run 36871942001 at
+9a243279 is building native tests in the saved 14:36 UTC observation. The contour
+and new joint cap await their own Linux verification.
 Both failed check annotations are archived.
 Windows remains NOT_RUN.
 
