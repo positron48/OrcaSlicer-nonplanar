@@ -1,0 +1,237 @@
+[1/2] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2924:31: error: use of undeclared identifier 'replan_first_cap_width'; did you mean 'replan_first_hatch_width'?
+ 2924 |             const auto result=replan_first_cap_width(before,WidthXY(.35),{},complete);INFO(result.reason);REQUIRE(result.snapshot);
+      |                               ^~~~~~~~~~~~~~~~~~~~~~
+      |                               replan_first_hatch_width
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:29: note: 'replan_first_hatch_width' declared here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2924:54: error: no viable conversion from 'FirstCapResult' to 'const FirstHatchLayerResult'
+ 2924 |             const auto result=replan_first_cap_width(before,WidthXY(.35),{},complete);INFO(result.reason);REQUIRE(result.snapshot);
+      |                                                      ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'FirstCapResult' to 'const FirstHatchLayerResult &' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'FirstCapResult' to 'FirstHatchLayerResult &&' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:83: note: passing argument to parameter here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2968:39: error: unknown type name 'FirstCapWidthReplanPolicy'; did you mean 'FirstHatchWidthReplanPolicy'?
+ 2968 |     const auto source=before.snapshot;FirstCapWidthReplanPolicy policy;auto limits=complete;
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                       FirstHatchWidthReplanPolicy
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:714:8: note: 'FirstHatchWidthReplanPolicy' declared here
+  714 | struct FirstHatchWidthReplanPolicy {
+      |        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2970:23: error: use of undeclared identifier 'replan_first_cap_width'; did you mean 'replan_first_hatch_width'?
+ 2970 |     const auto result=replan_first_cap_width(before,WidthXY(.35),policy,limits);INFO(result.reason);REQUIRE(result.snapshot);REQUIRE(result.snapshot->before==source);
+      |                       ^~~~~~~~~~~~~~~~~~~~~~
+      |                       replan_first_hatch_width
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:29: note: 'replan_first_hatch_width' declared here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2970:46: error: no viable conversion from 'FirstCapResult' to 'const FirstHatchLayerResult'
+ 2970 |     const auto result=replan_first_cap_width(before,WidthXY(.35),policy,limits);INFO(result.reason);REQUIRE(result.snapshot);REQUIRE(result.snapshot->before==source);
+      |                                              ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'FirstCapResult' to 'const FirstHatchLayerResult &' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'FirstCapResult' to 'FirstHatchLayerResult &&' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:83: note: passing argument to parameter here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2972:19: error: use of undeclared identifier 'replan_first_cap_width'; did you mean 'replan_first_hatch_width'?
+ 2972 |     REQUIRE_FALSE(replan_first_cap_width({},WidthXY(.35),policy,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+      |                   replan_first_hatch_width
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:29: note: 'replan_first_hatch_width' declared here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2972:19: error: use of undeclared identifier 'replan_first_cap_width'; did you mean 'replan_first_hatch_width'?
+ 2972 |     REQUIRE_FALSE(replan_first_cap_width({},WidthXY(.35),policy,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+      |                   replan_first_hatch_width
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:29: note: 'replan_first_hatch_width' declared here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2972:19: error: use of undeclared identifier 'replan_first_cap_width'; did you mean 'replan_first_hatch_width'?
+ 2972 |     REQUIRE_FALSE(replan_first_cap_width({},WidthXY(.35),policy,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+      |                   replan_first_hatch_width
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:29: note: 'replan_first_hatch_width' declared here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2973:19: error: use of undeclared identifier 'replan_first_cap_width'; did you mean 'replan_first_hatch_width'?
+ 2973 |     REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.45),policy,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+      |                   replan_first_hatch_width
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:29: note: 'replan_first_hatch_width' declared here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2973:42: error: no viable conversion from 'FirstCapResult' to 'const FirstHatchLayerResult'
+ 2973 |     REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.45),policy,limits).snapshot);
+      |                                          ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'FirstCapResult' to 'const FirstHatchLayerResult &' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'FirstCapResult' to 'FirstHatchLayerResult &&' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:83: note: passing argument to parameter here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2973:19: error: use of undeclared identifier 'replan_first_cap_width'; did you mean 'replan_first_hatch_width'?
+ 2973 |     REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.45),policy,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+      |                   replan_first_hatch_width
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:29: note: 'replan_first_hatch_width' declared here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2973:42: error: no viable conversion from 'FirstCapResult' to 'const FirstHatchLayerResult'
+ 2973 |     REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.45),policy,limits).snapshot);
+      |                                          ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'FirstCapResult' to 'const FirstHatchLayerResult &' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'FirstCapResult' to 'FirstHatchLayerResult &&' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:83: note: passing argument to parameter here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2973:19: error: use of undeclared identifier 'replan_first_cap_width'; did you mean 'replan_first_hatch_width'?
+ 2973 |     REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.45),policy,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+      |                   replan_first_hatch_width
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:29: note: 'replan_first_hatch_width' declared here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2973:42: error: no viable conversion from 'FirstCapResult' to 'const FirstHatchLayerResult'
+ 2973 |     REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.45),policy,limits).snapshot);
+      |                                          ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'FirstCapResult' to 'const FirstHatchLayerResult &' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'FirstCapResult' to 'FirstHatchLayerResult &&' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:83: note: passing argument to parameter here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2974:19: error: use of undeclared identifier 'replan_first_cap_width'; did you mean 'replan_first_hatch_width'?
+ 2974 |     REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.5),policy,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+      |                   replan_first_hatch_width
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:29: note: 'replan_first_hatch_width' declared here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2974:42: error: no viable conversion from 'FirstCapResult' to 'const FirstHatchLayerResult'
+ 2974 |     REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.5),policy,limits).snapshot);
+      |                                          ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'FirstCapResult' to 'const FirstHatchLayerResult &' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'FirstCapResult' to 'FirstHatchLayerResult &&' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:83: note: passing argument to parameter here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2974:19: error: use of undeclared identifier 'replan_first_cap_width'; did you mean 'replan_first_hatch_width'?
+ 2974 |     REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.5),policy,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+      |                   replan_first_hatch_width
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:29: note: 'replan_first_hatch_width' declared here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2974:42: error: no viable conversion from 'FirstCapResult' to 'const FirstHatchLayerResult'
+ 2974 |     REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.5),policy,limits).snapshot);
+      |                                          ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit copy constructor) not viable: no known conversion from 'FirstCapResult' to 'const FirstHatchLayerResult &' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:679:8: note: candidate constructor (the implicit move constructor) not viable: no known conversion from 'FirstCapResult' to 'FirstHatchLayerResult &&' for 1st argument
+  679 | struct FirstHatchLayerResult {std::string reason;std::shared_ptr<const FirstHatchLayerSnapshot> snapshot;};
+      |        ^~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:83: note: passing argument to parameter here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2974:19: error: use of undeclared identifier 'replan_first_cap_width'; did you mean 'replan_first_hatch_width'?
+ 2974 |     REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.5),policy,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~
+      |                   replan_first_hatch_width
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:737:29: note: 'replan_first_hatch_width' declared here
+  737 | FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
+      |                             ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+ninja: build stopped: subcommand failed.

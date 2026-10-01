@@ -15,16 +15,16 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
-`B07-first-cap-end-replan.md` and ADR-0058 now retain all contour/central packets
-and qualify two new finite end strips per interior owner. One fresh whole ledger
-measures positive coverage gain with the original target, band, losses and
-.001 mm3 native precision. The native cap grows from 161 to 173 packets; missing
-volume falls from about .1074 to .0958 mm3 and clear deficit to about .0866 mm3.
-All six run joins and 173 complete flat-floor interface packets pass. Five new
-cases / 2727 assertions, combined 97 material / 14 native-body cases and selected
-342/342 CTest pass; six fresh OFF/ZAA comparisons pass. Under-material voids,
-allowable repeated material, full 3D seam/fill/contact and export remain pending.
-
+`B07-first-cap-width-replan.md` and ADR-0059 now narrow only central packets,
+retaining original XYZ/gaps, contour snapshots, end doses and body/target/band/losses.
+The native .40 -> .38 mm candidate changes 53 of 173 packets and reduces S/R by
+about .0063 mm3, with the original C/M/spill bounds and complete policy. All six
+run joins, 173 interface packets and fresh void classification pass. Two new
+cases / 2897 assertions, combined 99 material / 14 native-body cases
+and selected 344/344 CTest pass; six fresh OFF/ZAA comparisons pass. First-cap
+runtime contract is 3; owned packet widths are authoritative. Real voids,
+allowable repeated material, full seam/3D fill/contact/order and export remain
+pending. Wider analytic extended-shadow budget refusals remain documented.
 
 The current implementation boundary is exact pre-apply native source ownership
 and revision invalidation in `B01-inputs.md`. Raw settings, meshes, transforms,

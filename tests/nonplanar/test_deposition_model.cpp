@@ -2680,7 +2680,7 @@ TEST_CASE("B07 variable-gap shoulder deficit matches an independent cubic integr
 
 namespace {
 using CapAmount=boost::multiprecision::cpp_bin_float_quad;
-std::pair<CapAmount,CapAmount> independent_flat_union(const std::vector<MaterialRecord> &rows)
+std::pair<CapAmount,CapAmount> independent_flat_union(const std::vector<MaterialRecord> &rows,size_t count=2048,bool shadow=false)
 {
     using Q=CapAmount;const Q pi=acos(Q(-1));std::optional<Q> height,top;
     struct Section {bool x;Q lo,hi,centre,core;};std::vector<Section> sections;
@@ -2719,16 +2719,18 @@ std::pair<CapAmount,CapAmount> independent_flat_union(const std::vector<Material
     // All constant-height cross-sections grow monotonically on the lower
     // half. Independent exact rectangle sweeps at 2048 height levels bracket
     // the integral by left/right sums, including all triple multiplicity.
-    const size_t count=2048;Q low=0,high=0,previous=area(Q(0));
+    Q low=0,high=0,previous=area(Q(0));
     for (size_t i=1;i<=count;++i) {const Q next=area(r*Q(i)/Q(count));low+=previous;high+=next;previous=next;}
-    const Q pad("1e-20");low=low*h/Q(count)-pad;high=high*h/Q(count)+pad;
+    const Q pad("1e-20");
+    if (shadow) {const Q bottom=r*area(r);low=low*r/Q(count)+bottom-pad;high=high*r/Q(count)+bottom+pad;}
+    else {low=low*h/Q(count)-pad;high=high*h/Q(count)+pad;}
     REQUIRE(high-low<Q(.0001));return {low,high};
 }
 }
 
 TEST_CASE("B07 first cap end replan preserves contours and replaces the whole prospective ledger", "[Nonplanar][B07][FirstCapEndReplan]")
 {
-    STATIC_REQUIRE(first_cap_contract_version==2);
+    STATIC_REQUIRE(first_cap_contract_version==3);
     STATIC_REQUIRE(first_cap_replan_contract_version==1);
     STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapReplanSnapshot>::value);
     const SceneBox box{{1,-.8,.7},{3,.8,1.84}};
@@ -2909,4 +2911,136 @@ TEST_CASE("B07 affine triple multiplicity encloses the independently integrated 
         REQUIRE(Q(result.snapshot->repeated_volume_mm3.lower)<=sum-united);REQUIRE(Q(result.snapshot->repeated_volume_mm3.upper)>=sum-united);
         limits.max_cells=1;REQUIRE_FALSE(integrate_material_union(state.nominal,{{-1,-1,.7},{3,3,1.5}},limits).snapshot);
     }
+}
+
+TEST_CASE("B07 central cap width replan preserves geometry contour and extended ends", "[Nonplanar][B07][FirstCapWidthReplan]")
+{
+    STATIC_REQUIRE(first_cap_contract_version==3);
+    STATIC_REQUIRE(first_cap_width_replan_contract_version==1);
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapWidthReplanSnapshot>::value);
+    using Q=CapAmount;
+    const SceneBox box{{1,-.8,.7},{3,.8,1.84}};
+    FirstHatchLayerLimits complete;complete.max_cells=complete.volumes.max_cells=65535;complete.volumes.max_evaluations=2000000;
+    complete.timeout=complete.beads.timeout=complete.beads.packets.timeout=complete.volumes.timeout=std::chrono::seconds(5);
+    for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) for (bool sloped : {false,true}) {
+        auto before=plan_first_cap(first_cap_fixture(direction,sloped),{WidthXY(.45),0,sloped,Volume(.001)},box,complete);REQUIRE(before.snapshot);
+        const double width=sloped ? .43 : .4;
+        for (bool extended : {false,true}) {
+            if (extended) {const auto end=replan_first_cap_ends(before,{},complete);INFO(end.reason);REQUIRE(end.snapshot);before.snapshot=end.snapshot->after;}
+            INFO("direction=" << int(direction) << " sloped=" << sloped << " extended=" << extended << " width=" << width);
+            const auto result=replan_first_cap_width(before,WidthXY(width),{},complete);INFO(result.reason);REQUIRE(result.snapshot);
+            const auto &r=*result.snapshot;const auto &after=*r.after;
+            REQUIRE(r.before==before.snapshot);REQUIRE(after.source==r.before->source);REQUIRE(after.hatch_extent==r.before->hatch_extent);
+            REQUIRE(after.fill->target==r.before->fill->target);REQUIRE(after.replaced_boundary_lines==r.before->replaced_boundary_lines);
+            REQUIRE(after.paths.size()==r.before->paths.size());REQUIRE(after.fill->occupied->source->sequence!=r.before->fill->occupied->source->sequence);
+            REQUIRE(r.commanded_reduction_mm3.lower>=.001);REQUIRE(r.repeated_reduction_mm3.lower>=.001);
+            REQUIRE(r.covered_change_mm3.lower>=-.001);REQUIRE(after.fill->missing_target_mm3.upper-r.before->fill->missing_target_mm3.lower<=.001);
+            REQUIRE(after.fill->outside_target_mm3.upper<=.001);REQUIRE(after.global_volume_error_mm3<=.001);
+            Q old_amount=0,new_amount=0;size_t changed=0,retained=0;
+            for (size_t i=0;i<after.paths.size();++i) {
+                const auto &p=*after.paths[i],&old=*r.before->paths[i];
+                if (i<4) REQUIRE(after.paths[i]==r.before->paths[i]);
+                REQUIRE(p.pieces.size()==old.pieces.size());REQUIRE(p.line_index==old.line_index);
+                REQUIRE(p.maximum_gap_error_mm==old.maximum_gap_error_mm);REQUIRE(p.numerical_error_upper_mm>=old.numerical_error_upper_mm);
+                for (size_t n=0;n<p.pieces.size();++n) {
+                    const auto &a=p.pieces[n],&b=old.pieces[n];
+                    REQUIRE(std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)==
+                        std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm));
+                    old_amount+=b.volume.value();new_amount+=a.volume.value();
+                    if (a.nominal_width.value()!=b.nominal_width.value()) {
+                        ++changed;REQUIRE(a.nominal_width.value()==width);REQUIRE(a.volume.value()<b.volume.value());
+                        const Q length=sqrt(pow(Q(a.end.x())-a.start.x(),2)+pow(Q(a.end.y())-a.start.y(),2));
+                        const Q h0=a.section.gap_begin_mm,h1=a.section.gap_end_mm,k=1-acos(Q(-1))/4;
+                        const Q ideal=length*(Q(width)*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3);
+                        const Q mid=(h0+h1)/2,commanded=length*mid*(Q(width)-k*mid);
+                        REQUIRE(abs(Q(a.volume.value())-commanded)<Q("1e-13"));
+                        REQUIRE(abs(Q(a.volume.value())-ideal-k*length*(h1-h0)*(h1-h0)/12)<Q("1e-13"));
+                        REQUIRE(abs(Q(a.volume.value())-ideal)<=complete.beads.packets.maximum_volume_error.value());
+                    } else {++retained;REQUIRE(a.volume.value()==b.volume.value());REQUIRE(a.width_error_upper_mm==b.width_error_upper_mm);}
+                }
+            }
+            REQUIRE(changed>0);REQUIRE(retained>0);REQUIRE(new_amount<old_amount);
+            REQUIRE(Q(r.commanded_reduction_mm3.lower)<=old_amount-new_amount);REQUIRE(Q(r.commanded_reduction_mm3.upper)>=old_amount-new_amount);
+            if (!sloped && !extended) {
+                const auto staged=replan_first_cap_ends({"",r.after},{},complete);INFO(staged.reason);REQUIRE(staged.snapshot);
+                REQUIRE(staged.snapshot->covered_gain_mm3.lower>=.001);
+                for (size_t i=0;i<after.paths.size();++i) {
+                    if (i<4) REQUIRE(staged.snapshot->after->paths[i]==after.paths[i]);
+                    for (const auto &p : after.paths[i]->pieces) {
+                        const auto &pieces=staged.snapshot->after->paths[i]->pieces;
+                        const auto found=std::find_if(pieces.begin(),pieces.end(),[&](const auto &a) {
+                            return std::make_tuple(a.start.x(),a.start.y(),a.end.x(),a.end.y(),a.volume.value(),a.nominal_width.value())==
+                                std::make_tuple(p.start.x(),p.start.y(),p.end.x(),p.end.y(),p.volume.value(),p.nominal_width.value());
+                        });REQUIRE(found!=pieces.end());
+                    }
+                }
+            }
+            if (!sloped) {
+                const auto integral=independent_flat_union(after.fill->occupied->source->sequence->records);
+                REQUIRE(Q(after.fill->occupied->union_volume_mm3.lower)<=integral.second);REQUIRE(Q(after.fill->occupied->union_volume_mm3.upper)>=integral.first);
+                REQUIRE(Q(after.fill->occupied->repeated_volume_mm3.lower)<=new_amount-integral.first);REQUIRE(Q(after.fill->occupied->repeated_volume_mm3.upper)>=new_amount-integral.second);
+                if (!extended && direction==HatchDirection::AlongX) {
+                    MaterialFillLimits shadow_limits;static_cast<MaterialUnionLimits &>(shadow_limits)=complete.volumes;
+                    const auto voids=classify_material_voids({"",after.fill},shadow_limits);INFO(voids.reason);REQUIRE(voids.snapshot);
+                    const auto shadow=independent_flat_union(after.fill->occupied->source->sequence->records,4096,true);
+                    REQUIRE(Q(voids.snapshot->shadow_target_mm3.lower)<=shadow.second);REQUIRE(Q(voids.snapshot->shadow_target_mm3.upper)>=shadow.first);
+                    REQUIRE(Q(voids.snapshot->under_material_missing_mm3.lower)<=shadow.second-integral.first);
+                    REQUIRE(Q(voids.snapshot->under_material_missing_mm3.upper)>=shadow.first-integral.second);
+                }
+            }
+        }
+    }
+}
+
+TEST_CASE("B07 central cap width replan owns input and refuses unqualified replacement", "[Nonplanar][B07][FirstCapWidthReplan]")
+{
+    FirstHatchLayerLimits complete;complete.max_cells=complete.volumes.max_cells=65535;complete.volumes.max_evaluations=2000000;
+    complete.timeout=complete.beads.timeout=complete.beads.packets.timeout=complete.volumes.timeout=std::chrono::seconds(5);
+    auto before=plan_first_cap(first_cap_fixture(HatchDirection::AlongX),{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}},complete);REQUIRE(before.snapshot);
+    const auto source=before.snapshot;FirstCapWidthReplanPolicy policy;auto limits=complete;
+    limits.cancelled=[&] {before.snapshot.reset();policy.minimum_repeated_reduction=Volume(10);limits.max_paths=0;return false;};
+    const auto result=replan_first_cap_width(before,WidthXY(.4),policy,limits);INFO(result.reason);REQUIRE(result.snapshot);REQUIRE(result.snapshot->before==source);
+    before.snapshot=source;policy={};limits=complete;
+    REQUIRE_FALSE(replan_first_cap_width({},WidthXY(.4),policy,limits).snapshot);
+    REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.45),policy,limits).snapshot);
+    REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.5),policy,limits).snapshot);
+    REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.01),policy,limits).snapshot);
+    REQUIRE_FALSE(replan_first_cap_width({"",result.snapshot->after},WidthXY(.3),policy,limits).snapshot);
+    policy.minimum_repeated_reduction=Volume(10);REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot);
+    policy={};policy.maximum_covered_loss=Volume(0);REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot);
+    policy={};policy.maximum_outside_target=Volume(0);REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot);
+    policy={};policy.minimum_repeated_reduction=Volume(0);REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot);policy={};
+    limits.beads.maximum_gap_error=Length(source->paths.back()->maximum_gap_error_mm/2);
+    REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot);limits=complete;
+    limits.beads.packets.maximum_width_error=Length(source->paths.back()->maximum_width_error_mm/2);
+    REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot);limits=complete;
+    // Independent section sweeps prove excessive new voids at this pitch.
+    // A budget refusal is acceptable; unresolved coverage cannot publish.
+    auto sparse_rows=source->fill->occupied->source->sequence->records;
+    using Q=CapAmount;const Q k=1-acos(Q(-1))/4;
+    for (size_t i=4;i<source->paths.size();++i) for (const auto &p : source->paths[i]->pieces) for (auto &row : sparse_rows) {
+        if (!row.bead || row.motion.start.x()!=p.start.x() || row.motion.start.y()!=p.start.y() ||
+            row.motion.end.x()!=p.end.x() || row.motion.end.y()!=p.end.y()) continue;
+        auto &dose=std::get<Deposition>(row.motion.payload);
+        const Q l=abs(Q(p.end.x())-p.start.x()),h=p.section.gap_begin_mm;
+        dose.width=WidthXY(.28);dose.volume=Volume((l*h*(Q(.28)-k*h)).convert_to<double>());
+    }
+    const auto original_union=independent_flat_union(source->fill->occupied->source->sequence->records,4096);
+    const auto sparse_union=independent_flat_union(sparse_rows,4096);
+    REQUIRE(original_union.first-sparse_union.second>Q(.001));
+    const auto too_sparse=replan_first_cap_width(before,WidthXY(.28),policy,limits);
+    INFO(too_sparse.reason);REQUIRE_FALSE(too_sparse.snapshot);
+    for (int mode=0;mode<9;++mode) {
+        limits=complete;
+        if (mode==0) limits.max_paths=4;if (mode==1) limits.max_records=1;if (mode==2) limits.max_evaluations=1;
+        if (mode==3) limits.max_cells=1;if (mode==4) limits.beads.packets.max_segments=1;
+        if (mode==5) limits.cancelled=[] {return true;};if (mode==6) limits.is_current=[](uint64_t) {return false;};
+        if (mode==7) {limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if (mode==8) limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+        const auto refused=replan_first_cap_width(before,WidthXY(.4),policy,limits);
+        if (mode==8) REQUIRE(std::fesetround(FE_TONEAREST)==0);INFO(mode << ' ' << refused.reason);REQUIRE_FALSE(refused.snapshot);
+    }
+    limits=complete;size_t callbacks=0;limits.cancelled=[&] {++callbacks;return false;};REQUIRE(replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot);
+    const size_t count=callbacks;callbacks=0;limits.cancelled=[&] {return ++callbacks==count;};
+    REQUIRE_FALSE(replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot);REQUIRE(callbacks==count);
 }

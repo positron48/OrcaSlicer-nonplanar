@@ -116,6 +116,12 @@ Next software tasks, in dependency order:
    All six run joins and 173 complete interface packets pass; actual
    under-material voids and repeated material remain. Shared original work/time
    budgets and all old negative cases remain.
+   `B07-first-cap-width-replan.md` now retains every XYZ/gap, contour snapshot
+   and end packet while narrowing 53 native central packets to .38 mm. S/R fall
+   about .0063 mm3 and the native C/M/spill bounds stay unchanged; all six run
+   joins, 173 interface packets and fresh void classification pass. Use actual
+   owned packet widths, not original policy.width, after replacement. Wider
+   analytic extended-shadow budget refusals still need bounded refinement.
    Qualify allowable repeated material and complete shoulder/seam volumes,
    construct/replan paths for both remaining 3D volumes and reconstruct later support;
    short-packet motion/flow limits remain unverified.

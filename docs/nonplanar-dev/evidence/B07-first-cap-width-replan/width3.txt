@@ -1,0 +1,3701 @@
+Filters: [FirstCapWidthReplan]
+Randomness seeded to: 3487034563
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 central cap width replan preserves geometry contour and extended ends
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2914
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2916: PASSED:
+with message:
+  first_cap_contract_version==3
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2917: PASSED:
+with message:
+  first_cap_width_replan_contract_version==1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2918: PASSED:
+with message:
+  !(std::is_aggregate<FirstCapWidthReplanSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x98ec780b8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2069: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x104938450
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2070: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x98f0396c0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2924: PASSED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0x98ec6d2c0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2927: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x98ec783c0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2929: PASSED:
+  REQUIRE( r.before==before.snapshot )
+with expansion:
+  0x98ec6d2c0 == 0x98ec6d2c0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2929: PASSED:
+  REQUIRE( after.source==r.before->source )
+with expansion:
+  0x98f0396c0 == 0x98f0396c0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2929: PASSED:
+  REQUIRE( after.hatch_extent==r.before->hatch_extent )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2930: PASSED:
+  REQUIRE( after.fill->target==r.before->fill->target )
+with expansion:
+  0x98ed18af0 == 0x98ed18af0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2930: PASSED:
+  REQUIRE( after.replaced_boundary_lines==r.before->replaced_boundary_lines )
+with expansion:
+  { 0, 6 } == { 0, 6 }
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2931: PASSED:
+  REQUIRE( after.paths.size()==r.before->paths.size() )
+with expansion:
+  9 == 9
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2931: PASSED:
+  REQUIRE( after.fill->occupied->source->sequence!=r.before->fill->occupied->source->sequence )
+with expansion:
+  0x98ec78298 != 0x98ec78158
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2932: PASSED:
+  REQUIRE( r.commanded_reduction_mm3.lower>=.001 )
+with expansion:
+  0.07405624999999959 >= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2932: PASSED:
+  REQUIRE( r.repeated_reduction_mm3.lower>=.001 )
+with expansion:
+  0.07382752832711346 >= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2933: PASSED:
+  REQUIRE( r.covered_change_mm3.lower>=-.001 )
+with expansion:
+  -0.00022872167289079 >= -0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2933: PASSED:
+  REQUIRE( after.fill->missing_target_mm3.upper-r.before->fill->missing_target_mm3.lower<=.001 )
+with expansion:
+  0.00022872167289373 <= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2934: PASSED:
+  REQUIRE( after.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000462 <= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2934: PASSED:
+  REQUIRE( after.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000411 <= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0df80 == 0x98ed0df80
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000333 >= 0.00000000000000333
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.12026931204524363 == 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000061 == 0.00000000000000061
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0e040 == 0x98ed0e040
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000339 >= 0.00000000000000339
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.08697676891853252 == 0.08697676891853252
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0e100 == 0x98ed0e100
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000333 >= 0.00000000000000333
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.12026931204524363 == 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000061 == 0.00000000000000061
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0e1c0 == 0x98ed0e1c0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000339 >= 0.00000000000000339
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.08697676891853252 == 0.08697676891853252
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000333 >= 0.00000000000000333
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.volume.value()<b.volume.value() )
+with expansion:
+  0.10545806204524368 < 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951: PASSED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)<Q("1e-13") )
+with expansion:
+  1.76294e-17 < 1e-13
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000333 >= 0.00000000000000333
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.volume.value()<b.volume.value() )
+with expansion:
+  0.10545806204524368 < 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951: PASSED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)<Q("1e-13") )
+with expansion:
+  1.76294e-17 < 1e-13
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000333 >= 0.00000000000000333
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.volume.value()<b.volume.value() )
+with expansion:
+  0.10545806204524368 < 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951: PASSED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)<Q("1e-13") )
+with expansion:
+  1.76294e-17 < 1e-13
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000333 >= 0.00000000000000333
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.volume.value()<b.volume.value() )
+with expansion:
+  0.10545806204524368 < 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951: PASSED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)<Q("1e-13") )
+with expansion:
+  1.76294e-17 < 1e-13
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000333 >= 0.00000000000000333
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.volume.value()<b.volume.value() )
+with expansion:
+  0.10545806204524368 < 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951: PASSED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)<Q("1e-13") )
+with expansion:
+  1.76294e-17 < 1e-13
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2955: PASSED:
+  REQUIRE( changed>0 )
+with expansion:
+  5 > 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2955: PASSED:
+  REQUIRE( retained>0 )
+with expansion:
+  4 > 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2955: PASSED:
+  REQUIRE( new_amount<old_amount )
+with expansion:
+  0.941782 < 1.01584
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2956: PASSED:
+  REQUIRE( Q(r.commanded_reduction_mm3.lower)<=old_amount-new_amount )
+with expansion:
+  0.0740562 <= 0.0740562
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2956: PASSED:
+  REQUIRE( Q(r.commanded_reduction_mm3.upper)>=old_amount-new_amount )
+with expansion:
+  0.0740562 >= 0.0740562
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.0975 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.0975 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.0975 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.0975 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.0975 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2697: PASSED:
+  REQUIRE( height )
+with expansion:
+  {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2725: PASSED:
+  REQUIRE( high-low<Q(.0001) )
+with expansion:
+  5.10948e-05 < 0.0001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2959: PASSED:
+  REQUIRE( Q(after.fill->occupied->union_volume_mm3.lower)<=integral.second )
+with expansion:
+  0.516726 <= 0.516826
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2959: PASSED:
+  REQUIRE( Q(after.fill->occupied->union_volume_mm3.upper)>=integral.first )
+with expansion:
+  0.516954 >= 0.516775
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2960: PASSED:
+  REQUIRE( Q(after.fill->occupied->repeated_volume_mm3.lower)<=new_amount-integral.first )
+with expansion:
+  0.424828 <= 0.425007
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2960: PASSED:
+  REQUIRE( Q(after.fill->occupied->repeated_volume_mm3.upper)>=new_amount-integral.second )
+with expansion:
+  0.425057 >= 0.424956
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2926: PASSED:
+  REQUIRE( end.snapshot )
+with expansion:
+  0x98ed4c080
+with message:
+  BOUNDED_WHOLE_FIRST_CAP_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2927: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x98ec78280
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2929: PASSED:
+  REQUIRE( r.before==before.snapshot )
+with expansion:
+  0x98ec6d380 == 0x98ec6d380
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2929: PASSED:
+  REQUIRE( after.source==r.before->source )
+with expansion:
+  0x98f0396c0 == 0x98f0396c0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2929: PASSED:
+  REQUIRE( after.hatch_extent==r.before->hatch_extent )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2930: PASSED:
+  REQUIRE( after.fill->target==r.before->fill->target )
+with expansion:
+  0x98ed18af0 == 0x98ed18af0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2930: PASSED:
+  REQUIRE( after.replaced_boundary_lines==r.before->replaced_boundary_lines )
+with expansion:
+  { 0, 6 } == { 0, 6 }
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2931: PASSED:
+  REQUIRE( after.paths.size()==r.before->paths.size() )
+with expansion:
+  9 == 9
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2931: PASSED:
+  REQUIRE( after.fill->occupied->source->sequence!=r.before->fill->occupied->source->sequence )
+with expansion:
+  0x98ec781f8 != 0x98ec783d8
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2932: PASSED:
+  REQUIRE( r.commanded_reduction_mm3.lower>=.001 )
+with expansion:
+  0.07405624999999948 >= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2932: PASSED:
+  REQUIRE( r.repeated_reduction_mm3.lower>=.001 )
+with expansion:
+  0.07380852597522335 >= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2933: PASSED:
+  REQUIRE( r.covered_change_mm3.lower>=-.001 )
+with expansion:
+  -0.00024772402478068 >= -0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2933: PASSED:
+  REQUIRE( after.fill->missing_target_mm3.upper-r.before->fill->missing_target_mm3.lower<=.001 )
+with expansion:
+  0.0002477240247836 <= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2934: PASSED:
+  REQUIRE( after.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.00000000000000462 <= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2934: PASSED:
+  REQUIRE( after.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000511 <= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0df80 == 0x98ed0df80
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000333 >= 0.00000000000000333
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.12026931204524363 == 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000061 == 0.00000000000000061
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0e040 == 0x98ed0e040
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000339 >= 0.00000000000000339
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.08697676891853252 == 0.08697676891853252
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0e100 == 0x98ed0e100
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000333 >= 0.00000000000000333
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.12026931204524363 == 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000061 == 0.00000000000000061
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0e1c0 == 0x98ed0e1c0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000339 >= 0.00000000000000339
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.08697676891853252 == 0.08697676891853252
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  3 == 3
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000339 >= 0.00000000000000339
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01893513390331699 == 0.01893513390331699
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.volume.value()<b.volume.value() )
+with expansion:
+  0.10545806204524368 < 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951: PASSED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)<Q("1e-13") )
+with expansion:
+  1.76294e-17 < 1e-13
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01893513390331701 == 0.01893513390331701
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  3 == 3
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000339 >= 0.00000000000000339
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01893513390331699 == 0.01893513390331699
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.volume.value()<b.volume.value() )
+with expansion:
+  0.10545806204524368 < 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951: PASSED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)<Q("1e-13") )
+with expansion:
+  1.76294e-17 < 1e-13
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01893513390331701 == 0.01893513390331701
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  3 == 3
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000339 >= 0.00000000000000339
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01893513390331699 == 0.01893513390331699
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.volume.value()<b.volume.value() )
+with expansion:
+  0.10545806204524368 < 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951: PASSED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)<Q("1e-13") )
+with expansion:
+  1.76294e-17 < 1e-13
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01893513390331701 == 0.01893513390331701
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  3 == 3
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000339 >= 0.00000000000000339
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01893513390331699 == 0.01893513390331699
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.volume.value()<b.volume.value() )
+with expansion:
+  0.10545806204524368 < 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951: PASSED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)<Q("1e-13") )
+with expansion:
+  1.76294e-17 < 1e-13
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01893513390331701 == 0.01893513390331701
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  3 == 3
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000339 >= 0.00000000000000339
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01893513390331699 == 0.01893513390331699
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.volume.value()<b.volume.value() )
+with expansion:
+  0.10545806204524368 < 0.12026931204524363
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951: PASSED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)<Q("1e-13") )
+with expansion:
+  1.76294e-17 < 1e-13
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01893513390331701 == 0.01893513390331701
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2955: PASSED:
+  REQUIRE( changed>0 )
+with expansion:
+  5 > 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2955: PASSED:
+  REQUIRE( retained>0 )
+with expansion:
+  14 > 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2955: PASSED:
+  REQUIRE( new_amount<old_amount )
+with expansion:
+  1.13113 < 1.20519
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2956: PASSED:
+  REQUIRE( Q(r.commanded_reduction_mm3.lower)<=old_amount-new_amount )
+with expansion:
+  0.0740562 <= 0.0740562
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2956: PASSED:
+  REQUIRE( Q(r.commanded_reduction_mm3.upper)>=old_amount-new_amount )
+with expansion:
+  0.0740562 >= 0.0740562
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.0975 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.0975 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.0975 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.0975 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.0975 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.kind==BeadSectionKind::RoundedRectangle )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( b.gap_begin_mm==b.gap_end_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2689: PASSED:
+  REQUIRE( p.start.z()==p.end.z() )
+with expansion:
+  1.20500000000000029 == 1.20500000000000029
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(b.gap_begin_mm)==*height )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2691: PASSED:
+  REQUIRE( Q(p.start.z())==*top )
+with expansion:
+  1.205 == 1.205
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2694: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2697: PASSED:
+  REQUIRE( height )
+with expansion:
+  {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2725: PASSED:
+  REQUIRE( high-low<Q(.0001) )
+with expansion:
+  3.65356e-05 < 0.0001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2959: PASSED:
+  REQUIRE( Q(after.fill->occupied->union_volume_mm3.lower)<=integral.second )
+with expansion:
+  0.533156 <= 0.533255
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2959: PASSED:
+  REQUIRE( Q(after.fill->occupied->union_volume_mm3.upper)>=integral.first )
+with expansion:
+  0.533404 >= 0.533218
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2960: PASSED:
+  REQUIRE( Q(after.fill->occupied->repeated_volume_mm3.lower)<=new_amount-integral.first )
+with expansion:
+  0.59773 <= 0.597915
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2960: PASSED:
+  REQUIRE( Q(after.fill->occupied->repeated_volume_mm3.upper)>=new_amount-integral.second )
+with expansion:
+  0.597978 >= 0.597879
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x98ec780b8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2069: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x98ef08000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2070: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x98f838000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2924: PASSED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0x98ec6d380
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2927: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x98ec781e0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2929: PASSED:
+  REQUIRE( r.before==before.snapshot )
+with expansion:
+  0x98ec6d380 == 0x98ec6d380
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2929: PASSED:
+  REQUIRE( after.source==r.before->source )
+with expansion:
+  0x98f838000 == 0x98f838000
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2929: PASSED:
+  REQUIRE( after.hatch_extent==r.before->hatch_extent )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2930: PASSED:
+  REQUIRE( after.fill->target==r.before->fill->target )
+with expansion:
+  0x98ed18af0 == 0x98ed18af0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2930: PASSED:
+  REQUIRE( after.replaced_boundary_lines==r.before->replaced_boundary_lines )
+with expansion:
+  { 0, 6 } == { 0, 6 }
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2931: PASSED:
+  REQUIRE( after.paths.size()==r.before->paths.size() )
+with expansion:
+  9 == 9
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2931: PASSED:
+  REQUIRE( after.fill->occupied->source->sequence!=r.before->fill->occupied->source->sequence )
+with expansion:
+  0x98ec78298 != 0x98ec78338
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2932: PASSED:
+  REQUIRE( r.commanded_reduction_mm3.lower>=.001 )
+with expansion:
+  0.07405624999999937 >= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2932: PASSED:
+  REQUIRE( r.repeated_reduction_mm3.lower>=.001 )
+with expansion:
+  0.07383008715834947 >= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2933: PASSED:
+  REQUIRE( r.covered_change_mm3.lower>=-.001 )
+with expansion:
+  -0.00041847530817607 >= -0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2933: PASSED:
+  REQUIRE( after.fill->missing_target_mm3.upper-r.before->fill->missing_target_mm3.lower<=.001 )
+with expansion:
+  0.00041847530817901 <= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2934: PASSED:
+  REQUIRE( after.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.0005114551700316 <= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2934: PASSED:
+  REQUIRE( after.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000236066188597 <= 0.001
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0df80 == 0x98ed0df80
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000483 >= 0.00000000000000483
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.08146345256264015 == 0.08146345256264015
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000067 == 0.00000000000000067
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0e040 == 0x98ed0e040
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  8 == 8
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000078 == 0.00000000000000078
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00348668921807505 >= 0.00348668921807505
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01420070961660175 == 0.01420070961660175
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00348668921806955 == 0.00348668921806955
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01443996122519538 == 0.01443996122519538
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00340739351318581 == 0.00340739351318581
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01467820112155495 == 0.01467820112155495
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.0033309945923638 == 0.0033309945923638
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01491542930568043 == 0.01491542930568043
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00325733656759014 == 0.00325733656759014
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01515164577757183 == 0.01515164577757183
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.0031862745390554 == 0.0031862745390554
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01538685053722913 == 0.01538685053722913
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00311767364375165 == 0.00311767364375165
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01562104358465236 == 0.01562104358465236
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00305140820123906 == 0.00305140820123906
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01585422491984149 == 0.01585422491984149
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00298736094519608 == 0.00298736094519608
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0e100 == 0x98ed0e100
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000033 == 0.00000000000000033
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00000000000000472 >= 0.00000000000000472
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.09239643362845085 == 0.09239643362845085
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00000000000000061 == 0.00000000000000061
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2938: PASSED:
+  REQUIRE( after.paths[i]==r.before->paths[i] )
+with expansion:
+  0x98ed0e1c0 == 0x98ed0e1c0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  8 == 8
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000078 == 0.00000000000000078
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00348668921807505 >= 0.00348668921807505
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01585422491984149 == 0.01585422491984149
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00298736094519608 == 0.00298736094519608
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01562104358465236 == 0.01562104358465236
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00305140820123906 == 0.00305140820123906
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01538685053722913 == 0.01538685053722913
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00311767364375165 == 0.00311767364375165
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01515164577757183 == 0.01515164577757183
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.0031862745390554 == 0.0031862745390554
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01491542930568043 == 0.01491542930568043
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00325733656759014 == 0.00325733656759014
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01467820112155495 == 0.01467820112155495
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.0033309945923638 == 0.0033309945923638
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01443996122519538 == 0.01443996122519538
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00340739351318581 == 0.00340739351318581
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.volume.value()==b.volume.value() )
+with expansion:
+  0.01420070961660175 == 0.01420070961660175
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2952: PASSED:
+  REQUIRE( a.width_error_upper_mm==b.width_error_upper_mm )
+with expansion:
+  0.00348668921806955 == 0.00348668921806955
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.pieces.size()==old.pieces.size() )
+with expansion:
+  8 == 8
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2939: PASSED:
+  REQUIRE( p.line_index==old.line_index )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.maximum_gap_error_mm==old.maximum_gap_error_mm )
+with expansion:
+  0.00000000000000078 == 0.00000000000000078
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2940: PASSED:
+  REQUIRE( p.numerical_error_upper_mm>=old.numerical_error_upper_mm )
+with expansion:
+  0.00348668921807505 >= 0.00348668921807505
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2944: PASSED:
+  REQUIRE( std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)== std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm) )
+with expansion:
+  {?} == {?}
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.nominal_width.value()==.4 )
+with expansion:
+  0.40000000000000002 == 0.40000000000000002
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2947: PASSED:
+  REQUIRE( a.volume.value()<b.volume.value() )
+with expansion:
+  0.01246349223378926 < 0.01420070961660175
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951: FAILED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)<Q("1e-13") )
+with expansion:
+  4.21547e-08 < 1e-13
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+-------------------------------------------------------------------------------
+B07 central cap width replan owns input and refuses unqualified replacement
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2966
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x98ec78018
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2069: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x98ef08000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2070: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x98f838000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2970: PASSED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0x98ec6d380
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2973: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x98ec78460
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2973: PASSED:
+  REQUIRE( result.snapshot->before==source )
+with expansion:
+  0x98ec6d380 == 0x98ec6d380
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2975: PASSED:
+  REQUIRE_FALSE( replan_first_cap_width({},WidthXY(.4),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2976: PASSED:
+  REQUIRE_FALSE( replan_first_cap_width(before,WidthXY(.45),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2977: PASSED:
+  REQUIRE_FALSE( replan_first_cap_width(before,WidthXY(.5),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2978: PASSED:
+  REQUIRE_FALSE( replan_first_cap_width(before,WidthXY(.01),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2979: PASSED:
+  REQUIRE_FALSE( replan_first_cap_width({"",result.snapshot->after},WidthXY(.3),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2980: PASSED:
+  REQUIRE_FALSE( replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2981: PASSED:
+  REQUIRE_FALSE( replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2982: PASSED:
+  REQUIRE_FALSE( replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2983: PASSED:
+  REQUIRE_FALSE( replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2992: PASSED:
+  REQUIRE_FALSE( refused.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  0 FIRST_CAP_WIDTH_REPLAN_PATH_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2992: PASSED:
+  REQUIRE_FALSE( refused.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  1 FIRST_HATCH_LAYER_RECORD_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2992: PASSED:
+  REQUIRE_FALSE( refused.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  2 FIRST_CAP_WIDTH_REPLAN_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2992: PASSED:
+  REQUIRE_FALSE( refused.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  3 MATERIAL_UNION_CELL_LIMIT paths=9 packets=9 cells=1 work=53
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2992: PASSED:
+  REQUIRE_FALSE( refused.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  4 FIRST_CAP_WIDTH_REPLAN_RETAINED_PROOF_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2992: PASSED:
+  REQUIRE_FALSE( refused.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  5 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2992: PASSED:
+  REQUIRE_FALSE( refused.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  6 STALE_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2992: PASSED:
+  REQUIRE_FALSE( refused.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  7 MATERIAL_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2992: PASSED:
+  REQUIRE( std::fesetround(0x00000000)==0 )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2992: PASSED:
+  REQUIRE_FALSE( refused.snapshot )
+with expansion:
+  !0
+with messages:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+  8 FIRST_CAP_WIDTH_REPLAN_NUMERIC_FAILURE: unsupported interval rounding
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2994: PASSED:
+  REQUIRE( replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot )
+with expansion:
+  0x98ec78640
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2996: PASSED:
+  REQUIRE_FALSE( replan_first_cap_width(before,WidthXY(.4),policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2996: PASSED:
+  REQUIRE( callbacks==count )
+with expansion:
+  175 == 175
+with message:
+  BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+
+===============================================================================
+test cases:   2 |   1 passed | 1 failed
+assertions: 528 | 527 passed | 1 failed
+

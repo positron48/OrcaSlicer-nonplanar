@@ -306,6 +306,8 @@ struct FirstHatchWidthReplanPolicy;
 struct FirstHatchWidthReplanResult;
 struct FirstCapReplanPolicy;
 struct FirstCapReplanResult;
+struct FirstCapWidthReplanPolicy;
+struct FirstCapWidthReplanResult;
 enum class HatchDirection { AlongX, AlongY };
 enum class FirstHatchExtent { CapsuleInset, FiniteButtInset };
 enum class FirstCapHatchExtent { ContourCentres, BoundaryBand };
@@ -472,6 +474,7 @@ private:
     friend FirstContourResult plan_first_contour(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,const FirstHatchLayerLimits &);
     friend FirstCapResult plan_first_cap(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,const FirstHatchLayerLimits &);
     friend FirstCapReplanResult replan_first_cap_ends(const FirstCapResult &,const FirstCapReplanPolicy &,const FirstHatchLayerLimits &);
+    friend FirstCapWidthReplanResult replan_first_cap_width(const FirstCapResult &,WidthXY,const FirstCapWidthReplanPolicy &,const FirstHatchLayerLimits &);
     static FirstHatchBeadResult plan(const AffineHatchResult &, std::optional<size_t>, const FirstHatchBeadLimits &, FirstHatchRoofDomain,
         const AffineHatchLine *slice=nullptr,double coordinate_error=0);
     static std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> construct_first_paths(
@@ -764,13 +767,15 @@ struct FirstContourResult {std::string reason;std::shared_ptr<const FirstContour
 FirstContourResult plan_first_contour(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,
     const FirstHatchLayerLimits &limits={});
 
-inline constexpr unsigned first_cap_contract_version=2;
+inline constexpr unsigned first_cap_contract_version=3;
 struct FirstCapSnapshot {
     const std::shared_ptr<const AffineHatchSnapshot> source;
     const FirstContourPolicy policy;
     const FirstCapHatchExtent hatch_extent; // Actual owned paths are authoritative; original source lines stay unchanged.
     // First four paths are the closed contour, followed by original interior
     // hatch owners in source order. Boundary owners are replaced, not appended.
+    // Each packet's nominal width is authoritative after central width replan;
+    // policy.width retains the original contour/generation policy.
     const std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> paths;
     const std::vector<size_t> replaced_boundary_lines;
     const std::shared_ptr<const MaterialFillSnapshot> fill;
@@ -786,6 +791,7 @@ private:
           roof_segments(roofs),cells(count),evaluations(work) {}
     friend FirstCapResult plan_first_cap(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,const FirstHatchLayerLimits &);
     friend FirstCapReplanResult replan_first_cap_ends(const FirstCapResult &,const FirstCapReplanPolicy &,const FirstHatchLayerLimits &);
+    friend FirstCapWidthReplanResult replan_first_cap_width(const FirstCapResult &,WidthXY,const FirstCapWidthReplanPolicy &,const FirstHatchLayerLimits &);
 };
 struct FirstCapResult {std::string reason;std::shared_ptr<const FirstCapSnapshot> snapshot;};
 // Construct one prospective first contour/infill candidate with common fixed
@@ -821,6 +827,31 @@ struct FirstCapReplanResult {std::string reason;std::shared_ptr<const FirstCapRe
 // complete 3D fill, later support and export remain separate obligations.
 FirstCapReplanResult replan_first_cap_ends(const FirstCapResult &,const FirstCapReplanPolicy &policy={},
     const FirstHatchLayerLimits &limits={});
+
+inline constexpr unsigned first_cap_width_replan_contract_version=1;
+struct FirstCapWidthReplanPolicy {Volume minimum_repeated_reduction{.001},maximum_covered_loss{.001},maximum_outside_target{.001};};
+struct FirstCapWidthReplanSnapshot {
+    const std::shared_ptr<const FirstCapSnapshot> before,after;
+    const WidthXY width;
+    const FirstCapWidthReplanPolicy policy;
+    const ScalarBounds commanded_reduction_mm3,repeated_reduction_mm3,covered_change_mm3,missing_change_mm3;
+    const size_t cells,evaluations;
+private:
+    FirstCapWidthReplanSnapshot(std::shared_ptr<const FirstCapSnapshot> old,std::shared_ptr<const FirstCapSnapshot> next,WidthXY w,
+        FirstCapWidthReplanPolicy p,ScalarBounds amount,ScalarBounds repeated,ScalarBounds covered,ScalarBounds missing,size_t count,size_t work)
+        : before(std::move(old)),after(std::move(next)),width(w),policy(p),commanded_reduction_mm3(amount),repeated_reduction_mm3(repeated),
+          covered_change_mm3(covered),missing_change_mm3(missing),cells(count),evaluations(work) {}
+    friend FirstCapWidthReplanResult replan_first_cap_width(const FirstCapResult &,WidthXY,const FirstCapWidthReplanPolicy &,const FirstHatchLayerLimits &);
+};
+struct FirstCapWidthReplanResult {std::string reason;std::shared_ptr<const FirstCapWidthReplanSnapshot> snapshot;};
+// Narrow only central infill packets between the original contour centres.
+// Retain all XYZ/gap approximants, contour and extended-end packets, body/target,
+// band and losses. The qualified narrower footprint inherits the original
+// whole-point roof bound; any required packet subdivision refuses. Measure a
+// fresh whole ledger and require S/R reduction with bounded C loss/M increase.
+// This candidate-quality bound does not qualify excess, contact, order or export.
+FirstCapWidthReplanResult replan_first_cap_width(const FirstCapResult &,WidthXY,
+    const FirstCapWidthReplanPolicy &policy={},const FirstHatchLayerLimits &limits={});
 
 struct FirstCapJoinLimits : MaterialJoinLimits {size_t max_joins=8192,max_records=200000;};
 struct FirstCapJoin {size_t first_path,second_path;std::shared_ptr<const MaterialJoinSnapshot> material;};

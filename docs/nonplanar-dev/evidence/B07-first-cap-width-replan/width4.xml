@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="2" skipped="0" tests="1812" hostname="tbd" time="17.801" timestamp="2026-10-01T22:06:32Z">
+    <properties>
+      <property name="random-seed" value="604888835"/>
+      <property name="filters" value="[FirstCapWidthReplan]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 central cap width replan owns input and refuses unqualified replacement" time="0.000" status="run">
+      <failure message="high-low&lt;Q(.0001)" type="REQUIRE">
+FAILED:
+  REQUIRE( high-low&lt;Q(.0001) )
+with expansion:
+  0.000102145 &lt; 0.0001
+BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2725
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 central cap width replan preserves geometry contour and extended ends" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+MATERIAL_DEADLINE paths=11 packets=74 cells=43635 work=1368696 union_width=0.000735
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2927
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

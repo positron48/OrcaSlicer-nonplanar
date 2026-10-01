@@ -21,7 +21,7 @@
     "B04": "OWNED_EXACT_PARTITION_NATIVE_BODY_MATERIAL_AND_INTERIOR_DENSE_COVERAGE_PASS_SEAM_WIDER_NATIVE_DOMAIN_JOB_WORKER_PENDING",
     "B05": "OWNED_ACTUAL_PREFIX_NATIVE_BODY_PER_EVENT_AND_CONTINUOUS_RUN_LOWER_BOXES_PASS_FULL_CONTACT_CCD_JOB_REPLAY_PENDING",
     "B06": "ACTUAL_PREFIX_AFFINE_GAP_INTEGRAL_PASS_STACK_AND_COMPLETE_VARIABLE_FLAT_FLOOR_INTERFACE_TO_3D_BODY_LOWER_ANCHOR_PASS_STEPPED_SHOULDER_SEAM_LATER_SUPPORT_FULL_SCOPE_PENDING",
-    "B07": "PROTECTED_WHOLE_FIRST_CAP_END_REPLAN_RETAINS_CENTRAL_PACKETS_MEASURED_FILL_GAIN_RUN_JOINS_INTERFACE_AND_CLEAR_DEFICIT_REDUCTION_PASS_QUALIFIED_EXCESS_COMPLETE_SEAM_3D_FILL_LATER_SUPPORT_ORDER_PENDING",
+    "B07": "PROTECTED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_RETAINS_XYZ_GAPS_CONTOUR_ENDS_MEASURED_EXCESS_REDUCTION_NATIVE_RUN_JOINS_INTERFACE_AND_VOID_RECHECK_PASS_QUALIFIED_EXCESS_COMPLETE_SEAM_3D_FILL_LATER_SUPPORT_ORDER_PENDING",
     "B08": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B09": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B10": "NOT_IMPLEMENTED_FULL_SCOPE",
@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 299,
+    "new_native_cases": 301,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 342,
-    "final_ctest_executed": 342,
+    "final_ctest_discovered": 344,
+    "final_ctest_executed": 344,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -606,11 +606,71 @@
     "B07_first_cap_end_replan_OFF_ZAA": "SIX_GCODE_AND_MODAL_REPLAY_PASS_ORIGINAL_NORMALIZATION_ESTABLISHED_ADDITIVE_OFF_DEFAULT_ONLY",
     "B07_first_cap_end_replan_final_build": "BUILD30_RELEASE_APPLICATION_AND_BOTH_NATIVE_CONSUMERS_FINAL_SOURCE_HASHES_NO_DIAGNOSTIC_PRINTS",
     "B07_first_cap_end_replan_linux": "NOT_YET_VERIFIED",
-    "B07_first_cap_end_replan_review": "INDEPENDENT_REVIEW_PENDING"
+    "B07_first_cap_end_replan_review": "INDEPENDENT_REVIEW_PENDING",
+    "B07_first_cap_width_replan_contract": 1,
+    "B07_first_cap_width_replan_first_cap_contract": 3,
+    "B07_first_cap_width_replan_cases": 2,
+    "B07_first_cap_width_replan_assertions": 2897,
+    "B07_first_cap_width_replan_retention": "ALL_XYZ_GAPS_CONTOUR_SNAPSHOTS_END_PACKETS_DOSES_AND_ORIGINAL_BODY_TARGET_BAND_LOSSES",
+    "B07_first_cap_width_replan_native_paths": 5,
+    "B07_first_cap_width_replan_native_packets": 173,
+    "B07_first_cap_width_replan_native_changed_packets": 53,
+    "B07_first_cap_width_replan_native_retained_packets": 120,
+    "B07_first_cap_width_replan_native_nominal_width_mm": 0.38,
+    "B07_first_cap_width_replan_native_commanded_mm3": 0.394386,
+    "B07_first_cap_width_replan_native_commanded_reduction_mm3": 0.006291,
+    "B07_first_cap_width_replan_native_repeated_mm3": [
+      0.174812,
+      0.175043
+    ],
+    "B07_first_cap_width_replan_native_repeated_reduction_mm3": [
+      0.00605963,
+      0.00652244
+    ],
+    "B07_first_cap_width_replan_native_covered_mm3": [
+      0.218986,
+      0.219409
+    ],
+    "B07_first_cap_width_replan_native_missing_mm3": [
+      0.0955759,
+      0.0959988
+    ],
+    "B07_first_cap_width_replan_native_spill_mm3": [
+      0.000164691,
+      0.000356254
+    ],
+    "B07_first_cap_width_replan_native_under_mm3": [
+      0.00866917,
+      0.00966917
+    ],
+    "B07_first_cap_width_replan_native_clear_mm3": [
+      0.0863297,
+      0.0869067
+    ],
+    "B07_first_cap_width_replan_native_cells": 515,
+    "B07_first_cap_width_replan_native_work": 15657,
+    "B07_first_cap_width_replan_native_void_cells": 59717,
+    "B07_first_cap_width_replan_native_void_work": 847691,
+    "B07_first_cap_width_replan_native_run_joins": 6,
+    "B07_first_cap_width_replan_native_interface_packets": 173,
+    "B07_first_cap_width_replan_policy": "ORIGINAL_COMPLETE_65535_CELLS_2000000_WORK_5_SECONDS_0_001_MM3_PRECISION_DEFAULTS_LOSSES_AND_INTERFACE_UNCHANGED",
+    "B07_first_cap_width_replan_measure": "FRESH_WHOLE_LEDGER_ALIGNED_UNEQUAL_DOSE_MERGED_ORDERED_CORES_S_R_REDUCTION_BOUNDED_C_LOSS_M_INCREASE_SPILL",
+    "B07_first_cap_width_replan_oracle": "113_BIT_MIDPOINT_DOSE_ANALYTIC_INTEGRAL_DIFFERENCE_FLAT_UNION_AND_ORDINARY_FLAT_SHADOW_SWEEPS_NATIVE_WHOLE_RUN_BOXES_ACTUAL_FLOOR_SUMS",
+    "B07_first_cap_width_replan_negatives": "ABSENT_REPEATED_SAME_WIDER_TOO_NARROW_INHERITED_PROOF_EXCESSIVE_COVERAGE_LOSS_INSUFFICIENT_REDUCTION_SPILL_SHARED_BUDGETS_STALE_CANCEL_LATE_TIMEOUT_ROUNDING_NATIVE_0_30_FLAT_FLOOR",
+    "B07_first_cap_width_replan_final_material_cases": 99,
+    "B07_first_cap_width_replan_final_material_assertions": 30401,
+    "B07_first_cap_width_replan_final_body_cases": 14,
+    "B07_first_cap_width_replan_final_body_assertions": 112938,
+    "B07_first_cap_width_replan_ctest": 344,
+    "B07_first_cap_width_replan_OFF_ZAA": "SIX_GCODE_AND_MODAL_REPLAY_PASS_ORIGINAL_NORMALIZATION_ESTABLISHED_ADDITIVE_OFF_DEFAULT_ONLY",
+    "B07_first_cap_width_replan_final_build": "BUILD14_RELEASE_APPLICATION_AND_BOTH_NATIVE_CONSUMERS_FINAL_SOURCE_AND_BINARY_HASHES",
+    "B07_first_cap_width_replan_linux": "NOT_YET_VERIFIED",
+    "B07_first_cap_width_replan_review": "INDEPENDENT_REVIEW_PENDING",
+    "B07_first_cap_width_replan_residual": "ALLOWABLE_EXCESS_3D_SEAM_FILL_LATER_SUPPORT_HEAD_CONTACT_ORDER_FLOW_JOB_REPLAY_EXPORT_PENDING_WIDE_ANALYTIC_EXTENDED_SHADOW_BUDGET_REFUSAL_RETAINED"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
-    "linux_x86_64": "2A6EE309_36908631898_SUCCESS_OBSERVED_2026_10_01_2119_UTC_CURRENT_FIRST_CAP_END_REPLAN_PENDING"
+    "linux_x86_64": "383D0595_36928975495_IN_PROGRESS_CURRENT_CENTRAL_WIDTH_REPLAN_NOT_YET_VERIFIED"
   },
   "physical": {
     "machine": "Snapmaker U1",
@@ -621,10 +681,10 @@
     "operator_profile": "UNCONFIRMED"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "2A6EE309_36908631898_EB0E864A_36899512769_3D3F97A4_36894070655_D02D7544_36887521770_SUCCESS_CURRENT_FIRST_CAP_END_REPLAN_NOT_YET_VERIFIED",
+  "ci": "PARENT_383D0595_36928975495_IN_PROGRESS_OBSERVED_2026_10_01_2227_UTC_PRIOR_2A6EE309_SUCCESS_CURRENT_FIRST_CAP_WIDTH_REPLAN_NOT_YET_VERIFIED",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Qualify allowable repeated material and complete shoulder/seam volumes on the original body/target. The whole-cap end replan preserves central packets and reduces native vertically clear deficit, but under-material voids and repeated material remain. Construct/replan remaining 3D fill and reconstruct later curved/stepped actual support. Complete full-head CCD/motion/order/flow, final-byte replay/export and B01-B03 job/plate/provenance binding. Independent review, Windows and physical qualification remain pending.",
+  "next_step": "Qualify allowable repeated material and complete shoulder/seam volumes on the original body/target. Central-width replacement preserves geometry, contour/end doses and native C/M while reducing S/R; real under-material and vertically clear voids remain. Extend bounded shadow integration to wider analytic extended caps. Construct/replan remaining 3D fill and reconstruct later curved/stepped support. Complete full-head CCD/motion/order/flow, final-byte replay/export and B01-B03 job/plate/provenance binding. Independent review, Windows and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -702,7 +762,8 @@
     "B07_material_join": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-material-joins.md",
     "B07_material_runs": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-material-runs.md",
     "B06_cap_interface": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-cap-interface.md",
-    "B07_first_cap_end_replan": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-cap-end-replan.md"
+    "B07_first_cap_end_replan": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-cap-end-replan.md",
+    "B07_first_cap_width_replan": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-cap-width-replan.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -778,5 +839,6 @@
   "B07_material_runs_evidence": "docs/nonplanar-dev/evidence/B07-material-runs/source-manifest.json",
   "B06_cap_interface_evidence": "docs/nonplanar-dev/evidence/B06-cap-interface/source-manifest.json",
   "B07_material_void_evidence": "docs/nonplanar-dev/evidence/B07-material-voids/source-manifest.json",
-  "B07_first_cap_end_replan_evidence": "docs/nonplanar-dev/evidence/B07-first-cap-end-replan/source-manifest.json"
+  "B07_first_cap_end_replan_evidence": "docs/nonplanar-dev/evidence/B07-first-cap-end-replan/source-manifest.json",
+  "B07_first_cap_width_replan_evidence": "docs/nonplanar-dev/evidence/B07-first-cap-width-replan/source-manifest.json"
 }

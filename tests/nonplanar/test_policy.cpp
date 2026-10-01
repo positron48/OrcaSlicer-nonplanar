@@ -2098,7 +2098,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan][NativeFirstCapWidthReplan]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2447,6 +2447,76 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         " run joins cells=" << extended_joins.cells << " work=" << extended_joins.evaluations <<
         " interface cells=" << extended_interface.cells << " work=" << extended_interface.evaluations);
     REQUIRE(extended.fill->missing_target_mm3.lower>0);
+    const auto too_narrow_cap=replan_first_cap_width(extended_result,WidthXY(.3),{},layer_limits);
+    INFO(too_narrow_cap.reason);REQUIRE(too_narrow_cap.snapshot);
+    const auto too_narrow_interface=assess_first_cap_interface({"",too_narrow_cap.snapshot->after},interface_policy);
+    REQUIRE_FALSE(too_narrow_interface.snapshot);REQUIRE(too_narrow_interface.reason=="FIRST_CAP_INTERFACE_FLAT_FLOOR_TOO_NARROW");
+    const auto cap_width=replan_first_cap_width(extended_result,WidthXY(.38),{},layer_limits);
+    INFO(cap_width.reason);REQUIRE(cap_width.snapshot);const auto &narrow=*cap_width.snapshot->after;
+    REQUIRE(cap_width.snapshot->before==extended_result.snapshot);REQUIRE(narrow.source==extended.source);
+    REQUIRE(narrow.fill->target==extended.fill->target);REQUIRE(narrow.hatch_extent==extended.hatch_extent);
+    REQUIRE(narrow.policy.width.value()==.4);REQUIRE(narrow.paths.size()==extended.paths.size());
+    REQUIRE(narrow.fill->occupied->source->sequence!=extended.fill->occupied->source->sequence);
+    LayerAmount narrow_amount=0,narrow_ideal=0;size_t changed_packets=0,retained_packets=0;
+    const double first_centre=coordinate(cap.paths.back()->path_start),last_centre=coordinate(cap.paths.back()->path_end);
+    for (size_t i=0;i<narrow.paths.size();++i) {
+        const auto &path=*narrow.paths[i],&old=*extended.paths[i];if (i<4) REQUIRE(narrow.paths[i]==extended.paths[i]);
+        REQUIRE(path.pieces.size()==old.pieces.size());REQUIRE(path.line_index==old.line_index);LayerAmount path_ideal=0;
+        for (size_t n=0;n<path.pieces.size();++n) {
+            const auto &a=path.pieces[n],&b=old.pieces[n];
+            REQUIRE(std::make_tuple(a.start.x(),a.start.y(),a.start.z(),a.end.x(),a.end.y(),a.end.z(),a.section.gap_begin_mm,a.section.gap_end_mm)==
+                std::make_tuple(b.start.x(),b.start.y(),b.start.z(),b.end.x(),b.end.y(),b.end.z(),b.section.gap_begin_mm,b.section.gap_end_mm));
+            const bool selected=i>=4 && coordinate(a.start)>=first_centre && coordinate(a.end)<=last_centre;
+            REQUIRE(a.nominal_width.value()==(selected ? .38 : .4));narrow_amount+=a.volume.value();
+            const LayerAmount l=sqrt(pow(LayerAmount(a.end.x())-a.start.x(),2)+pow(LayerAmount(a.end.y())-a.start.y(),2));
+            const LayerAmount h0=LayerAmount(a.start.z())-flat_top,h1=LayerAmount(a.end.z())-flat_top,k=1-acos(LayerAmount(-1))/4;
+            path_ideal+=l*(LayerAmount(a.nominal_width.value())*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3);
+            if (selected) {++changed_packets;REQUIRE(a.volume.value()<b.volume.value());}
+            else {++retained_packets;REQUIRE(a.volume.value()==b.volume.value());REQUIRE(a.width_error_upper_mm==b.width_error_upper_mm);}
+        }
+        contains(path.actual_target_volume_mm3,path_ideal);narrow_ideal+=path_ideal;
+    }
+    REQUIRE(changed_packets>0);REQUIRE(retained_packets>0);REQUIRE(changed_packets+retained_packets==extended_packets);
+    contains(narrow.section_target_volume_mm3,narrow_ideal);contains(narrow.deposited_volume_mm3,narrow_amount);
+    contains(narrow.fill->occupied->individual_volume_mm3,narrow_amount);
+    contains(cap_width.snapshot->commanded_reduction_mm3,extended_amount-narrow_amount);
+    REQUIRE(narrow.global_volume_error_mm3<=layer_limits.beads.packets.maximum_volume_error.value());
+    REQUIRE(cap_width.snapshot->commanded_reduction_mm3.lower>.001);REQUIRE(cap_width.snapshot->repeated_reduction_mm3.lower>.001);
+    REQUIRE(cap_width.snapshot->covered_change_mm3.lower>=-.001);REQUIRE(cap_width.snapshot->missing_change_mm3.upper<=.001);
+    REQUIRE(narrow.fill->outside_target_mm3.upper<=.001);REQUIRE(narrow.fill->missing_target_mm3.lower>0);
+    const FirstCapResult narrow_result{"",cap_width.snapshot->after};
+    const auto narrow_joins=assess_first_cap_run_joins(narrow_result);INFO(narrow_joins.reason);REQUIRE(narrow_joins.snapshot);
+    REQUIRE(narrow_joins.snapshot->joins.size()==6);
+    for (const auto &join : narrow_joins.snapshot->joins) {
+        REQUIRE(join.material->first_run->source==narrow.fill->occupied->source);
+        REQUIRE(join.material->second_run->source==narrow.fill->occupied->source);
+        test::independent_run_box(*join.material->first_run,join.material->witness);
+        test::independent_run_box(*join.material->second_run,join.material->witness);
+    }
+    const auto narrow_interface=assess_first_cap_interface(narrow_result,interface_policy);
+    INFO(narrow_interface.reason);REQUIRE(narrow_interface.snapshot);REQUIRE(narrow_interface.snapshot->packets.size()==extended_packets);
+    test::independent_lower_box(*narrow_interface.snapshot->body,support_row,narrow_interface.snapshot->anchor);
+    const auto narrow_voids=classify_material_voids({"",narrow.fill},void_limits);
+    INFO(narrow_voids.reason << " cells=" << narrow_voids.cells << " work=" << narrow_voids.evaluations);REQUIRE(narrow_voids.snapshot);
+    REQUIRE(narrow_voids.snapshot->source==narrow.fill);REQUIRE(narrow_voids.snapshot->under_material_missing_mm3.lower>0);
+    REQUIRE(narrow_voids.snapshot->vertical_clear_missing_mm3.lower>0);
+    for (auto amounts : {std::pair<ScalarBounds,ScalarBounds>{narrow_voids.snapshot->under_material_missing_mm3,extended_voids.snapshot->under_material_missing_mm3},
+            {narrow_voids.snapshot->vertical_clear_missing_mm3,extended_voids.snapshot->vertical_clear_missing_mm3}}) {
+        REQUIRE(amounts.first.lower<=amounts.second.upper);REQUIRE(amounts.first.upper>=amounts.second.lower);
+    }
+    INFO("native narrow central cap changed=" << changed_packets << " retained=" << retained_packets <<
+        " S=[" << narrow.deposited_volume_mm3.lower << ',' << narrow.deposited_volume_mm3.upper <<
+        "] R=[" << narrow.fill->occupied->repeated_volume_mm3.lower << ',' << narrow.fill->occupied->repeated_volume_mm3.upper <<
+        "] C=[" << narrow.fill->covered_target_mm3.lower << ',' << narrow.fill->covered_target_mm3.upper <<
+        "] M=[" << narrow.fill->missing_target_mm3.lower << ',' << narrow.fill->missing_target_mm3.upper <<
+        "] spill=[" << narrow.fill->outside_target_mm3.lower << ',' << narrow.fill->outside_target_mm3.upper <<
+        "] R reduction=[" << cap_width.snapshot->repeated_reduction_mm3.lower << ',' << cap_width.snapshot->repeated_reduction_mm3.upper <<
+        "] under=[" << narrow_voids.snapshot->under_material_missing_mm3.lower << ',' << narrow_voids.snapshot->under_material_missing_mm3.upper <<
+        "] clear=[" << narrow_voids.snapshot->vertical_clear_missing_mm3.lower << ',' << narrow_voids.snapshot->vertical_clear_missing_mm3.upper <<
+        "] cells=" << cap_width.snapshot->cells << " work=" << cap_width.snapshot->evaluations <<
+        " void cells=" << narrow_voids.cells << " void work=" << narrow_voids.evaluations <<
+        " joins cells=" << narrow_joins.cells << " work=" << narrow_joins.evaluations <<
+        " interface cells=" << narrow_interface.cells << " work=" << narrow_interface.evaluations);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

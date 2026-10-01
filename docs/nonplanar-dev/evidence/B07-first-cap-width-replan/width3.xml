@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="528" hostname="tbd" time="2.376" timestamp="2026-10-01T22:01:05Z">
+    <properties>
+      <property name="random-seed" value="3487034563"/>
+      <property name="filters" value="[FirstCapWidthReplan]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 central cap width replan preserves geometry contour and extended ends" time="0.000" status="run">
+      <failure message="abs(Q(a.volume.value())-ideal)&lt;Q(&quot;1e-13&quot;)" type="REQUIRE">
+FAILED:
+  REQUIRE( abs(Q(a.volume.value())-ideal)&lt;Q("1e-13") )
+with expansion:
+  4.21547e-08 &lt; 1e-13
+BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2951
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 central cap width replan owns input and refuses unqualified replacement" time="0.021" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

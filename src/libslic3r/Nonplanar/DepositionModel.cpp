@@ -1651,6 +1651,13 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                 if (x==y || progress(i)!=1 || row.bead->kind!=BeadSectionKind::RoundedRectangle) {supported=false;break;}
                 groups[{x,x ? m.start.y() : m.start.x()}].push_back(i);
             }
+            const auto merged_ordered=[&](double first_amount,double last_amount,const Exact &length,double h0,double h1,const Exact &separation) {
+                const Interval maximum_gap(std::max(h0,h1));const Exact minimum_gap(std::min(h0,h1));
+                const auto first=section_width(exact_interval(Exact(first_amount)/length),maximum_gap,BeadSectionKind::RoundedRectangle)-maximum_gap;
+                const auto last=section_width(exact_interval(Exact(last_amount)/length),maximum_gap,BeadSectionKind::RoundedRectangle)-maximum_gap;
+                return first.lo>=0 && last.lo>=0 && exact_interval(separation).hi<=((first+last)/Interval(2)).lo &&
+                    separation>=abs(Exact(first_amount)-Exact(last_amount))/(Exact(2)*length*minimum_gap);
+            };
             if (supported && groups.size()==2 && groups.begin()->first.first==groups.rbegin()->first.first &&
                 groups.begin()->second.size()==groups.rbegin()->second.size()) {
                 const bool x=groups.begin()->first.first;
@@ -1706,18 +1713,14 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                 for (size_t n=0;qualified && n<groups.begin()->second.size();++n) {
                     evaluate();const auto first=profile(groups.begin()->second[n]),last=profile(groups.rbegin()->second[n]);
                     if (previous && first.lo<*previous) {qualified=false;break;}
-                    const Exact length=Exact(first.hi)-Exact(first.lo),minimum_gap(std::min(first.h0,first.h1));
-                    const Interval maximum_gap(std::max(first.h0,first.h1));
+                    const Exact length=Exact(first.hi)-Exact(first.lo);
                     std::optional<std::pair<double,Profile>> prior;
                     for (const auto &g : groups) {
                         evaluate();const auto p=profile(g.second[n]);
                         if (std::tie(p.lo,p.hi,p.z0,p.z1,p.h0,p.h1)!=std::tie(first.lo,first.hi,first.z0,first.z1,first.h0,first.h1)) {qualified=false;break;}
                         if (prior) {
                             const Exact separation=Exact(g.first.second)-Exact(prior->first);
-                            const auto a=section_width(exact_interval(Exact(p.amount)/length),maximum_gap,BeadSectionKind::RoundedRectangle)-maximum_gap;
-                            const auto b=section_width(exact_interval(Exact(prior->second.amount)/length),maximum_gap,BeadSectionKind::RoundedRectangle)-maximum_gap;
-                            if (a.lo<0 || b.lo<0 || exact_interval(separation).hi>((a+b)/Interval(2)).lo ||
-                                separation<abs(Exact(p.amount)-Exact(prior->second.amount))/(Exact(2)*length*minimum_gap)) {qualified=false;break;}
+                            if (!merged_ordered(prior->second.amount,p.amount,length,first.h0,first.h1,separation)) {qualified=false;break;}
                         }
                         prior=std::pair<double,Profile>{g.first.second,p};
                     }
@@ -1734,7 +1737,7 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                         std::array<ScalarBounds,3>{bounds(united),bounds(individual),bounds(repeated)},cells,evaluations,provisional_union,provisional_excess};
                 }
             }
-            // A loop with congruent primary packets and two constant
+            // A loop with aligned primary packets and two constant
             // transverse ends. Adjacent flat cores must merge, so the primary
             // union fills its whole centre span even with multiple infill rows
             // between affine top/bottom graphs. Each end intersection therefore
@@ -1780,15 +1783,16 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                         for (size_t n=0;loop && n<lists.front().size();++n) {
                             evaluate();const auto a=packet(lists.front()[n]);
                             if (!lofts.empty() && (a.lo!=lofts.back().hi || a.z0!=lofts.back().z1 || a.h0!=lofts.back().h1)) {loop=false;break;}
-                            const auto hmax=Interval(std::max(a.h0,a.h1));
-                            const auto core=section_width(exact_interval(Exact(a.amount)/(Exact(a.hi)-Exact(a.lo))),hmax,BeadSectionKind::RoundedRectangle)-hmax;
                             for (size_t g=1;g<lists.size();++g) {
                                 evaluate();const auto b=packet(lists[g][n]);
-                                if (std::tie(a.lo,a.hi,a.z0,a.z1,a.h0,a.h1,a.amount)!=std::tie(b.lo,b.hi,b.z0,b.z1,b.h0,b.h1,b.amount) ||
-                                    exact_interval(Exact(main[g]->first.second)-Exact(main[g-1]->first.second)).hi>core.lo) {loop=false;break;}
+                                const auto prior=packet(lists[g-1][n]);
+                                if (std::tie(a.lo,a.hi,a.z0,a.z1,a.h0,a.h1)!=std::tie(b.lo,b.hi,b.z0,b.z1,b.h0,b.h1) ||
+                                    !merged_ordered(prior.amount,b.amount,Exact(a.hi)-Exact(a.lo),a.h0,a.h1,
+                                        Exact(main[g]->first.second)-Exact(main[g-1]->first.second))) {loop=false;break;}
                             }
                             if (!loop) break;
-                            volume+=Exact(a.amount)+span*(Exact(a.hi)-Exact(a.lo))*(Exact(a.h0)+Exact(a.h1))/Exact(2);lofts.push_back(a);
+                            const auto last=packet(lists.back()[n]);
+                            volume+=(Exact(a.amount)+Exact(last.amount))/Exact(2)+span*(Exact(a.hi)-Exact(a.lo))*(Exact(a.h0)+Exact(a.h1))/Exact(2);lofts.push_back(a);
                         }
                         struct LoopEnd {Exact centre,zmid;Interval core,radius,half;};std::vector<LoopEnd> sides;Exact end_amount(0);
                         for (size_t n=0;loop && n<2;++n) {
@@ -1983,7 +1987,7 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
         // Keep internal packet seams out of this hint; the continuous solver
         // below still retains real holes and every packet's actual profile.
         std::map<std::pair<bool,double>,std::array<double,4>> group_envelopes;
-        if (clip_kind==UnionClip::Box) for (size_t i : active) {
+        if (clip_kind==UnionClip::Box || clip_kind==UnionClip::TargetShadow) for (size_t i : active) {
             evaluate();const auto &m=sequence->records[i].motion;const bool x=m.start.y()==m.end.y(),y=m.start.x()==m.end.x();
             if (x==y) continue;const auto key=std::make_pair(x,x ? m.start.y() : m.start.x());
             const auto inserted=group_envelopes.emplace(key,xy_bounds[i]);
@@ -2513,7 +2517,7 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
             for (auto point : node.polygon) {const Exact value=normal[0]*point[0]+normal[1]*point[1];lo=std::min(lo,value);hi=std::max(hi,value);}
             if (lo==hi) reject("MATERIAL_UNION_INVALID_SPLIT");Exact middle=(lo+hi)/Exact(2);
             if (node.packet_cut) middle=*node.packet_cut;
-            else if (clip_kind==UnionClip::Box && (dx==0 || dy==0)) {
+            else if ((clip_kind==UnionClip::Box || clip_kind==UnionClip::TargetShadow) && (dx==0 || dy==0)) {
                 // Place refinement on finite group envelope faces when possible.
                 // A midpoint grid needlessly straddles unequal cap/contour ends.
                 // These are split hints only; both children retain all original
@@ -3466,6 +3470,125 @@ FirstCapReplanResult replan_first_cap_ends(const FirstCapResult &requested,const
         poll();return {"BOUNDED_WHOLE_FIRST_CAP_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) {return {e.what(),{}};}
     catch (const std::exception &e) {return {"FIRST_CAP_REPLAN_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
+}
+
+FirstCapWidthReplanResult replan_first_cap_width(const FirstCapResult &requested,WidthXY width,
+    const FirstCapWidthReplanPolicy &requested_policy,const FirstHatchLayerLimits &requested_limits)
+{
+    const auto before=requested.snapshot;const auto policy=requested_policy;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!before || !before->source || !before->source->source || !before->fill || before->paths.size()<5 ||
+            !valid_first_hatch_layer_limits(limits) || width.value()<=0 || policy.minimum_repeated_reduction.value()<=0 ||
+            policy.maximum_covered_loss.value()<0 || policy.maximum_outside_target.value()<0) reject("INVALID_FIRST_CAP_WIDTH_REPLAN");
+        const auto source=before->source;const auto sequence=source->source->source->sequence;
+        const auto poll=[&] {
+            stop(limits,sequence->revision,started);stop(limits.beads,sequence->revision,started);
+            stop(limits.beads.packets,sequence->revision,started);stop(limits.volumes,sequence->revision,started);
+        };poll();size_t work=0,bead_work=0,packets=0,roofs=0,selected=0;
+        const auto charge=[&](size_t count) {if (count>limits.max_evaluations-work) reject("FIRST_CAP_WIDTH_REPLAN_WORK_LIMIT");work+=count;poll();};
+        if (before->paths.size()>limits.max_paths) reject("FIRST_CAP_WIDTH_REPLAN_PATH_LIMIT");
+        const bool x=source->passes.front().direction==HatchDirection::AlongX;
+        const auto coordinate=[&](PhysicalPosition p) {return x ? p.x() : p.y();};
+        double begin=coordinate(before->paths.front()->path_start),end=begin;
+        for (size_t i=0;i<4;++i) {charge(1);begin=std::min(begin,coordinate(before->paths[i]->path_start));end=std::max(end,coordinate(before->paths[i]->path_start));}
+        const auto central=[&](const FixedWidthBeadPiece &p) {
+            const double a=std::min(coordinate(p.start),coordinate(p.end)),b=std::max(coordinate(p.start),coordinate(p.end));
+            if (a>=begin && b<=end) return true;
+            if (b<=begin || a>=end) return false;
+            reject("FIRST_CAP_WIDTH_REPLAN_PACKET_CROSSES_CONTOUR_PLANE");return false;
+        };
+        for (size_t i=0;i<before->paths.size();++i) {
+            charge(1);const auto &path=before->paths[i];
+            if (!path || path->source!=source || path->roof_domain!=FirstHatchRoofDomain::FiniteWidth ||
+                path->maximum_gap_error_mm>limits.beads.maximum_gap_error.value() ||
+                path->maximum_width_error_mm>limits.beads.packets.maximum_width_error.value()) reject("FIRST_CAP_WIDTH_REPLAN_INHERITED_PROOF_LIMIT");
+            if (path->pieces.size()>limits.beads.packets.max_segments-packets || path->roof_segments>limits.beads.max_roof_segments-roofs)
+                reject("FIRST_CAP_WIDTH_REPLAN_RETAINED_PROOF_LIMIT");
+            packets+=path->pieces.size();roofs+=path->roof_segments;
+            if (i<4) continue;
+            for (const auto &piece : path->pieces) {
+                charge(1);if (!central(piece)) continue;
+                if (piece.nominal_width.value()!=before->policy.width.value()) reject("FIRST_CAP_WIDTH_ALREADY_REPLANNED");
+                if (width.value()>=piece.nominal_width.value()) reject("FIRST_CAP_WIDTH_REQUIRES_NARROWER_WIDTH");
+                ++selected;
+            }
+        }
+        if (!selected) reject("FIRST_CAP_WIDTH_REPLAN_NO_CENTRAL_PACKET");
+        charge(sequence->records.size());const auto fingerprint=sequence_hash(*sequence,poll);
+        std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> paths;
+        const auto correction=Interval(1)-pi()/Interval(4);
+        for (size_t i=0;i<before->paths.size();++i) {
+            charge(1);const auto &old=before->paths[i];if (i<4) {paths.push_back(old);continue;}
+            const size_t path_work=bead_work;auto pieces=old->pieces;Exact target_lo(0),target_hi(0),amount(0);const Interval error(old->maximum_gap_error_mm);
+            for (auto &piece : pieces) {
+                charge(1);const auto original=piece;
+                if (central(piece)) {
+                    const auto maximum_gap=Interval(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm))+error;
+                    if (width.value()<=maximum_gap.hi) reject("FIRST_CAP_WIDTH_REPLAN_WIDTH_HEIGHT_DOMAIN");
+                    auto remaining=limits.beads.packets;remaining.max_segments=1;
+                    remaining.maximum_volume_error=Volume((Interval(limits.beads.packets.maximum_volume_error.value())/Interval(double(selected))/Interval(8)).lo);
+                    remaining.timeout=std::min(limits.beads.timeout,limits.beads.packets.timeout)-
+                        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+                    remaining.cancelled=[&] {
+                        if (bead_work>=limits.beads.max_evaluations) reject("FIRST_CAP_WIDTH_REPLAN_BEAD_WORK_LIMIT");
+                        ++bead_work;charge(1);return false;
+                    };remaining.is_current={};
+                    const auto planned=plan_fixed_width_bead({piece.start,piece.end,width,VerticalGap(piece.section.gap_begin_mm),
+                        VerticalGap(piece.section.gap_end_mm),piece.section.kind,sequence->revision,fingerprint},remaining);
+                    if (!planned.snapshot) throw Rejection(planned.reason);
+                    if (planned.snapshot->pieces.size()!=1) reject("FIRST_CAP_WIDTH_REPLAN_SUBDIVISION_NOT_QUALIFIED");
+                    auto next=planned.snapshot->pieces.front();
+                    if (std::make_tuple(next.start.x(),next.start.y(),next.start.z(),next.end.x(),next.end.y(),next.end.z(),next.section.gap_begin_mm,next.section.gap_end_mm)!=
+                        std::make_tuple(piece.start.x(),piece.start.y(),piece.start.z(),piece.end.x(),piece.end.y(),piece.end.z(),piece.section.gap_begin_mm,piece.section.gap_end_mm))
+                        reject("FIRST_CAP_WIDTH_REPLAN_GAP_GEOMETRY_CHANGED");
+                    const auto hmin=Interval(std::min(next.section.gap_begin_mm,next.section.gap_end_mm))-error;
+                    const auto hmax=Interval(std::max(next.section.gap_begin_mm,next.section.gap_end_mm))+error;
+                    if (hmin.lo<=0) reject("FIRST_CAP_WIDTH_REPLAN_GAP_DOMAIN");
+                    const auto area=Interval(next.volume.value())/detail::root(length_squared(next.start,next.end));
+                    if (area.lo<=(pi()/Interval(4)*square(hmax)).hi) reject("FIRST_CAP_WIDTH_REPLAN_SECTION_DOMAIN");
+                    const auto wmin=section_width(area,hmax,next.section.kind),wmax=section_width(area,hmin,next.section.kind);
+                    const double width_error=std::max((Interval(width.value())-wmin).hi,(wmax-Interval(width.value())).hi);
+                    // The original continuous roof interval holds at every point
+                    // of its whole finite strip. The same XYZ/gap and a narrower
+                    // admitted footprint inherit it, without a centreline query.
+                    if (width_error>old->maximum_width_error_mm ||
+                        (Interval(width.value())+Interval(width_error)).hi>(Interval(original.nominal_width.value())+Interval(old->maximum_width_error_mm)).lo)
+                        reject("FIRST_CAP_WIDTH_REPLAN_ROOF_DOMAIN_NOT_CONTAINED");
+                    if (next.volume.value()>=original.volume.value()) reject("FIRST_CAP_WIDTH_REPLAN_PACKET_NOT_REDUCED");
+                    next.coordinate_error_upper_mm=original.coordinate_error_upper_mm;piece=std::move(next);
+                }
+                const auto length=detail::root(length_squared(piece.start,piece.end));
+                const auto h0=Interval(piece.section.gap_begin_mm),h1=Interval(piece.section.gap_end_mm),w=Interval(piece.nominal_width.value());
+                const auto ideal=length*(w*(h0+h1)/Interval(2)-correction*(square(h0)+h0*h1+square(h1))/Interval(3));
+                const auto hmax=detail::maximum(h0,h1)+error;
+                const auto uncertainty=length*error*(w+Interval(2)*correction*hmax);
+                const auto target=ideal+Interval(-uncertainty.hi,uncertainty.hi);
+                target_lo+=Exact(target.lo);target_hi+=Exact(target.hi);amount+=Exact(piece.volume.value());
+            }
+            const Interval target(exact_interval(target_lo).lo,exact_interval(target_hi).hi),delivered=exact_interval(amount);
+            const auto difference=delivered-target;const double volume_error=std::max(std::abs(difference.lo),std::abs(difference.hi));
+            paths.push_back(std::shared_ptr<const FirstHatchBeadSnapshot>(new FirstHatchBeadSnapshot(source,old->line_index,old->roof_domain,
+                old->path_start,old->path_end,std::move(pieces),bounds(target),bounds(delivered),old->maximum_gap_error_mm,old->maximum_width_error_mm,
+                volume_error,old->numerical_error_upper_mm,old->roof_segments,old->evaluations+bead_work-path_work)));
+        }
+        const auto measured=measure_first_candidate(source,paths,before->fill->occupied->domain,limits,started,work);
+        if (measured.fill->target!=before->fill->target) reject("FIRST_CAP_WIDTH_REPLAN_TARGET_CHANGED");
+        const auto commanded=interval(before->fill->occupied->individual_volume_mm3)-interval(measured.fill->occupied->individual_volume_mm3);
+        const auto repeated=interval(before->fill->occupied->repeated_volume_mm3)-interval(measured.fill->occupied->repeated_volume_mm3);
+        const auto covered=interval(measured.fill->covered_target_mm3)-interval(before->fill->covered_target_mm3);
+        const auto missing=interval(measured.fill->missing_target_mm3)-interval(before->fill->missing_target_mm3);
+        if (commanded.lo<policy.minimum_repeated_reduction.value() || repeated.lo<policy.minimum_repeated_reduction.value()) reject("FIRST_CAP_WIDTH_REPLAN_INSUFFICIENT_REDUCTION");
+        if (covered.lo<-policy.maximum_covered_loss.value() || missing.hi>policy.maximum_covered_loss.value()) reject("FIRST_CAP_WIDTH_REPLAN_COVERAGE_LOSS");
+        if (measured.fill->outside_target_mm3.upper>std::min(before->policy.maximum_outside_target.value(),policy.maximum_outside_target.value())) reject("FIRST_CAP_WIDTH_REPLAN_OUTSIDE_TARGET_LIMIT");
+        poll();auto after=std::shared_ptr<const FirstCapSnapshot>(new FirstCapSnapshot(source,before->policy,std::move(paths),before->replaced_boundary_lines,
+            measured.fill,measured.target,measured.delivered,measured.error,measured.numeric,measured.roofs,measured.cells,work,before->hatch_extent));
+        poll();auto snapshot=std::shared_ptr<const FirstCapWidthReplanSnapshot>(new FirstCapWidthReplanSnapshot(before,after,width,policy,
+            bounds(commanded),bounds(repeated),bounds(covered),bounds(missing),measured.cells,work));
+        poll();return {"BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) {return {e.what(),{}};}
+    catch (const std::exception &e) {return {"FIRST_CAP_WIDTH_REPLAN_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
 }
 
 namespace {
