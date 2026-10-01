@@ -873,6 +873,101 @@ TEST_CASE("B07 first bead excludes future roof and refuses packet and numerical 
     const auto rounding=plan_first_hatch_bead(hatch,0,limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
 }
 
+TEST_CASE("B07 first footprint plans amounts over the whole finite width on a flat laid roof", "[Nonplanar][B07][FirstHatchFootprint]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto present=material_at(ledger,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.76,1.8,1.76},.9,policy);REQUIRE(stack.snapshot);
+    for (const auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) {
+        auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),direction});REQUIRE(hatch.snapshot);
+        FirstHatchBeadLimits limits;limits.maximum_gap_error=Length(.0001);limits.packets.maximum_width_error=Length(.002);
+        limits.packets.maximum_volume_error=Volume(.00001);
+        const auto plan=plan_first_hatch_footprint_bead(hatch,0,limits);INFO(plan.reason);REQUIRE(plan.snapshot);
+        REQUIRE(plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth);
+        const auto &line=hatch.snapshot->passes.front().lines.front();
+        const long double h0=static_cast<long double>(line.start.z())-1,h1=static_cast<long double>(line.end.z())-1;
+        const long double dx=static_cast<long double>(line.end.x())-line.start.x(),dy=static_cast<long double>(line.end.y())-line.start.y();
+        const long double k=1-std::acos(-1.L)/4;
+        volume_contains(plan.snapshot->actual_target_volume_mm3,std::sqrt(dx*dx+dy*dy)*(.45L*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3));
+        REQUIRE(plan.snapshot->maximum_gap_error_mm<=limits.maximum_gap_error.value());
+        REQUIRE(plan.snapshot->maximum_width_error_mm<=limits.packets.maximum_width_error.value());
+        const auto centerline=plan_first_hatch_bead(hatch,0,limits);REQUIRE(centerline.snapshot);
+        REQUIRE(centerline.snapshot->roof_domain==FirstHatchRoofDomain::Centerline);
+        limits.cancelled=[&] {hatch.snapshot.reset();limits.max_roof_segments=1;return false;};
+        const auto owned=plan_first_hatch_footprint_bead(hatch,0,limits);INFO(owned.reason);REQUIRE(owned.snapshot);
+        REQUIRE(owned.snapshot->source==plan.snapshot->source);
+    }
+}
+
+TEST_CASE("B07 first footprint retains a transverse ridge that its centerline misses", "[Nonplanar][B07][FirstHatchFootprint]")
+{
+    const auto floor=bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle);
+    const auto ridge=bead(3,2,{0,.075,1.06},{10,.075,1.06},.06,.05,.05,BeadSectionKind::Rectangle);
+    const MaterialRecord travel{{2,1,0,floor.motion.end,ridge.motion.start,Speed(10),Acceleration(100),Travel{}},{}};
+    const auto ledger=captured({floor,travel,ridge});
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    for (const double progress : {0.,.1,.2,.3,1.}) {
+        const auto present=material_at(ledger,2,progress);
+        const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.76,1.8,1.76},.9,policy);INFO(stack.reason);REQUIRE(stack.snapshot);
+        const auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX});REQUIRE(hatch.snapshot);
+        const auto &line=hatch.snapshot->passes.front().lines.front();REQUIRE(std::abs(line.start.y()+.125)<1e-12);
+        FirstHatchBeadLimits limits;limits.max_roof_segments=32;
+        const auto centerline=plan_first_hatch_bead(hatch,0,limits);INFO(centerline.reason);REQUIRE(centerline.snapshot);
+        const auto footprint=plan_first_hatch_footprint_bead(hatch,0,limits);INFO(footprint.reason);
+        // At .1 the true finite butt is X=1, before this candidate. Future
+        // material and the remainder of the current event are absent.
+        if (progress<=.1) REQUIRE(footprint.snapshot);
+        else REQUIRE_FALSE(footprint.snapshot);
+    }
+}
+
+TEST_CASE("B07 first footprint refuses unsupported source and exhausted continuous proof", "[Nonplanar][B07][FirstHatchFootprint]")
+{
+    const auto floor=bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle);
+    const MaterialRecord travel{{2,1,0,floor.motion.end,floor.motion.start,Speed(10),Acceleration(100),Travel{}},{}};
+    const auto ledger=captured({floor,travel,bead(3,2,floor.motion.start,floor.motion.end,2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto present=material_at(ledger,3,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.76,1.8,1.76},.9,policy);REQUIRE(stack.snapshot);
+    const auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX});REQUIRE(hatch.snapshot);
+    REQUIRE(plan_first_hatch_footprint_bead(hatch,0).snapshot);
+    const auto boundary=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.0001),HatchDirection::AlongX});REQUIRE(boundary.snapshot);
+    REQUIRE_FALSE(plan_first_hatch_footprint_bead(boundary,0).snapshot);
+    FirstHatchBeadLimits limits;
+    REQUIRE_FALSE(plan_first_hatch_footprint_bead({},0,limits).snapshot);
+    REQUIRE_FALSE(plan_first_hatch_footprint_bead(hatch,10000,limits).snapshot);
+    limits.max_evaluations=1;REQUIRE_FALSE(plan_first_hatch_footprint_bead(hatch,0,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead(hatch,0,limits).snapshot);
+    limits={};limits.packets.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead(hatch,0,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(plan_first_hatch_footprint_bead(hatch,0,limits).snapshot);
+    limits={};limits.packets.max_segments=1;REQUIRE_FALSE(plan_first_hatch_footprint_bead(hatch,0,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounding=plan_first_hatch_footprint_bead(hatch,0,limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+}
+
+TEST_CASE("B07 first footprint refines continuous rounded shoulders without transverse sampling", "[Nonplanar][B07][FirstHatchFootprint]")
+{
+    const auto row=bead(1,0,{0,0,1},{10,0,1},1.6,.6,.6);const auto ledger=captured({row});const auto present=material_at(ledger,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.05),VerticalGap(.28),Length(0)},VerticalGap(.08),VerticalGap(.13),NormalGap(.08),NormalGap(.13),Volume(.001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.75,3,.75},1.43,1.43,1.43},.82,policy);REQUIRE(stack.snapshot);
+    const auto hatch=plan_affine_hatches(stack,{WidthXY(.3),Length(.25),Length(.05),HatchDirection::AlongY});REQUIRE(hatch.snapshot);
+    FirstHatchBeadLimits limits;limits.maximum_gap_error=Length(.0001);limits.packets.maximum_width_error=Length(.002);
+    limits.packets.maximum_volume_error=Volume(.0001);
+    const auto plan=plan_first_hatch_footprint_bead(hatch,0,limits);INFO(plan.reason);REQUIRE(plan.snapshot);
+    REQUIRE(plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth);REQUIRE(plan.snapshot->roof_segments>1);
+    const auto &line=hatch.snapshot->passes.front().lines.front();
+    const long double k=1-std::acos(-1.L)/4,h=row.bead->gap_begin_mm;
+    const long double width=std::get<Deposition>(row.motion.payload).volume.value()/10/h+k*h,core=(width-h)/2,radius=h/2;
+    const auto area=[&](long double y) {const long double d=std::max(std::abs(y)-core,0.L);
+        const long double gap=line.start.z()-(1-h/2+std::sqrt(radius*radius-d*d));return gap*(.3L-k*gap);};
+    const long double dy=(static_cast<long double>(line.end.y())-line.start.y())/4096;long double lower=0,upper=0;
+    for (size_t i=0;i<4096;++i) {const long double a=area(line.start.y()+dy*i),b=area(line.start.y()+dy*(i+1));
+        lower+=std::min(a,b)*dy;upper+=std::max(a,b)*dy;}
+    REQUIRE(plan.snapshot->actual_target_volume_mm3.lower<=lower);REQUIRE(plan.snapshot->actual_target_volume_mm3.upper>=upper);
+    limits.max_roof_segments=1;REQUIRE_FALSE(plan_first_hatch_footprint_bead(hatch,0,limits).snapshot);
+}
+
 TEST_CASE("B07 finite material union distinguishes repeated amount from geometric occupancy", "[Nonplanar][B07][MaterialUnion]")
 {
     for (const auto kind : {BeadSectionKind::Rectangle,BeadSectionKind::RoundedRectangle}) {

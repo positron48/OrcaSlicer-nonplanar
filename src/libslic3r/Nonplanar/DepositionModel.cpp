@@ -1262,6 +1262,14 @@ FixedWidthBeadResult plan_fixed_width_bead(const FixedWidthBeadRequest &requeste
 
 FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &requested, size_t line_index,
                                          const FirstHatchBeadLimits &requested_limits)
+{ return FirstHatchBeadSnapshot::plan(requested,line_index,requested_limits,FirstHatchRoofDomain::Centerline); }
+
+FirstHatchBeadResult plan_first_hatch_footprint_bead(const AffineHatchResult &requested, size_t line_index,
+                                                   const FirstHatchBeadLimits &requested_limits)
+{ return FirstHatchBeadSnapshot::plan(requested,line_index,requested_limits,FirstHatchRoofDomain::FiniteWidth); }
+
+FirstHatchBeadResult FirstHatchBeadSnapshot::plan(const AffineHatchResult &requested, size_t line_index,
+    const FirstHatchBeadLimits &requested_limits, FirstHatchRoofDomain domain)
 {
     const auto source=requested.snapshot; const auto limits=requested_limits;
     const auto started=std::chrono::steady_clock::now();
@@ -1281,6 +1289,22 @@ FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &requested, s
         const auto sequence=cursor->sequence; const auto &line=source->passes.front().lines[line_index];
         const bool x_axis=line.start.y()==line.end.y(), y_axis=line.start.x()==line.end.x();
         if (x_axis==y_axis) reject("FIRST_HATCH_REQUIRES_AXIS_ALIGNED_CENTERLINE");
+        // Any admitted actual-gap width lies in nominal +/- this requested
+        // error. Query its exact outer strip before deriving the gap/amount;
+        // shrinking the query to the nominal centerline would be circular.
+        const Exact half=(Exact(source->policy.width.value())+Exact(limits.packets.maximum_width_error.value()))/Exact(2);
+        const auto footprint=[&](PhysicalPosition a,PhysicalPosition b) {
+            if (domain==FirstHatchRoofDomain::Centerline)
+                return Polygon{{Exact(a.x()),Exact(a.y())},{Exact(b.x()),Exact(b.y())}};
+            const Exact x0=Exact(std::min(a.x(),b.x()))-(y_axis ? half : Exact(0));
+            const Exact x1=Exact(std::max(a.x(),b.x()))+(y_axis ? half : Exact(0));
+            const Exact y0=Exact(std::min(a.y(),b.y()))-(x_axis ? half : Exact(0));
+            const Exact y1=Exact(std::max(a.y(),b.y()))+(x_axis ? half : Exact(0));
+            const auto &roi=stack->surfaces.front().cell.footprint;
+            if (x0<Exact(roi.min_x) || x1>Exact(roi.max_x) || y0<Exact(roi.min_y) || y1>Exact(roi.max_y))
+                reject("FIRST_HATCH_FINITE_FOOTPRINT_OUTSIDE_SUPPORTED_ROI");
+            return Polygon{{x0,y0},{x1,y0},{x1,y1},{x0,y1}};
+        };
         const auto poll=[&] { stop(limits,sequence->revision,started);stop(limits.packets,sequence->revision,started); };poll();
         const auto context=sequence_hash(*sequence,poll);
         size_t evaluations=0, segments=0;
@@ -1305,20 +1329,9 @@ FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &requested, s
         const auto correction=Interval(1)-pi()/Interval(4);
         while (!pending.empty()) {
             poll();auto node=std::move(pending.back());pending.pop_back();
-            const Polygon polygon{{Exact(node.a.point.x()),Exact(node.a.point.y())},{Exact(node.b.point.x()),Exact(node.b.point.y())}};
-            double lower=stack->support_plane_z_mm,upper=lower;std::vector<size_t> candidates;
-            for (size_t i : node.candidates) {
-                evaluate();const auto &row=sequence->records[i];const double progress=i<cursor->completed_records ? 1 : cursor->current_progress;
-                const auto last=Interval(row.motion.start.z())+(Interval(row.motion.end.z())-Interval(row.motion.start.z()))*Interval(progress);
-                if (std::max(row.motion.start.z(),last.hi)<stack->support_plane_z_mm) continue;
-                const auto projection=roof_projection(row,sequence->model,polygon,progress,Representation::Nominal);
-                if (!projection) continue;
-                const auto possible=nominal_roof(row,projection->projected,progress);
-                if (!possible || possible->height.hi<stack->support_plane_z_mm) continue;
-                candidates.push_back(i);upper=std::max(upper,possible->height.hi);
-                const auto guaranteed=nominal_roof(row,project_polygon(row,polygon,Interval(0)),progress);
-                if (guaranteed && guaranteed->whole_footprint) lower=std::max(lower,guaranteed->height.lo);
-            }
+            auto roof_bound=nominal_roof_bounds(*cursor,footprint(node.a.point,node.b.point),node.candidates,stack->support_plane_z_mm,evaluate);
+            const double lower=roof_bound.height.lo,upper=roof_bound.height.hi;
+            auto candidates=std::move(roof_bound.active);
             // The owned parent proves D_lower covers the whole ROI at plane.
             // It is a lower bound on the nominal roof, never its actual value.
             if (candidates.empty() || lower>upper) reject("FIRST_HATCH_INCONSISTENT_NOMINAL_ROOF");
@@ -1391,9 +1404,10 @@ FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &requested, s
         const double numeric=(Interval(source->numerical_error_upper_mm)+Interval(coordinate_error)+Interval(maximum_gap)+Interval(maximum_width)).hi;
         if (error>limits.packets.maximum_volume_error.value()) reject("FIRST_HATCH_GLOBAL_VOLUME_ERROR");
         if (numeric>.05) reject("FIRST_HATCH_NUMERICAL_BUDGET");
-        poll();auto snapshot=std::shared_ptr<const FirstHatchBeadSnapshot>(new FirstHatchBeadSnapshot(source,line_index,std::move(pieces),
+        poll();auto snapshot=std::shared_ptr<const FirstHatchBeadSnapshot>(new FirstHatchBeadSnapshot(source,line_index,domain,std::move(pieces),
             bounds(target),bounds(delivered),maximum_gap,maximum_width,error,numeric,segments,evaluations));
-        poll();return {"BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY",std::move(snapshot)};
+        poll();return {domain==FirstHatchRoofDomain::FiniteWidth ? "BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY" :
+            "BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) { return {e.what(),{}}; }
     catch (const std::exception &e) { return {"FIRST_HATCH_BEAD_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
 }

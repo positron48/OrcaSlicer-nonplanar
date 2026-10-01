@@ -2097,6 +2097,61 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint]")
+{
+    auto config=planar_body_config();
+    config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
+        {"internal_solid_infill_line_width",1.0},{"top_surface_line_width",1.0}});
+    const auto body=generate_planar_body(native_body_partition(config,{},{},4.2,
+        "tests/nonplanar/data/affine-wedge-1-in-16.stl"));REQUIRE(body.snapshot);
+    const BodyMaterialParameters parameters{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits capture;capture.timeout=std::chrono::seconds(5);
+    const auto material=reconstruct_planar_body_material(body,parameters,capture);INFO(material.reason);REQUIRE(material.snapshot);
+    std::optional<RectangleXY> roi;HatchDirection direction=HatchDirection::AlongX;long double flat_top=0;
+    // Independent source-section calculation chooses a real native flat core.
+    // No model or golden fixture is replaced with an idealized solid slab.
+    for (const auto &row : material.snapshot->material->records) {
+        if (!row.bead || std::abs(row.motion.start.z()-4.2)>1e-8 || row.motion.end.z()!=row.motion.start.z()) continue;
+        const bool x=row.motion.start.y()==row.motion.end.y(),y=row.motion.start.x()==row.motion.end.x();if (x==y) continue;
+        const long double dx=static_cast<long double>(row.motion.end.x())-row.motion.start.x(),dy=static_cast<long double>(row.motion.end.y())-row.motion.start.y();
+        const long double h=row.bead->gap_begin_mm;if (row.bead->gap_end_mm!=h) continue;
+        const long double width=std::get<Deposition>(row.motion.payload).volume.value()/std::sqrt(dx*dx+dy*dy)/h+(1-std::acos(-1.L)/4)*h;
+        if (width-h<=.7) continue;
+        if (x && std::min(row.motion.start.x(),row.motion.end.x())<18.8 && std::max(row.motion.start.x(),row.motion.end.x())>21.2 &&
+            row.motion.start.y()>19 && row.motion.start.y()<21) {
+            roi=RectangleXY{19,row.motion.start.y()-.3,21,row.motion.start.y()+.3};direction=HatchDirection::AlongX;
+        } else if (y && std::min(row.motion.start.y(),row.motion.end.y())<18.8 && std::max(row.motion.start.y(),row.motion.end.y())>21.2 &&
+            row.motion.start.x()>19 && row.motion.start.x()<21) {
+            roi=RectangleXY{row.motion.start.x()-.3,19,row.motion.start.x()+.3,21};direction=HatchDirection::AlongY;
+        }
+        if (roi) {flat_top=row.motion.start.z();break;}
+    }
+    REQUIRE(roi);
+    const NativeAffinePassRequest request{*roi,0,4.1,
+        {4,{VerticalGap(.1),VerticalGap(.4),Length(.00001)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.01)}};
+    NativeAffinePassLimits pass_limits;pass_limits.material.max_cells=8191;pass_limits.material.timeout=std::chrono::seconds(5);
+    pass_limits.material.maximum_interval_width=Volume(.01);
+    AffineHatchLimits hatch_limits;hatch_limits.timeout=std::chrono::seconds(5);hatch_limits.volumes.timeout=std::chrono::seconds(5);
+    const auto native=plan_native_affine_hatches(material,request,{WidthXY(.45),Length(.4),Length(.05),direction},pass_limits,hatch_limits);
+    INFO(native.reason);REQUIRE(native.snapshot);
+    FirstHatchBeadLimits limits;limits.timeout=std::chrono::seconds(5);limits.packets.timeout=std::chrono::seconds(5);
+    limits.maximum_gap_error=Length(.0001);limits.packets.maximum_width_error=Length(.002);limits.packets.maximum_volume_error=Volume(.0001);
+    const auto plan=plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits);INFO(plan.reason);REQUIRE(plan.snapshot);
+    REQUIRE(plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth);REQUIRE(plan.snapshot->source==native.snapshot->hatches);
+    const auto &line=native.snapshot->hatches->passes.front().lines.front();
+    const long double h0=static_cast<long double>(line.start.z())-flat_top,h1=static_cast<long double>(line.end.z())-flat_top;
+    const long double dx=static_cast<long double>(line.end.x())-line.start.x(),dy=static_cast<long double>(line.end.y())-line.start.y();
+    const long double k=1-std::acos(-1.L)/4,expected=std::sqrt(dx*dx+dy*dy)*(.45L*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3);
+    INFO("native footprint packets=" << plan.snapshot->pieces.size() << " roof leaves=" << plan.snapshot->roof_segments <<
+        " work=" << plan.snapshot->evaluations << " expected amount=" << std::setprecision(18) << expected);
+    REQUIRE(plan.snapshot->actual_target_volume_mm3.lower<=expected);REQUIRE(plan.snapshot->actual_target_volume_mm3.upper>=expected);
+    REQUIRE(plan.snapshot->maximum_gap_error_mm<=limits.maximum_gap_error.value());
+    REQUIRE(plan.snapshot->maximum_width_error_mm<=limits.packets.maximum_width_error.value());
+    REQUIRE(plan.snapshot->total_volume_error_mm3<=limits.packets.maximum_volume_error.value());
+    limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
+}
+
 TEST_CASE("B07 native first-hatch union measures rounded overlap rather than summed extrusion", "[Nonplanar][B07][NativeMaterialUnion][NativeMaterialFill][NativeMaterialDeficit]")
 {
     STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialUnionSnapshot>::value);

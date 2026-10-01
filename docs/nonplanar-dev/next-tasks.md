@@ -47,6 +47,10 @@ Next software tasks, in dependency order:
    `B07-material-fill.md` now separates covered/missing target and vertical spill
    with continuous actual roof bounds. `B07-material-deficit.md` now locates
    positive missing-volume lower witnesses over a complete exact XY grid.
+   `B07-first-footprint.md` now constructs first-hatch amounts over the continuous
+   roof of their complete finite width, with explicit domain provenance and
+   off-axis ridge rejection. Rounded side-floor contact and target conformity
+   still require qualification.
    Resolve that deficit/excess by constructing paths in actual remaining space,
    recheck union/fill, qualify
    finite-width floor/contact, then construct seam and later actual support;

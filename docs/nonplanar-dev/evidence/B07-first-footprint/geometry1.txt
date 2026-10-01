@@ -1,0 +1,425 @@
+Filters: [FirstHatchFootprint]
+Randomness seeded to: 3217693444
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 first footprint retains a transverse ridge that its centerline misses
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:903
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xb5ad359b8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:912: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x10692e600
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:913: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xb5b0028b0
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:914: PASSED:
+  REQUIRE( std::abs(line.start.y()+.125)<1e-12 )
+with expansion:
+  0.00000000000000218 < 0.000000000001
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:916: PASSED:
+  REQUIRE( centerline.snapshot )
+with expansion:
+  0xb5ad35a40
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:920: PASSED:
+  REQUIRE( footprint.snapshot )
+with expansion:
+  0xb5ad35ae0
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:912: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x10692dca0
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:913: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xb5b0028b0
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:914: PASSED:
+  REQUIRE( std::abs(line.start.y()+.125)<1e-12 )
+with expansion:
+  0.00000000000000151 < 0.000000000001
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:916: PASSED:
+  REQUIRE( centerline.snapshot )
+with expansion:
+  0xb5ad35a40
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:920: PASSED:
+  REQUIRE( footprint.snapshot )
+with expansion:
+  0xb5ad35ae0
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:912: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0xb5adb0000
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:913: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xb5b0028b0
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:914: PASSED:
+  REQUIRE( std::abs(line.start.y()+.125)<1e-12 )
+with expansion:
+  0.00000000000000151 < 0.000000000001
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:916: PASSED:
+  REQUIRE( centerline.snapshot )
+with expansion:
+  0xb5ad35a40
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:921: PASSED:
+  REQUIRE_FALSE( footprint.snapshot )
+with expansion:
+  !0
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+  FIRST_HATCH_ROOF_DEPTH_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:912: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0xb5adb0000
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:913: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xb5b0028b0
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:914: PASSED:
+  REQUIRE( std::abs(line.start.y()+.125)<1e-12 )
+with expansion:
+  0.00000000000000151 < 0.000000000001
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:916: PASSED:
+  REQUIRE( centerline.snapshot )
+with expansion:
+  0xb5ad35a40
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:921: PASSED:
+  REQUIRE_FALSE( footprint.snapshot )
+with expansion:
+  !0
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+  FIRST_HATCH_ROOF_DEPTH_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:912: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0xb5adb0000
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:913: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xb5b0028b0
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:914: PASSED:
+  REQUIRE( std::abs(line.start.y()+.125)<1e-12 )
+with expansion:
+  0.00000000000000151 < 0.000000000001
+with message:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:916: PASSED:
+  REQUIRE( centerline.snapshot )
+with expansion:
+  0xb5ad35a40
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:921: PASSED:
+  REQUIRE_FALSE( footprint.snapshot )
+with expansion:
+  !0
+with messages:
+  PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY
+  BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY
+  FIRST_HATCH_ROOF_DEPTH_LIMIT
+
+-------------------------------------------------------------------------------
+B07 first footprint plans amounts over the whole finite width on a flat laid
+roof
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:876
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xb5ad35a58
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:881: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0xb5adb0000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:883: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xb5b0028b0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:886: PASSED:
+  REQUIRE( plan.snapshot )
+with expansion:
+  0xb5ad35ae0
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:887: PASSED:
+  REQUIRE( plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.12066366081685588 <= 0.120664
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.1206636608168576 >= 0.120664
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:893: PASSED:
+  REQUIRE( plan.snapshot->maximum_gap_error_mm<=limits.maximum_gap_error.value() )
+with expansion:
+  0.00000000000000078 <= 0.0001
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:894: PASSED:
+  REQUIRE( plan.snapshot->maximum_width_error_mm<=limits.packets.maximum_width_error.value() )
+with expansion:
+  0.00175085700506455 <= 0.002
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:895: PASSED:
+  REQUIRE( centerline.snapshot )
+with expansion:
+  0xb5ad35b80
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:896: PASSED:
+  REQUIRE( centerline.snapshot->roof_domain==FirstHatchRoofDomain::Centerline )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:898: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0xb5ad35c20
+with messages:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:899: PASSED:
+  REQUIRE( owned.snapshot->source==plan.snapshot->source )
+with expansion:
+  0xb5b0028b0 == 0xb5b0028b0
+with messages:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:883: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xb5b0028b0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:886: PASSED:
+  REQUIRE( plan.snapshot )
+with expansion:
+  0xb5ad35ae0
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:887: PASSED:
+  REQUIRE( plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.01948426142480811 <= 0.0194843
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.01948426142480828 >= 0.0194843
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:893: PASSED:
+  REQUIRE( plan.snapshot->maximum_gap_error_mm<=limits.maximum_gap_error.value() )
+with expansion:
+  0.00000000000000033 <= 0.0001
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:894: PASSED:
+  REQUIRE( plan.snapshot->maximum_width_error_mm<=limits.packets.maximum_width_error.value() )
+with expansion:
+  0.00000000000000128 <= 0.002
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:895: PASSED:
+  REQUIRE( centerline.snapshot )
+with expansion:
+  0xb5ad35b80
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:896: PASSED:
+  REQUIRE( centerline.snapshot->roof_domain==FirstHatchRoofDomain::Centerline )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:898: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0xb5ad35c20
+with messages:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:899: PASSED:
+  REQUIRE( owned.snapshot->source==plan.snapshot->source )
+with expansion:
+  0xb5b0028b0 == 0xb5b0028b0
+with messages:
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+
+-------------------------------------------------------------------------------
+B07 first footprint refuses unsupported source and exhausted continuous proof
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:925
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xb5ad35af8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:930: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0xb5adb0000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:931: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xb5b0028b0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:933: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_footprint_bead({},0,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:934: PASSED:
+  REQUIRE_FALSE( plan_first_hatch_footprint_bead(hatch,10000,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:935: FAILED:
+  REQUIRE_FALSE( plan_first_hatch_footprint_bead(hatch,0,limits).snapshot )
+with expansion:
+  !0xb5ad35b80
+
+===============================================================================
+test cases:  3 |  2 passed | 1 failed
+assertions: 56 | 55 passed | 1 failed
+

@@ -337,7 +337,8 @@ struct FixedWidthBeadResult { std::string reason; std::shared_ptr<const FixedWid
 // Cell filling/overlap, actual gap reconstruction and export remain separate.
 FixedWidthBeadResult plan_fixed_width_bead(const FixedWidthBeadRequest &, const FixedWidthBeadLimits &limits = {});
 
-inline constexpr unsigned first_hatch_bead_contract_version=1;
+inline constexpr unsigned first_hatch_bead_contract_version=2;
+enum class FirstHatchRoofDomain { Centerline, FiniteWidth };
 struct FirstHatchBeadLimits : MaterialQueryLimits {
     FixedWidthBeadLimits packets;
     Length maximum_gap_error{.001};
@@ -347,18 +348,21 @@ struct FirstHatchBeadResult;
 struct FirstHatchBeadSnapshot {
     const std::shared_ptr<const AffineHatchSnapshot> source;
     const size_t line_index;
+    const FirstHatchRoofDomain roof_domain;
     const std::vector<FixedWidthBeadPiece> pieces;
     const ScalarBounds actual_target_volume_mm3, deposited_volume_mm3;
     const double maximum_gap_error_mm, maximum_width_error_mm, total_volume_error_mm3, numerical_error_upper_mm;
     const size_t roof_segments, evaluations;
 private:
-    FirstHatchBeadSnapshot(std::shared_ptr<const AffineHatchSnapshot> s, size_t index, std::vector<FixedWidthBeadPiece> p,
+    FirstHatchBeadSnapshot(std::shared_ptr<const AffineHatchSnapshot> s, size_t index, FirstHatchRoofDomain domain, std::vector<FixedWidthBeadPiece> p,
         ScalarBounds target, ScalarBounds deposited, double gap_error, double width_error, double volume_error,
         double numeric, size_t segments, size_t work)
-        : source(std::move(s)), line_index(index), pieces(std::move(p)), actual_target_volume_mm3(target),
+        : source(std::move(s)), line_index(index), roof_domain(domain), pieces(std::move(p)), actual_target_volume_mm3(target),
           deposited_volume_mm3(deposited), maximum_gap_error_mm(gap_error), maximum_width_error_mm(width_error),
           total_volume_error_mm3(volume_error), numerical_error_upper_mm(numeric), roof_segments(segments), evaluations(work) {}
     friend FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &, size_t, const FirstHatchBeadLimits &);
+    friend FirstHatchBeadResult plan_first_hatch_footprint_bead(const AffineHatchResult &, size_t, const FirstHatchBeadLimits &);
+    static FirstHatchBeadResult plan(const AffineHatchResult &, size_t, const FirstHatchBeadLimits &, FirstHatchRoofDomain);
 };
 struct FirstHatchBeadResult { std::string reason; std::shared_ptr<const FirstHatchBeadSnapshot> snapshot; };
 // Reconstruct the continuous highest nominal laid roof under one first-pass
@@ -368,6 +372,13 @@ struct FirstHatchBeadResult { std::string reason; std::shared_ptr<const FirstHat
 // ordering, later support and export remain separate obligations.
 FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &, size_t line_index,
                                         const FirstHatchBeadLimits &limits = {});
+// Plan against the continuous nominal roof over the whole finite butt-ended
+// strip, enclosing nominal width +/- the permitted width error. That strip must
+// lie inside the owned ROI whose support plane is covered by D_lower. Bounds
+// the axial section-gap approximation across its full width; rounded side-floor
+// contact, target conformity, D_upper/head clearance, order and export are separate.
+FirstHatchBeadResult plan_first_hatch_footprint_bead(const AffineHatchResult &, size_t line_index,
+                                                  const FirstHatchBeadLimits &limits = {});
 
 inline constexpr unsigned material_union_contract_version=1;
 struct MaterialUnionLimits : MaterialIntegralLimits {};

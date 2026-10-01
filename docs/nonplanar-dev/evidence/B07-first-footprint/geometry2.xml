@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="64" hostname="tbd" time="0.070" timestamp="2026-10-01T07:25:25Z">
+    <properties>
+      <property name="random-seed" value="3893895073"/>
+      <property name="filters" value="[FirstHatchFootprint]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 first footprint refuses unsupported source and exhausted continuous proof" time="0.000" status="run">
+      <failure message="boundary.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( boundary.snapshot )
+with expansion:
+  0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:935
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 first footprint retains a transverse ridge that its centerline misses" time="0.023" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first footprint refines continuous rounded shoulders without transverse sampling" time="0.045" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 first footprint plans amounts over the whole finite width on a flat laid roof" time="0.002" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

@@ -96,8 +96,16 @@ seam and later support remain open.
 complete XY grid. Three analytical cases/118 assertions and the extended native
 case/64 assertions pass. The four native quarters jointly require at least
 0.98329 mm3 more material, without asserting a complete missing-shape map or
-repair approval. Current selected CTest executes 292/292 and six fresh OFF/ZAA
+repair approval. At that checkpoint selected CTest executes 292/292 and six fresh OFF/ZAA
 comparisons pass. Constructing and qualifying the repair paths remains open.
+
+`B07-first-footprint.md` now constructs bounded first-hatch amounts against the
+continuous roof across the complete finite width and explicitly distinguishes
+them from centerline diagnostics. Four analytical cases/74 assertions and one
+new actual native case/18 assertions pass, including an off-axis ridge refusal
+and a positive native flat-core path. Current selected CTest executes 297/297;
+six fresh OFF/ZAA comparisons pass. Rounded side-floor contact, target conformity
+and actual deficit repair remain open.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -110,9 +118,9 @@ Prior Linux native runs at d57e9325, 7df1d765, e7a46961, 23f00bfd,
 b35408ce, a083f2df, 63779b4f and 8bcbbd45 succeeded. Run 36809462993 confirms
 8bcbbd45 native tests and application. The latest saved snapshot records successful e2030e15 runs
 36812147275 and 36819847014 and successful 4b3da47d run 36820170446;
-run 36826154741 at 84a709ef is in progress. Earlier intermediate runs were cancelled by
+run 36826154741 at 84a709ef is in progress and run 36828766748 at 7f454ba5 is pending. Earlier intermediate runs were cancelled by
 workflow concurrency. These records do not prove Linux execution of this
-localized deficit revision.
+finite-width roof revision.
 Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;

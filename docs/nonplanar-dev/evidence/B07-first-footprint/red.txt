@@ -1,0 +1,163 @@
+[1/2] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:886:25: error: use of undeclared identifier 'plan_first_hatch_footprint_bead'; did you mean 'plan_first_hatch_bead'?
+  886 |         const auto plan=plan_first_hatch_footprint_bead(hatch,0,limits);INFO(plan.reason);REQUIRE(plan.snapshot);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                         plan_first_hatch_bead
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:369:22: note: 'plan_first_hatch_bead' declared here
+  369 | FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &, size_t line_index,
+      |                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:887:32: error: no member named 'roof_domain' in 'Slic3r::nptop::FirstHatchBeadSnapshot'
+  887 |         REQUIRE(plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth);
+      |                 ~~~~~~~~~~~~~~~^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:887:45: error: use of undeclared identifier 'FirstHatchRoofDomain'
+  887 |         REQUIRE(plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth);
+      |                                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:887:32: error: no member named 'roof_domain' in 'Slic3r::nptop::FirstHatchBeadSnapshot'
+  887 |         REQUIRE(plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth);
+      |                 ~~~~~~~~~~~~~~~^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:887:45: error: use of undeclared identifier 'FirstHatchRoofDomain'
+  887 |         REQUIRE(plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth);
+      |                                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:887:32: error: no member named 'roof_domain' in 'Slic3r::nptop::FirstHatchBeadSnapshot'
+  887 |         REQUIRE(plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth);
+      |                 ~~~~~~~~~~~~~~~^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:887:45: error: use of undeclared identifier 'FirstHatchRoofDomain'
+  887 |         REQUIRE(plan.snapshot->roof_domain==FirstHatchRoofDomain::FiniteWidth);
+      |                                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:896:38: error: no member named 'roof_domain' in 'Slic3r::nptop::FirstHatchBeadSnapshot'
+  896 |         REQUIRE(centerline.snapshot->roof_domain==FirstHatchRoofDomain::Centerline);
+      |                 ~~~~~~~~~~~~~~~~~~~~~^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:896:51: error: use of undeclared identifier 'FirstHatchRoofDomain'
+  896 |         REQUIRE(centerline.snapshot->roof_domain==FirstHatchRoofDomain::Centerline);
+      |                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:896:38: error: no member named 'roof_domain' in 'Slic3r::nptop::FirstHatchBeadSnapshot'
+  896 |         REQUIRE(centerline.snapshot->roof_domain==FirstHatchRoofDomain::Centerline);
+      |                 ~~~~~~~~~~~~~~~~~~~~~^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:896:51: error: use of undeclared identifier 'FirstHatchRoofDomain'
+  896 |         REQUIRE(centerline.snapshot->roof_domain==FirstHatchRoofDomain::Centerline);
+      |                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:896:38: error: no member named 'roof_domain' in 'Slic3r::nptop::FirstHatchBeadSnapshot'
+  896 |         REQUIRE(centerline.snapshot->roof_domain==FirstHatchRoofDomain::Centerline);
+      |                 ~~~~~~~~~~~~~~~~~~~~~^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:896:51: error: use of undeclared identifier 'FirstHatchRoofDomain'
+  896 |         REQUIRE(centerline.snapshot->roof_domain==FirstHatchRoofDomain::Centerline);
+      |                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:898:26: error: use of undeclared identifier 'plan_first_hatch_footprint_bead'; did you mean 'plan_first_hatch_bead'?
+  898 |         const auto owned=plan_first_hatch_footprint_bead(hatch,0,limits);INFO(owned.reason);REQUIRE(owned.snapshot);
+      |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                          plan_first_hatch_bead
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:369:22: note: 'plan_first_hatch_bead' declared here
+  369 | FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &, size_t line_index,
+      |                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:917:30: error: use of undeclared identifier 'plan_first_hatch_footprint_bead'; did you mean 'plan_first_hatch_bead'?
+  917 |         const auto footprint=plan_first_hatch_footprint_bead(hatch,0,limits);INFO(footprint.reason);
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                              plan_first_hatch_bead
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:369:22: note: 'plan_first_hatch_bead' declared here
+  369 | FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &, size_t line_index,
+      |                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:933:19: error: use of undeclared identifier 'plan_first_hatch_footprint_bead'; did you mean 'plan_first_hatch_bead'?
+  933 |     REQUIRE_FALSE(plan_first_hatch_footprint_bead({},0,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                   plan_first_hatch_bead
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:369:22: note: 'plan_first_hatch_bead' declared here
+  369 | FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &, size_t line_index,
+      |                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:933:19: error: use of undeclared identifier 'plan_first_hatch_footprint_bead'; did you mean 'plan_first_hatch_bead'?
+  933 |     REQUIRE_FALSE(plan_first_hatch_footprint_bead({},0,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                   plan_first_hatch_bead
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:369:22: note: 'plan_first_hatch_bead' declared here
+  369 | FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &, size_t line_index,
+      |                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:933:19: error: use of undeclared identifier 'plan_first_hatch_footprint_bead'; did you mean 'plan_first_hatch_bead'?
+  933 |     REQUIRE_FALSE(plan_first_hatch_footprint_bead({},0,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                   plan_first_hatch_bead
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:369:22: note: 'plan_first_hatch_bead' declared here
+  369 | FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &, size_t line_index,
+      |                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:934:19: error: use of undeclared identifier 'plan_first_hatch_footprint_bead'; did you mean 'plan_first_hatch_bead'?
+  934 |     REQUIRE_FALSE(plan_first_hatch_footprint_bead(hatch,10000,limits).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                   plan_first_hatch_bead
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:135:142: note: expanded from macro 'REQUIRE_FALSE'
+  135 |   #define REQUIRE_FALSE( ... ) INTERNAL_CATCH_TEST( "REQUIRE_FALSE", Catch::ResultDisposition::Normal | Catch::ResultDisposition::FalseTest, __VA_ARGS__ )
+      |                                                                                                                                              ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:369:22: note: 'plan_first_hatch_bead' declared here
+  369 | FirstHatchBeadResult plan_first_hatch_bead(const AffineHatchResult &, size_t line_index,
+      |                      ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+ninja: build stopped: subcommand failed.

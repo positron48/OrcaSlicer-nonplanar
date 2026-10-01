@@ -1,0 +1,517 @@
+{
+  "base_commit": "7f454ba55d68ea5317a5ce7adf26a339ebaff06a",
+  "upstream_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-footprint.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "cf47c2f6936bd843007bef40e950ff1ef1de8274fe0f03211d35032e6700f317",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "59a864243563f51886f396f8ef1be9d51bc4f9acb0a562c9d2ea9da06757b3ce",
+    "tests/nonplanar/test_deposition_model.cpp": "d0120406780a75d43bd6989666121203dcbd145c656affc3e892571bc224bfd6",
+    "tests/nonplanar/test_policy.cpp": "bd9816653a7983f0685982bf8cabb96d21b6fc4e2377cde754f6c0810640c357",
+    "docs/nonplanar-dev/adr-0045-first-hatch-finite-roof-domain.md": "091e815389cb70540b65dab82de109ccc6e171551303b94518dcd7c0fd86a5b5",
+    "docs/nonplanar-dev/B07-first-footprint.md": "10d652788f47817cdbbea9546e3dcac35285595a1db8fb3d40f68b0edad62654",
+    "docs/nonplanar-dev/status.json": "f6133c4cbc49c04a6978f03da872c7abc7c74be8190a4271d45ebbdf01164da7",
+    "docs/nonplanar-dev/README.md": "a9cbcf85bc5208408119358a7ec82e379fb85ee16aeab60a0d47eb9ad28089db",
+    "docs/nonplanar-dev/next-tasks.md": "7852de06fd7de7f5b41368330a1d75e0c2d4f56442588ab285037cfb8cc3ed44"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "c6519f093a20917e1384c81eaeb5e4613e95bb8d28a7f88bdf5cf1423a05617e",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "55b9b01eab7b4b8810dc202bcd017c30e0a59b7f90447078117d744af756cb55"
+  },
+  "compiled_commit_label": "31461d50",
+  "compiled_commit_label_note": "Retained configure label; exact source/binary hashes bind this build. Full B13 provenance pending.",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "captured_utc": "2026-10-01T07:37:26.071884+00:00",
+  "internal_first_hatch_contract": 2,
+  "new_geometric_cases": 4,
+  "new_geometric_assertions": 74,
+  "new_native_cases": 1,
+  "new_native_assertions": 18,
+  "material_suite_cases": 52,
+  "material_suite_assertions": 12180,
+  "body_suite_cases": 14,
+  "body_suite_assertions": 107906,
+  "ctest_discovered": 297,
+  "ctest_executed": 297,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "native_packets": 61,
+  "native_roof_leaves": 1,
+  "native_work_units": 1911,
+  "native_analytic_amount_mm3": 0.12307872665804441,
+  "native_case_time_seconds": 0.168,
+  "native_policy": {
+    "maximum_gap_error_mm": 0.0001,
+    "maximum_width_error_mm": 0.002,
+    "maximum_line_volume_error_mm3": 0.0001,
+    "timeout_ms": 5000,
+    "max_evaluations": 200000,
+    "max_roof_segments": 4096,
+    "max_depth": 24,
+    "max_packets": 4096
+  },
+  "default_policy": {
+    "maximum_gap_error_mm": 0.001,
+    "maximum_width_error_mm": 0.005,
+    "maximum_line_volume_error_mm3": 0.001,
+    "timeout_ms": 1000,
+    "max_evaluations": 200000,
+    "max_roof_segments": 4096,
+    "max_depth": 24,
+    "max_packets": 4096
+  },
+  "hard_limits": {
+    "max_evaluations": 200000,
+    "max_roof_segments": 65535,
+    "max_depth": 32,
+    "max_packets": 65535,
+    "timeout_ms": 30000,
+    "combined_numerical_error_mm": 0.05
+  },
+  "bound_scope": "CONTINUOUS_FINITE_STRIP_NOMINAL_ROOF_GAP_AND_SECTION_AMOUNTS_ONLY",
+  "independent_review": "NOT_RUN",
+  "rounded_side_floor_contact": "NOT_IMPLEMENTED",
+  "target_conformity_and_deficit_repair": "NOT_IMPLEMENTED",
+  "full_B07": "NOT_IMPLEMENTED",
+  "export": "BLOCKED_PUBLIC_GATE_UNCHANGED",
+  "windows": "NOT_RUN",
+  "physical": "NOT_RUN",
+  "linux_current_revision": "NOT_RUN",
+  "linux_parent_7f454ba5": "RUN_36828766748_PENDING_AT_SAVED_SNAPSHOT",
+  "linux_parent_84a709ef": "RUN_36826154741_IN_PROGRESS_AT_SAVED_SNAPSHOT",
+  "linux_parent_4b3da47d": "RUN_36820170446_SUCCESS",
+  "raw_output_sha256": {
+    "baseline-capture.log": "eb8bc3ec6e5918b78f8453fe0d1b81123f704783265e8d28c3762efdb0c61361",
+    "baseline-capture.log.json": "b411a968d3911b05aad6efc4019f90f4069af84ae8e6af2c8fd58ceabeb4a02a",
+    "baseline-compare.log": "14bdf3eb82fad8b4210bed868b9124996e150788e839c30f3c35e33189b88fe0",
+    "baseline-compare.log.json": "35df058bf10c4a1f09baef177ae9907a3940b31ab46c2d456647526adc3cc59b",
+    "body.log": "a8701a8c014aae5608a7bc82b4e5ac0c7af20132dce89b7a4eb8abe6e4dc69e3",
+    "body.log.json": "b016dd64984b2934825d10f8089420b85865e23a759b7f0aa64dcf38a9bb342c",
+    "body.xml": "945fbb0f43cf685e3a98a3a2e9c18642027e1499a19966042ff85f41f204ba2e",
+    "build1.log": "ba27949e797fb5bb2bf0b4cb8f1bd50a6d11cb50ae7ed6987450d22b1ac3e27e",
+    "build1.log.json": "16aa59f24c10eaff96032032a885b30e74ec57e6b02a2051e17f95a82c6a9529",
+    "build2.log": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build2.log.json": "8ca7a5573bb38a763a474e5445bbccbfacf983c4ddb9e3f29540f71adcded941",
+    "build3.log": "95bcacdb8eded134ab74c86d90d9218e29895e329229212b5f4272181faa497a",
+    "build3.log.json": "edcdb221dc046151716cf16c5edd4244271129e23bddf2b953637d32ed9e1755",
+    "ctest/discovery.json": "e652c6e1c5664b64b33557a6d85b7aba2814b6371496573725f839300987ab78",
+    "ctest/results.xml": "b72b2200d1c6feb9a62aaaa640bc24ca3bd84ec988e28f7f83747ff38aea1323",
+    "ctest.log": "5d6a5be7b2c02fdd0b8a67e98158ba3441131a0fba4e2288a0b6ba9ac93420d5",
+    "ctest.log.json": "8eec804262ce650eca5620565d9af71d6f1c3a7468d794d19b2d6e835ccad18f",
+    "geometry1.log": "83ccca5566ab714ebed3397a60e8d441e79a53b826961159bd7ffee6cfdb368f",
+    "geometry1.log.json": "978e0b5ca0f7c260800e447499e1176a1cfd95a053121f7b23a805c40413bfee",
+    "geometry1.xml": "6e3f89db91702695744ad56ed0029495b3af486d37f46a57a8551775f9883133",
+    "geometry2.log": "1322fa885adf28c9430059a0adbd38daf902d2e2ad033581c132802080e1b585",
+    "geometry2.log.json": "4fea65e2230557dfd66aceb3c2213993bfa7624f13d1cc12218f1f2337cda37a",
+    "geometry2.xml": "3a78318c68790b633155519fb3cb333ac5c7a7e680494b68347f7bfed63d85dc",
+    "geometry3.log": "66f47c81ced3812114a2205a1626a0e4536321270078f89c40880f77e2fab1b9",
+    "geometry3.log.json": "127c697a259ecdd16d3f7d8dd57409183211e6b3dafff17f12c7dc6b0a5c82e3",
+    "geometry3.xml": "0c2e1b0519aa10846cdc3796f328d014dee2c0772df2c33818b40c681e0410bc",
+    "linux-ci.json": "cd5b3f77bf3f273392fd95766ab7ead89ff5ec0105aa420d7dfeda385fa344dd",
+    "material.log": "2e1b2a7213e65dce91805a7a01c13258c6691071433a775d380ec910c8a03402",
+    "material.log.json": "59f3ba9c1f04319df088d80a0d9a20450be244fb725ff30976025e01132a4779",
+    "material.xml": "b0d77d0d2a6fc3ae3ca6fe4c4f566671436b7d0c61f1a670700cba394808da48",
+    "native1.log": "604d431bdc1e69919d8963009e21f01174ba934851d97fbceb06e0aafb4a53f5",
+    "native1.log.json": "9b81dc99cd82f1bb4c8a8103880271ec9594580820539a5db61282a26edc1ea1",
+    "native1.xml": "37bdf1964861911b6e460079e46a905d480a8f27dbc6fdba108b1bddb426f381",
+    "package-validation.log": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "package-validation.log.json": "62690a2a97afdfad043f98d2cdc7a554c30472d038e45b28ef92d6261feb3d8a",
+    "red.log": "3ec4fec5472b88d4c45d404564e73b9ac46e15c0c7e3c4646be4f1c4cef408cf",
+    "red.log.json": "835a8a5d10d9d04e7d221d174cc23210e5d1a6e31be892cd1398bce5be15b537",
+    "source-audit.log": "af53456344c6db2023db432c8a091b5b46f127019639b01b7af55acb44365e01",
+    "source-audit.log.json": "b6023142893affb71086e8120d346dc2624a71e67570060a2423ef309b2e4649",
+    "baselines/flat_block-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/flat_block-off/output/plate_1.gcode": "23728e480834d04c9676849b76ab5e6d7d538a286fec8f0f40591aefcebd3dd2",
+    "baselines/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/flat_block-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/flat_block-off/run.log.json": "5f8537b1255388290b02441067e5af7c92c5b870c67cbb856383636ed1bc60b3",
+    "baselines/flat_block-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/flat_block-zaa/output/plate_1.gcode": "e8666703b5ec795bd28fa11b2d79b87ab67a2e86c7d0fd608d0ab4b4b99a706a",
+    "baselines/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/flat_block-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/flat_block-zaa/run.log.json": "ea2dd96128012b14872cbbb90bab278c768c270d7d8ce58d37920fdfa24cbe5d",
+    "baselines/manifest.json": "18ee5a2d5c6627ce9e4dfda4cf02a0ed0c456bd72071e1d1cd5a5c8e96791564",
+    "baselines/offline.sb": "63a7573fb72668b8a2f5eef3cadadf3cd6264cc5f0bbb04ecab381e869b74e2d",
+    "baselines/shallow_sphere-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/shallow_sphere-off/output/plate_1.gcode": "570021b4f96f19d2614a664ab17bd1f6093ec57219012823919b2828ba5dedaf",
+    "baselines/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/shallow_sphere-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/shallow_sphere-off/run.log.json": "40c3a224b892cf6a1ade2919591133dc3e1eb8b7510a276b2130374656e8d7f5",
+    "baselines/shallow_sphere-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/shallow_sphere-zaa/output/plate_1.gcode": "6884b92d96ce8ac57138107a36522424c3eea76428a7c1af9319007b7b4196e8",
+    "baselines/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/shallow_sphere-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/shallow_sphere-zaa/run.log.json": "2f642b80766fb4fd1211ec15745961a6a18194b4657ef9b6eb36d16efdcbb1fe",
+    "baselines/wedge_5deg-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/wedge_5deg-off/output/plate_1.gcode": "9f357f2c42a9e89c103456596ff14af233a35534c0d1cb30f0d0e9aea2a44536",
+    "baselines/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/wedge_5deg-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/wedge_5deg-off/run.log.json": "0775ce2d02890535747988fbee976627144077b3384a1d3cab9e0ac9ae967ce5",
+    "baselines/wedge_5deg-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/wedge_5deg-zaa/output/plate_1.gcode": "840bbbd50685edbf444c27cbd7d5589c749afde44b8b025a17fcda688403781e",
+    "baselines/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/wedge_5deg-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/wedge_5deg-zaa/run.log.json": "e40464486b50e0ee781ad88e1fbc0e0b3ac7ad1c3a3a9c75eada05dc422cbfa3"
+  },
+  "archive_mapping": {
+    "baseline-capture.log": {
+      "archive_file": "baseline-capture.txt",
+      "compression": null
+    },
+    "baseline-capture.log.json": {
+      "archive_file": "baseline-capture.log.json",
+      "compression": null
+    },
+    "baseline-compare.log": {
+      "archive_file": "baseline-compare.txt",
+      "compression": null
+    },
+    "baseline-compare.log.json": {
+      "archive_file": "baseline-compare.log.json",
+      "compression": null
+    },
+    "body.log": {
+      "archive_file": "body.txt.gz",
+      "compression": "gzip"
+    },
+    "body.log.json": {
+      "archive_file": "body.log.json",
+      "compression": null
+    },
+    "body.xml": {
+      "archive_file": "body.xml",
+      "compression": null
+    },
+    "build1.log": {
+      "archive_file": "build1.txt",
+      "compression": null
+    },
+    "build1.log.json": {
+      "archive_file": "build1.log.json",
+      "compression": null
+    },
+    "build2.log": {
+      "archive_file": "build2.txt",
+      "compression": null
+    },
+    "build2.log.json": {
+      "archive_file": "build2.log.json",
+      "compression": null
+    },
+    "build3.log": {
+      "archive_file": "build3.txt",
+      "compression": null
+    },
+    "build3.log.json": {
+      "archive_file": "build3.log.json",
+      "compression": null
+    },
+    "ctest/discovery.json": {
+      "archive_file": "ctest/discovery.json",
+      "compression": null
+    },
+    "ctest/results.xml": {
+      "archive_file": "ctest/results.xml",
+      "compression": null
+    },
+    "ctest.log": {
+      "archive_file": "ctest.txt",
+      "compression": null
+    },
+    "ctest.log.json": {
+      "archive_file": "ctest.log.json",
+      "compression": null
+    },
+    "geometry1.log": {
+      "archive_file": "geometry1.txt",
+      "compression": null
+    },
+    "geometry1.log.json": {
+      "archive_file": "geometry1.log.json",
+      "compression": null
+    },
+    "geometry1.xml": {
+      "archive_file": "geometry1.xml",
+      "compression": null
+    },
+    "geometry2.log": {
+      "archive_file": "geometry2.txt",
+      "compression": null
+    },
+    "geometry2.log.json": {
+      "archive_file": "geometry2.log.json",
+      "compression": null
+    },
+    "geometry2.xml": {
+      "archive_file": "geometry2.xml",
+      "compression": null
+    },
+    "geometry3.log": {
+      "archive_file": "geometry3.txt",
+      "compression": null
+    },
+    "geometry3.log.json": {
+      "archive_file": "geometry3.log.json",
+      "compression": null
+    },
+    "geometry3.xml": {
+      "archive_file": "geometry3.xml",
+      "compression": null
+    },
+    "linux-ci.json": {
+      "archive_file": "linux-ci.json",
+      "compression": null
+    },
+    "material.log": {
+      "archive_file": "material.txt.gz",
+      "compression": "gzip"
+    },
+    "material.log.json": {
+      "archive_file": "material.log.json",
+      "compression": null
+    },
+    "material.xml": {
+      "archive_file": "material.xml",
+      "compression": null
+    },
+    "native1.log": {
+      "archive_file": "native1.txt",
+      "compression": null
+    },
+    "native1.log.json": {
+      "archive_file": "native1.log.json",
+      "compression": null
+    },
+    "native1.xml": {
+      "archive_file": "native1.xml",
+      "compression": null
+    },
+    "package-validation.log": {
+      "archive_file": "package-validation.txt",
+      "compression": null
+    },
+    "package-validation.log.json": {
+      "archive_file": "package-validation.log.json",
+      "compression": null
+    },
+    "red.log": {
+      "archive_file": "red.txt",
+      "compression": null
+    },
+    "red.log.json": {
+      "archive_file": "red.log.json",
+      "compression": null
+    },
+    "source-audit.log": {
+      "archive_file": "source-audit.txt",
+      "compression": null
+    },
+    "source-audit.log.json": {
+      "archive_file": "source-audit.log.json",
+      "compression": null
+    },
+    "baselines/flat_block-off/00000.log": {
+      "archive_file": "baselines/flat_block-off/00000.txt",
+      "compression": null
+    },
+    "baselines/flat_block-off/output/plate_1.gcode": {
+      "archive_file": "baselines/flat_block-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/flat_block-off/resolved.json": {
+      "archive_file": "baselines/flat_block-off/resolved.json",
+      "compression": null
+    },
+    "baselines/flat_block-off/run.log": {
+      "archive_file": "baselines/flat_block-off/run.txt",
+      "compression": null
+    },
+    "baselines/flat_block-off/run.log.json": {
+      "archive_file": "baselines/flat_block-off/run.log.json",
+      "compression": null
+    },
+    "baselines/flat_block-zaa/00000.log": {
+      "archive_file": "baselines/flat_block-zaa/00000.txt",
+      "compression": null
+    },
+    "baselines/flat_block-zaa/output/plate_1.gcode": {
+      "archive_file": "baselines/flat_block-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/flat_block-zaa/resolved.json": {
+      "archive_file": "baselines/flat_block-zaa/resolved.json",
+      "compression": null
+    },
+    "baselines/flat_block-zaa/run.log": {
+      "archive_file": "baselines/flat_block-zaa/run.txt",
+      "compression": null
+    },
+    "baselines/flat_block-zaa/run.log.json": {
+      "archive_file": "baselines/flat_block-zaa/run.log.json",
+      "compression": null
+    },
+    "baselines/manifest.json": {
+      "archive_file": "baselines/manifest.json",
+      "compression": null
+    },
+    "baselines/offline.sb": {
+      "archive_file": "baselines/offline.sb",
+      "compression": null
+    },
+    "baselines/shallow_sphere-off/00000.log": {
+      "archive_file": "baselines/shallow_sphere-off/00000.txt",
+      "compression": null
+    },
+    "baselines/shallow_sphere-off/output/plate_1.gcode": {
+      "archive_file": "baselines/shallow_sphere-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/shallow_sphere-off/resolved.json": {
+      "archive_file": "baselines/shallow_sphere-off/resolved.json",
+      "compression": null
+    },
+    "baselines/shallow_sphere-off/run.log": {
+      "archive_file": "baselines/shallow_sphere-off/run.txt",
+      "compression": null
+    },
+    "baselines/shallow_sphere-off/run.log.json": {
+      "archive_file": "baselines/shallow_sphere-off/run.log.json",
+      "compression": null
+    },
+    "baselines/shallow_sphere-zaa/00000.log": {
+      "archive_file": "baselines/shallow_sphere-zaa/00000.txt",
+      "compression": null
+    },
+    "baselines/shallow_sphere-zaa/output/plate_1.gcode": {
+      "archive_file": "baselines/shallow_sphere-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/shallow_sphere-zaa/resolved.json": {
+      "archive_file": "baselines/shallow_sphere-zaa/resolved.json",
+      "compression": null
+    },
+    "baselines/shallow_sphere-zaa/run.log": {
+      "archive_file": "baselines/shallow_sphere-zaa/run.txt",
+      "compression": null
+    },
+    "baselines/shallow_sphere-zaa/run.log.json": {
+      "archive_file": "baselines/shallow_sphere-zaa/run.log.json",
+      "compression": null
+    },
+    "baselines/wedge_5deg-off/00000.log": {
+      "archive_file": "baselines/wedge_5deg-off/00000.txt",
+      "compression": null
+    },
+    "baselines/wedge_5deg-off/output/plate_1.gcode": {
+      "archive_file": "baselines/wedge_5deg-off/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/wedge_5deg-off/resolved.json": {
+      "archive_file": "baselines/wedge_5deg-off/resolved.json",
+      "compression": null
+    },
+    "baselines/wedge_5deg-off/run.log": {
+      "archive_file": "baselines/wedge_5deg-off/run.txt",
+      "compression": null
+    },
+    "baselines/wedge_5deg-off/run.log.json": {
+      "archive_file": "baselines/wedge_5deg-off/run.log.json",
+      "compression": null
+    },
+    "baselines/wedge_5deg-zaa/00000.log": {
+      "archive_file": "baselines/wedge_5deg-zaa/00000.txt",
+      "compression": null
+    },
+    "baselines/wedge_5deg-zaa/output/plate_1.gcode": {
+      "archive_file": "baselines/wedge_5deg-zaa/output/plate_1.gcode.gz",
+      "compression": "gzip"
+    },
+    "baselines/wedge_5deg-zaa/resolved.json": {
+      "archive_file": "baselines/wedge_5deg-zaa/resolved.json",
+      "compression": null
+    },
+    "baselines/wedge_5deg-zaa/run.log": {
+      "archive_file": "baselines/wedge_5deg-zaa/run.txt",
+      "compression": null
+    },
+    "baselines/wedge_5deg-zaa/run.log.json": {
+      "archive_file": "baselines/wedge_5deg-zaa/run.log.json",
+      "compression": null
+    }
+  },
+  "archive_file_sha256": {
+    "baseline-capture.log.json": "b411a968d3911b05aad6efc4019f90f4069af84ae8e6af2c8fd58ceabeb4a02a",
+    "baseline-capture.txt": "eb8bc3ec6e5918b78f8453fe0d1b81123f704783265e8d28c3762efdb0c61361",
+    "baseline-compare.log.json": "35df058bf10c4a1f09baef177ae9907a3940b31ab46c2d456647526adc3cc59b",
+    "baseline-compare.txt": "14bdf3eb82fad8b4210bed868b9124996e150788e839c30f3c35e33189b88fe0",
+    "baselines/flat_block-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/flat_block-off/output/plate_1.gcode.gz": "bfdb254c9ca0800bcfa67a3da92ec3e4953b34cafb1c9c1216ae7f0b9fb16348",
+    "baselines/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/flat_block-off/run.log.json": "5f8537b1255388290b02441067e5af7c92c5b870c67cbb856383636ed1bc60b3",
+    "baselines/flat_block-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/flat_block-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/flat_block-zaa/output/plate_1.gcode.gz": "70bc2b8ae6bb20ebe9335ff66e024255e518c71e015a39e72683596884c48409",
+    "baselines/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/flat_block-zaa/run.log.json": "ea2dd96128012b14872cbbb90bab278c768c270d7d8ce58d37920fdfa24cbe5d",
+    "baselines/flat_block-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/manifest.json": "18ee5a2d5c6627ce9e4dfda4cf02a0ed0c456bd72071e1d1cd5a5c8e96791564",
+    "baselines/offline.sb": "63a7573fb72668b8a2f5eef3cadadf3cd6264cc5f0bbb04ecab381e869b74e2d",
+    "baselines/shallow_sphere-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/shallow_sphere-off/output/plate_1.gcode.gz": "c32ce5e54f46ec778b366d380e4337ffebe44f47b8224d3efa9537d7dadec80b",
+    "baselines/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/shallow_sphere-off/run.log.json": "40c3a224b892cf6a1ade2919591133dc3e1eb8b7510a276b2130374656e8d7f5",
+    "baselines/shallow_sphere-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/shallow_sphere-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/shallow_sphere-zaa/output/plate_1.gcode.gz": "7c8dfd6899591c4ad6f6a0d0f3d3898be7961e4ad37c901bc5da13bea6f28a4b",
+    "baselines/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/shallow_sphere-zaa/run.log.json": "2f642b80766fb4fd1211ec15745961a6a18194b4657ef9b6eb36d16efdcbb1fe",
+    "baselines/shallow_sphere-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/wedge_5deg-off/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/wedge_5deg-off/output/plate_1.gcode.gz": "fd48a9d3addb9fa9e07f116f208447ea74db731c293b6639fdc35873a1bde13d",
+    "baselines/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "baselines/wedge_5deg-off/run.log.json": "0775ce2d02890535747988fbee976627144077b3384a1d3cab9e0ac9ae967ce5",
+    "baselines/wedge_5deg-off/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "baselines/wedge_5deg-zaa/00000.txt": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "baselines/wedge_5deg-zaa/output/plate_1.gcode.gz": "dca2e12e1dd8ff70ae0f9fbda0199812168e99fd8d87fa569cd79e348b7b4271",
+    "baselines/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "baselines/wedge_5deg-zaa/run.log.json": "e40464486b50e0ee781ad88e1fbc0e0b3ac7ad1c3a3a9c75eada05dc422cbfa3",
+    "baselines/wedge_5deg-zaa/run.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "body.log.json": "b016dd64984b2934825d10f8089420b85865e23a759b7f0aa64dcf38a9bb342c",
+    "body.txt.gz": "ddd22b1705302214e1e8ac8497ef508a4069e482c60438c5031dc1392098e015",
+    "body.xml": "945fbb0f43cf685e3a98a3a2e9c18642027e1499a19966042ff85f41f204ba2e",
+    "build1.log.json": "16aa59f24c10eaff96032032a885b30e74ec57e6b02a2051e17f95a82c6a9529",
+    "build1.txt": "ba27949e797fb5bb2bf0b4cb8f1bd50a6d11cb50ae7ed6987450d22b1ac3e27e",
+    "build2.log.json": "8ca7a5573bb38a763a474e5445bbccbfacf983c4ddb9e3f29540f71adcded941",
+    "build2.txt": "ef21046e0be8e5b126e8187095a2eb6730577f247002ca734079f9278a09f894",
+    "build3.log.json": "edcdb221dc046151716cf16c5edd4244271129e23bddf2b953637d32ed9e1755",
+    "build3.txt": "95bcacdb8eded134ab74c86d90d9218e29895e329229212b5f4272181faa497a",
+    "commands.json": "f9de0138f3ef0f5b1e80f601ff590ef44e6e3808d4be32f7d119fb57fc5da387",
+    "ctest/discovery.json": "e652c6e1c5664b64b33557a6d85b7aba2814b6371496573725f839300987ab78",
+    "ctest/results.xml": "b72b2200d1c6feb9a62aaaa640bc24ca3bd84ec988e28f7f83747ff38aea1323",
+    "ctest.log.json": "8eec804262ce650eca5620565d9af71d6f1c3a7468d794d19b2d6e835ccad18f",
+    "ctest.txt": "5d6a5be7b2c02fdd0b8a67e98158ba3441131a0fba4e2288a0b6ba9ac93420d5",
+    "geometry1.log.json": "978e0b5ca0f7c260800e447499e1176a1cfd95a053121f7b23a805c40413bfee",
+    "geometry1.txt": "83ccca5566ab714ebed3397a60e8d441e79a53b826961159bd7ffee6cfdb368f",
+    "geometry1.xml": "6e3f89db91702695744ad56ed0029495b3af486d37f46a57a8551775f9883133",
+    "geometry2.log.json": "4fea65e2230557dfd66aceb3c2213993bfa7624f13d1cc12218f1f2337cda37a",
+    "geometry2.txt": "1322fa885adf28c9430059a0adbd38daf902d2e2ad033581c132802080e1b585",
+    "geometry2.xml": "3a78318c68790b633155519fb3cb333ac5c7a7e680494b68347f7bfed63d85dc",
+    "geometry3.log.json": "127c697a259ecdd16d3f7d8dd57409183211e6b3dafff17f12c7dc6b0a5c82e3",
+    "geometry3.txt": "66f47c81ced3812114a2205a1626a0e4536321270078f89c40880f77e2fab1b9",
+    "geometry3.xml": "0c2e1b0519aa10846cdc3796f328d014dee2c0772df2c33818b40c681e0410bc",
+    "linux-ci.json": "cd5b3f77bf3f273392fd95766ab7ead89ff5ec0105aa420d7dfeda385fa344dd",
+    "material.log.json": "59f3ba9c1f04319df088d80a0d9a20450be244fb725ff30976025e01132a4779",
+    "material.txt.gz": "04e918f8dfe1e36c5af71227c6c85cbe5ac086ad1a949a7a090e5518a78bf854",
+    "material.xml": "b0d77d0d2a6fc3ae3ca6fe4c4f566671436b7d0c61f1a670700cba394808da48",
+    "native1.log.json": "9b81dc99cd82f1bb4c8a8103880271ec9594580820539a5db61282a26edc1ea1",
+    "native1.txt": "604d431bdc1e69919d8963009e21f01174ba934851d97fbceb06e0aafb4a53f5",
+    "native1.xml": "37bdf1964861911b6e460079e46a905d480a8f27dbc6fdba108b1bddb426f381",
+    "package-validation.log.json": "62690a2a97afdfad043f98d2cdc7a554c30472d038e45b28ef92d6261feb3d8a",
+    "package-validation.txt": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "red.log.json": "835a8a5d10d9d04e7d221d174cc23210e5d1a6e31be892cd1398bce5be15b537",
+    "red.txt": "3ec4fec5472b88d4c45d404564e73b9ac46e15c0c7e3c4646be4f1c4cef408cf",
+    "source-audit.log.json": "b6023142893affb71086e8120d346dc2624a71e67570060a2423ef309b2e4649",
+    "source-audit.txt": "af53456344c6db2023db432c8a091b5b46f127019639b01b7af55acb44365e01"
+  }
+}
