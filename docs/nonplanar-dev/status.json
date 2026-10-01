@@ -21,7 +21,7 @@
     "B04": "OWNED_EXACT_PARTITION_NATIVE_BODY_MATERIAL_AND_INTERIOR_DENSE_COVERAGE_PASS_SEAM_WIDER_NATIVE_DOMAIN_JOB_WORKER_PENDING",
     "B05": "OWNED_ORDERED_CONSTANT_FLUX_PREFIX_NATIVE_BODY_AND_CONTINUOUS_UNION_COVERAGE_PASS_CONTACT_CCD_FULL_SCOPE_PENDING",
     "B06": "ACTUAL_FIRST_GAP_REFINED_INTEGRAL_SOURCE_BOUND_AFFINE_SURFACES_AND_PROTECTED_STRIP_VOLUMES_PASS_LATER_SUPPORT_SEAM_FULL_SCOPE_PENDING",
-    "B07": "BOUNDED_WHOLE_FIRST_CANDIDATE_WIDTH_PITCH_REPLAN_OWNED_LINE_WIDTHS_MEASURED_EXCESS_REDUCTION_AND_BOUNDED_COVERAGE_LOSS_PASS_FULL_3D_REPAIR_CONTACT_SEAM_CURVED_LATER_SUPPORT_ORDER_PENDING",
+    "B07": "BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WHOLE_WIDTH_EDGES_OPTIONAL_OWNERS_AND_MEASURED_CORNER_UNIONS_PASS_COMBINED_INFILL_3D_REPAIR_CONTACT_JOIN_CURVED_LATER_SUPPORT_ORDER_PENDING",
     "B08": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B09": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B10": "NOT_IMPLEMENTED_FULL_SCOPE",
@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 278,
+    "new_native_cases": 282,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 312,
-    "final_ctest_executed": 312,
+    "final_ctest_discovered": 319,
+    "final_ctest_executed": 319,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -361,7 +361,7 @@
     "B07_first_hatch_end_replan_native_missing_mm3": 0.0709877,
     "B07_constant_section_roof_linux": "2D8BEBAA_RUN_36847680702_NATIVE_SUITES_STL_CLI_AND_APPLICATION_PASS_ORIGINAL_20_SECOND_FILL_LIMIT",
     "affine_hatch_contract_version": 4,
-    "first_hatch_bead_contract_version": 4,
+    "first_hatch_bead_contract_version": 5,
     "affine_hatch_cells_contract_version": 2,
     "remaining_hatch_contract_version": 2,
     "first_hatch_layer_contract_version": 2,
@@ -378,11 +378,46 @@
     "B07_first_hatch_width_replan_native_repeated_reduction_mm3": 0.0398967,
     "B07_first_hatch_width_replan_native_covered_change_mm3": 2.46731e-08,
     "B07_first_hatch_width_replan_native_missing_mm3": 0.0709876,
-    "B07_first_hatch_layer_linux": "361CCDC8_RUN_36853913690_NATIVE_SUITES_STL_CLI_AND_APPLICATION_PASS"
+    "B07_first_hatch_layer_linux": "361CCDC8_RUN_36853913690_NATIVE_SUITES_STL_CLI_AND_APPLICATION_PASS",
+    "first_contour_contract_version": 1,
+    "B07_first_contour_cases": 2,
+    "B07_first_contour_assertions": 558,
+    "B07_closed_loop_union_cases": 2,
+    "B07_closed_loop_union_assertions": 124,
+    "B07_native_first_contour_cases": 1,
+    "B07_native_first_contour_assertions": 360,
+    "B07_first_contour_oracle": "INDEPENDENT_113_BIT_STADIUM_MERGED_UNMERGED_PARTIAL_MERGE_CIRCULAR_MOMENTS_AND_SLOPED_CIRCLE_LINE_SPILL_BOTH_AXES_CURRENT_GAPS_CLIP_AND_NATIVE_EDGE_AMOUNTS_PASS_COMBINED_FILL_CONTACT_JOIN_PENDING",
+    "B07_first_contour_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B07_first_contour_native_edges": 4,
+    "B07_first_contour_native_packets": 108,
+    "B07_first_contour_native_cells": 145,
+    "B07_first_contour_native_work": 30635,
+    "B07_first_contour_native_standalone_seconds": 0.414,
+    "B07_first_contour_native_final_case_seconds": 0.371,
+    "B07_first_contour_native_commanded_mm3": 0.237329,
+    "B07_first_contour_native_covered_mm3": [
+      0.149216,
+      0.149627
+    ],
+    "B07_first_contour_native_missing_mm3": [
+      0.102361,
+      0.102772
+    ],
+    "B07_first_contour_native_outside_mm3": [
+      1.72428e-05,
+      0.000213198
+    ],
+    "B07_first_contour_final_material_cases": 74,
+    "B07_first_contour_final_material_assertions": 13886,
+    "B07_first_contour_final_body_cases": 14,
+    "B07_first_contour_final_body_assertions": 108248,
+    "B07_first_contour_shared_measurement_width_work": 18119,
+    "B07_first_hatch_end_replan_linux": "05F4A887_RUN_36858083109_NATIVE_SUITES_STL_CLI_AND_APPLICATION_PASS",
+    "B07_first_contour_linux": "NOT_YET_VERIFIED"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
-    "linux_x86_64": "2D8BEBAA_NATIVE_SUITES_STL_CLI_AND_APPLICATION_PASS_361CCDC8_NATIVE_BUILD_IN_PROGRESS_CURRENT_END_REPLAN_REVISION_PENDING"
+    "linux_x86_64": "2D8BEBAA_361CCDC8_05F4A887_NATIVE_SUITES_STL_CLI_AND_APPLICATION_PASS_4E6CDDD7_NATIVE_BUILD_IN_PROGRESS_CURRENT_CONTOUR_PENDING"
   },
   "physical": {
     "machine": "Snapmaker U1",
@@ -393,10 +428,10 @@
     "operator_profile": "UNCONFIRMED"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "2D8BEBAA_RUN_36847680702_SUCCESS_361CCDC8_RUN_36853913690_NATIVE_BUILD_IN_PROGRESS_SAVED_2026_10_01_1137_UTC_CURRENT_END_REPLAN_REVISION_PENDING",
+  "ci": "2D8BEBAA_36847680702_361CCDC8_36853913690_05F4A887_36858083109_SUCCESS_4E6CDDD7_36861891679_NATIVE_BUILD_IN_PROGRESS_SAVED_2026_10_01_1347_UTC_CURRENT_CONTOUR_PENDING",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Verify end/width replans on Linux with unchanged budgets. Construct and qualify remaining 3D space and transverse/end perimeter/seam from positive measured deficit and residual excess; use owned line widths, retain actual partial cap prefixes separately from prospective replacements. Continue floor/contact and curved/later support, full-head CCD/motion/order/flow, final-byte replay/export and B01-B03 job/plate/provenance binding. Independent review, Windows and physical qualification remain pending.",
+  "next_step": "Verify width/contour on Linux with unchanged budgets. Combine qualified first contour and infill within actual remaining 3D space, remeasure joint S/U/R/C/M/spill and qualify finite-width floor/contact and joining material; preserve actually laid partial cap prefixes separately from prospective replacements. Continue curved/later actual support, full-head CCD/motion/order/flow, final-byte replay/export and B01-B03 job/plate/provenance binding. Independent review, Windows and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -468,7 +503,8 @@
     "B07_stadium_depth_bounds": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-stadium-depth-bounds.md",
     "B07_constant_section_roof": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-constant-section-roof.md",
     "B07_first_hatch_layer": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-hatch-layer.md",
-    "B07_first_hatch_end_replan": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-hatch-end-replan.md"
+    "B07_first_hatch_end_replan": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-hatch-end-replan.md",
+    "B07_first_contour": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-contour.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -537,5 +573,6 @@
   "B07_stadium_depth_bounds_evidence": "docs/nonplanar-dev/evidence/B07-stadium-depth-bounds/source-manifest.json",
   "B07_constant_section_roof_evidence": "docs/nonplanar-dev/evidence/B07-constant-section-roof/source-manifest.json",
   "B07_first_hatch_layer_evidence": "docs/nonplanar-dev/evidence/B07-first-hatch-layer/source-manifest.json",
-  "B07_first_hatch_end_replan_evidence": "docs/nonplanar-dev/evidence/B07-first-hatch-end-replan/source-manifest.json"
+  "B07_first_hatch_end_replan_evidence": "docs/nonplanar-dev/evidence/B07-first-hatch-end-replan/source-manifest.json",
+  "B07_first_contour_evidence": "docs/nonplanar-dev/evidence/B07-first-contour/source-manifest.json"
 }

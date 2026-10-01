@@ -2097,7 +2097,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2242,6 +2242,28 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         "] missing=[" << width_fill.missing_target_mm3.lower << ',' << width_fill.missing_target_mm3.upper << "] repeated reduction=[" <<
         width_plan.repeated_reduction_mm3.lower << ',' << width_plan.repeated_reduction_mm3.upper << "] covered change=[" <<
         width_plan.covered_change_mm3.lower << ',' << width_plan.covered_change_mm3.upper << "] cells=" << width_plan.cells << " work=" << width_plan.evaluations);
+    const auto contour=plan_first_contour({"",native.snapshot->hatches},{WidthXY(.4),0,false,Volume(.001)},box,layer_limits);INFO(contour.reason);REQUIRE(contour.snapshot);
+    const auto &loop=*contour.snapshot;REQUIRE(loop.edges.size()==4);REQUIRE(loop.source==native.snapshot->hatches);REQUIRE(loop.fill->target==layer_fill.target);
+    LayerAmount contour_sum=0;
+    for (size_t i=0;i<loop.edges.size();++i) {
+        const auto &edge=*loop.edges[i],&next=*loop.edges[(i+1)%loop.edges.size()];
+        REQUIRE_FALSE(edge.line_index.has_value());REQUIRE(edge.roof_domain==FirstHatchRoofDomain::FiniteWidth);
+        REQUIRE(edge.path_end.x()==next.path_start.x());REQUIRE(edge.path_end.y()==next.path_start.y());REQUIRE(edge.path_end.z()==next.path_start.z());
+        const LayerAmount h0=LayerAmount(edge.path_start.z())-LayerAmount(flat_top),h1=LayerAmount(edge.path_end.z())-LayerAmount(flat_top);
+        const LayerAmount l=sqrt(pow(LayerAmount(edge.path_end.x())-edge.path_start.x(),2)+pow(LayerAmount(edge.path_end.y())-edge.path_start.y(),2));
+        const LayerAmount k=1-acos(LayerAmount(-1))/4,ideal=l*(LayerAmount(.4)*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3);
+        contains(edge.actual_target_volume_mm3,ideal);
+        for (const auto &piece : edge.pieces) {REQUIRE(piece.nominal_width.value()==.4);contour_sum+=piece.volume.value();}
+    }
+    contains(loop.fill->occupied->individual_volume_mm3,contour_sum);
+    REQUIRE(loop.fill->occupied->repeated_volume_mm3.lower>0);REQUIRE(loop.fill->covered_target_mm3.lower>0);
+    REQUIRE(loop.fill->missing_target_mm3.lower>0);REQUIRE(loop.fill->outside_target_mm3.upper<=.001);
+    REQUIRE(loop.global_volume_error_mm3<=layer_limits.beads.packets.maximum_volume_error.value());
+    INFO("native closed first contour amount=[" << loop.deposited_volume_mm3.lower << ',' << loop.deposited_volume_mm3.upper <<
+        "] covered=[" << loop.fill->covered_target_mm3.lower << ',' << loop.fill->covered_target_mm3.upper <<
+        "] missing=[" << loop.fill->missing_target_mm3.lower << ',' << loop.fill->missing_target_mm3.upper <<
+        "] outside=[" << loop.fill->outside_target_mm3.lower << ',' << loop.fill->outside_target_mm3.upper <<
+        "] cells=" << loop.cells << " work=" << loop.evaluations);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

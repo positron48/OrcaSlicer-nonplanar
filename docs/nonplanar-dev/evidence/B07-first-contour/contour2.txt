@@ -1,0 +1,3897 @@
+Filters: [FirstContour]
+Randomness seeded to: 183072878
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 first contour rejects partial roofs and shares all construction and fill
+budgets
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1933
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb1112318
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x106d77840
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1306: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0xcb0c2e8b0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb11123b8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xcb0c10900
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1315: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xcb1112440
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1938: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0x106d75400
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1938: PASSED:
+  REQUIRE( owned.snapshot->source==saved )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1940: PASSED:
+  REQUIRE_FALSE( plan_first_contour({},policy,box).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1941: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1942: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1943: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1944: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,{{1.1,-.4,.7},{3,.4,1.8}}).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1945: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,{{1,-.4,1.1},{3,.4,1.8}}).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1946: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1947: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1948: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1949: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1950: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1951: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1952: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1953: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1954: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1956: PASSED:
+  REQUIRE_FALSE( plan_first_contour(f.hatches,policy,box,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1958: PASSED:
+  REQUIRE( std::fesetround(0x00000000)==0 )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1958: PASSED:
+  REQUIRE_FALSE( rounding.snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb11126d8
+with messages:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1966: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x106d7ad40
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1967: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xcb0c2e920
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1969: PASSED:
+  REQUIRE( plan_first_hatch_footprint_bead(hatch,0,limits.beads).snapshot )
+with expansion:
+  0xcb1071ec0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1971: PASSED:
+  REQUIRE( contour.snapshot )
+with expansion:
+  0xcb11d4000
+with messages:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1966: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x106d7a440
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1967: PASSED:
+  REQUIRE( hatch.snapshot )
+with expansion:
+  0xcb0c2e920
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1969: PASSED:
+  REQUIRE( plan_first_hatch_footprint_bead(hatch,0,limits.beads).snapshot )
+with expansion:
+  0xcb1071ec0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1971: FAILED:
+  REQUIRE( contour.snapshot )
+with expansion:
+  0
+with messages:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+  MATERIAL_UNION_CELL_LIMIT paths=4 packets=4 cells=4095 work=13422
+  union_width=0.001939
+
+-------------------------------------------------------------------------------
+B07 first contour owns a closed finite-width loop and measures corner overlap
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1883
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1885: PASSED:
+with message:
+  !(std::is_aggregate<FirstContourSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb1112318
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0xcb0d14000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1306: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0xcb0c2e8b0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb1112458
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0xcb0c10900
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1315: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0xcb11123a0
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1888: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb11d40a0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.source==f.hatches.snapshot )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.edges.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.seam_corner==seam )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.clockwise==clockwise )
+with expansion:
+  false == false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1905: PASSED:
+  REQUIRE( (clockwise ? orientation<0 : orientation>0) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.lower<=sum )
+with expansion:
+  0.28132198942070774 <= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.upper>=sum )
+with expansion:
+  0.2813219894207078 >= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1907: PASSED:
+  REQUIRE( loop.fill->occupied->repeated_volume_mm3.lower>0 )
+with expansion:
+  0.0680858697103552 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->covered_target_mm3.lower>0 )
+with expansion:
+  0.21323611971035031 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->missing_target_mm3.lower>0 )
+with expansion:
+  0.114763880289647 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.0000000000000022 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000122 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.120269 == 0.12026931204524363
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  1.445 == 1.445
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.0203917 == 0.02039168266511025
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  0.245 == 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *short_span<=width_h-h )
+with expansion:
+  0.245 <= 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *long_span>width_v )
+with expansion:
+  1.445 > 0.45
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035253 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.0680858697103552 <= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.06808586971035521 >= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035031 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1929: PASSED:
+  REQUIRE( rows.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1888: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb11d40a0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.source==f.hatches.snapshot )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.edges.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.seam_corner==seam )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.clockwise==clockwise )
+with expansion:
+  false == false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1905: PASSED:
+  REQUIRE( (clockwise ? orientation<0 : orientation>0) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.lower<=sum )
+with expansion:
+  0.28132198942070774 <= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.upper>=sum )
+with expansion:
+  0.2813219894207078 >= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1907: PASSED:
+  REQUIRE( loop.fill->occupied->repeated_volume_mm3.lower>0 )
+with expansion:
+  0.0680858697103552 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->covered_target_mm3.lower>0 )
+with expansion:
+  0.21323611971035031 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->missing_target_mm3.lower>0 )
+with expansion:
+  0.114763880289647 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.0000000000000022 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000122 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.0203917 == 0.02039168266511025
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  0.245 == 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.120269 == 0.12026931204524363
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  1.445 == 1.445
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *short_span<=width_h-h )
+with expansion:
+  0.245 <= 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *long_span>width_v )
+with expansion:
+  1.445 > 0.45
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035253 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.0680858697103552 <= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.06808586971035521 >= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035031 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1929: PASSED:
+  REQUIRE( rows.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1888: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb11d40a0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.source==f.hatches.snapshot )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.edges.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.seam_corner==seam )
+with expansion:
+  2 == 2
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.clockwise==clockwise )
+with expansion:
+  false == false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1905: PASSED:
+  REQUIRE( (clockwise ? orientation<0 : orientation>0) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.lower<=sum )
+with expansion:
+  0.28132198942070774 <= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.upper>=sum )
+with expansion:
+  0.2813219894207078 >= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1907: PASSED:
+  REQUIRE( loop.fill->occupied->repeated_volume_mm3.lower>0 )
+with expansion:
+  0.0680858697103552 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->covered_target_mm3.lower>0 )
+with expansion:
+  0.21323611971035031 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->missing_target_mm3.lower>0 )
+with expansion:
+  0.114763880289647 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.0000000000000022 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000122 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.120269 == 0.12026931204524363
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  1.445 == 1.445
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.0203917 == 0.02039168266511025
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  0.245 == 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *short_span<=width_h-h )
+with expansion:
+  0.245 <= 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *long_span>width_v )
+with expansion:
+  1.445 > 0.45
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035253 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.0680858697103552 <= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.06808586971035521 >= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035031 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1929: PASSED:
+  REQUIRE( rows.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1888: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb11d40a0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.source==f.hatches.snapshot )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.edges.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.seam_corner==seam )
+with expansion:
+  3 == 3
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.clockwise==clockwise )
+with expansion:
+  false == false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1905: PASSED:
+  REQUIRE( (clockwise ? orientation<0 : orientation>0) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.lower<=sum )
+with expansion:
+  0.28132198942070774 <= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.upper>=sum )
+with expansion:
+  0.2813219894207078 >= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1907: PASSED:
+  REQUIRE( loop.fill->occupied->repeated_volume_mm3.lower>0 )
+with expansion:
+  0.0680858697103552 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->covered_target_mm3.lower>0 )
+with expansion:
+  0.21323611971035031 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->missing_target_mm3.lower>0 )
+with expansion:
+  0.114763880289647 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.0000000000000022 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000122 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.0203917 == 0.02039168266511025
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  0.245 == 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.120269 == 0.12026931204524363
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  1.445 == 1.445
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *short_span<=width_h-h )
+with expansion:
+  0.245 <= 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *long_span>width_v )
+with expansion:
+  1.445 > 0.45
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035253 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.0680858697103552 <= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.06808586971035521 >= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035031 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1929: PASSED:
+  REQUIRE( rows.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1888: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb11d40a0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.source==f.hatches.snapshot )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.edges.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.seam_corner==seam )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.clockwise==clockwise )
+with expansion:
+  true == true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1905: PASSED:
+  REQUIRE( (clockwise ? orientation<0 : orientation>0) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.lower<=sum )
+with expansion:
+  0.28132198942070774 <= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.upper>=sum )
+with expansion:
+  0.2813219894207078 >= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1907: PASSED:
+  REQUIRE( loop.fill->occupied->repeated_volume_mm3.lower>0 )
+with expansion:
+  0.0680858697103552 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->covered_target_mm3.lower>0 )
+with expansion:
+  0.21323611971035031 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->missing_target_mm3.lower>0 )
+with expansion:
+  0.114763880289647 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.0000000000000022 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000122 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.0203917 == 0.02039168266511025
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  0.245 == 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.120269 == 0.12026931204524363
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  1.445 == 1.445
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *short_span<=width_h-h )
+with expansion:
+  0.245 <= 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *long_span>width_v )
+with expansion:
+  1.445 > 0.45
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035253 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.0680858697103552 <= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.06808586971035521 >= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035031 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1929: PASSED:
+  REQUIRE( rows.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1888: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb11d40a0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.source==f.hatches.snapshot )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.edges.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.seam_corner==seam )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.clockwise==clockwise )
+with expansion:
+  true == true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1905: PASSED:
+  REQUIRE( (clockwise ? orientation<0 : orientation>0) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.lower<=sum )
+with expansion:
+  0.28132198942070774 <= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.upper>=sum )
+with expansion:
+  0.2813219894207078 >= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1907: PASSED:
+  REQUIRE( loop.fill->occupied->repeated_volume_mm3.lower>0 )
+with expansion:
+  0.0680858697103552 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->covered_target_mm3.lower>0 )
+with expansion:
+  0.21323611971035031 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->missing_target_mm3.lower>0 )
+with expansion:
+  0.114763880289647 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.0000000000000022 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000122 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.120269 == 0.12026931204524363
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  1.445 == 1.445
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.0203917 == 0.02039168266511025
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  0.245 == 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *short_span<=width_h-h )
+with expansion:
+  0.245 <= 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *long_span>width_v )
+with expansion:
+  1.445 > 0.45
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035253 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.0680858697103552 <= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.06808586971035521 >= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035031 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1929: PASSED:
+  REQUIRE( rows.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1888: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb11d40a0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.source==f.hatches.snapshot )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.edges.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.seam_corner==seam )
+with expansion:
+  2 == 2
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.clockwise==clockwise )
+with expansion:
+  true == true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1905: PASSED:
+  REQUIRE( (clockwise ? orientation<0 : orientation>0) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.lower<=sum )
+with expansion:
+  0.28132198942070774 <= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.upper>=sum )
+with expansion:
+  0.2813219894207078 >= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1907: PASSED:
+  REQUIRE( loop.fill->occupied->repeated_volume_mm3.lower>0 )
+with expansion:
+  0.0680858697103552 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->covered_target_mm3.lower>0 )
+with expansion:
+  0.21323611971035031 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->missing_target_mm3.lower>0 )
+with expansion:
+  0.114763880289647 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.0000000000000022 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000122 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.0203917 == 0.02039168266511025
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  0.245 == 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.120269 == 0.12026931204524363
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  1.445 == 1.445
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *short_span<=width_h-h )
+with expansion:
+  0.245 <= 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *long_span>width_v )
+with expansion:
+  1.445 > 0.45
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035253 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.0680858697103552 <= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.06808586971035521 >= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035031 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1929: PASSED:
+  REQUIRE( rows.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1888: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xcb11d40a0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.source==f.hatches.snapshot )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1889: PASSED:
+  REQUIRE( loop.edges.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.seam_corner==seam )
+with expansion:
+  3 == 3
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1890: PASSED:
+  REQUIRE( loop.policy.clockwise==clockwise )
+with expansion:
+  true == true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  5.57047e-18 <= 0.0000000000000005
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE_FALSE( edge.line_index.has_value() )
+with expansion:
+  !false
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1895: PASSED:
+  REQUIRE( edge.source==loop.source )
+with expansion:
+  0xcb0c2e8b0 == 0xcb0c2e8b0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( edge.roof_domain==FirstHatchRoofDomain::FiniteWidth )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1896: PASSED:
+  REQUIRE( same(edge.path_end,next.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( edge.pieces.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.front().start,edge.path_start) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1897: PASSED:
+  REQUIRE( same(edge.pieces.back().end,edge.path_end) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1901: PASSED:
+  REQUIRE( p.section.gap_end_mm==p.section.gap_begin_mm )
+with expansion:
+  0.20500000000000029 == 0.20500000000000029
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1903: PASSED:
+  REQUIRE( abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3 )
+with expansion:
+  2.21767e-18 <= 0.00000000000000008
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1905: PASSED:
+  REQUIRE( (clockwise ? orientation<0 : orientation>0) )
+with expansion:
+  true
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.lower<=sum )
+with expansion:
+  0.28132198942070774 <= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1906: PASSED:
+  REQUIRE( loop.fill->occupied->individual_volume_mm3.upper>=sum )
+with expansion:
+  0.2813219894207078 >= 0.281322
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1907: PASSED:
+  REQUIRE( loop.fill->occupied->repeated_volume_mm3.lower>0 )
+with expansion:
+  0.0680858697103552 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->covered_target_mm3.lower>0 )
+with expansion:
+  0.21323611971035031 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1908: PASSED:
+  REQUIRE( loop.fill->missing_target_mm3.lower>0 )
+with expansion:
+  0.114763880289647 > 0
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.fill->outside_target_mm3.upper<=.001 )
+with expansion:
+  0.0000000000000022 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1909: PASSED:
+  REQUIRE( loop.global_volume_error_mm3<=.001 )
+with expansion:
+  0.00000000000000122 <= 0.001
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.120269 == 0.12026931204524363
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  1.445 == 1.445
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *volume==p.volume.value() )
+with expansion:
+  0.0203917 == 0.02039168266511025
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *span==length )
+with expansion:
+  0.245 == 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1918: PASSED:
+  REQUIRE( *height==h )
+with expansion:
+  0.205 == 0.205
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *short_span<=width_h-h )
+with expansion:
+  0.245 <= 0.245
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1923: PASSED:
+  REQUIRE( *long_span>width_v )
+with expansion:
+  1.445 > 0.45
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035253 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.0680858697103552 <= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.06808586971035521 >= 0.0680859
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.lower<=amount )
+with expansion:
+  0.21323611971035031 <= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1925: PASSED:
+  REQUIRE( v.upper>=amount )
+with expansion:
+  0.21323611971035256 >= 0.213236
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1929: PASSED:
+  REQUIRE( rows.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_CLOSED_FIRST_ROI_CONTOUR_WITH_MEASURED_CORNER_UNION_FILL_ONLY
+
+===============================================================================
+test cases:   2 |   1 passed | 1 failed
+assertions: 554 | 553 passed | 1 failed
+

@@ -352,7 +352,9 @@ struct RemainingHatchResult;
 struct RemainingHatchPolicy;
 struct RemainingHatchLimits;
 struct MaterialFillResult;
-inline constexpr unsigned first_hatch_bead_contract_version=4;
+struct FirstContourPolicy;
+struct FirstContourResult;
+inline constexpr unsigned first_hatch_bead_contract_version=5;
 enum class FirstHatchRoofDomain { Centerline, FiniteWidth };
 struct FirstHatchBeadLimits : MaterialQueryLimits {
     FixedWidthBeadLimits packets;
@@ -362,15 +364,15 @@ struct FirstHatchBeadLimits : MaterialQueryLimits {
 struct FirstHatchBeadResult;
 struct FirstHatchBeadSnapshot {
     const std::shared_ptr<const AffineHatchSnapshot> source;
-    const size_t line_index;
+    const std::optional<size_t> line_index; // Absent for an owned contour edge; otherwise the original hatch owner.
     const FirstHatchRoofDomain roof_domain;
-    const PhysicalPosition path_start, path_end; // May be a qualified subinterval of the parent line.
+    const PhysicalPosition path_start, path_end; // Hatch, qualified remaining interval, or owned contour edge.
     const std::vector<FixedWidthBeadPiece> pieces;
     const ScalarBounds actual_target_volume_mm3, deposited_volume_mm3;
     const double maximum_gap_error_mm, maximum_width_error_mm, total_volume_error_mm3, numerical_error_upper_mm;
     const size_t roof_segments, evaluations;
 private:
-    FirstHatchBeadSnapshot(std::shared_ptr<const AffineHatchSnapshot> s, size_t index, FirstHatchRoofDomain domain,
+    FirstHatchBeadSnapshot(std::shared_ptr<const AffineHatchSnapshot> s, std::optional<size_t> index, FirstHatchRoofDomain domain,
         PhysicalPosition start, PhysicalPosition end, std::vector<FixedWidthBeadPiece> p,
         ScalarBounds target, ScalarBounds deposited, double gap_error, double width_error, double volume_error,
         double numeric, size_t segments, size_t work)
@@ -381,7 +383,8 @@ private:
     friend FirstHatchBeadResult plan_first_hatch_footprint_bead(const AffineHatchResult &, size_t, const FirstHatchBeadLimits &);
     friend RemainingHatchResult plan_remaining_first_hatch(const AffineHatchResult &,size_t,const MaterialFillResult &,
         const RemainingHatchPolicy &,const RemainingHatchLimits &);
-    static FirstHatchBeadResult plan(const AffineHatchResult &, size_t, const FirstHatchBeadLimits &, FirstHatchRoofDomain,
+    friend FirstContourResult plan_first_contour(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,const FirstHatchLayerLimits &);
+    static FirstHatchBeadResult plan(const AffineHatchResult &, std::optional<size_t>, const FirstHatchBeadLimits &, FirstHatchRoofDomain,
         const AffineHatchLine *slice=nullptr,double coordinate_error=0);
 };
 struct FirstHatchBeadResult { std::string reason; std::shared_ptr<const FirstHatchBeadSnapshot> snapshot; };
@@ -616,5 +619,32 @@ struct FirstHatchWidthReplanResult {std::string reason;std::shared_ptr<const Fir
 // This does not repair an actually laid cap or qualify contact/seam/order/export.
 FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult &,WidthXY,
     const FirstHatchWidthReplanPolicy &policy={},const FirstHatchLayerLimits &limits={});
+
+inline constexpr unsigned first_contour_contract_version=1;
+struct FirstContourPolicy {WidthXY width;size_t seam_corner=0;bool clockwise=false;Volume maximum_outside_target{.001};};
+struct FirstContourSnapshot {
+    const std::shared_ptr<const AffineHatchSnapshot> source;
+    const FirstContourPolicy policy;
+    const std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> edges;
+    const std::shared_ptr<const MaterialFillSnapshot> fill;
+    const ScalarBounds section_target_volume_mm3,deposited_volume_mm3;
+    const double global_volume_error_mm3,numerical_error_upper_mm;
+    const size_t roof_segments,cells,evaluations;
+private:
+    FirstContourSnapshot(std::shared_ptr<const AffineHatchSnapshot> s,FirstContourPolicy p,std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> e,
+        std::shared_ptr<const MaterialFillSnapshot> f,ScalarBounds target,ScalarBounds amount,double error,double numeric,size_t roofs,size_t count,size_t work)
+        : source(std::move(s)),policy(p),edges(std::move(e)),fill(std::move(f)),section_target_volume_mm3(target),deposited_volume_mm3(amount),
+          global_volume_error_mm3(error),numerical_error_upper_mm(numeric),roof_segments(roofs),cells(count),evaluations(work) {}
+    friend FirstContourResult plan_first_contour(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,const FirstHatchLayerLimits &);
+};
+struct FirstContourResult {std::string reason;std::shared_ptr<const FirstContourSnapshot> snapshot;};
+// Construct a closed rectangular contour on the first affine surface inside
+// its supported ROI and unchanged outer band. Bound every whole finite-width
+// edge against the actual body, sharing packet/roof/volume/work/deadline limits.
+// Measure all corners together with joint S/U/R/C/M/spill. Seam is an owned
+// starting vertex, not qualified joining material, head/contact/order/flow or
+// export. Infill, 3D repair and later support remain separate constructions.
+FirstContourResult plan_first_contour(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,
+    const FirstHatchLayerLimits &limits={});
 
 }

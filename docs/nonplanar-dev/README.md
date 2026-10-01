@@ -164,10 +164,24 @@ body/target, original band/finite ends and later paths. Three analytical cases /
 approximately 0.181000 mm3; M remains 0.0709876 mm3. Four-line independent circular
 lenses retain a real bounded loss; excessive loss refuses the candidate. Affine
 hatch 3 -> 4 and dependent consumers use owned line widths, retaining original
-generation policy as provenance. No persisted formats change. Current material/
+generation policy as provenance. No persisted formats change. At that checkpoint material/
 body suites pass 70/14 cases; selected CTest passes 315/315 without skips.
 Six fresh OFF/ZAA G-code/modal comparisons pass. Actual contact, 3D remainder,
 perimeter/seam, later support and order/export remain required.
+
+`B07-first-contour.md` constructs four connected finite-width edges on the
+original first affine surface, preserving actual body/target and original band.
+Two contour cases/558 assertions cover eight explicit seam/direction variants;
+two independent circular-moment/circle-line union cases/124 assertions verify
+merged, unmerged, partly merged and sloped packet loops. Shared original budgets
+and real gaps/current prefixes remain enforced. The extended native case passes
+360 assertions: four edges/108 packets yield C [0.149216,0.149627] mm3,
+M [0.102361,0.102772] mm3 and real positive outside volume, with 145 cells/30635
+work. This separate contour is not yet combined with infill and does not improve
+its deficit. First-bead 4 -> 5 retains optional original infill ownership; contour
+contract 1 has no persisted format. Current material/body suites pass 74/14 cases;
+selected CTest passes 319/319 and six fresh OFF/ZAA comparisons pass. Joining
+material, contact, remaining 3D repair and curved/later actual support remain open.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -188,9 +202,10 @@ Run 36842571249 at 946d3da7 also failed the native fill deadline
 hatch-layer archive. Run 36847680702 at 2d8bebaa now succeeds in selected
 native suites, native STL CLI and application build, retaining the original
 20-second fill limit. Run 36853913690 at 361ccdc8 now also succeeds in native
-suites, STL CLI and application. Run 36858083109 at 05f4a887 is building native
-tests in the saved 12:23 UTC observation. End and width replans await their
-own Linux verification.
+suites, STL CLI and application. Run 36858083109 at 05f4a887 also succeeds in
+native suites, STL CLI and application. Run 36861891679 at 4e6cddd7 is building
+native tests in the saved 13:47 UTC observation. Width replan and the new contour
+await their own Linux verification.
 Both failed check annotations are archived.
 Windows remains NOT_RUN.
 

@@ -23,8 +23,9 @@ Next software tasks, in dependency order:
    successful run 36847680702 at 2d8bebaa: selected native suites, STL CLI and
    application pass with the original 20-second timeout. Run 36853913690 at
    361ccdc8 also succeeds in native suites, STL CLI and application. Run
-   36858083109 at 05f4a887 is building native tests in the saved 12:23 UTC
-   observation; end and current width replans require their own verification. The A02 correction at d57e9325 also
+   36858083109 at 05f4a887 also succeeds in native suites, STL CLI and application.
+   Run 36861891679 at 4e6cddd7 is building native tests in the saved 13:47 UTC
+   observation; width replan and the new contour require their own verification. The A02 correction at d57e9325 also
    has successful native Linux run 36454696019.
 3. Extend B03 nominal affine bounds to qualified error budgets, curved surfaces,
    ROI and tool access. Existing masks, whole-footprint checks and isolated CLI
@@ -77,9 +78,14 @@ Next software tasks, in dependency order:
    mm3; M remains 0.0709876 mm3. Recompute complete strip owners and use owned
    line widths in all consumers; original generation policy remains provenance.
    Measured excessive coverage loss refuses replacement. Residual excess still
-   needs qualification. Construct paths in actual remaining 3D space and
-   recheck union/fill, qualify
-   finite-width floor/contact, then construct seam and later actual support;
+   needs qualification. `B07-first-contour.md` now owns four connected edges
+   with explicit seam vertex/direction, whole-width roof proofs and joint corner
+   union/fill. Its separate native candidate has M [0.102361,0.102772] mm3 and
+   real positive spill; it is not yet combined with infill. First-bead owners
+   are optional only for protected contour edges; do not invent hatch owners.
+   Combine qualified contour/infill paths in actual remaining 3D space and
+   remeasure joint union/fill, qualify finite-width floor/contact and joining
+   material, then reconstruct later actual support;
    short-packet motion/flow limits remain unverified.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.

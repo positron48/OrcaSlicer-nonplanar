@@ -1,0 +1,122 @@
+Filters: [FirstContour]
+Randomness seeded to: 69962986
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 first contour rejects partial roofs and shares all construction and fill
+budgets
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1933
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x9890441f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x1066c37f0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1306: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x1066c2db0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x989044298
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x98900c300
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1315: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x988d24960
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1938: FAILED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0
+with message:
+  MATERIAL_UNION_CELL_LIMIT paths=4 packets=4 cells=4095 work=13480
+  union_width=0.001579
+
+-------------------------------------------------------------------------------
+B07 first contour owns a closed finite-width loop and measures corner overlap
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1883
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1885: PASSED:
+with message:
+  !(std::is_aggregate<FirstContourSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x9890441f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1305: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x1066c3c30
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1306: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x988d78000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:36: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x989044298
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1314: PASSED:
+  REQUIRE( occupied.snapshot )
+with expansion:
+  0x98900c300
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1315: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x988d24a00
+with messages:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1888: FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+with message:
+  MATERIAL_UNION_CELL_LIMIT paths=4 packets=4 cells=4095 work=13480
+  union_width=0.001579
+
+===============================================================================
+test cases:  2 |  0 passed | 2 failed
+assertions: 15 | 13 passed | 2 failed
+

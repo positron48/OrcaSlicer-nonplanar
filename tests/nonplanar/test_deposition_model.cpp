@@ -1879,3 +1879,181 @@ TEST_CASE("B07 first-width replan repartitions displaced interior strip owners",
     REQUIRE(fill.covered_target_mm3.upper<before.snapshot->fill->covered_target_mm3.lower); // Small real loss is explicitly bounded, not called gain.
     REQUIRE(result.snapshot->covered_change_mm3.lower>=-.001);REQUIRE(result.snapshot->repeated_reduction_mm3.lower>.005);
 }
+
+TEST_CASE("B07 first contour owns a closed finite-width loop and measures corner overlap", "[Nonplanar][B07][FirstContour]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstContourSnapshot>::value);
+    const auto f=remainder_fixture(0);const SceneBox box{{1,-.4,.7},{3,.4,1.8}};
+    for (bool clockwise : {false,true}) for (size_t seam=0;seam<4;++seam) {
+        const auto result=plan_first_contour(f.hatches,{WidthXY(.45),seam,clockwise,Volume(.001)},box);INFO(result.reason);REQUIRE(result.snapshot);
+        const auto &loop=*result.snapshot;REQUIRE(loop.source==f.hatches.snapshot);REQUIRE(loop.edges.size()==4);
+        REQUIRE(loop.policy.seam_corner==seam);REQUIRE(loop.policy.clockwise==clockwise);
+        const auto same=[](PhysicalPosition a,PhysicalPosition b) {return a.x()==b.x() && a.y()==b.y() && a.z()==b.z();};
+        using Amount=boost::multiprecision::cpp_bin_float_quad;Amount sum=0;double orientation=0;
+        for (size_t i=0;i<4;++i) {
+            const auto &edge=*loop.edges[i];const auto &next=*loop.edges[(i+1)%4];
+            REQUIRE_FALSE(edge.line_index.has_value());REQUIRE(edge.source==loop.source);
+            REQUIRE(edge.roof_domain==FirstHatchRoofDomain::FiniteWidth);REQUIRE(same(edge.path_end,next.path_start));
+            REQUIRE(edge.pieces.size()==1);REQUIRE(same(edge.pieces.front().start,edge.path_start));REQUIRE(same(edge.pieces.back().end,edge.path_end));
+            orientation+=edge.path_start.x()*edge.path_end.y()-edge.path_end.x()*edge.path_start.y();
+            const auto &p=edge.pieces[0];const Amount length=sqrt(pow(Amount(p.end.x())-p.start.x(),2)+pow(Amount(p.end.y())-p.start.y(),2));
+            const Amount h=p.section.gap_begin_mm,k=1-acos(Amount(-1))/4;
+            REQUIRE(p.section.gap_end_mm==p.section.gap_begin_mm);
+            const Amount ideal=length*h*(Amount(.45)-k*h);
+            REQUIRE(abs(Amount(p.volume.value())-ideal)<=edge.total_volume_error_mm3);sum+=p.volume.value();
+        }
+        REQUIRE((clockwise ? orientation<0 : orientation>0));
+        REQUIRE(loop.fill->occupied->individual_volume_mm3.lower<=sum);REQUIRE(loop.fill->occupied->individual_volume_mm3.upper>=sum);
+        REQUIRE(loop.fill->occupied->repeated_volume_mm3.lower>0); // Corners and the nearby long sides overlap.
+        REQUIRE(loop.fill->covered_target_mm3.lower>0);REQUIRE(loop.fill->missing_target_mm3.lower>0);
+        REQUIRE(loop.fill->outside_target_mm3.upper<=.001);REQUIRE(loop.global_volume_error_mm3<=.001);
+        // Independent exact union: the two long horizontal flat cores overlap
+        // across the entire short span. Vertical sides contribute their outer
+        // half-sections; all inside quarters are already in that merged strip.
+        std::optional<Amount> horizontal,vertical,long_span,short_span,height;
+        for (const auto &edge : loop.edges) {
+            const auto &p=edge->pieces[0];const Amount h=p.section.gap_begin_mm;
+            const bool x=p.start.y()==p.end.y();const Amount length=x ? abs(Amount(p.end.x())-p.start.x()) : abs(Amount(p.end.y())-p.start.y());
+            auto &volume=x ? horizontal : vertical;auto &span=x ? long_span : short_span;
+            if (volume) {REQUIRE(*volume==p.volume.value());REQUIRE(*span==length);REQUIRE(*height==h);}
+            else {volume=p.volume.value();span=length;height=h;}
+        }
+        const Amount k=1-acos(Amount(-1))/4,h=*height;
+        const Amount width_h=*horizontal / *long_span/h+k*h,width_v=*vertical / *short_span/h+k*h;
+        REQUIRE(*short_span<=width_h-h);REQUIRE(*long_span>width_v);
+        const Amount united=*horizontal + *vertical + *long_span * *short_span*h;
+        const auto contains=[&](ScalarBounds v,Amount amount) {REQUIRE(v.lower<=amount);REQUIRE(v.upper>=amount);};
+        contains(loop.fill->occupied->union_volume_mm3,united);contains(loop.fill->occupied->repeated_volume_mm3,sum-united);
+        contains(loop.fill->covered_target_mm3,united);
+        const auto &rows=loop.fill->occupied->source->sequence->records;
+        REQUIRE(rows.size()==4); // Connected deposition edges need no zero-length travel.
+    }
+}
+
+TEST_CASE("B07 first contour rejects partial roofs and shares all construction and fill budgets", "[Nonplanar][B07][FirstContour]")
+{
+    auto f=remainder_fixture(0);const auto saved=f.hatches.snapshot;const SceneBox box{{1,-.4,.7},{3,.4,1.8}};
+    FirstContourPolicy policy{WidthXY(.45),0,false,Volume(.001)};FirstHatchLayerLimits limits;
+    limits.cancelled=[&] {f.hatches.snapshot.reset();policy.seam_corner=9;limits.max_paths=0;return false;};
+    const auto owned=plan_first_contour(f.hatches,policy,box,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==saved);
+    f.hatches.snapshot=saved;policy={WidthXY(.45),0,false,Volume(.001)};limits={};
+    REQUIRE_FALSE(plan_first_contour({},policy,box).snapshot);
+    policy.seam_corner=4;REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box).snapshot);policy.seam_corner=0;
+    policy.width=WidthXY(.1);REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box).snapshot);policy.width=WidthXY(.9);
+    REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box).snapshot);policy.width=WidthXY(.45);
+    REQUIRE_FALSE(plan_first_contour(f.hatches,policy,{{1.1,-.4,.7},{3,.4,1.8}}).snapshot);
+    REQUIRE_FALSE(plan_first_contour(f.hatches,policy,{{1,-.4,1.1},{3,.4,1.8}}).snapshot);
+    limits.max_paths=3;REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box,limits).snapshot);
+    limits={};limits.max_records=3;REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box,limits).snapshot);
+    limits={};limits.max_cells=1;REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box,limits).snapshot);
+    limits={};limits.max_evaluations=1;REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box,limits).snapshot);
+    limits={};limits.beads.packets.max_segments=3;REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box,limits).snapshot);
+    limits={};limits.beads.max_roof_segments=3;REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box,limits).snapshot);
+    limits={};limits.volumes.max_depth=0;REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE_FALSE(plan_first_contour(f.hatches,policy,box,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounding=plan_first_contour(f.hatches,policy,box,limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+    const auto floor=bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle);
+    const auto ridge=bead(3,2,{0,.3,1.06},{10,.3,1.06},.06,.05,.05,BeadSectionKind::Rectangle);
+    const MaterialRecord travel{{2,1,0,floor.motion.end,ridge.motion.start,Speed(10),Acceleration(100),Travel{}},{}};
+    const auto ledger=captured({floor,travel,ridge});
+    const AffinePassPolicy passes{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.0001)};
+    for (double progress : {0.,.1,.3}) {
+        const auto present=material_at(ledger,2,progress);
+        const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.8,1.8,1.8},.9,passes);REQUIRE(stack.snapshot);
+        const auto hatch=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX});REQUIRE(hatch.snapshot);
+        limits={};limits.beads.max_roof_segments=32;
+        REQUIRE(plan_first_hatch_footprint_bead(hatch,0,limits.beads).snapshot); // First edge misses the ridge.
+        const auto contour=plan_first_contour(hatch,policy,box,limits);INFO(contour.reason);
+        if (progress<=.1) REQUIRE(contour.snapshot);else REQUIRE_FALSE(contour.snapshot);
+    }
+}
+
+TEST_CASE("B07 closed-loop unions enclose independent circular section moments", "[Nonplanar][B07][MaterialUnion][ClosedLoopUnion]")
+{
+    using Amount=boost::multiprecision::cpp_bin_float_quad;
+    for (bool rotate : {false,true}) for (double short_span : {.1,.3,1.}) {
+        const auto point=[&](double a,double b) {return rotate ? PhysicalPosition(b,a,1.2) : PhysicalPosition(a,b,1.2);};
+        const std::array<PhysicalPosition,4> points{point(0,0),point(2,0),point(2,short_span),point(0,short_span)};
+        std::vector<MaterialRecord> rows;
+        for (size_t i=0;i<4;++i) rows.push_back(bead(i+1,i,points[i],points[(i+1)%4],i%2 ? .55 : .45,.2,.2));
+        const auto ledger=captured(rows);const auto present=material_at(ledger,4,0);
+        MaterialUnionLimits limits;limits.max_cells=511;limits.maximum_interval_width=Volume(.0001);
+        const SceneBox box{{-1,-1,.7},{3,3,1.5}};
+        const auto result=integrate_material_union(present.nominal,box,limits);INFO(result.reason);REQUIRE(result.snapshot);
+        const Amount A=2,B=short_span,h=.2,r=h/2,pi=acos(Amount(-1)),k=1-pi/4;
+        const Amount vh=std::get<Deposition>(rows[0].motion.payload).volume.value(),vv=std::get<Deposition>(rows[1].motion.payload).volume.value();
+        const Amount c=(vh/A/h+k*h-h)/2,e=(vv/B/h+k*h-h)/2,sum=2*(vh+vv);
+        Amount united;
+        if (B<=2*c) united=vh+vv+A*B*h;
+        else if (B>=2*(c+r)) united=sum-4*(c*e*h+(c+e)*pi*h*h/8+h*h*h/6);
+        else {
+            const Amount t=B/2-c,d=r-sqrt(r*r-t*t),q=d-r;
+            const Amount circle=(q*sqrt(r*r-q*q)+r*r*asin(q/r))/2+pi*r*r/4;
+            const Amount square=h*d*d/2-d*d*d/3;
+            const Amount a0=4*(c*A+e*B-c*e),a1=4*(A+B-c-e),b0=A*B+2*A*c+2*B*e,b1=2*(A+B);
+            united=2*(a0*d+a1*circle-4*square+b0*(r-d)+b1*(pi*r*r/4-circle));
+        }
+        const auto contains=[&](ScalarBounds v,Amount amount) {REQUIRE(v.lower<=amount);REQUIRE(v.upper>=amount);};
+        contains(result.snapshot->individual_volume_mm3,sum);contains(result.snapshot->union_volume_mm3,united);contains(result.snapshot->repeated_volume_mm3,sum-united);
+        limits.max_cells=1;REQUIRE_FALSE(integrate_material_union(present.nominal,box,limits).snapshot);
+        limits.max_cells=4;limits.maximum_interval_width=Volume(1e-10);
+        const auto partial=material_at(ledger,3,.4);REQUIRE_FALSE(integrate_material_union(partial.nominal,box,limits).snapshot);
+        auto changed=rows;changed[2]=bead(3,2,points[2],points[3],.46,.2,.2);
+        const auto unequal=captured(changed);REQUIRE_FALSE(integrate_material_union(material_at(unequal,4,0).nominal,box,limits).snapshot);
+        changed=rows;changed[3]=bead(4,3,points[3],points[0],.55,.2,.21);
+        const auto variable=captured(changed);REQUIRE_FALSE(integrate_material_union(material_at(variable,4,0).nominal,box,limits).snapshot);
+        REQUIRE_FALSE(integrate_material_union(present.nominal,{{-1,-1,1.1},{3,3,1.5}},limits).snapshot); // A clipped box cannot use full-loop volume.
+    }
+}
+
+TEST_CASE("B07 sloped loop union matches independent circle-line spill and preserves packet gaps", "[Nonplanar][B07][MaterialUnion][LoftLoopUnion]")
+{
+    using Amount=boost::multiprecision::cpp_bin_float_quad;
+    for (bool rotate : {false,true}) {
+        const auto point=[&](double a,double b,double z) {return rotate ? PhysicalPosition(b,a,z) : PhysicalPosition(a,b,z);};
+        std::vector<MaterialRecord> rows;
+        const auto add=[&](PhysicalPosition a,PhysicalPosition b,double h0,double h1) {const size_t i=rows.size();rows.push_back(bead(i+1,i,a,b,.9,h0,h1));};
+        add(point(0,0,1.25),point(1,0,1.3125),.25,.3125);
+        add(point(1,0,1.3125),point(2,0,1.375),.3125,.375);
+        add(point(2,0,1.375),point(2,.1,1.375),.375,.375);
+        add(point(2,.1,1.375),point(1,.1,1.3125),.375,.3125);
+        add(point(1,.1,1.3125),point(0,.1,1.25),.3125,.25);
+        add(point(0,.1,1.25),point(0,0,1.25),.25,.25);
+        const auto ledger=captured(rows);const auto present=material_at(ledger,rows.size(),0);
+        MaterialUnionLimits limits;limits.max_cells=511;limits.maximum_interval_width=Volume(.0001);
+        const SceneBox box{{-1,-1,.7},{3,3,1.6}};
+        const auto result=integrate_material_union(present.nominal,box,limits);INFO(result.reason);REQUIRE(result.snapshot);
+        const auto amount=[&](size_t i) {return Amount(std::get<Deposition>(rows[i].motion.payload).volume.value());};
+        const Amount main=amount(0)+amount(1),left=amount(5),right=amount(2),B=.1,h=.375,r=h/2,s=.0625,pi=acos(Amount(-1));
+        const Amount c=(right/B/h+(1-pi/4)*h-h)/2;
+        // Independent positive circle/line intersection: the high transverse
+        // end protrudes above the primary affine top on its inner half-section.
+        const Amount qa=1+s*s,qb=2*s*s*c-2*r*s,qc=s*s*c*c-2*r*s*c;
+        const Amount q=(-qb+sqrt(qb*qb-4*qa*qc))/(2*qa);
+        REQUIRE(q>0);REQUIRE(q<r);REQUIRE(s*(c+q)<r);
+        const Amount spill=s*c*c/2+(s*c-r)*q+s*q*q/2+(q*sqrt(r*r-q*q)+r*r*asin(q/r))/2;
+        const Amount united=main+B*2*(Amount(.25)+.375)/2+(left+right)/2+B*spill,sum=2*main+left+right;
+        const auto contains=[&](ScalarBounds v,Amount value) {REQUIRE(v.lower<=value);REQUIRE(v.upper>=value);};
+        contains(result.snapshot->individual_volume_mm3,sum);contains(result.snapshot->union_volume_mm3,united);contains(result.snapshot->repeated_volume_mm3,sum-united);
+        limits.max_cells=1;REQUIRE_FALSE(integrate_material_union(present.nominal,box,limits).snapshot);
+        limits.max_cells=4;limits.maximum_interval_width=Volume(1e-10);
+        REQUIRE_FALSE(integrate_material_union(material_at(ledger,5,.4).nominal,box,limits).snapshot);
+        auto changed=rows;changed[3]=bead(4,3,changed[3].motion.start,changed[3].motion.end,.91,.375,.3125);
+        const auto unequal=captured(changed);REQUIRE_FALSE(integrate_material_union(material_at(unequal,6,0).nominal,box,limits).snapshot);
+        // A real gap in both paired long sides must not become a continuous slab.
+        changed[3]=rows[3];changed[1]=bead(2,1,point(1.125,0,1.3125),point(2,0,1.375),.9,.3125,.375);
+        changed[3]=bead(4,3,point(2,.1,1.375),point(1.125,.1,1.3125),.9,.375,.3125);
+        std::vector<MaterialRecord> gapped;
+        for (auto row : changed) {
+            if (!gapped.empty() && (gapped.back().motion.end.x()!=row.motion.start.x() || gapped.back().motion.end.y()!=row.motion.start.y())) {
+                const size_t i=gapped.size();gapped.push_back({{i+1,i,0,gapped.back().motion.end,row.motion.start,Speed(10),Acceleration(100),Travel{}},{}});
+            }
+            row.motion.event_id=gapped.size()+1;row.motion.sequence_index=gapped.size();gapped.push_back(std::move(row));
+        }
+        const auto holes=captured(gapped);REQUIRE_FALSE(integrate_material_union(material_at(holes,gapped.size(),0).nominal,box,limits).snapshot);
+    }
+}

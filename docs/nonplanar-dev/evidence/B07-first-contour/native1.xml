@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="213" hostname="tbd" time="4.757" timestamp="2026-10-01T13:05:51Z">
+    <properties>
+      <property name="random-seed" value="2017919572"/>
+      <property name="filters" value="[NativeFirstContour]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B07 native first footprint derives bounded amounts inside an actual flat bead core" time="0.000" status="run">
+      <failure message="contour.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( contour.snapshot )
+with expansion:
+  0
+DECLARED_NATIVE_BODY_MATERIAL_ONLY
+SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY
+native footprint packets=61 roof leaves=1 work=1911 expected amount=0.12307872665804441
+BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY
+BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY
+native remaining gain >= 0.0688508719117390672 covered=[0.121222584158338378,0.121222584158343222] missing=[0.130765407432446357,0.130765407432458486] cells=3 work=12474
+BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY
+native complete first layer paths=2 amount=[0.246158,0.246158] covered=[0.138283,0.138283] missing=[0.113705,0.113705] repeated=[0.107875,0.107875] cells=63 work=17926
+BOUNDED_WHOLE_FIRST_CANDIDATE_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+native whole end replan covered=[0.181,0.181] missing=[0.0709877,0.0709877] gain=[0.0427173,0.0427173] cells=79 work=18474
+BOUNDED_FIRST_CANDIDATE_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY
+native whole width replan covered=[0.181,0.181] missing=[0.0709876,0.0709876] repeated reduction=[0.0398967,0.0398967] covered change=[2.46731e-08,2.46731e-08] cells=70 work=18119
+MATERIAL_UNION_CELL_LIMIT paths=4 packets=108 cells=65535 work=950516 union_width=0.001100
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:2245
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
