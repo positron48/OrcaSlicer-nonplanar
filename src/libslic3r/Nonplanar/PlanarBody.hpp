@@ -100,4 +100,15 @@ struct NativeAffinePassResult {
 // This is not complete curved/seam/path/material scheduling or export approval.
 NativeAffinePassResult plan_native_affine_pass_stack(const BodyMaterialResult &, const NativeAffinePassRequest &,
                                                     const NativeAffinePassLimits &limits = {});
+
+struct NativeAffineHatchSnapshot {
+    const std::shared_ptr<const NativeAffinePassSnapshot> passes;
+    const std::shared_ptr<const AffineHatchSnapshot> hatches;
+};
+struct NativeAffineHatchResult { std::string reason; std::shared_ptr<const NativeAffineHatchSnapshot> snapshot; };
+// Capture/revalidate the actual native parent and original affine target, then
+// construct finite hatch alternatives under one whole-call deadline. Candidate
+// geometry and prospective cells are not a complete deposited motion plan.
+NativeAffineHatchResult plan_native_affine_hatches(const BodyMaterialResult &, const NativeAffinePassRequest &,
+    const AffineHatchPolicy &, const NativeAffinePassLimits &pass_limits = {}, const AffineHatchLimits &hatch_limits = {});
 }

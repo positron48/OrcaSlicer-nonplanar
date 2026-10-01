@@ -1,0 +1,25 @@
+Filters: [AffineHatches]
+Randomness seeded to: 535319907
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 finite fixed-width hatch candidates retain affine Z strip volumes and both
+direction choices
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:552
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:585: FAILED:
+  REQUIRE( layout.passes.back().lines.front().start.z()!=layout.passes.back().lines.front().end.z() )
+with expansion:
+  1.76549999999999985 != 1.76549999999999985
+with message:
+  OWNED_FIXED_WIDTH_AFFINE_HATCH_CANDIDATES_ONLY
+
+===============================================================================
+test cases:   2 |   1 passed | 1 failed
+assertions: 244 | 243 passed | 1 failed
+

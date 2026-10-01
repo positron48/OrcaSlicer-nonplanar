@@ -499,4 +499,43 @@ NativeAffinePassResult plan_native_affine_pass_stack(const BodyMaterialResult &r
     } catch (const Rejection &e) { return {e.what(),{}}; }
     catch (const std::exception &e) { return {"NATIVE_PASS_CAPTURE_OR_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
 }
+
+NativeAffineHatchResult plan_native_affine_hatches(const BodyMaterialResult &requested_body, const NativeAffinePassRequest &requested,
+    const AffineHatchPolicy &requested_policy, const NativeAffinePassLimits &requested_pass_limits, const AffineHatchLimits &requested_hatch_limits)
+{
+    const auto body=requested_body.snapshot; const auto request=requested; const auto policy=requested_policy;
+    const auto pass_limits=requested_pass_limits; const auto hatch_limits=requested_hatch_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!body || !body->body || hatch_limits.timeout.count()<=0 || hatch_limits.timeout>std::chrono::seconds(30))
+            reject("INVALID_NATIVE_HATCH_CONTEXT");
+        const auto poll=[&] {
+            for (const auto &cancel : {pass_limits.material.cancelled,pass_limits.projection.geometry.cancelled,
+                                      hatch_limits.cancelled,hatch_limits.volumes.cancelled})
+                if (cancel && cancel()) reject("CANCELLED");
+            for (const auto &current : {pass_limits.material.is_current,pass_limits.projection.is_current,
+                                       hatch_limits.is_current,hatch_limits.volumes.is_current})
+                if (current && !current(body->body->revision)) reject("STALE_REVISION");
+            if (std::chrono::steady_clock::now()-started>=hatch_limits.timeout) reject("NATIVE_HATCH_DEADLINE");
+            detail::require_interval_environment();
+        };
+        const auto time_left=[&] {
+            poll(); return hatch_limits.timeout-
+                std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        };
+        auto remaining_pass=pass_limits;
+        remaining_pass.material.timeout=std::min(remaining_pass.material.timeout,time_left());
+        remaining_pass.material.cancelled=[&] { poll();return false; };remaining_pass.material.is_current={};
+        const auto passes=plan_native_affine_pass_stack({"",body},request,remaining_pass);
+        if (!passes.snapshot) return {passes.reason,{}};
+        auto remaining_hatch=hatch_limits; remaining_hatch.timeout=time_left();
+        remaining_hatch.cancelled=[&] { poll();return false; };remaining_hatch.is_current={};
+        const auto hatches=plan_affine_hatches({"",passes.snapshot->stack},policy,remaining_hatch);
+        if (!hatches.snapshot) return {hatches.reason,{}};
+        poll(); auto snapshot=std::make_shared<const NativeAffineHatchSnapshot>(NativeAffineHatchSnapshot{passes.snapshot,hatches.snapshot});
+        poll(); return {"SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) { return {e.what(),{}}; }
+    catch (const std::exception &e) { return {"NATIVE_HATCH_CAPTURE_OR_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
+}
 }

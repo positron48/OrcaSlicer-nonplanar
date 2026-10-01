@@ -1,0 +1,84 @@
+{
+  "base_commit": "63779b4f23e502ee61b7cfd67113fb2a6dacad0f",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-affine-hatches.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "39072aac1c02bfa1d8940706ba1b2581f6fdc833c01a63ef1170f20546c5807a",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "f890531d2e528cfaf25e48f70db66f682b11562ca7151b9e35e5763471c59378",
+    "src/libslic3r/Nonplanar/PlanarBody.hpp": "827f495030d06eac82f0bfce9fdd1f64025b5b82039b0fc5d4ece261cf39b6d1",
+    "src/libslic3r/Nonplanar/PlanarBody.cpp": "9183e2dd45b9eb1569ef3b2c5e3adce13b1fdca1cc958423db4a54ec5c95381c",
+    "tests/nonplanar/test_deposition_model.cpp": "db5c076d54121232ba1a68879946873f3b1acbe10d44dfc7e7eca41a22c01515",
+    "tests/nonplanar/test_policy.cpp": "20219e1256bbd9461efa474cd42dab9ff721e175eaea59c2d6ad97b0fd1fd04f",
+    "tests/nonplanar/data/affine-wedge-1-in-16.stl": "61ea4366929c429e7a6986e48590cbac81ead909e4807f0d15b497ac94883b62",
+    "docs/nonplanar-dev/B07-affine-hatches.md": "44a755565ad1e73ad5abb80c1b035e3861e5fd08706e0db8556fc5f9af679b26",
+    "docs/nonplanar-dev/adr-0038-finite-affine-hatch-candidates.md": "c6ced6eae831f1f80ee94db1b525bd21fdca90a8f631b47ab882abaf0604e71f",
+    "docs/nonplanar-dev/status.json": "df978f9e278903ab59fd2c958bbc23587b20d99fe4e28188336b0b6b6e80543f"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "390c494a104cb06181f5fc5e721c1b286eaf228501fd83d804d01c038267bdb3",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "c5960177d0feab7db2a056101dd5aadb6ceeb0b3dbaf74147d0fdceb65126aee"
+  },
+  "compiled_commit_label": "31461d50",
+  "compiled_commit_label_note": "Retained configure label; exact source/binary hashes bind this build. B13 full software provenance remains pending.",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "internal_material_integral_contract": 2,
+  "internal_affine_pass_stack_contract": 2,
+  "internal_affine_hatch_contract": 1,
+  "new_geometric_cases": 2,
+  "new_geometric_assertions": 263,
+  "new_native_cases": 1,
+  "new_native_assertions": 41,
+  "material_suite_cases": 24,
+  "material_suite_assertions": 4951,
+  "body_suite_cases": 9,
+  "body_suite_assertions": 54617,
+  "ctest_discovered": 264,
+  "ctest_executed": 264,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "native_hatch_lines": 36,
+  "native_total_prospective_volume_mm3": [
+    9.654772867907512,
+    9.664760810003408
+  ],
+  "fixture": {
+    "path": "tests/nonplanar/data/affine-wedge-1-in-16.stl",
+    "triangles": 12,
+    "original_volume_mm3": 3200,
+    "top_slope_x": 0.0625,
+    "instance_offset_mm": [
+      20,
+      20,
+      0
+    ],
+    "independent_final_height_oracle": "5+(x-20)/16",
+    "ROI": [
+      19,
+      17,
+      21,
+      23
+    ]
+  },
+  "native_policy": {
+    "passes": 4,
+    "width_xy_mm": 0.45,
+    "maximum_pitch_xy_mm": 0.4,
+    "outer_band_mm": 0.2,
+    "first_direction": "AlongX"
+  },
+  "native_limits": {
+    "whole_wrapper_timeout_ms": 10000,
+    "first_integral_max_cells": 8191,
+    "first_strip_max_cells": 32768,
+    "first_strip_max_evaluations": 200000,
+    "first_strip_timeout_ms": 5000,
+    "maximum_total_interval_width_mm3": 0.01
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN",
+  "full_B07": "NOT_IMPLEMENTED_FINITE_BEAD_VOLUME_SEAM_PERIMETER_CURVED_SEGMENTATION_LATER_SUPPORT_ORDER_PENDING",
+  "export": "EXISTING_SAFE_HYBRID_BLOCKER_RETAINED"
+}

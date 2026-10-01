@@ -21,7 +21,7 @@
     "B04": "OWNED_EXACT_PARTITION_NATIVE_BODY_MATERIAL_AND_INTERIOR_DENSE_COVERAGE_PASS_SEAM_WIDER_NATIVE_DOMAIN_JOB_WORKER_PENDING",
     "B05": "OWNED_ORDERED_CONSTANT_FLUX_PREFIX_NATIVE_BODY_AND_CONTINUOUS_UNION_COVERAGE_PASS_CONTACT_CCD_FULL_SCOPE_PENDING",
     "B06": "ACTUAL_FIRST_GAP_REFINED_INTEGRAL_SOURCE_BOUND_AFFINE_SURFACES_AND_PROTECTED_STRIP_VOLUMES_PASS_LATER_SUPPORT_SEAM_FULL_SCOPE_PENDING",
-    "B07": "NOT_IMPLEMENTED_FULL_SCOPE",
+    "B07": "BOUNDED_SOURCE_BOUND_FIXED_WIDTH_FINITE_AFFINE_HATCH_CANDIDATES_PASS_BEAD_SEAM_CURVED_SUPPORT_ORDER_FULL_SCOPE_PENDING",
     "B08": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B09": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B10": "NOT_IMPLEMENTED_FULL_SCOPE",
@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 224,
+    "new_native_cases": 227,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 261,
-    "final_ctest_executed": 261,
+    "final_ctest_discovered": 264,
+    "final_ctest_executed": 264,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -270,11 +270,18 @@
     "B06_native_integral_strips_assertions": 77,
     "B06_selected_first_pass_strip_added_assertions": 6,
     "B06_integral_strips_oracle": "INDEPENDENT_CIRCULAR_AFFINE_STRIP_INTEGRALS_AND_EXISTING_NATIVE_LAYER_CAKE_ENCLOSURE_PASS",
-    "B06_integral_strips_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY"
+    "B06_integral_strips_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B07_affine_hatches_geometric_cases": 2,
+    "B07_affine_hatches_geometric_assertions": 263,
+    "B07_native_affine_hatches_cases": 1,
+    "B07_native_affine_hatches_assertions": 41,
+    "B07_affine_hatches_oracle": "INDEPENDENT_AFFINE_Z_AND_RECTANGULAR_SOURCE_TOTAL_VOLUME_BOTH_FIRST_AXES_PASS_NATIVE_EXACT_WEDGE_Z_AND_SOURCE_VOLUME_PASS",
+    "B07_affine_hatches_OFF_ZAA": "SIX_GCODE_AND_REPLAY_PASS_ADDITIVE_B01_SCHEMA_ONLY",
+    "B07_full_paths": "NOT_IMPLEMENTED_FINITE_BEAD_VOLUME_SEAM_PERIMETER_CURVED_SEGMENTATION_LATER_ACTUAL_SUPPORT_ORDER_PENDING"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
-    "linux_x86_64": "B35408CE_NATIVE_LINUX_CI_SUCCESS_NEW_REVISION_NOT_VERIFIED"
+    "linux_x86_64": "A083F2DF_NATIVE_LINUX_CI_SUCCESS_NEW_REVISION_NOT_VERIFIED"
   },
   "physical": {
     "machine": "Snapmaker U1",
@@ -285,10 +292,10 @@
     "operator_profile": "UNCONFIRMED"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "RUN_36791501134_B35408CE_SUCCESS_RUN_36796275758_A083F2DF_LAST_IN_PROGRESS_RUN_36800464013_3310BDE1_LAST_PENDING_STRIP_REVISION_NOT_VERIFIED",
+  "ci": "RUN_36796275758_A083F2DF_SUCCESS_RUN_36802647527_63779B4F_LAST_IN_PROGRESS_HATCH_REVISION_NOT_VERIFIED",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Generate finite fixed-width cap candidates from local strip volumes with explicit endpoint/perimeter/seam ownership. Resolve stepped domains and later actual deposited support; complete contact/full-head CCD, legal order, final-byte replay/export and B01-B03 job/plate/worker boundaries. Linux new revision, independent review and physical qualification remain pending.",
+  "next_step": "Allocate finite nominal beads and boundary/end/perimeter/seam corrections from owned hatch volume targets; prove actual subsequent support and curved/facet segmentation. Complete contact/full-head CCD, legal order, final-byte replay/export and B01-B03 job/plate/worker boundaries. Linux new revision, independent review and physical qualification remain pending.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -347,7 +354,8 @@
     "B06_material_transition": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-material-transition.md",
     "B06_material_integral": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-material-integral.md",
     "B06_pass_stack": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-pass-stack.md",
-    "B06_integral_strips": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-integral-strips.md"
+    "B06_integral_strips": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-integral-strips.md",
+    "B07_affine_hatches": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-affine-hatches.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -403,5 +411,6 @@
   "B06_material_transition_evidence": "docs/nonplanar-dev/evidence/B06-material-transition/source-manifest.json",
   "B06_material_integral_evidence": "docs/nonplanar-dev/evidence/B06-material-integral/source-manifest.json",
   "B06_pass_stack_evidence": "docs/nonplanar-dev/evidence/B06-pass-stack/source-manifest.json",
-  "B06_integral_strips_evidence": "docs/nonplanar-dev/evidence/B06-integral-strips/source-manifest.json"
+  "B06_integral_strips_evidence": "docs/nonplanar-dev/evidence/B06-integral-strips/source-manifest.json",
+  "B07_affine_hatches_evidence": "docs/nonplanar-dev/evidence/B07-affine-hatches/source-manifest.json"
 }

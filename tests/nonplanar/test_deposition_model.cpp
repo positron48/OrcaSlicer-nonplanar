@@ -548,3 +548,75 @@ TEST_CASE("B06 strip partition owns its proof cuts and limits and refuses incomp
     limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(3));return false; };
     REQUIRE_FALSE(split_material_integral(amount,IntegralSplitAxis::Y,{-.35,0,.35},limits).snapshot);
 }
+
+TEST_CASE("B07 finite fixed-width hatch candidates retain affine Z strip volumes and both direction choices", "[Nonplanar][B07][AffineHatches]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},1.2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto present=material_at(ledger,1,0);
+    const AffinePassPolicy passes{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),
+        NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.76,1.8,1.76},.9,passes); REQUIRE(stack.snapshot);
+    const AffineHatchPolicy policy{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX};
+    AffineHatchLimits limits; limits.volumes.maximum_interval_width=Volume(.001);
+    const auto result=plan_affine_hatches(stack,policy,limits); INFO(result.reason); REQUIRE(result.snapshot);
+    const auto &layout=*result.snapshot; REQUIRE(layout.source==stack.snapshot); REQUIRE(layout.passes.size()==4);
+    size_t count=0;
+    for (size_t p=0; p<layout.passes.size(); ++p) {
+        const auto &pass=layout.passes[p]; REQUIRE(pass.direction==(p%2 ? HatchDirection::AlongY : HatchDirection::AlongX));
+        REQUIRE(pass.boundary_regions.size()==4); REQUIRE(pass.lines.size()>=2);
+        REQUIRE(pass.pitch_mm.lower>0); REQUIRE(pass.pitch_mm.upper<=policy.maximum_pitch.value());
+        for (const auto &line : pass.lines) {
+            ++count; REQUIRE(line.width.value()==.45); REQUIRE(line.prospective_cell_volume_mm3.lower>0);
+            const auto &cell=stack.snapshot->surfaces[p].cell;
+            for (const auto &point : {line.start,line.end}) {
+                REQUIRE(point.x()-.225>=cell.footprint.min_x); REQUIRE(point.x()+.225<=cell.footprint.max_x);
+                REQUIRE(point.y()-.225>=cell.footprint.min_y); REQUIRE(point.y()+.225<=cell.footprint.max_y);
+                const long double z=static_cast<long double>(cell.z00)+
+                    (static_cast<long double>(cell.z10)-cell.z00)*(point.x()-1)/2;
+                REQUIRE(std::abs(point.z()-z)<=line.coordinate_error_upper_mm);
+            }
+            REQUIRE(line.reverse_start.x()==line.end.x()); REQUIRE(line.reverse_end.z()==line.start.z());
+            REQUIRE(line.projected_length_mm.lower>0);
+        }
+    }
+    REQUIRE(count==layout.line_count);
+    // Independent affine mean-height volume above the rectangular source top.
+    volume_contains(layout.total_prospective_volume_mm3,2.L*.8L*((static_cast<long double>(double(1.76))+double(1.8))/2-1));
+    REQUIRE(layout.total_prospective_volume_mm3.upper-layout.total_prospective_volume_mm3.lower<=.001);
+    REQUIRE(layout.passes.front().lines.front().start.z()!=layout.passes.front().lines.front().end.z());
+    REQUIRE(layout.passes.back().lines.front().start.z()!=layout.passes.back().lines.back().start.z());
+    auto alternate=policy; alternate.first_direction=HatchDirection::AlongY;
+    const auto other=plan_affine_hatches(stack,alternate,limits); INFO(other.reason); REQUIRE(other.snapshot);
+    for (size_t p=0; p<4; ++p)
+        REQUIRE(other.snapshot->passes[p].direction==(p%2 ? HatchDirection::AlongX : HatchDirection::AlongY));
+    volume_contains(other.snapshot->total_prospective_volume_mm3,
+        2.L*.8L*((static_cast<long double>(double(1.76))+double(1.8))/2-1));
+}
+
+TEST_CASE("B07 finite hatch capture refuses thin sparse stale cancelled and exhausted candidates", "[Nonplanar][B07][AffineHatches]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},1.2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto present=material_at(ledger,1,0);
+    const AffinePassPolicy passes{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),
+        NormalGap(.14),NormalGap(.24),Volume(.001)};
+    auto stack=plan_affine_pass_stack(present.lower,{{1,-.4,3,.4},1.76,1.8,1.76},.9,passes); REQUIRE(stack.snapshot);
+    AffineHatchPolicy policy{WidthXY(.45),Length(.4),Length(.05),HatchDirection::AlongX};
+    AffineHatchLimits limits; limits.cancelled=[&] { stack.snapshot.reset();policy.width=WidthXY(3);limits.max_lines=1;return false; };
+    const auto retained=plan_affine_hatches(stack,policy,limits); INFO(retained.reason); REQUIRE(retained.snapshot);
+    REQUIRE(retained.snapshot->policy.width.value()==.45); REQUIRE(retained.snapshot->line_count>1);
+    stack.snapshot=retained.snapshot->source; policy=retained.snapshot->policy; limits={};
+    REQUIRE_FALSE(plan_affine_hatches({},policy,limits).snapshot);
+    policy.boundary_band=Length(0); REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+    policy.boundary_band=Length(.05);
+    policy.first_direction=static_cast<HatchDirection>(2); REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+    policy.first_direction=HatchDirection::AlongX;
+    policy.maximum_pitch=Length(.6); REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+    policy.maximum_pitch=Length(.4); policy.width=WidthXY(1); REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+    policy.width=WidthXY(.45); limits.max_lines=1; REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+    limits={}; limits.is_current=[](uint64_t){return false;}; REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+    limits={}; limits.cancelled=[] { return true; }; REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+    limits={}; limits.volumes.max_evaluations=1; REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+    limits={}; limits.timeout=std::chrono::milliseconds(1);
+    limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(3));return false; };
+    REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+}

@@ -165,7 +165,8 @@ struct IntegralStripsResult { std::string reason; std::shared_ptr<const Integral
 IntegralStripsResult split_material_integral(const MaterialIntegralResult &, IntegralSplitAxis,
     const std::vector<double> &cuts, const MaterialIntegralLimits &limits = {});
 
-inline constexpr unsigned affine_pass_stack_contract_version=1;
+inline constexpr unsigned affine_pass_stack_contract_version=2;
+struct AffinePassStackResult;
 struct AffinePassPolicy {
     size_t passes;
     TransitionPolicy first_gap;
@@ -191,6 +192,15 @@ struct AffinePassStackSnapshot {
     const ScalarBounds total_volume_mm3;
     const Volume total_allocated_volume;
     const double total_allocation_error_mm3, numerical_error_upper_mm;
+private:
+    AffinePassStackSnapshot(std::shared_ptr<const MaterialPrefixSnapshot> s, AffineCapCell f, AffinePassPolicy p,
+        double plane, double offset, ScalarBounds range, MaterialIntegralResult first, std::vector<AffinePassSurface> passes,
+        ScalarBounds total, Volume amount, double allocation_error, double numeric)
+        : source(std::move(s)), final_surface(f), policy(p), support_plane_z_mm(plane), first_offset_mm(offset), offset_range_mm(range),
+          first_pass(std::move(first)), surfaces(std::move(passes)), total_volume_mm3(total), total_allocated_volume(amount),
+          total_allocation_error_mm3(allocation_error), numerical_error_upper_mm(numeric) {}
+    friend AffinePassStackResult plan_affine_pass_stack(const LowerMaterialView &, const AffineCapCell &,
+        double, const AffinePassPolicy &, const MaterialIntegralLimits &);
 };
 struct AffinePassStackResult {
     std::string reason;
@@ -203,4 +213,49 @@ struct AffinePassStackResult {
 // full-head motion, target-source binding and export remain separate obligations.
 AffinePassStackResult plan_affine_pass_stack(const LowerMaterialView &, const AffineCapCell &final_surface,
     double support_plane_z_mm, const AffinePassPolicy &, const MaterialIntegralLimits &limits = {});
+
+inline constexpr unsigned affine_hatch_contract_version=1;
+enum class HatchDirection { AlongX, AlongY };
+struct AffineHatchPolicy {
+    WidthXY width;
+    Length maximum_pitch, boundary_band;
+    HatchDirection first_direction;
+};
+struct AffineHatchLimits {
+    MaterialIntegralLimits volumes;
+    size_t max_lines=20000;
+    std::chrono::milliseconds timeout{1000};
+    std::function<bool()> cancelled;
+    std::function<bool(uint64_t)> is_current;
+};
+struct AffineHatchLine {
+    PhysicalPosition start, end, reverse_start, reverse_end; // Direction alternatives, never a selected order.
+    WidthXY width;
+    RectangleXY volume_cell;
+    ScalarBounds prospective_cell_volume_mm3, projected_length_mm;
+    double coordinate_error_upper_mm;
+};
+struct AffineHatchPass {
+    HatchDirection direction;
+    ScalarBounds pitch_mm, prospective_volume_mm3;
+    std::vector<AffineHatchLine> lines;
+    // Configured outer bands of the parent ROI, not a complete finite-bead or
+    // seam remainder. Prospective line cells still own their complete volume.
+    std::vector<RectangleXY> boundary_regions;
+};
+struct AffineHatchSnapshot {
+    const std::shared_ptr<const AffinePassStackSnapshot> source;
+    const AffineHatchPolicy policy;
+    const std::vector<AffineHatchPass> passes;
+    const ScalarBounds total_prospective_volume_mm3;
+    const size_t line_count;
+    const double numerical_error_upper_mm;
+};
+struct AffineHatchResult { std::string reason; std::shared_ptr<const AffineHatchSnapshot> snapshot; };
+// Construct finite fixed-width centerline alternatives on the selected affine
+// surfaces, with nominal whole-capsule ROI containment and complete strip volume targets.
+// Cells include the unallocated boundary/end bands. No bead volume/E, full fill,
+// subsequent support, contact/head clearance, travel or motion order is selected.
+AffineHatchResult plan_affine_hatches(const AffinePassStackResult &, const AffineHatchPolicy &,
+                                      const AffineHatchLimits &limits = {});
 }

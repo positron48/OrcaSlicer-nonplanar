@@ -1,0 +1,60 @@
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:559:11: error: unknown type name 'AffineHatchPolicy'; did you mean 'AffinePassPolicy'?
+  559 |     const AffineHatchPolicy policy{WidthXY(.2),Length(.18),Length(.05),HatchDirection::AlongX};
+      |           ^~~~~~~~~~~~~~~~~
+      |           AffinePassPolicy
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:169:8: note: 'AffinePassPolicy' declared here
+  169 | struct AffinePassPolicy {
+      |        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:559:72: error: use of undeclared identifier 'HatchDirection'
+  559 |     const AffineHatchPolicy policy{WidthXY(.2),Length(.18),Length(.05),HatchDirection::AlongX};
+      |                                                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:560:5: error: unknown type name 'AffineHatchLimits'
+  560 |     AffineHatchLimits limits; limits.volumes.maximum_interval_width=Volume(.001);
+      |     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:565:75: error: use of undeclared identifier 'HatchDirection'
+  565 |         const auto &pass=layout.passes[p]; REQUIRE(pass.direction==(p%2 ? HatchDirection::AlongY : HatchDirection::AlongX));
+      |                                                                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:565:100: error: use of undeclared identifier 'HatchDirection'
+  565 |         const auto &pass=layout.passes[p]; REQUIRE(pass.direction==(p%2 ? HatchDirection::AlongY : HatchDirection::AlongX));
+      |                                                                                                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:565:75: error: use of undeclared identifier 'HatchDirection'
+  565 |         const auto &pass=layout.passes[p]; REQUIRE(pass.direction==(p%2 ? HatchDirection::AlongY : HatchDirection::AlongX));
+      |                                                                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:565:100: error: use of undeclared identifier 'HatchDirection'
+  565 |         const auto &pass=layout.passes[p]; REQUIRE(pass.direction==(p%2 ? HatchDirection::AlongY : HatchDirection::AlongX));
+      |                                                                                                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:565:75: error: use of undeclared identifier 'HatchDirection'
+  565 |         const auto &pass=layout.passes[p]; REQUIRE(pass.direction==(p%2 ? HatchDirection::AlongY : HatchDirection::AlongX));
+      |                                                                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:565:100: error: use of undeclared identifier 'HatchDirection'
+  565 |         const auto &pass=layout.passes[p]; REQUIRE(pass.direction==(p%2 ? HatchDirection::AlongY : HatchDirection::AlongX));
+      |                                                                                                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:595:5: error: unknown type name 'AffineHatchPolicy'; did you mean 'AffinePassPolicy'?
+  595 |     AffineHatchPolicy policy{WidthXY(.2),Length(.18),Length(.05),HatchDirection::AlongX};
+      |     ^~~~~~~~~~~~~~~~~
+      |     AffinePassPolicy
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:169:8: note: 'AffinePassPolicy' declared here
+  169 | struct AffinePassPolicy {
+      |        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:595:66: error: use of undeclared identifier 'HatchDirection'
+  595 |     AffineHatchPolicy policy{WidthXY(.2),Length(.18),Length(.05),HatchDirection::AlongX};
+      |                                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:596:5: error: unknown type name 'AffineHatchLimits'
+  596 |     AffineHatchLimits limits; limits.cancelled=[&] { stack.snapshot.reset();policy.width=WidthXY(3);limits.max_lines=1;return false; };
+      |     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:596:84: error: no member named 'width' in 'Slic3r::nptop::AffinePassPolicy'
+  596 |     AffineHatchLimits limits; limits.cancelled=[&] { stack.snapshot.reset();policy.width=WidthXY(3);limits.max_lines=1;return false; };
+      |                                                                             ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:600:12: error: no member named 'maximum_pitch' in 'Slic3r::nptop::AffinePassPolicy'
+  600 |     policy.maximum_pitch=Length(.3); REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+      |     ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:601:12: error: no member named 'maximum_pitch' in 'Slic3r::nptop::AffinePassPolicy'
+  601 |     policy.maximum_pitch=Length(.18); policy.width=WidthXY(1); REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+      |     ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:601:46: error: no member named 'width' in 'Slic3r::nptop::AffinePassPolicy'
+  601 |     policy.maximum_pitch=Length(.18); policy.width=WidthXY(1); REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+      |                                       ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:602:12: error: no member named 'width' in 'Slic3r::nptop::AffinePassPolicy'
+  602 |     policy.width=WidthXY(.2); limits.max_lines=1; REQUIRE_FALSE(plan_affine_hatches(stack,policy,limits).snapshot);
+      |     ~~~~~~ ^
+17 errors generated.

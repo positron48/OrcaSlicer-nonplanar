@@ -915,10 +915,124 @@ AffinePassStackResult plan_affine_pass_stack(const LowerMaterialView &view, cons
         const double total_error=std::max(std::abs(allocation_error.lo),std::abs(allocation_error.hi));
         if (total_error>policy.total_volume_error.value()) reject("AFFINE_PASS_TOTAL_VOLUME_ERROR");
         poll();
-        auto snapshot=std::make_shared<const AffinePassStackSnapshot>(AffinePassStackSnapshot{cursor,target,policy,plane,offset,{low,high},first,
-            std::move(surfaces),bounds(total_volume),Volume(allocated),total_error,total_numeric});
+        auto snapshot=std::shared_ptr<const AffinePassStackSnapshot>(new AffinePassStackSnapshot(cursor,target,policy,plane,offset,{low,high},first,
+            std::move(surfaces),bounds(total_volume),Volume(allocated),total_error,total_numeric));
         poll(); return {"PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) { return {e.what(),{}}; }
     catch (const std::exception &e) { return {"AFFINE_PASS_STACK_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
+}
+
+AffineHatchResult plan_affine_hatches(const AffinePassStackResult &requested, const AffineHatchPolicy &requested_policy,
+    const AffineHatchLimits &requested_limits)
+{
+    const auto source=requested.snapshot; const auto policy=requested_policy; const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!source || !source->source || !source->first_pass.proof || !valid_timeout(limits.timeout) ||
+            !limits.max_lines || limits.max_lines>200000 || policy.width.value()<=0 || policy.maximum_pitch.value()<=0 ||
+            policy.boundary_band.value()<=0 || (policy.first_direction!=HatchDirection::AlongX && policy.first_direction!=HatchDirection::AlongY))
+            reject("INVALID_AFFINE_HATCH_REQUEST");
+        const auto poll=[&] {
+            stop(limits,source->source->sequence->revision,started);
+            if (limits.volumes.cancelled && limits.volumes.cancelled()) reject("CANCELLED");
+            if (limits.volumes.is_current && !limits.volumes.is_current(source->source->sequence->revision)) reject("STALE_REVISION");
+        };
+        poll(); const auto &r=source->final_surface.footprint;
+        const auto radius=Interval(policy.width.value())/Interval(2)+Interval(source->numerical_error_upper_mm);
+        const auto inset=radius+Interval(policy.boundary_band.value());
+        const RectangleXY center{(Interval(r.min_x)+inset).hi,(Interval(r.min_y)+inset).hi,
+            (Interval(r.max_x)-inset).lo,(Interval(r.max_y)-inset).lo};
+        if (center.min_x>=center.max_x || center.min_y>=center.max_y) reject("AFFINE_HATCH_ROI_TOO_THIN");
+        if (policy.maximum_pitch.value()>(Interval(policy.width.value())-Interval(2)*Interval(source->numerical_error_upper_mm)).lo)
+            reject("AFFINE_HATCH_SPARSE_PROJECTED_PITCH");
+        if (!source->first_pass.first_pass.gap_mm || policy.width.value()<=source->first_pass.first_pass.gap_mm->upper ||
+            policy.width.value()<=source->policy.later_vertical_maximum.value()) reject("AFFINE_HATCH_WIDTH_HEIGHT_DOMAIN");
+        const auto stored=[&](const Exact &value) {
+            const auto range=exact_interval(value); const double midpoint=(range.lo+range.hi)/2; coordinate(midpoint);
+            const auto error=range-Interval(midpoint);
+            return std::pair<double,double>{midpoint,std::max(std::abs(error.lo),std::abs(error.hi))};
+        };
+        const auto point=[&](double x,double y,const AffineCapCell &c) {
+            const Exact z=Exact(c.z00)+(Exact(c.z10)-Exact(c.z00))*(Exact(x)-Exact(r.min_x))/(Exact(r.max_x)-Exact(r.min_x))+
+                (Exact(c.z01)-Exact(c.z00))*(Exact(y)-Exact(r.min_y))/(Exact(r.max_y)-Exact(r.min_y));
+            const auto value=stored(z); return std::pair<PhysicalPosition,double>{{x,y,value.first},value.second};
+        };
+        std::vector<AffineHatchPass> passes; size_t line_count=0; Exact total_lower(0),total_upper(0); double numeric=source->numerical_error_upper_mm;
+        for (size_t p=0; p<source->surfaces.size(); ++p) {
+            poll(); const bool x_axis=(policy.first_direction==HatchDirection::AlongX)==(p%2==0);
+            const auto direction=x_axis ? HatchDirection::AlongX : HatchDirection::AlongY;
+            const double low=x_axis ? center.min_y : center.min_x, high=x_axis ? center.max_y : center.max_x;
+            const auto ratio=exact_interval((Exact(high)-Exact(low))/Exact(policy.maximum_pitch.value()));
+            if (ratio.hi>double(limits.max_lines)) reject("AFFINE_HATCH_LINE_LIMIT");
+            const size_t intervals=std::max(size_t(1),size_t(std::ceil(ratio.hi))), count=intervals+1;
+            if (count>limits.max_lines-line_count || count>4096) reject("AFFINE_HATCH_LINE_LIMIT");
+            auto pitch=exact_interval((Exact(high)-Exact(low))/Exact(int(intervals)));
+            if (pitch.hi>policy.maximum_pitch.value()) reject("AFFINE_HATCH_PITCH_ROUNDING");
+            std::vector<double> centers,cuts; std::vector<double> errors;
+            for (size_t i=0; i<count; ++i) {
+                poll(); const auto value=stored(Exact(low)+(Exact(high)-Exact(low))*Exact(int(i))/Exact(int(intervals)));
+                centers.push_back(value.first); errors.push_back(value.second);
+                if (i) cuts.push_back(stored((Exact(centers[i-1])+Exact(centers[i]))/Exact(2)).first);
+            }
+            for (size_t i=1; i<centers.size(); ++i) {
+                const auto gap=exact_interval(Exact(centers[i])-Exact(centers[i-1]));
+                if (gap.lo<=0 || gap.hi>policy.maximum_pitch.value()) reject("AFFINE_HATCH_PITCH_ROUNDING");
+                pitch=Interval(std::min(pitch.lo,gap.lo),std::max(pitch.hi,gap.hi));
+            }
+            cuts.insert(cuts.begin(),x_axis ? r.min_y : r.min_x); cuts.push_back(x_axis ? r.max_y : r.max_x);
+            std::vector<IntegralStripVolume> volumes;
+            if (!p) {
+                auto remaining=limits.volumes;
+                remaining.timeout=std::min(remaining.timeout,limits.timeout-
+                    std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started));
+                remaining.cancelled=[&] { poll();return false; };remaining.is_current={};
+                const auto split=split_material_integral(source->first_pass,x_axis ? IntegralSplitAxis::Y : IntegralSplitAxis::X,cuts,remaining);
+                if (!split.snapshot) return {split.reason,{}}; volumes=split.snapshot->strips;
+            } else {
+                for (size_t i=1; i<cuts.size(); ++i) {
+                    poll(); RectangleXY cell=r;
+                    if (x_axis) { cell.min_y=cuts[i-1];cell.max_y=cuts[i]; }
+                    else { cell.min_x=cuts[i-1];cell.max_x=cuts[i]; }
+                    const Polygon polygon{{Exact(cell.min_x),Exact(cell.min_y)},{Exact(cell.max_x),Exact(cell.min_y)},
+                        {Exact(cell.max_x),Exact(cell.max_y)},{Exact(cell.min_x),Exact(cell.max_y)}};
+                    const auto above=affine_integral(polygon,source->surfaces[p].cell),below=affine_integral(polygon,source->surfaces[p-1].cell);
+                    volumes.push_back({cell,bounds(above.second-below.second)});
+                }
+            }
+            AffineHatchPass pass{direction,bounds(pitch),{0,0},{},{}}; Exact lower(0),upper(0);
+            for (size_t i=0; i<count; ++i) {
+                poll(); const auto &cell=source->surfaces[p].cell;
+                const auto a=point(x_axis ? center.min_x : centers[i],x_axis ? centers[i] : center.min_y,cell);
+                const auto b=point(x_axis ? center.max_x : centers[i],x_axis ? centers[i] : center.max_y,cell);
+                const auto error=Interval(errors[i])+Interval(std::max(a.second,b.second));
+                numeric=std::max(numeric,(Interval(source->numerical_error_upper_mm)+error).hi);
+                if (numeric>.05) reject("AFFINE_HATCH_NUMERICAL_BUDGET");
+                const auto footprint_radius=radius+Interval(errors[i]);
+                for (const auto &v : {a.first,b.first}) {
+                    if ((Interval(v.x())-footprint_radius).lo<r.min_x || (Interval(v.x())+footprint_radius).hi>r.max_x ||
+                        (Interval(v.y())-footprint_radius).lo<r.min_y || (Interval(v.y())+footprint_radius).hi>r.max_y)
+                        reject("AFFINE_HATCH_FOOTPRINT_OUTSIDE_ROI");
+                }
+                const auto length=detail::root(square(Interval(b.first.x())-Interval(a.first.x()))+square(Interval(b.first.y())-Interval(a.first.y())));
+                if (length.lo<=0 || volumes[i].volume_mm3.lower<=0) reject("AFFINE_HATCH_DEGENERATE_LINE_OR_VOLUME");
+                pass.lines.push_back({a.first,b.first,b.first,a.first,policy.width,volumes[i].footprint,volumes[i].volume_mm3,bounds(length),error.hi});
+                lower+=Exact(volumes[i].volume_mm3.lower);upper+=Exact(volumes[i].volume_mm3.upper);
+            }
+            pass.prospective_volume_mm3={exact_interval(lower).lo,exact_interval(upper).hi};
+            const auto band=policy.boundary_band.value();
+            pass.boundary_regions={{r.min_x,r.min_y,r.min_x+band,r.max_y},{r.max_x-band,r.min_y,r.max_x,r.max_y},
+                {r.min_x+band,r.min_y,r.max_x-band,r.min_y+band},{r.min_x+band,r.max_y-band,r.max_x-band,r.max_y}};
+            total_lower+=Exact(pass.prospective_volume_mm3.lower);total_upper+=Exact(pass.prospective_volume_mm3.upper);
+            line_count+=count; passes.push_back(std::move(pass));
+        }
+        const auto total=Interval(exact_interval(total_lower).lo,exact_interval(total_upper).hi);
+        if (total.hi<source->total_volume_mm3.lower || total.lo>source->total_volume_mm3.upper ||
+            (Interval(total.hi)-Interval(total.lo)).hi>std::min(limits.volumes.maximum_interval_width.value(),source->policy.total_volume_error.value()))
+            reject("AFFINE_HATCH_TOTAL_VOLUME_PRECISION");
+        poll(); auto snapshot=std::make_shared<const AffineHatchSnapshot>(AffineHatchSnapshot{source,policy,std::move(passes),bounds(total),line_count,numeric});
+        poll(); return {"OWNED_FIXED_WIDTH_AFFINE_HATCH_CANDIDATES_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) { return {e.what(),{}}; }
+    catch (const std::exception &e) { return {"AFFINE_HATCH_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
 }
 }

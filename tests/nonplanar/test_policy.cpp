@@ -18,6 +18,7 @@
 #include <cfenv>
 #include <limits>
 #include <cstring>
+#include <iomanip>
 #include <set>
 #include <type_traits>
 #include <thread>
@@ -1354,10 +1355,10 @@ TEST_CASE("B01 source mesh and raw override changes invalidate Print and aggrega
 
 namespace {
 VolumePartitionResult native_body_partition(DynamicPrintConfig config,
-    const DynamicPrintConfig &object_config={}, const DynamicPrintConfig &volume_config={}, double reserve_bottom=2)
+    const DynamicPrintConfig &object_config={}, const DynamicPrintConfig &volume_config={}, double reserve_bottom=2,
+    const char *fixture="docs/nonplanar/fixtures/models/flat_block.stl")
 {
-    const auto path=boost::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/
-        "docs/nonplanar/fixtures/models/flat_block.stl";
+    const auto path=boost::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/fixture;
     const auto file=capture_stl_file(path.string(),true,71); REQUIRE(file.source);
     const auto imported=import_stl_snapshot(file.source->bytes,true); REQUIRE(imported.geometry.status==MeshAuditStatus::ValidGeometry);
     Model model; REQUIRE(load_stl(path.string().c_str(),&model));
@@ -1867,4 +1868,50 @@ TEST_CASE("B06 native refined integral allocates complete X and Y strips from th
     integral.nominal_volume_mm3=ScalarBounds{100,100}; integral.first_pass.source.reset();
     const auto retained=split_material_integral(integral,IntegralSplitAxis::X,cuts,limits); REQUIRE(retained.snapshot);
     REQUIRE(retained.snapshot->total_volume_mm3.upper<8);
+}
+
+TEST_CASE("B07 native affine wedge creates finite nonplanar hatch candidates from the owned source", "[Nonplanar][B07][NativeAffineHatches]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<AffinePassStackSnapshot>::value);
+    const auto body=generate_planar_body(native_body_partition(planar_body_config(),{},{},4.2,
+        "tests/nonplanar/data/affine-wedge-1-in-16.stl")); REQUIRE(body.snapshot);
+    REQUIRE(body.snapshot->partition->original_exact_volume_mm3.lower<=3200);
+    REQUIRE(body.snapshot->partition->original_exact_volume_mm3.upper>=3200);
+    const BodyMaterialParameters parameters{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits capture; capture.timeout=std::chrono::seconds(5);
+    auto material=reconstruct_planar_body_material(body,parameters,capture); REQUIRE(material.snapshot);
+    const NativeAffinePassRequest request{{19,17,21,23},0,4.1,
+        {4,{VerticalGap(.1),VerticalGap(.4),Length(.00001)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.01)}};
+    const AffineHatchPolicy policy{WidthXY(.45),Length(.4),Length(.2),HatchDirection::AlongX};
+    NativeAffinePassLimits pass_limits;pass_limits.material.max_cells=8191;pass_limits.material.timeout=std::chrono::seconds(5);
+    pass_limits.material.maximum_interval_width=Volume(.01);
+    AffineHatchLimits hatch_limits;hatch_limits.timeout=std::chrono::seconds(10);hatch_limits.volumes.max_cells=32768;
+    hatch_limits.volumes.timeout=std::chrono::seconds(5);hatch_limits.volumes.maximum_interval_width=Volume(.01);
+    const auto result=plan_native_affine_hatches(material,request,policy,pass_limits,hatch_limits); INFO(result.reason); REQUIRE(result.snapshot);
+    const auto &native=*result.snapshot; const auto &layout=*native.hatches; REQUIRE(layout.source==native.passes->stack);
+    INFO("hatch lines=" << layout.line_count << " total=[" << std::setprecision(18) <<
+        layout.total_prospective_volume_mm3.lower << ',' << layout.total_prospective_volume_mm3.upper << ']');
+    REQUIRE(layout.passes.size()==4); REQUIRE(layout.line_count>0);
+    REQUIRE(layout.passes.front().lines.front().start.z()!=layout.passes.front().lines.front().end.z());
+    for (const auto &line : layout.passes.back().lines) for (const auto &point : {line.start,line.end}) {
+        const long double expected=5+(static_cast<long double>(point.x())-20)/16;
+        REQUIRE(std::abs(point.z()-expected)<=line.coordinate_error_upper_mm);
+        REQUIRE(line.width.value()==.45);
+    }
+    REQUIRE(layout.total_prospective_volume_mm3.lower>9.6); REQUIRE(layout.total_prospective_volume_mm3.upper<10);
+    REQUIRE(layout.total_prospective_volume_mm3.upper-layout.total_prospective_volume_mm3.lower<=.01);
+    REQUIRE(native.passes->body_material==material.snapshot);
+    hatch_limits.is_current=[](uint64_t){return false;};
+    REQUIRE_FALSE(plan_native_affine_hatches(material,request,policy,pass_limits,hatch_limits).snapshot);
+    hatch_limits.is_current={};hatch_limits.max_lines=1;
+    REQUIRE_FALSE(plan_native_affine_hatches(material,request,policy,pass_limits,hatch_limits).snapshot);
+    hatch_limits.max_lines=20000;hatch_limits.cancelled=[] { return true; };
+    REQUIRE(plan_native_affine_hatches(material,request,policy,pass_limits,hatch_limits).reason=="CANCELLED");
+    hatch_limits.timeout=std::chrono::milliseconds(1);
+    hatch_limits.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(3));return false; };
+    REQUIRE(plan_native_affine_hatches(material,request,policy,pass_limits,hatch_limits).reason=="NATIVE_HATCH_DEADLINE");
+    hatch_limits.timeout=std::chrono::seconds(10);hatch_limits.cancelled=[&] { material.snapshot.reset();return false; };
+    const auto retained=plan_native_affine_hatches(material,request,policy,pass_limits,hatch_limits);INFO(retained.reason);REQUIRE(retained.snapshot);
+    REQUIRE(retained.snapshot->passes->body_material);
 }

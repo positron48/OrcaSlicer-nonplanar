@@ -1,0 +1,321 @@
+Filters: [NativeAffineHatches]
+Randomness seeded to: 3864223545
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 native affine wedge creates finite nonplanar hatch candidates from the
+owned source
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1873
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1875: PASSED:
+with message:
+  !(std::is_aggregate<AffinePassStackSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1362: PASSED:
+  REQUIRE( file.source )
+with expansion:
+  0xa690311e8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1363: PASSED:
+  REQUIRE( imported.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1364: PASSED:
+  REQUIRE( load_stl(path.string().c_str(),&model) )
+with expansion:
+  true
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1370: PASSED:
+  REQUIRE( placed.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+with message:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1373: PASSED:
+  REQUIRE( partition.status==VolumePartitionStatus::Partitioned )
+with expansion:
+  0 == 0
+with messages:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+  NOMINAL_BODY_CAP_PARTITION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1877: PASSED:
+  REQUIRE( body.snapshot )
+with expansion:
+  0xa6981c018
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1878: PASSED:
+  REQUIRE( body.snapshot->partition->original_exact_volume_mm3.lower<=3200 )
+with expansion:
+  3200.0 <= 3200 (0xc80)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1879: PASSED:
+  REQUIRE( body.snapshot->partition->original_exact_volume_mm3.upper>=3200 )
+with expansion:
+  3200.0 >= 3200 (0xc80)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1883: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0xa68ca1eb8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1891: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa6a816858
+with message:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1892: PASSED:
+  REQUIRE( layout.source==native.passes->stack )
+with expansion:
+  0xa68de8000 == 0xa68de8000
+with message:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1895: PASSED:
+  REQUIRE( layout.passes.size()==4 )
+with expansion:
+  4 == 4
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1895: PASSED:
+  REQUIRE( layout.line_count>0 )
+with expansion:
+  36 > 0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1896: PASSED:
+  REQUIRE( layout.passes.front().lines.front().start.z()!=layout.passes.front().lines.front().end.z() )
+with expansion:
+  4.37405446619051474 != 4.44592550109568307
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1899: PASSED:
+  REQUIRE( std::abs(point.z()-expected)<=line.coordinate_error_upper_mm )
+with expansion:
+  0 <= 0.00000000000000089
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1900: PASSED:
+  REQUIRE( line.width.value()==.45 )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1899: PASSED:
+  REQUIRE( std::abs(point.z()-expected)<=line.coordinate_error_upper_mm )
+with expansion:
+  0 <= 0.00000000000000089
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1900: PASSED:
+  REQUIRE( line.width.value()==.45 )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1899: PASSED:
+  REQUIRE( std::abs(point.z()-expected)<=line.coordinate_error_upper_mm )
+with expansion:
+  0 <= 0.00000000000000089
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1900: PASSED:
+  REQUIRE( line.width.value()==.45 )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1899: PASSED:
+  REQUIRE( std::abs(point.z()-expected)<=line.coordinate_error_upper_mm )
+with expansion:
+  0 <= 0.00000000000000089
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1900: PASSED:
+  REQUIRE( line.width.value()==.45 )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1899: PASSED:
+  REQUIRE( std::abs(point.z()-expected)<=line.coordinate_error_upper_mm )
+with expansion:
+  0 <= 0.00000000000000089
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1900: PASSED:
+  REQUIRE( line.width.value()==.45 )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1899: PASSED:
+  REQUIRE( std::abs(point.z()-expected)<=line.coordinate_error_upper_mm )
+with expansion:
+  0 <= 0.00000000000000089
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1900: PASSED:
+  REQUIRE( line.width.value()==.45 )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1899: PASSED:
+  REQUIRE( std::abs(point.z()-expected)<=line.coordinate_error_upper_mm )
+with expansion:
+  0 <= 0.00000000000000089
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1900: PASSED:
+  REQUIRE( line.width.value()==.45 )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1899: PASSED:
+  REQUIRE( std::abs(point.z()-expected)<=line.coordinate_error_upper_mm )
+with expansion:
+  0 <= 0.00000000000000089
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1900: PASSED:
+  REQUIRE( line.width.value()==.45 )
+with expansion:
+  0.45000000000000001 == 0.45000000000000001
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1902: PASSED:
+  REQUIRE( layout.total_prospective_volume_mm3.lower>9.6 )
+with expansion:
+  9.65477286790751243 > 9.59999999999999964
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1902: PASSED:
+  REQUIRE( layout.total_prospective_volume_mm3.upper<10 )
+with expansion:
+  9.6647608100034077 < 10
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1903: PASSED:
+  REQUIRE( layout.total_prospective_volume_mm3.upper-layout.total_prospective_volume_mm3.lower<=.01 )
+with expansion:
+  0.00998794209589526 <= 0.01
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1904: PASSED:
+  REQUIRE( native.passes->body_material==material.snapshot )
+with expansion:
+  0xa68ca1eb8 == 0xa68ca1eb8
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1906: PASSED:
+  REQUIRE_FALSE( plan_native_affine_hatches(material,request,policy,pass_limits,hatch_limits).snapshot )
+with expansion:
+  !0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1908: PASSED:
+  REQUIRE_FALSE( plan_native_affine_hatches(material,request,policy,pass_limits,hatch_limits).snapshot )
+with expansion:
+  !0
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1910: PASSED:
+  REQUIRE( plan_native_affine_hatches(material,request,policy,pass_limits,hatch_limits).reason=="CANCELLED" )
+with expansion:
+  "CANCELLED" == "CANCELLED"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1913: PASSED:
+  REQUIRE( plan_native_affine_hatches(material,request,policy,pass_limits,hatch_limits).reason=="NATIVE_HATCH_DEADLINE" )
+with expansion:
+  "NATIVE_HATCH_DEADLINE"
+  ==
+  "NATIVE_HATCH_DEADLINE"
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1915: PASSED:
+  REQUIRE( retained.snapshot )
+with expansion:
+  0xa6914d7d8
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1916: PASSED:
+  REQUIRE( retained.snapshot->passes->body_material )
+with expansion:
+  0xa68ca1eb8
+with messages:
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+  hatch lines=36 total=[9.65477286790751243,9.6647608100034077]
+  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+
+===============================================================================
+All tests passed (41 assertions in 1 test case)
+

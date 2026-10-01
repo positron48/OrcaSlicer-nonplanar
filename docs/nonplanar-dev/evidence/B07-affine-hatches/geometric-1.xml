@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="244" hostname="tbd" time="0.006" timestamp="2026-10-01T02:01:41Z">
+    <properties>
+      <property name="random-seed" value="535319907"/>
+      <property name="filters" value="[AffineHatches]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 finite hatch capture refuses thin sparse stale cancelled and exhausted candidates" time="0.006" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 finite fixed-width hatch candidates retain affine Z strip volumes and both direction choices" time="0.000" status="run">
+      <failure message="layout.passes.back().lines.front().start.z()!=layout.passes.back().lines.front().end.z()" type="REQUIRE">
+FAILED:
+  REQUIRE( layout.passes.back().lines.front().start.z()!=layout.passes.back().lines.front().end.z() )
+with expansion:
+  1.76549999999999985 != 1.76549999999999985
+OWNED_FIXED_WIDTH_AFFINE_HATCH_CANDIDATES_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:585
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
