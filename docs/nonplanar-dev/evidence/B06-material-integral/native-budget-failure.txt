@@ -1,0 +1,26 @@
+Filters: [NativeIntegral]
+Randomness seeded to: 730384706
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B06 actual native bead union refines the corrugated first-pass volume
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1686
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1699: FAILED:
+  REQUIRE( result.status==MaterialIntegralStatus::Bounded )
+with expansion:
+  2 == 0
+with messages:
+  MATERIAL_INTEGRAL_CELL_LIMIT
+  3760
+  10015
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 9 | 8 passed | 1 failed
+

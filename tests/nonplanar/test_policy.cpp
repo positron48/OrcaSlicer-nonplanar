@@ -1682,3 +1682,86 @@ TEST_CASE("B06 actual native reserved body bounds the first affine pass and miss
     const auto edge=assess_material_first_pass(all.lower,{{15,17,23,23},2.2,2.2,2.2},1.9,policy,limits);
     REQUIRE(edge.status!=TransitionStatus::Compatible);
 }
+
+TEST_CASE("B06 actual native bead union refines the corrugated first-pass volume", "[Nonplanar][B06][NativeIntegral]")
+{
+    const auto body=generate_planar_body(native_body_partition(planar_body_config())); REQUIRE(body.snapshot);
+    const BodyMaterialParameters params{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits material_limits; material_limits.timeout=std::chrono::seconds(5);
+    const auto material=reconstruct_planar_body_material(body,params,material_limits); REQUIRE(material.snapshot);
+    const auto ledger=material.snapshot->material;
+    const auto all=material_at(ledger,ledger->records.size(),0,material_limits); REQUIRE(all.lower.snapshot);
+    MaterialIntegralLimits limits; limits.timeout=std::chrono::seconds(5); limits.maximum_interval_width=Volume(.01);
+    limits.max_cells=8191; // Explicit work budget for this 36 mm2 / 0.01 mm3 query.
+    const TransitionPolicy policy{VerticalGap(.1),VerticalGap(.32),Length(.00001)};
+    const auto result=integrate_material_first_pass(all.lower,{{17,17,23,23},2.2,2.2,2.2},1.9,policy,limits);
+    INFO(result.reason); INFO(result.cells); INFO(result.evaluations);
+    REQUIRE(result.status==MaterialIntegralStatus::Bounded); REQUIRE(result.nominal_volume_mm3);
+    REQUIRE(result.first_pass.source==all.lower.snapshot);
+    const auto amount=*result.nominal_volume_mm3;
+    INFO(amount.lower); INFO(amount.upper);
+    REQUIRE(amount.upper-amount.lower<=limits.maximum_interval_width.value());
+    REQUIRE(amount.lower>7.2); REQUIRE(amount.upper<10.8);
+    REQUIRE(amount.upper-amount.lower<.01*(result.first_pass.nominal_volume_mm3->upper-result.first_pass.nominal_volume_mm3->lower));
+    REQUIRE(result.evaluations+result.first_pass.roof_evaluations+result.first_pass.support.evaluations<=limits.max_evaluations);
+    REQUIRE(result.cells+result.first_pass.support.cells<=limits.max_cells);
+    // Independent layer-cake oracle: upper-half sections near native Z=2
+    // beads shrink monotonically from the supported plane. Quantization-safe
+    // inner/outer rectangles bound their continuous XY union at each Z, then
+    // monotone Riemann bounds enclose the whole integral between those planes.
+    constexpr long double scale=1000000.L,inset=.000064L;
+    const long double plane=double(1.9); long double roof=plane;
+    const Polygons target{Polygon(Points{Point(17000000,17000000),Point(23000000,17000000),Point(23000000,23000000),Point(17000000,23000000)})};
+    struct Section { long double ax,ay,bx,by,ux,uy,length,core,height,top; };
+    std::vector<Section> sections;
+    const auto rectangle=[&](const Section &s,long double half,long double extend) {
+        const auto point=[&](long double x,long double y) { return Point(coord_t(std::llround(x*scale)),coord_t(std::llround(y*scale))); };
+        const auto ax=s.ax-s.ux*extend,ay=s.ay-s.uy*extend,bx=s.bx+s.ux*extend,by=s.by+s.uy*extend;
+        return Polygon(Points{point(ax+s.uy*half,ay-s.ux*half),point(bx+s.uy*half,by-s.ux*half),
+            point(bx-s.uy*half,by+s.ux*half),point(ax-s.uy*half,ay+s.ux*half)});
+    };
+    for (const auto &row : ledger->records) if (row.bead && row.motion.start.z()>plane) {
+        const auto &m=row.motion; REQUIRE(m.start.z()==m.end.z()); REQUIRE(row.bead->gap_begin_mm==row.bead->gap_end_mm);
+        REQUIRE(row.bead->kind==BeadSectionKind::RoundedRectangle);
+        const long double dx=static_cast<long double>(m.end.x())-m.start.x(),dy=static_cast<long double>(m.end.y())-m.start.y();
+        const long double length=std::sqrt(dx*dx+dy*dy),height=row.bead->gap_begin_mm;
+        const long double width=std::get<Deposition>(m.payload).volume.value()/length/height+(1-std::acos(-1.L)/4)*height;
+        const Section s{m.start.x(),m.start.y(),m.end.x(),m.end.y(),dx/length,dy/length,length,(width-height)/2,height,m.start.z()};
+        if (intersection(Polygons{rectangle(s,width/2+inset,inset)},target).empty()) continue;
+        REQUIRE(std::abs(s.top-2)<1e-12); REQUIRE(s.top-height/2<=plane); REQUIRE(length>2*inset);
+        roof=std::max(roof,s.top); // Keep every actual native Z, including its ULPs.
+        sections.push_back(s);
+    }
+    REQUIRE_FALSE(sections.empty());
+    const auto cross_section=[&](long double z,bool outer) {
+        Polygons paths;
+        for (const auto &s : sections) {
+            if (z>s.top) continue;
+            const long double down=s.top-z;
+            const long double half=s.core+std::sqrt(std::max(0.L,down*(s.height-down)))+(outer ? inset : -inset);
+            if (half>0) paths.push_back(rectangle(s,half,outer ? inset : -inset));
+        }
+        return intersection(paths,target);
+    };
+    REQUIRE(diff(target,cross_section(plane,false)).empty());
+    const auto cross_area=[&](long double z,bool outer) {
+        long double area=0; for (const auto &p : cross_section(z,outer)) area+=p.area(); return area/(scale*scale);
+    };
+    long double lower=0,upper=0,previous=plane;
+    constexpr size_t steps=2000;
+    for (size_t i=1; i<=steps; ++i) {
+        const long double z=plane+(roof-plane)*i/steps;
+        lower+=(z-previous)*cross_area(z,false);upper+=(z-previous)*cross_area(previous,true);previous=z;
+    }
+    // The fixed 64 micron inset dominates coordinate/section arithmetic and
+    // 1 micron quantization in this small fixture. Keep a separate 1e-7 mm3
+    // allowance on these bounded floating sums (Apple long double is binary64).
+    const long double cell_volume=36*(static_cast<long double>(double(2.2))-plane);
+    const ScalarBounds oracle{double(cell_volume-upper)-1e-7,double(cell_volume-lower)+1e-7};
+    INFO(oracle.lower); INFO(oracle.upper);
+    REQUIRE(oracle.upper-oracle.lower<limits.maximum_interval_width.value());
+    REQUIRE(amount.lower<=oracle.lower); REQUIRE(amount.upper>=oracle.upper);
+    const auto impossible=integrate_material_first_pass(all.lower,{{17,17,23,23},2.2,2.2,2.2},2.5,policy,limits);
+    REQUIRE(impossible.status==MaterialIntegralStatus::Rejected); REQUIRE(impossible.first_pass.support.witness);
+}

@@ -51,6 +51,11 @@ Five new cases/84 assertions pass, including actual native cap interior, blocked
 edge and an independent step-volume integral. Nominal volume remains a diagnostic
 interval; thickness selection, refined integration and volumetric seam are open.
 Final selected CTest executes 250/250 and six fresh OFF/ZAA comparisons pass.
+`B06-material-integral.md` now refines volume above the highest actual rounded
+roof to an explicit total interval width, with independent circular/step integrals
+and a Clipper/monotone-Z oracle for the native floor. Four new cases/8293 assertions
+pass. Final selected CTest executes 254/254 with six fresh OFF/ZAA comparisons.
+Selected bead volume/E, thickness and complete seam/path allocation remain open.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -61,8 +66,8 @@ nozzle are user-declared in `B15-u1-declared-setup.md`, without measurement clai
 
 Prior Linux runs 36454696019 at d57e9325 and 36758101513 at 7df1d765 succeeded.
 Runs 36767506583 at e7a46961 and 36786738740 at 23f00bfd succeeded. In the saved
-snapshot, 36791501134 at b35408ce is in_progress. These records do not
-prove Linux execution of this transition patch. Windows remains NOT_RUN.
+snapshot, 36791501134 at b35408ce is in_progress and 36793524250 at 22478ec6
+pending. These records do not prove Linux execution of this integral patch. Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;
 `status.json` and this checkpoint describe the current state.

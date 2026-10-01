@@ -1,0 +1,52 @@
+{
+  "base_commit": "22478ec6c5eae8dbc863fc829faeba15a02f4fe6",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-material-integral.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "2fd4dafc107caa19bc20b19b115065f7ad748950b8dfebf8179436df955ead4f",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "78115e34b5a98513bb6a150e15a04f5d3a29829d561f874d921183859e15cbdc",
+    "tests/nonplanar/test_deposition_model.cpp": "61d72fefbc72bb12243f97146242d08c78958be9bec247c8864ff7305ccc0e9e",
+    "tests/nonplanar/test_policy.cpp": "089336e99187f8a3da7af0a4cc1ed4ebd43e58d9d4e1f6359ba9532762c9a485"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "6443b4b41d01209973b665463f1417bfcb31e1018e0ba9ab27ad9218f7aed165",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "22c6564167755fd730b7d3ce0ff96f09bb5a239c43d8633998331515a4bd3803"
+  },
+  "compiled_commit_label": "31461d50",
+  "compiled_commit_label_note": "Retained configure label; exact source/binary hashes bind this build. B13 full software provenance remains pending.",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "new_geometric_cases": 3,
+  "new_geometric_assertions": 37,
+  "new_native_cases": 1,
+  "new_native_assertions": 8256,
+  "material_suite_cases": 17,
+  "material_suite_assertions": 4592,
+  "body_suite_cases": 6,
+  "body_suite_assertions": 54419,
+  "ctest_discovered": 254,
+  "ctest_executed": 254,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "native_nominal_volume_mm3": [
+    7.373520501006957,
+    7.383518432156698
+  ],
+  "native_oracle_volume_mm3": [
+    7.3775372714425425,
+    7.379270181864429
+  ],
+  "native_integral_cells": 4541,
+  "native_integral_evaluations": 11066,
+  "native_limits": {
+    "max_cells": 8191,
+    "max_evaluations": 200000,
+    "timeout_ms": 5000,
+    "maximum_interval_width_mm3": 0.01
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN",
+  "full_B06": "NOT_IMPLEMENTED_THICKNESS_SELECTED_PATH_VOLUME_SEAM_COMPLETE_PLAN_PENDING"
+}

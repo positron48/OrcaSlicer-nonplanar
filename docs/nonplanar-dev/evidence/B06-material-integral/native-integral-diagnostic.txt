@@ -1,0 +1,67 @@
+REQUIRE( oracle.upper-oracle.lower<limits.maximum_interval_width.value() )
+with expansion:
+  0.00173291042188684 < 0.01
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  4541
+  11066
+  7.37352
+  7.38352
+  7.37754
+  7.37927
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1764: PASSED:
+  REQUIRE( amount.lower<=oracle.lower )
+with expansion:
+  7.37352050100695688 <= 7.37753727144254245
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  4541
+  11066
+  7.37352
+  7.38352
+  7.37754
+  7.37927
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1764: PASSED:
+  REQUIRE( amount.upper>=oracle.upper )
+with expansion:
+  7.38351843215669756 >= 7.37927018186442929
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  4541
+  11066
+  7.37352
+  7.38352
+  7.37754
+  7.37927
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1766: PASSED:
+  REQUIRE( impossible.status==MaterialIntegralStatus::Rejected )
+with expansion:
+  1 == 1
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  4541
+  11066
+  7.37352
+  7.38352
+  7.37754
+  7.37927
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1766: PASSED:
+  REQUIRE( impossible.first_pass.support.witness )
+with expansion:
+  {?}
+with messages:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+  4541
+  11066
+  7.37352
+  7.38352
+  7.37754
+  7.37927
+
+===============================================================================
+All tests passed (8256 assertions in 1 test case)
+

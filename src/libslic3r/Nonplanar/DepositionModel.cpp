@@ -338,8 +338,9 @@ Polygon clip(const Polygon &polygon, const Vertex &normal, const Exact &offset, 
     if (result.size()>64) reject("MATERIAL_COVERAGE_VERTEX_LIMIT");
     return result;
 }
-std::optional<double> roof_ceiling(const MaterialRecord &row, const MaterialModel &model,
-                                   Polygon polygon, double progress, Representation rep)
+struct RoofProjection { Projection projected; Interval top_growth; };
+std::optional<RoofProjection> roof_projection(const MaterialRecord &row, const MaterialModel &model,
+                                             Polygon polygon, double progress, Representation rep)
 {
     // Enclose precisely the section model used by piece(). Exact clipping to
     // its oriented XY enclosure removes irrelevant neighboring walls before
@@ -380,11 +381,52 @@ std::optional<double> roof_ceiling(const MaterialRecord &row, const MaterialMode
     if (polygon.empty()) return {};
     polygon=clip(polygon,normal,center+transverse,false);
     if (polygon.empty()) return {};
-    const auto projected=project_polygon(row,polygon,Interval(0));
-    const auto local=detail::maximum(Interval(0),detail::minimum(projected.t,Interval(progress)));
-    const auto top=Interval(m.start.z())+dz*local+top_growth;
+    return RoofProjection{project_polygon(row,polygon,Interval(0)),top_growth};
+}
+std::optional<double> roof_ceiling(const MaterialRecord &row, const MaterialModel &model,
+                                   Polygon polygon, double progress, Representation rep)
+{
+    const auto projected=roof_projection(row,model,std::move(polygon),progress,rep);
+    if (!projected) return {};
+    const auto local=detail::maximum(Interval(0),detail::minimum(projected->projected.t,Interval(progress)));
+    const auto top=Interval(row.motion.start.z())+(Interval(row.motion.end.z())-Interval(row.motion.start.z()))*local+projected->top_growth;
     coordinate(top.lo); coordinate(top.hi);
     return top.hi;
+}
+struct NominalRoof { Interval height; bool whole_footprint; };
+std::optional<NominalRoof> nominal_roof(const MaterialRecord &row, Projection projection, double progress)
+{
+    const auto &b=*row.bead; const auto &m=row.motion;
+    const auto local=detail::maximum(Interval(0),detail::minimum(projection.t,Interval(progress)));
+    const auto height=Interval(b.gap_begin_mm)+(Interval(b.gap_end_mm)-Interval(b.gap_begin_mm))*local;
+    const auto top=Interval(m.start.z())+(Interval(m.end.z())-Interval(m.start.z()))*local;
+    const auto area=Interval(std::get<Deposition>(m.payload).volume.value())/detail::root(length_squared(row));
+    const auto width=section_width(area,height,b.kind), normal=absolute(projection.normal);
+    const bool whole=projection.t.lo>0 && projection.t.hi<progress && normal.hi<(width/Interval(2)).lo;
+    if (b.kind==BeadSectionKind::Rectangle) return NominalRoof{top,whole};
+    const auto core=(width-height)/Interval(2), radius=height/Interval(2);
+    const auto transverse=detail::maximum(normal-core,Interval(0));
+    const auto radicand=square(radius)-square(transverse);
+    if (radicand.hi<0) return {};
+    // The nonnegative root encloses every real cross-section in the projected
+    // cell. A lower roof is usable only if that bead covers the entire XY cell.
+    return NominalRoof{top-height/Interval(2)+detail::root(radicand),whole};
+}
+std::pair<Interval,Interval> affine_integral(const Polygon &polygon, const AffineCapCell &cell)
+{
+    Exact twice_area(0), x_moment(0), y_moment(0);
+    for (size_t i=0; i<polygon.size(); ++i) {
+        const auto &a=polygon[i], &b=polygon[(i+1)%polygon.size()];
+        const Exact cross=a[0]*b[1]-b[0]*a[1];
+        twice_area+=cross; x_moment+=(a[0]+b[0])*cross; y_moment+=(a[1]+b[1])*cross;
+    }
+    if (twice_area<=0) reject("MATERIAL_INTEGRAL_DEGENERATE_CELL");
+    const Exact x=x_moment/(Exact(3)*twice_area), y=y_moment/(Exact(3)*twice_area);
+    const auto &r=cell.footprint;
+    const Exact mean=Exact(cell.z00)+(Exact(cell.z10)-Exact(cell.z00))*(x-Exact(r.min_x))/(Exact(r.max_x)-Exact(r.min_x))+
+        (Exact(cell.z01)-Exact(cell.z00))*(y-Exact(r.min_y))/(Exact(r.max_y)-Exact(r.min_y));
+    const Exact area=twice_area/Exact(2);
+    return {exact_interval(area),exact_interval(area*mean)};
 }
 MaterialCoverageResult coverage(std::shared_ptr<const MaterialPrefixSnapshot> cursor, const SceneBox &requested,
                                Representation rep, const MaterialCoverageLimits &requested_limits)
@@ -583,6 +625,104 @@ MaterialTransitionResult assess_material_first_pass(const LowerMaterialView &vie
         } else result.reason="MATERIAL_TRANSITION_UNCERTAIN_GAP";
     } catch (const Rejection &e) { result.status=TransitionStatus::Unknown;result.reason=e.what(); }
     catch (const std::exception &e) { result.status=TransitionStatus::Unknown;result.reason="MATERIAL_TRANSITION_NUMERIC_FAILURE: "+std::string(e.what()); }
+    return result;
+}
+
+MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &view, const AffineCapCell &requested_cell,
+    double plane, const TransitionPolicy &requested_policy, const MaterialIntegralLimits &requested_limits)
+{
+    const auto cursor=view.snapshot; const auto cell=requested_cell; const auto policy=requested_policy; const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now(); MaterialIntegralResult result;
+    result.maximum_interval_width_mm3=limits.maximum_interval_width.value();
+    try {
+        detail::require_interval_environment();
+        if (!cursor || !cursor->sequence || limits.maximum_interval_width.value()<=0) reject("INVALID_MATERIAL_INTEGRAL");
+        const auto sequence=cursor->sequence; const auto poll=[&] { stop(limits,sequence->revision,started); };
+        result.first_pass=assess_material_first_pass({cursor},cell,plane,policy,limits);
+        poll();
+        if (result.first_pass.status!=TransitionStatus::Compatible) {
+            result.reason=result.first_pass.reason;
+            if (result.first_pass.status==TransitionStatus::Rejected) result.status=MaterialIntegralStatus::Rejected;
+            return result;
+        }
+        const size_t previous_work=result.first_pass.roof_evaluations+result.first_pass.support.evaluations;
+        const auto evaluate=[&] {
+            if (result.evaluations+previous_work>=limits.max_evaluations) reject("MATERIAL_INTEGRAL_WORK_LIMIT");
+            if (result.evaluations%128==0) poll(); ++result.evaluations;
+        };
+        const auto fraction=[&](size_t i) { return i<cursor->completed_records ? 1 : cursor->current_progress; };
+        struct Node { Polygon polygon; std::vector<size_t> candidates; Interval volume; size_t depth, id, splitter; double uncertainty; };
+        const auto make_node=[&](Polygon polygon, const std::vector<size_t> &candidates, size_t depth) {
+            poll();
+            if (result.cells+result.first_pass.support.cells>=limits.max_cells) reject("MATERIAL_INTEGRAL_CELL_LIMIT");
+            const size_t id=result.cells++;
+            double lower=plane, upper=plane; size_t splitter=sequence->records.size(); std::vector<size_t> active;
+            for (size_t i : candidates) {
+                evaluate(); const auto &row=sequence->records[i]; const double progress=fraction(i);
+                const auto end=Interval(row.motion.start.z())+(Interval(row.motion.end.z())-Interval(row.motion.start.z()))*Interval(progress);
+                if (std::max(row.motion.start.z(),end.hi)<plane) continue;
+                const auto clipped=roof_projection(row,sequence->model,polygon,progress,Representation::Nominal);
+                if (!clipped) continue;
+                const auto possible=nominal_roof(row,clipped->projected,progress);
+                if (!possible || possible->height.hi<plane) continue;
+                active.push_back(i);
+                if (splitter==sequence->records.size() || possible->height.hi>upper) splitter=i;
+                upper=std::max(upper,possible->height.hi);
+                const auto guaranteed=nominal_roof(row,project_polygon(row,polygon,Interval(0)),progress);
+                if (guaranteed && guaranteed->whole_footprint) lower=std::max(lower,guaranteed->height.lo);
+            }
+            if (active.empty() || lower>upper) reject("MATERIAL_INTEGRAL_INCONSISTENT_ROOF");
+            const auto integral=affine_integral(polygon,cell);
+            const auto volume=integral.second-integral.first*Interval(lower,upper);
+            return Node{std::move(polygon),std::move(active),volume,depth,id,splitter,(Interval(volume.hi)-Interval(volume.lo)).hi};
+        };
+        std::vector<size_t> active;
+        const size_t end=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence->records.size());
+        for (size_t i=0; i<end; ++i) if (sequence->records[i].bead) active.push_back(i);
+        const auto &r=cell.footprint;
+        auto root=make_node({{Exact(r.min_x),Exact(r.min_y)},{Exact(r.max_x),Exact(r.min_y)},
+                            {Exact(r.max_x),Exact(r.max_y)},{Exact(r.min_x),Exact(r.max_y)}},active,0);
+        Exact total_lower(root.volume.lo),total_upper(root.volume.hi);
+        const auto total=[&] { return Interval(exact_interval(total_lower).lo,exact_interval(total_upper).hi); };
+        const auto compare=[](const Node &a, const Node &b) { return a.uncertainty==b.uncertainty ? a.id>b.id : a.uncertainty<b.uncertainty; };
+        std::vector<Node> heap; heap.push_back(std::move(root));
+        while (true) {
+            poll(); const auto amount=total(); result.nominal_volume_mm3=bounds(amount);
+            if ((Interval(amount.hi)-Interval(amount.lo)).hi<=limits.maximum_interval_width.value()) break;
+            if (heap.empty()) reject("MATERIAL_INTEGRAL_DEPTH_LIMIT");
+            std::pop_heap(heap.begin(),heap.end(),compare); auto node=std::move(heap.back()); heap.pop_back();
+            // Keep terminal cells in the exact total, even when other cells can
+            // still narrow enough to satisfy the requested global tolerance.
+            if (node.depth>=limits.max_depth) continue;
+            const auto &row=sequence->records[node.splitter]; const auto &m=row.motion;
+            const Exact dx=Exact(m.end.x())-Exact(m.start.x()),dy=Exact(m.end.y())-Exact(m.start.y());
+            Vertex normal{-dy,dx};
+            const auto projected=project_polygon(row,node.polygon,Interval(0));
+            const double span=projected.normal.hi-projected.normal.lo;
+            if (((projected.t.lo<=0 || projected.t.hi>=fraction(node.splitter)) && span<row.bead->width_mm.lower/2) ||
+                std::max(std::abs(m.end.z()-m.start.z()),std::abs(row.bead->gap_end_mm-row.bead->gap_begin_mm))*(projected.t.hi-projected.t.lo)>span)
+                normal={dx,dy};
+            auto minimum=normal[0]*node.polygon.front()[0]+normal[1]*node.polygon.front()[1], maximum=minimum;
+            for (const auto &p : node.polygon) {
+                const Exact value=normal[0]*p[0]+normal[1]*p[1]; minimum=std::min(minimum,value);maximum=std::max(maximum,value);
+            }
+            if (minimum==maximum) reject("MATERIAL_INTEGRAL_INVALID_SPLIT");
+            const Exact middle=(minimum+maximum)/Exact(2);
+            auto first=make_node(clip(node.polygon,normal,middle,false),node.candidates,node.depth+1);
+            auto second=make_node(clip(node.polygon,normal,middle,true),node.candidates,node.depth+1);
+            // Sum lower and upper endpoints separately in eager exact arithmetic.
+            // Interval subtraction would incorrectly retain the replaced parent
+            // uncertainty, and ordinary running sums could lose the error budget.
+            total_lower+=Exact(first.volume.lo)+Exact(second.volume.lo)-Exact(node.volume.lo);
+            total_upper+=Exact(first.volume.hi)+Exact(second.volume.hi)-Exact(node.volume.hi);
+            heap.push_back(std::move(first)); std::push_heap(heap.begin(),heap.end(),compare);
+            heap.push_back(std::move(second)); std::push_heap(heap.begin(),heap.end(),compare);
+        }
+        poll();
+        if (result.nominal_volume_mm3->lower<=0) reject("MATERIAL_INTEGRAL_UNCERTAIN_POSITIVE_VOLUME");
+        result.status=MaterialIntegralStatus::Bounded;result.reason="BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL";
+    } catch (const Rejection &e) { result.status=MaterialIntegralStatus::Unknown;result.reason=e.what(); }
+    catch (const std::exception &e) { result.status=MaterialIntegralStatus::Unknown;result.reason="MATERIAL_INTEGRAL_NUMERIC_FAILURE: "+std::string(e.what()); }
     return result;
 }
 }

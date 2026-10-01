@@ -124,4 +124,24 @@ struct MaterialTransitionResult {
 // tool contact, complete transition plan or export approval. No Z adaptation.
 MaterialTransitionResult assess_material_first_pass(const LowerMaterialView &, const AffineCapCell &,
     double support_plane_z_mm, const TransitionPolicy &, const MaterialCoverageLimits &limits = {});
+
+inline constexpr unsigned material_integral_contract_version=1;
+enum class MaterialIntegralStatus { Bounded, Rejected, Unknown };
+struct MaterialIntegralLimits : MaterialCoverageLimits {
+    Volume maximum_interval_width{.001}; // Total mm3 interval width, not per cell.
+};
+struct MaterialIntegralResult {
+    MaterialIntegralStatus status=MaterialIntegralStatus::Unknown;
+    std::string reason;
+    MaterialTransitionResult first_pass;
+    double maximum_interval_width_mm3=0;
+    std::optional<ScalarBounds> nominal_volume_mm3;
+    size_t cells=0, evaluations=0;
+};
+// Refine the signed nominal vertical-cell integral above the highest laid roof.
+// Bounded requires the continuous first-pass feasibility proof and the requested
+// total interval width. Rounded shoulders and overlaps are included; no selected
+// bead amount, perimeter/seam allocation, V-to-E or export permission is provided.
+MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &, const AffineCapCell &,
+    double support_plane_z_mm, const TransitionPolicy &, const MaterialIntegralLimits &limits = {});
 }

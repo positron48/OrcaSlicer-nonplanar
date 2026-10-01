@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="9" hostname="tbd" time="0.581" timestamp="2026-10-01T00:06:44Z">
+    <properties>
+      <property name="random-seed" value="730384706"/>
+      <property name="filters" value="[NativeIntegral]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B06 actual native bead union refines the corrugated first-pass volume" time="0.000" status="run">
+      <failure message="result.status==MaterialIntegralStatus::Bounded" type="REQUIRE">
+FAILED:
+  REQUIRE( result.status==MaterialIntegralStatus::Bounded )
+with expansion:
+  2 == 0
+MATERIAL_INTEGRAL_CELL_LIMIT
+3760
+10015
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1699
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

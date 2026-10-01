@@ -1,0 +1,158 @@
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:357:5: error: unknown type name 'MaterialIntegralLimits'
+  357 |     MaterialIntegralLimits limits; limits.maximum_interval_width=Volume(.0001);
+      |     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:359:30: error: use of undeclared identifier 'MaterialIntegralStatus'; did you mean 'MaterialCoverageStatus'?
+  359 |     REQUIRE(integral.status==MaterialIntegralStatus::Bounded); REQUIRE(integral.nominal_volume_mm3);
+      |                              ^~~~~~~~~~~~~~~~~~~~~~
+      |                              MaterialCoverageStatus
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:85:12: note: 'MaterialCoverageStatus' declared here
+   85 | enum class MaterialCoverageStatus { Covered, Uncovered, Unknown };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:359:54: error: no member named 'Bounded' in 'Slic3r::nptop::MaterialCoverageStatus'
+  359 |     REQUIRE(integral.status==MaterialIntegralStatus::Bounded); REQUIRE(integral.nominal_volume_mm3);
+      |                                                      ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:359:30: error: use of undeclared identifier 'MaterialIntegralStatus'; did you mean 'MaterialCoverageStatus'?
+  359 |     REQUIRE(integral.status==MaterialIntegralStatus::Bounded); REQUIRE(integral.nominal_volume_mm3);
+      |                              ^~~~~~~~~~~~~~~~~~~~~~
+      |                              MaterialCoverageStatus
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:85:12: note: 'MaterialCoverageStatus' declared here
+   85 | enum class MaterialCoverageStatus { Covered, Uncovered, Unknown };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:359:54: error: no member named 'Bounded' in 'Slic3r::nptop::MaterialCoverageStatus'
+  359 |     REQUIRE(integral.status==MaterialIntegralStatus::Bounded); REQUIRE(integral.nominal_volume_mm3);
+      |                                                      ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:359:30: error: use of undeclared identifier 'MaterialIntegralStatus'; did you mean 'MaterialCoverageStatus'?
+  359 |     REQUIRE(integral.status==MaterialIntegralStatus::Bounded); REQUIRE(integral.nominal_volume_mm3);
+      |                              ^~~~~~~~~~~~~~~~~~~~~~
+      |                              MaterialCoverageStatus
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:85:12: note: 'MaterialCoverageStatus' declared here
+   85 | enum class MaterialCoverageStatus { Covered, Uncovered, Unknown };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:359:54: error: no member named 'Bounded' in 'Slic3r::nptop::MaterialCoverageStatus'
+  359 |     REQUIRE(integral.status==MaterialIntegralStatus::Bounded); REQUIRE(integral.nominal_volume_mm3);
+      |                                                      ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:383:5: error: unknown type name 'MaterialIntegralLimits'
+  383 |     MaterialIntegralLimits limits; limits.maximum_interval_width=Volume(.000001);
+      |     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:385:49: error: use of undeclared identifier 'MaterialIntegralStatus'; did you mean 'MaterialCoverageStatus'?
+  385 |     INFO(result.reason); REQUIRE(result.status==MaterialIntegralStatus::Bounded); REQUIRE(result.nominal_volume_mm3);
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                                                 MaterialCoverageStatus
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:85:12: note: 'MaterialCoverageStatus' declared here
+   85 | enum class MaterialCoverageStatus { Covered, Uncovered, Unknown };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:385:73: error: no member named 'Bounded' in 'Slic3r::nptop::MaterialCoverageStatus'
+  385 |     INFO(result.reason); REQUIRE(result.status==MaterialIntegralStatus::Bounded); REQUIRE(result.nominal_volume_mm3);
+      |                                                                         ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:385:49: error: use of undeclared identifier 'MaterialIntegralStatus'; did you mean 'MaterialCoverageStatus'?
+  385 |     INFO(result.reason); REQUIRE(result.status==MaterialIntegralStatus::Bounded); REQUIRE(result.nominal_volume_mm3);
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                                                 MaterialCoverageStatus
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:85:12: note: 'MaterialCoverageStatus' declared here
+   85 | enum class MaterialCoverageStatus { Covered, Uncovered, Unknown };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:385:73: error: no member named 'Bounded' in 'Slic3r::nptop::MaterialCoverageStatus'
+  385 |     INFO(result.reason); REQUIRE(result.status==MaterialIntegralStatus::Bounded); REQUIRE(result.nominal_volume_mm3);
+      |                                                                         ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:385:49: error: use of undeclared identifier 'MaterialIntegralStatus'; did you mean 'MaterialCoverageStatus'?
+  385 |     INFO(result.reason); REQUIRE(result.status==MaterialIntegralStatus::Bounded); REQUIRE(result.nominal_volume_mm3);
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                                                 MaterialCoverageStatus
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:85:12: note: 'MaterialCoverageStatus' declared here
+   85 | enum class MaterialCoverageStatus { Covered, Uncovered, Unknown };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:385:73: error: no member named 'Bounded' in 'Slic3r::nptop::MaterialCoverageStatus'
+  385 |     INFO(result.reason); REQUIRE(result.status==MaterialIntegralStatus::Bounded); REQUIRE(result.nominal_volume_mm3);
+      |                                                                         ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:391:49: error: use of undeclared identifier 'MaterialIntegralStatus'; did you mean 'MaterialCoverageStatus'?
+  391 |     INFO(affine.reason); REQUIRE(affine.status==MaterialIntegralStatus::Bounded); REQUIRE(affine.nominal_volume_mm3);
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                                                 MaterialCoverageStatus
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:85:12: note: 'MaterialCoverageStatus' declared here
+   85 | enum class MaterialCoverageStatus { Covered, Uncovered, Unknown };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:391:73: error: no member named 'Bounded' in 'Slic3r::nptop::MaterialCoverageStatus'
+  391 |     INFO(affine.reason); REQUIRE(affine.status==MaterialIntegralStatus::Bounded); REQUIRE(affine.nominal_volume_mm3);
+      |                                                                         ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:391:49: error: use of undeclared identifier 'MaterialIntegralStatus'; did you mean 'MaterialCoverageStatus'?
+  391 |     INFO(affine.reason); REQUIRE(affine.status==MaterialIntegralStatus::Bounded); REQUIRE(affine.nominal_volume_mm3);
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                                                 MaterialCoverageStatus
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:85:12: note: 'MaterialCoverageStatus' declared here
+   85 | enum class MaterialCoverageStatus { Covered, Uncovered, Unknown };
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:391:73: error: no member named 'Bounded' in 'Slic3r::nptop::MaterialCoverageStatus'
+  391 |     INFO(affine.reason); REQUIRE(affine.status==MaterialIntegralStatus::Bounded); REQUIRE(affine.nominal_volume_mm3);
+      |                                                                         ^~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:391:49: error: use of undeclared identifier 'MaterialIntegralStatus'; did you mean 'MaterialCoverageStatus'?
+  391 |     INFO(affine.reason); REQUIRE(affine.status==MaterialIntegralStatus::Bounded); REQUIRE(affine.nominal_volume_mm3);
+      |                                                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                                                 MaterialCoverageStatus
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:85:12: note: 'MaterialCoverageStatus' declared here
+   85 | enum class MaterialCoverageStatus { Covered, Uncovered, Unknown };
+      |            ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
