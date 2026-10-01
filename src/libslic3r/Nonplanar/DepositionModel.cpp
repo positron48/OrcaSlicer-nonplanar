@@ -625,6 +625,8 @@ class MaterialIntegralProof {
         const std::vector<double> &, const MaterialIntegralLimits &);
     friend AffineHatchCellsResult allocate_affine_hatch_cells(const AffineHatchResult &, const MaterialIntegralLimits &);
     friend MaterialFillResult reconcile_material_fill(const MaterialIntegralResult &, const MaterialUnionResult &, const MaterialFillLimits &);
+    friend MaterialDeficitResult locate_material_deficit(const MaterialFillResult &,const std::vector<double> &,
+        const std::vector<double> &,const MaterialDeficitLimits &);
     ScalarBounds rectangle_volume(const RectangleXY &r, const MaterialIntegralLimits &limits,
         size_t &fragments, size_t &evaluations, const std::function<void()> &poll, const char *reason_prefix) const
     {
@@ -1926,4 +1928,63 @@ MaterialFillResult reconcile_material_fill(const MaterialIntegralResult &request
     catch (const std::exception &e) {result.reason="MATERIAL_FILL_NUMERIC_FAILURE: "+std::string(e.what());}
     return result;
 }
+MaterialDeficitResult locate_material_deficit(const MaterialFillResult &requested,const std::vector<double> &requested_x,
+    const std::vector<double> &requested_y,const MaterialDeficitLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto limits=requested_limits;const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!source || !source->target || !source->occupied || requested_x.size()<2 || requested_y.size()<2 ||
+            requested_x.size()>257 || requested_y.size()>257 || !limits.max_regions || limits.max_regions>256 ||
+            (requested_x.size()-1)*(requested_y.size()-1)>limits.max_regions ||
+            !limits.max_cells || limits.max_cells>65535 || !limits.max_evaluations || limits.max_evaluations>200000 ||
+            !valid_timeout(limits.timeout) || limits.maximum_interval_width.value()<=0) reject("INVALID_MATERIAL_DEFICIT_GRID");
+        const auto x=requested_x,y=requested_y;const auto target=source->target;const auto cursor=source->occupied->source;
+        const auto &sequence=*cursor->sequence;const auto &r=target->target.footprint;
+        const auto poll=[&] {stop(limits,target->source->sequence->revision,started);stop(limits,sequence.revision,started);};poll();
+        if (x.front()!=r.min_x || x.back()!=r.max_x || y.front()!=r.min_y || y.back()!=r.max_y)
+            reject("INCOMPLETE_MATERIAL_DEFICIT_GRID");
+        for (const auto &cuts : {x,y}) for (size_t i=0;i<cuts.size();++i) {
+            coordinate(cuts[i]);if (i && cuts[i]<=cuts[i-1]) reject("UNORDERED_MATERIAL_DEFICIT_GRID");
+        }
+        const size_t end=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence.records.size());
+        std::vector<MaterialDeficitCell> cells;size_t fragments=0,evaluations=0;
+        Exact total_lower(0),total_upper(0),missing_lower(0);
+        const AffineCapCell flat{r,0,0,0};
+        for (size_t yi=1;yi<y.size();++yi) for (size_t xi=1;xi<x.size();++xi) {
+            poll();const RectangleXY region{x[xi-1],y[yi-1],x[xi],y[yi]};
+            const auto volume=target->rectangle_volume(region,limits,fragments,evaluations,poll,"MATERIAL_DEFICIT");
+            const Polygon polygon{{Exact(region.min_x),Exact(region.min_y)},{Exact(region.max_x),Exact(region.min_y)},
+                {Exact(region.max_x),Exact(region.max_y)},{Exact(region.min_x),Exact(region.max_y)}};
+            Exact possible_amount(0);
+            for (size_t i=0;i<end;++i) {
+                if (evaluations>=limits.max_evaluations) reject("MATERIAL_DEFICIT_WORK_LIMIT");
+                if (evaluations%128==0) poll();++evaluations;const auto &row=sequence.records[i];if (!row.bead) continue;
+                const double fraction=i<cursor->completed_records ? 1 : cursor->current_progress;
+                const auto footprint=roof_projection(row,sequence.model,polygon,fraction,Representation::Nominal);
+                if (!footprint) continue;Exact area(0);affine_integral(footprint->polygon,flat,&area);if (area==0) continue;
+                // Every nominal point is inside this exact-clipped outer XY
+                // footprint. Count the complete laid fraction, deliberately
+                // overestimating a partial intersection and all overlaps. This
+                // can only weaken a missing-volume lower bound, never fill it.
+                possible_amount+=Exact(std::get<Deposition>(row.motion.payload).volume.value())*Exact(fraction);
+            }
+            const double amount_upper=exact_interval(possible_amount).hi;
+            const double covered_upper=std::min({amount_upper,volume.upper,source->covered_target_mm3.upper});
+            const double missing=std::max(0.,(Interval(volume.lower)-Interval(covered_upper)).lo);
+            cells.push_back({region,volume,amount_upper,covered_upper,missing});
+            total_lower+=Exact(volume.lower);total_upper+=Exact(volume.upper);missing_lower+=Exact(missing);
+        }
+        const Interval total(exact_interval(total_lower).lo,exact_interval(total_upper).hi);
+        if (total.hi<source->target_volume_mm3.lower || total.lo>source->target_volume_mm3.upper)
+            reject("MATERIAL_DEFICIT_INCONSISTENT_TARGET");
+        if ((Interval(total.hi)-Interval(total.lo)).hi>limits.maximum_interval_width.value()) reject("MATERIAL_DEFICIT_GLOBAL_PRECISION");
+        const double missing=exact_interval(missing_lower).lo;
+        if (missing>source->missing_target_mm3.upper) reject("MATERIAL_DEFICIT_INCONSISTENT_LOWER_BOUND");
+        poll();auto snapshot=std::shared_ptr<const MaterialDeficitSnapshot>(new MaterialDeficitSnapshot(source,std::move(cells),bounds(total),missing,fragments,evaluations));
+        poll();return {"BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) {return {e.what(),{}};}
+    catch (const std::exception &e) {return {"MATERIAL_DEFICIT_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
+}
+
 }

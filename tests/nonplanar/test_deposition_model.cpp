@@ -1131,3 +1131,70 @@ TEST_CASE("B07 rounded actual roof spill matches an independent circular integra
     volume_contains(fit.snapshot->missing_target_mm3,.006L);
     REQUIRE(fit.snapshot->below_roof_mm3.lower>0);REQUIRE(fit.snapshot->above_surface_mm3.upper==0);
 }
+
+TEST_CASE("B07 deficit cells locate the unprinted finite prefix without future material", "[Nonplanar][B07][MaterialDeficit]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialDeficitSnapshot>::value);
+    const auto target=flat_fill_target();
+    for (double fraction : {0.,.3,.5,1.}) {
+        const auto fill=reconcile_material_fill(target,flat_fill_union(1.2,fraction));REQUIRE(fill.snapshot);
+        const auto map=locate_material_deficit(fill,{1,2,3},{-.4,0,.4});INFO(map.reason);REQUIRE(map.snapshot);
+        REQUIRE(map.snapshot->source==fill.snapshot);REQUIRE(map.snapshot->cells.size()==4);
+        volume_contains(map.snapshot->target_volume_mm3,.32L);
+        // If x>=2 has no laid material, both cells there must have a positive
+        // volume witness. Entire amounts counted at intersections may overstate
+        // coverage elsewhere, which is allowed only for a lower-deficit witness.
+        for (const auto &cell : map.snapshot->cells) {
+            const long double printed=std::max(0.L,std::min(static_cast<long double>(cell.footprint.max_x),1+2*static_cast<long double>(fraction))-cell.footprint.min_x);
+            const long double missing=(cell.footprint.max_x-cell.footprint.min_x-printed)*.4L*.2L;
+            REQUIRE(cell.missing_lower_mm3>=0);REQUIRE(cell.missing_lower_mm3<=missing+1e-14L);
+            if (fraction<=.5 && cell.footprint.min_x==2) REQUIRE(cell.missing_lower_mm3>.031);
+            if (fraction==1) REQUIRE(cell.missing_lower_mm3==0);
+        }
+        REQUIRE(map.snapshot->localized_missing_lower_mm3<=fill.snapshot->missing_target_mm3.upper);
+        if (fraction==0) REQUIRE(map.snapshot->localized_missing_lower_mm3>.319);
+        if (fraction==1) REQUIRE(map.snapshot->localized_missing_lower_mm3==0);
+    }
+}
+TEST_CASE("B07 deficit witnesses retain protected ownership and reject incomplete grids and exhausted budgets", "[Nonplanar][B07][MaterialDeficit]")
+{
+    auto fill=reconcile_material_fill(flat_fill_target(),flat_fill_union(1.2,.5));REQUIRE(fill.snapshot);
+    const auto source=fill.snapshot;std::vector<double> x{1,2,3},y{-.4,0,.4};MaterialDeficitLimits limits;
+    fill.reason="FORGED";fill.provisional_below_roof_mm3=ScalarBounds{100,100};
+    limits.cancelled=[&] {fill.snapshot.reset();x.clear();y.clear();limits.max_regions=1;return false;};
+    const auto owned=locate_material_deficit(fill,x,y,limits);INFO(owned.reason);REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->source==source);REQUIRE(owned.snapshot->cells.size()==4);
+    fill.snapshot=source;x={1,2,3};y={-.4,0,.4};limits={};
+    REQUIRE_FALSE(locate_material_deficit({},x,y,limits).snapshot);
+    REQUIRE_FALSE(locate_material_deficit(fill,{1,2},{-.4,.4},limits).snapshot);
+    REQUIRE_FALSE(locate_material_deficit(fill,{1,2,2,3},y,limits).snapshot);
+    REQUIRE_FALSE(locate_material_deficit(fill,{1,2,3},{-.5,0,.4},limits).snapshot);
+    REQUIRE_FALSE(locate_material_deficit(fill,{1,2,3},{-.4,NAN,.4},limits).snapshot);
+    limits.max_regions=1;REQUIRE_FALSE(locate_material_deficit(fill,x,y,limits).snapshot);
+    limits={};limits.max_evaluations=1;REQUIRE_FALSE(locate_material_deficit(fill,x,y,limits).snapshot);
+    limits={};limits.max_cells=1;REQUIRE_FALSE(locate_material_deficit(fill,x,y,limits).snapshot);
+    limits={};limits.maximum_interval_width=Volume(1e-20);REQUIRE_FALSE(locate_material_deficit(fill,x,y,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(locate_material_deficit(fill,x,y,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(locate_material_deficit(fill,x,y,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE_FALSE(locate_material_deficit(fill,x,y,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};const auto rounding=locate_material_deficit(fill,x,y,limits);
+    REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+}
+
+TEST_CASE("B07 deficit localization keeps a rotated current butt and future ledgers separate", "[Nonplanar][B07][MaterialDeficit]")
+{
+    const auto row=bead(1,0,{1,-.4,1.2},{3,.4,1.2},.15,.2,.2,BeadSectionKind::Rectangle);
+    const MaterialRecord travel{{2,1,0,row.motion.end,row.motion.start,Speed(10),Acceleration(100),Travel{}},{}};
+    auto future=row;future.motion.event_id=3;future.motion.sequence_index=2;
+    const auto prefix=material_at(captured({row,travel,future}),0,.5);
+    const auto occupied=integrate_material_union(prefix.nominal,{{1,-.4,.7},{3,.4,1.6}});INFO(occupied.reason);REQUIRE(occupied.snapshot);
+    const auto fill=reconcile_material_fill(flat_fill_target(),occupied);INFO(fill.reason);REQUIRE(fill.snapshot);
+    const auto map=locate_material_deficit(fill,{1,2,3},{-.4,0,.4});INFO(map.reason);REQUIRE(map.snapshot);
+    // The end plane of this half diagonal is 2*(x-2)+.8*y=0.
+    // The upper-right quadrant lies beyond it, except for a zero-volume corner.
+    const auto &cell=map.snapshot->cells.back();REQUIRE(cell.footprint.min_x==2);REQUIRE(cell.footprint.min_y==0);
+    REQUIRE(cell.candidate_amount_upper_mm3==0);REQUIRE(cell.covered_upper_mm3==0);
+    REQUIRE(cell.missing_lower_mm3>.079);REQUIRE(cell.missing_lower_mm3<=.080000000001);
+    REQUIRE(map.snapshot->localized_missing_lower_mm3<=fill.snapshot->missing_target_mm3.upper);
+}

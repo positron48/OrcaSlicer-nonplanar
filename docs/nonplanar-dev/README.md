@@ -88,10 +88,16 @@ At that checkpoint selected CTest executes 284/284; six fresh OFF/ZAA comparison
 `B07-material-fill.md` now separates covered and missing target volumes from
 below-roof and above-surface spill, using protected actual roof/union sources.
 Five analytical cases/126 assertions and the extended native case/54 assertions
-pass. Current selected CTest executes 289/289; six fresh OFF/ZAA comparisons pass.
+pass. At that checkpoint selected CTest executes 289/289; six fresh OFF/ZAA comparisons pass.
 The native first candidates have approximately 1.27-1.29 mm3 proven deficit and
 0.015-0.019 mm3 outside volume. Localized fill resolution, finite-width contact,
 seam and later support remain open.
+`B07-material-deficit.md` now proves missing-volume lower witnesses over a
+complete XY grid. Three analytical cases/118 assertions and the extended native
+case/64 assertions pass. The four native quarters jointly require at least
+0.98329 mm3 more material, without asserting a complete missing-shape map or
+repair approval. Current selected CTest executes 292/292 and six fresh OFF/ZAA
+comparisons pass. Constructing and qualifying the repair paths remains open.
 
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
@@ -103,9 +109,10 @@ nozzle are user-declared in `B15-u1-declared-setup.md`, without measurement clai
 Prior Linux native runs at d57e9325, 7df1d765, e7a46961, 23f00bfd,
 b35408ce, a083f2df, 63779b4f and 8bcbbd45 succeeded. Run 36809462993 confirms
 8bcbbd45 native tests and application. The latest saved snapshot records successful e2030e15 runs
-36812147275 and 36819847014; run 36820170446 at 4b3da47d is in progress. Earlier intermediate runs were cancelled by
+36812147275 and 36819847014 and successful 4b3da47d run 36820170446;
+run 36826154741 at 84a709ef is in progress. Earlier intermediate runs were cancelled by
 workflow concurrency. These records do not prove Linux execution of this
-nominal target-fill integration revision.
+localized deficit revision.
 Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;

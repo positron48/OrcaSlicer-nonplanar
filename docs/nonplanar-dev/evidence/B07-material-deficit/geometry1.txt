@@ -1,0 +1,745 @@
+Filters: [MaterialDeficit]
+Randomness seeded to: 2525342421
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 deficit witnesses retain protected ownership and reject incomplete grids
+and exhausted budgets
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1159
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x873121cd8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1020: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0x872c2b020
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x873121d78
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1027: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x8730b4980
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1161: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x873024be0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1165: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0x872c55040
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1166: PASSED:
+  REQUIRE( owned.snapshot->source==source )
+with expansion:
+  0x873024be0 == 0x873024be0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1166: PASSED:
+  REQUIRE( owned.snapshot->cells.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1168: PASSED:
+  REQUIRE_FALSE( locate_material_deficit({},x,y,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1169: PASSED:
+  REQUIRE_FALSE( locate_material_deficit(fill,{1,2},{-.4,.4},limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1170: PASSED:
+  REQUIRE_FALSE( locate_material_deficit(fill,{1,2,2,3},y,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1171: PASSED:
+  REQUIRE_FALSE( locate_material_deficit(fill,{1,2,3},{-.5,0,.4},limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1172: PASSED:
+  REQUIRE_FALSE( locate_material_deficit(fill,{1,2,3},{-.4,__builtin_nanf("0x7fc00000"),.4},limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1173: PASSED:
+  REQUIRE_FALSE( locate_material_deficit(fill,x,y,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1174: PASSED:
+  REQUIRE_FALSE( locate_material_deficit(fill,x,y,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1175: PASSED:
+  REQUIRE_FALSE( locate_material_deficit(fill,x,y,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1176: PASSED:
+  REQUIRE_FALSE( locate_material_deficit(fill,x,y,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1177: PASSED:
+  REQUIRE_FALSE( locate_material_deficit(fill,x,y,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1178: PASSED:
+  REQUIRE_FALSE( locate_material_deficit(fill,x,y,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1180: PASSED:
+  REQUIRE_FALSE( locate_material_deficit(fill,x,y,limits).snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1182: PASSED:
+  REQUIRE( std::fesetround(0x00000000)==0 )
+with expansion:
+  0 == 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1182: PASSED:
+  REQUIRE_FALSE( rounding.snapshot )
+with expansion:
+  !0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+-------------------------------------------------------------------------------
+B07 deficit cells locate the unprinted finite prefix without future material
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1135
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1137: PASSED:
+with message:
+  !(std::is_aggregate<MaterialDeficitSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x873121d78
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1020: PASSED:
+  REQUIRE( target.proof )
+with expansion:
+  0x87240c000
+with message:
+  BOUNDED_NOMINAL_VERTICAL_CELL_INTEGRAL
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x873121e18
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1027: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x8730b4980
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1140: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x873024be0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1141: PASSED:
+  REQUIRE( map.snapshot )
+with expansion:
+  0x872c55040
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1142: PASSED:
+  REQUIRE( map.snapshot->source==fill.snapshot )
+with expansion:
+  0x873024be0 == 0x873024be0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1142: PASSED:
+  REQUIRE( map.snapshot->cells.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.31999999999999912 <= 0.32
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.32000000000000056 >= 0.32
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.07999999999999977 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.07999999999999977 <= 0.08
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.07999999999999977 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.07999999999999977 <= 0.08
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1151: PASSED:
+  REQUIRE( cell.missing_lower_mm3>.031 )
+with expansion:
+  0.07999999999999977 > 0.031
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.07999999999999977 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.07999999999999977 <= 0.08
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.07999999999999977 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.07999999999999977 <= 0.08
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1151: PASSED:
+  REQUIRE( cell.missing_lower_mm3>.031 )
+with expansion:
+  0.07999999999999977 > 0.031
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1154: PASSED:
+  REQUIRE( map.snapshot->localized_missing_lower_mm3<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.31999999999999906 <= 0.32000000000000056
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1155: PASSED:
+  REQUIRE( map.snapshot->localized_missing_lower_mm3>.319 )
+with expansion:
+  0.31999999999999906 > 0.31900000000000001
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x873121e18
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1027: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x8730b4980
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1140: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x873024be0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1141: PASSED:
+  REQUIRE( map.snapshot )
+with expansion:
+  0x872c55040
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1142: PASSED:
+  REQUIRE( map.snapshot->source==fill.snapshot )
+with expansion:
+  0x873024be0 == 0x873024be0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1142: PASSED:
+  REQUIRE( map.snapshot->cells.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.31999999999999912 <= 0.32
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.32000000000000056 >= 0.32
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.0 <= 0.032
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.07999999999999977 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.07999999999999977 <= 0.08
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1151: PASSED:
+  REQUIRE( cell.missing_lower_mm3>.031 )
+with expansion:
+  0.07999999999999977 > 0.031
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.0 <= 0.032
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.07999999999999977 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.07999999999999977 <= 0.08
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1151: PASSED:
+  REQUIRE( cell.missing_lower_mm3>.031 )
+with expansion:
+  0.07999999999999977 > 0.031
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1154: PASSED:
+  REQUIRE( map.snapshot->localized_missing_lower_mm3<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.15999999999999953 <= 0.22400000000000139
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x873121e18
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1027: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x8730b4980
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1140: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x873024be0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1141: PASSED:
+  REQUIRE( map.snapshot )
+with expansion:
+  0x872c55040
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1142: PASSED:
+  REQUIRE( map.snapshot->source==fill.snapshot )
+with expansion:
+  0x873024be0 == 0x873024be0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1142: PASSED:
+  REQUIRE( map.snapshot->cells.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.31999999999999912 <= 0.32
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.32000000000000056 >= 0.32
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.0 <= 1e-14
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.07999999999999977 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.07999999999999977 <= 0.08
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1151: PASSED:
+  REQUIRE( cell.missing_lower_mm3>.031 )
+with expansion:
+  0.07999999999999977 > 0.031
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.0 <= 1e-14
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.07999999999999977 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.07999999999999977 <= 0.08
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1151: PASSED:
+  REQUIRE( cell.missing_lower_mm3>.031 )
+with expansion:
+  0.07999999999999977 > 0.031
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1154: PASSED:
+  REQUIRE( map.snapshot->localized_missing_lower_mm3<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.15999999999999953 <= 0.16000000000000189
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:35: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x873121e18
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1027: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x8730b4980
+with message:
+  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1140: PASSED:
+  REQUIRE( fill.snapshot )
+with expansion:
+  0x873024be0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1141: PASSED:
+  REQUIRE( map.snapshot )
+with expansion:
+  0x872c55040
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1142: PASSED:
+  REQUIRE( map.snapshot->source==fill.snapshot )
+with expansion:
+  0x873024be0 == 0x873024be0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1142: PASSED:
+  REQUIRE( map.snapshot->cells.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.lower<=expected )
+with expansion:
+  0.31999999999999912 <= 0.32
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:38: PASSED:
+  REQUIRE( b.upper>=expected )
+with expansion:
+  0.32000000000000056 >= 0.32
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.0 <= 1e-14
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1152: PASSED:
+  REQUIRE( cell.missing_lower_mm3==0 )
+with expansion:
+  0.0 == 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.0 <= 1e-14
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1152: PASSED:
+  REQUIRE( cell.missing_lower_mm3==0 )
+with expansion:
+  0.0 == 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.0 <= 1e-14
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1152: PASSED:
+  REQUIRE( cell.missing_lower_mm3==0 )
+with expansion:
+  0.0 == 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1150: PASSED:
+  REQUIRE( cell.missing_lower_mm3<=missing+1e-14L )
+with expansion:
+  0.0 <= 1e-14
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1152: PASSED:
+  REQUIRE( cell.missing_lower_mm3==0 )
+with expansion:
+  0.0 == 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1154: PASSED:
+  REQUIRE( map.snapshot->localized_missing_lower_mm3<=fill.snapshot->missing_target_mm3.upper )
+with expansion:
+  0.0 <= 0.00000000000000316
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1156: PASSED:
+  REQUIRE( map.snapshot->localized_missing_lower_mm3==0 )
+with expansion:
+  0.0 == 0
+with message:
+  BOUNDED_COMPLETE_GRID_MISSING_VOLUME_LOWER_WITNESSES_ONLY
+
+===============================================================================
+All tests passed (105 assertions in 2 test cases)
+

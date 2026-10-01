@@ -2097,7 +2097,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first-hatch union measures rounded overlap rather than summed extrusion", "[Nonplanar][B07][NativeMaterialUnion][NativeMaterialFill]")
+TEST_CASE("B07 native first-hatch union measures rounded overlap rather than summed extrusion", "[Nonplanar][B07][NativeMaterialUnion][NativeMaterialFill][NativeMaterialDeficit]")
 {
     STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialUnionSnapshot>::value);
     STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialFillSnapshot>::value);
@@ -2177,4 +2177,19 @@ TEST_CASE("B07 native first-hatch union measures rounded overlap rather than sum
     for (auto volume : {f.covered_target_mm3,f.missing_target_mm3,f.outside_target_mm3,f.below_roof_mm3,f.above_surface_mm3}) {
         REQUIRE(volume.lower>=0);REQUIRE(volume.upper-volume.lower<=fill_limits.maximum_interval_width.value());
     }
+    MaterialDeficitLimits locate;locate.maximum_interval_width=Volume(.02);locate.max_cells=65535;
+    locate.timeout=std::chrono::seconds(5);
+    const auto map=locate_material_deficit(fit,{19,20,21},{17,20,23},locate);
+    INFO(map.reason);REQUIRE(map.snapshot);REQUIRE(map.snapshot->cells.size()==4);REQUIRE(map.snapshot->source==fit.snapshot);
+    INFO("localized missing >= " << map.snapshot->localized_missing_lower_mm3 << " regions=" << map.snapshot->cells.size() <<
+        " fragments=" << map.snapshot->proof_cells << " work=" << map.snapshot->evaluations);
+    for (const auto &cell : map.snapshot->cells) {
+        INFO("cell " << cell.footprint.min_x << ',' << cell.footprint.min_y << " target=[" << cell.target_volume_mm3.lower << ',' <<
+            cell.target_volume_mm3.upper << "] possible amount <= " << cell.candidate_amount_upper_mm3 << " missing >= " << cell.missing_lower_mm3);
+        REQUIRE(cell.missing_lower_mm3>0);
+    }
+    REQUIRE(map.snapshot->localized_missing_lower_mm3>.5);
+    REQUIRE(map.snapshot->localized_missing_lower_mm3<=fit.snapshot->missing_target_mm3.upper);
+    REQUIRE(map.snapshot->target_volume_mm3.upper-map.snapshot->target_volume_mm3.lower<=.02);
+
 }

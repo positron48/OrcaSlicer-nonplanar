@@ -45,8 +45,10 @@ Next software tasks, in dependency order:
    gaps and bounded fixed-width amounts. `B07-material-union.md` now measures
    clipped declared nominal occupied union and multiplicity excess.
    `B07-material-fill.md` now separates covered/missing target and vertical spill
-   with continuous actual roof bounds. Localize and resolve that deficit/excess
-   by constructing useful finite paths, qualify
+   with continuous actual roof bounds. `B07-material-deficit.md` now locates
+   positive missing-volume lower witnesses over a complete exact XY grid.
+   Resolve that deficit/excess by constructing paths in actual remaining space,
+   recheck union/fill, qualify
    finite-width floor/contact, then construct seam and later actual support;
    short-packet motion/flow limits remain unverified.
 5. Continue the dependent planner, safety/replay and guarded export integration

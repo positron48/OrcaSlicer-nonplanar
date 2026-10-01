@@ -427,4 +427,34 @@ struct MaterialFillResult {
 // and union proofs; wrapper fields cannot replace them. Geometric measures only.
 MaterialFillResult reconcile_material_fill(const MaterialIntegralResult &, const MaterialUnionResult &,
                                           const MaterialFillLimits &limits = {});
+inline constexpr unsigned material_deficit_contract_version=1;
+struct MaterialDeficitLimits : MaterialIntegralLimits {size_t max_regions=256;};
+struct MaterialDeficitCell {
+    RectangleXY footprint;
+    ScalarBounds target_volume_mm3;
+    // Entire amounts of intersecting finite prefix beads: a conservative upper
+    // bound, not local occupied volume. A zero deficit lower bound does not certify fill.
+    double candidate_amount_upper_mm3,covered_upper_mm3,missing_lower_mm3;
+};
+struct MaterialDeficitResult;
+struct MaterialDeficitSnapshot {
+    const std::shared_ptr<const MaterialFillSnapshot> source;
+    const std::vector<MaterialDeficitCell> cells;
+    const ScalarBounds target_volume_mm3;
+    const double localized_missing_lower_mm3;
+    const size_t proof_cells,evaluations;
+private:
+    MaterialDeficitSnapshot(std::shared_ptr<const MaterialFillSnapshot> s,std::vector<MaterialDeficitCell> c,
+        ScalarBounds volume,double missing,size_t fragments,size_t work)
+        : source(std::move(s)),cells(std::move(c)),target_volume_mm3(volume),localized_missing_lower_mm3(missing),
+          proof_cells(fragments),evaluations(work) {}
+    friend MaterialDeficitResult locate_material_deficit(const MaterialFillResult &,const std::vector<double> &,
+        const std::vector<double> &,const MaterialDeficitLimits &);
+};
+struct MaterialDeficitResult {std::string reason;std::shared_ptr<const MaterialDeficitSnapshot> snapshot;};
+// Complete exact XY grid of conservative missing-volume lower bounds, within
+// the owned fill domain. Cuts include both ends. No local-fill or path approval.
+MaterialDeficitResult locate_material_deficit(const MaterialFillResult &,const std::vector<double> &x_cuts,
+    const std::vector<double> &y_cuts,const MaterialDeficitLimits &limits = {});
+
 }
