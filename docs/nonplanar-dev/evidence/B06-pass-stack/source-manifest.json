@@ -1,0 +1,62 @@
+{
+  "base_commit": "a083f2df60bd8481c16144791441357fa7e86c41",
+  "implementation_commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-pass-stack.md",
+  "sha256": {
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "9f15638d8d5f9471ead1aed510f9ee18fbf591b9b151f809f94794423e9c117f",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "07ce9038b5712466ed9c49b78a101b4eea56244d15ab3bae5c58322975204725",
+    "src/libslic3r/Nonplanar/PlanarBody.hpp": "502cd73996f0369eacd38a3227f729061ff3c6075a06d3f4a8eae651bdf2afb8",
+    "src/libslic3r/Nonplanar/PlanarBody.cpp": "67bebaa8978105bf900ed9cd977b726c6ba7c9f99fb68462065aad318c36f933",
+    "tests/nonplanar/test_deposition_model.cpp": "04d6540c96a8cf85378ba52bf25dd0910cc20967b300c28aa1ba1d363d3d542f",
+    "tests/nonplanar/test_policy.cpp": "4e7ee436a56829ba2d13f50320118814a1cb1d2938c70e68bd909557e38acde2"
+  },
+  "native_binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "225dd2d49b3e601456773253360419b08fb8dec79dba68ee74d996e532c0da71",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "7382dfa5e7c3b8072369b83b176d83725f7962cf3f267b12e710c260c5c1b128",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "295e396e0c6018c9238fb8635ed6209d6cd98edb300b01101640cb1a260e7e69"
+  },
+  "compiled_commit_label": "31461d50",
+  "compiled_commit_label_note": "Retained configure label; exact source/binary hashes bind this build. B13 full software provenance remains pending.",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "new_geometric_cases": 3,
+  "new_geometric_assertions": 54,
+  "new_native_cases": 1,
+  "new_native_assertions": 74,
+  "material_suite_cases": 20,
+  "material_suite_assertions": 4646,
+  "body_suite_cases": 7,
+  "body_suite_assertions": 54493,
+  "ctest_discovered": 258,
+  "ctest_executed": 258,
+  "skips": 0,
+  "OFF_ZAA_pairs": 6,
+  "native_first_z_mm": 3.3700006449872904,
+  "native_final_z_mm": 4,
+  "native_first_gap_mm": [
+    0.14996744761757827,
+    0.27003255238242035
+  ],
+  "native_total_volume_mm3": [
+    28.97352050100678,
+    28.98351843215684
+  ],
+  "native_total_allocation_error_mm3": 0.00499896557503021,
+  "native_reservation_tests": 6240,
+  "native_limits": {
+    "max_cells": 8191,
+    "max_evaluations": 200000,
+    "timeout_ms": 5000,
+    "maximum_interval_width_mm3": 0.01,
+    "total_allocation_error_mm3": 0.01,
+    "max_reservation_tests": 50000
+  },
+  "independent_review": "PENDING",
+  "physical": "NOT_RUN",
+  "linux_new_revision": "NOT_VERIFIED",
+  "windows": "NOT_RUN",
+  "full_B06": "NOT_IMPLEMENTED_STEPPED_SUBDIVISION_LATER_ACTUAL_SUPPORT_FINITE_PATH_VOLUME_SEAM_COMPLETE_PLAN_PENDING",
+  "final_build_log": "build-6.log.json",
+  "final_ctest_log": "ctest-2.log.json",
+  "final_native_log": "native-final-2.log.json",
+  "final_baseline_result": "differential-final.txt"
+}

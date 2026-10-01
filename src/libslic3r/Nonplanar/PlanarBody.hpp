@@ -2,6 +2,7 @@
 #include "VolumePartition.hpp"
 #include "Policy.hpp"
 #include "DepositionModel.hpp"
+#include "UpperProjection.hpp"
 
 namespace Slic3r::nptop {
 inline constexpr unsigned planar_body_contract_version=1;
@@ -69,4 +70,34 @@ struct BodyMaterialResult {
 // scheduler, support/contact/firmware proof or an executable motion plan.
 BodyMaterialResult reconstruct_planar_body_material(const PlanarBodyResult &, const BodyMaterialParameters &,
                                                     const MaterialLimits &limits = {});
+
+struct NativeAffinePassRequest {
+    RectangleXY footprint; // Physical XY, including its whole interior.
+    size_t patch;
+    double support_plane_z_mm;
+    AffinePassPolicy policy;
+};
+struct NativeAffinePassLimits {
+    MaterialIntegralLimits material;
+    UpperProjectionLimits projection;
+    size_t max_reservation_tests=50000;
+};
+struct NativeAffinePassSnapshot {
+    const std::shared_ptr<const BodyMaterialSnapshot> body_material;
+    const std::shared_ptr<const UpperProjectionSnapshot> source_projection;
+    const NativeAffinePassRequest request;
+    const std::shared_ptr<const AffinePassStackSnapshot> stack;
+    const double source_corner_error_upper_mm;
+    const size_t reservation_tests;
+};
+struct NativeAffinePassResult {
+    std::string reason;
+    std::shared_ptr<const NativeAffinePassSnapshot> snapshot;
+};
+// Bind prospective surfaces/quotas to an owned native body and its original
+// source target. Whole rectangular cell must avoid source holes, lie in one
+// exactly affine patch, and fit the convex reservation with numerical error.
+// This is not complete curved/seam/path/material scheduling or export approval.
+NativeAffinePassResult plan_native_affine_pass_stack(const BodyMaterialResult &, const NativeAffinePassRequest &,
+                                                    const NativeAffinePassLimits &limits = {});
 }

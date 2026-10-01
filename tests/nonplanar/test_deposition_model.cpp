@@ -418,3 +418,71 @@ TEST_CASE("B06 refined volume cannot publish broad stale late unsupported or fut
     REQUIRE(integrate_material_first_pass(material_at(ledger,0,.4).lower,cell,.9,policy).status==MaterialIntegralStatus::Rejected);
     REQUIRE(integrate_material_first_pass(material_at(ledger,1,0).lower,{{1,-1,9,1},1.2,1.2,1.2},.9,policy).status==MaterialIntegralStatus::Rejected);
 }
+
+TEST_CASE("B06 affine pass selection preserves the final surface and bounds nominal volume quotas", "[Nonplanar][B06][PassStack]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},.8,.2,.2)}); const auto all=material_at(ledger,1,0);
+    const AffineCapCell target{{1,-.35,9,.35},1.8,1.8,1.8};
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(.00001)},
+        VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const auto planned=plan_affine_pass_stack(all.lower,target,.9,policy); INFO(planned.reason); REQUIRE(planned.snapshot);
+    const auto &stack=*planned.snapshot; REQUIRE(stack.surfaces.size()==4); REQUIRE(stack.source==all.lower.snapshot);
+    REQUIRE(stack.first_pass.status==MaterialIntegralStatus::Bounded);
+    REQUIRE(stack.surfaces.back().cell.z00==target.z00); REQUIRE(stack.surfaces.back().cell.z10==target.z10);
+    REQUIRE(stack.surfaces.back().cell.z01==target.z01);
+    REQUIRE(stack.first_offset_mm>stack.offset_range_mm.lower); REQUIRE(stack.first_offset_mm<stack.offset_range_mm.upper);
+    for (size_t i=1; i<stack.surfaces.size(); ++i) {
+        const auto &surface=stack.surfaces[i]; REQUIRE(surface.vertical_spacing_mm); REQUIRE(surface.normal_spacing_mm);
+        REQUIRE(surface.vertical_spacing_mm->lower>.14); REQUIRE(surface.vertical_spacing_mm->upper<.24);
+        REQUIRE(surface.normal_spacing_mm->lower>.14); REQUIRE(surface.normal_spacing_mm->upper<.24);
+    }
+    REQUIRE(stack.total_allocation_error_mm3<=policy.total_volume_error.value());
+    const long double area=std::get<Deposition>(ledger->records.front().motion.payload).volume.value()/10.L;
+    const long double h=ledger->records.front().bead->gap_begin_mm;
+    const long double width=area/h+(1-std::acos(-1.L)/4)*h, core=(width-h)/2, radius=h/2, s=.35L-core;
+    const long double circular=.5L*(s*std::sqrt(radius*radius-s*s)+radius*radius*std::asin(s/radius));
+    const long double expected=8*(.7L*static_cast<long double>(target.z00)-(2*core+2*((1-h/2)*s+circular)));
+    volume_contains(stack.total_volume_mm3,expected);
+    REQUIRE(std::abs(stack.total_allocated_volume.value()-expected)<=policy.total_volume_error.value());
+    REQUIRE_FALSE(stack.surfaces.front().vertical_spacing_mm);
+}
+
+TEST_CASE("B06 pass selection distinguishes normal spacing on a slope and refuses an impossible stack", "[Nonplanar][B06][PassStack]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},1.2,.4,.4,BeadSectionKind::Rectangle)}); const auto all=material_at(ledger,1,0);
+    AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),
+        NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const AffineCapCell target{{1,-.1,2,.1},1.76,1.81,1.76};
+    const auto slope=plan_affine_pass_stack(all.lower,target,.9,policy); INFO(slope.reason); REQUIRE(slope.snapshot);
+    const auto &spacing=slope.snapshot->surfaces[1]; REQUIRE(spacing.vertical_spacing_mm); REQUIRE(spacing.normal_spacing_mm);
+    REQUIRE(spacing.normal_spacing_mm->upper<spacing.vertical_spacing_mm->lower);
+    const long double vertical=spacing.cell.z00-slope.snapshot->surfaces.front().cell.z00;
+    const long double normal=vertical/std::sqrt(1+.05L*.05L);
+    volume_contains(*spacing.normal_spacing_mm,normal);
+    policy.later_normal_minimum=NormalGap(.235);
+    REQUIRE_FALSE(plan_affine_pass_stack(all.lower,target,.9,policy).snapshot);
+    policy.later_normal_minimum=NormalGap(.14); policy.passes=2;
+    REQUIRE_FALSE(plan_affine_pass_stack(all.lower,target,.9,policy).snapshot);
+    policy.passes=4;
+    REQUIRE_FALSE(plan_affine_pass_stack(all.lower,{{1,-.1,2,.1},3.,3.,3.},.9,policy).snapshot);
+    REQUIRE_FALSE(plan_affine_pass_stack(all.lower,{{1,-1,2,1},1.8,1.8,1.8},.9,policy).snapshot);
+}
+
+TEST_CASE("B06 pass stack owns policy and rejects stale work exhausted precision and numerical budget", "[Nonplanar][B06][PassStack]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{10,0,1},.8,.2,.2)}); auto state=material_at(ledger,1,0);
+    AffineCapCell target{{1,-.35,9,.35},1.8,1.8,1.8};
+    AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(.00001)},VerticalGap(.14),VerticalGap(.24),
+        NormalGap(.14),NormalGap(.24),Volume(.001)};
+    MaterialIntegralLimits limits; limits.cancelled=[&] { state.lower.snapshot.reset();target.z00=8;policy.passes=2;return false; };
+    const auto owned=plan_affine_pass_stack(state.lower,target,.9,policy,limits); INFO(owned.reason); REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->surfaces.size()==4); REQUIRE(owned.snapshot->final_surface.z00==1.8);
+    state=material_at(ledger,1,0); target={{1,-.35,9,.35},1.8,1.8,1.8}; policy.passes=4;
+    limits={}; limits.is_current=[](uint64_t){return false;}; REQUIRE_FALSE(plan_affine_pass_stack(state.lower,target,.9,policy,limits).snapshot);
+    limits={}; limits.max_evaluations=1; REQUIRE_FALSE(plan_affine_pass_stack(state.lower,target,.9,policy,limits).snapshot);
+    limits={}; limits.max_cells=1; REQUIRE_FALSE(plan_affine_pass_stack(state.lower,target,.9,policy,limits).snapshot);
+    limits={}; limits.maximum_interval_width=Volume(0); REQUIRE_FALSE(plan_affine_pass_stack(state.lower,target,.9,policy,limits).snapshot);
+    policy.first_gap.corner_height_error=Length(.02); REQUIRE_FALSE(plan_affine_pass_stack(state.lower,target,.9,policy).snapshot);
+    policy.first_gap.corner_height_error=Length(.00001); policy.total_volume_error=Volume(0);
+    REQUIRE_FALSE(plan_affine_pass_stack(state.lower,target,.9,policy).snapshot);
+}

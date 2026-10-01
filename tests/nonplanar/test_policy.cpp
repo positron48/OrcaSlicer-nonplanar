@@ -1354,7 +1354,7 @@ TEST_CASE("B01 source mesh and raw override changes invalidate Print and aggrega
 
 namespace {
 VolumePartitionResult native_body_partition(DynamicPrintConfig config,
-    const DynamicPrintConfig &object_config={}, const DynamicPrintConfig &volume_config={})
+    const DynamicPrintConfig &object_config={}, const DynamicPrintConfig &volume_config={}, double reserve_bottom=2)
 {
     const auto path=boost::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/
         "docs/nonplanar/fixtures/models/flat_block.stl";
@@ -1367,7 +1367,7 @@ VolumePartitionResult native_body_partition(DynamicPrintConfig config,
     const NativeInputBinding input{71,capture_native_input(model,config)};
     const auto placed=capture_input_placement(imported,input,{}); INFO(placed.geometry.reason);
     REQUIRE(placed.geometry.status==MeshAuditStatus::ValidGeometry);
-    auto reservation=make_cube(8,8,4); reservation.translate(16,16,2);
+    auto reservation=make_cube(8,8,4); reservation.translate(16,16,reserve_bottom);
     auto partition=partition_cap(placed,reservation); INFO(partition.reason);
     REQUIRE(partition.status==VolumePartitionStatus::Partitioned); return partition;
 }
@@ -1764,4 +1764,65 @@ TEST_CASE("B06 actual native bead union refines the corrugated first-pass volume
     REQUIRE(amount.lower<=oracle.lower); REQUIRE(amount.upper>=oracle.upper);
     const auto impossible=integrate_material_first_pass(all.lower,{{17,17,23,23},2.2,2.2,2.2},2.5,policy,limits);
     REQUIRE(impossible.status==MaterialIntegralStatus::Rejected); REQUIRE(impossible.first_pass.support.witness);
+}
+
+TEST_CASE("B06 native pass stack derives the target from the owned source and stays in the reserved cap", "[Nonplanar][B06][NativePassStack]")
+{
+    const auto body=generate_planar_body(native_body_partition(planar_body_config(),{},{},3.2)); REQUIRE(body.snapshot);
+    const BodyMaterialParameters material_params{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8};
+    MaterialLimits material_limits; material_limits.timeout=std::chrono::seconds(5);
+    auto material=reconstruct_planar_body_material(body,material_params,material_limits); REQUIRE(material.snapshot);
+    const NativeAffinePassRequest request{{17,17,23,23},0,3.1,
+        {4,{VerticalGap(.1),VerticalGap(.32),Length(.00001)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.01)}};
+    NativeAffinePassLimits limits; limits.material.timeout=std::chrono::seconds(5); limits.material.max_cells=8191;
+    limits.material.maximum_interval_width=Volume(.01);
+    const auto result=plan_native_affine_pass_stack(material,request,limits); INFO(result.reason); REQUIRE(result.snapshot);
+    const auto &owned=*result.snapshot; REQUIRE(owned.body_material==material.snapshot); REQUIRE(owned.source_projection);
+    const auto &stack=*owned.stack; REQUIRE(stack.surfaces.size()==4);
+    INFO(stack.first_offset_mm); INFO(stack.total_volume_mm3.lower); INFO(stack.total_volume_mm3.upper);
+    INFO(stack.total_allocated_volume.value()); INFO(stack.total_allocation_error_mm3); INFO(owned.reservation_tests);
+    REQUIRE(stack.final_surface.z00==4); REQUIRE(stack.final_surface.z10==4); REQUIRE(stack.final_surface.z01==4);
+    REQUIRE(stack.surfaces.front().cell.z00>3.35); REQUIRE(stack.surfaces.front().cell.z00<3.4);
+    REQUIRE(stack.first_pass.first_pass.gap_mm); REQUIRE(stack.first_pass.first_pass.gap_mm->lower>.1);
+    REQUIRE(stack.first_pass.first_pass.gap_mm->upper<.32);
+    for (const auto &surface : stack.surfaces) for (double z : {surface.cell.z00,surface.cell.z10,surface.cell.z01}) {
+        REQUIRE(z>3.2); REQUIRE(z<=4);
+    }
+    REQUIRE(stack.total_volume_mm3.lower>28.8); REQUIRE(stack.total_volume_mm3.upper<29.5);
+    REQUIRE(stack.total_allocation_error_mm3<=request.policy.total_volume_error.value());
+    REQUIRE(owned.source_projection->revision==body.snapshot->revision);
+    REQUIRE(owned.reservation_tests>0);
+    auto invalid=request; invalid.patch=100; REQUIRE_FALSE(plan_native_affine_pass_stack(material,invalid,limits).snapshot);
+    invalid=request; invalid.policy.passes=2; REQUIRE_FALSE(plan_native_affine_pass_stack(material,invalid,limits).snapshot);
+    invalid=request; invalid.footprint={15,17,23,23}; REQUIRE_FALSE(plan_native_affine_pass_stack(material,invalid,limits).snapshot);
+    limits.material.is_current=[](uint64_t){return false;}; REQUIRE_FALSE(plan_native_affine_pass_stack(material,request,limits).snapshot);
+    limits.material.is_current={}; limits.max_reservation_tests=1; REQUIRE_FALSE(plan_native_affine_pass_stack(material,request,limits).snapshot);
+    limits.max_reservation_tests=50000;
+    auto unreserved=generate_planar_body(native_body_partition(planar_body_config())); REQUIRE(unreserved.snapshot);
+    const auto deep=reconstruct_planar_body_material(unreserved,material_params,material_limits); REQUIRE(deep.snapshot);
+    invalid=request; invalid.support_plane_z_mm=1.9;
+    REQUIRE_FALSE(plan_native_affine_pass_stack(deep,invalid,limits).snapshot);
+    auto moved_params=material_params; moved_params.plate_origin=PhysicalPosition(100,200,10);
+    const auto moved=reconstruct_planar_body_material(body,moved_params,material_limits); REQUIRE(moved.snapshot);
+    auto moved_request=request; moved_request.footprint={117,217,123,223}; moved_request.support_plane_z_mm=13.1;
+    const auto translated=plan_native_affine_pass_stack(moved,moved_request,limits); INFO(translated.reason); REQUIRE(translated.snapshot);
+    REQUIRE(translated.snapshot->stack->final_surface.z00==14);
+    REQUIRE(translated.snapshot->stack->final_surface.footprint.min_x==117);
+    REQUIRE(translated.snapshot->stack->total_volume_mm3.lower<stack.total_volume_mm3.upper);
+    REQUIRE(translated.snapshot->stack->total_volume_mm3.upper>stack.total_volume_mm3.lower);
+    REQUIRE_FALSE(plan_native_affine_pass_stack(moved,request,limits).snapshot);
+    const auto &parent=*material.snapshot;
+    const BodyMaterialResult mismatched{"",std::make_shared<const BodyMaterialSnapshot>(BodyMaterialSnapshot{
+        parent.body,parent.material,"other body",parent.material_fingerprint,parent.plate_origin,parent.references})};
+    REQUIRE(plan_native_affine_pass_stack(mismatched,request,limits).reason=="NATIVE_PASS_PARENT_BINDING");
+    limits.material.cancelled=[] { return true; };
+    REQUIRE(plan_native_affine_pass_stack(material,request,limits).reason=="CANCELLED");
+    limits.material.timeout=std::chrono::milliseconds(1);
+    limits.material.cancelled=[] { std::this_thread::sleep_for(std::chrono::milliseconds(3));return false; };
+    REQUIRE(plan_native_affine_pass_stack(material,request,limits).reason=="NATIVE_PASS_DEADLINE");
+    limits.material.timeout=std::chrono::seconds(5);
+    limits.material.cancelled=[&] { material.snapshot.reset();return false; };
+    const auto retained=plan_native_affine_pass_stack(material,request,limits); INFO(retained.reason); REQUIRE(retained.snapshot);
+    REQUIRE(retained.snapshot->body_material); REQUIRE(retained.snapshot->stack->final_surface.z00==4);
 }

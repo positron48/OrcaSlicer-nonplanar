@@ -1,0 +1,17 @@
+{
+  "command": [
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+    "[MaterialModel],[MaterialCoverage],[MaterialTransition],[MaterialIntegral],[PassStack]",
+    "--warn",
+    "NoAssertions",
+    "--reporter",
+    "JUnit::out=build/nonplanar-evidence/B06-pass-stack/geometric-final.xml",
+    "--reporter",
+    "console"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-01T01:07:28.917796+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 0.154
+}

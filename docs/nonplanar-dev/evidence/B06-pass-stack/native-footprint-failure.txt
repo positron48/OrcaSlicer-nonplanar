@@ -1,0 +1,25 @@
+Filters: [NativePassStack]
+Randomness seeded to: 3322371028
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B06 native pass stack derives the target from the owned source and stays in the
+reserved cap
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1769
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1780: FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+with message:
+  INVALID_FOOTPRINT_QUERY
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 8 | 7 passed | 1 failed
+

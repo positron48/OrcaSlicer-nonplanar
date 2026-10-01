@@ -35,8 +35,10 @@ Next software tasks, in dependency order:
    flat 6x6 mm interior support plane through exact union coverage plus Clipper;
    `B06-material-transition.md` now bounds first-pass roof/gap/nominal volume
    against that actual prefix. `B06-material-integral.md` refines the nominal roof
-   integral to a global mm3 interval width. Subdivide stepped support into qualified
-   cells and select thickness/path volume before seam/edge domains.
+   integral to a global mm3 interval width. `B06-pass-stack.md` selects source-bound
+   prospective affine surfaces and whole-cell quotas within a total error budget.
+   Subdivide stepped support into qualified cells, allocate finite paths and solve
+   seam/edge domains; prospective surfaces alone do not prove later cap support.
 5. Continue the dependent planner, safety/replay and guarded export integration
    against the normative backlog; do not close P2 from these partial modules.
 

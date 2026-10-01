@@ -725,4 +725,118 @@ MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &vi
     catch (const std::exception &e) { result.status=MaterialIntegralStatus::Unknown;result.reason="MATERIAL_INTEGRAL_NUMERIC_FAILURE: "+std::string(e.what()); }
     return result;
 }
+
+AffinePassStackResult plan_affine_pass_stack(const LowerMaterialView &view, const AffineCapCell &requested_target,
+    double plane, const AffinePassPolicy &requested_policy, const MaterialIntegralLimits &requested_limits)
+{
+    const auto cursor=view.snapshot; const auto target=requested_target; const auto policy=requested_policy; const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!cursor || !cursor->sequence || policy.passes<2 || policy.passes>16 || policy.total_volume_error.value()<=0 ||
+            policy.later_vertical_minimum.value()<=0 || policy.later_vertical_minimum.value()>=policy.later_vertical_maximum.value() ||
+            policy.later_normal_minimum.value()<=0 || policy.later_normal_minimum.value()>=policy.later_normal_maximum.value() ||
+            limits.maximum_interval_width.value()<=0) reject("INVALID_AFFINE_PASS_POLICY");
+        const auto sequence=cursor->sequence; const auto poll=[&] { stop(limits,sequence->revision,started); };
+        const auto numeric_error=[&](double shift_error) {
+            const auto total=Interval(sequence->model.numerical_coordinate_error.value())+
+                Interval(3)*(Interval(policy.first_gap.corner_height_error.value())+Interval(shift_error));
+            if (total.hi>.05) reject("AFFINE_PASS_NUMERICAL_BUDGET"); return total.hi;
+        };
+        numeric_error(0);
+        // This is a geometry probe at the final target, not a printed first
+        // candidate. Its valid support/roof bounds may show that target too high
+        // or low for a first pass. No failed/unknown material proof is accepted.
+        const auto probe=assess_material_first_pass({cursor},target,plane,policy.first_gap,limits);
+        poll();
+        if (probe.support.status!=MaterialCoverageStatus::Covered || !probe.gap_mm || !probe.upper_roof_ceiling_mm ||
+            (probe.reason!="CONTINUOUS_MATERIAL_FIRST_PASS_FEASIBLE" && probe.reason!="MATERIAL_GAP_TOO_SMALL" &&
+             probe.reason!="MATERIAL_GAP_TOO_LARGE" && probe.reason!="MATERIAL_TRANSITION_UNCERTAIN_GAP"))
+            return {probe.reason,{}};
+        const auto &r=target.footprint;
+        const Interval error(-policy.first_gap.corner_height_error.value(),policy.first_gap.corner_height_error.value());
+        const auto gx=(Interval(target.z10)+error-Interval(target.z00)-error)/(Interval(r.max_x)-Interval(r.min_x));
+        const auto gy=(Interval(target.z01)+error-Interval(target.z00)-error)/(Interval(r.max_y)-Interval(r.min_y));
+        const auto normalizer=detail::root(Interval(1)+square(gx)+square(gy));
+        const Interval remaining_passes(double(policy.passes-1));
+        double low=(Interval(probe.gap_mm->upper)-Interval(policy.first_gap.maximum.value())).hi;
+        double high=(Interval(probe.gap_mm->lower)-Interval(policy.first_gap.minimum.value())).lo;
+        low=std::max({low,(remaining_passes*Interval(policy.later_vertical_minimum.value())).hi,
+            (remaining_passes*Interval(policy.later_normal_minimum.value())*normalizer).hi});
+        high=std::min({high,(remaining_passes*Interval(policy.later_vertical_maximum.value())).lo,
+            (remaining_passes*Interval(policy.later_normal_maximum.value())*normalizer).lo});
+        if (low>=high) return {"PARALLEL_AFFINE_STACK_INFEASIBLE",{}};
+        const double offset=(low+high)/2;
+        if (!(offset>low && offset<high)) reject("AFFINE_PASS_OFFSET_ROUNDING");
+        std::vector<AffineCapCell> cells; double shift_error=0;
+        for (size_t pass=1; pass<=policy.passes; ++pass) {
+            poll(); auto cell=target;
+            if (pass!=policy.passes) {
+                const double fraction=double(policy.passes-pass)/double(policy.passes-1);
+                const auto exact_offset=Interval(offset)*Interval(double(policy.passes-pass))/remaining_passes;
+                for (auto pair : {std::pair<double *,double>{&cell.z00,target.z00},{&cell.z10,target.z10},{&cell.z01,target.z01}}) {
+                    *pair.first=pair.second-offset*fraction; coordinate(*pair.first);
+                    const auto delta=Interval(pair.second)-exact_offset-Interval(*pair.first);
+                    shift_error=std::max(shift_error,std::max(std::abs(delta.lo),std::abs(delta.hi)));
+                }
+            }
+            cells.push_back(cell);
+        }
+        const double total_numeric=numeric_error(shift_error);
+        const size_t previous_work=probe.roof_evaluations+probe.support.evaluations, previous_cells=probe.support.cells;
+        if (previous_work>=limits.max_evaluations || previous_cells>=limits.max_cells) reject("AFFINE_PASS_WORK_LIMIT");
+        auto remaining=limits; remaining.max_evaluations-=previous_work; remaining.max_cells-=previous_cells;
+        remaining.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        remaining.cancelled=[&] { poll();return false; }; remaining.is_current={};
+        remaining.maximum_interval_width=Volume(std::min(limits.maximum_interval_width.value(),policy.total_volume_error.value()));
+        auto first_policy=policy.first_gap;
+        first_policy.corner_height_error=Length((Interval(first_policy.corner_height_error.value())+Interval(shift_error)).hi);
+        const auto first=integrate_material_first_pass({cursor},cells.front(),plane,first_policy,remaining);
+        poll(); if (first.status!=MaterialIntegralStatus::Bounded || !first.nominal_volume_mm3) return {first.reason,{}};
+        const auto area=(Interval(r.max_x)-Interval(r.min_x))*(Interval(r.max_y)-Interval(r.min_y));
+        const auto corners=[](const AffineCapCell &c) {
+            return std::array<Interval,4>{Interval(c.z00),Interval(c.z10),Interval(c.z01),Interval(c.z10)+Interval(c.z01)-Interval(c.z00)};
+        };
+        const auto gradient=[&](const AffineCapCell &c) {
+            return std::array<Interval,2>{
+                (Interval(c.z10)+error-Interval(c.z00)-error)/(Interval(r.max_x)-Interval(r.min_x)),
+                (Interval(c.z01)+error-Interval(c.z00)-error)/(Interval(r.max_y)-Interval(r.min_y))};
+        };
+        std::vector<AffinePassSurface> surfaces; Interval total_volume(0); double allocated=0;
+        for (size_t i=0; i<cells.size(); ++i) {
+            poll(); Interval volume=interval(*first.nominal_volume_mm3);
+            std::optional<ScalarBounds> vertical,normal;
+            if (i) {
+                const auto before=corners(cells[i-1]), after=corners(cells[i]); auto spacing=after[0]-before[0];
+                for (size_t j=1; j<4; ++j) {
+                    const auto gap=after[j]-before[j]; spacing=Interval(std::min(spacing.lo,gap.lo),std::max(spacing.hi,gap.hi));
+                }
+                // Normal separation is measured along the lower affine plane's
+                // normal. Account for the tiny nonparallelism of rounded stored
+                // vertices instead of silently using the ideal target gradient.
+                const auto g0=gradient(cells[i-1]),g1=gradient(cells[i]);
+                const auto normal_spacing=spacing*detail::root(Interval(1)+square(g0[0])+square(g0[1]))/
+                    (Interval(1)+g0[0]*g1[0]+g0[1]*g1[1]);
+                if (spacing.lo<=policy.later_vertical_minimum.value() || spacing.hi>=policy.later_vertical_maximum.value() ||
+                    normal_spacing.lo<=policy.later_normal_minimum.value() || normal_spacing.hi>=policy.later_normal_maximum.value())
+                    reject("AFFINE_PASS_SPACING_UNCERTAIN");
+                vertical=bounds(spacing); normal=bounds(normal_spacing);
+                volume=area*((after[1]+after[2]-before[1]-before[2])/Interval(2));
+            }
+            if (volume.lo<=0) reject("AFFINE_PASS_VOLUME_UNCERTAIN");
+            const double quota=(volume.lo+volume.hi)/2;
+            const auto quota_error=volume-Interval(quota);
+            surfaces.push_back({cells[i],vertical,normal,bounds(volume),Volume(quota),std::max(std::abs(quota_error.lo),std::abs(quota_error.hi))});
+            total_volume=total_volume+volume; allocated+=quota;
+        }
+        const auto allocation_error=total_volume-Interval(allocated);
+        const double total_error=std::max(std::abs(allocation_error.lo),std::abs(allocation_error.hi));
+        if (total_error>policy.total_volume_error.value()) reject("AFFINE_PASS_TOTAL_VOLUME_ERROR");
+        poll();
+        auto snapshot=std::make_shared<const AffinePassStackSnapshot>(AffinePassStackSnapshot{cursor,target,policy,plane,offset,{low,high},first,
+            std::move(surfaces),bounds(total_volume),Volume(allocated),total_error,total_numeric});
+        poll(); return {"PROSPECTIVE_AFFINE_SURFACES_AND_CELL_QUOTAS_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) { return {e.what(),{}}; }
+    catch (const std::exception &e) { return {"AFFINE_PASS_STACK_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
+}
 }

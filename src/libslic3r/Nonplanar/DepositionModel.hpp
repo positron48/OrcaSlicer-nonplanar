@@ -144,4 +144,43 @@ struct MaterialIntegralResult {
 // bead amount, perimeter/seam allocation, V-to-E or export permission is provided.
 MaterialIntegralResult integrate_material_first_pass(const LowerMaterialView &, const AffineCapCell &,
     double support_plane_z_mm, const TransitionPolicy &, const MaterialIntegralLimits &limits = {});
+
+inline constexpr unsigned affine_pass_stack_contract_version=1;
+struct AffinePassPolicy {
+    size_t passes;
+    TransitionPolicy first_gap;
+    VerticalGap later_vertical_minimum, later_vertical_maximum;
+    NormalGap later_normal_minimum, later_normal_maximum;
+    Volume total_volume_error;
+};
+struct AffinePassSurface {
+    AffineCapCell cell;
+    std::optional<ScalarBounds> vertical_spacing_mm, normal_spacing_mm;
+    ScalarBounds volume_mm3;
+    Volume allocated_volume; // Prospective whole-cell quota, never a bead/E.
+    double allocation_error_mm3;
+};
+struct AffinePassStackSnapshot {
+    const std::shared_ptr<const MaterialPrefixSnapshot> source;
+    const AffineCapCell final_surface;
+    const AffinePassPolicy policy;
+    const double support_plane_z_mm, first_offset_mm;
+    const ScalarBounds offset_range_mm;
+    const MaterialIntegralResult first_pass;
+    const std::vector<AffinePassSurface> surfaces;
+    const ScalarBounds total_volume_mm3;
+    const Volume total_allocated_volume;
+    const double total_allocation_error_mm3, numerical_error_upper_mm;
+};
+struct AffinePassStackResult {
+    std::string reason;
+    std::shared_ptr<const AffinePassStackSnapshot> snapshot;
+};
+// Select prospective parallel affine surfaces within the declared pass count
+// and spacing limits. Preserve the final target, re-prove the selected first
+// surface against actual material and bound total nominal cell-volume quotas.
+// Later spacing is geometric only: actual cap material, paths, contact/seam,
+// full-head motion, target-source binding and export remain separate obligations.
+AffinePassStackResult plan_affine_pass_stack(const LowerMaterialView &, const AffineCapCell &final_surface,
+    double support_plane_z_mm, const AffinePassPolicy &, const MaterialIntegralLimits &limits = {});
 }

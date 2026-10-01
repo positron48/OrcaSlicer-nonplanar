@@ -1,0 +1,7 @@
+  429 |     virtual int            load_cached_data(const std::string& directory) { return 0;}
+      |                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/PlanarBody.cpp:469:21: error: no member named 'snapshot' in 'Slic3r::nptop::MaterialAt'
+  469 |         if (!prefix.snapshot) return {prefix.reason,{}};
+      |              ~~~~~~ ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/PlanarBody.cpp:1:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/PlanarBody.hpp:2:

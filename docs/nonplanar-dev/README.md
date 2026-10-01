@@ -57,6 +57,13 @@ and a Clipper/monotone-Z oracle for the native floor. Four new cases/8293 assert
 pass. Final selected CTest executes 254/254 with six fresh OFF/ZAA comparisons.
 Selected bead volume/E, thickness and complete seam/path allocation remain open.
 
+`B06-pass-stack.md` now selects source-bound prospective affine surfaces and
+whole-cell quotas, preserving the final target and checking actual first-gap,
+later vertical/normal spacing and total volume error. Four new cases/128
+assertions pass, including a physical-frame translation and a native reserved
+interior. Current selected CTest executes 258/258; six fresh OFF/ZAA comparisons
+pass. Subsequent actual cap support, finite paths and volumetric seam remain open.
+
 The complete B01–B15 objective remains active and `gate-b-plan.md` records the
 full acceptance scope. Source/file/plate/job/profile/scene binding, complete
 compatibility, dense coverage, material replay, ordering and guarded hybrid
@@ -66,8 +73,9 @@ nozzle are user-declared in `B15-u1-declared-setup.md`, without measurement clai
 
 Prior Linux runs 36454696019 at d57e9325 and 36758101513 at 7df1d765 succeeded.
 Runs 36767506583 at e7a46961 and 36786738740 at 23f00bfd succeeded. In the saved
-snapshot, 36791501134 at b35408ce is in_progress and 36793524250 at 22478ec6
-pending. These records do not prove Linux execution of this integral patch. Windows remains NOT_RUN.
+snapshot, 36791501134 at b35408ce is in_progress, 36793524250 at 22478ec6
+is cancelled, and 36796275758 at a083f2df is pending. These records do not prove
+Linux execution of this pass-selection patch. Windows remains NOT_RUN.
 
 The continuation sections below preserve historical counts and next steps;
 `status.json` and this checkpoint describe the current state.

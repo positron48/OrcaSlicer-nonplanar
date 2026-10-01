@@ -1,0 +1,932 @@
+Filters: [NativePassStack]
+Randomness seeded to: 1753698393
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B06 native pass stack derives the target from the owned source and stays in the
+reserved cap
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1769
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1361: PASSED:
+  REQUIRE( file.source )
+with expansion:
+  0x104f45148
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1362: PASSED:
+  REQUIRE( imported.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1363: PASSED:
+  REQUIRE( load_stl(path.string().c_str(),&model) )
+with expansion:
+  true
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1369: PASSED:
+  REQUIRE( placed.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+with message:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1372: PASSED:
+  REQUIRE( partition.status==VolumePartitionStatus::Partitioned )
+with expansion:
+  0 == 0
+with messages:
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+  NOMINAL_BODY_CAP_PARTITION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1771: PASSED:
+  REQUIRE( body.snapshot )
+with expansion:
+  0x9b8904798
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1775: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x9b90e1198
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1780: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x9b8d7a5b8
+with message:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1781: PASSED:
+  REQUIRE( owned.body_material==material.snapshot )
+with expansion:
+  0x9b90e1198 == 0x9b90e1198
+with message:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1781: PASSED:
+  REQUIRE( owned.source_projection )
+with expansion:
+  0x9b8960300
+with message:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1782: PASSED:
+  REQUIRE( stack.surfaces.size()==4 )
+with expansion:
+  4 == 4
+with message:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1785: PASSED:
+  REQUIRE( stack.final_surface.z00==4 )
+with expansion:
+  4.0 == 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1785: PASSED:
+  REQUIRE( stack.final_surface.z10==4 )
+with expansion:
+  4.0 == 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1785: PASSED:
+  REQUIRE( stack.final_surface.z01==4 )
+with expansion:
+  4.0 == 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1786: PASSED:
+  REQUIRE( stack.surfaces.front().cell.z00>3.35 )
+with expansion:
+  3.37000064498729035 > 3.35000000000000009
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1786: PASSED:
+  REQUIRE( stack.surfaces.front().cell.z00<3.4 )
+with expansion:
+  3.37000064498729035 < 3.39999999999999991
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1787: PASSED:
+  REQUIRE( stack.first_pass.first_pass.gap_mm )
+with expansion:
+  {?}
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1787: PASSED:
+  REQUIRE( stack.first_pass.first_pass.gap_mm->lower>.1 )
+with expansion:
+  0.14996744761757827 > 0.10000000000000001
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1788: PASSED:
+  REQUIRE( stack.first_pass.first_pass.gap_mm->upper<.32 )
+with expansion:
+  0.27003255238242035 < 0.32000000000000001
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  3.37000064498729035 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  3.37000064498729035 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  3.37000064498729035 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  3.37000064498729035 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  3.37000064498729035 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  3.37000064498729035 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  3.5800004299915269 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  3.5800004299915269 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  3.5800004299915269 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  3.5800004299915269 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  3.5800004299915269 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  3.5800004299915269 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  3.79000021499576345 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  3.79000021499576345 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  3.79000021499576345 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  3.79000021499576345 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  3.79000021499576345 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  3.79000021499576345 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  4.0 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  4.0 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  4.0 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  4.0 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z>3.2 )
+with expansion:
+  4.0 > 3.20000000000000018
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1790: PASSED:
+  REQUIRE( z<=4 )
+with expansion:
+  4.0 <= 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1792: PASSED:
+  REQUIRE( stack.total_volume_mm3.lower>28.8 )
+with expansion:
+  28.97352050100678156
+  >
+  28.80000000000000071
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1792: PASSED:
+  REQUIRE( stack.total_volume_mm3.upper<29.5 )
+with expansion:
+  28.98351843215683843 < 29.5
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1793: PASSED:
+  REQUIRE( stack.total_allocation_error_mm3<=request.policy.total_volume_error.value() )
+with expansion:
+  0.00499896557503021 <= 0.01
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1794: PASSED:
+  REQUIRE( owned.source_projection->revision==body.snapshot->revision )
+with expansion:
+  71 == 71
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1795: PASSED:
+  REQUIRE( owned.reservation_tests>0 )
+with expansion:
+  6240 (0x1860) > 0
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1796: PASSED:
+  REQUIRE_FALSE( plan_native_affine_pass_stack(material,invalid,limits).snapshot )
+with expansion:
+  !0
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1797: PASSED:
+  REQUIRE_FALSE( plan_native_affine_pass_stack(material,invalid,limits).snapshot )
+with expansion:
+  !0
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1798: PASSED:
+  REQUIRE_FALSE( plan_native_affine_pass_stack(material,invalid,limits).snapshot )
+with expansion:
+  !0
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1799: PASSED:
+  REQUIRE_FALSE( plan_native_affine_pass_stack(material,request,limits).snapshot )
+with expansion:
+  !0
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1800: PASSED:
+  REQUIRE_FALSE( plan_native_affine_pass_stack(material,request,limits).snapshot )
+with expansion:
+  !0
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1361: PASSED:
+  REQUIRE( file.source )
+with expansion:
+  0x9b90b0248
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1362: PASSED:
+  REQUIRE( imported.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1363: PASSED:
+  REQUIRE( load_stl(path.string().c_str(),&model) )
+with expansion:
+  true
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1369: PASSED:
+  REQUIRE( placed.geometry.status==MeshAuditStatus::ValidGeometry )
+with expansion:
+  0 == 0
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1372: PASSED:
+  REQUIRE( partition.status==VolumePartitionStatus::Partitioned )
+with expansion:
+  0 == 0
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  CLOSED_ORIENTED_SINGLE_COMPONENT
+  NOMINAL_BODY_CAP_PARTITION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1802: PASSED:
+  REQUIRE( unreserved.snapshot )
+with expansion:
+  0x9b8905bd8
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1803: PASSED:
+  REQUIRE( deep.snapshot )
+with expansion:
+  0x9b90e1418
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1805: PASSED:
+  REQUIRE_FALSE( plan_native_affine_pass_stack(deep,invalid,limits).snapshot )
+with expansion:
+  !0
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1807: PASSED:
+  REQUIRE( moved.snapshot )
+with expansion:
+  0x9b90e0158
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1809: PASSED:
+  REQUIRE( translated.snapshot )
+with expansion:
+  0x9b8d7a778
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1810: PASSED:
+  REQUIRE( translated.snapshot->stack->final_surface.z00==14 )
+with expansion:
+  14.0 == 14
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1811: PASSED:
+  REQUIRE( translated.snapshot->stack->final_surface.footprint.min_x==117 )
+with expansion:
+  117.0 == 117
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1812: PASSED:
+  REQUIRE( translated.snapshot->stack->total_volume_mm3.lower<stack.total_volume_mm3.upper )
+with expansion:
+  28.97352050100624155
+  <
+  28.98351843215683843
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1813: PASSED:
+  REQUIRE( translated.snapshot->stack->total_volume_mm3.upper>stack.total_volume_mm3.lower )
+with expansion:
+  28.98351843215732515
+  >
+  28.97352050100678156
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1814: PASSED:
+  REQUIRE_FALSE( plan_native_affine_pass_stack(moved,request,limits).snapshot )
+with expansion:
+  !0
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1818: PASSED:
+  REQUIRE( plan_native_affine_pass_stack(mismatched,request,limits).reason=="NATIVE_PASS_PARENT_BINDING" )
+with expansion:
+  "NATIVE_PASS_PARENT_BINDING"
+  ==
+  "NATIVE_PASS_PARENT_BINDING"
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1820: PASSED:
+  REQUIRE( plan_native_affine_pass_stack(material,request,limits).reason=="CANCELLED" )
+with expansion:
+  "CANCELLED" == "CANCELLED"
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1823: PASSED:
+  REQUIRE( plan_native_affine_pass_stack(material,request,limits).reason=="NATIVE_PASS_DEADLINE" )
+with expansion:
+  "NATIVE_PASS_DEADLINE"
+  ==
+  "NATIVE_PASS_DEADLINE"
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1826: PASSED:
+  REQUIRE( retained.snapshot )
+with expansion:
+  0x9b8d79518
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1827: PASSED:
+  REQUIRE( retained.snapshot->body_material )
+with expansion:
+  0x9b90e1198
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:1827: PASSED:
+  REQUIRE( retained.snapshot->stack->final_surface.z00==4 )
+with expansion:
+  4.0 == 4
+with messages:
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  0.629999
+  28.9735
+  28.9835
+  28.9785
+  0.00499897
+  6240
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+  SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+
+===============================================================================
+All tests passed (74 assertions in 1 test case)
+

@@ -7,6 +7,7 @@
 #include "../Print.hpp"
 #include "../Layer.hpp"
 #include "../Flow.hpp"
+#include <CGAL/Gmpq.h>
 #include <mutex>
 
 namespace Slic3r::nptop {
@@ -335,5 +336,167 @@ BodyMaterialResult reconstruct_planar_body_material(const PlanarBodyResult &requ
         return {"DECLARED_NATIVE_BODY_MATERIAL_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) { return {e.what(),{}}; }
     catch (const std::exception &e) { return {"BODY_MATERIAL_CAPTURE_OR_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
+}
+
+NativeAffinePassResult plan_native_affine_pass_stack(const BodyMaterialResult &requested_body,
+    const NativeAffinePassRequest &requested, const NativeAffinePassLimits &requested_limits)
+{
+    const auto owned=requested_body.snapshot; const auto request=requested; const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    using detail::Interval;
+    const auto poll=[&] {
+        if ((limits.material.cancelled && limits.material.cancelled()) ||
+            (limits.projection.geometry.cancelled && limits.projection.geometry.cancelled())) reject("CANCELLED");
+        if ((limits.material.is_current && !limits.material.is_current(owned->body->revision)) ||
+            (limits.projection.is_current && !limits.projection.is_current(owned->body->revision))) reject("STALE_REVISION");
+        if (std::chrono::steady_clock::now()-started>=limits.material.timeout) reject("NATIVE_PASS_DEADLINE");
+        detail::require_interval_environment();
+    };
+    const auto remaining_time=[&] {
+        poll();
+        return limits.material.timeout-std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+    };
+    try {
+        detail::require_interval_environment();
+        if (!owned || !owned->body || !owned->material || !owned->body->partition ||
+            !owned->body->partition->original || !owned->body->partition->reservation ||
+            limits.material.timeout.count()<=0 || limits.material.timeout>std::chrono::seconds(30) ||
+            !limits.max_reservation_tests || limits.max_reservation_tests>200000)
+            reject("INVALID_NATIVE_PASS_CONTEXT");
+        const auto &body=*owned->body; const auto &partition=*body.partition;
+        if (partition.revision!=body.revision || owned->material->revision!=body.revision ||
+            owned->material->source_fingerprint!=owned->body_fingerprint) reject("NATIVE_PASS_PARENT_BINDING");
+        poll();
+        if (body.fingerprint()!=owned->body_fingerprint || owned->material->fingerprint()!=owned->material_fingerprint)
+            reject("NATIVE_PASS_PARENT_BINDING");
+        poll();
+        RectangleXY local=request.footprint; double frame_error=0;
+        for (auto pair : {std::pair<double *,double>{&local.min_x,owned->plate_origin.x()},{&local.max_x,owned->plate_origin.x()},
+                          {&local.min_y,owned->plate_origin.y()},{&local.max_y,owned->plate_origin.y()}}) {
+            if (!std::isfinite(*pair.first) || std::abs(*pair.first)>NativeScale::max_coordinate_mm)
+                reject("INVALID_NATIVE_PASS_CELL");
+            const auto exact=Interval(*pair.first)-Interval(pair.second); *pair.first-=pair.second;
+            if (!std::isfinite(*pair.first) || std::abs(*pair.first)>NativeScale::max_coordinate_mm)
+                reject("INVALID_NATIVE_PASS_CELL");
+            const auto delta=exact-Interval(*pair.first);
+            // The footprint query uses a Euclidean disk. Sum coordinate
+            // errors (an L1 upper bound), rather than retaining only one axis.
+            frame_error=(Interval(frame_error)+Interval(std::max(std::abs(delta.lo),std::abs(delta.hi)))).hi;
+        }
+        if (local.min_x>=local.max_x || local.min_y>=local.max_y) reject("INVALID_NATIVE_PASS_CELL");
+        auto projection_limits=limits.projection;
+        projection_limits.geometry.timeout=std::min(projection_limits.geometry.timeout,remaining_time());
+        projection_limits.geometry.cancelled=[&] { poll();return false; }; projection_limits.is_current={};
+        const auto projection=analyze_upper_projection(*partition.original,true,body.revision,projection_limits);
+        if (projection.status!=UpperProjectionStatus::NominalHeightfield || !projection.snapshot)
+            return {projection.reason,{}};
+        const auto &source=*projection.snapshot;
+        if (request.patch>=source.slope_patches.size()) reject("NATIVE_PASS_PATCH_INDEX");
+        const auto &patch=source.slope_patches[request.patch];
+        if (!patch.nominal_curvature_upper_mm_inv || *patch.nominal_curvature_upper_mm_inv!=0)
+            reject("NATIVE_PASS_REQUIRES_AFFINE_SOURCE_PATCH");
+        const double inset=(Interval(frame_error)+Interval(partition.total_error_upper_mm)+Interval(body.origin_error_upper_mm)).hi;
+        if (!std::isfinite(inset) || inset<=0 || inset>.05) reject("NATIVE_PASS_SOURCE_NUMERICAL_BUDGET");
+        // Four boundary queries alone would miss a hole entirely inside the
+        // cell. Whole affine patch membership also excludes such enclosed holes.
+        for (const auto &boundary : patch.boundaries) if (boundary.hole) {
+            for (size_t index : boundary.mesh_vertices) {
+                poll(); const auto &p=source.geometry->its.vertices.at(index);
+                if (p.x()>=local.min_x-inset && p.x()<=local.max_x+inset &&
+                    p.y()>=local.min_y-inset && p.y()<=local.max_y+inset) reject("NATIVE_PASS_CELL_CONTAINS_SOURCE_HOLE");
+            }
+        }
+        const std::array<Vec2d,4> corners{{{local.min_x,local.min_y},{local.max_x,local.min_y},
+                                          {local.max_x,local.max_y},{local.min_x,local.max_y}}};
+        std::array<double,4> height{}; double height_error=0, maximum_gradient=0;
+        for (size_t i=0; i<4; ++i) {
+            UpperFootprintLimits edge_limits; edge_limits.timeout=remaining_time();
+            edge_limits.cancelled=[&] { poll();return false; };
+            const auto edge=check_affine_upper_footprint(projection.snapshot,{request.patch,corners[i],corners[(i+1)%4],inset,0,0},edge_limits);
+            if (edge.status!=UpperFootprintStatus::Contained || !edge.nominal_heights) return {edge.reason,{}};
+            const auto &h=*edge.nominal_heights;
+            const auto translated=Interval(h.start_z_mm[0],h.start_z_mm[1])+Interval(owned->plate_origin.z());
+            height[i]=(translated.lo+translated.hi)/2;
+            const auto error=translated-Interval(height[i]);
+            height_error=std::max(height_error,std::max(std::abs(error.lo),std::abs(error.hi)));
+            const auto gx=Interval(h.gradient_x[0],h.gradient_x[1]),gy=Interval(h.gradient_y[0],h.gradient_y[1]);
+            maximum_gradient=std::max(maximum_gradient,(Interval(std::max(std::abs(gx.lo),std::abs(gx.hi)))+
+                Interval(std::max(std::abs(gy.lo),std::abs(gy.hi)))).hi);
+        }
+        height_error=(Interval(height_error)+Interval(inset)*(Interval(1)+Interval(maximum_gradient))).hi;
+        const auto fourth=Interval(height[1])+Interval(height[3])-Interval(height[0])-Interval(height[2]);
+        if (std::max(std::abs(fourth.lo),std::abs(fourth.hi))>4*height_error) reject("NATIVE_PASS_SOURCE_AFFINE_BINDING");
+
+        // A bounded exact half-space proof is supported only for convex
+        // reservations. Vertex containment is sufficient for an affine cell
+        // only after proving every reservation vertex satisfies every face.
+        using Exact=CGAL::Gmpq;
+        using Point=std::array<Exact,3>;
+        const auto &mesh=partition.reservation->its;
+        if (mesh.vertices.size()<4 || mesh.vertices.size()>128 || mesh.indices.empty() || mesh.indices.size()>256)
+            reject("UNSUPPORTED_NATIVE_PASS_RESERVATION");
+        std::vector<Point> vertices; Point center{{0,0,0}};
+        for (const auto &v : mesh.vertices) {
+            Point p;
+            for (size_t axis=0; axis<3; ++axis) {
+                if (!std::isfinite(v[axis]) || std::abs(v[axis])>NativeScale::max_coordinate_mm)
+                    reject("UNSUPPORTED_NATIVE_PASS_RESERVATION");
+                p[axis]=Exact(double(v[axis])); center[axis]+=p[axis];
+            }
+            vertices.push_back(std::move(p));
+        }
+        for (auto &v : center) v/=Exact(int(vertices.size()));
+        struct Plane { Point normal; Exact offset; bool positive; };
+        std::vector<Plane> planes; size_t tests=0;
+        const auto inside=[&](const Plane &p,const Point &v) {
+            poll(); if (tests>=limits.max_reservation_tests) reject("NATIVE_PASS_RESERVATION_WORK_LIMIT"); ++tests;
+            const Exact distance=p.normal[0]*v[0]+p.normal[1]*v[1]+p.normal[2]*v[2]-p.offset;
+            return p.positive ? distance>=0 : distance<=0;
+        };
+        for (const auto &face : mesh.indices) {
+            const auto &a=vertices.at(face[0]), &b=vertices.at(face[1]), &c=vertices.at(face[2]);
+            Point ab,ac;
+            for (size_t axis=0; axis<3; ++axis) { ab[axis]=b[axis]-a[axis];ac[axis]=c[axis]-a[axis]; }
+            Point n{{ab[1]*ac[2]-ab[2]*ac[1],ab[2]*ac[0]-ab[0]*ac[2],ab[0]*ac[1]-ab[1]*ac[0]}};
+            const Exact offset=n[0]*a[0]+n[1]*a[1]+n[2]*a[2];
+            const Exact direction=n[0]*center[0]+n[1]*center[1]+n[2]*center[2]-offset;
+            if (direction==0) reject("UNSUPPORTED_NATIVE_PASS_RESERVATION");
+            Plane p{std::move(n),offset,direction>0};
+            for (const auto &v : vertices) if (!inside(p,v)) reject("NONCONVEX_NATIVE_PASS_RESERVATION");
+            planes.push_back(std::move(p));
+        }
+        MaterialLimits prefix_limits; prefix_limits.timeout=remaining_time();
+        prefix_limits.cancelled=[&] { poll();return false; };
+        const auto prefix=material_at(owned->material,owned->material->records.size(),0,prefix_limits);
+        if (!prefix.lower.snapshot) return {prefix.reason,{}};
+        auto policy=request.policy;
+        policy.first_gap.corner_height_error=Length((Interval(policy.first_gap.corner_height_error.value())+Interval(height_error)).hi);
+        auto material_limits=limits.material; material_limits.timeout=remaining_time();
+        material_limits.cancelled=[&] { poll();return false; }; material_limits.is_current={};
+        const auto stack=plan_affine_pass_stack(prefix.lower,{request.footprint,height[0],height[1],height[3]},
+            request.support_plane_z_mm,policy,material_limits);
+        if (!stack.snapshot) return {stack.reason,{}};
+        const double xy_error=stack.snapshot->numerical_error_upper_mm;
+        const double z_error=(Interval(3)*Interval(policy.first_gap.corner_height_error.value())+Interval(xy_error)).hi;
+        for (const auto &surface : stack.snapshot->surfaces) {
+            const std::array<Interval,4> z{{Interval(surface.cell.z00),Interval(surface.cell.z10),
+                Interval(surface.cell.z10)+Interval(surface.cell.z01)-Interval(surface.cell.z00),Interval(surface.cell.z01)}};
+            for (size_t i=0; i<4; ++i) for (double dx : {-xy_error,xy_error}) for (double dy : {-xy_error,xy_error}) {
+                const auto x=Interval(corners[i].x())+Interval(dx),y=Interval(corners[i].y())+Interval(dy);
+                const auto local_z=z[i]-Interval(owned->plate_origin.z())+Interval(-z_error,z_error);
+                // Exact tests use all outward endpoints, enclosing the whole
+                // affine cell and its declared coordinate error in each plane.
+                for (double px : {x.lo,x.hi}) for (double py : {y.lo,y.hi}) for (double pz : {local_z.lo,local_z.hi}) {
+                    const Point point{{Exact(px),Exact(py),Exact(pz)}};
+                    for (const auto &p : planes) if (!inside(p,point)) reject("NATIVE_PASS_OUTSIDE_RESERVED_CAP");
+                }
+            }
+        }
+        poll();
+        auto snapshot=std::make_shared<const NativeAffinePassSnapshot>(NativeAffinePassSnapshot{
+            owned,projection.snapshot,request,stack.snapshot,height_error,tests});
+        poll(); return {"SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) { return {e.what(),{}}; }
+    catch (const std::exception &e) { return {"NATIVE_PASS_CAPTURE_OR_NUMERIC_FAILURE: "+std::string(e.what()),{}}; }
 }
 }
