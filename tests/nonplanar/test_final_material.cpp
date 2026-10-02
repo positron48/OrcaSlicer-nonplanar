@@ -32,6 +32,35 @@ std::vector<MaterialDeclaration> declarations()
  {7,6,MaterialEventKind::Retraction,{6,8,.2},{6,8,.2},0,.4,{}}};
 }
 void encloses(RateBounds b,High v){REQUIRE(High(b.lower)<=v);REQUIRE(v<=High(b.upper));}
+// Independent 113-bit whole-box inequalities from the known decimal fixture
+// poses and binary section/policy inputs. No verifier geometry helpers.
+void independent_solid_box(const MaterialRegion &box,MaterialRepresentation rep,const MaterialSection &section,
+ const std::array<High,3> &start,const std::array<High,3> &end)
+{
+ const auto p=material_policy();const High dx=end[0]-start[0],dy=end[1]-start[1],length=sqrt(dx*dx+dy*dy);
+ const High pi=acos(High(-1)),volume=High(".2")*pi*High("1.75")*High("1.75")/4/High(rate_policy().flow);
+ const High dose=rep==MaterialRepresentation::Lower ? volume*(1-High(p.relative_dose_error))-High(p.absolute_dose_error_mm3) :
+  rep==MaterialRepresentation::Upper ? volume*(1+High(p.relative_dose_error))+High(p.absolute_dose_error_mm3) : volume;
+ High tlo=2,thi=-1,normal=0;
+ for(double x:{box.min[0],box.max[0]})for(double y:{box.min[1],box.max[1]}) {
+  const High px=High(x)-start[0],py=High(y)-start[1],t=(dx*px+dy*py)/(length*length);
+  tlo=std::min(tlo,t);thi=std::max(thi,t);normal=std::max(normal,abs((dx*py-dy*px)/length));
+ }
+ // For Upper, containment in its largest-dose unexpanded solid suffices.
+ const High xy=rep==MaterialRepresentation::Lower ? High(p.inner_xy_loss_mm)+High(p.numerical_coordinate_error_mm) : High(0);
+ const High z=rep==MaterialRepresentation::Lower ? High(p.inner_z_loss_mm)+High(p.numerical_coordinate_error_mm) : High(0);
+ tlo-=xy/length;thi+=xy/length;normal+=xy;REQUIRE(tlo>0);REQUIRE(thi<1);
+ const High h0(section.gap_begin_mm),dh=High(section.gap_end_mm)-h0,dz=end[2]-start[2];
+ const High ha=h0+dh*tlo,hb=h0+dh*thi,hmin=std::min(ha,hb),hmax=std::max(ha,hb),area=dose/length;
+ const High ta=start[2]+dz*tlo,tb=start[2]+dz*thi;
+ if(section.kind==MaterialSectionKind::Rectangle){
+  REQUIRE(normal<area/hmax/2);REQUIRE(High(box.max[2])+z<std::min(ta,tb));REQUIRE(High(box.min[2])-z>std::max(ta-ha,tb-hb));
+ }else {
+  const High core=(area/hmax-pi*hmax/4)/2,radius=hmin/2,ca=ta-ha/2,cb=tb-hb/2;
+  const High lateral=std::max(High(0),normal-core),vertical=std::max(abs(High(box.min[2])-z-std::max(ca,cb)),abs(High(box.max[2])+z-std::min(ca,cb)));
+  REQUIRE(core>0);REQUIRE(lateral*lateral+vertical*vertical<radius*radius);
+ }
+}
 }
 TEST_CASE("B12 final material reconstructs complete final dose sections and only actual pressure free prefixes", "[Nonplanar][B12][FinalByteMaterial]")
 {
@@ -85,4 +114,122 @@ TEST_CASE("B12 final material ownership stale budgets rounding and final publica
  const auto owned=reconstruct_linear_material(rates.snapshot,rows,policy,limits);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->declarations.size()==7);
  limits={};size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(reconstruct_linear_material(rates.snapshot,declarations(),material_policy(),limits).snapshot);
  const auto last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};REQUIRE_FALSE(reconstruct_linear_material(rates.snapshot,declarations(),material_policy(),limits).snapshot);
+}
+
+TEST_CASE("B12 final solids classify complete rotated boxes without filling bead bounding corners", "[Nonplanar][B12][FinalByteSolids]")
+{
+ const auto rates=verify_linear_rates(text,{0,0,0},rate_policy());REQUIRE(rates.snapshot);
+ const auto material=reconstruct_linear_material(rates.snapshot,declarations(),material_policy());REQUIRE(material.snapshot);
+ const auto prefix=linear_material_at(material.snapshot,1,0);REQUIRE(prefix.snapshot);
+ const MaterialRegion inside{{1.49,1.99,-.08},{1.51,2.01,-.07}};
+ for(auto rep:{MaterialRepresentation::Nominal,MaterialRepresentation::Upper,MaterialRepresentation::Lower}) {
+  const auto r=classify_linear_material(prefix.snapshot,inside,rep);INFO(r.reason);
+  REQUIRE(r.membership==MaterialMembership::Inside);REQUIRE(r.event_id==1);REQUIRE(r.evaluations>prefix.evaluations);
+  const auto cover=cover_linear_material(prefix.snapshot,inside,rep);REQUIRE(cover.status==RateStatus::Pass);REQUIRE(cover.snapshot);
+  REQUIRE(cover.snapshot->source==prefix.snapshot);REQUIRE(cover.snapshot->leaves.size()==1);
+  independent_solid_box(inside,rep,*declarations()[0].section,{High(0),High(0),High(0)},{High(3),High(4),High(".1")});
+ }
+ const MaterialRegion bounding_corner{{.05,3.8,-.08},{.06,3.81,-.07}};
+ for(auto rep:{MaterialRepresentation::Nominal,MaterialRepresentation::Upper,MaterialRepresentation::Lower})
+  REQUIRE(classify_linear_material(prefix.snapshot,bounding_corner,rep).membership==MaterialMembership::Outside);
+ const auto half=linear_material_at(material.snapshot,0,.5);REQUIRE(half.snapshot);
+ REQUIRE(classify_linear_material(half.snapshot,{{2.39,3.19,-.04},{2.41,3.21,-.03}},MaterialRepresentation::Upper).membership==MaterialMembership::Outside);
+ const auto future=linear_material_at(material.snapshot,0,0);REQUIRE(future.snapshot);
+ REQUIRE(cover_linear_material(future.snapshot,inside,MaterialRepresentation::Lower).status==RateStatus::Fail);
+}
+TEST_CASE("B12 final solid dose shells rounded caps and finite butt erosion stay distinct", "[Nonplanar][B12][FinalByteSolids]")
+{
+ const auto rates=verify_linear_rates(text,{0,0,0},rate_policy());REQUIRE(rates.snapshot);
+ const auto material=reconstruct_linear_material(rates.snapshot,declarations(),material_policy());REQUIRE(material.snapshot);
+ const auto prefix=linear_material_at(material.snapshot,5,0);REQUIRE(prefix.snapshot);
+ const MaterialRegion rounded_center{{4.49,5.99,.04},{4.51,6.01,.05}};
+ REQUIRE(classify_linear_material(prefix.snapshot,rounded_center,MaterialRepresentation::Lower).membership==MaterialMembership::Inside);
+ independent_solid_box(rounded_center,MaterialRepresentation::Lower,*declarations()[4].section,
+  {High(3),High(4),High(".15")},{High(6),High(8),High(".2")});
+ // This lies in the rounded bead's rectangular bounding footprint/top range,
+ // but beyond the curved stadium side. A filled AABB would falsely cover it.
+ const MaterialRegion rounded_corner{{4.62,5.90,.173},{4.63,5.91,.174}};
+ REQUIRE(classify_linear_material(prefix.snapshot,rounded_corner,MaterialRepresentation::Nominal).membership==MaterialMembership::Outside);
+ const auto full=linear_material_at(material.snapshot,1,0);REQUIRE(full.snapshot);
+ const MaterialRegion near_start{{.003,.004,-.10},{.003,.004,-.10}};
+ REQUIRE(classify_linear_material(full.snapshot,near_start,MaterialRepresentation::Nominal).membership==MaterialMembership::Inside);
+ REQUIRE(classify_linear_material(full.snapshot,near_start,MaterialRepresentation::Lower).membership==MaterialMembership::Outside);
+ const auto tiny=linear_material_at(material.snapshot,0,.001);REQUIRE(tiny.snapshot);
+ REQUIRE(classify_linear_material(tiny.snapshot,near_start,MaterialRepresentation::Lower).membership==MaterialMembership::Outside);
+}
+TEST_CASE("B12 final solid union coverage spans different beads and reports an actual missing box", "[Nonplanar][B12][FinalByteSolids]")
+{
+ const std::string bytes="G90\nM83\nM400\nM204 S4\nG1 X3 Y0 Z0 E.2 F60\nM400\nG1 X0 Y.25 Z0 F60\nM400\nG1 X3 Y.25 Z0 E.2 F60\nM400\n";
+ const double amount=(High(".2")*acos(High(-1))*High("1.75")*High("1.75")/4/High(rate_policy().flow)).convert_to<double>();
+ std::vector<MaterialDeclaration> rows={{1,0,MaterialEventKind::Deposit,{0,0,0},{3,0,0},amount,0,MaterialSection{MaterialSectionKind::Rectangle,.2,.2}},
+ {2,1,MaterialEventKind::Travel,{3,0,0},{0,.25,0},0,0,{}},
+ {3,2,MaterialEventKind::Deposit,{0,.25,0},{3,.25,0},amount,0,MaterialSection{MaterialSectionKind::Rectangle,.2,.2}}};
+ const auto rates=verify_linear_rates(bytes,{0,0,0},rate_policy());REQUIRE(rates.snapshot);
+ const auto material=reconstruct_linear_material(rates.snapshot,rows,material_policy());REQUIRE(material.snapshot);
+ const auto prefix=linear_material_at(material.snapshot,3,0);REQUIRE(prefix.snapshot);
+ const MaterialRegion joined{{1,-.20,-.13},{2,.45,-.08}};
+ REQUIRE(classify_linear_material(prefix.snapshot,joined,MaterialRepresentation::Lower).membership==MaterialMembership::Unknown);
+ const auto cover=cover_linear_material(prefix.snapshot,joined,MaterialRepresentation::Lower);INFO(cover.reason);
+ REQUIRE(cover.status==RateStatus::Pass);REQUIRE(cover.snapshot);REQUIRE(cover.snapshot->leaves.size()>1);
+ High partition_volume=0;bool first=false,second=false;
+ for(const auto &leaf:cover.snapshot->leaves){first|=leaf.event_id==1;second|=leaf.event_id==3;
+  const High y=leaf.event_id==1 ? High(0) : High(".25");
+  independent_solid_box(leaf.region,MaterialRepresentation::Lower,*rows[0].section,{High(0),y,High(0)},{High(3),y,High(0)});
+  High volume=1;for(size_t axis=0;axis<3;++axis){REQUIRE(leaf.region.min[axis]>=joined.min[axis]);REQUIRE(leaf.region.max[axis]<=joined.max[axis]);volume*=High(leaf.region.max[axis])-High(leaf.region.min[axis]);}partition_volume+=volume;
+ }
+ High expected=1;for(size_t axis=0;axis<3;++axis)expected*=High(joined.max[axis])-High(joined.min[axis]);REQUIRE(abs(partition_volume-expected)<High("1e-30"));
+ for(size_t i=0;i<cover.snapshot->leaves.size();++i)for(size_t j=0;j<i;++j){bool disjoint=false;
+  for(size_t axis=0;axis<3;++axis)disjoint|=cover.snapshot->leaves[i].region.min[axis]>=cover.snapshot->leaves[j].region.max[axis] || cover.snapshot->leaves[j].region.min[axis]>=cover.snapshot->leaves[i].region.max[axis];REQUIRE(disjoint);
+ }
+ REQUIRE(first);REQUIRE(second);
+ const auto missing=cover_linear_material(prefix.snapshot,{{1,-.20,-.13},{2,1,-.08}},MaterialRepresentation::Lower);
+ REQUIRE(missing.status==RateStatus::Fail);REQUIRE_FALSE(missing.snapshot);REQUIRE(missing.uncovered);
+ REQUIRE(classify_linear_material(prefix.snapshot,*missing.uncovered,MaterialRepresentation::Lower).membership==MaterialMembership::Outside);
+ MaterialCoverLimits small;small.max_cells=1;
+ REQUIRE(cover_linear_material(prefix.snapshot,joined,MaterialRepresentation::Lower,small).status==RateStatus::Unknown);
+}
+TEST_CASE("B12 final solid queries own inputs and refuse stale exhausted or late numeric environments", "[Nonplanar][B12][FinalByteSolids]")
+{
+ const auto rates=verify_linear_rates(text,{0,0,0},rate_policy());REQUIRE(rates.snapshot);
+ const auto material=reconstruct_linear_material(rates.snapshot,declarations(),material_policy());REQUIRE(material.snapshot);
+ const auto prefix=linear_material_at(material.snapshot,1,0);REQUIRE(prefix.snapshot);
+ const MaterialRegion region{{1.49,1.99,-.08},{1.51,2.01,-.07}};
+ for(int mode=0;mode<6;++mode){MaterialCoverLimits limits;
+  if(mode==0)limits.max_evaluations=prefix.evaluations+1;
+  if(mode==1)limits.is_current=[](uint64_t,uint64_t){return false;};
+  if(mode==2)limits.is_source_current=[](uint64_t){return false;};
+  if(mode==3)limits.is_rate_current=[](uint64_t,uint64_t){return false;};
+  if(mode==4)limits.cancelled=[] {return true;};
+  if(mode==5)limits.cancelled=[] {std::fesetround(FE_UPWARD);return false;};
+  const auto result=cover_linear_material(prefix.snapshot,region,MaterialRepresentation::Lower,limits);std::fesetround(FE_TONEAREST);
+  REQUIRE(result.status==RateStatus::Unknown);REQUIRE_FALSE(result.snapshot);REQUIRE_FALSE(result.uncovered);
+ }
+ auto captured=region;MaterialCoverLimits limits;limits.cancelled=[&]{captured.min[0]=50;limits.max_cells=0;return false;};
+ const auto owned=cover_linear_material(prefix.snapshot,captured,MaterialRepresentation::Lower,limits);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->region.min==region.min);
+ limits={};size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(cover_linear_material(prefix.snapshot,region,MaterialRepresentation::Lower,limits).snapshot);
+ const auto last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};
+ REQUIRE_FALSE(cover_linear_material(prefix.snapshot,region,MaterialRepresentation::Lower,limits).snapshot);
+ calls=0;limits.cancelled=[&]{if(++calls==last)std::fesetround(FE_UPWARD);return false;};
+ const auto late=cover_linear_material(prefix.snapshot,region,MaterialRepresentation::Lower,limits);std::fesetround(FE_TONEAREST);
+ REQUIRE(late.status==RateStatus::Unknown);REQUIRE_FALSE(late.snapshot);
+ const auto vacant=linear_material_at(material.snapshot,0,0);REQUIRE(vacant.snapshot);
+ calls=0;limits.cancelled=[&]{++calls;return false;};
+ const auto absent=cover_linear_material(vacant.snapshot,region,MaterialRepresentation::Lower,limits);REQUIRE(absent.status==RateStatus::Fail);REQUIRE(absent.uncovered);
+ const auto negative_last=calls;calls=0;limits.cancelled=[&]{if(++calls==negative_last)std::fesetround(FE_UPWARD);return false;};
+ const auto stale_negative=cover_linear_material(vacant.snapshot,region,MaterialRepresentation::Lower,limits);std::fesetround(FE_TONEAREST);
+ REQUIRE(stale_negative.status==RateStatus::Unknown);REQUIRE_FALSE(stale_negative.uncovered);
+ REQUIRE_FALSE(cover_linear_material(prefix.snapshot,{{2,0,0},{1,1,1}},MaterialRepresentation::Lower).snapshot);
+ REQUIRE(classify_linear_material({},region,MaterialRepresentation::Lower).membership==MaterialMembership::Unknown);
+}
+TEST_CASE("B12 final delivered dose bounds change solids in opposite directions independently of growth", "[Nonplanar][B12][FinalByteSolids]")
+{
+ const auto rates=verify_linear_rates(text,{0,0,0},rate_policy());REQUIRE(rates.snapshot);
+ auto policy=material_policy();policy.outer_xy_growth_mm=policy.outer_z_growth_mm=policy.inner_xy_loss_mm=policy.inner_z_loss_mm=policy.numerical_coordinate_error_mm=0;
+ const auto material=reconstruct_linear_material(rates.snapshot,declarations(),policy);REQUIRE(material.snapshot);
+ const auto prefix=linear_material_at(material.snapshot,1,0);REQUIRE(prefix.snapshot);
+ const std::array<double,3> more{1.5-.8*.168,2+.6*.168,-.075},less{1.5-.8*.161,2+.6*.161,-.075};
+ REQUIRE(classify_linear_material(prefix.snapshot,{more,more},MaterialRepresentation::Nominal).membership==MaterialMembership::Outside);
+ REQUIRE(classify_linear_material(prefix.snapshot,{more,more},MaterialRepresentation::Upper).membership==MaterialMembership::Inside);
+ REQUIRE(classify_linear_material(prefix.snapshot,{less,less},MaterialRepresentation::Nominal).membership==MaterialMembership::Inside);
+ REQUIRE(classify_linear_material(prefix.snapshot,{less,less},MaterialRepresentation::Lower).membership==MaterialMembership::Outside);
 }

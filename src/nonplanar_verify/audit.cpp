@@ -52,27 +52,67 @@ nptop_verify::LinearRatePolicy parse_policy(const std::string &text,std::array<d
     p.max_retraction=j.at("max_retraction").get<double>();p.max_volume_rate=j.at("max_volume_rate").get<double>();
     p.max_cross_section=j.at("max_cross_section").get<double>();p.max_event_rate=j.at("max_event_rate").get<double>();return p;
 }
+struct CoverQuery {
+    size_t completed;double progress;nptop_verify::MaterialRepresentation representation;nptop_verify::MaterialRegion region;
+};
+CoverQuery parse_cover_query(const std::string &text)
+{
+    using Json=nlohmann::json;std::set<std::string> keys;
+    const auto j=Json::parse(text,[&](int depth,Json::parse_event_t event,Json &value) {
+        if(depth>2)throw std::runtime_error("cover nesting");
+        if(event==Json::parse_event_t::object_start && depth>0)throw std::runtime_error("nested cover query");
+        if(event==Json::parse_event_t::key && !keys.insert(value.get<std::string>()).second)throw std::runtime_error("duplicate cover key");return true;
+    });
+    if(!j.is_object() || keys!=std::set<std::string>{"version","completed_records","current_progress","representation","region_min","region_max"} ||
+        !j.at("version").is_number_unsigned() || j.at("version").get<uint64_t>()!=1 || !j.at("completed_records").is_number_unsigned() ||
+        j.at("completed_records").get<uint64_t>()>200000 || !j.at("current_progress").is_number())
+        throw std::runtime_error("cover registry");
+    const auto array3=[&](const char *key) {const auto &a=j.at(key);if(!a.is_array() || a.size()!=3)throw std::runtime_error("cover axis count");return a.get<std::array<double,3>>();};
+    const auto r=j.at("representation").get<std::string>();nptop_verify::MaterialRepresentation representation;
+    if(r=="nominal")representation=nptop_verify::MaterialRepresentation::Nominal;else if(r=="upper")representation=nptop_verify::MaterialRepresentation::Upper;
+    else if(r=="lower")representation=nptop_verify::MaterialRepresentation::Lower;else throw std::runtime_error("cover representation");
+    return {j.at("completed_records").get<size_t>(),j.at("current_progress").get<double>(),representation,{array3("region_min"),array3("region_max")}};
+}
 }
 int main(int argc,char **argv)
 {
     boost::nowide::args utf8(argc,argv);
-    const bool material_mode=argc==5 && std::string(argv[1])=="--linear-material-only";
+    const bool cover_mode=argc==6 && std::string(argv[1])=="--linear-material-cover-only";
+    const bool material_mode=cover_mode || (argc==5 && std::string(argv[1])=="--linear-material-only");
     if(!material_mode && (argc!=4 || std::string(argv[1])!="--linear-rates-only")) {
         std::cerr<<"Usage: nonplanar_rate_audit --linear-rates-only POLICY.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-material-only POLICY.json MATERIAL.json CANDIDATE.txt\n"
+                    "       nonplanar_rate_audit --linear-material-cover-only POLICY.json MATERIAL.json QUERY.json CANDIDATE.txt\n"
                     "Numerical component only; complete job and export remain blocked.\n";return 64;
     }
-    nptop_verify::LinearRateResult result;nptop_verify::LinearMaterialResult material;
+    nptop_verify::LinearRateResult result;nptop_verify::LinearMaterialResult material;nptop_verify::MaterialCoverResult cover;
+    std::optional<CoverQuery> query;
+    const auto deadline=std::chrono::steady_clock::now()+std::chrono::milliseconds(1000);
+    const auto expired=[&]{return std::chrono::steady_clock::now()>=deadline;};
     try {
         std::array<double,3> initial;const auto policy=parse_policy(read_bounded(argv[2],65536),initial);
-        const auto bytes=read_bounded(argv[material_mode ? 4 : 3],32*1024*1024);result=nptop_verify::verify_linear_rates(bytes,initial,policy);
+        const auto bytes=read_bounded(argv[cover_mode ? 5 : material_mode ? 4 : 3],32*1024*1024);
+        nptop_verify::LinearRateLimits rate_limits;if(cover_mode)rate_limits.cancelled=expired;
+        result=nptop_verify::verify_linear_rates(bytes,initial,policy,rate_limits);
         if(material_mode){
             const auto declaration=nptop_verify::parse_material_document(read_bounded(argv[3],32*1024*1024));
-            material=nptop_verify::reconstruct_linear_material(result.snapshot,declaration.second,declaration.first);
+            nptop_verify::LinearMaterialLimits material_limits;if(cover_mode)material_limits.cancelled=expired;
+            material=nptop_verify::reconstruct_linear_material(result.snapshot,declaration.second,declaration.first,material_limits);
+            if(cover_mode){
+                query=parse_cover_query(read_bounded(argv[4],65536));
+                if(!material.snapshot){cover.status=material.status;cover.reason=material.reason;cover.evaluations=std::max(material.evaluations,result.evaluations);}
+                else {
+                    const auto prefix=nptop_verify::linear_material_at(material.snapshot,query->completed,query->progress,material_limits);
+                    nptop_verify::MaterialCoverLimits cover_limits;cover_limits.cancelled=expired;
+                    if(prefix.snapshot)cover=nptop_verify::cover_linear_material(prefix.snapshot,query->region,query->representation,cover_limits);
+                    else {cover.reason=prefix.reason;cover.evaluations=prefix.evaluations;}
+                }
+            }
         }
-    } catch(const std::exception &){if(material_mode)material.reason="BOUNDED_MATERIAL_INPUT_ERROR";else result.reason="BOUNDED_RATE_INPUT_ERROR";}
+    } catch(const std::exception &){if(cover_mode){cover.reason="BOUNDED_MATERIAL_COVER_INPUT_ERROR";cover.evaluations=std::max(material.evaluations,result.evaluations);}
+        else if(material_mode)material.reason="BOUNDED_MATERIAL_INPUT_ERROR";else result.reason="BOUNDED_RATE_INPUT_ERROR";}
     const auto bounds=[](nptop_verify::RateBounds value) {return nlohmann::json::array({value.lower,value.upper});};
-    const auto component_status=material_mode ? material.status : result.status;
+    const auto component_status=cover_mode ? cover.status : material_mode ? material.status : result.status;
     const char *status=component_status==nptop_verify::RateStatus::Pass ? "PASS" : component_status==nptop_verify::RateStatus::Fail ? "FAIL" : "UNKNOWN";
     nlohmann::json report{{"schema_version",1},{"component","final_byte_linear_rates"},{"component_status",status},{"job_status","UNKNOWN"},
         {"scope","synthetic_identity_transform_full_stop_rates_and_ideal_mechanical_time_only"},{"export_allowed",false},
@@ -94,6 +134,13 @@ int main(int argc,char **argv)
             report["depositions"]=deposits;report["nominal_volume_mm3"]=bounds(m.nominal_volume);report["declared_delivered_volume_mm3"]=bounds(m.delivered_volume);
             report["maximum_nominal_delta_mm3"]=bounds(m.maximum_nominal_delta_mm3);report["total_nominal_delta_mm3"]=bounds(m.total_nominal_delta_mm3);
         }
+    }
+    if(cover_mode){
+        report["component"]="final_byte_material_region_cover";report["scope"]="actual_prefix_declared_material_solids_and_region_cover_only";
+        report["reason"]=cover.reason;report["work"]=cover.evaluations;report["cells"]=cover.cells;report["cover_leaves"]=cover.snapshot ? cover.snapshot->leaves.size() : 0;
+        report["uncovered"]=cover.uncovered ? nlohmann::json{{"min",cover.uncovered->min},{"max",cover.uncovered->max}} : nlohmann::json(nullptr);
+        if(query){const char *representations[]={"nominal","upper","lower"};report["completed_records"]=query->completed;report["current_progress"]=query->progress;report["representation"]=representations[int(query->representation)];}
+        report["mandatory_checks_pending"]={"complete_material_geometry","packet_seams","actual_support_gaps","contact","dose_qualification","job_integrity","qualified_profile","machine_state"};
     }
     std::cout<<report.dump(2)<<'\n';if(!std::cout)return 74;
     return component_status==nptop_verify::RateStatus::Pass ? 0 : component_status==nptop_verify::RateStatus::Fail ? 2 : 3;

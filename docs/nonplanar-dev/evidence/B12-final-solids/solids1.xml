@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="78" hostname="tbd" time="0.006" timestamp="2026-10-02T10:11:26Z">
+    <properties>
+      <property name="random-seed" value="3124232690"/>
+      <property name="filters" value="[FinalByteSolids]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B12 final solid dose shells rounded caps and finite butt erosion stay distinct" time="0.002" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 final solids classify complete rotated boxes without filling bead bounding corners" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 final solid queries own inputs and refuse stale exhausted or late numeric environments" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 final solid union coverage spans different beads and reports an actual missing box" time="0.000" status="run">
+      <failure message="missing.status==RateStatus::Fail" type="REQUIRE">
+FAILED:
+  REQUIRE( missing.status==RateStatus::Fail )
+with expansion:
+  2 == 1
+WHOLE_REGION_COVERED_BY_ACTUAL_FINAL_MATERIAL_UNION
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:145
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

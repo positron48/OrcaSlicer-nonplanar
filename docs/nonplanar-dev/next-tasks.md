@@ -7,17 +7,17 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
-`B12-final-material.md` now independently reconstructs every final native
-constant-flux section, dose/width uncertainty, source pose/amount deviations and
-actual partial prefixes after exact rate verification. Extend this into complete
-lower/upper set membership, union/coverage and continuous head/contact/support
-checks. Validate declared gaps against the reconstructed actual prefix; source
-section parameters and broad boxes are not support proofs. Qualify actual
-delivered-volume/transform assumptions, audit every native final filter/prolog/
-end motion and bind all exact bytes/resources/software/plate/job state to B13.
-The original complete native B09 exit remains UNKNOWN at unchanged margins.
+`B12-final-solids.md` now independently classifies whole closed regions against
+nominal/upper/lower final-byte actual-prefix solids, with protected union-cover
+partitions. Native nominal half-front coverage passes, but per-event finite butt
+erosion leaves no guaranteed lower cover at the selected cap box. Reconstruct
+continuous joined packets from final bytes with explicit continuity and retained
+uncertainty; do not repair seams by filling AABBs or reusing old certificates.
+Then validate actual support gaps and complete head/contact/cap/exit coverage,
+qualified delivery/transforms and B13 job/plate/resources/software/bytes/report
+binding. The original complete B09 exit remains UNKNOWN at unchanged margins.
 User-declared standard U1 head/.4 mm nozzle is retained. Continue software without
-asking firmware-version/material-brand questions; physical bounds remain separate.
+firmware-version/material-brand questions; physical bounds remain separate.
 
 1. Complete B01 compatibility and whole-job provenance, then B02 original STL
    and actual GUI/native plate binding. `B01-inputs.md` now retains exact source

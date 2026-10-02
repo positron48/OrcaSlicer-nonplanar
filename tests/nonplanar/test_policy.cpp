@@ -2706,6 +2706,18 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     const auto rounded_front=nptop_verify::linear_material_at(rounded_material.snapshot,new_ledger.records.size()-1,.5,front_limits);INFO(rounded_front.reason);REQUIRE(rounded_front.snapshot);
     REQUIRE(rounded_front.snapshot->pieces.back().record==new_ledger.records.size()-1);
     REQUIRE(rounded_front.snapshot->nominal_volume.upper<rounded_material.snapshot->nominal_volume.lower);
+    const auto &last_piece=rounded_front.snapshot->pieces.back();
+    std::array<double,3> laid_center;
+    for(size_t axis=0;axis<3;++axis)laid_center[axis]=(last_piece.start[axis].lower+last_piece.end[axis].lower)/2;
+    const auto &last_section=*rounded_material.snapshot->declarations.back().section;
+    laid_center[2]-=(last_section.gap_begin_mm+.25*(last_section.gap_end_mm-last_section.gap_begin_mm))/2;
+    nptop_verify::MaterialRegion laid_box{laid_center,laid_center};
+    for(size_t axis=0;axis<3;++axis){laid_box.min[axis]-=1e-5;laid_box.max[axis]+=1e-5;}
+    const auto nominal_solid=nptop_verify::cover_linear_material(rounded_front.snapshot,laid_box,nptop_verify::MaterialRepresentation::Nominal);
+    INFO(nominal_solid.reason);REQUIRE(nominal_solid.snapshot);REQUIRE(nominal_solid.snapshot->leaves.front().event_id==last_piece.event_id);
+    REQUIRE(last_piece.empty_inner);
+    const auto lower_solid=nptop_verify::cover_linear_material(rounded_front.snapshot,laid_box,nptop_verify::MaterialRepresentation::Lower);
+    INFO(lower_solid.reason);REQUIRE(lower_solid.status==nptop_verify::RateStatus::Fail);REQUIRE(lower_solid.uncovered);REQUIRE_FALSE(lower_solid.snapshot);
     REQUIRE(rounded_material.snapshot->rates->bytes==bytes.bytes);REQUIRE(rounded_material.evaluations>final_rates.evaluations);
     INFO("native final rates work=" << final_rates.evaluations << " ideal duration=[" << final_rates.snapshot->duration.lower << ',' << final_rates.snapshot->duration.upper << ']');
     REQUIRE(bytes.plan==byte_plan.snapshot);REQUIRE(bytes.events.size()==new_ledger.records.size());
@@ -2739,6 +2751,23 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
             {"initial_position",{bytes.initial_position.x(),bytes.initial_position.y(),bytes.initial_position.z()}},{"events",mapping}};
         boost::nowide::ofstream material_sidecar((dir/"native-material.json").string());REQUIRE(material_sidecar.good());
         material_sidecar<<nptop_verify::material_document(*rounded_material.snapshot).dump(2)<<'\n';material_sidecar.close();REQUIRE(material_sidecar.good());
+        const auto &rp=rounded_material.snapshot->rates->policy;
+        const nlohmann::json rate_document={{"version",rp.version},{"profile_id",rp.profile_id},{"revision",rp.revision},
+            {"synthetic",rp.synthetic},{"operator_confirmed_claim",rp.operator_confirmed_claim},{"model","full_stop"},
+            {"kinematics",rp.kinematics==nptop_verify::RateKinematics::CoreXY ? "corexy" : "cartesian"},
+            {"initial_position",rounded_material.snapshot->rates->initial_position},{"position_min",rp.position_min},{"position_max",rp.position_max},
+            {"axis_speed",rp.axis_speed},{"drive_speed",rp.drive_speed},{"axis_acceleration",rp.axis_acceleration},{"drive_acceleration",rp.drive_acceleration},
+            {"initial_acceleration",rp.initial_acceleration},{"filament_diameter",rp.filament_diameter},{"flow",rp.flow},
+            {"filament_speed",rp.filament_speed},{"filament_acceleration",rp.filament_acceleration},{"max_retraction",rp.max_retraction},
+            {"max_volume_rate",rp.max_volume_rate},{"max_cross_section",rp.max_cross_section},{"max_event_rate",rp.max_event_rate}};
+        boost::nowide::ofstream rate_file((dir/"native-rate-policy.json").string());REQUIRE(rate_file.good());
+        rate_file<<rate_document.dump(2)<<'\n';rate_file.close();REQUIRE(rate_file.good());
+        for(const char *representation:{"nominal","lower"}) {
+            const nlohmann::json query={{"version",1},{"completed_records",rounded_front.snapshot->completed_records},
+                {"current_progress",rounded_front.snapshot->current_progress},{"representation",representation},{"region_min",laid_box.min},{"region_max",laid_box.max}};
+            boost::nowide::ofstream query_file((dir/(std::string("native-cover-")+representation+".json")).string());REQUIRE(query_file.good());
+            query_file<<query.dump(2)<<'\n';query_file.close();REQUIRE(query_file.good());
+        }
         boost::nowide::ofstream sidecar((dir/"native-full-stop.bytes.json").string());REQUIRE(sidecar.good());sidecar<<metadata.dump(2)<<'\n';sidecar.close();REQUIRE(sidecar.good());
     }
     INFO("native final candidate records=" << parsed.size() << " bytes=" << bytes.bytes.size() << " work=" << candidate.evaluations << " sha256=" << bytes.sha256);

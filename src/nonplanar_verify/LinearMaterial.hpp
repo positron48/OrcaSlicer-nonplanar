@@ -34,6 +34,13 @@ struct ReplayedBead {
 struct MaterialReplayData;
 struct LinearMaterialResult;
 struct LinearMaterialPrefixResult;
+enum class MaterialRepresentation { Nominal,Upper,Lower };
+enum class MaterialMembership { Inside,Outside,Unknown };
+struct MaterialRegion {std::array<double,3> min,max;};
+struct MaterialBoxResult;
+struct MaterialCoverResult;
+struct MaterialCoverLimits;
+struct LinearMaterialPrefixSnapshot;
 struct LinearMaterialSnapshot {
  const std::shared_ptr<const LinearRateSnapshot> rates;
  const std::vector<MaterialDeclaration> declarations;
@@ -49,6 +56,8 @@ private:
    maximum_nominal_delta_mm3(error),total_nominal_delta_mm3(total),evaluations(work),exact(std::move(e)){}
  friend LinearMaterialResult reconstruct_linear_material(std::shared_ptr<const LinearRateSnapshot>,const std::vector<MaterialDeclaration>&,const LinearMaterialPolicy&,const LinearMaterialLimits&);
  friend LinearMaterialPrefixResult linear_material_at(std::shared_ptr<const LinearMaterialSnapshot>,size_t,double,const LinearMaterialLimits&);
+ friend MaterialBoxResult classify_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,MaterialRepresentation,const LinearMaterialLimits&);
+ friend MaterialCoverResult cover_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,MaterialRepresentation,const MaterialCoverLimits&);
 };
 struct LinearMaterialResult {
  RateStatus status=RateStatus::Unknown;std::string reason;std::optional<size_t> record;
@@ -67,6 +76,26 @@ private:
 struct LinearMaterialPrefixResult {
  RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const LinearMaterialPrefixSnapshot> snapshot;size_t evaluations=0;
 };
+struct MaterialBoxResult {
+ MaterialMembership membership=MaterialMembership::Unknown;std::string reason;
+ std::optional<uint64_t> event_id;size_t evaluations=0;
+};
+struct MaterialCoverLimits : LinearMaterialLimits {size_t max_cells=100000;unsigned max_depth=32;};
+struct MaterialCoverLeaf {MaterialRegion region;uint64_t event_id;};
+struct MaterialCoverSnapshot {
+ const std::shared_ptr<const LinearMaterialPrefixSnapshot> source;
+ const MaterialRegion region;const MaterialRepresentation representation;
+ const std::vector<MaterialCoverLeaf> leaves;const size_t evaluations,cells;
+private:
+ MaterialCoverSnapshot(std::shared_ptr<const LinearMaterialPrefixSnapshot> s,MaterialRegion b,MaterialRepresentation r,
+  std::vector<MaterialCoverLeaf> l,size_t work,size_t count)
+  :source(std::move(s)),region(b),representation(r),leaves(std::move(l)),evaluations(work),cells(count){}
+ friend MaterialCoverResult cover_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,MaterialRepresentation,const MaterialCoverLimits&);
+};
+struct MaterialCoverResult {
+ RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const MaterialCoverSnapshot> snapshot;
+ std::optional<MaterialRegion> uncovered;size_t evaluations=0,cells=0;
+};
 // Declared constant-flux fixed-gap section model, synthetic only. Reconstructs
 // final decimal poses/dose; shape declarations do not prove support/contact.
 // Delivered-dose intervals are explicit assumptions, not physical calibration.
@@ -75,4 +104,13 @@ LinearMaterialResult reconstruct_linear_material(std::shared_ptr<const LinearRat
 // All previous actual depositions plus only the requested current fraction.
 // No future rows, pressure material or blanket filled boxes/clearance PASS.
 LinearMaterialPrefixResult linear_material_at(std::shared_ptr<const LinearMaterialSnapshot>,size_t,double,const LinearMaterialLimits &limits={});
+// Whole closed region, not vertex sampling. Upper/lower use respectively the
+// largest/smallest declared delivered dose and local XY/Z growth/erosion.
+// Per-bead erosion retains finite butt gaps; no assumed packet seam repair.
+MaterialBoxResult classify_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,
+ MaterialRepresentation,const LinearMaterialLimits &limits={});
+// A protected partition covers the entire requested region with actual-prefix
+// bead witnesses. An uncovered box proves a missing part; exhaustion is UNKNOWN.
+MaterialCoverResult cover_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,
+ MaterialRepresentation,const MaterialCoverLimits &limits={});
 }

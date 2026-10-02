@@ -15,6 +15,15 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B12-final-solids.md` and ADR-0072 add independent whole-region classification
+of nominal/upper/lower actual-prefix solids and protected continuous union-cover
+partitions. Five new cases are included in 29/1940 combined assertions, CTest
+388/388, 38 CLI cases and six fresh OFF/ZAA pairs. Native half-front nominal
+coverage passes; per-event lower coverage refuses at unchanged finite butt
+losses. This is missing guaranteed coverage, not a physical void. Independent
+joined packet continuity, actual support gaps/contact/head/full cap and B13
+binding remain pending; full B01-B15 stays IN_PROGRESS, export BLOCK.
+
 `B12-final-material.md` and ADR-0071 independently reconstruct all 2092 native
 beads from final XYZ/E, including explicit dose uncertainty, changed widths,
 source pose/amount budgets and actual partial prefixes. Original model losses

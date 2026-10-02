@@ -1,6 +1,7 @@
 #include "LinearMaterial.hpp"
 #include "Exact.hpp"
 #include <algorithm>
+#include <deque>
 #include <set>
 namespace nptop_verify {
 namespace {
@@ -161,5 +162,142 @@ LinearMaterialPrefixResult linear_material_at(std::shared_ptr<const LinearMateri
   result.status=RateStatus::Pass;result.reason="ACTUAL_FINAL_BYTE_PREFIX_ONLY_SUPPORT_CONTACT_PENDING";
  }catch(const Refusal &e){result.snapshot.reset();result.status=e.status;result.reason=e.what();}
  catch(const std::exception &e){result.snapshot.reset();result.status=RateStatus::Unknown;result.reason=e.what();}return result;
+}
+namespace {
+Range affine(const Q &base,const Q &delta,Range t)
+{return delta>=0 ? Range{base+delta*t.lo,base+delta*t.hi} : Range{base+delta*t.hi,base+delta*t.lo};}
+Range absolute(Range v)
+{return {v.lo<=0 && v.hi>=0 ? Q(0) : std::min(abs(v.lo),abs(v.hi)),std::max(abs(v.lo),abs(v.hi))};}
+struct SolidProjection {Range t,normal,z;};
+void valid_region(const MaterialRegion &b)
+{
+ for(size_t axis=0;axis<3;++axis)
+  if(!std::isfinite(b.min[axis]) || !std::isfinite(b.max[axis]) || b.min[axis]>b.max[axis] ||
+   std::abs(b.min[axis])>10000 || std::abs(b.max[axis])>10000)unknown("INVALID_FINAL_MATERIAL_REGION");
+}
+struct SolidQuery {
+ const LinearMaterialPrefixSnapshot &prefix;const MaterialReplayData &data;MaterialRepresentation representation;Work &work;
+ MaterialMembership section(const ExactStep &s,const MaterialDeclaration &row,Range length,const Q &progress,
+  SolidProjection p,bool interior)
+ {
+  work();
+  if(p.t.hi<0 || p.t.lo>progress)return MaterialMembership::Outside;
+  const bool along=interior ? p.t.lo>0 && p.t.hi<progress : p.t.lo>=0 && p.t.hi<=progress;
+  const Range t{std::max(Q(0),p.t.lo),std::min(progress,p.t.hi)};
+  const Q h0=binary(row.section->gap_begin_mm),dh=binary(row.section->gap_end_mm)-h0,dz=s.end[2]-s.start[2];
+  const auto h=affine(h0,dh,t),top=affine(s.start[2],dz,t),bottom=affine(s.start[2]-h0,dz-dh,t),n=absolute(p.normal);
+  const Range dose=representation==MaterialRepresentation::Nominal ? s.nominal : representation==MaterialRepresentation::Upper ?
+   Range{s.delivered.hi,s.delivered.hi} : Range{s.delivered.lo,s.delivered.lo};
+  const Range area{dose.lo/length.hi,dose.hi/length.lo};
+  if(row.section->kind==MaterialSectionKind::Rectangle) {
+   const Range half{area.lo/(2*h.hi),area.hi/(2*h.lo)};
+   if(n.lo>half.hi || p.z.lo>top.hi || p.z.hi<bottom.lo)return MaterialMembership::Outside;
+   const bool cross=interior ? n.hi<half.lo && p.z.hi<top.lo && p.z.lo>bottom.hi :
+    n.hi<=half.lo && p.z.hi<=top.lo && p.z.lo>=bottom.hi;
+   return along && cross ? MaterialMembership::Inside : MaterialMembership::Unknown;
+  }
+  const Range core{(area.lo/h.hi-data.pi.hi*h.hi/4)/2,(area.hi/h.lo-data.pi.lo*h.lo/4)/2};
+  const auto center=affine(s.start[2]-h0/2,dz-dh/2,t),vertical=absolute({p.z.lo-center.hi,p.z.hi-center.lo});
+  const Range horizontal{std::max(Q(0),n.lo-core.hi),std::max(Q(0),n.hi-core.lo)};
+  const Q distance_lo=square(horizontal.lo)+square(vertical.lo),distance_hi=square(horizontal.hi)+square(vertical.hi);
+  if(distance_lo>square(h.hi/2))return MaterialMembership::Outside;
+  if(along && (interior ? distance_hi<square(h.lo/2) : distance_hi<=square(h.lo/2)))return MaterialMembership::Inside;
+  return MaterialMembership::Unknown;
+ }
+ MaterialMembership piece(const ReplayedBead &b,const MaterialRegion &box)
+ {
+  work();if(representation==MaterialRepresentation::Lower && b.empty_inner)return MaterialMembership::Outside;
+  const auto &s=data.steps[b.record];const auto &row=prefix.source->declarations[b.record];
+  const Q progress=b.record<prefix.completed_records ? Q(1) : binary(prefix.current_progress);
+  const auto l=prefix.source->beads[b.record]->xy_length;const Range length{binary(l.lower),binary(l.upper)};
+  const Q dx=s.end[0]-s.start[0],dy=s.end[1]-s.start[1];Range t{0,0},normal{0,0};bool first=true;
+  for(double x:{box.min[0],box.max[0]})for(double y:{box.min[1],box.max[1]}) {
+   work();const Q px=binary(x)-s.start[0],py=binary(y)-s.start[1],u=(dx*px+dy*py)/s.xy2,v=dx*py-dy*px;
+   if(first){t={u,u};normal={v,v};first=false;}
+   else {t.lo=std::min(t.lo,u);t.hi=std::max(t.hi,u);normal.lo=std::min(normal.lo,v);normal.hi=std::max(normal.hi,v);}
+  }
+  const auto divide=[](Range v,Range l) {
+   return Range{v.lo<0 ? v.lo/l.lo : v.lo/l.hi,v.hi<0 ? v.hi/l.hi : v.hi/l.lo};
+  };
+  const SolidProjection original{t,divide(normal,length),{binary(box.min[2]),binary(box.max[2])}};
+  const auto base=section(s,row,length,progress,original,false);
+  if(representation==MaterialRepresentation::Nominal)return base;
+  if(representation==MaterialRepresentation::Upper && base==MaterialMembership::Inside)return base;
+  if(representation==MaterialRepresentation::Lower && base==MaterialMembership::Outside)return base;
+  const auto &policy=prefix.source->policy;
+  const Q xy=binary(representation==MaterialRepresentation::Upper ? policy.outer_xy_growth_mm : policy.inner_xy_loss_mm)+binary(policy.numerical_coordinate_error_mm);
+  const Q z=binary(representation==MaterialRepresentation::Upper ? policy.outer_z_growth_mm : policy.inner_z_loss_mm)+binary(policy.numerical_coordinate_error_mm);
+  const Range shift{xy/length.hi,xy/length.lo};
+  const SolidProjection expanded{{original.t.lo-shift.hi,original.t.hi+shift.hi},
+   {original.normal.lo-xy,original.normal.hi+xy},{original.z.lo-z,original.z.hi+z}};
+  const auto robust=section(s,row,length,progress,expanded,representation==MaterialRepresentation::Lower);
+  if(representation==MaterialRepresentation::Lower && robust==MaterialMembership::Inside)return robust;
+  if(representation==MaterialRepresentation::Upper && robust==MaterialMembership::Outside)return robust;
+  // A single common admissible translation proves containment in the grown
+  // solid, or exclusion from the eroded one. This never samples query vertices.
+  for(int along:{-1,1})for(int transverse:{-1,1})for(int vertical:{-1,1}) {
+   const Range u=along<0 ? Range{-shift.hi,-shift.lo} : shift;
+   const SolidProjection moved{{original.t.lo+u.lo,original.t.hi+u.hi},
+    {original.normal.lo+transverse*xy,original.normal.hi+transverse*xy},{original.z.lo+vertical*z,original.z.hi+vertical*z}};
+   const auto membership=section(s,row,length,progress,moved,false);
+   if(representation==MaterialRepresentation::Upper && membership==MaterialMembership::Inside)return membership;
+   if(representation==MaterialRepresentation::Lower && membership==MaterialMembership::Outside)return membership;
+  }
+  return MaterialMembership::Unknown;
+ }
+ MaterialBoxResult query(const MaterialRegion &box)
+ {
+  MaterialBoxResult result;bool uncertain=false;
+  for(const auto &b:prefix.pieces) {
+   const auto membership=piece(b,box);
+   if(membership==MaterialMembership::Inside){result.membership=membership;result.event_id=b.event_id;return result;}
+   uncertain|=membership==MaterialMembership::Unknown;
+  }
+  result.membership=uncertain ? MaterialMembership::Unknown : MaterialMembership::Outside;return result;
+ }
+};
+void valid_representation(MaterialRepresentation r)
+{if(r!=MaterialRepresentation::Nominal && r!=MaterialRepresentation::Upper && r!=MaterialRepresentation::Lower)unknown("INVALID_FINAL_MATERIAL_REPRESENTATION");}
+}
+MaterialBoxResult classify_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot> prefix,const MaterialRegion &requested,
+ MaterialRepresentation representation,const LinearMaterialLimits &requested_limits)
+{
+ const auto region=requested;const auto limits=requested_limits;MaterialBoxResult result;
+ try {
+  if(!prefix)unknown("MISSING_FINAL_MATERIAL_PREFIX");result.evaluations=std::max(prefix->evaluations,limits.initial_evaluations);
+  Work work{*prefix->source->rates,prefix->source->policy,limits,result.evaluations};work.admission();work();valid_region(region);valid_representation(representation);
+  SolidQuery query{*prefix,*prefix->source->exact,representation,work};const auto answer=query.query(region);work.stop();
+  result.membership=answer.membership;result.event_id=answer.event_id;result.reason=answer.membership==MaterialMembership::Inside ?
+   "WHOLE_REGION_INSIDE_FINAL_MATERIAL" : answer.membership==MaterialMembership::Outside ? "WHOLE_REGION_OUTSIDE_FINAL_MATERIAL" : "FINAL_MATERIAL_BOUNDARY_UNCERTAIN";
+ }catch(const std::exception &e){result.membership=MaterialMembership::Unknown;result.event_id.reset();result.reason=e.what();}return result;
+}
+MaterialCoverResult cover_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot> prefix,const MaterialRegion &requested,
+ MaterialRepresentation representation,const MaterialCoverLimits &requested_limits)
+{
+ const auto region=requested;const auto limits=requested_limits;MaterialCoverResult result;
+ try {
+  if(!prefix)unknown("MISSING_FINAL_MATERIAL_PREFIX");result.evaluations=std::max(prefix->evaluations,limits.initial_evaluations);
+  Work work{*prefix->source->rates,prefix->source->policy,limits,result.evaluations};work.admission();work();valid_region(region);valid_representation(representation);
+  if(!limits.max_cells || limits.max_cells>1000000 || !limits.max_depth || limits.max_depth>64)unknown("INVALID_FINAL_MATERIAL_COVER_LIMITS");
+  SolidQuery query{*prefix,*prefix->source->exact,representation,work};
+  // Breadth first exposes missing regions before following a boundary to the
+  // depth limit; a boundary alone can only produce UNKNOWN.
+  struct Node {MaterialRegion box;unsigned depth;};std::deque<Node> pending{{region,0}};std::vector<MaterialCoverLeaf> leaves;
+  while(!pending.empty()) {
+   work();if(++result.cells>limits.max_cells)unknown("FINAL_MATERIAL_COVER_CELL_LIMIT");
+   const auto node=pending.front();pending.pop_front();const auto answer=query.query(node.box);
+   if(answer.membership==MaterialMembership::Inside){leaves.push_back({node.box,*answer.event_id});continue;}
+   if(answer.membership==MaterialMembership::Outside){work.stop();result.status=RateStatus::Fail;result.uncovered=node.box;result.reason="FINAL_MATERIAL_UNCOVERED_REGION";return result;}
+   if(node.depth>=limits.max_depth)unknown("FINAL_MATERIAL_COVER_DEPTH_LIMIT");
+   size_t axis=0;Q span=0;
+   for(size_t i=0;i<3;++i){const Q width=binary(node.box.max[i])-binary(node.box.min[i]);if(width>span){span=width;axis=i;}}
+   const double middle=node.box.min[axis]+(node.box.max[axis]-node.box.min[axis])/2;
+   if(!(middle>node.box.min[axis] && middle<node.box.max[axis]))unknown("FINAL_MATERIAL_COVER_UNSPLITTABLE_BOUNDARY");
+   auto lower=node.box,upper=node.box;lower.max[axis]=middle;upper.min[axis]=middle;
+   pending.push_back({upper,node.depth+1});pending.push_back({lower,node.depth+1});
+  }
+  work.stop();result.snapshot=std::shared_ptr<const MaterialCoverSnapshot>(new MaterialCoverSnapshot(prefix,region,representation,std::move(leaves),result.evaluations,result.cells));work.stop();
+  result.status=RateStatus::Pass;result.reason="WHOLE_REGION_COVERED_BY_ACTUAL_FINAL_MATERIAL_UNION";
+ }catch(const std::exception &e){result.snapshot.reset();result.uncovered.reset();result.status=RateStatus::Unknown;result.reason=e.what();}return result;
 }
 }
