@@ -1,0 +1,19 @@
+{
+  "command": [
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests",
+    "[MaterialModel],[MaterialCoverage],[MaterialTransition],[MaterialIntegral],[PassStack],[IntegralStrips],[AffineHatches],[HatchCells],[FixedWidthBeads],[FirstHatchBeads],[MaterialUnion],[MaterialFill],[MaterialDeficit],[FirstHatchFootprint],[RemainderHatch],[StadiumDepthBounds],[FlatRoofQueries],[FirstHatchLayer],[FirstHatchEndReplan],[FirstHatchWidthReplan],[FirstContour],[FirstCap],[MaterialJoin],[FirstCapJoin],[MaterialRun],[MaterialRunJoin],[FirstCapInterface],[MaterialVoid],[FirstCapEndReplan],[ParallelMultiplicity],[FirstCapWidthReplan],[FirstCapMaterial],[MaterialRunUnion],[NextCapBead],[NextCapMaterial],[MaterialMotion],[SceneMaterialMotion],[ActualNormalSpacing],[LiftedTravel],[LinearMotionPlan]",
+    "--warn",
+    "NoAssertions",
+    "--reporter",
+    "junit",
+    "--out",
+    "build/nonplanar-evidence/B12-final-rates/material3.xml",
+    "--reporter",
+    "console::out=-"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-02T07:49:15.372377+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 39.643
+}

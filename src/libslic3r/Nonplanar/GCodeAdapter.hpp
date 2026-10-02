@@ -1,6 +1,7 @@
 #pragma once
 #include "Contracts.hpp"
 #include "MotionPlan.hpp"
+#include <nonplanar_verify/LinearRates.hpp>
 #include <string>
 #include <vector>
 
@@ -46,5 +47,10 @@ struct LinearCandidateResult {
 // ceiling, explicit per-event feed/XYZ or pressure/dwell and complete barriers.
 // Precision is isolated from stock. Final rounded geometry/E/rates require replay.
 LinearCandidateResult serialize_linear_candidate(const LinearMotionPlanResult &,const LinearCandidatePolicy &,
+    const LinearCandidateLimits &limits={});
+// Final-rate component bound to the protected candidate's exact owned bytes and
+// original motion limits; source/scene/both policies and cumulative work retained.
+// Its PASS is not material/contact verification or complete-job export approval.
+nptop_verify::LinearRateResult verify_linear_candidate_rates(const LinearCandidateResult &,
     const LinearCandidateLimits &limits={});
 }

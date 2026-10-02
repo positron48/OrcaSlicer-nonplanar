@@ -1,0 +1,13 @@
+ .github/workflows/nonplanar-native.yml   |   2 +
+ docs/nonplanar-dev/README.md             |   9 +++
+ docs/nonplanar-dev/gate-b-plan.md        |   2 +-
+ docs/nonplanar-dev/next-tasks.md         |  12 +--
+ docs/nonplanar-dev/status.json           |  51 +++++++++---
+ src/CMakeLists.txt                       |   1 +
+ src/libslic3r/Nonplanar/GCodeAdapter.cpp |  39 +++++++++
+ src/libslic3r/Nonplanar/GCodeAdapter.hpp |   6 ++
+ tests/fff_print/CMakeLists.txt           |   2 +-
+ tests/nonplanar/CMakeLists.txt           |   2 +-
+ tests/nonplanar/test_policy.cpp          |   4 +
+ tests/nonplanar/test_serialization.cpp   | 132 +++++++++++++++++++++++++++++++
+ 12 files changed, 241 insertions(+), 21 deletions(-)

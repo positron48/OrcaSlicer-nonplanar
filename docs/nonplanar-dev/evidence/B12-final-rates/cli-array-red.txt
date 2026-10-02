@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/validate_rate_audit_cli.py", line 34, in <module>
+    assert run.returncode==exit_code,(name,run.returncode,report)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('array-extra', 0, {'axis': None, 'bytes': 94, 'command_volume_mm3': [0.48105637508093707, 0.4810563750809371], 'component': 'final_byte_linear_rates', 'component_status': 'PASS', 'export_allowed': False, 'ideal_mechanical_duration_s': [4.03492235949962, 4.034922359499622], 'job_status': 'UNKNOWN', 'mandatory_checks_pending': ['material', 'contact', 'support', 'dose_uncertainty', 'job_integrity', 'qualified_profile', 'machine_state'], 'nominal_volume_mm3': [0.41115929494097186, 0.4111592949409719], 'reason': 'SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED', 'record': None, 'records': 4, 'schema_version': 1, 'scope': 'synthetic_identity_transform_full_stop_rates_and_ideal_mechanical_time_only', 'work': 51})

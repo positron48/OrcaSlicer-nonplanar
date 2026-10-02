@@ -1,0 +1,25 @@
+Filters: "B12 final event cadence uses complete rest to rest time rather than the peak divided by length"
+Randomness seeded to: 3770942664
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B12 final event cadence uses complete rest to rest time rather than the peak
+divided by length
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:392
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:398: FAILED:
+  REQUIRE( accepted.status==nptop_verify::RateStatus::Pass )
+with expansion:
+  1 == 0
+with message:
+  EVENT_RATE_LIMIT
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 1 | 1 failed
+

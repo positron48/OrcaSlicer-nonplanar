@@ -147,4 +147,43 @@ LinearCandidateResult serialize_linear_candidate(const LinearMotionPlanResult &r
     } catch (const std::exception &e) {result.snapshot.reset();result.reason=e.what();}
     return result;
 }
+nptop_verify::LinearRateResult verify_linear_candidate_rates(const LinearCandidateResult &requested,const LinearCandidateLimits &requested_limits)
+{
+    const auto candidate=requested.snapshot;const auto limits=requested_limits;const auto started=std::chrono::steady_clock::now();
+    nptop_verify::LinearRateResult result;
+    if(!candidate){result.reason="MISSING_LINEAR_CANDIDATE";return result;}
+    std::string stopped;
+    const auto current=[&] {
+        try {
+            if(limits.cancelled && limits.cancelled())stopped="CANCELLED";
+            else if(limits.is_current && !limits.is_current(candidate->plan->planned->material->ledger->revision))stopped="STALE_MATERIAL_REVISION";
+            else if(limits.is_scene_current && !limits.is_scene_current(candidate->plan->planned->scene.profile_id,candidate->plan->planned->scene.revision))stopped="STALE_SCENE_REVISION";
+            else if(limits.is_policy_current && (!limits.is_policy_current(candidate->plan->policy.profile_id,candidate->plan->policy.revision) ||
+                !limits.is_policy_current(candidate->policy.profile_id,candidate->policy.revision)))stopped="STALE_CANDIDATE_RATE_POLICY";
+            else if(std::chrono::steady_clock::now()-started>=limits.timeout)stopped="CANDIDATE_RATE_DEADLINE";
+            else return true;
+        } catch(const std::exception &){stopped="SOURCE_RATE_CALLBACK_ERROR";}
+        return false;
+    };
+    if(!current()){result.reason=stopped;return result;}
+    const auto &source=candidate->plan->policy;nptop_verify::LinearRatePolicy policy;
+    policy.version=source.version;policy.profile_id=source.profile_id;policy.revision=source.revision;
+    policy.synthetic=source.origin==ProfileOrigin::Synthetic;policy.operator_confirmed_claim=source.operator_confirmed_claim;
+    policy.model=source.model==LinearPlannerModel::FullStop ? nptop_verify::RateModel::FullStop : nptop_verify::RateModel::FirmwareLookahead;
+    policy.kinematics=source.kinematics==LinearKinematics::CoreXY ? nptop_verify::RateKinematics::CoreXY : nptop_verify::RateKinematics::Cartesian;
+    policy.position_min={source.commanded_domain.min.x(),source.commanded_domain.min.y(),source.commanded_domain.min.z()};
+    policy.position_max={source.commanded_domain.max.x(),source.commanded_domain.max.y(),source.commanded_domain.max.z()};
+    policy.axis_speed=source.axis_speed_mm_s;policy.axis_acceleration=source.axis_acceleration_mm_s2;
+    policy.drive_speed=source.drive_speed_mm_s;policy.drive_acceleration=source.drive_acceleration_mm_s2;
+    policy.initial_acceleration=candidate->policy.initial_acceleration.value();policy.filament_diameter=source.filament_diameter.value();policy.flow=source.flow.value();
+    policy.filament_speed=source.filament_speed.value();policy.filament_acceleration=source.filament_acceleration.value();policy.max_retraction=source.max_retraction.value();
+    policy.max_volume_rate=source.max_volume_mm3_s;policy.max_cross_section=source.max_extrude_cross_section_mm2;policy.max_event_rate=source.max_events_per_second;
+    nptop_verify::LinearRateLimits query;query.max_bytes=limits.max_bytes;query.max_events=limits.max_records;query.max_evaluations=limits.max_evaluations;
+    query.initial_evaluations=candidate->evaluations;query.timeout=limits.timeout;query.cancelled=[&] {return !current();};
+    result=nptop_verify::verify_linear_rates(candidate->bytes,{candidate->initial_position.x(),candidate->initial_position.y(),candidate->initial_position.z()},policy,query);
+    if(result.snapshot && result.snapshot->moves.size()!=candidate->events.size()){result.snapshot.reset();result.status=nptop_verify::RateStatus::Fail;result.reason="CANDIDATE_RATE_RECORD_MISMATCH";}
+    if(!stopped.empty() || !current()){result.snapshot.reset();result.status=nptop_verify::RateStatus::Unknown;result.reason=stopped;}
+    return result;
+}
+
 }

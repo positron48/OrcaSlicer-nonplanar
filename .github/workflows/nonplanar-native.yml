@@ -88,6 +88,8 @@ jobs:
         run: python3 scripts/nonplanar/publish_ci_failure.py --evidence-dir build/nonplanar-evidence/linux
       - name: Exercise native STL audit command
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/stl-cli.log -- python3 scripts/nonplanar/validate_stl_audit_cli.py --executable build/src/nonplanar_import/Release/nonplanar_stl_audit --output-dir build/nonplanar-evidence/linux/stl-cli
+      - name: Exercise independent native final-byte rate audit
+        run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/rate-cli.log -- python3 scripts/nonplanar/validate_rate_audit_cli.py --executable build/src/nonplanar_verify/Release/nonplanar_rate_audit --output-dir build/nonplanar-evidence/linux/rate-cli
       - name: Build native application after test verification
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/app-build.log -- ./build_linux.sh -srlL -j 2
       - name: Preserve observed results even on failure

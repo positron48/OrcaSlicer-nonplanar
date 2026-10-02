@@ -20,7 +20,7 @@ add_executable(${_TEST_NAME}_tests
 	../nonplanar/test_transition.cpp
 	../nonplanar/test_policy.cpp
 	)
-target_link_libraries(${_TEST_NAME}_tests test_common libslic3r Catch2::Catch2WithMain)
+target_link_libraries(${_TEST_NAME}_tests test_common libslic3r nonplanar_final_rates Catch2::Catch2WithMain)
 set_property(TARGET ${_TEST_NAME}_tests PROPERTY FOLDER "tests")
 
 orcaslicer_copy_test_dlls()

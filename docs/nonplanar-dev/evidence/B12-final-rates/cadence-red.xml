@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="1" hostname="tbd" time="0.001" timestamp="2026-10-02T07:27:29Z">
+    <properties>
+      <property name="random-seed" value="3770942664"/>
+      <property name="filters" value="&quot;B12 final event cadence uses complete rest to rest time rather than the peak divided by length&quot;"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B12 final event cadence uses complete rest to rest time rather than the peak divided by length" time="0.000" status="run">
+      <failure message="accepted.status==nptop_verify::RateStatus::Pass" type="REQUIRE">
+FAILED:
+  REQUIRE( accepted.status==nptop_verify::RateStatus::Pass )
+with expansion:
+  1 == 0
+EVENT_RATE_LIMIT
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:398
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

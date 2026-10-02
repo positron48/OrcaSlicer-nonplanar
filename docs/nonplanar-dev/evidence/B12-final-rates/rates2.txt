@@ -1,0 +1,974 @@
+Filters: [FinalByteRates]
+Randomness seeded to: 1812926486
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B12 exact decimal boundaries and triangular peaks distinguish CoreXY from
+Cartesian drives
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:338
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:343: PASSED:
+  REQUIRE( boundary.status==nptop_verify::RateStatus::Pass )
+with expansion:
+  0 == 0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:343: PASSED:
+  REQUIRE( boundary.snapshot )
+with expansion:
+  0x98f0fca80
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:345: PASSED:
+  REQUIRE( over.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:345: PASSED:
+  REQUIRE_FALSE( over.snapshot )
+with expansion:
+  !0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:347: PASSED:
+  REQUIRE( nptop_verify::verify_linear_rates(header+"M204 S.1\nG1 X.01 Y0 Z0 F6000\nM400\n",{0,0,0},p).status==nptop_verify::RateStatus::Pass )
+with expansion:
+  0 == 0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:350: PASSED:
+  REQUIRE( nptop_verify::verify_linear_rates(bytes,{0,0,0},p).status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:351: PASSED:
+  REQUIRE( nptop_verify::verify_linear_rates(bytes,{0,0,0},p).status==nptop_verify::RateStatus::Pass )
+with expansion:
+  0 == 0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+-------------------------------------------------------------------------------
+B12 final rate verifier owns final bytes policies callbacks and refuses
+resources stale publication and unsupported arithmetic
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:353
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  0 FINAL_RATE_BYTE_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  0 FINAL_RATE_BYTE_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  1 FINAL_RATE_EVENT_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  1 FINAL_RATE_EVENT_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  2 FINAL_RATE_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  2 FINAL_RATE_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  3 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  3 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  4 STALE_RATE_POLICY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  4 STALE_RATE_POLICY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  5 FINAL_RATE_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  5 FINAL_RATE_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  6 UNSUPPORTED_FINAL_RATE_POLICY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  6 UNSUPPORTED_FINAL_RATE_POLICY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  7 UNSUPPORTED_RATE_ROUNDING
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:363: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  7 UNSUPPORTED_RATE_ROUNDING
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:367: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0x98f0fca80
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:367: PASSED:
+  REQUIRE( owned.snapshot->bytes==rate_bytes() )
+with expansion:
+  "G90
+  M83
+  M400
+  M204 S4
+  G1 X3 Y4 Z0 E.2 F300
+  M400
+  G1 E-.8 F120
+  M400
+  G1 X3 Y4 Z.05 F60
+  M400
+  G1 E.8 F120
+  M400
+  G4 P10
+  M400
+  "
+  ==
+  "G90
+  M83
+  M400
+  M204 S4
+  G1 X3 Y4 Z0 E.2 F300
+  M400
+  G1 E-.8 F120
+  M400
+  G1 X3 Y4 Z.05 F60
+  M400
+  G1 E.8 F120
+  M400
+  G4 P10
+  M400
+  "
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:368: PASSED:
+  REQUIRE( nptop_verify::verify_linear_rates(rate_bytes(),{0,0,0},rate_policy(),limits).snapshot )
+with expansion:
+  0x98f0fcc40
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:370: PASSED:
+  REQUIRE_FALSE( late.snapshot )
+with expansion:
+  !0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:370: PASSED:
+  REQUIRE( late.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+-------------------------------------------------------------------------------
+B12 independent exact final byte limits certify rates dose and ideal full stop
+timing without phantom pressure material
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:306
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:309: PASSED:
+with message:
+  nptop_verify::linear_rate_version==1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:309: PASSED:
+with message:
+  !(std::is_aggregate<nptop_verify::LinearRateSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:311: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Pass )
+with expansion:
+  0 == 0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:311: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x98f0fca80
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:312: PASSED:
+  REQUIRE( r.bytes==rate_bytes() )
+with expansion:
+  "G90
+  M83
+  M400
+  M204 S4
+  G1 X3 Y4 Z0 E.2 F300
+  M400
+  G1 E-.8 F120
+  M400
+  G1 X3 Y4 Z.05 F60
+  M400
+  G1 E.8 F120
+  M400
+  G4 P10
+  M400
+  "
+  ==
+  "G90
+  M83
+  M400
+  M204 S4
+  G1 X3 Y4 Z0 E.2 F300
+  M400
+  G1 E-.8 F120
+  M400
+  G1 X3 Y4 Z.05 F60
+  M400
+  G1 E.8 F120
+  M400
+  G4 P10
+  M400
+  "
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:312: PASSED:
+  REQUIRE( r.moves.size()==5 )
+with expansion:
+  5 == 5
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:312: PASSED:
+  REQUIRE( r.steps.size()==5 )
+with expansion:
+  5 == 5
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( High(bound.lower)<=value )
+with expansion:
+  5 <= 5
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( value<=High(bound.upper) )
+with expansion:
+  5 <= 5
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( High(bound.lower)<=value )
+with expansion:
+  4.47214 <= 4.47214
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( value<=High(bound.upper) )
+with expansion:
+  4.47214 <= 4.47214
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( High(bound.lower)<=value )
+with expansion:
+  2.23607 <= 2.23607
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( value<=High(bound.upper) )
+with expansion:
+  2.23607 <= 2.23607
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( High(bound.lower)<=value )
+with expansion:
+  0.481056 <= 0.481056
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( value<=High(bound.upper) )
+with expansion:
+  0.481056 <= 0.481056
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( High(bound.lower)<=value )
+with expansion:
+  0.411159 <= 0.411159
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( value<=High(bound.upper) )
+with expansion:
+  0.411159 <= 0.411159
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( High(bound.lower)<=value )
+with expansion:
+  4.25853 <= 4.25853
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:313: PASSED:
+  REQUIRE( value<=High(bound.upper) )
+with expansion:
+  4.25853 <= 4.25853
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:321: PASSED:
+  REQUIRE( r.steps[i].command_volume.lower==0 )
+with expansion:
+  0.0 == 0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:321: PASSED:
+  REQUIRE( r.steps[i].command_volume.upper==0 )
+with expansion:
+  0.0 == 0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:321: PASSED:
+  REQUIRE( r.steps[i].command_volume.lower==0 )
+with expansion:
+  0.0 == 0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:321: PASSED:
+  REQUIRE( r.steps[i].command_volume.upper==0 )
+with expansion:
+  0.0 == 0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:321: PASSED:
+  REQUIRE( r.steps[i].command_volume.lower==0 )
+with expansion:
+  0.0 == 0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:321: PASSED:
+  REQUIRE( r.steps[i].command_volume.upper==0 )
+with expansion:
+  0.0 == 0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:322: PASSED:
+  REQUIRE( r.moves[1].kind==nptop_verify::FullStopKind::Pressure )
+with expansion:
+  1 == 1
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:322: PASSED:
+  REQUIRE( r.moves[4].kind==nptop_verify::FullStopKind::Dwell )
+with expansion:
+  2 == 2
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+-------------------------------------------------------------------------------
+B12 protected native candidate rate check binds original source policies bytes
+and shared publication guards
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:373
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:188: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x98f13f9c0
+with message:
+  DECLARED_MATERIAL_MOTION_SOURCE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:194: PASSED:
+  REQUIRE( source.snapshot )
+with expansion:
+  0x98f145600
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:198: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x98ed64000
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:375: PASSED:
+  REQUIRE( candidate.snapshot )
+with expansion:
+  0x106871a00
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:376: PASSED:
+  REQUIRE( rates.snapshot )
+with expansion:
+  0x98f0fce00
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:376: PASSED:
+  REQUIRE( rates.status==nptop_verify::RateStatus::Pass )
+with expansion:
+  0 == 0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:377: PASSED:
+  REQUIRE( rates.snapshot->bytes==candidate.snapshot->bytes )
+with expansion:
+  "G90
+  M83
+  M400
+  M204 S39.999999
+  G1 X4.001234 Y2.002345 Z3.053456 E.116743074 F239.999999
+  M400
+  G1 E-.8 F179.999999
+  M400
+  G1 X4.001234 Y5.002345 Z3.103456 F239.999999
+  M400
+  G1 E.8 F179.999999
+  M400
+  G4 P10.001
+  M400
+  "
+  ==
+  "G90
+  M83
+  M400
+  M204 S39.999999
+  G1 X4.001234 Y2.002345 Z3.053456 E.116743074 F239.999999
+  M400
+  G1 E-.8 F179.999999
+  M400
+  G1 X4.001234 Y5.002345 Z3.103456 F239.999999
+  M400
+  G1 E.8 F179.999999
+  M400
+  G4 P10.001
+  M400
+  "
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:377: PASSED:
+  REQUIRE( rates.snapshot->policy.flow==candidate.snapshot->plan->policy.flow.value() )
+with expansion:
+  1.16999999999999993 == 1.16999999999999993
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:378: PASSED:
+  REQUIRE( rates.evaluations>candidate.evaluations )
+with expansion:
+  166 > 106
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:378: PASSED:
+  REQUIRE( rates.snapshot->moves.size()==candidate.snapshot->events.size() )
+with expansion:
+  5 == 5
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:379: PASSED:
+  REQUIRE_FALSE( verify_linear_candidate_rates({}).snapshot )
+with expansion:
+  !0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:384: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:384: PASSED:
+  REQUIRE( denied.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:384: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:384: PASSED:
+  REQUIRE( denied.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:384: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:384: PASSED:
+  REQUIRE( denied.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:384: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:384: PASSED:
+  REQUIRE( denied.status==nptop_verify::RateStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:387: PASSED:
+  REQUIRE( verify_linear_candidate_rates(mutable_candidate,limits).snapshot )
+with expansion:
+  0x98f0fcfc0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:388: PASSED:
+  REQUIRE( verify_linear_candidate_rates(candidate,limits).snapshot )
+with expansion:
+  0x98f0fcfc0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:389: PASSED:
+  REQUIRE_FALSE( verify_linear_candidate_rates(candidate,limits).snapshot )
+with expansion:
+  !0
+with message:
+  SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED
+
+-------------------------------------------------------------------------------
+B12 final byte rate limit mutations fail with original record and no partial
+certificate
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:324
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  0 POSITION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  0 POSITION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.record )
+with expansion:
+  {?}
+with message:
+  0 POSITION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( *result.record==0 )
+with expansion:
+  0 == 0
+with message:
+  0 POSITION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  1 AXIS_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  1 AXIS_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.record )
+with expansion:
+  {?}
+with message:
+  1 AXIS_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( *result.record==0 )
+with expansion:
+  0 == 0
+with message:
+  1 AXIS_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  2 AXIS_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  2 AXIS_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.record )
+with expansion:
+  {?}
+with message:
+  2 AXIS_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( *result.record==0 )
+with expansion:
+  0 == 0
+with message:
+  2 AXIS_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  3 DRIVE_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  3 DRIVE_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.record )
+with expansion:
+  {?}
+with message:
+  3 DRIVE_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( *result.record==0 )
+with expansion:
+  0 == 0
+with message:
+  3 DRIVE_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  4 DRIVE_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  4 DRIVE_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.record )
+with expansion:
+  {?}
+with message:
+  4 DRIVE_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( *result.record==0 )
+with expansion:
+  0 == 0
+with message:
+  4 DRIVE_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  5 FILAMENT_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  5 FILAMENT_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.record )
+with expansion:
+  {?}
+with message:
+  5 FILAMENT_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( *result.record==0 )
+with expansion:
+  0 == 0
+with message:
+  5 FILAMENT_SPEED_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  6 FILAMENT_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  6 FILAMENT_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.record )
+with expansion:
+  {?}
+with message:
+  6 FILAMENT_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( *result.record==0 )
+with expansion:
+  0 == 0
+with message:
+  6 FILAMENT_ACCELERATION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  7 VOLUME_RATE_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  7 VOLUME_RATE_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.record )
+with expansion:
+  {?}
+with message:
+  7 VOLUME_RATE_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( *result.record==0 )
+with expansion:
+  0 == 0
+with message:
+  7 VOLUME_RATE_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  8 EXTRUDE_CROSS_SECTION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  8 EXTRUDE_CROSS_SECTION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.record )
+with expansion:
+  {?}
+with message:
+  8 EXTRUDE_CROSS_SECTION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( *result.record==0 )
+with expansion:
+  0 == 0
+with message:
+  8 EXTRUDE_CROSS_SECTION_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  9 EVENT_RATE_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  9 EVENT_RATE_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( result.record )
+with expansion:
+  {?}
+with message:
+  9 EVENT_RATE_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:331: PASSED:
+  REQUIRE( *result.record==0 )
+with expansion:
+  0 == 0
+with message:
+  9 EVENT_RATE_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:334: PASSED:
+  REQUIRE( pressure.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:334: PASSED:
+  REQUIRE( pressure.record )
+with expansion:
+  {?}
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:334: PASSED:
+  REQUIRE( *pressure.record==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:335: PASSED:
+  REQUIRE( nptop_verify::verify_linear_rates(rate_bytes(),{0,0,0},p).status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:336: PASSED:
+  REQUIRE( nptop_verify::verify_linear_rates(rate_bytes()+"G92 E0\n",{0,0,0},rate_policy()).status==nptop_verify::RateStatus::Fail )
+with expansion:
+  1 == 1
+
+===============================================================================
+All tests passed (122 assertions in 5 test cases)
+

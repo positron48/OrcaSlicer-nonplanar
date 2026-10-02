@@ -15,6 +15,15 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B12-final-rates.md` and ADR-0070 add an independent exact-rational final-byte
+rate library, protected native adapter and separate diagnostic command. All
+2218 native rows pass; seven new cases/137 assertions, ten CLI cases,
+378/378 selected CTest and six fresh OFF/ZAA pairs pass. Command/nominal dose,
+ideal full-stop time and final pressure state are enclosed; geometry/contact/
+support, delivered-volume uncertainty and complete job/export binding remain
+pending. Component PASS keeps job UNKNOWN and export BLOCK. B10 Linux succeeded;
+current B12 Linux and independent review require separate evidence.
+
 `B11-linear-candidate.md` and ADR-0069 add protected complete native final bytes,
 policy/hash/event ownership, explicit XYZ/F/E, balanced pressure, full-stop
 barriers and dwell. Independent final-byte parser and 113-bit test rate formulas

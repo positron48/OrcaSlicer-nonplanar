@@ -2690,6 +2690,10 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     LinearCandidateLimits byte_limits;byte_limits.timeout=std::chrono::seconds(5);
     const auto candidate=serialize_linear_candidate(byte_plan,byte_policy,byte_limits);INFO(candidate.reason);REQUIRE(candidate.snapshot);
     const auto &bytes=*candidate.snapshot;REQUIRE(bytes.sha256==sha256_bytes(bytes.bytes));
+    const auto final_rates=verify_linear_candidate_rates(candidate,byte_limits);INFO(final_rates.reason);REQUIRE(final_rates.snapshot);
+    REQUIRE(final_rates.status==nptop_verify::RateStatus::Pass);REQUIRE(final_rates.snapshot->bytes==bytes.bytes);
+    REQUIRE(final_rates.snapshot->moves.size()==new_ledger.records.size());REQUIRE(final_rates.evaluations>candidate.evaluations);
+    INFO("native final rates work=" << final_rates.evaluations << " ideal duration=[" << final_rates.snapshot->duration.lower << ',' << final_rates.snapshot->duration.upper << ']');
     REQUIRE(bytes.plan==byte_plan.snapshot);REQUIRE(bytes.events.size()==new_ledger.records.size());
     const auto parsed=nptop_verify::replay_full_stop(bytes.bytes,{bytes.initial_position.x(),bytes.initial_position.y(),bytes.initial_position.z()});
     nptop_test::check_full_stop_rates(parsed,kinematics,true);

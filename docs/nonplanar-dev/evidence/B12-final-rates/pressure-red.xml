@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="1" hostname="tbd" time="0.001" timestamp="2026-10-02T07:43:24Z">
+    <properties>
+      <property name="random-seed" value="299483438"/>
+      <property name="filters" value="&quot;B12 final byte rate certificate requires an exactly closed pressure cycle&quot;"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B12 final byte rate certificate requires an exactly closed pressure cycle" time="0.000" status="run">
+      <failure message="open.status==nptop_verify::RateStatus::Fail" type="REQUIRE">
+FAILED:
+  REQUIRE( open.status==nptop_verify::RateStatus::Fail )
+with expansion:
+  0 == 1
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:411
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

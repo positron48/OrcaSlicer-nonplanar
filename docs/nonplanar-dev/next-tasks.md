@@ -7,12 +7,12 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
-`B11-linear-candidate.md` now owns complete final native full-stop bytes with
-policy/hash/event binding and independent pressure/dwell/barrier parsing. Extend
-B12 into the independent complete headless final-byte verifier: reconstruct
-rounded material and support/contact, propagate XYZ/E dose uncertainty, recheck
-all axes/drives/flow/rates/acceleration and recompute timing. Analytical rate tests
-alone do not provide production verification. Audit every native final filter,
+`B12-final-rates.md` now independently checks complete final native full-stop
+bytes for exact axes/drives/E/Q/cross-section/acceleration/event rates and enclosed
+command/nominal dose, ideal time and final pressure state. Extend B12 into the
+complete headless final-byte verifier: reconstruct rounded material and support/
+contact and propagate XYZ/E delivered-volume uncertainty. The new production
+rate component keeps job UNKNOWN/export BLOCK. Audit every native final filter,
 prolog/end motion and bind the exact resulting bytes to B13. The B09 complete
 native exit remains UNKNOWN; contact/access/cap work below remains required.
 User-declared standard U1 head/.4 mm nozzle is retained. Continue software without

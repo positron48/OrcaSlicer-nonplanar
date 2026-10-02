@@ -3,6 +3,7 @@
 #include <libslic3r/Nonplanar/GCodeAdapter.hpp>
 #include <nonplanar_verify/Replay.hpp>
 #include <nonplanar_verify/FullStopReplay.hpp>
+#include <nonplanar_verify/LinearRates.hpp>
 #include "full_stop_oracle.hpp"
 #include <libslic3r/Nonplanar/StlImport.hpp>
 #include <cfenv>
@@ -285,4 +286,135 @@ TEST_CASE("B12 replay owns input and rejects cancellation deadline resources fin
     REQUIRE(nptop_verify::replay_full_stop(mutable_bytes,{0,0,0},limits).size()==1);
     limits={};size_t calls=0;limits.cancelled=[&] {++calls;return false;};REQUIRE(nptop_verify::replay_full_stop(bytes,{0,0,0},limits).size()==1);
     const size_t last=calls;calls=0;limits.cancelled=[&] {return ++calls==last;};REQUIRE_THROWS(nptop_verify::replay_full_stop(bytes,{0,0,0},limits));
+}
+
+namespace {
+nptop_verify::LinearRatePolicy rate_policy()
+{
+    nptop_verify::LinearRatePolicy p;p.version=1;p.profile_id=71;p.revision=1;
+    p.kinematics=nptop_verify::RateKinematics::CoreXY;p.initial_acceleration=20;
+    p.position_min={-100,-100,-100};p.position_max={100,100,100};
+    p.axis_speed={10,10,2};p.axis_acceleration={20,20,5};p.drive_speed={15,15,2};p.drive_acceleration={30,30,5};
+    p.filament_diameter=1.75;p.flow=1.17;p.filament_speed=5;p.filament_acceleration=10;
+    p.max_retraction=2;p.max_volume_rate=2;p.max_cross_section=.5;p.max_event_rate=100;return p;
+}
+std::string rate_bytes()
+{
+    return "G90\nM83\nM400\nM204 S4\nG1 X3 Y4 Z0 E.2 F300\nM400\nG1 E-.8 F120\nM400\nG1 X3 Y4 Z.05 F60\nM400\nG1 E.8 F120\nM400\nG4 P10\nM400\n";
+}
+}
+TEST_CASE("B12 independent exact final byte limits certify rates dose and ideal full stop timing without phantom pressure material", "[Nonplanar][B12][FinalByteRates]")
+{
+    using High=boost::multiprecision::cpp_bin_float_quad;
+    STATIC_REQUIRE(nptop_verify::linear_rate_version==1);STATIC_REQUIRE_FALSE(std::is_aggregate<nptop_verify::LinearRateSnapshot>::value);
+    const auto result=nptop_verify::verify_linear_rates(rate_bytes(),{0,0,0},rate_policy());INFO(result.reason);
+    REQUIRE(result.status==nptop_verify::RateStatus::Pass);REQUIRE(result.snapshot);const auto &r=*result.snapshot;
+    REQUIRE(r.bytes==rate_bytes());REQUIRE(r.moves.size()==5);REQUIRE(r.steps.size()==5);
+    const auto encloses=[](auto bound,High value) {REQUIRE(High(bound.lower)<=value);REQUIRE(value<=High(bound.upper));};
+    const High first_peak=sqrt(High(20));encloses(r.steps[0].distance,High(5));encloses(r.steps[0].peak,first_peak);
+    encloses(r.steps[0].duration,High(5)/first_peak+first_peak/4);
+    const High volume=High(".2")*acos(High(-1))*High("1.75")*High("1.75")/4;
+    encloses(r.command_volume,volume);encloses(r.nominal_volume,volume/High(rate_policy().flow));
+    const High pressure_peak=sqrt(High("3.2"));
+    const High duration=2*High(5)/first_peak+4*High(".8")/pressure_peak+2*sqrt(High(".05")/4)+High(".01");
+    encloses(r.duration,duration);
+    for(size_t i : {1,3,4}) {REQUIRE(r.steps[i].command_volume.lower==0);REQUIRE(r.steps[i].command_volume.upper==0);}
+    REQUIRE(r.moves[1].kind==nptop_verify::FullStopKind::Pressure);REQUIRE(r.moves[4].kind==nptop_verify::FullStopKind::Dwell);
+}
+TEST_CASE("B12 final byte rate limit mutations fail with original record and no partial certificate", "[Nonplanar][B12][FinalByteRates]")
+{
+    for(int mode=0;mode<10;++mode) {
+        auto p=rate_policy();if(mode==0)p.position_max[0]=2;if(mode==1)p.axis_speed[1]=1;if(mode==2)p.axis_acceleration[0]=1;
+        if(mode==3)p.drive_speed[0]=1;if(mode==4)p.drive_acceleration[0]=1;if(mode==5)p.filament_speed=.01;
+        if(mode==6)p.filament_acceleration=.01;if(mode==7)p.max_volume_rate=.01;if(mode==8)p.max_cross_section=.01;if(mode==9)p.max_event_rate=.1;
+        const auto result=nptop_verify::verify_linear_rates(rate_bytes(),{0,0,0},p);INFO(mode << " " << result.reason);
+        REQUIRE(result.status==nptop_verify::RateStatus::Fail);REQUIRE_FALSE(result.snapshot);REQUIRE(result.record);REQUIRE(*result.record==0);
+    }
+    auto p=rate_policy();p.max_retraction=.7;const auto pressure=nptop_verify::verify_linear_rates(rate_bytes(),{0,0,0},p);
+    REQUIRE(pressure.status==nptop_verify::RateStatus::Fail);REQUIRE(pressure.record);REQUIRE(*pressure.record==1);
+    p=rate_policy();p.initial_acceleration=3;REQUIRE(nptop_verify::verify_linear_rates(rate_bytes(),{0,0,0},p).status==nptop_verify::RateStatus::Fail);
+    REQUIRE(nptop_verify::verify_linear_rates(rate_bytes()+"G92 E0\n",{0,0,0},rate_policy()).status==nptop_verify::RateStatus::Fail);
+}
+TEST_CASE("B12 exact decimal boundaries and triangular peaks distinguish CoreXY from Cartesian drives", "[Nonplanar][B12][FinalByteRates]")
+{
+    const std::string header="G90\nM83\nM400\n";auto p=rate_policy();p.initial_acceleration=20;
+    p.axis_speed={1,10,2};p.axis_acceleration={20,20,5};p.max_event_rate=10;
+    const auto boundary=nptop_verify::verify_linear_rates(header+"M204 S10\nG1 X.1 Y0 Z0 F60\nM400\n",{0,0,0},p);INFO(boundary.reason);
+    REQUIRE(boundary.status==nptop_verify::RateStatus::Pass);REQUIRE(boundary.snapshot);
+    const auto over=nptop_verify::verify_linear_rates(header+"M204 S10.000001\nG1 X.1 Y0 Z0 F60.000001\nM400\n",{0,0,0},p);
+    REQUIRE(over.status==nptop_verify::RateStatus::Fail);REQUIRE_FALSE(over.snapshot);
+    p=rate_policy();p.axis_speed[0]=.04;
+    REQUIRE(nptop_verify::verify_linear_rates(header+"M204 S.1\nG1 X.01 Y0 Z0 F6000\nM400\n",{0,0,0},p).status==nptop_verify::RateStatus::Pass);
+    p=rate_policy();p.drive_speed[0]=6;p.initial_acceleration=200;p.axis_acceleration={200,200,200};p.drive_acceleration={400,400,400};
+    const auto bytes=header+"M204 S100\nG1 X3 Y4 Z0 F300\nM400\n";
+    REQUIRE(nptop_verify::verify_linear_rates(bytes,{0,0,0},p).status==nptop_verify::RateStatus::Fail);
+    p.kinematics=nptop_verify::RateKinematics::Cartesian;REQUIRE(nptop_verify::verify_linear_rates(bytes,{0,0,0},p).status==nptop_verify::RateStatus::Pass);
+}
+TEST_CASE("B12 final rate verifier owns final bytes policies callbacks and refuses resources stale publication and unsupported arithmetic", "[Nonplanar][B12][FinalByteRates]")
+{
+    for(int mode=0;mode<8;++mode) {
+        nptop_verify::LinearRateLimits limits;auto p=rate_policy();
+        if(mode==0)limits.max_bytes=1;if(mode==1)limits.max_events=1;if(mode==2)limits.max_evaluations=1;
+        if(mode==3)limits.cancelled=[] {return true;};if(mode==4)limits.is_current=[](uint64_t,uint64_t) {return false;};
+        if(mode==5){limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if(mode==6)p.kinematics=static_cast<nptop_verify::RateKinematics>(9);
+        if(mode==7)limits.cancelled=[] {std::fesetround(FE_UPWARD);return false;};
+        const auto result=nptop_verify::verify_linear_rates(rate_bytes(),{0,0,0},p,limits);std::fesetround(FE_TONEAREST);
+        INFO(mode << " " << result.reason);REQUIRE(result.status==nptop_verify::RateStatus::Unknown);REQUIRE_FALSE(result.snapshot);
+    }
+    auto bytes=rate_bytes();auto policy=rate_policy();nptop_verify::LinearRateLimits limits;
+    limits.cancelled=[&] {bytes="M82\n";policy.max_volume_rate=.0001;limits.max_events=0;return false;};
+    const auto owned=nptop_verify::verify_linear_rates(bytes,{0,0,0},policy,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->bytes==rate_bytes());
+    limits={};size_t calls=0;limits.cancelled=[&] {++calls;return false;};REQUIRE(nptop_verify::verify_linear_rates(rate_bytes(),{0,0,0},rate_policy(),limits).snapshot);
+    const size_t last=calls;calls=0;limits.cancelled=[&] {return ++calls==last;};
+    const auto late=nptop_verify::verify_linear_rates(rate_bytes(),{0,0,0},rate_policy(),limits);REQUIRE_FALSE(late.snapshot);REQUIRE(late.status==nptop_verify::RateStatus::Unknown);
+}
+
+TEST_CASE("B12 protected native candidate rate check binds original source policies bytes and shared publication guards", "[Nonplanar][B12][FinalByteRates]")
+{
+    const auto candidate=serialize_linear_candidate(full_stop_plan(),LinearCandidatePolicy{3,1,Acceleration(100)});REQUIRE(candidate.snapshot);
+    const auto rates=verify_linear_candidate_rates(candidate);INFO(rates.reason);REQUIRE(rates.snapshot);REQUIRE(rates.status==nptop_verify::RateStatus::Pass);
+    REQUIRE(rates.snapshot->bytes==candidate.snapshot->bytes);REQUIRE(rates.snapshot->policy.flow==candidate.snapshot->plan->policy.flow.value());
+    REQUIRE(rates.evaluations>candidate.evaluations);REQUIRE(rates.snapshot->moves.size()==candidate.snapshot->events.size());
+    REQUIRE_FALSE(verify_linear_candidate_rates({}).snapshot);
+    for(int mode=0;mode<4;++mode) {
+        LinearCandidateLimits limits;
+        if(mode==0)limits.is_current=[](uint64_t) {return false;};if(mode==1)limits.is_scene_current=[](uint64_t,uint64_t) {return false;};
+        if(mode==2)limits.is_policy_current=[](uint64_t id,uint64_t) {return id!=3;};if(mode==3)limits.max_evaluations=candidate.evaluations;
+        const auto denied=verify_linear_candidate_rates(candidate,limits);REQUIRE_FALSE(denied.snapshot);REQUIRE(denied.status==nptop_verify::RateStatus::Unknown);
+    }
+    auto mutable_candidate=candidate;LinearCandidateLimits limits;limits.cancelled=[&] {mutable_candidate={};limits.max_records=0;return false;};
+    REQUIRE(verify_linear_candidate_rates(mutable_candidate,limits).snapshot);
+    limits={};size_t calls=0;limits.cancelled=[&] {++calls;return false;};REQUIRE(verify_linear_candidate_rates(candidate,limits).snapshot);
+    const size_t last=calls;calls=0;limits.cancelled=[&] {return ++calls==last;};REQUIRE_FALSE(verify_linear_candidate_rates(candidate,limits).snapshot);
+}
+
+TEST_CASE("B12 final event cadence uses complete rest to rest time rather than the peak divided by length", "[Nonplanar][B12][FinalByteRates]")
+{
+    auto p=rate_policy();p.max_event_rate=7;
+    const std::string bytes="G90\nM83\nM400\nM204 S10\nG1 X.1 Y0 Z0 F60\nM400\n";
+    // Peak/L is 10, but the exact rest-to-rest duration is .2s: 5 events/s.
+    const auto accepted=nptop_verify::verify_linear_rates(bytes,{0,0,0},p);INFO(accepted.reason);
+    REQUIRE(accepted.status==nptop_verify::RateStatus::Pass);REQUIRE(accepted.snapshot);
+    p.max_event_rate=5;REQUIRE(nptop_verify::verify_linear_rates(bytes,{0,0,0},p).status==nptop_verify::RateStatus::Pass);
+    p.max_event_rate=std::nextafter(5.,0.);REQUIRE(nptop_verify::verify_linear_rates(bytes,{0,0,0},p).status==nptop_verify::RateStatus::Fail);
+    p=rate_policy();p.max_event_rate=1;
+    const std::string trapezoid="G90\nM83\nM400\nM204 S10\nG1 X1 Y0 Z0 F60\nM400\n";
+    REQUIRE(nptop_verify::verify_linear_rates(trapezoid,{0,0,0},p).status==nptop_verify::RateStatus::Pass);
+    p.max_event_rate=.8;REQUIRE(nptop_verify::verify_linear_rates(trapezoid,{0,0,0},p).status==nptop_verify::RateStatus::Fail);
+}
+
+TEST_CASE("B12 final byte rates retain final retraction state without inventing restoration or material", "[Nonplanar][B12][FinalByteRates]")
+{
+    const std::string header="G90\nM83\nM400\nM204 S4\n";
+    const auto open=nptop_verify::verify_linear_rates(header+"G1 E-.8 F120\nM400\n",{0,0,0},rate_policy());
+    REQUIRE(open.status==nptop_verify::RateStatus::Pass);REQUIRE(open.snapshot);
+    REQUIRE(open.snapshot->command_volume.upper==0);
+    using High=boost::multiprecision::cpp_bin_float_quad;
+    REQUIRE(High(open.snapshot->final_pressure_debt.lower)<=High(".8"));
+    REQUIRE(High(open.snapshot->final_pressure_debt.upper)>=High(".8"));
+    const auto closed=nptop_verify::verify_linear_rates(header+"G1 E-.8 F120\nM400\nG1 E.8 F120\nM400\n",{0,0,0},rate_policy());
+    REQUIRE(closed.status==nptop_verify::RateStatus::Pass);REQUIRE(closed.snapshot);
+    REQUIRE(closed.snapshot->command_volume.upper==0);
+    REQUIRE(closed.snapshot->final_pressure_debt.upper==0);
 }

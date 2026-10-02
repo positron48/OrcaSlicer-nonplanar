@@ -2,7 +2,7 @@ add_executable(nonplanar_tests test_contracts.cpp test_collision.cpp test_profil
 add_executable(nonplanar_worker_probe worker_probe.cpp)
 target_link_libraries(nonplanar_worker_probe Threads::Threads)
 set_target_properties(nonplanar_worker_probe PROPERTIES MACOSX_BUNDLE FALSE)
-add_dependencies(nonplanar_tests nonplanar_stl_audit nonplanar_worker_probe)
+add_dependencies(nonplanar_tests nonplanar_rate_audit nonplanar_stl_audit nonplanar_worker_probe)
 target_compile_definitions(nonplanar_tests PRIVATE
     NPTOP_WORKER_PATH="$<TARGET_FILE:nonplanar_import_worker>"
     NPTOP_PROBE_PATH="$<TARGET_FILE:nonplanar_worker_probe>"
