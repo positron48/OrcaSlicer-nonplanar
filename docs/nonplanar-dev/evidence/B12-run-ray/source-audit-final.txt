@@ -1,0 +1,85 @@
+{
+  "status": "PASS_SOURCE_INVENTORY_ONLY",
+  "baseline_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "head_commit": "db7dee0bfdc3ef0e0e0a701aeed874a76e89e7c9",
+  "head_is_baseline": false,
+  "files": [
+    {
+      "path": "src/libslic3r/ContourZ.cpp",
+      "markers_checked": 1,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/ExtrusionEntity.hpp",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/GCode.cpp",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/Format/STEP.cpp",
+      "markers_checked": 1,
+      "status": "PRESENT"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "tests/CMakeLists.txt",
+      "markers_checked": 1,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/slic3r/GUI/BackgroundSlicingProcess.cpp",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/Format/bbs_3mf.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/slic3r/GUI/GCodeViewer.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/PrintConfig.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/Print.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/PrintObject.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/slic3r/GUI/Tab.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    }
+  ],
+  "tracked_worktree_changes": [
+    "M .github/workflows/nonplanar-native.yml",
+    " M src/nonplanar_verify/LinearMaterial.cpp",
+    " M src/nonplanar_verify/LinearMaterial.hpp",
+    " M src/nonplanar_verify/audit.cpp",
+    " M tests/nonplanar/final_material_oracle.hpp",
+    " M tests/nonplanar/test_final_material.cpp",
+    " M tests/nonplanar/test_policy.cpp"
+  ],
+  "build_status": "NOT_RUN",
+  "slicer_test_status": "NOT_RUN",
+  "semantic_hook_audit": "REQUIRES_ENGINEER_REVIEW"
+}

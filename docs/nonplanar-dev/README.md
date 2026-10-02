@@ -15,6 +15,17 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B12-run-ray.md` and ADR-0075 use exact actual packet cuts for complete Nominal
+section union, preserving original Lower/errors/footprints/bands/budgets. The
+unchanged eight-packet native half-prefix now has complete support PASS, including
+independent whole near-ray/terminal/anchor/partition checks: 137783 native
+assertions. Focused39/14571, CTest398/398, CLI100, nine gate helpers and six fresh
+strict OFF/ZAA pairs pass. Original native front/per-event Lower refusals and
+complete B09 exit UNKNOWN remain. General B12/contact/head/cap/route/dose/
+transform qualification and B13–B15 remain open; full B01–B15 IN_PROGRESS,
+export BLOCK. Exact-index CTest selection fixes the long-name regex limit while
+checking every original requested target and all skip/failure negatives.
+
 `B12-final-support.md` and ADR-0074 independently check complete actual run
 footprints against the pre-run prefix for nominal vertical/normal gaps and
 separate joined Lower anchors. Four new cases are included in 37/13211 combined

@@ -108,7 +108,8 @@ int main(int argc,char **argv)
 {
     boost::nowide::args utf8(argc,argv);
     if(argc==7 && std::string(argv[1])=="--linear-run-support-only")return audit_run_support(argv);
-    const bool joined_mode=argc==7 && std::string(argv[1])=="--linear-material-joined-cover-only";
+    const bool nominal_run_mode=argc==7 && std::string(argv[1])=="--linear-material-nominal-run-cover-only";
+    const bool joined_mode=nominal_run_mode || (argc==7 && std::string(argv[1])=="--linear-material-joined-cover-only");
     const bool cover_mode=joined_mode || (argc==6 && std::string(argv[1])=="--linear-material-cover-only");
     const bool material_mode=cover_mode || (argc==5 && std::string(argv[1])=="--linear-material-only");
     if(!material_mode && (argc!=4 || std::string(argv[1])!="--linear-rates-only")) {
@@ -116,6 +117,7 @@ int main(int argc,char **argv)
                     "       nonplanar_rate_audit --linear-material-only POLICY.json MATERIAL.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-material-cover-only POLICY.json MATERIAL.json QUERY.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-material-joined-cover-only POLICY.json MATERIAL.json JOIN.json QUERY.json CANDIDATE.txt\n"
+                    "       nonplanar_rate_audit --linear-material-nominal-run-cover-only POLICY.json MATERIAL.json JOIN.json QUERY.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-run-support-only POLICY.json MATERIAL.json JOIN.json SUPPORT_QUERY.json CANDIDATE.txt\n"
                     "Numerical component only; complete job and export remain blocked.\n";return 64;
     }
@@ -137,7 +139,7 @@ int main(int argc,char **argv)
                 query=parse_cover_query(read_bounded(argv[joined_mode ? 5 : 4],65536));
                 std::optional<nptop_verify::JoinedMaterialPolicy> joined_policy;
                 if(joined_mode){joined_policy=nptop_verify::parse_joined_material_document(read_bounded(argv[4],65536));
-                    if(query->representation!=nptop_verify::MaterialRepresentation::Lower)throw std::runtime_error("joined lower only");}
+                    if(query->representation!=(nominal_run_mode ? nptop_verify::MaterialRepresentation::Nominal : nptop_verify::MaterialRepresentation::Lower))throw std::runtime_error("joined representation");}
                 if(!material.snapshot){cover.status=material.status;cover.reason=material.reason;cover.evaluations=std::max(material.evaluations,result.evaluations);}
                 else {
                     const auto prefix=nptop_verify::linear_material_at(material.snapshot,query->completed,query->progress,material_limits);
@@ -145,7 +147,7 @@ int main(int argc,char **argv)
                     if(prefix.snapshot && joined_mode){
                         nptop_verify::JoinedMaterialLimits joined_limits;joined_limits.cancelled=expired;
                         joined=nptop_verify::reconstruct_joined_linear_material(prefix.snapshot,*joined_policy,joined_limits);
-                        if(joined.snapshot)joined_cover=nptop_verify::cover_joined_linear_material_lower(joined.snapshot,query->region,joined_limits);
+                        if(joined.snapshot)joined_cover=nptop_verify::cover_joined_linear_material(joined.snapshot,query->region,query->representation,joined_limits);
                         else {joined_cover.reason=joined.reason;joined_cover.evaluations=joined.evaluations;}
                     }
                     else if(prefix.snapshot)cover=nptop_verify::cover_linear_material(prefix.snapshot,query->region,query->representation,cover_limits);
@@ -190,7 +192,8 @@ int main(int argc,char **argv)
         report["mandatory_checks_pending"]={"complete_material_geometry","packet_seams","actual_support_gaps","contact","dose_qualification","job_integrity","qualified_profile","machine_state"};
     }
     if(joined_mode){
-        report["component"]="final_byte_joined_lower_region_cover";report["scope"]="actual_prefix_declared_synthetic_common_run_lower_envelope_only";
+        report["component"]=nominal_run_mode ? "final_byte_nominal_run_region_cover" : "final_byte_joined_lower_region_cover";
+        report["scope"]=nominal_run_mode ? "actual_prefix_nominal_sections_exact_packet_cuts_only" : "actual_prefix_declared_synthetic_common_run_lower_envelope_only";
         report["reason"]=joined_cover.reason;report["work"]=joined_cover.evaluations;report["cells"]=joined_cover.cells;
         report["cover_leaves"]=joined_cover.snapshot ? joined_cover.snapshot->leaves.size() : 0;
         report["uncovered"]=joined_cover.uncovered ? nlohmann::json{{"min",joined_cover.uncovered->min},{"max",joined_cover.uncovered->max}} : nlohmann::json(nullptr);

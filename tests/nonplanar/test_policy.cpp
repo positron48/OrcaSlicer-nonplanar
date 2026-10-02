@@ -2744,8 +2744,8 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         later.snapshot->normal_spacing->normal_spacing_mm.lower,later.snapshot->normal_spacing->normal_spacing_mm.upper};
     const auto final_support=nptop_verify::verify_linear_run_support(joined_material.snapshot,joined_cover.snapshot->leaves.front().run_index,final_support_policy);
     REQUIRE(final_support.evaluations>joined_material.evaluations);
-    if(final_support.snapshot){REQUIRE(final_support.snapshot->support->source->completed_records==joined_run.first_record);REQUIRE(final_support.status==nptop_verify::RateStatus::Pass);}
-    else {REQUIRE(final_support.status!=nptop_verify::RateStatus::Pass);if(final_support.status==nptop_verify::RateStatus::Fail)REQUIRE(final_support.witness);else REQUIRE_FALSE(final_support.witness);}
+    INFO(final_support.reason);REQUIRE(final_support.snapshot);REQUIRE(final_support.status==nptop_verify::RateStatus::Pass);REQUIRE_FALSE(final_support.witness);
+    nptop_test::check_complete_run_support(*final_support.snapshot);
     std::cout<<"native final support status="<<int(final_support.status)<<" reason="<<final_support.reason<<" work="<<final_support.evaluations<<" cells="<<final_support.cells<<'\n';
     INFO("native joined runs="<<joined_material.snapshot->runs.size()<<" work="<<joined_cover.evaluations<<" cells="<<joined_cover.cells);
     REQUIRE(rounded_material.snapshot->rates->bytes==bytes.bytes);REQUIRE(rounded_material.evaluations>final_rates.evaluations);
@@ -2796,6 +2796,9 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         joined_file<<nptop_verify::joined_material_document(joined_material.snapshot->policy).dump(2)<<'\n';joined_file.close();REQUIRE(joined_file.good());
         const auto support_query=nptop_verify::run_support_document({rounded_front.snapshot->completed_records,joined_cover.snapshot->leaves.front().run_index,rounded_front.snapshot->current_progress,final_support_policy});
         boost::nowide::ofstream support_file((dir/"native-support-query.json").string());REQUIRE(support_file.good());support_file<<support_query.dump(2)<<'\n';support_file.close();REQUIRE(support_file.good());
+        const auto &terminal=final_support.snapshot->leaves.front().nominal_terminal->region;
+        const nlohmann::json nominal_run_query={{"version",1},{"completed_records",joined_run.first_record},{"current_progress",0},{"representation","nominal"},{"region_min",terminal.min},{"region_max",terminal.max}};
+        boost::nowide::ofstream nominal_run_file((dir/"native-nominal-run-query.json").string());REQUIRE(nominal_run_file.good());nominal_run_file<<nominal_run_query.dump(2)<<'\n';nominal_run_file.close();REQUIRE(nominal_run_file.good());
         for(bool interior:{false,true}){
             const auto &region=interior ? interior_box : laid_box;
             const nlohmann::json query={{"version",1},{"completed_records",rounded_front.snapshot->completed_records},{"current_progress",rounded_front.snapshot->current_progress},

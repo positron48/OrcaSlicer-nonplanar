@@ -70,6 +70,15 @@ class CTestGateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "empty"):
             run(self.build, self.root / "empty", target_executables=["absent"])
 
+    def test_target_selection_handles_long_names_without_running_other_targets(self):
+        names = [f"selected_{i}_" + "x" * 600 for i in range(80)]
+        self.configure('add_test(NAME unselected COMMAND ${CMAKE_CURRENT_BINARY_DIR}/absent)\n' +
+                       ''.join(f'add_test(NAME {name} COMMAND ${{CMAKE_COMMAND}} -E true)\n'
+                               for name in names))
+        result = run(self.build, self.root / "selected-long", target_executables=["cmake"])
+        self.assertEqual(result["tests_executed"], len(names))
+        self.assertEqual(result["test_names"], names)
+
 
 if __name__ == "__main__":
     unittest.main()

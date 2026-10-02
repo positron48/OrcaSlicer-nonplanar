@@ -7,18 +7,18 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
-`B12-final-support.md` independently checks actual complete run footprints
-against only the pre-run prefix, with original nominal vertical/normal bands and
-separate Lower anchors. Analytical full/partial/rotated coverage passes. The
-complete native eight-packet half-prefix remains UNKNOWN at original work/
-deadline budgets; no partial certificate or witness is published. Complete that
-coverage without shrinking the footprint/error/loss/band or bypassing exhaustion.
-Protected broad-phase indexes only prune disjoint regions. Native deeper joined
-interior PASS and per-event/external-front refusals remain. General curved/
-stepped head/contact/cap/exit coverage, qualified delivery/transforms and B13
-job/plate/resources/software/bytes/report binding remain. The original complete
-B09 exit stays UNKNOWN at unchanged margins. Standard U1 head/.4 mm nozzle is
-retained; software does not await firmware-version/material-brand questions.
+`B12-run-ray.md` now resolves the complete native eight-packet half-prefix
+support refusal with exact closed Nominal slices at actual decimal packet cuts.
+Original input bytes/errors/losses/widths/bands/budgets remain. Independent whole
+near-ray exclusion, Nominal terminal/Lower anchor coverage and complete footprint
+partition pass; standalone all-stage support takes .615 s under original1 s.
+Native interior PASS and per-event/external-front refusals remain; original B09
+complete exit stays UNKNOWN. Full B12/general curved/stepped head/contact/cap/
+route geometry and qualified delivery/transforms remain open. Implement B13
+immutable job/revision, mandatory-check completeness and job/plate/resources/
+software/bytes/report binding while retaining guarded export BLOCK for missing
+proofs. Standard U1 head/.4 mm nozzle is retained; software does not await
+firmware-version/material-brand questions.
 
 1. Complete B01 compatibility and whole-job provenance, then B02 original STL
    and actual GUI/native plate binding. `B01-inputs.md` now retains exact source

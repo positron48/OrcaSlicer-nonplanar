@@ -2,7 +2,6 @@
 """Bootstrap test gate: disabled, empty, unbuilt or skipped tests cannot pass."""
 import argparse
 import json
-import re
 from pathlib import Path
 import subprocess
 import xml.etree.ElementTree as ET
@@ -22,15 +21,18 @@ def run(build_dir, output_dir, configuration="Release", regex=None, target_execu
                                capture_output=True, text=True, check=True)
     if target_executables:
         wanted = set(target_executables)
-        selected = [t for t in json.loads(discovery.stdout)["tests"]
+        selected = [(i, t) for i, t in enumerate(json.loads(discovery.stdout)["tests"], 1)
                     if t.get("command") and Path(t["command"][0]).stem in wanted]
         if not selected:
             raise ValueError("CTest target selection is empty or unbuilt")
-        found = {Path(t["command"][0]).stem for t in selected}
+        found = {Path(t["command"][0]).stem for _, t in selected}
         if found != wanted:
             raise ValueError("Missing requested CTest target executable")
-        command += ["-R", "^("+"|".join(re.escape(t["name"]) for t in selected)+")$"]
+        # Numeric selection avoids CTest's finite regex size for long test names.
+        command += ["-I", "0,0,0," + ",".join(str(i) for i, _ in selected)]
         discovery = subprocess.run(command + ["--show-only=json-v1"], capture_output=True, text=True, check=True)
+        if [t["name"] for t in json.loads(discovery.stdout)["tests"]] != [t["name"] for _, t in selected]:
+            raise ValueError("CTest index selection differs from requested targets")
     (output_dir / "discovery.json").write_text(discovery.stdout)
     tests = json.loads(discovery.stdout)["tests"]
     if not tests or any(not test.get("command") for test in tests):

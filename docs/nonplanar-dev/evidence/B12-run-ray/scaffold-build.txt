@@ -1,0 +1,202 @@
+[1/2] Building CXX object tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_final_material.cpp.o
+FAILED: [code=1] tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_final_material.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_ASIO_DISABLE_KQUEUE -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"6b0fc1f9\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_final_material.cpp.o -MF tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_final_material.cpp.o.d -o tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_final_material.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:498:20: error: use of undeclared identifier 'cover_joined_linear_material'; did you mean 'cover_joined_linear_material_lower'?
+  498 |   const auto exact=cover_joined_linear_material(joined.snapshot,box,MaterialRepresentation::Nominal);INFO(exact.reason);REQUIRE(exact.snapshot);REQUIRE(exact.status==RateStatus::Pass);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                    cover_joined_linear_material_lower
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:170:27: note: 'cover_joined_linear_material_lower' declared here
+  170 | JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:498:69: error: reference to type 'const JoinedMaterialLimits' could not bind to an rvalue of type 'nptop_verify::MaterialRepresentation'
+  498 |   const auto exact=cover_joined_linear_material(joined.snapshot,box,MaterialRepresentation::Nominal);INFO(exact.reason);REQUIRE(exact.snapshot);REQUIRE(exact.status==RateStatus::Pass);
+      |                                                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:171:52: note: passing argument to parameter 'limits' here
+  171 |  const MaterialRegion&,const JoinedMaterialLimits &limits={});
+      |                                                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:500:15: error: no member named 'check_joined_nominal' in namespace 'nptop_test'; did you mean 'check_joined_lower'?
+  500 |   nptop_test::check_joined_nominal(*exact.snapshot);
+      |               ^~~~~~~~~~~~~~~~~~~~
+      |               check_joined_lower
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/final_material_oracle.hpp:10:13: note: 'check_joined_lower' declared here
+   10 | inline void check_joined_lower(const nptop_verify::JoinedMaterialCoverSnapshot &cover)
+      |             ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:501:124: error: no member named 'representation' in 'nptop_verify::JoinedMaterialCoverSnapshot'
+  501 |   const auto lower=cover_joined_linear_material_lower(joined.snapshot,box);REQUIRE(lower.snapshot);REQUIRE(lower.snapshot->representation==MaterialRepresentation::Lower);nptop_test::check_joined_lower(*lower.snapshot);
+      |                                                                                                            ~~~~~~~~~~~~~~~~^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:501:124: error: no member named 'representation' in 'nptop_verify::JoinedMaterialCoverSnapshot'
+  501 |   const auto lower=cover_joined_linear_material_lower(joined.snapshot,box);REQUIRE(lower.snapshot);REQUIRE(lower.snapshot->representation==MaterialRepresentation::Lower);nptop_test::check_joined_lower(*lower.snapshot);
+      |                                                                                                            ~~~~~~~~~~~~~~~~^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:501:124: error: no member named 'representation' in 'nptop_verify::JoinedMaterialCoverSnapshot'
+  501 |   const auto lower=cover_joined_linear_material_lower(joined.snapshot,box);REQUIRE(lower.snapshot);REQUIRE(lower.snapshot->representation==MaterialRepresentation::Lower);nptop_test::check_joined_lower(*lower.snapshot);
+      |                                                                                                            ~~~~~~~~~~~~~~~~^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:508:23: error: use of undeclared identifier 'cover_joined_linear_material'; did you mean 'cover_joined_linear_material_lower'?
+  508 |   const auto rejected=cover_joined_linear_material(joined.snapshot,box,MaterialRepresentation::Nominal);INFO(rejected.reason);REQUIRE(rejected.status==RateStatus::Fail);REQUIRE(rejected.uncovered);REQUIRE_FALSE(rejected.snapshot);
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                       cover_joined_linear_material_lower
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:170:27: note: 'cover_joined_linear_material_lower' declared here
+  170 | JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:508:72: error: reference to type 'const JoinedMaterialLimits' could not bind to an rvalue of type 'nptop_verify::MaterialRepresentation'
+  508 |   const auto rejected=cover_joined_linear_material(joined.snapshot,box,MaterialRepresentation::Nominal);INFO(rejected.reason);REQUIRE(rejected.status==RateStatus::Fail);REQUIRE(rejected.uncovered);REQUIRE_FALSE(rejected.snapshot);
+      |                                                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:171:52: note: passing argument to parameter 'limits' here
+  171 |  const MaterialRegion&,const JoinedMaterialLimits &limits={});
+      |                                                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:511:74: error: use of undeclared identifier 'cover_joined_linear_material'; did you mean 'cover_joined_linear_material_lower'?
+  511 |  const MaterialRegion future{{.061,-.001,-.08},{.063,.001,-.07}};REQUIRE(cover_joined_linear_material(joined.snapshot,future,MaterialRepresentation::Nominal).status==RateStatus::Fail);
+      |                                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                          cover_joined_linear_material_lower
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:170:27: note: 'cover_joined_linear_material_lower' declared here
+  170 | JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:511:126: error: reference to type 'const JoinedMaterialLimits' could not bind to an rvalue of type 'nptop_verify::MaterialRepresentation'
+  511 |  const MaterialRegion future{{.061,-.001,-.08},{.063,.001,-.07}};REQUIRE(cover_joined_linear_material(joined.snapshot,future,MaterialRepresentation::Nominal).status==RateStatus::Fail);
+      |                                                                                                                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:171:52: note: passing argument to parameter 'limits' here
+  171 |  const MaterialRegion&,const JoinedMaterialLimits &limits={});
+      |                                                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:511:74: error: use of undeclared identifier 'cover_joined_linear_material'; did you mean 'cover_joined_linear_material_lower'?
+  511 |  const MaterialRegion future{{.061,-.001,-.08},{.063,.001,-.07}};REQUIRE(cover_joined_linear_material(joined.snapshot,future,MaterialRepresentation::Nominal).status==RateStatus::Fail);
+      |                                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                          cover_joined_linear_material_lower
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:170:27: note: 'cover_joined_linear_material_lower' declared here
+  170 | JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:511:126: error: reference to type 'const JoinedMaterialLimits' could not bind to an rvalue of type 'nptop_verify::MaterialRepresentation'
+  511 |  const MaterialRegion future{{.061,-.001,-.08},{.063,.001,-.07}};REQUIRE(cover_joined_linear_material(joined.snapshot,future,MaterialRepresentation::Nominal).status==RateStatus::Fail);
+      |                                                                                                                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:171:52: note: passing argument to parameter 'limits' here
+  171 |  const MaterialRegion&,const JoinedMaterialLimits &limits={});
+      |                                                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:511:74: error: use of undeclared identifier 'cover_joined_linear_material'; did you mean 'cover_joined_linear_material_lower'?
+  511 |  const MaterialRegion future{{.061,-.001,-.08},{.063,.001,-.07}};REQUIRE(cover_joined_linear_material(joined.snapshot,future,MaterialRepresentation::Nominal).status==RateStatus::Fail);
+      |                                                                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                          cover_joined_linear_material_lower
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:170:27: note: 'cover_joined_linear_material_lower' declared here
+  170 | JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:511:126: error: reference to type 'const JoinedMaterialLimits' could not bind to an rvalue of type 'nptop_verify::MaterialRepresentation'
+  511 |  const MaterialRegion future{{.061,-.001,-.08},{.063,.001,-.07}};REQUIRE(cover_joined_linear_material(joined.snapshot,future,MaterialRepresentation::Nominal).status==RateStatus::Fail);
+      |                                                                                                                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:171:52: note: passing argument to parameter 'limits' here
+  171 |  const MaterialRegion&,const JoinedMaterialLimits &limits={});
+      |                                                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:513:102: error: use of undeclared identifier 'cover_joined_linear_material'; did you mean 'cover_joined_linear_material_lower'?
+  513 |  for(auto role:{MaterialRepresentation::Upper,static_cast<MaterialRepresentation>(99)}){const auto r=cover_joined_linear_material(complete.snapshot,f.box,role);REQUIRE(r.status==RateStatus::Unknown);REQUIRE_FALSE(r.snapshot);REQUIRE_FALSE(r.uncovered);}
+      |                                                                                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                                                                                      cover_joined_linear_material_lower
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:170:27: note: 'cover_joined_linear_material_lower' declared here
+  170 | JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:513:155: error: reference to type 'const JoinedMaterialLimits' could not bind to an lvalue of type 'nptop_verify::MaterialRepresentation'
+  513 |  for(auto role:{MaterialRepresentation::Upper,static_cast<MaterialRepresentation>(99)}){const auto r=cover_joined_linear_material(complete.snapshot,f.box,role);REQUIRE(r.status==RateStatus::Unknown);REQUIRE_FALSE(r.snapshot);REQUIRE_FALSE(r.uncovered);}
+      |                                                                                                                                                           ^~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:171:52: note: passing argument to parameter 'limits' here
+  171 |  const MaterialRegion&,const JoinedMaterialLimits &limits={});
+      |                                                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:517:16: error: use of undeclared identifier 'cover_joined_linear_material'; did you mean 'cover_linear_material'?
+  517 |   const auto r=cover_joined_linear_material(complete.snapshot,f.box,MaterialRepresentation::Nominal,limits);REQUIRE(r.status==RateStatus::Unknown);REQUIRE_FALSE(r.snapshot);REQUIRE_FALSE(r.uncovered);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                cover_linear_material
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:128:21: note: 'cover_linear_material' declared here
+  128 | MaterialCoverResult cover_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,
+      |                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:517:45: error: no viable conversion from 'const shared_ptr<const JoinedMaterialSnapshot>' to 'shared_ptr<const LinearMaterialPrefixSnapshot>'
+  517 |   const auto r=cover_joined_linear_material(complete.snapshot,f.box,MaterialRepresentation::Nominal,limits);REQUIRE(r.status==RateStatus::Unknown);REQUIRE_FALSE(r.snapshot);REQUIRE_FALSE(r.uncovered);
+      |                                             ^~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:331:43: note: candidate constructor not viable: no known conversion from 'const std::shared_ptr<const JoinedMaterialSnapshot>' to 'nullptr_t' (aka 'std::nullptr_t') for 1st argument
+  331 |   _LIBCPP_HIDE_FROM_ABI _LIBCPP_CONSTEXPR shared_ptr(nullptr_t) _NOEXCEPT : __ptr_(nullptr), __cntrl_(nullptr) {}
+      |                                           ^          ~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:476:25: note: candidate constructor not viable: no known conversion from 'const std::shared_ptr<const JoinedMaterialSnapshot>' to 'const shared_ptr<const nptop_verify::LinearMaterialPrefixSnapshot> &' for 1st argument
+  476 |   _LIBCPP_HIDE_FROM_ABI shared_ptr(const shared_ptr& __r) _NOEXCEPT : __ptr_(__r.__ptr_), __cntrl_(__r.__cntrl_) {
+      |                         ^          ~~~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:487:25: note: candidate constructor not viable: no known conversion from 'const std::shared_ptr<const JoinedMaterialSnapshot>' to 'shared_ptr<const nptop_verify::LinearMaterialPrefixSnapshot> &&' for 1st argument
+  487 |   _LIBCPP_HIDE_FROM_ABI shared_ptr(shared_ptr&& __r) _NOEXCEPT : __ptr_(__r.__ptr_), __cntrl_(__r.__cntrl_) {
+      |                         ^          ~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:482:25: note: candidate template ignored: requirement '__compatible_with<const nptop_verify::JoinedMaterialSnapshot, const nptop_verify::LinearMaterialPrefixSnapshot>::value' was not satisfied [with _Yp = const nptop_verify::JoinedMaterialSnapshot]
+  482 |   _LIBCPP_HIDE_FROM_ABI shared_ptr(const shared_ptr<_Yp>& __r) _NOEXCEPT : __ptr_(__r.__ptr_), __cntrl_(__r.__cntrl_) {
+      |                         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:493:25: note: candidate template ignored: requirement '__compatible_with<const nptop_verify::JoinedMaterialSnapshot, const nptop_verify::LinearMaterialPrefixSnapshot>::value' was not satisfied [with _Yp = const nptop_verify::JoinedMaterialSnapshot]
+  493 |   _LIBCPP_HIDE_FROM_ABI shared_ptr(shared_ptr<_Yp>&& __r) _NOEXCEPT : __ptr_(__r.__ptr_), __cntrl_(__r.__cntrl_) {
+      |                         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:520:25: note: candidate template ignored: could not match 'unique_ptr' against 'std::shared_ptr'
+  520 |   _LIBCPP_HIDE_FROM_ABI shared_ptr(unique_ptr<_Yp, _Dp>&& __r) : __ptr_(__r.get()) {
+      |                         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:541:25: note: candidate template ignored: could not match 'unique_ptr' against 'std::shared_ptr'
+  541 |   _LIBCPP_HIDE_FROM_ABI shared_ptr(unique_ptr<_Yp, _Dp>&& __r) : __ptr_(__r.get()) {
+      |                         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:344:34: note: explicit constructor is not a candidate
+  344 |   _LIBCPP_HIDE_FROM_ABI explicit shared_ptr(_Yp* __p) : __ptr_(__p) {
+      |                                  ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/shared_ptr.h:499:34: note: explicit constructor is not a candidate
+  499 |   _LIBCPP_HIDE_FROM_ABI explicit shared_ptr(const weak_ptr<_Yp>& __r)
+      |                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/nonplanar_verify/LinearMaterial.hpp:128:94: note: passing argument to parameter here
+  128 | MaterialCoverResult cover_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,
+      |                                                                                              ^
+18 errors generated.
+ninja: build stopped: subcommand failed.

@@ -70,6 +70,7 @@ private:
  friend MaterialCoverResult cover_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,MaterialRepresentation,const MaterialCoverLimits&);
  friend JoinedMaterialResult reconstruct_joined_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const JoinedMaterialPolicy&,const JoinedMaterialLimits&);
  friend JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,const MaterialRegion&,const JoinedMaterialLimits&);
+ friend JoinedMaterialCoverResult cover_joined_linear_material(std::shared_ptr<const JoinedMaterialSnapshot>,const MaterialRegion&,MaterialRepresentation,const JoinedMaterialLimits&);
  friend LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot>,size_t,const LinearRunSupportPolicy&,const LinearRunSupportLimits&);
 };
 struct LinearMaterialResult {
@@ -148,12 +149,13 @@ struct JoinedMaterialResult {
 };
 struct JoinedMaterialCoverLeaf {MaterialRegion region;size_t run_index;};
 struct JoinedMaterialCoverSnapshot {
- const std::shared_ptr<const JoinedMaterialSnapshot> source;const MaterialRegion region;
+ const std::shared_ptr<const JoinedMaterialSnapshot> source;const MaterialRegion region;const MaterialRepresentation representation;
  const std::vector<JoinedMaterialCoverLeaf> leaves;const size_t evaluations,cells;
 private:
- JoinedMaterialCoverSnapshot(std::shared_ptr<const JoinedMaterialSnapshot> s,MaterialRegion b,std::vector<JoinedMaterialCoverLeaf> l,size_t work,size_t count)
-  :source(std::move(s)),region(b),leaves(std::move(l)),evaluations(work),cells(count){}
+ JoinedMaterialCoverSnapshot(std::shared_ptr<const JoinedMaterialSnapshot> s,MaterialRegion b,MaterialRepresentation r,std::vector<JoinedMaterialCoverLeaf> l,size_t work,size_t count)
+  :source(std::move(s)),region(b),representation(r),leaves(std::move(l)),evaluations(work),cells(count){}
  friend JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,const MaterialRegion&,const JoinedMaterialLimits&);
+ friend JoinedMaterialCoverResult cover_joined_linear_material(std::shared_ptr<const JoinedMaterialSnapshot>,const MaterialRegion&,MaterialRepresentation,const JoinedMaterialLimits&);
 };
 struct JoinedMaterialCoverResult {
  RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const JoinedMaterialCoverSnapshot> snapshot;
@@ -169,6 +171,11 @@ JoinedMaterialResult reconstruct_joined_linear_material(std::shared_ptr<const Li
 // Actual run ends/front stay strict; no future or pressure material appears.
 JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,
  const MaterialRegion&,const JoinedMaterialLimits &limits={});
+// Exact closed Nominal union across actual packet cuts, or original eroded
+// common-run Lower. The protected representation tag prevents role confusion.
+// Upper remains a separate query; no whole-run physical bonding is inferred.
+JoinedMaterialCoverResult cover_joined_linear_material(std::shared_ptr<const JoinedMaterialSnapshot>,
+ const MaterialRegion&,MaterialRepresentation,const JoinedMaterialLimits &limits={});
 inline constexpr unsigned linear_run_support_version=1;
 struct LinearRunSupportPolicy {
  uint64_t version=1,policy_id=0,revision=0;bool synthetic=true,operator_confirmed_claim=false;
@@ -179,7 +186,7 @@ struct LinearRunSupportLeaf {
  size_t target_record;RateBounds progress,transverse;
  MaterialRegion vertical_near,vertical_terminal,normal_near,normal_terminal;
  std::shared_ptr<const JoinedMaterialCoverSnapshot> lower_anchor;
- std::shared_ptr<const MaterialCoverSnapshot> nominal_terminal;
+ std::shared_ptr<const JoinedMaterialCoverSnapshot> nominal_terminal;
 };
 struct LinearRunSupportResult;
 struct LinearRunSupportSnapshot {

@@ -1,0 +1,258 @@
+{
+  "cases": [
+    {
+      "case": "positive",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/positive/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/positive/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/positive/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/positive/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "upper",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/upper/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/upper/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/upper/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/upper/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "nominal",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/nominal/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/nominal/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/nominal/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/nominal/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "partial",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/partial/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/partial/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/partial/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/partial/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "future",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/future/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/future/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/future/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/future/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "unlaid",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/unlaid/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/unlaid/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/unlaid/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/unlaid/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "bounding-corner",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bounding-corner/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bounding-corner/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bounding-corner/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bounding-corner/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "extra-field",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/extra-field/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/extra-field/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/extra-field/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/extra-field/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "bad-representation",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bad-representation/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bad-representation/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bad-representation/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bad-representation/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "negative-count",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/negative-count/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/negative-count/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/negative-count/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/negative-count/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "float-count",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/float-count/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/float-count/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/float-count/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/float-count/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "bad-array",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bad-array/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bad-array/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bad-array/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/bad-array/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "wrong-version",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/wrong-version/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/wrong-version/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/wrong-version/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/wrong-version/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "duplicate-key",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/duplicate-key/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/duplicate-key/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/duplicate-key/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/duplicate-key/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "after-complete",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/after-complete/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/after-complete/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/after-complete/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/after-complete/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "changed-e",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/changed-e/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/changed-e/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/changed-e/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/changed-e/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "nested-array",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/nested-array/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/nested-array/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/nested-array/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/nested-array/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "oversized-count",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/oversized-count/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/oversized-count/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/oversized-count/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-run-ray/cover-cli-final/oversized-count/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    }
+  ],
+  "status": "PASS",
+  "scope": "ACTUAL_PREFIX_REGION_GEOMETRY_ONLY_JOB_EXPORT_BLOCKED"
+}

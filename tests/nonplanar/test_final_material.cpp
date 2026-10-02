@@ -487,3 +487,41 @@ TEST_CASE("B12 final material bounds indexes preserve separated solids and actua
  REQUIRE(classify_linear_material(prefix.snapshot,empty,MaterialRepresentation::Nominal).membership==MaterialMembership::Outside);
  REQUIRE(cover_joined_linear_material_lower(joined.snapshot,empty).status==RateStatus::Fail);
 }
+
+TEST_CASE("B12 exact nominal run union covers complete packet cuts in every frame", "[Nonplanar][B12][FinalByteNominalRun]")
+{
+ for(bool rounded:{false,true})for(bool diagonal:{false,true})for(bool reverse:{false,true}){
+  const auto f=joined_fixture(rounded,0,diagonal,reverse);const auto joined=reconstruct_joined_linear_material(f.prefix,join_policy());REQUIRE(joined.snapshot);
+  auto box=f.box;for(size_t axis=0;axis<2;++axis){const double delta=f.prefix->source->declarations[2].end[axis]-(box.min[axis]+box.max[axis])/2;box.min[axis]+=delta;box.max[axis]+=delta;}
+  box.min[2]+=.005;box.max[2]+=.005;MaterialCoverLimits shallow;shallow.max_depth=1;
+  REQUIRE(cover_linear_material(f.prefix,box,MaterialRepresentation::Nominal,shallow).status==RateStatus::Unknown);
+  const auto exact=cover_joined_linear_material(joined.snapshot,box,MaterialRepresentation::Nominal);INFO(exact.reason);REQUIRE(exact.snapshot);REQUIRE(exact.status==RateStatus::Pass);
+  REQUIRE(exact.snapshot->representation==MaterialRepresentation::Nominal);REQUIRE(exact.snapshot->leaves.size()==1);REQUIRE(exact.snapshot->source==joined.snapshot);
+  nptop_test::check_joined_nominal(*exact.snapshot);
+  const auto lower=cover_joined_linear_material_lower(joined.snapshot,box);REQUIRE(lower.snapshot);REQUIRE(lower.snapshot->representation==MaterialRepresentation::Lower);nptop_test::check_joined_lower(*lower.snapshot);
+ }
+}
+TEST_CASE("B12 exact nominal run union retains actual doses floors future and role refusals", "[Nonplanar][B12][FinalByteNominalRun]")
+{
+ for(int deformation:{1,2}){const auto f=joined_fixture(false,0,false,false,deformation);const auto joined=reconstruct_joined_linear_material(f.prefix,join_policy());REQUIRE(joined.snapshot);
+  auto box=f.box;if(deformation==1){box.min[1]=.039;box.max[1]=.041;}
+  const auto rejected=cover_joined_linear_material(joined.snapshot,box,MaterialRepresentation::Nominal);INFO(rejected.reason);REQUIRE(rejected.status==RateStatus::Fail);REQUIRE(rejected.uncovered);REQUIRE_FALSE(rejected.snapshot);
+ }
+ const auto f=joined_fixture();const auto partial=linear_material_at(f.prefix->source,2,.5);REQUIRE(partial.snapshot);const auto joined=reconstruct_joined_linear_material(partial.snapshot,join_policy());REQUIRE(joined.snapshot);
+ const MaterialRegion future{{.061,-.001,-.08},{.063,.001,-.07}};REQUIRE(cover_joined_linear_material(joined.snapshot,future,MaterialRepresentation::Nominal).status==RateStatus::Fail);
+ const auto complete=reconstruct_joined_linear_material(f.prefix,join_policy());REQUIRE(complete.snapshot);
+ for(auto role:{MaterialRepresentation::Upper,static_cast<MaterialRepresentation>(99)}){const auto r=cover_joined_linear_material(complete.snapshot,f.box,role);REQUIRE(r.status==RateStatus::Unknown);REQUIRE_FALSE(r.snapshot);REQUIRE_FALSE(r.uncovered);}
+ for(int mode=0;mode<7;++mode){JoinedMaterialLimits limits;
+  if(mode==0)limits.is_join_current=[](uint64_t,uint64_t){return false;};if(mode==1)limits.is_current=[](uint64_t,uint64_t){return false;};if(mode==2)limits.is_source_current=[](uint64_t){return false;};
+  if(mode==3)limits.is_rate_current=[](uint64_t,uint64_t){return false;};if(mode==4)limits.cancelled=[] {return true;};if(mode==5)limits.max_evaluations=complete.evaluations+1;if(mode==6)limits.max_cells=0;
+  const auto r=cover_joined_linear_material(complete.snapshot,f.box,MaterialRepresentation::Nominal,limits);REQUIRE(r.status==RateStatus::Unknown);REQUIRE_FALSE(r.snapshot);REQUIRE_FALSE(r.uncovered);
+ }
+ JoinedMaterialLimits limits;size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(cover_joined_linear_material(complete.snapshot,f.box,MaterialRepresentation::Nominal,limits).snapshot);
+ const auto positive_last=calls;calls=0;limits.cancelled=[&]{if(++calls==positive_last)std::fesetround(FE_UPWARD);return false;};
+ const auto late=cover_joined_linear_material(complete.snapshot,f.box,MaterialRepresentation::Nominal,limits);std::fesetround(FE_TONEAREST);REQUIRE(late.status==RateStatus::Unknown);REQUIRE_FALSE(late.snapshot);REQUIRE_FALSE(late.uncovered);
+ calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(cover_joined_linear_material(joined.snapshot,future,MaterialRepresentation::Nominal,limits).uncovered);
+ const auto negative_last=calls;calls=0;limits.cancelled=[&]{if(++calls==negative_last)std::fesetround(FE_UPWARD);return false;};
+ const auto refused=cover_joined_linear_material(joined.snapshot,future,MaterialRepresentation::Nominal,limits);std::fesetround(FE_TONEAREST);REQUIRE(refused.status==RateStatus::Unknown);REQUIRE_FALSE(refused.snapshot);REQUIRE_FALSE(refused.uncovered);
+ auto region=f.box;limits={};limits.cancelled=[&]{region.min[0]=99;limits.max_cells=0;return false;};
+ const auto owned=cover_joined_linear_material(complete.snapshot,region,MaterialRepresentation::Nominal,limits);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->region.min==f.box.min);
+}
