@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/validate_material_audit_cli.py", line 31, in <module>
+    assert run.returncode==code,(name,run.returncode,report)
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('changed-e', 0, {'axis': None, 'bytes': 94, 'command_volume_mm3': [0.7215845626214056, 0.7215845626214057], 'component': 'final_byte_linear_material', 'component_status': 'FAIL', 'export_allowed': False, 'final_pressure_debt_mm': [0.0, 0.0], 'ideal_mechanical_duration_s': [7.049854282019826, 7.049854282019828], 'job_status': 'UNKNOWN', 'mandatory_checks_pending': ['material_geometry', 'contact', 'support', 'dose_qualification', 'job_integrity', 'qualified_profile', 'machine_state'], 'nominal_volume_mm3': [0.6167389424114578, 0.6167389424114579], 'rate_component_status': 'PASS', 'reason': 'FINAL_MATERIAL_NOMINAL_DOSE_DELTA', 'record': 0, 'records': 4, 'schema_version': 1, 'scope': 'declared_synthetic_constant_flux_sections_bounds_and_dose_only', 'work': 58})

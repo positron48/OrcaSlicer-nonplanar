@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import subprocess; lines=subprocess.check_output(["ninja","-C","build/arm64","-t","commands","nonplanar_rate_audit"],text=True).splitlines(); matches=[s for s in lines if " -o src/nonplanar_verify/Release/nonplanar_rate_audit " in s]; assert len(matches)==1,len(matches); print(matches[0])
+                                                                                                                                                                                                                                                      ^^^^^^^^^^^^^^^
+AssertionError: 0

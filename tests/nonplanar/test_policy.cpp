@@ -10,6 +10,7 @@
 #include <libslic3r/Nonplanar/GCodeAdapter.hpp>
 #include <nonplanar_verify/FullStopReplay.hpp>
 #include "full_stop_oracle.hpp"
+#include <nonplanar_verify/MaterialJson.hpp>
 #include <libslic3r/ClipperUtils.hpp>
 #include <libslic3r/Nonplanar/StlFile.hpp>
 #include <libslic3r/Format/STL.hpp>
@@ -2693,6 +2694,19 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     const auto final_rates=verify_linear_candidate_rates(candidate,byte_limits);INFO(final_rates.reason);REQUIRE(final_rates.snapshot);
     REQUIRE(final_rates.status==nptop_verify::RateStatus::Pass);REQUIRE(final_rates.snapshot->bytes==bytes.bytes);
     REQUIRE(final_rates.snapshot->moves.size()==new_ledger.records.size());REQUIRE(final_rates.evaluations>candidate.evaluations);
+    const LinearMaterialOptions material_options{93,1,5e-9,.0001,1e-9,.02,0};
+    const auto rounded_material=verify_linear_candidate_material(candidate,material_options,byte_limits);INFO(rounded_material.reason);REQUIRE(rounded_material.snapshot);
+    REQUIRE(rounded_material.status==nptop_verify::RateStatus::Pass);REQUIRE(rounded_material.snapshot->beads.size()==new_ledger.records.size());
+    REQUIRE(rounded_material.snapshot->policy.inner_xy_loss_mm==new_ledger.model.inner_xy_loss.value());
+    REQUIRE(rounded_material.snapshot->policy.inner_z_loss_mm==new_ledger.model.inner_z_loss.value());
+    REQUIRE(rounded_material.snapshot->policy.outer_xy_growth_mm==new_ledger.model.outer_xy_growth.value());
+    REQUIRE(rounded_material.snapshot->policy.outer_z_growth_mm==new_ledger.model.outer_z_growth.value());
+    REQUIRE(rounded_material.snapshot->policy.numerical_coordinate_error_mm==new_ledger.model.numerical_coordinate_error.value());
+    nptop_verify::LinearMaterialLimits front_limits;front_limits.timeout=std::chrono::seconds(5);
+    const auto rounded_front=nptop_verify::linear_material_at(rounded_material.snapshot,new_ledger.records.size()-1,.5,front_limits);INFO(rounded_front.reason);REQUIRE(rounded_front.snapshot);
+    REQUIRE(rounded_front.snapshot->pieces.back().record==new_ledger.records.size()-1);
+    REQUIRE(rounded_front.snapshot->nominal_volume.upper<rounded_material.snapshot->nominal_volume.lower);
+    REQUIRE(rounded_material.snapshot->rates->bytes==bytes.bytes);REQUIRE(rounded_material.evaluations>final_rates.evaluations);
     INFO("native final rates work=" << final_rates.evaluations << " ideal duration=[" << final_rates.snapshot->duration.lower << ',' << final_rates.snapshot->duration.upper << ']');
     REQUIRE(bytes.plan==byte_plan.snapshot);REQUIRE(bytes.events.size()==new_ledger.records.size());
     const auto parsed=nptop_verify::replay_full_stop(bytes.bytes,{bytes.initial_position.x(),bytes.initial_position.y(),bytes.initial_position.z()});
@@ -2723,6 +2737,8 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
             {"motion_policy_fingerprint",bytes.plan->policy_fingerprint},{"records",parsed.size()},{"bytes",bytes.bytes.size()},
             {"work",candidate.evaluations},{"coordinate_error_mm",bytes.coordinate_rounding_error_mm},{"global_acceleration_mm_s2",bytes.acceleration_mm_s2},
             {"initial_position",{bytes.initial_position.x(),bytes.initial_position.y(),bytes.initial_position.z()}},{"events",mapping}};
+        boost::nowide::ofstream material_sidecar((dir/"native-material.json").string());REQUIRE(material_sidecar.good());
+        material_sidecar<<nptop_verify::material_document(*rounded_material.snapshot).dump(2)<<'\n';material_sidecar.close();REQUIRE(material_sidecar.good());
         boost::nowide::ofstream sidecar((dir/"native-full-stop.bytes.json").string());REQUIRE(sidecar.good());sidecar<<metadata.dump(2)<<'\n';sidecar.close();REQUIRE(sidecar.good());
     }
     INFO("native final candidate records=" << parsed.size() << " bytes=" << bytes.bytes.size() << " work=" << candidate.evaluations << " sha256=" << bytes.sha256);

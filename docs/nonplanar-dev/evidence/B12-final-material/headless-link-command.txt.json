@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-c",
+    "import subprocess; lines=subprocess.check_output([\"ninja\",\"-C\",\"build/arm64\",\"-t\",\"commands\",\"nonplanar_rate_audit\"],text=True).splitlines(); matches=[s for s in lines if \" -o src/nonplanar_verify/Release/nonplanar_rate_audit \" in s]; assert len(matches)==1,len(matches); print(matches[0])"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-02T09:54:22.336746+00:00",
+  "status": "COMPLETED",
+  "exit_code": 1,
+  "elapsed_seconds": 0.058
+}

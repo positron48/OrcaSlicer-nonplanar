@@ -17,6 +17,7 @@ add_executable(${_TEST_NAME}_tests
 	test_support_material.cpp
 	test_trianglemesh.cpp
 	../nonplanar/test_serialization.cpp
+	../nonplanar/test_final_material.cpp
 	../nonplanar/test_transition.cpp
 	../nonplanar/test_policy.cpp
 	)

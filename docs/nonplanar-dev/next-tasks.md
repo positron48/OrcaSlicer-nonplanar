@@ -7,14 +7,15 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
-`B12-final-rates.md` now independently checks complete final native full-stop
-bytes for exact axes/drives/E/Q/cross-section/acceleration/event rates and enclosed
-command/nominal dose, ideal time and final pressure state. Extend B12 into the
-complete headless final-byte verifier: reconstruct rounded material and support/
-contact and propagate XYZ/E delivered-volume uncertainty. The new production
-rate component keeps job UNKNOWN/export BLOCK. Audit every native final filter,
-prolog/end motion and bind the exact resulting bytes to B13. The B09 complete
-native exit remains UNKNOWN; contact/access/cap work below remains required.
+`B12-final-material.md` now independently reconstructs every final native
+constant-flux section, dose/width uncertainty, source pose/amount deviations and
+actual partial prefixes after exact rate verification. Extend this into complete
+lower/upper set membership, union/coverage and continuous head/contact/support
+checks. Validate declared gaps against the reconstructed actual prefix; source
+section parameters and broad boxes are not support proofs. Qualify actual
+delivered-volume/transform assumptions, audit every native final filter/prolog/
+end motion and bind all exact bytes/resources/software/plate/job state to B13.
+The original complete native B09 exit remains UNKNOWN at unchanged margins.
 User-declared standard U1 head/.4 mm nozzle is retained. Continue software without
 asking firmware-version/material-brand questions; physical bounds remain separate.
 

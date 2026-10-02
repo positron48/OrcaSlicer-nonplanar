@@ -418,3 +418,31 @@ TEST_CASE("B12 final byte rates retain final retraction state without inventing 
     REQUIRE(closed.snapshot->command_volume.upper==0);
     REQUIRE(closed.snapshot->final_pressure_debt.upper==0);
 }
+
+TEST_CASE("B12 final candidate adapter refuses rounding changed by the final source callback", "[Nonplanar][B12][FinalByteRates]")
+{
+ const auto candidate=serialize_linear_candidate(full_stop_plan(),LinearCandidatePolicy{3,1,Acceleration(100)});REQUIRE(candidate.snapshot);
+ LinearCandidateLimits limits;size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(verify_linear_candidate_rates(candidate,limits).snapshot);
+ const auto last=calls;calls=0;limits.cancelled=[&]{if(++calls==last)std::fesetround(FE_UPWARD);return false;};
+ const auto result=verify_linear_candidate_rates(candidate,limits);std::fesetround(FE_TONEAREST);
+ REQUIRE_FALSE(result.snapshot);REQUIRE(result.status==nptop_verify::RateStatus::Unknown);
+}
+
+TEST_CASE("B12 protected material replay owns source options original losses and publication guards", "[Nonplanar][B12][FinalByteMaterial]")
+{
+ const auto candidate=serialize_linear_candidate(full_stop_plan(),LinearCandidatePolicy{3,1,Acceleration(100)});REQUIRE(candidate.snapshot);
+ const LinearMaterialOptions options{93,1,1e-7,.0001,1e-9};
+ const auto material=verify_linear_candidate_material(candidate,options);INFO(material.reason);REQUIRE(material.snapshot);
+ REQUIRE(material.snapshot->rates->bytes==candidate.snapshot->bytes);REQUIRE(material.evaluations>candidate.evaluations);
+ for(int mode=0;mode<4;++mode){LinearCandidateLimits limits;
+  if(mode==0)limits.is_current=[](uint64_t){return false;};if(mode==1)limits.is_scene_current=[](uint64_t,uint64_t){return false;};
+  if(mode==2)limits.is_policy_current=[](uint64_t id,uint64_t){return id!=93;};if(mode==3)limits.max_evaluations=candidate.evaluations;
+  const auto denied=verify_linear_candidate_material(candidate,options,limits);REQUIRE_FALSE(denied.snapshot);REQUIRE(denied.status==nptop_verify::RateStatus::Unknown);
+ }
+ auto mutable_candidate=candidate;auto mutable_options=options;LinearCandidateLimits limits;
+ limits.cancelled=[&]{mutable_candidate={};mutable_options.policy_id=0;return false;};
+ REQUIRE(verify_linear_candidate_material(mutable_candidate,mutable_options,limits).snapshot);
+ limits={};size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(verify_linear_candidate_material(candidate,options,limits).snapshot);
+ const auto last=calls;calls=0;limits.cancelled=[&]{if(++calls==last)std::fesetround(FE_UPWARD);return false;};
+ const auto late=verify_linear_candidate_material(candidate,options,limits);std::fesetround(FE_TONEAREST);REQUIRE_FALSE(late.snapshot);
+}

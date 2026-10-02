@@ -1,4 +1,5 @@
 #include "LinearRates.hpp"
+#include "MaterialJson.hpp"
 #include <nlohmann/json.hpp>
 #include <boost/nowide/args.hpp>
 #include <filesystem>
@@ -55,17 +56,24 @@ nptop_verify::LinearRatePolicy parse_policy(const std::string &text,std::array<d
 int main(int argc,char **argv)
 {
     boost::nowide::args utf8(argc,argv);
-    if(argc!=4 || std::string(argv[1])!="--linear-rates-only") {
+    const bool material_mode=argc==5 && std::string(argv[1])=="--linear-material-only";
+    if(!material_mode && (argc!=4 || std::string(argv[1])!="--linear-rates-only")) {
         std::cerr<<"Usage: nonplanar_rate_audit --linear-rates-only POLICY.json CANDIDATE.txt\n"
+                    "       nonplanar_rate_audit --linear-material-only POLICY.json MATERIAL.json CANDIDATE.txt\n"
                     "Numerical component only; complete job and export remain blocked.\n";return 64;
     }
-    nptop_verify::LinearRateResult result;
+    nptop_verify::LinearRateResult result;nptop_verify::LinearMaterialResult material;
     try {
         std::array<double,3> initial;const auto policy=parse_policy(read_bounded(argv[2],65536),initial);
-        const auto bytes=read_bounded(argv[3],32*1024*1024);result=nptop_verify::verify_linear_rates(bytes,initial,policy);
-    } catch(const std::exception &){result.reason="BOUNDED_RATE_INPUT_ERROR";}
+        const auto bytes=read_bounded(argv[material_mode ? 4 : 3],32*1024*1024);result=nptop_verify::verify_linear_rates(bytes,initial,policy);
+        if(material_mode){
+            const auto declaration=nptop_verify::parse_material_document(read_bounded(argv[3],32*1024*1024));
+            material=nptop_verify::reconstruct_linear_material(result.snapshot,declaration.second,declaration.first);
+        }
+    } catch(const std::exception &){if(material_mode)material.reason="BOUNDED_MATERIAL_INPUT_ERROR";else result.reason="BOUNDED_RATE_INPUT_ERROR";}
     const auto bounds=[](nptop_verify::RateBounds value) {return nlohmann::json::array({value.lower,value.upper});};
-    const char *status=result.status==nptop_verify::RateStatus::Pass ? "PASS" : result.status==nptop_verify::RateStatus::Fail ? "FAIL" : "UNKNOWN";
+    const auto component_status=material_mode ? material.status : result.status;
+    const char *status=component_status==nptop_verify::RateStatus::Pass ? "PASS" : component_status==nptop_verify::RateStatus::Fail ? "FAIL" : "UNKNOWN";
     nlohmann::json report{{"schema_version",1},{"component","final_byte_linear_rates"},{"component_status",status},{"job_status","UNKNOWN"},
         {"scope","synthetic_identity_transform_full_stop_rates_and_ideal_mechanical_time_only"},{"export_allowed",false},
         {"reason",result.reason},{"record",result.record ? nlohmann::json(*result.record) : nlohmann::json(nullptr)},
@@ -77,6 +85,16 @@ int main(int argc,char **argv)
         report["ideal_mechanical_duration_s"]=bounds(proof.duration);
         report["final_pressure_debt_mm"]=bounds(proof.final_pressure_debt);
     }
+    if(material_mode){
+        report["component"]="final_byte_linear_material";report["scope"]="declared_synthetic_constant_flux_sections_bounds_and_dose_only";
+        report["reason"]=material.reason;report["record"]=material.record ? nlohmann::json(*material.record) : nlohmann::json(nullptr);
+        report["work"]=material.evaluations;report["rate_component_status"]=result.status==nptop_verify::RateStatus::Pass ? "PASS" : result.status==nptop_verify::RateStatus::Fail ? "FAIL" : "UNKNOWN";
+        report["mandatory_checks_pending"]={"material_geometry","contact","support","dose_qualification","job_integrity","qualified_profile","machine_state"};
+        if(material.snapshot){const auto &m=*material.snapshot;size_t deposits=0;for(const auto &b:m.beads)deposits+=bool(b);
+            report["depositions"]=deposits;report["nominal_volume_mm3"]=bounds(m.nominal_volume);report["declared_delivered_volume_mm3"]=bounds(m.delivered_volume);
+            report["maximum_nominal_delta_mm3"]=bounds(m.maximum_nominal_delta_mm3);report["total_nominal_delta_mm3"]=bounds(m.total_nominal_delta_mm3);
+        }
+    }
     std::cout<<report.dump(2)<<'\n';if(!std::cout)return 74;
-    return result.status==nptop_verify::RateStatus::Pass ? 0 : result.status==nptop_verify::RateStatus::Fail ? 2 : 3;
+    return component_status==nptop_verify::RateStatus::Pass ? 0 : component_status==nptop_verify::RateStatus::Fail ? 2 : 3;
 }

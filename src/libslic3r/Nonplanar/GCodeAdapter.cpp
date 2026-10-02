@@ -147,24 +147,35 @@ LinearCandidateResult serialize_linear_candidate(const LinearMotionPlanResult &r
     } catch (const std::exception &e) {result.snapshot.reset();result.reason=e.what();}
     return result;
 }
+namespace {
+bool current_candidate(const LinearCandidateSnapshot &candidate,const LinearCandidateLimits &limits,
+ std::chrono::steady_clock::time_point started,std::string &stopped)
+{
+    if(!stopped.empty())return false;
+    try {
+        if(limits.cancelled && limits.cancelled())stopped="CANCELLED";
+        else if(limits.is_current && !limits.is_current(candidate.plan->planned->material->ledger->revision))stopped="STALE_MATERIAL_REVISION";
+        else if(limits.is_scene_current && !limits.is_scene_current(candidate.plan->planned->scene.profile_id,candidate.plan->planned->scene.revision))stopped="STALE_SCENE_REVISION";
+        else if(limits.is_policy_current && (!limits.is_policy_current(candidate.plan->policy.profile_id,candidate.plan->policy.revision) ||
+            !limits.is_policy_current(candidate.policy.profile_id,candidate.policy.revision)))stopped="STALE_CANDIDATE_RATE_POLICY";
+        else if(std::chrono::steady_clock::now()-started>=limits.timeout)stopped="CANDIDATE_RATE_DEADLINE";
+        else if(std::fegetround()!=FE_TONEAREST)stopped="UNSUPPORTED_RATE_ROUNDING";
+        else {
+            volatile double normal=std::numeric_limits<double>::min(),subnormal=std::numeric_limits<double>::denorm_min();
+            if(normal/2==0 || subnormal+subnormal==0)stopped="UNSUPPORTED_RATE_UNDERFLOW";
+            else return true;
+        }
+    } catch(const std::exception &){stopped="SOURCE_RATE_CALLBACK_ERROR";}
+    return false;
+}
+}
 nptop_verify::LinearRateResult verify_linear_candidate_rates(const LinearCandidateResult &requested,const LinearCandidateLimits &requested_limits)
 {
     const auto candidate=requested.snapshot;const auto limits=requested_limits;const auto started=std::chrono::steady_clock::now();
     nptop_verify::LinearRateResult result;
     if(!candidate){result.reason="MISSING_LINEAR_CANDIDATE";return result;}
     std::string stopped;
-    const auto current=[&] {
-        try {
-            if(limits.cancelled && limits.cancelled())stopped="CANCELLED";
-            else if(limits.is_current && !limits.is_current(candidate->plan->planned->material->ledger->revision))stopped="STALE_MATERIAL_REVISION";
-            else if(limits.is_scene_current && !limits.is_scene_current(candidate->plan->planned->scene.profile_id,candidate->plan->planned->scene.revision))stopped="STALE_SCENE_REVISION";
-            else if(limits.is_policy_current && (!limits.is_policy_current(candidate->plan->policy.profile_id,candidate->plan->policy.revision) ||
-                !limits.is_policy_current(candidate->policy.profile_id,candidate->policy.revision)))stopped="STALE_CANDIDATE_RATE_POLICY";
-            else if(std::chrono::steady_clock::now()-started>=limits.timeout)stopped="CANDIDATE_RATE_DEADLINE";
-            else return true;
-        } catch(const std::exception &){stopped="SOURCE_RATE_CALLBACK_ERROR";}
-        return false;
-    };
+    const auto current=[&] {return current_candidate(*candidate,limits,started,stopped);};
     if(!current()){result.reason=stopped;return result;}
     const auto &source=candidate->plan->policy;nptop_verify::LinearRatePolicy policy;
     policy.version=source.version;policy.profile_id=source.profile_id;policy.revision=source.revision;
@@ -186,4 +197,49 @@ nptop_verify::LinearRateResult verify_linear_candidate_rates(const LinearCandida
     return result;
 }
 
+nptop_verify::LinearMaterialResult verify_linear_candidate_material(const LinearCandidateResult &requested,const LinearMaterialOptions &requested_options,
+ const LinearCandidateLimits &requested_limits)
+{
+ const auto candidate=requested.snapshot;const auto options=requested_options;const auto limits=requested_limits;
+ const auto started=std::chrono::steady_clock::now();nptop_verify::LinearMaterialResult result;std::string stopped;
+ try {
+  if(!candidate){result.reason="MISSING_LINEAR_CANDIDATE";return result;}
+  const auto current=[&] {
+   if(!current_candidate(*candidate,limits,started,stopped))return false;
+   if(limits.is_policy_current && !limits.is_policy_current(options.policy_id,options.revision)){stopped="STALE_MATERIAL_REPLAY_POLICY";return false;}
+   // A callback may change the arithmetic environment at publication.
+   return current_candidate(*candidate,limits,started,stopped);
+  };
+  if(!current()){result.reason=stopped;return result;}
+  LinearCandidateResult owned;owned.snapshot=candidate;
+  const auto rates=verify_linear_candidate_rates(owned,limits);result.evaluations=rates.evaluations;
+  if(!rates.snapshot){result.reason=rates.reason;result.status=rates.status;return result;}
+  const auto &ledger=*candidate->plan->planned->material->ledger;const auto &model=ledger.model;
+  nptop_verify::LinearMaterialPolicy p;p.model_id=model.model_id;p.policy_id=options.policy_id;p.revision=options.revision;
+  p.source_revision=ledger.revision;p.source_fingerprint=ledger.source_fingerprint;
+  p.outer_xy_growth_mm=model.outer_xy_growth.value();p.outer_z_growth_mm=model.outer_z_growth.value();
+  p.inner_xy_loss_mm=model.inner_xy_loss.value();p.inner_z_loss_mm=model.inner_z_loss.value();p.numerical_coordinate_error_mm=model.numerical_coordinate_error.value();
+  p.max_coordinate_delta_mm=candidate->coordinate_rounding_error_mm;p.max_nominal_delta_mm3=options.max_nominal_delta_mm3;
+  p.max_total_nominal_delta_mm3=options.max_total_nominal_delta_mm3;p.max_filament_delta_mm=options.max_filament_delta_mm;
+  p.relative_dose_error=options.relative_dose_error;p.absolute_dose_error_mm3=options.absolute_dose_error_mm3;
+  std::vector<nptop_verify::MaterialDeclaration> rows;rows.reserve(ledger.records.size());
+  for(size_t i=0;i<ledger.records.size();++i){
+   if(++result.evaluations>limits.max_evaluations || !current()){result.reason=stopped.empty() ? "FINAL_MATERIAL_WORK_LIMIT" : stopped;return result;}
+   const auto &r=ledger.records[i];const auto &m=r.motion;nptop_verify::MaterialDeclaration d{m.event_id,i,nptop_verify::MaterialEventKind::Travel,
+    {m.start.x(),m.start.y(),m.start.z()},{m.end.x(),m.end.y(),m.end.z()},0,0,{}};
+   if(const auto *deposit=std::get_if<Deposition>(&m.payload)){
+    d.kind=nptop_verify::MaterialEventKind::Deposit;d.expected_nominal_volume_mm3=deposit->volume.value();
+    d.section=nptop_verify::MaterialSection{r.bead->kind==BeadSectionKind::Rectangle ? nptop_verify::MaterialSectionKind::Rectangle : nptop_verify::MaterialSectionKind::RoundedRectangle,r.bead->gap_begin_mm,r.bead->gap_end_mm};
+   }else if(const auto *pressure=std::get_if<Retraction>(&m.payload)){
+    d.kind=pressure->after==RetractionState::Retracted ? nptop_verify::MaterialEventKind::Retraction : nptop_verify::MaterialEventKind::Restore;d.expected_filament_mm=pressure->amount.value();
+   }else if(m.start.x()==m.end.x() && m.start.y()==m.end.y() && m.start.z()==m.end.z())d.kind=nptop_verify::MaterialEventKind::Dwell;
+   rows.push_back(std::move(d));
+  }
+  nptop_verify::LinearMaterialLimits query;query.max_bytes=limits.max_bytes;query.max_events=limits.max_records;
+  query.max_evaluations=limits.max_evaluations;query.initial_evaluations=result.evaluations;query.timeout=limits.timeout;query.cancelled=[&]{return !current();};
+  result=nptop_verify::reconstruct_linear_material(rates.snapshot,rows,p,query);
+  if(!stopped.empty() || !current()){result.snapshot.reset();result.status=nptop_verify::RateStatus::Unknown;result.reason=stopped;}
+ }catch(const std::exception &e){result.snapshot.reset();result.status=nptop_verify::RateStatus::Unknown;result.reason=e.what();}
+ return result;
+}
 }

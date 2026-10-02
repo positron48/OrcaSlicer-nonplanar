@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="6" hostname="tbd" time="0.001" timestamp="2026-10-02T08:41:06Z">
+    <properties>
+      <property name="random-seed" value="105130626"/>
+      <property name="filters" value="&quot;B12 final candidate adapter refuses rounding changed by the final source callback&quot;"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B12 final candidate adapter refuses rounding changed by the final source callback" time="0.000" status="run">
+      <failure message="!(result.snapshot)" type="REQUIRE_FALSE">
+FAILED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0x9f9188c40
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:428
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

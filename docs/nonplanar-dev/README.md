@@ -15,6 +15,15 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B12-final-material.md` and ADR-0071 independently reconstruct all 2092 native
+beads from final XYZ/E, including explicit dose uncertainty, changed widths,
+source pose/amount budgets and actual partial prefixes. Original model losses
+remain; pressure/future rows add no material. Four material cases/106 assertions,
+24 combined cases/1774, 20 CLI cases and CTest 383/383 pass. Six fresh OFF/ZAA
+pairs pass. Boxes are broad-phase bounds, not filled support solids; complete
+lower/upper geometry/contact/support and delivered-dose qualification remain
+pending. Job UNKNOWN/export BLOCK and full B01–B15 IN_PROGRESS remain.
+
 `B12-final-rates.md` and ADR-0070 add an independent exact-rational final-byte
 rate library, protected native adapter and separate diagnostic command. All
 2218 native rows pass; seven new cases/137 assertions, ten CLI cases,

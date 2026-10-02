@@ -2,6 +2,7 @@
 #include "Contracts.hpp"
 #include "MotionPlan.hpp"
 #include <nonplanar_verify/LinearRates.hpp>
+#include <nonplanar_verify/LinearMaterial.hpp>
 #include <string>
 #include <vector>
 
@@ -53,4 +54,13 @@ LinearCandidateResult serialize_linear_candidate(const LinearMotionPlanResult &,
 // Its PASS is not material/contact verification or complete-job export approval.
 nptop_verify::LinearRateResult verify_linear_candidate_rates(const LinearCandidateResult &,
     const LinearCandidateLimits &limits={});
+struct LinearMaterialOptions {
+ uint64_t policy_id,revision;
+ double max_nominal_delta_mm3,max_total_nominal_delta_mm3,max_filament_delta_mm;
+ double relative_dose_error=0,absolute_dose_error_mm3=0;
+};
+// New rounded material under the original model, not reuse of its old clearance
+// or support proof. Complete source, every ID/role, dose and original losses retained.
+nptop_verify::LinearMaterialResult verify_linear_candidate_material(const LinearCandidateResult &,const LinearMaterialOptions &,
+ const LinearCandidateLimits &limits={});
 }
