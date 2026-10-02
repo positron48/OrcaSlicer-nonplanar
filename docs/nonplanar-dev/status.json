@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_ONLY",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 314,
+    "new_native_cases": 315,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 357,
-    "final_ctest_executed": 357,
+    "final_ctest_discovered": 358,
+    "final_ctest_executed": 358,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -830,7 +830,29 @@
     "B08_scene_material_independent_review": "PENDING",
     "B08_scene_material_physical": "NOT_RUN",
     "B08_scene_material_remaining": "MEASURED_HEAD_APPLICABILITY_CONTACT_WHOLE_CAP_FILL_EXCESS_NORMAL_ORDER_ENTRY_EXIT_TRAVEL_PARKING_FLOW_JOB_PLATE_SOFTWARE_RESOURCE_REPLAY_EXPORT",
-    "B08_scene_material_ctest_elapsed_seconds": 122.902
+    "B08_scene_material_ctest_elapsed_seconds": 122.902,
+    "B07_exact_union_reuse_cases": 1,
+    "B07_exact_union_reuse_assertions": 88,
+    "B07_exact_union_reuse_material_cases": 113,
+    "B07_exact_union_reuse_material_assertions": 47153,
+    "B07_exact_union_reuse_body_cases": 14,
+    "B07_exact_union_reuse_body_assertions": 120943,
+    "B07_exact_union_reuse_material_expansions": 47033,
+    "B07_exact_union_reuse_body_expansions": 120936,
+    "B07_exact_union_reuse_material_before_seconds": 57.688,
+    "B07_exact_union_reuse_material_after_seconds": 39.116,
+    "B07_exact_union_reuse_native_before_seconds": 16.78,
+    "B07_exact_union_reuse_native_after_seconds": 8.095,
+    "B07_exact_union_reuse_ctest": 358,
+    "B07_exact_union_reuse_ctest_elapsed_seconds": 90.322,
+    "B07_exact_union_reuse_invariant": "EXACT_LOCAL_AXIAL_BUTTS_CONFIRMED_CCW_RECTANGLE_INTERSECTION_AREA_MOMENTS_AND_EXACT_EXTREMA_ORIGINAL_ARBITRARY_POLYGON_PATH_UNCHANGED_LIMITS_NO_PERSISTED_CACHE",
+    "B07_exact_union_reuse_differential": "ALL_PRINTED_EXPANSIONS_EQUAL_ADDRESS_TOKENS_ONLY_NORMALIZED_NATIVE_SEED_FIXED_TO_ORIGINAL_3348965181_NO_UNPRINTED_BITWISE_CLAIM",
+    "B07_exact_union_reuse_OFF_ZAA": "SIX_FINAL_BINARY_GCODE_AND_MODAL_REPLAY_PASS_ORIGINAL_NORMALIZATION_ESTABLISHED_ADDITIVE_OFF_DEFAULT_ONLY",
+    "B07_exact_union_reuse_Linux": "NEW_SOURCE_NOT_YET_VERIFIED_INHERITED_E8F40123_FIVE_SECOND_FAILURE_ANNOTATIONS_RETAINED",
+    "B07_exact_union_reuse_Windows": "NOT_RUN",
+    "B07_exact_union_reuse_independent_review": "PENDING",
+    "B07_exact_union_reuse_author_review": "SEPARATE_CRITICAL_REVIEW_RECORDED",
+    "B07_exact_union_reuse_physical": "NOT_RUN"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -932,7 +954,8 @@
     "B07_next_cap_bead": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-next-cap-bead.md",
     "B07_next_cap_material": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-next-cap-material.md",
     "B08_material_motion": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B08-material-motion.md",
-    "B08_scene_material": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B08-scene-material.md"
+    "B08_scene_material": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B08-scene-material.md",
+    "B07_exact_union_reuse": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-exact-union-reuse.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -1014,5 +1037,6 @@
   "B07_next_cap_bead_evidence": "docs/nonplanar-dev/evidence/B07-next-cap-bead/source-manifest.json",
   "B07_next_cap_material_evidence": "docs/nonplanar-dev/evidence/B07-next-cap-material/source-manifest.json",
   "B08_material_motion_evidence": "docs/nonplanar-dev/evidence/B08-material-motion/source-manifest.json",
-  "B08_scene_material_evidence": "docs/nonplanar-dev/evidence/B08-scene-material/source-manifest.json"
+  "B08_scene_material_evidence": "docs/nonplanar-dev/evidence/B08-scene-material/source-manifest.json",
+  "B07_exact_union_reuse_evidence": "docs/nonplanar-dev/evidence/B07-union-cache/source-manifest.json"
 }

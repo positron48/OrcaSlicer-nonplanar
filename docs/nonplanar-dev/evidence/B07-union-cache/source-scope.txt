@@ -1,0 +1,160 @@
+diff --git a/src/libslic3r/Nonplanar/DepositionModel.cpp b/src/libslic3r/Nonplanar/DepositionModel.cpp
+index 2ba72f07..82c27f4a 100644
+--- a/src/libslic3r/Nonplanar/DepositionModel.cpp
++++ b/src/libslic3r/Nonplanar/DepositionModel.cpp
+@@ -1697,0 +1698,2 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
++        struct AxisGeometry {bool x;Exact begin,end;std::array<Exact,4> bounds;};
++        std::vector<std::optional<AxisGeometry>> axes(sequence->records.size());
+@@ -1746,0 +1749,7 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
++            const bool x_axis=m.start.y()==m.end.y(),y_axis=m.start.x()==m.end.x();
++            if (x_axis!=y_axis) {
++                const Exact start(x_axis ? m.start.x() : m.start.y()),last=start+
++                    (Exact(x_axis ? m.end.x() : m.end.y())-start)*Exact(fraction);
++                axes[i]=AxisGeometry{x_axis,std::min(start,last),std::max(start,last),
++                    {Exact(xmin.lo),Exact(xmax.hi),Exact(ymin.lo),Exact(ymax.hi)}};
++            }
+@@ -2238,0 +2248 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
++        const Exact domain_area=(Exact(domain.max.x())-Exact(domain.min.x()))*(Exact(domain.max.y())-Exact(domain.min.y()));
+@@ -2243,6 +2253,4 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-            Exact area(0);affine_integral(polygon,flat,&area);
+-            std::array<double,4> cell_bounds{exact_interval(polygon.front()[0]).lo,exact_interval(polygon.front()[0]).hi,
+-                exact_interval(polygon.front()[1]).lo,exact_interval(polygon.front()[1]).hi};
+-            for (const auto &p : polygon) {
+-                const auto x=exact_interval(p[0]),y=exact_interval(p[1]);cell_bounds[0]=std::min(cell_bounds[0],x.lo);cell_bounds[1]=std::max(cell_bounds[1],x.hi);
+-                cell_bounds[2]=std::min(cell_bounds[2],y.lo);cell_bounds[3]=std::max(cell_bounds[3],y.hi);
++            std::array<Exact,4> exact_bounds{polygon.front()[0],polygon.front()[0],polygon.front()[1],polygon.front()[1]};
++            for (const auto &p : polygon) for (size_t axis=0;axis<2;++axis) {
++                exact_bounds[axis*2]=std::min(exact_bounds[axis*2],p[axis]);
++                exact_bounds[axis*2+1]=std::max(exact_bounds[axis*2+1],p[axis]);
+@@ -2250 +2258,20 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-            auto reference=exact_interval(shear_x*polygon.front()[0]+shear_y*polygon.front()[1]);
++            // An actual four-edge CCW axis rectangle admits exact intersections
++            // and product areas. Bounds of an arbitrary polygon are never used
++            // as occupancy: keep its original clipping/moment path below.
++            bool rectangle=polygon.size()==4;
++            if (rectangle) {
++                for (size_t j=0;j<4;++j) {
++                    const auto &a=polygon[j],&b=polygon[(j+1)%4],&c=polygon[(j+2)%4];
++                    const bool horizontal=a[1]==b[1],vertical=a[0]==b[0];
++                    if (horizontal==vertical || horizontal==(b[1]==c[1])) {rectangle=false;break;}
++                }
++                if (rectangle) rectangle=polygon[0][1]==polygon[1][1] ?
++                    (polygon[1][0]>polygon[0][0])==(polygon[2][1]>polygon[1][1]) :
++                    (polygon[1][1]>polygon[0][1])!=(polygon[2][0]>polygon[1][0]);
++            }
++            Exact area(0);
++            if (rectangle) area=(exact_bounds[1]-exact_bounds[0])*(exact_bounds[3]-exact_bounds[2]);
++            else affine_integral(polygon,flat,&area);
++            const std::array<double,4> cell_bounds{exact_interval(exact_bounds[0]).lo,exact_interval(exact_bounds[1]).hi,
++                exact_interval(exact_bounds[2]).lo,exact_interval(exact_bounds[3]).hi};
++            Exact reference_min=shear_x*polygon.front()[0]+shear_y*polygon.front()[1],reference_max=reference_min;
+@@ -2252 +2279 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                const auto value=exact_interval(shear_x*p[0]+shear_y*p[1]);reference={std::min(reference.lo,value.lo),std::max(reference.hi,value.hi)};
++                const Exact value=shear_x*p[0]+shear_y*p[1];reference_min=std::min(reference_min,value);reference_max=std::max(reference_max,value);
+@@ -2253,0 +2281 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
++            const Interval reference(exact_interval(reference_min).lo,exact_interval(reference_max).hi);
+@@ -2300 +2328,20 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                if (x_axis!=y_axis) {
++                std::optional<Exact> rectangle_area;
++                if (rectangle && axes[i]) {
++                    auto clipped=exact_bounds;const auto &axis=*axes[i];
++                    for (size_t j=0;j<2;++j) {
++                        clipped[j*2]=std::max(clipped[j*2],axis.bounds[j*2]);
++                        clipped[j*2+1]=std::min(clipped[j*2+1],axis.bounds[j*2+1]);
++                    }
++                    if (fraction!=1) {
++                        const size_t j=axis.x ? 0 : 1;
++                        clipped[j*2]=std::max(clipped[j*2],axis.begin);
++                        clipped[j*2+1]=std::min(clipped[j*2+1],axis.end);
++                    }
++                    if (clipped[0]<clipped[1] && clipped[2]<clipped[3]) {
++                        const std::array<double,4> bounds{std::max(box[0],cell_bounds[0]),std::min(box[1],cell_bounds[1]),
++                            std::max(box[2],cell_bounds[2]),std::min(box[3],cell_bounds[3])};
++                        rectangle_area=(clipped[1]-clipped[0])*(clipped[3]-clipped[2]);
++                        footprint=RoofProjection{project_bounds(row,bounds),Interval(0),
++                            {{clipped[0],clipped[2]},{clipped[1],clipped[2]},{clipped[1],clipped[3]},{clipped[0],clipped[3]}}};
++                    }
++                } else if (x_axis!=y_axis) {
+@@ -2327 +2374,3 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                if (inside && inside->second.whole_transverse && longitudinal(row,polygon,fraction)) {
++                const bool whole_length=axes[i] ? exact_bounds[(axes[i]->x ? 0 : 1)*2]>=axes[i]->begin &&
++                    exact_bounds[(axes[i]->x ? 0 : 1)*2+1]<=axes[i]->end : longitudinal(row,polygon,fraction);
++                if (inside && inside->second.whole_transverse && whole_length) {
+@@ -2336,2 +2385 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                    const auto &m=row.motion;const auto coordinate=[&](PhysicalPosition p) {return x_axis ? p.x() : p.y();};
+-                    const Exact start(coordinate(m.start)),last=start+(Exact(coordinate(m.end))-start)*Exact(fraction);
++                    const auto &m=row.motion;const auto &axis=*axes[i];
+@@ -2339 +2387 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                    strips[{x_axis,x_axis ? m.start.y() : m.start.x()}].push_back({std::min(start,last),std::max(start,last),s,outside,
++                    strips[{x_axis,x_axis ? m.start.y() : m.start.x()}].push_back({axis.begin,axis.end,s,outside,
+@@ -2350 +2398,3 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                    Exact clipped_area(0);affine_integral(footprint->polygon,flat,&clipped_area);
++                    Exact clipped_area(0);
++                    if (rectangle_area) clipped_area=*rectangle_area;
++                    else affine_integral(footprint->polygon,flat,&clipped_area);
+@@ -2364 +2414 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                const double partial=full_individual && x_axis!=y_axis && !longitudinal(row,polygon,fraction) ? outside.second-outside.first : 0.;
++                const double partial=full_individual && x_axis!=y_axis && !whole_length ? outside.second-outside.first : 0.;
+@@ -2371,2 +2421 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                Exact begin=polygon.front()[axis],end=begin;
+-                for (const auto &point : polygon) {begin=std::min(begin,point[axis]);end=std::max(end,point[axis]);}
++                const Exact begin=exact_bounds[axis*2],end=exact_bounds[axis*2+1];
+@@ -2430,2 +2479,4 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                                const auto mx=affine_integral(polygon,{{0,0,1,1},0,1,0}).second;
+-                                const auto my=affine_integral(polygon,{{0,0,1,1},0,0,1}).second;
++                                const auto mx=rectangle ? exact_interval(area*(exact_bounds[0]+exact_bounds[1])/Exact(2)) :
++                                    affine_integral(polygon,{{0,0,1,1},0,1,0}).second;
++                                const auto my=rectangle ? exact_interval(area*(exact_bounds[2]+exact_bounds[3])/Exact(2)) :
++                                    affine_integral(polygon,{{0,0,1,1},0,0,1}).second;
+@@ -2451 +2501,0 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                const Exact domain_area=(Exact(domain.max.x())-Exact(domain.min.x()))*(Exact(domain.max.y())-Exact(domain.min.y()));
+@@ -2454,2 +2504 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                    Exact xmin=polygon.front()[0],xmax=xmin,ymin=polygon.front()[1],ymax=ymin;
+-                    for (const auto &p : polygon) {xmin=std::min(xmin,p[0]);xmax=std::max(xmax,p[0]);ymin=std::min(ymin,p[1]);ymax=std::max(ymax,p[1]);}
++                    const Exact xmin=exact_bounds[0],xmax=exact_bounds[1],ymin=exact_bounds[2],ymax=exact_bounds[3];
+@@ -2503,2 +2552 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                Exact xmin=polygon.front()[0],xmax=xmin,ymin=polygon.front()[1],ymax=ymin;
+-                for (const auto &p : polygon) {xmin=std::min(xmin,p[0]);xmax=std::max(xmax,p[0]);ymin=std::min(ymin,p[1]);ymax=std::max(ymax,p[1]);}
++                const Exact xmin=exact_bounds[0],xmax=exact_bounds[1],ymin=exact_bounds[2],ymax=exact_bounds[3];
+@@ -2600,2 +2648 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
+-                Exact xmin=polygon.front()[0],xmax=xmin,ymin=polygon.front()[1],ymax=ymin;
+-                for (const auto &p : polygon) {xmin=std::min(xmin,p[0]);xmax=std::max(xmax,p[0]);ymin=std::min(ymin,p[1]);ymax=std::max(ymax,p[1]);}
++                const Exact xmin=exact_bounds[0],xmax=exact_bounds[1],ymin=exact_bounds[2],ymax=exact_bounds[3];
+diff --git a/tests/nonplanar/test_deposition_model.cpp b/tests/nonplanar/test_deposition_model.cpp
+index 62b3b79b..23381f4e 100644
+--- a/tests/nonplanar/test_deposition_model.cpp
++++ b/tests/nonplanar/test_deposition_model.cpp
+@@ -1090,0 +1091,33 @@ TEST_CASE("B07 nominal union retains rotated reversed and current finite XY geom
++TEST_CASE("B07 clipped axial partial fronts retain exact finite butts and exclude future material", "[Nonplanar][B07][MaterialUnion]")
++{
++    for (bool x_axis : {false,true}) for (double sign : {-1.,1.})
++        for (auto kind : {BeadSectionKind::Rectangle,BeadSectionKind::RoundedRectangle}) {
++            const auto position=[&](double along) {return PhysicalPosition(x_axis ? sign*along : 0,x_axis ? 0 : sign*along,1);};
++            const auto first=bead(1,0,position(5),position(6),.8,.2,.25,kind);
++            const MaterialRecord back{{2,1,0,position(6),position(0),Speed(10),Acceleration(100),Travel{}},{}};
++            const auto current=bead(3,2,position(0),position(3),.8,.2,.25,kind);
++            auto future_back=back;future_back.motion.event_id=4;future_back.motion.sequence_index=3;future_back.motion.start=position(3);
++            auto future=current;future.motion.event_id=5;future.motion.sequence_index=4;
++            const auto ledger=captured({first,back,current,future_back,future});
++            const auto present=material_at(ledger,2,.1);
++            const auto domain=[&](double begin,double end) {
++                const double lo=sign>0 ? begin : -end,hi=sign>0 ? end : -begin;
++                return SceneBox{{x_axis ? lo : -.05,x_axis ? -.05 : lo,.5},{x_axis ? hi : .05,x_axis ? .05 : hi,1.1}};
++            };
++            MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.00001);limits.max_cells=65535;
++            const auto result=integrate_material_union(present.nominal,domain(.25,.75),limits);INFO(result.reason);REQUIRE(result.snapshot);
++            // The narrow transverse window is wholly in the flat core of both
++            // sections. Integrate the affine gap to the exact binary64 fraction,
++            // rather than rounding its nonrepresentable current butt to double.
++            const long double a=.25L,b=3.L*static_cast<long double>(.1),normal_width=2.L*static_cast<long double>(.05);
++            const long double h=.2,dh=static_cast<long double>(.25)-static_cast<long double>(.2);
++            const long double amount=normal_width*(h*(b-a)+dh*(b*b-a*a)/6.L);
++            volume_contains(result.snapshot->union_volume_mm3,amount);
++            volume_contains(result.snapshot->individual_volume_mm3,amount);
++            REQUIRE(result.snapshot->repeated_volume_mm3.lower==0);REQUIRE(result.snapshot->repeated_volume_mm3.upper<=.00001);
++            const auto empty=integrate_material_union(present.nominal,domain(std::nextafter(3*.1,std::numeric_limits<double>::infinity()),.75),limits);
++            INFO(empty.reason);REQUIRE(empty.snapshot);REQUIRE(empty.snapshot->union_volume_mm3.upper==0);
++            REQUIRE(empty.snapshot->individual_volume_mm3.upper==0);
++        }
++}
++

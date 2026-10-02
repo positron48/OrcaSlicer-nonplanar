@@ -17,8 +17,15 @@ Next software tasks, in dependency order:
    `B02-input-placement.md` connects owned inputs to the native placement/error
    chain and enforces source plate-index agreement; actual GUI membership and
    original file-to-job association remain pending.
-2. Verify new milestones on Linux with all budgets unchanged. The inherited
-   native-fill deadline failures at 84a709ef, 7f71cc98 and 946d3da7 are retained
+2. Verify new milestones on Linux with all budgets unchanged. The e8f40123 run
+   36948380709 failed end/width replan and extended native void calculations at
+   five seconds; original annotations are retained. B07-exact-union-reuse.md now
+   reuses exact local geometry without changing precision/limits. Local material
+   time is 57.688 -> 39.116 seconds; the native case is 16.780 -> 8.095 seconds.
+   All old printed material/native expansions match with the original native seed;
+   final CTest is 358/358 and six OFF/ZAA comparisons pass. Observe the new-source
+   Linux result separately; local acceleration does not close the timeout gate.
+   The inherited native-fill deadline failures at 84a709ef, 7f71cc98 and 946d3da7 are retained
    as historical evidence. `B07-constant-section-roof.md` is now verified by
    successful run 36847680702 at 2d8bebaa: selected native suites, STL CLI and
    application pass with the original 20-second timeout. Run 36853913690 at
@@ -158,7 +165,9 @@ Next software tasks, in dependency order:
    64-box-plus-tip maximum pass. Qualification/contact/job remain pending.
    Continue the normative backlog without closing P2 from bounded
    modules. The saved 01:23 UTC Linux observation confirms 2c446685 succeeded;
-   current e8f40123 is in progress and the new B08 source remains unverified.
+   e8f40123 failed the retained five-second calculations. The saved 02:23 UTC
+   observation has a258877a in progress and 0dcbd642 pending; new source remains
+   unverified on Linux.
 
 Independent review of A03–A08 remains required for Gate A closure. Operator
 measurements, machine/material confirmation and physical coupon runs remain

@@ -1088,6 +1088,39 @@ TEST_CASE("B07 nominal union retains rotated reversed and current finite XY geom
         }
 }
 
+TEST_CASE("B07 clipped axial partial fronts retain exact finite butts and exclude future material", "[Nonplanar][B07][MaterialUnion]")
+{
+    for (bool x_axis : {false,true}) for (double sign : {-1.,1.})
+        for (auto kind : {BeadSectionKind::Rectangle,BeadSectionKind::RoundedRectangle}) {
+            const auto position=[&](double along) {return PhysicalPosition(x_axis ? sign*along : 0,x_axis ? 0 : sign*along,1);};
+            const auto first=bead(1,0,position(5),position(6),.8,.2,.25,kind);
+            const MaterialRecord back{{2,1,0,position(6),position(0),Speed(10),Acceleration(100),Travel{}},{}};
+            const auto current=bead(3,2,position(0),position(3),.8,.2,.25,kind);
+            auto future_back=back;future_back.motion.event_id=4;future_back.motion.sequence_index=3;future_back.motion.start=position(3);
+            auto future=current;future.motion.event_id=5;future.motion.sequence_index=4;
+            const auto ledger=captured({first,back,current,future_back,future});
+            const auto present=material_at(ledger,2,.1);
+            const auto domain=[&](double begin,double end) {
+                const double lo=sign>0 ? begin : -end,hi=sign>0 ? end : -begin;
+                return SceneBox{{x_axis ? lo : -.05,x_axis ? -.05 : lo,.5},{x_axis ? hi : .05,x_axis ? .05 : hi,1.1}};
+            };
+            MaterialUnionLimits limits;limits.maximum_interval_width=Volume(.00001);limits.max_cells=65535;
+            const auto result=integrate_material_union(present.nominal,domain(.25,.75),limits);INFO(result.reason);REQUIRE(result.snapshot);
+            // The narrow transverse window is wholly in the flat core of both
+            // sections. Integrate the affine gap to the exact binary64 fraction,
+            // rather than rounding its nonrepresentable current butt to double.
+            const long double a=.25L,b=3.L*static_cast<long double>(.1),normal_width=2.L*static_cast<long double>(.05);
+            const long double h=.2,dh=static_cast<long double>(.25)-static_cast<long double>(.2);
+            const long double amount=normal_width*(h*(b-a)+dh*(b*b-a*a)/6.L);
+            volume_contains(result.snapshot->union_volume_mm3,amount);
+            volume_contains(result.snapshot->individual_volume_mm3,amount);
+            REQUIRE(result.snapshot->repeated_volume_mm3.lower==0);REQUIRE(result.snapshot->repeated_volume_mm3.upper<=.00001);
+            const auto empty=integrate_material_union(present.nominal,domain(std::nextafter(3*.1,std::numeric_limits<double>::infinity()),.75),limits);
+            INFO(empty.reason);REQUIRE(empty.snapshot);REQUIRE(empty.snapshot->union_volume_mm3.upper==0);
+            REQUIRE(empty.snapshot->individual_volume_mm3.upper==0);
+        }
+}
+
 TEST_CASE("B07 triple occupancy counts multiplicity excess without pairwise double counting", "[Nonplanar][B07][MaterialUnion]")
 {
     const auto first=bead(1,0,{0,0,1},{1,0,1},.8,.2,.2);

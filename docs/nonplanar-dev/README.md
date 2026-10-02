@@ -15,6 +15,15 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B07-exact-union-reuse.md` and ADR-0065 reuse exact local axial/rectangle
+geometry under unchanged budgets after inherited Linux deadline failures. The
+material suite falls from 57.688 to 39.116 seconds; the actual native cap/later
+scenario falls from 16.780 to 8.095 seconds locally. All printed expansions of
+112 old material / 14 native cases match (native seed fixed to the parent).
+One new partial-front case / 88 assertions, final 113 material / 14 body cases,
+358/358 selected CTest and six fresh OFF/ZAA comparisons pass. New-source Linux,
+independent review, full cap/job/contact/flow/replay and physical work remain pending.
+
 `B08-scene-material.md` and ADR-0064 compose every captured head/static pair
 with the complete actual material proof for the same original event. Coverage
 includes full potential Upper tops and all errors; scene and material revisions
