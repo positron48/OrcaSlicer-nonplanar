@@ -27,6 +27,8 @@ set(lisbslic3r_sources
     Nonplanar/Job.hpp
     Nonplanar/JobArtifact.cpp
     Nonplanar/JobArtifact.hpp
+    Nonplanar/JobNative.cpp
+    Nonplanar/JobNative.hpp
     Nonplanar/ProfileScene.cpp
     Nonplanar/ProfileScene.hpp
     Nonplanar/MotionPlan.cpp
@@ -679,11 +681,11 @@ endif()
 
 # Outward interval operations must not be reassociated or contracted. Restrict
 # these options to the new primitive queries; stock slicing flags stay unchanged.
-set_source_files_properties(Nonplanar/UpperProjection.cpp Nonplanar/UpperProjectionPredicates.cpp Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MotionPlan.cpp Nonplanar/GCodeAdapter.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp Nonplanar/Job.cpp Nonplanar/JobArtifact.cpp Nonplanar/InputSnapshot.cpp Nonplanar/VolumePartition.cpp Nonplanar/VolumePartitionExact.cpp Nonplanar/PlanarBody.cpp Nonplanar/DepositionModel.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+set_source_files_properties(Nonplanar/UpperProjection.cpp Nonplanar/UpperProjectionPredicates.cpp Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MotionPlan.cpp Nonplanar/GCodeAdapter.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp Nonplanar/Job.cpp Nonplanar/JobArtifact.cpp Nonplanar/JobNative.cpp Nonplanar/InputSnapshot.cpp Nonplanar/VolumePartition.cpp Nonplanar/VolumePartitionExact.cpp Nonplanar/PlanarBody.cpp Nonplanar/DepositionModel.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 if(MSVC)
-    set_source_files_properties(Nonplanar/UpperProjection.cpp Nonplanar/UpperProjectionPredicates.cpp Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MotionPlan.cpp Nonplanar/GCodeAdapter.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp Nonplanar/Job.cpp Nonplanar/JobArtifact.cpp Nonplanar/InputSnapshot.cpp Nonplanar/VolumePartition.cpp Nonplanar/VolumePartitionExact.cpp Nonplanar/PlanarBody.cpp Nonplanar/DepositionModel.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
+    set_source_files_properties(Nonplanar/UpperProjection.cpp Nonplanar/UpperProjectionPredicates.cpp Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MotionPlan.cpp Nonplanar/GCodeAdapter.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp Nonplanar/Job.cpp Nonplanar/JobArtifact.cpp Nonplanar/JobNative.cpp Nonplanar/InputSnapshot.cpp Nonplanar/VolumePartition.cpp Nonplanar/VolumePartitionExact.cpp Nonplanar/PlanarBody.cpp Nonplanar/DepositionModel.cpp PROPERTIES COMPILE_OPTIONS "/fp:strict")
 else()
-    set_source_files_properties(Nonplanar/UpperProjection.cpp Nonplanar/UpperProjectionPredicates.cpp Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MotionPlan.cpp Nonplanar/GCodeAdapter.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp Nonplanar/Job.cpp Nonplanar/JobArtifact.cpp Nonplanar/InputSnapshot.cpp Nonplanar/VolumePartition.cpp Nonplanar/VolumePartitionExact.cpp Nonplanar/PlanarBody.cpp Nonplanar/DepositionModel.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
+    set_source_files_properties(Nonplanar/UpperProjection.cpp Nonplanar/UpperProjectionPredicates.cpp Nonplanar/Collision.cpp Nonplanar/Transition.cpp Nonplanar/ProfileScene.cpp Nonplanar/MotionPlan.cpp Nonplanar/GCodeAdapter.cpp Nonplanar/MeshAudit.cpp Nonplanar/StlImportError.cpp Nonplanar/StlWorker.cpp Nonplanar/MeshPlacement.cpp Nonplanar/Job.cpp Nonplanar/JobArtifact.cpp Nonplanar/JobNative.cpp Nonplanar/InputSnapshot.cpp Nonplanar/VolumePartition.cpp Nonplanar/VolumePartitionExact.cpp Nonplanar/PlanarBody.cpp Nonplanar/DepositionModel.cpp PROPERTIES COMPILE_OPTIONS "-fno-fast-math;-ffp-contract=off")
 endif()
 
 if (SLIC3R_PCH AND NOT SLIC3R_SYNTAXONLY)

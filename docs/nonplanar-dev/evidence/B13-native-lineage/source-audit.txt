@@ -1,0 +1,87 @@
+{
+  "status": "PASS_SOURCE_INVENTORY_ONLY",
+  "baseline_commit": "8500fcdccaa10b5099ac20d252af3a7c560046f1",
+  "head_commit": "9a3ed1cacf7652652949b303efc1e49586645259",
+  "head_is_baseline": false,
+  "files": [
+    {
+      "path": "src/libslic3r/ContourZ.cpp",
+      "markers_checked": 1,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/ExtrusionEntity.hpp",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/GCode.cpp",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/Format/STEP.cpp",
+      "markers_checked": 1,
+      "status": "PRESENT"
+    },
+    {
+      "path": "CMakeLists.txt",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "tests/CMakeLists.txt",
+      "markers_checked": 1,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/slic3r/GUI/BackgroundSlicingProcess.cpp",
+      "markers_checked": 2,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/Format/bbs_3mf.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/slic3r/GUI/GCodeViewer.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/PrintConfig.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/Print.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/libslic3r/PrintObject.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    },
+    {
+      "path": "src/slic3r/GUI/Tab.cpp",
+      "markers_checked": 0,
+      "status": "PRESENT"
+    }
+  ],
+  "tracked_worktree_changes": [
+    "M .github/workflows/nonplanar-native.yml",
+    " M scripts/nonplanar/job_report_oracle.py",
+    " M src/libslic3r/CMakeLists.txt",
+    " M src/libslic3r/Nonplanar/Job.cpp",
+    " M src/libslic3r/Nonplanar/Job.hpp",
+    " M src/libslic3r/Nonplanar/JobArtifact.cpp",
+    " M src/libslic3r/Nonplanar/JobArtifact.hpp",
+    " M tests/nonplanar/job_report_evidence.hpp",
+    " M tests/nonplanar/test_policy.cpp"
+  ],
+  "build_status": "NOT_RUN",
+  "slicer_test_status": "NOT_RUN",
+  "semantic_hook_audit": "REQUIRES_ENGINEER_REVIEW"
+}

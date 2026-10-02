@@ -58,6 +58,68 @@ def sha(text):
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 
+def native_lineage(record, job):
+    """Exact dependency identity only; no geometry or material math approval."""
+    native = record['native']
+    for prefix in ['', 'hatch_', 'body_']:
+        text, digest = native[prefix + 'canonical'], native[prefix + 'sha256']
+        require(type(digest) is str and re.fullmatch('[a-f0-9]{64}', digest), 'Native digest')
+        require(sha(text) == digest and canonical(parse(text)) == text, 'Native canonical identity')
+    plan, hatch, body = (parse(native[key]) for key in ['canonical', 'hatch_canonical', 'body_canonical'])
+    require(set(plan) == {'schema', 'scope', 'job_fingerprint', 'attempt', 'hatch_lineage',
+                          'assembled_journal', 'planned_journal', 'candidate_sha256'}, 'Native plan fields')
+    require(set(hatch) == {'schema', 'scope', 'body_lineage', 'request', 'geometry'}, 'Native hatch fields')
+    require(set(body) == {'schema', 'scope', 'job_fingerprint', 'attempt', 'source_sha256',
+                          'slicing_input', 'request', 'body', 'body_material', 'body_journal'}, 'Native body fields')
+    for document, scope in [(plan, 'owned_native_body_cap_linear_candidate_lineage_only'),
+                            (hatch, 'owned_native_affine_hatch_dependency_lineage_only'),
+                            (body, 'owned_native_body_dependency_lineage_only')]:
+        require(type(document['schema']) is int and document['schema'] == 1 and document['scope'] == scope, 'Native version/scope')
+    for document in [plan, body]:
+        require(type(document['attempt']) is int and document['attempt'] == record['attempt'] and
+                document['job_fingerprint'] == record['job_fingerprint'], 'Native owner/attempt')
+    require(plan['hatch_lineage'] == native['hatch_sha256'] and hatch['body_lineage'] == native['body_sha256'], 'Native ancestry')
+    require(body['slicing_input'].encode().hex() == job['native_input'] and body['request']['millimeters_declared'] is True, 'Native source units/input')
+    require(any(type(resource[0]) is int and resource[0] == 0 and resource[2] == body['source_sha256'].encode().hex()
+                for resource in job['resources']), 'Native original source bytes')
+    require(plan['candidate_sha256'] == record['candidate_sha256'] and plan['planned_journal'] == record['material_journal'], 'Native candidate/journal')
+    journals = {}
+    for name in ['assembled', 'planned', 'body']:
+        journal = native[name]
+        require(set(journal) == {'context', 'records', 'sha256'}, 'Native journal fields')
+        context = parse(journal['context'])
+        require(canonical(context) == journal['context'] and type(context['record_count']) is int and
+                context['record_count'] == len(journal['records']) and type(context['revision']) is int and
+                context['revision'] == record['job_revision'], 'Native journal context')
+        digest = sha('nptop-material-ledger-v1\0' + journal['context'])
+        rows = []
+        for text in journal['records']:
+            row = parse(text)
+            require(canonical(row) == text, 'Native row canonical identity')
+            digest = sha('nptop-material-record-v1\0' + digest + text)
+            rows.append(row)
+        require(digest == journal['sha256'], 'Native ledger SHA')
+        journals[name] = (context, rows)
+    require(native['body']['sha256'] == body['body_journal'] and native['assembled']['sha256'] == plan['assembled_journal'] and
+            native['planned']['sha256'] == plan['planned_journal'], 'Native ledger dependency')
+    require(journals['body'][0]['source'] == body['body'].encode().hex(), 'Native body geometry journal binding')
+    original_context, original = journals['assembled']
+    planned_context, planned = journals['planned']
+    require(original_context == planned_context and len(original) == len(planned), 'Native planned context')
+    require(original[:len(journals['body'][1])] == journals['body'][1] and
+            len(original) > len(journals['body'][1]), 'Complete original body plus cap')
+    for a, b in zip(original, planned):
+        # Binary64 bit strings encode nonnegative finite quantities here.
+        # Decode before checking reductions; all other fields must be exact.
+        adjusted = parse(canonical(a))
+        for index in [5, 6]:
+            before, after = (struct.unpack('>d', bytes.fromhex(row['motion'][index]))[0] for row in [a, b])
+            require(math.isfinite(before) and math.isfinite(after) and 0 < after <= before, 'Native motion limit reduction')
+            adjusted['motion'][index] = b['motion'][index]
+        require(adjusted == b, 'Native planner changed geometry/order/material')
+    return native['sha256']
+
+
 def verify(record):
     for key in ['sha256', 'manifest_sha256', 'candidate_sha256', 'job_fingerprint', 'material_journal',
                 'motion_policy', 'serializer_policy', 'source_fingerprint']:
@@ -89,6 +151,10 @@ def verify(record):
         'serializer_policy': encode(record['serializer_policy']), 'source_fingerprint': encode(record['source_fingerprint']),
         'source_revision': record['source_revision'],
     }
+    if 'native' in record:
+        manifest['schema'] = 2
+        manifest['scope'] = 'owned_native_body_cap_candidate_lineage_only'
+        manifest['native_lineage'] = encode(native_lineage(record, job))
     require(parse(record['manifest']) == manifest and canonical(manifest) == record['manifest'], 'Manifest binding')
     require(sha(record['manifest']) == record['manifest_sha256'] == document['manifest_sha256'], 'Manifest SHA mismatch')
     require(document['job_fingerprint'] == record['job_fingerprint'] and

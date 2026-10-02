@@ -15,11 +15,22 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B13-native-lineage.md` and ADR-0078 now execute an owned original-byte/native
+placement/partition/body/material -> affine hatches -> selected cap assembly ->
+linear plan -> final bytes chain. Exact parent and complete original body/journal
+binding rejects unrelated or partial plans; only reduced speed/acceleration may
+change rows. Optional manifest v2 retains bounded lineage; all 17 mandatory IDs
+remain and 13 full-job domains UNKNOWN/NOT_RUN block export. Five new native
+cases, focus 21/666, CTest 419/419, independent report 5/46, CLI 100 and strict OFF/ZAA 6
+pass locally. The positive chain has 2197 rows/127589 bytes/report work 144333;
+complete later layers/geometry/routes/resources/software/GUI/qualification remain
+pending. See separate author review and frozen evidence manifest.
+
 `B13-final-report.md` and ADR-0077 add protected actual manifest/final-byte
 rate/material replay reports with a fixed 17-check mandatory registry. Four
 declared component checks pass; thirteen missing full-job domains stay
 UNKNOWN/NOT_RUN and block export. Seven new cases join 16/534 focused assertions;
-CTest414/414, independent report oracles (4 positives/34 refusals), original CLI100
+CTest414/414, independent report oracles (4 positives/34 refusals), original CLI 100
 and six fresh strict OFF/ZAA pairs pass. The full 2218-record native candidate
 executes the report path and ends Unknown/BLOCK. Raw provenance traces localize
 the earlier hash difference to derived body vertex IDs 16/17 with matching
@@ -32,7 +43,7 @@ settings/plate and exact opaque resources; private attempt/phase tokens with
 atomic revocation; and exact final-byte/initial-pose/policy/journal manifest
 association. Known credentials/timestamp/log metadata are excluded from public
 identity views while raw native edits still revoke attempts. Nine cases/264
-assertions, independent hash/tamper oracles, CTest407/407, original CLI100 and six
+assertions, independent hash/tamper oracles, CTest407/407, original CLI 100 and six
 final OFF/ZAA pairs pass. The final root native run retains 137783 assertions and
 all eleven original files. A CTest-context source-fingerprint difference is
 retained as a strict identity refusal. Full B13 qualified provenance/report/
@@ -43,7 +54,7 @@ full B01–B15 stays IN_PROGRESS, export BLOCK.
 section union, preserving original Lower/errors/footprints/bands/budgets. The
 unchanged eight-packet native half-prefix now has complete support PASS, including
 independent whole near-ray/terminal/anchor/partition checks: 137783 native
-assertions. Focused39/14571, CTest398/398, CLI100, nine gate helpers and six fresh
+assertions. Focused39/14571, CTest398/398, CLI 100, nine gate helpers and six fresh
 strict OFF/ZAA pairs pass. Original native front/per-event Lower refusals and
 complete B09 exit UNKNOWN remain. General B12/contact/head/cap/route/dose/
 transform qualification and B13–B15 remain open; full B01–B15 IN_PROGRESS,

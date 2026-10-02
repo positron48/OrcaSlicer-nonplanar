@@ -11,6 +11,12 @@
 
 namespace Slic3r::nptop {
 namespace {
+const std::set<std::string> &non_slicing_options()
+{
+    static const std::set<std::string> keys{"printer_agent","print_host","print_host_webui","printhost_apikey","flashforge_serial_number",
+        "printhost_port","printhost_cafile","printhost_user","printhost_password","printhost_ssl_ignore_revoke","printhost_authorization_type","timestamp","logfile"};
+    return keys;
+}
 void omit_non_slicing_options(nlohmann::json &value)
 {
     if(value.is_object() && value.size()==2 && value.contains("options") && value.value("schema",0)==1){
@@ -19,9 +25,8 @@ void omit_non_slicing_options(nlohmann::json &value)
         // embed credentials. Unknown geometry/override fields remain exact.
         static const auto keys=[] {
             std::set<std::string> encoded;
-            for(const char *key:{"printer_agent","print_host","print_host_webui","printhost_apikey","flashforge_serial_number",
-                "printhost_port","printhost_cafile","printhost_user","printhost_password","printhost_ssl_ignore_revoke","printhost_authorization_type","timestamp","logfile"}){
-                detail::CanonicalConfigWriter writer;writer.value(std::string(key));encoded.insert(nlohmann::json::parse(writer.take()).get<std::string>());
+            for(const auto &key:non_slicing_options()){
+                detail::CanonicalConfigWriter writer;writer.value(key);encoded.insert(nlohmann::json::parse(writer.take()).get<std::string>());
             }return encoded;
         }();
         auto &options=value.at("options");require(options.is_array(),"JOB_IDENTITY_CONFIG_SHAPE");
@@ -51,6 +56,24 @@ bool native_current(const Print &print,const GuardedJobSnapshot &job)
     return settings && settings->input_revision==job.input_revision && settings->input_fingerprint==job.input->fingerprint &&
         settings->fingerprint()==job.settings->fingerprint() && executed && executed->fingerprint==job.executed_input->fingerprint;
 }
+}
+ResolvedConfigSnapshot guarded_slicing_config(const ResolvedConfigSnapshot &source)
+{
+    DynamicPrintConfig config;
+    for(const auto &key:source.keys())if(!non_slicing_options().count(key))config.set_key_value(key,source.option(key)->clone());
+    return ResolvedConfigSnapshot(config);
+}
+std::shared_ptr<const NativeInputSnapshot> guarded_slicing_input(const GuardedJobSnapshot &job)
+{
+    const auto &source=*job.input;auto objects=source.objects;auto materials=source.materials;
+    for(auto &object:objects){
+        object.config=guarded_slicing_config(object.config);
+        for(auto &volume:object.volumes)volume.config=guarded_slicing_config(volume.config);
+        for(auto &range:object.layer_ranges)range.config=guarded_slicing_config(range.config);
+    }
+    for(auto &material:materials)material.config=guarded_slicing_config(material.config);
+    return std::make_shared<const NativeInputSnapshot>(NativeInputSnapshot{guarded_slicing_config(source.config),std::move(materials),std::move(objects),
+        source.model_plate_index,job.input_identity.canonical_json,job.input_identity.fingerprint});
 }
 void GuardedJobOwner::invalidate()
 {

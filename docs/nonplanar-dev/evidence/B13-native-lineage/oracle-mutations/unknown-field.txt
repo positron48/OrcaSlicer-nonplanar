@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 217, in <module>
+    main()
+    ~~~~^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 213, in main
+    print(json.dumps(verify(parse(args.input.read_text()))))
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 163, in verify
+    require(set(validation) == {'schema_version', 'document_example', 'job_id', 'job_revision', 'overall_status',
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                'export_decision', 'gcode_sha256', 'mandatory_check_ids', 'checks', 'assumptions'}, 'Validation fields')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 28, in require
+    raise ValueError(reason)
+ValueError: Validation fields

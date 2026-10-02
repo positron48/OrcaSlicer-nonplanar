@@ -4,17 +4,20 @@
 
 namespace Slic3r::nptop {
 inline constexpr unsigned guarded_candidate_binding_version=1;
+struct GuardedNativePlanSnapshot;
 struct GuardedCandidateBindingResult;
 struct GuardedCandidateBindingSnapshot {
     const std::shared_ptr<const GuardedJobSnapshot> job;
     const std::shared_ptr<const LinearCandidateSnapshot> candidate;
     const uint64_t attempt;
     const std::string manifest_json,manifest_sha256;
+    const std::shared_ptr<const GuardedNativePlanSnapshot> native;
 private:
     GuardedCandidateBindingSnapshot(std::shared_ptr<const GuardedJobSnapshot> context,std::shared_ptr<const LinearCandidateSnapshot> bytes,
-        uint64_t generation,std::string manifest,std::string hash)
-        :job(std::move(context)),candidate(std::move(bytes)),attempt(generation),manifest_json(std::move(manifest)),manifest_sha256(std::move(hash)){}
-    friend GuardedCandidateBindingResult bind_guarded_candidate(Print &,const GuardedJobTask &,const LinearCandidateResult &,const GuardedJobLimits &);
+        uint64_t generation,std::string manifest,std::string hash,std::shared_ptr<const GuardedNativePlanSnapshot> lineage)
+        :job(std::move(context)),candidate(std::move(bytes)),attempt(generation),manifest_json(std::move(manifest)),manifest_sha256(std::move(hash)),native(std::move(lineage)){}
+    friend GuardedCandidateBindingResult bind_guarded_candidate(Print &,const GuardedJobTask &,const LinearCandidateResult &,const GuardedJobLimits &,
+        std::shared_ptr<const GuardedNativePlanSnapshot>);
 };
 struct GuardedCandidateBindingResult {
     std::string reason;
@@ -26,8 +29,10 @@ struct GuardedCandidateBindingResult {
 // token. Neither the association nor the manifest proves model-to-plan geometry,
 // final replay, mandatory checks, measured resources or export eligibility.
 // No files are published. Caller serializes native host operations at admission.
+// Optional protected native lineage produces a version-2 manifest. The original
+// version-1 association remains unchanged; neither scope qualifies a full job.
 GuardedCandidateBindingResult bind_guarded_candidate(Print &,const GuardedJobTask &,const LinearCandidateResult &,
-    const GuardedJobLimits &limits={});
+    const GuardedJobLimits &limits={},std::shared_ptr<const GuardedNativePlanSnapshot> native={});
 
 inline constexpr unsigned guarded_report_version=1,guarded_check_registry_version=1;
 enum class GuardedCheckExecution {Run,NotRun,Skipped,Error};

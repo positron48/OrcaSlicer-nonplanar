@@ -4,6 +4,7 @@
 #include <libslic3r/Nonplanar/Policy.hpp>
 #include <libslic3r/Nonplanar/InputSnapshot.hpp>
 #include <libslic3r/Nonplanar/Job.hpp>
+#include <libslic3r/Nonplanar/JobNative.hpp>
 #include <libslic3r/Nonplanar/PlanarBody.hpp>
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
 #include <libslic3r/Nonplanar/ProfileScene.hpp>
@@ -3130,4 +3131,202 @@ TEST_CASE("B13 publishable identity excludes transport credentials and retains e
     model.objects.front()->config.set_key_value("future_geometry_setting",new ConfigOptionFloat(.1));other.apply(model,other_config);
     const auto unknown=begin_guarded_job(other,88,job_resources());REQUIRE(unknown.task);
     REQUIRE(unknown.snapshot->input_identity.fingerprint!=geometry.snapshot->input_identity.fingerprint);
+}
+
+namespace {
+struct NativeJobFixture {
+    Model model;
+    DynamicPrintConfig config=planar_body_config();
+    Print print;
+    std::vector<JobResource> resources=job_resources();
+    NativeJobFixture()
+    {
+        const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/affine-wedge-1-in-16.stl";
+        const auto file=capture_stl_file(path.string(),true,1);REQUIRE(file.source);REQUIRE(load_stl(path.string().c_str(),&model));
+        model.objects.front()->add_instance()->set_offset(Vec3d(20,20,0));
+        config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
+            {"internal_solid_infill_line_width",1.0},{"top_surface_line_width",1.0}});
+        resources.push_back({JobResourceKind::SourceFile,model.objects.front()->volumes.front()->source.input_file,file.source->bytes});
+        print.apply(model,config);
+    }
+    GuardedJobResult begin(){auto result=begin_guarded_job(print,88,resources);INFO(result.reason);REQUIRE(result.task);return result;}
+};
+GuardedNativeBodyRequest native_job_body_request()
+{
+    auto reservation=make_cube(8,8,4);reservation.translate(16,16,4.2);
+    return {true,std::move(reservation),{{0,0,0},{17,Length(.01),Length(.01),Length(.01),Length(.01),Length(0)},
+        {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},Speed(20),Speed(30),Acceleration(100),7,8}};
+}
+GuardedNativeBodyLimits native_job_body_limits()
+{
+    GuardedNativeBodyLimits limits;limits.body.paths.timeout=std::chrono::seconds(5);limits.material.timeout=std::chrono::seconds(5);return limits;
+}
+std::pair<NativeAffinePassRequest,AffineHatchPolicy> native_job_hatch_request(const GuardedNativeBodySnapshot &body)
+{
+    // Choose a real native rounded bead's flat core, independently from the
+    // hatch planner. The original wedge/body and explicit error budgets remain.
+    std::optional<RectangleXY> roi;HatchDirection direction=HatchDirection::AlongX;
+    for(const auto &row:body.body->material->records){
+        if(!row.bead || std::abs(row.motion.start.z()-4.2)>1e-8 || row.motion.end.z()!=row.motion.start.z())continue;
+        const bool x=row.motion.start.y()==row.motion.end.y(),y=row.motion.start.x()==row.motion.end.x();if(x==y)continue;
+        const long double h=row.bead->gap_begin_mm;if(row.bead->gap_end_mm!=h)continue;
+        const long double dx=static_cast<long double>(row.motion.end.x())-row.motion.start.x(),dy=static_cast<long double>(row.motion.end.y())-row.motion.start.y();
+        const long double core=(std::get<Deposition>(row.motion.payload).volume.value()/std::sqrt(dx*dx+dy*dy)/h+(1-std::acos(-1.L)/4)*h-h)/2;
+        if(core<=.375)continue;
+        if(x && std::min(row.motion.start.x(),row.motion.end.x())<18.8 && std::max(row.motion.start.x(),row.motion.end.x())>21.2 && row.motion.start.y()>19 && row.motion.start.y()<21){
+            roi=RectangleXY{19,row.motion.start.y()-.375,21,row.motion.start.y()+.375};direction=HatchDirection::AlongX;
+        }else if(y && std::min(row.motion.start.y(),row.motion.end.y())<18.8 && std::max(row.motion.start.y(),row.motion.end.y())>21.2 && row.motion.start.x()>19 && row.motion.start.x()<21){
+            roi=RectangleXY{row.motion.start.x()-.375,19,row.motion.start.x()+.375,21};direction=HatchDirection::AlongY;
+        }
+        if(roi)break;
+    }
+    REQUIRE(roi);
+    return {{*roi,0,4.1,{4,{VerticalGap(.1),VerticalGap(.4),Length(.00001)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.01)}},
+        {WidthXY(.4),Length(.15),Length(.05),direction}};
+}
+GuardedNativeHatchLimits native_job_hatch_limits()
+{
+    GuardedNativeHatchLimits limits;limits.passes.material.max_cells=8191;limits.passes.material.timeout=std::chrono::seconds(5);
+    limits.passes.material.maximum_interval_width=Volume(.01);limits.hatches.timeout=std::chrono::seconds(5);limits.hatches.volumes.timeout=std::chrono::seconds(5);return limits;
+}
+LinearCandidateResult native_job_candidate(std::shared_ptr<const MaterialSequenceSnapshot> journal)
+{
+    const auto motion=prepare_material_motion({"",std::move(journal)});INFO(motion.reason);REQUIRE(motion.snapshot);
+    SimulationScene scene{1,41,7,ProfileOrigin::Synthetic,false,{{0,0,0},Length(.2),Length(.5)}, {},
+        {{-1,-1,-.1},{40,40,10}},{{-5,-5,-5},{45,45,20}}, {},true,Length(30),Length(0)};
+    uint64_t id=1;for(auto part:{HeadPart::NozzleBody,HeadPart::Heater,HeadPart::Sock,HeadPart::Duct,HeadPart::Sensor,HeadPart::Mount})
+        scene.head.push_back({id++,part,{{-.05,-.05,.5},{.05,.05,.8}},false,false});
+    const ClearancePolicy geometry{Length(.01),NumericBudget(0,0,0,2e-6),Length(0),Length(0),Length(0)};
+    const auto source=prepare_simulation_motion(scene,motion,geometry);INFO(source.reason);REQUIRE(source.snapshot);
+    const LinearMotionPolicy kinematics{1,91,1,ProfileOrigin::Synthetic,false,LinearPlannerModel::FullStop,LinearKinematics::CoreXY,
+        scene.nozzle_domain,{200,200,5},{1000,1000,50},{200,200,5},{1000,1000,50},Length(1.75),FlowCompensation(1),
+        Speed(40),Acceleration(400),Length(5),12,2,200};
+    const auto plan=plan_linear_motion(source,kinematics);INFO(plan.reason);REQUIRE(plan.snapshot);
+    const auto bytes=serialize_linear_candidate(plan,{92,1,Acceleration(100)});INFO(bytes.reason);REQUIRE(bytes.snapshot);return bytes;
+}
+}
+TEST_CASE("B13 native body factory owns actual job inputs before callbacks", "[Nonplanar][B13][JobNative]")
+{
+    static_assert(!std::is_aggregate_v<GuardedNativeBodySnapshot>);static_assert(!std::is_aggregate_v<GuardedNativeHatchSnapshot>);static_assert(!std::is_aggregate_v<GuardedNativePlanSnapshot>);
+    NativeJobFixture fixture;fixture.config.set_key_value("printhost_apikey",new ConfigOptionString("worker-test-secret"));fixture.print.apply(fixture.model,fixture.config);
+    const auto job=fixture.begin();auto request=native_job_body_request();const auto original=native_mesh_fingerprint(request.reservation.its);
+    auto limits=native_job_body_limits();bool changed=false;
+    limits.cancelled=[&]{if(!changed){changed=true;request.reservation.clear();request.millimeters_declared=false;request.material.plate_origin={1,0,0};}return false;};
+    const auto body=analyze_guarded_native_body(*job.task,request,limits);INFO(body.reason);REQUIRE(body.snapshot);REQUIRE(changed);
+    REQUIRE(body.snapshot->job==job.snapshot);REQUIRE(body.snapshot->attempt==job.task->attempt);
+    REQUIRE(body.snapshot->slicing_input->fingerprint==job.snapshot->input_identity.fingerprint);
+    REQUIRE(body.snapshot->body->body->partition->placement->native_input==body.snapshot->slicing_input);
+    REQUIRE(body.snapshot->body->body->revision==job.snapshot->input_revision);REQUIRE(body.snapshot->body->material->records.size()>1000);
+    const auto encoded=nlohmann::json::parse(body.snapshot->request_json);
+    std::string encoded_hash;for(unsigned char c:original){encoded_hash.push_back("0123456789abcdef"[c>>4]);encoded_hash.push_back("0123456789abcdef"[c&15]);}
+    REQUIRE(encoded["reservation"]==encoded_hash);REQUIRE(encoded["millimeters_declared"]==true);
+    REQUIRE(sha256_bytes(body.snapshot->canonical_json)==body.snapshot->sha256);
+    REQUIRE(body.snapshot->body->body->executed_full_config.option<ConfigOptionString>("nptop_mode")->value=="off");
+    REQUIRE_FALSE(body.snapshot->body->body->executed_full_config.has("printhost_apikey"));
+    REQUIRE(job.snapshot->input->config.option<ConfigOptionString>("printhost_apikey")->value=="worker-test-secret");
+    REQUIRE(capture_print_config(fixture.print)->full_config.option<ConfigOptionString>("nptop_mode")->value=="safe_hybrid");
+    fixture.print.model().objects.front()->volumes.front()->set_offset(Vec3d(.1,0,0));
+    REQUIRE_FALSE(advance_guarded_job(fixture.print,*job.task,GuardedJobPhase::Planning).task);REQUIRE_FALSE(job.task->is_current());
+}
+TEST_CASE("B13 native source units original bytes placement and bounded limits must agree", "[Nonplanar][B13][JobNative]")
+{
+    NativeJobFixture fixture;const auto job=fixture.begin();auto request=native_job_body_request();const auto limits=native_job_body_limits();
+    request.millimeters_declared=false;REQUIRE(analyze_guarded_native_body(*job.task,request,limits).reason=="NATIVE_JOB_SOURCE_UNITS_UNKNOWN");
+    request.millimeters_declared=true;request.material.plate_origin={.1,0,0};REQUIRE(analyze_guarded_native_body(*job.task,request,limits).reason=="NATIVE_JOB_PHYSICAL_ORIGIN_BINDING");
+    request=native_job_body_request();auto bad=limits;bad.timeout=std::chrono::milliseconds(0);REQUIRE_FALSE(analyze_guarded_native_body(*job.task,request,bad).snapshot);
+    bad=limits;bad.timeout=std::chrono::milliseconds(30001);REQUIRE_FALSE(analyze_guarded_native_body(*job.task,request,bad).snapshot);
+    bad=limits;bad.partition.geometry.max_faces=1;REQUIRE_FALSE(analyze_guarded_native_body(*job.task,request,bad).snapshot);
+    bad=limits;bad.import.timeout=std::chrono::milliseconds(0);REQUIRE_FALSE(analyze_guarded_native_body(*job.task,request,bad).snapshot);
+    bad=limits;bad.import.cancelled=[] {return true;};REQUIRE_FALSE(analyze_guarded_native_body(*job.task,request,bad).snapshot);
+    // The host association alone permits opaque source bytes. The actual worker
+    // must reject a geometrically unrelated, valid original STL with that name.
+    const auto other=boost::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"docs/nonplanar/fixtures/models/flat_block.stl";
+    const auto file=capture_stl_file(other.string(),true,1);REQUIRE(file.source);fixture.resources.back().bytes=file.source->bytes;
+    const auto unrelated=fixture.begin();REQUIRE_FALSE(analyze_guarded_native_body(*unrelated.task,request,limits).snapshot);
+    REQUIRE_FALSE(analyze_guarded_native_body(*job.task,request,limits).snapshot);
+}
+TEST_CASE("B13 native workers latch cancellation and exceptions across nested stages", "[Nonplanar][B13][JobNative]")
+{
+    NativeJobFixture fixture;auto job=fixture.begin();const auto request=native_job_body_request();const auto limits=native_job_body_limits();
+    for(int mode=0;mode<4;++mode){auto bad=limits;size_t calls=0;
+        bad.body.paths.cancelled=[&] {++calls;if(mode==0)return true;if(mode==1)throw std::runtime_error("");if(mode==2)throw 7;return false;};
+        if(mode==3)bad.material.cancelled=[] {return true;};
+        const auto result=analyze_guarded_native_body(*job.task,request,bad);INFO(result.reason);REQUIRE_FALSE(result.snapshot);REQUIRE_FALSE(result.reason.empty());REQUIRE(calls>0);
+    }
+    auto deadline=limits;deadline.timeout=std::chrono::milliseconds(1);
+    deadline.import.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(2));return false;};
+    const auto expired=analyze_guarded_native_body(*job.task,request,deadline);REQUIRE_FALSE(expired.snapshot);REQUIRE(expired.reason=="NATIVE_JOB_DEADLINE");
+    const int rounding=std::fegetround();auto numeric=limits;numeric.cancelled=[] {std::fesetround(FE_UPWARD);return false;};
+    const auto wrong_environment=analyze_guarded_native_body(*job.task,request,numeric);std::fesetround(rounding);
+    REQUIRE_FALSE(wrong_environment.snapshot);REQUIRE_FALSE(wrong_environment.reason.empty());
+    auto bad=limits;GuardedJobResult replacement;bool changed=false;
+    bad.import.cancelled=[&]{if(!changed){changed=true;replacement=fixture.begin();}return false;};
+    REQUIRE_FALSE(analyze_guarded_native_body(*job.task,request,bad).snapshot);REQUIRE(replacement.task->is_current());
+    const auto status=guarded_job_status(fixture.print);REQUIRE(status.snapshot==replacement.snapshot);REQUIRE(status.phase==GuardedJobPhase::Analyzing);
+}
+TEST_CASE("B13 native derived identities omit transport secrets while retaining exact slicing overrides", "[Nonplanar][B13][JobNative]")
+{
+    NativeJobFixture fixture;fixture.config.set_key_value("printhost_apikey",new ConfigOptionString("private-test-value"));
+    fixture.model.objects.front()->config.set_key_value("wall_loops",new ConfigOptionInt(3));
+    fixture.model.objects.front()->volumes.front()->config.set_key_value("printhost_password",new ConfigOptionString("private-volume-value"));
+    fixture.model.objects.front()->volumes.front()->config.set_key_value("private_geometry_control",new ConfigOptionFloat(.123));
+    fixture.print.apply(fixture.model,fixture.config);const auto job=fixture.begin();const auto input=guarded_slicing_input(*job.snapshot);
+    REQUIRE_FALSE(input->config.has("printhost_apikey"));REQUIRE(input->objects.front().config.option<ConfigOptionInt>("wall_loops")->value==3);
+    const auto &volume=input->objects.front().volumes.front();REQUIRE_FALSE(volume.config.has("printhost_password"));REQUIRE(volume.config.option<ConfigOptionFloat>("private_geometry_control")->value==.123);
+    REQUIRE(job.snapshot->input->config.option<ConfigOptionString>("printhost_apikey")->value=="private-test-value");
+    REQUIRE(input->fingerprint==job.snapshot->input_identity.fingerprint);REQUIRE(input->canonical_json==job.snapshot->input_identity.canonical_json);
+    // Unknown slicing fields stay identity inputs. Known credentials never flow
+    // into the body request/public canonical hash through raw config digests.
+    fixture.config.set_key_value("printhost_apikey",new ConfigOptionString("replacement-test-value"));fixture.print.apply(fixture.model,fixture.config);
+    const auto changed=fixture.begin();REQUIRE(changed.snapshot->input_identity.fingerprint==job.snapshot->input_identity.fingerprint);REQUIRE_FALSE(job.task->is_current());
+}
+TEST_CASE("B13 complete native body cap and final bytes retain one current owned lineage", "[Nonplanar][B13][JobNative][JobNativePipeline]")
+{
+    NativeJobFixture fixture;auto job=fixture.begin();const auto body=analyze_guarded_native_body(*job.task,native_job_body_request(),native_job_body_limits());INFO(body.reason);REQUIRE(body.snapshot);
+    const auto request=native_job_hatch_request(*body.snapshot);const auto old=job;job=advance_guarded_job(fixture.print,*job.task,GuardedJobPhase::Planning);REQUIRE(job.task);
+    REQUIRE_FALSE(plan_guarded_native_hatches(*old.task,body.snapshot,request.first,request.second,native_job_hatch_limits()).snapshot);
+    auto refused_limits=native_job_hatch_limits();refused_limits.cancelled=[] {return true;};
+    REQUIRE_FALSE(plan_guarded_native_hatches(*job.task,body.snapshot,request.first,request.second,refused_limits).snapshot);
+    refused_limits=native_job_hatch_limits();refused_limits.passes.projection.is_current=[](uint64_t){return false;};
+    REQUIRE_FALSE(plan_guarded_native_hatches(*job.task,body.snapshot,request.first,request.second,refused_limits).snapshot);
+    refused_limits=native_job_hatch_limits();refused_limits.hatches.volumes.cancelled=[]()->bool{throw 7;};
+    REQUIRE_FALSE(plan_guarded_native_hatches(*job.task,body.snapshot,request.first,request.second,refused_limits).snapshot);
+    NativeJobFixture foreign;auto foreign_job=foreign.begin();foreign_job=advance_guarded_job(foreign.print,*foreign_job.task,GuardedJobPhase::Planning);REQUIRE(foreign_job.task);
+    REQUIRE_FALSE(plan_guarded_native_hatches(*foreign_job.task,body.snapshot,request.first,request.second,native_job_hatch_limits()).snapshot);
+    const auto hatches=plan_guarded_native_hatches(*job.task,body.snapshot,request.first,request.second,native_job_hatch_limits());INFO(hatches.reason);REQUIRE(hatches.snapshot);
+    REQUIRE(hatches.snapshot->native->passes->body_material==body.snapshot->body);
+    bool slope=false;for(const auto &pass:hatches.snapshot->native->hatches->passes)for(const auto &line:pass.lines)slope|=line.start.z()!=line.end.z();REQUIRE(slope);
+    const auto &roi=request.first.footprint;const SceneBox box{{roi.min_x,roi.min_y,4.0},{roi.max_x,roi.max_y,4.7}};
+    FirstHatchLayerLimits limits;limits.beads.timeout=std::chrono::seconds(5);limits.beads.packets.timeout=std::chrono::seconds(5);
+    limits.beads.maximum_gap_error=Length(.0001);limits.beads.packets.maximum_width_error=Length(.002);limits.beads.packets.maximum_volume_error=Volume(.0001);
+    limits.volumes.max_cells=65535;limits.volumes.timeout=std::chrono::seconds(5);
+    const auto cap=plan_first_cap({"",hatches.snapshot->native->hatches},{WidthXY(.4),0,false,Volume(.001)},box,limits);INFO(cap.reason);REQUIRE(cap.snapshot);
+    const auto assembled=reconstruct_first_cap_material(cap);INFO(assembled.reason);REQUIRE(assembled.snapshot);
+    const auto bytes=native_job_candidate(assembled.snapshot->material->sequence);
+    // A different privately built hatch object cannot impersonate this parent,
+    // even when its exact requested geometry coincides.
+    const auto other=plan_guarded_native_hatches(*job.task,body.snapshot,request.first,request.second,native_job_hatch_limits());REQUIRE(other.snapshot);
+    job=advance_guarded_job(fixture.print,*job.task,GuardedJobPhase::Serializing);REQUIRE(job.task);
+    REQUIRE_FALSE(capture_guarded_native_plan(*job.task,other.snapshot,assembled,bytes).snapshot);
+    const auto partial=reconstruct_first_cap_material(cap,0);REQUIRE(partial.snapshot);
+    REQUIRE_FALSE(capture_guarded_native_plan(*job.task,hatches.snapshot,partial,bytes).snapshot);
+    const auto lineage=capture_guarded_native_plan(*job.task,hatches.snapshot,assembled,bytes);INFO(lineage.reason);REQUIRE(lineage.snapshot);
+    REQUIRE(lineage.snapshot->candidate==bytes.snapshot);REQUIRE(lineage.snapshot->assembly==assembled.snapshot);
+    foreign_job=advance_guarded_job(foreign.print,*foreign_job.task,GuardedJobPhase::Serializing);REQUIRE(foreign_job.task);
+    REQUIRE_FALSE(bind_guarded_candidate(foreign.print,*foreign_job.task,bytes,{},lineage.snapshot).snapshot);REQUIRE(job.task->is_current());
+    auto rows=assembled.snapshot->material->sequence->records;rows.back().motion.speed_limit=Speed(rows.back().motion.speed_limit.value()*.5);
+    const auto &original=*assembled.snapshot->material->sequence;const auto changed=capture_material_sequence(rows,original.model,original.revision,original.source_fingerprint);REQUIRE(changed.snapshot);
+    const auto foreign_bytes=native_job_candidate(changed.snapshot);REQUIRE_FALSE(capture_guarded_native_plan(*job.task,hatches.snapshot,assembled,foreign_bytes).snapshot);
+    GuardedJobLimits cancelled;cancelled.cancelled=[] {return true;};REQUIRE_FALSE(capture_guarded_native_plan(*job.task,hatches.snapshot,assembled,bytes,cancelled).snapshot);
+    const auto bound=bind_guarded_candidate(fixture.print,*job.task,bytes,{},lineage.snapshot);INFO(bound.reason);REQUIRE(bound.snapshot);REQUIRE(bound.task);
+    REQUIRE(bound.snapshot->native==lineage.snapshot);REQUIRE(nlohmann::json::parse(bound.snapshot->manifest_json)["schema"]==2);
+    const auto report=verify_guarded_candidate_report(bound,{93,1,5e-9,.0001,1e-9,.02,0});INFO(report.reason);REQUIRE(report.snapshot);
+    REQUIRE(report.snapshot->rates);REQUIRE(report.snapshot->material);REQUIRE(report.snapshot->checks.size()==17);REQUIRE_FALSE(report.snapshot->export_allowed);
+    REQUIRE(report.snapshot->overall_status==nptop_verify::RateStatus::Unknown);
+    const auto source_check=std::find_if(report.snapshot->checks.begin(),report.snapshot->checks.end(),[](const auto &check){return check.id=="source_model_plan_binding";});
+    REQUIRE(source_check->status==nptop_verify::RateStatus::Unknown);REQUIRE(source_check->execution==GuardedCheckExecution::NotRun);
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(directory)/"native-lineage-report.json",report);
+    INFO("native job lineage records=" << report.snapshot->rates->moves.size() << " bytes=" << bytes.snapshot->bytes.size() << " work=" << report.evaluations);
+    REQUIRE(accept_guarded_candidate_report(fixture.print,report.snapshot));REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Unknown);
+    REQUIRE_THROWS_WITH(fixture.print.process(),Catch::Matchers::ContainsSubstring("not implemented"));
 }

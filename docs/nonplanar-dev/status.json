@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 407,
-    "final_ctest_executed": 407,
+    "final_ctest_discovered": 419,
+    "final_ctest_executed": 419,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -1208,7 +1208,20 @@
     "B13_final_report_Linux": "EXACT_NEW_SOURCE_PENDING_AFTER_PUSH_PARENT04A8E410_SUCCESS_C2350792_IN_PROGRESS_OBSERVED15_57_49_UTC",
     "B13_final_report_Windows": "NOT_RUN",
     "B13_final_report_physical": "NOT_RUN_UNCONFIRMED_STANDARD_U1_HEAD_NOZZLE0_4",
-    "B13_final_report_review": "SEPARATE_AUTHOR_CRITICAL_AUDIT_INDEPENDENT_PENDING"
+    "B13_final_report_review": "SEPARATE_AUTHOR_CRITICAL_AUDIT_INDEPENDENT_PENDING",
+    "B13_native_lineage": {
+      "new_native_cases": 5,
+      "focus_cases": 21,
+      "focus_assertions": 666,
+      "ctest": 419,
+      "report_oracle_positives": 5,
+      "report_oracle_refusals": 46,
+      "CLI_cases": 100,
+      "OFF_ZAA": 6,
+      "mandatory_pass_run": 4,
+      "mandatory_unknown_not_run": 13,
+      "guarded_export": "BLOCK"
+    }
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -1226,7 +1239,7 @@
   "ci": "OBSERVED_2026-10-02T10:37:40.193698+00:00_RUNS_36992762074:380967dd:in_progress,36982202676:6b0fc1f9:success,36973396044:69c4b339:success,36968335656:900cc58a:success_CURRENT_FINAL_SOLIDS_PENDING_NEW_RUN",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Bind actual complete B13 mandatory geometry/support/route/volume/filter/compatibility/resource/precondition/software proofs to native source/GUI plate/plan/job/report; current fixed17 registry retains13 UNKNOWN_NOT_RUN domains. Qualify derived CGAL body indexed representation identity boundary (vertex16/17 remap diagnosed; exact hashes not normalized), then Verified and atomic publication/recovery/copied-byte admission for every route. Complete remaining B12 and all B01-B15; export BLOCK. Standard U1 head/.4 nozzle retained; software does not await firmware-version/material-brand answers.",
+  "next_step": "Complete actual B13 mandatory source/GUI plate, compatibility, software/resources, full target/seam/later cap, support/contact/head/scene, route/order/prolog/end/filter/delivery/machine proof products from the owned native lineage. All17 checks remain with13 UNKNOWN_NOT_RUN domains including full source_model_plan_binding; export BLOCK. Qualify indexed CGAL representation drift without hash normalization; then Verified and atomic publication/recovery/copied-byte gate across every route. Continue full B01-B15. Standard U1 head/.4 nozzle retained; no firmware-version/material-brand dependency for software.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -1324,7 +1337,8 @@
     "B12_final_support": "db7dee0bfdc3ef0e0e0a701aeed874a76e89e7c9",
     "B12_run_ray": "04a8e410673443c063ebd4e285c6997916f63232",
     "B13_job_context": "c2350792c4ec86249d7ff6ba07e8cac4188276d8",
-    "B13_final_report": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B13-final-report.md"
+    "B13_final_report": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B13-final-report.md",
+    "B13_native_lineage": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B13-native-lineage.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -1420,5 +1434,14 @@
   "B12_final_support_evidence": "docs/nonplanar-dev/evidence/B12-final-support/source-manifest.json",
   "B12_run_ray_evidence": "docs/nonplanar-dev/evidence/B12-run-ray/source-manifest.json",
   "B13_job_context_evidence": "docs/nonplanar-dev/evidence/B13-job-context/source-manifest.json",
-  "B13_final_report_evidence": "docs/nonplanar-dev/evidence/B13-final-report/source-manifest.json"
+  "B13_final_report_evidence": "docs/nonplanar-dev/evidence/B13-final-report/source-manifest.json",
+  "B13_native_lineage_evidence": {
+    "status": "BOUNDED_OWNED_NATIVE_DEPENDENCY_CHAIN_IMPLEMENTED_FULL_JOB_QUALIFICATION_PENDING",
+    "document": "B13-native-lineage.md",
+    "manifest": "evidence/B13-native-lineage/source-manifest.json",
+    "review": "AUTHOR_CRITICAL_REVIEW_INDEPENDENT_PENDING",
+    "new_source_linux": "PENDING_AFTER_PUSH",
+    "Windows": "NOT_RUN",
+    "physical": "NOT_RUN"
+  }
 }

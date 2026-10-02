@@ -1,0 +1,21 @@
+{
+  "command": [
+    "env",
+    "NPTOP_JOB_EVIDENCE_DIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-lineage/job-fixtures",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+    "[JobArtifact]",
+    "--warn",
+    "NoAssertions",
+    "--reporter",
+    "junit",
+    "--out",
+    "build/nonplanar-evidence/B13-native-lineage/artifact-final.xml",
+    "--reporter",
+    "console::out=-"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-02T17:20:24.732741+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 0.319
+}

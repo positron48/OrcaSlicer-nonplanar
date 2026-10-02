@@ -1,4 +1,5 @@
 #include "JobArtifact.hpp"
+#include "JobNative.hpp"
 #include "Canonical.hpp"
 #include "StlImport.hpp"
 #include "Interval.hpp"
@@ -10,7 +11,7 @@
 
 namespace Slic3r::nptop {
 GuardedCandidateBindingResult bind_guarded_candidate(Print &print,const GuardedJobTask &task,const LinearCandidateResult &requested,
-    const GuardedJobLimits &requested_limits)
+    const GuardedJobLimits &requested_limits,std::shared_ptr<const GuardedNativePlanSnapshot> native)
 {
     GuardedCandidateBindingResult result;
     std::shared_ptr<const GuardedJobTask> active;
@@ -21,6 +22,8 @@ GuardedCandidateBindingResult bind_guarded_candidate(Print &print,const GuardedJ
         const auto stop=[&]{require(!limits.cancelled || !limits.cancelled(),"JOB_BINDING_CANCELLED");require(task.is_current(),"STALE_JOB_BINDING_TASK");require(std::chrono::steady_clock::now()-started<limits.timeout,"JOB_BINDING_DEADLINE");};stop();
         require(task.phase==GuardedJobPhase::Serializing,"JOB_BINDING_REQUIRES_SERIALIZING");
         require(candidate && candidate->plan==plan,"MISSING_JOB_CANDIDATE");
+        if(native)require(native->candidate==candidate && native->hatches->body->job==task.snapshot && native->hatches->body->attempt==task.attempt &&
+            sha256_bytes(native->canonical_json)==native->sha256,"JOB_NATIVE_LINEAGE_BINDING");
         require(!candidate->bytes.empty() && candidate->bytes.size()<=32*1024*1024,"JOB_CANDIDATE_BYTE_LIMIT");
         require(sha256_bytes(candidate->bytes)==candidate->sha256 && candidate->policy.fingerprint()==candidate->policy_fingerprint &&
             plan->policy.fingerprint()==plan->policy_fingerprint,"JOB_CANDIDATE_IDENTITY_MISMATCH");stop();
@@ -32,10 +35,12 @@ GuardedCandidateBindingResult bind_guarded_candidate(Print &print,const GuardedJ
         writer.append(",\"initial_position\":");writer.value(Vec3d(candidate->initial_position.x(),candidate->initial_position.y(),candidate->initial_position.z()));
         writer.append(",\"job_fingerprint\":");writer.value(task.snapshot->fingerprint);writer.append(",\"job_id\":");writer.append(std::to_string(task.snapshot->job_id));
         writer.append(",\"material_journal\":");writer.value(journal);writer.append(",\"motion_policy\":");writer.value(plan->policy_fingerprint);
-        writer.append(",\"schema\":1,\"scope\":\"job_context_candidate_byte_identity_only\",\"serializer_policy\":");writer.value(candidate->policy_fingerprint);
+        if(native){writer.append(",\"native_lineage\":");writer.value(native->sha256);}
+        writer.append(native ? ",\"schema\":2,\"scope\":\"owned_native_body_cap_candidate_lineage_only\",\"serializer_policy\":" :
+            ",\"schema\":1,\"scope\":\"job_context_candidate_byte_identity_only\",\"serializer_policy\":");writer.value(candidate->policy_fingerprint);
         writer.append(",\"source_fingerprint\":");writer.value(ledger.source_fingerprint);writer.append(",\"source_revision\":");writer.append(std::to_string(ledger.revision));writer.append("}");
         auto json=writer.take();auto hash=sha256_bytes(json);stop();
-        auto binding=std::shared_ptr<const GuardedCandidateBindingSnapshot>(new GuardedCandidateBindingSnapshot(task.snapshot,candidate,task.attempt,std::move(json),std::move(hash)));stop();
+        auto binding=std::shared_ptr<const GuardedCandidateBindingSnapshot>(new GuardedCandidateBindingSnapshot(task.snapshot,candidate,task.attempt,std::move(json),std::move(hash),std::move(native)));stop();
         const auto next=advance_guarded_job(print,task,GuardedJobPhase::Verifying);
         require(next.task && next.snapshot==binding->job,"STALE_JOB_CANDIDATE_PUBLICATION");
         active=next.task;require(!limits.cancelled || !limits.cancelled(),"JOB_BINDING_CANCELLED");
@@ -43,7 +48,8 @@ GuardedCandidateBindingResult bind_guarded_candidate(Print &print,const GuardedJ
         require(active->is_current() && status.snapshot==active->snapshot && status.attempt==active->attempt && status.phase==GuardedJobPhase::Verifying,"STALE_JOB_CANDIDATE_PUBLICATION");
         require(std::chrono::steady_clock::now()-started<limits.timeout,"JOB_BINDING_DEADLINE");
         result.snapshot=std::move(binding);result.task=next.task;
-    }catch(const std::exception &e){result.snapshot.reset();result.task.reset();result.reason=e.what();stop_guarded_job(print,active ? *active : task,GuardedJobPhase::Unknown);}
+    }catch(const std::exception &e){result.snapshot.reset();result.task.reset();result.reason=*e.what() ? e.what() : "JOB_BINDING_EXCEPTION_WITHOUT_REASON";stop_guarded_job(print,active ? *active : task,GuardedJobPhase::Unknown);}
+    catch(...){result.snapshot.reset();result.task.reset();result.reason="JOB_BINDING_UNKNOWN_EXCEPTION";stop_guarded_job(print,active ? *active : task,GuardedJobPhase::Unknown);}
     return result;
 }
 
@@ -77,12 +83,16 @@ void check_candidate_manifest(const GuardedCandidateBindingSnapshot &binding)
         sha256_bytes(job.canonical_json)==job.fingerprint,"JOB_REPORT_BYTES_OR_MANIFEST_HASH");
     require(candidate.policy.fingerprint()==candidate.policy_fingerprint && candidate.plan->policy.fingerprint()==candidate.plan->policy_fingerprint,"JOB_REPORT_POLICY_HASH");
     const auto manifest=Json::parse(binding.manifest_json);
-    const std::set<std::string> expected{"attempt","candidate_sha256","candidate_size","initial_position","job_fingerprint","job_id","material_journal",
+    std::set<std::string> expected{"attempt","candidate_sha256","candidate_size","initial_position","job_fingerprint","job_id","material_journal",
         "motion_policy","schema","scope","serializer_policy","source_fingerprint","source_revision"};
+    if(binding.native)expected.insert("native_lineage");
     std::set<std::string> keys;require(manifest.is_object(),"JOB_REPORT_MANIFEST_OBJECT");for(auto i=manifest.begin();i!=manifest.end();++i)keys.insert(i.key());require(keys==expected,"JOB_REPORT_MANIFEST_REGISTRY");
     const auto integer=[&](const char *key,uint64_t value){require(manifest.at(key).is_number_unsigned() && manifest.at(key).get<uint64_t>()==value,"JOB_REPORT_MANIFEST_INTEGER_BINDING");};
-    integer("schema",guarded_candidate_binding_version);integer("attempt",binding.attempt);integer("job_id",job.job_id);integer("candidate_size",candidate.bytes.size());integer("source_revision",ledger.revision);
-    require(manifest.at("scope")=="job_context_candidate_byte_identity_only","JOB_REPORT_MANIFEST_SCOPE");
+    integer("schema",binding.native ? 2 : guarded_candidate_binding_version);integer("attempt",binding.attempt);integer("job_id",job.job_id);integer("candidate_size",candidate.bytes.size());integer("source_revision",ledger.revision);
+    require(manifest.at("scope")==(binding.native ? "owned_native_body_cap_candidate_lineage_only" : "job_context_candidate_byte_identity_only"),"JOB_REPORT_MANIFEST_SCOPE");
+    if(binding.native){const auto &native=*binding.native;
+        require(native.candidate==binding.candidate && native.hatches->body->job==binding.job && native.hatches->body->attempt==binding.attempt &&
+            sha256_bytes(native.canonical_json)==native.sha256 && manifest_hash(manifest.at("native_lineage"))==native.sha256,"JOB_REPORT_NATIVE_LINEAGE");}
     for(const auto &[key,value]:std::vector<std::pair<const char*,std::string>>{{"candidate_sha256",candidate.sha256},{"job_fingerprint",job.fingerprint},
         {"motion_policy",candidate.plan->policy_fingerprint},{"serializer_policy",candidate.policy_fingerprint},{"material_journal",ledger.fingerprint()},{"source_fingerprint",ledger.source_fingerprint}})
         require(manifest_hash(manifest.at(key))==value,"JOB_REPORT_MANIFEST_HASH_BINDING");
@@ -143,7 +153,9 @@ GuardedCandidateReportResult verify_guarded_candidate_report(const GuardedCandid
         const Json validation={{"schema_version","0.1.0-draft"},{"document_example",false},{"job_id",std::to_string(binding->job->job_id)},
             {"job_revision",binding->job->input_revision},{"overall_status",report_status(overall)},{"export_decision",allowed ? "ALLOW" : "BLOCK"},
             {"gcode_sha256",candidate.sha256},{"mandatory_check_ids",guarded_mandatory_checks()},{"checks",entries},
-            {"assumptions",{"Declared simulation identity-transform full-stop rates/material only.","No qualified source-to-plan, measured resources, machine preconditions or full geometry/support/volume/route proofs."}}};
+            {"assumptions",{"Declared simulation identity-transform full-stop rates/material only.",binding->native ?
+                "Protected bounded native body/cap/linear-candidate lineage checked; full source/target, measured resources, machine preconditions and geometry/support/volume/route qualification pending." :
+                "No qualified source-to-plan, measured resources, machine preconditions or full geometry/support/volume/route proofs."}}};
         charge(1);Json replay={{"records",rates.snapshot ? rates.snapshot->moves.size() : 0},{"evaluations",result.evaluations},
             {"rate_status",report_status(rates.status)},{"rate_reason",rates.reason},{"material_status",report_status(material.status)},{"material_reason",material.reason}};
         const Json document={{"schema",guarded_report_version},{"registry_version",guarded_check_registry_version},{"scope","declared_linear_final_byte_replay_incomplete_job"},

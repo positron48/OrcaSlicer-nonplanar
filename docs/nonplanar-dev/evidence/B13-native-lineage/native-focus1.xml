@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="30" hostname="tbd" time="0.107" timestamp="2026-10-02T17:15:37Z">
+    <properties>
+      <property name="random-seed" value="2318393888"/>
+      <property name="filters" value="[JobNative]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B13 native source units original bytes placement and bounded limits must agree" time="0.030" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B13 native body factory owns actual job inputs before callbacks" time="0.000" status="run">
+      <error message="{Unknown expression after the reported line}">
+FAILED:
+  {Unknown expression after the reported line}
+SIGSEGV - Segmentation violation signal
+OWNED_NATIVE_BODY_LINEAGE_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:3224
+      </error>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

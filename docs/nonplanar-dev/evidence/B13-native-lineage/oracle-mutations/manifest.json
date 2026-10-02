@@ -1,0 +1,314 @@
+{
+  "status": "PASS",
+  "positives": 5,
+  "refusals": 46,
+  "scope": "REPORT_IDENTITY_FIXED_REGISTRY_ONLY_NOT_GEOMETRY_AUTHENTICITY_OR_EXPORT",
+  "cases": [
+    {
+      "name": "positive",
+      "exit_code": 0,
+      "expected": "PASS",
+      "record": "oracle-mutations/positive.json"
+    },
+    {
+      "name": "unknown-material",
+      "exit_code": 0,
+      "expected": "PASS",
+      "record": "oracle-mutations/unknown-material.json"
+    },
+    {
+      "name": "failed-material",
+      "exit_code": 0,
+      "expected": "PASS",
+      "record": "oracle-mutations/failed-material.json"
+    },
+    {
+      "name": "native",
+      "exit_code": 0,
+      "expected": "PASS",
+      "record": "oracle-mutations/native.json"
+    },
+    {
+      "name": "native-lineage",
+      "exit_code": 0,
+      "expected": "PASS",
+      "record": "oracle-mutations/native-lineage.json"
+    },
+    {
+      "name": "registry-missing",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/registry-missing.json"
+    },
+    {
+      "name": "registry-duplicate",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/registry-duplicate.json"
+    },
+    {
+      "name": "registry-unknown",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/registry-unknown.json"
+    },
+    {
+      "name": "checks-missing",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/checks-missing.json"
+    },
+    {
+      "name": "checks-duplicate",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/checks-duplicate.json"
+    },
+    {
+      "name": "checks-unknown",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/checks-unknown.json"
+    },
+    {
+      "name": "mandatory-false",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/mandatory-false.json"
+    },
+    {
+      "name": "skipped-pass",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/skipped-pass.json"
+    },
+    {
+      "name": "not-run-pass",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/not-run-pass.json"
+    },
+    {
+      "name": "unimplemented-pass",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/unimplemented-pass.json"
+    },
+    {
+      "name": "missing-reason",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/missing-reason.json"
+    },
+    {
+      "name": "allow",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/allow.json"
+    },
+    {
+      "name": "overall-pass",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/overall-pass.json"
+    },
+    {
+      "name": "example",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/example.json"
+    },
+    {
+      "name": "job-id",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/job-id.json"
+    },
+    {
+      "name": "revision",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/revision.json"
+    },
+    {
+      "name": "attempt",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/attempt.json"
+    },
+    {
+      "name": "job-fingerprint",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/job-fingerprint.json"
+    },
+    {
+      "name": "manifest-fingerprint",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/manifest-fingerprint.json"
+    },
+    {
+      "name": "records",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/records.json"
+    },
+    {
+      "name": "evaluations",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/evaluations.json"
+    },
+    {
+      "name": "registry-version",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/registry-version.json"
+    },
+    {
+      "name": "schema",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/schema.json"
+    },
+    {
+      "name": "scope",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/scope.json"
+    },
+    {
+      "name": "unknown-field",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/unknown-field.json"
+    },
+    {
+      "name": "replay-material-status",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/replay-material-status.json"
+    },
+    {
+      "name": "replay-journal-status",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/replay-journal-status.json"
+    },
+    {
+      "name": "candidate-byte",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/candidate-byte.json"
+    },
+    {
+      "name": "manifest-rehashed",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/manifest-rehashed.json"
+    },
+    {
+      "name": "duplicate-json",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/duplicate-json.json"
+    },
+    {
+      "name": "nonfinite-json",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/nonfinite-json.json"
+    },
+    {
+      "name": "overflow-json",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/overflow-json.json"
+    },
+    {
+      "name": "boolean-revision",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/boolean-revision.json"
+    },
+    {
+      "name": "report-hash",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/report-hash.json"
+    },
+    {
+      "name": "native-source-bytes",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-source-bytes.json"
+    },
+    {
+      "name": "native-source-units",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-source-units.json"
+    },
+    {
+      "name": "native-body-owner",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-body-owner.json"
+    },
+    {
+      "name": "native-body-boolean-attempt",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-body-boolean-attempt.json"
+    },
+    {
+      "name": "native-hatch-parent",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-hatch-parent.json"
+    },
+    {
+      "name": "native-candidate-parent",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-candidate-parent.json"
+    },
+    {
+      "name": "native-planned-position",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-planned-position.json"
+    },
+    {
+      "name": "native-planned-volume",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-planned-volume.json"
+    },
+    {
+      "name": "native-planned-order",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-planned-order.json"
+    },
+    {
+      "name": "native-planned-speed",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-planned-speed.json"
+    },
+    {
+      "name": "native-body-prefix",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-body-prefix.json"
+    },
+    {
+      "name": "native-missing-native",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations/native-missing-native.json"
+    }
+  ]
+}

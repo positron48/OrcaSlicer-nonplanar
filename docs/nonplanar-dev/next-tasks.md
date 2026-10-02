@@ -7,10 +7,21 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B13-native-lineage.md` and ADR-0078 now execute an owned original-byte/native
+placement/partition/body/material -> affine hatches -> selected cap assembly ->
+linear plan -> final bytes chain. Exact parent and complete original body/journal
+binding rejects unrelated or partial plans; only reduced speed/acceleration may
+change rows. Optional manifest v2 retains bounded lineage; all 17 mandatory IDs
+remain and 13 full-job domains UNKNOWN/NOT_RUN block export. Five new native
+cases, focus 21/666, CTest 419/419, independent report 5/46, CLI 100 and strict OFF/ZAA 6
+pass locally. The positive chain has 2197 rows/127589 bytes/report work 144333;
+complete later layers/geometry/routes/resources/software/GUI/qualification remain
+pending. See separate author review and frozen evidence manifest.
+
 `B13-final-report.md` now supplies protected actual manifest/rate/material replay
 and all seventeen mandatory IDs. Seven new report cases pass; combined16/534,
 CTest414/414, four positive/34 refused independent report fixtures, original
-CLI100 and six fresh OFF/ZAA pairs pass. The complete native2218-record report
+CLI 100 and six fresh OFF/ZAA pairs pass. The complete native2218-record report
 has work145632 and remains UNKNOWN/BLOCK with thirteen missing domains. Bind
 actual complete geometry/support/route/volume/filter/compatibility/resource/
 precondition/software proofs to the native job; only then implement Verified
@@ -23,7 +34,7 @@ cross-platform qualification. No report hash or component PASS permits export.
 private current-attempt working phases and atomic worker cancellation, with exact
 candidate/initial-pose/policy/journal manifest binding. Public identities omit
 known credentials/timestamp/log fields; raw edits still cancel attempts. Nine
-cases/264 assertions, CTest407/407, independent hash/tamper oracles, CLI100 and six
+cases/264 assertions, CTest407/407, independent hash/tamper oracles, CLI 100 and six
 final OFF/ZAA pairs pass. Source-to-plan/resource/software qualification, full
 independent report and mandatory checks, Verified and atomic publication across
 every export route are the next B13 invariant. Resolve the recorded CTest versus

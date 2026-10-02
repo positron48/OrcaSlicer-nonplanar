@@ -30,6 +30,10 @@ private:
         resources(std::move(dependencies)),canonical_json(std::move(json)),fingerprint(std::move(hash)){}
     friend GuardedJobResult begin_guarded_job(Print &,uint64_t,const std::vector<JobResource> &,const struct GuardedJobLimits &);
 };
+// Same exact version-1 omission registry as the publishable job identity.
+// Used only by isolated derived workers; original host snapshots remain exact.
+ResolvedConfigSnapshot guarded_slicing_config(const ResolvedConfigSnapshot &);
+std::shared_ptr<const NativeInputSnapshot> guarded_slicing_input(const GuardedJobSnapshot &);
 // Working phases only. No phase or resource identity is a Verified certificate.
 enum class GuardedJobPhase {Editing,Analyzing,Planning,Serializing,Verifying,Failed,Unknown,Cancelled,Stale};
 struct GuardedJobTask {

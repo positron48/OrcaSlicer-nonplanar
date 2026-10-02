@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 214, in <module>
+    main()
+    ~~~~^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 210, in main
+    print(json.dumps(verify(parse(args.input.read_text()))))
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 154, in verify
+    manifest['native_lineage'] = encode(native_lineage(record, job))
+                                        ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 113, in native_lineage
+    before, after = (struct.unpack('>d', bytes.fromhex(row['motion'][index]))[0] for row in [a, b])
+    ^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 113, in <genexpr>
+    before, after = (struct.unpack('>d', bytes.fromhex(row['motion'][index]))[0] for row in [a, b])
+                                         ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+TypeError: fromhex() argument must be str or bytes-like, not list

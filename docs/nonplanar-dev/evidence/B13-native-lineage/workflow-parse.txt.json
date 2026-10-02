@@ -1,0 +1,12 @@
+{
+  "command": [
+    "ruby",
+    "-e",
+    "require \"yaml\"; data=YAML.safe_load(File.read(\".github/workflows/nonplanar-native.yml\")); abort unless data[\"jobs\"].is_a?(Hash); puts \"Workflow YAML parse PASS\""
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-02T17:32:52.332008+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 0.105
+}
