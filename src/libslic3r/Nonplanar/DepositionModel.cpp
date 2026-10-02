@@ -1497,7 +1497,7 @@ bool valid_material_bead_limits(const FirstHatchBeadLimits &limits)
 MaterialBeadData derive_material_bead(const std::shared_ptr<const MaterialPrefixSnapshot> &cursor,const AffineHatchLine &line,
     const RectangleXY &region,double support_plane,double source_numeric,double slice_error,const FirstHatchBeadLimits &limits,
     FirstHatchRoofDomain domain,std::chrono::steady_clock::time_point started,const RoofFloorProvider &raise_floor={},
-    const std::optional<TransitionPolicy> &gap_policy={})
+    const std::optional<TransitionPolicy> &gap_policy={},size_t initial_evaluations=0)
 {
     const auto sequence=cursor->sequence;
     const bool x_axis=line.start.y()==line.end.y(), y_axis=line.start.x()==line.end.x();
@@ -1520,7 +1520,8 @@ MaterialBeadData derive_material_bead(const std::shared_ptr<const MaterialPrefix
     };
     const auto poll=[&] { stop(limits,sequence->revision,started);stop(limits.packets,sequence->revision,started); };poll();
     const auto context=sequence_hash(*sequence,poll);
-    size_t evaluations=0, segments=0;
+    if (initial_evaluations>limits.max_evaluations) reject("FIRST_HATCH_ROOF_WORK_LIMIT");
+    size_t evaluations=initial_evaluations, segments=0;
     const auto evaluate=[&](size_t count=1) {
         if (count>limits.max_evaluations-evaluations) reject("FIRST_HATCH_ROOF_WORK_LIMIT");
         if (evaluations%128==0) poll();evaluations+=count;
@@ -4749,6 +4750,135 @@ FirstCapNextPassResult assess_first_cap_next_pass(const FirstCapMaterialResult &
     catch (const std::exception &e) {return {"FIRST_CAP_NEXT_PASS_NUMERIC_FAILURE: "+std::string(e.what()),{},cells,work};}
 }
 
+FirstCapNormalSpacingResult assess_first_cap_normal_spacing(const FirstCapNextPassResult &requested,const MaterialCoverageLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();size_t cells=0,work=0;
+    try {
+        detail::require_interval_environment();
+        if (!source || !valid_coverage_limits(limits)) reject("INVALID_FIRST_CAP_NORMAL_SPACING");
+        const auto material=source->source;const auto cursor=material->material;const auto &sequence=*cursor->sequence;
+        const auto &stack=*material->source->source->source;const auto &surface=source->cell;const auto &r=surface.footprint;
+        const double minimum=stack.policy.later_normal_minimum.value(),maximum=stack.policy.later_normal_maximum.value();
+        if (minimum<=0 || minimum>=maximum || sequence.records.size()>200000) reject("INVALID_FIRST_CAP_NORMAL_SPACING");
+        const auto poll=[&] {stop(limits,sequence.revision,started);};
+        const auto charge=[&] {poll();if (work>=limits.max_evaluations) reject("FIRST_CAP_NORMAL_WORK_LIMIT");++work;};poll();
+        const double numeric=(Interval(material->source->source->numerical_error_upper_mm)+
+            Interval(sequence.model.numerical_coordinate_error.value())).hi;
+        const auto error=Interval(-source->policy.corner_height_error.value(),source->policy.corner_height_error.value());
+        const auto z00=Interval(surface.z00)+error,z10=Interval(surface.z10)+error,z01=Interval(surface.z01)+error;
+        const auto dx=Interval(r.max_x)-Interval(r.min_x),dy=Interval(r.max_y)-Interval(r.min_y);
+        const auto sx=(z10-z00)/dx,sy=(z01-z00)/dy;
+        const auto length=detail::root(Interval(1)+square(sx)+square(sy));
+        const auto nx=sx/length,ny=sy/length,nz=Interval(1)/length;
+        const auto nominal_sx=(Interval(surface.z10)-Interval(surface.z00))/dx,nominal_sy=(Interval(surface.z01)-Interval(surface.z00))/dy;
+        const auto nominal_length=detail::root(Interval(1)+square(nominal_sx)+square(nominal_sy));
+        const auto direction_error=detail::root(square(nx-nominal_sx/nominal_length)+square(ny-nominal_sy/nominal_length)+
+            square(nz-Interval(1)/nominal_length));
+        // Three affine corner weights have total absolute weight <= 3 on the
+        // rectangle. Include the full normal-direction displacement and all
+        // three coordinate uncertainties in the same spatial error budget.
+        const double spatial_error=(Interval(3)*Interval(numeric)+Interval(3)*absolute(error)+Interval(maximum)*direction_error).hi;
+        if (spatial_error>.05) reject("FIRST_CAP_NORMAL_NUMERIC_BUDGET");
+        const auto ray_box=[&](const RectangleXY &tile,Interval distance) {
+            const Interval x(tile.min_x,tile.max_x),y(tile.min_y,tile.max_y);
+            const auto z=z00+(z10-z00)*(x-Interval(r.min_x))/dx+(z01-z00)*(y-Interval(r.min_y))/dy;
+            const auto uncertainty=Interval(-numeric,numeric);
+            const auto bx=x+nx*distance+uncertainty,by=y+ny*distance+uncertainty,bz=z-nz*distance+uncertainty;
+            for (const auto v : {bx,by,bz}) {coordinate(v.lo);coordinate(v.hi);}
+            return SceneBox{{bx.lo,by.lo,bz.lo},{bx.hi,by.hi,bz.hi}};
+        };
+        const auto complete=ray_box(r,Interval(0,maximum));const auto &roi=stack.final_surface.footprint;
+        if (complete.min.x()<roi.min_x || complete.max.x()>roi.max_x || complete.min.y()<roi.min_y || complete.max.y()>roi.max_y)
+            reject("FIRST_CAP_NORMAL_RAYS_OUTSIDE_ORIGINAL_ROI");
+        const auto initial_near=ray_box(r,Interval(0,minimum));std::vector<size_t> active,complete_active;
+        const size_t end=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence.records.size());
+        for (size_t i=0;i<end;++i) {
+            charge();const auto &row=sequence.records[i];if (!row.bead) continue;
+            const double fraction=i<cursor->completed_records ? 1 : cursor->current_progress;
+            const auto z=Interval(row.motion.start.z())+(Interval(row.motion.end.z())-Interval(row.motion.start.z()))*Interval(fraction);
+            // A nominal stadium cannot rise above its affine axis top. This
+            // only removes impossible near-ray rows; it never proves coverage.
+            if (initial_near.min.z()<=std::max(row.motion.start.z(),z.hi)) active.push_back(i);
+            if (complete.min.z()<=std::max(row.motion.start.z(),z.hi)) complete_active.push_back(i);
+        }
+        std::vector<MaterialRunResult> runs;
+        for (const auto &path : material->runs) {charge();runs.push_back({"",path.material});}
+        const auto remaining=[&](size_t depth) {
+            poll();if (work>=limits.max_evaluations) reject("FIRST_CAP_NORMAL_WORK_LIMIT");
+            if (cells>=limits.max_cells) reject("FIRST_CAP_NORMAL_CELL_LIMIT");
+            auto next=limits;next.max_evaluations-=work;next.max_cells-=cells;
+            // Limit a terminal trial to one partition. Further XY adaptation
+            // belongs to the outer normal proof; the total depth remains bounded.
+            next.max_depth=std::min(size_t(1),limits.max_depth-depth);
+            next.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+            if (!valid_timeout(next.timeout)) reject("MATERIAL_DEADLINE");
+            next.cancelled=[&] {poll();return false;};next.is_current={};return next;
+        };
+        const auto geometric_refusal=[](const std::string &reason) {
+            return reason=="MATERIAL_RUN_UNION_NOT_COVERED" || reason=="MATERIAL_RUN_UNION_UNCOVERED_POINT" ||
+                reason=="MATERIAL_RUN_UNION_DEPTH_LIMIT" || reason=="MATERIAL_RUN_UNION_UNCERTAIN_BOUNDARY";
+        };
+        struct Node {RectangleXY tile;size_t depth;std::vector<size_t> candidates;};
+        std::vector<Node> pending{{r,0,std::move(active)}};std::vector<FirstCapNormalSpacingLeaf> leaves;
+        while (!pending.empty()) {
+            poll();if (cells>=limits.max_cells) reject("FIRST_CAP_NORMAL_CELL_LIMIT");++cells;
+            auto node=std::move(pending.back());pending.pop_back();const auto near=ray_box(node.tile,Interval(0,minimum));
+            std::vector<size_t> uncertain;
+            for (size_t i : node.candidates) {
+                charge();const auto &row=sequence.records[i];const double fraction=i<cursor->completed_records ? 1 : cursor->current_progress;
+                const auto projection=project(row,Interval(near.min.x(),near.max.x()),Interval(near.min.y(),near.max.y()),Interval(near.min.z(),near.max.z()));
+                if (piece(row,sequence.model,projection,fraction,Representation::Nominal)!=MaterialMembership::Outside) uncertain.push_back(i);
+            }
+            const auto terminal=ray_box(node.tile,Interval(maximum));
+            std::shared_ptr<const MaterialRunUnionSnapshot> terminal_runs;std::optional<MaterialCoverageResult> terminal_events;
+            if (uncertain.empty() && node.depth<limits.max_depth) {
+                if (!runs.empty()) {
+                    const auto proof=cover_material_runs_nominal(runs,terminal,remaining(node.depth));work+=proof.evaluations;cells+=proof.cells;poll();
+                    if (proof.snapshot) terminal_runs=proof.snapshot;
+                    else if (!geometric_refusal(proof.reason)) throw Rejection(proof.reason);
+                }
+                if (!terminal_runs) {
+                    auto proof=cover_material(NominalMaterialView{cursor},terminal,remaining(node.depth));work+=proof.evaluations;cells+=proof.cells;poll();
+                    if (proof.status==MaterialCoverageStatus::Covered) terminal_events=std::move(proof);
+                    else if (proof.reason!="MATERIAL_COVERAGE_DEPTH_LIMIT" && proof.reason!="MATERIAL_COVERAGE_UNCERTAIN_BOUNDARY" &&
+                             proof.status!=MaterialCoverageStatus::Uncovered)
+                        throw Rejection(proof.reason);
+                }
+            }
+            if (terminal_runs || terminal_events) {
+                if (terminal_runs && (terminal_runs->source!=cursor || terminal_runs->representation!=Representation::Nominal))
+                    reject("FIRST_CAP_NORMAL_TERMINAL_SOURCE_MISMATCH");
+                if (terminal_events && (terminal_events->source!=cursor || terminal_events->representation!=Representation::Nominal ||
+                    !terminal_events->domain))
+                    reject("FIRST_CAP_NORMAL_TERMINAL_SOURCE_MISMATCH");
+                leaves.push_back({node.tile,near,terminal,std::move(terminal_runs),std::move(terminal_events)});continue;
+            }
+            // A whole ray at one original XY point may refute the universal
+            // requirement. Point/ray diagnostics never accept a footprint.
+            const double px=node.tile.min_x+(node.tile.max_x-node.tile.min_x)/2,py=node.tile.min_y+(node.tile.max_y-node.tile.min_y)/2;
+            const auto ray=ray_box({px,py,px,py},Interval(0,maximum));bool empty=true;
+            for (size_t i : complete_active) {
+                charge();const auto &row=sequence.records[i];const double fraction=i<cursor->completed_records ? 1 : cursor->current_progress;
+                if (piece(row,sequence.model,project(row,Interval(ray.min.x(),ray.max.x()),Interval(ray.min.y(),ray.max.y()),
+                    Interval(ray.min.z(),ray.max.z())),fraction,Representation::Nominal)!=MaterialMembership::Outside) {empty=false;break;}
+            }
+            if (empty) reject("FIRST_CAP_NORMAL_COMPLETE_RAY_EMPTY");
+            if (node.depth+1>=limits.max_depth) reject("FIRST_CAP_NORMAL_SPACING_NOT_CERTIFIED");
+            auto first=node.tile,second=node.tile;
+            const bool x=node.tile.max_x-node.tile.min_x>=node.tile.max_y-node.tile.min_y;
+            const double lo=x ? node.tile.min_x : node.tile.min_y,hi=x ? node.tile.max_x : node.tile.max_y,mid=lo+(hi-lo)/2;
+            if (mid<=lo || mid>=hi) reject("FIRST_CAP_NORMAL_SPACING_UNCERTAIN_BOUNDARY");
+            if (x) {first.max_x=mid;second.min_x=mid;} else {first.max_y=mid;second.min_y=mid;}
+            pending.push_back({second,node.depth+1,uncertain});pending.push_back({first,node.depth+1,std::move(uncertain)});
+        }
+        poll();auto snapshot=std::shared_ptr<const FirstCapNormalSpacingSnapshot>(new FirstCapNormalSpacingSnapshot(source,{minimum,maximum},
+            spatial_error,std::move(leaves),cells,work));poll();
+        return {"WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGINAL_NORMAL_LIMITS",std::move(snapshot),cells,work};
+    } catch (const Rejection &e) {return {e.what(),{},cells,work};}
+    catch (const std::exception &e) {return {"FIRST_CAP_NORMAL_NUMERIC_FAILURE: "+std::string(e.what()),{},cells,work};}
+}
+
 NextCapBeadResult plan_next_cap_bead(const FirstCapNextPassResult &requested,HatchDirection direction,WidthXY width,
     const NextCapBeadLimits &requested_limits)
 {
@@ -4759,6 +4889,13 @@ NextCapBeadResult plan_next_cap_bead(const FirstCapNextPassResult &requested,Hat
             (direction!=HatchDirection::AlongX && direction!=HatchDirection::AlongY)) reject("INVALID_NEXT_CAP_BEAD");
         const auto material=source->source;const auto cursor=material->material;const auto &cell=source->cell;const auto &r=cell.footprint;
         const auto poll=[&] {stop(limits,cursor->sequence->revision,started);stop(limits.packets,cursor->sequence->revision,started);};poll();
+        MaterialCoverageLimits normal_limits;normal_limits.max_evaluations=limits.max_evaluations;normal_limits.max_cells=limits.max_roof_cells;
+        normal_limits.max_depth=limits.max_depth;normal_limits.timeout=std::min(limits.timeout,limits.packets.timeout)-
+            std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+        if (!valid_timeout(normal_limits.timeout)) reject("MATERIAL_DEADLINE");normal_limits.cancelled=[&] {poll();return false;};
+        const auto normal=assess_first_cap_normal_spacing({"",source},normal_limits);poll();
+        if (!normal.snapshot) throw Rejection(normal.reason);
+        cells=normal.cells;
         const bool x=direction==HatchDirection::AlongX;double coordinate_error=0;
         const auto point=[&](Exact px,Exact py) {
             const auto xx=stored_exact(px),yy=stored_exact(py);
@@ -4822,10 +4959,11 @@ NextCapBeadResult plan_next_cap_bead(const FirstCapNextPassResult &requested,Hat
         const double numeric=(Interval(material->source->source->numerical_error_upper_mm)+
             Interval(cursor->sequence->model.numerical_coordinate_error.value())+Interval(source->policy.corner_height_error.value())).hi;
         auto data=derive_material_bead(cursor,line,r,source->support_plane_z_mm,numeric,coordinate_error,limits,
-            FirstHatchRoofDomain::FiniteWidth,started,raise_floor,source->policy);
-        poll();auto snapshot=std::shared_ptr<const NextCapBeadSnapshot>(new NextCapBeadSnapshot(source,a,b,std::move(data.pieces),std::move(data.roof_proofs),
-            data.target,data.delivered,data.maximum_gap,data.maximum_width,data.error,data.numeric,data.segments,cells,data.evaluations));poll();
-        return {"BOUNDED_LATER_FINITE_FOOTPRINT_ACTUAL_ROOF_AND_CONSTANT_FLUX_DOSE_ONLY",std::move(snapshot)};
+            FirstHatchRoofDomain::FiniteWidth,started,raise_floor,source->policy,normal.evaluations);
+        poll();auto snapshot=std::shared_ptr<const NextCapBeadSnapshot>(new NextCapBeadSnapshot(source,normal.snapshot,a,b,std::move(data.pieces),std::move(data.roof_proofs),
+            data.target,data.delivered,data.maximum_gap,data.maximum_width,data.error,data.numeric,
+            data.segments,cells,data.evaluations));poll();
+        return {"BOUNDED_LATER_FINITE_FOOTPRINT_ACTUAL_NORMAL_SPACING_ROOF_AND_CONSTANT_FLUX_DOSE_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) {return {e.what(),{}};}
     catch (const std::exception &e) {return {"NEXT_CAP_BEAD_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
 }

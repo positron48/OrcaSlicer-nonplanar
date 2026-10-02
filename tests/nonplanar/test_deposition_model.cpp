@@ -2093,7 +2093,8 @@ TEST_CASE("B07 sloped loop union matches independent circle-line spill and prese
 }
 
 namespace {
-AffineHatchResult first_cap_fixture(HatchDirection direction,bool sloped=false,double inner_loss=.01,bool future_body=false,double body_progress=0)
+AffineHatchResult first_cap_fixture(HatchDirection direction,bool sloped=false,double inner_loss=.01,bool future_body=false,double body_progress=0,
+    NormalGap normal_minimum=NormalGap(.14),NormalGap normal_maximum=NormalGap(.24),Length corner_error=Length(0))
 {
     std::vector<MaterialRecord> rows{bead(1,0,{0,0,1},{10,0,1},2,.4,.4,BeadSectionKind::Rectangle)};
     if (future_body) {
@@ -2102,7 +2103,7 @@ AffineHatchResult first_cap_fixture(HatchDirection direction,bool sloped=false,d
     }
     const auto body=captured(rows,model(.01,inner_loss));
     const auto state=material_at(body,body_progress>0 ? 0 : 1,body_progress);
-    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),corner_error},VerticalGap(.14),VerticalGap(.24),normal_minimum,normal_maximum,Volume(.001)};
     const bool x=direction==HatchDirection::AlongX;
     const auto stack=plan_affine_pass_stack(state.lower,{{1,-.8,3,.8},1.8,sloped && x ? 1.84 : 1.8,sloped && !x ? 1.84 : 1.8},.9,policy);REQUIRE(stack.snapshot);
     const auto hatches=plan_affine_hatches(stack,{WidthXY(.45),Length(.2),Length(.05),direction});REQUIRE(hatches.snapshot);return hatches;
@@ -3257,9 +3258,93 @@ TEST_CASE("B07 continuous run unions certify every leaf without closing real gap
     limits={};limits.is_current=[](uint64_t) {return false;};REQUIRE(cover_material_runs_nominal(runs,nominal,limits).reason=="STALE_REVISION");
 }
 
+namespace {
+FirstCapNextPassResult normal_spacing_fixture(HatchDirection direction,bool sloped=false,bool shoulder=false,bool future=false,
+    Length corner_error=Length(0),double half_across=.002)
+{
+    const auto hatches=first_cap_fixture(direction,sloped,.01,future,0,
+        NormalGap(shoulder ? .2 : .14),NormalGap(shoulder ? .21 : .24),corner_error);
+    const auto cap=plan_first_cap(hatches,{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
+    const auto material=reconstruct_first_cap_material(cap,shoulder ? std::optional<size_t>{cap.snapshot->paths.front()->pieces.size()} : std::nullopt);
+    REQUIRE(material.snapshot);
+    const auto &path=*cap.snapshot->paths.at(shoulder ? 0 : 4);const bool x=direction==HatchDirection::AlongX;
+    const double cx=(path.path_start.x()+path.path_end.x())/2+(x ? 0 : shoulder ? .17 : 0);
+    const double cy=(path.path_start.y()+path.path_end.y())/2+(x && shoulder ? .17 : 0);
+    const RectangleXY region{cx-(x ? .05 : half_across),cy-(x ? half_across : .05),cx+(x ? .05 : half_across),cy+(x ? half_across : .05)};
+    const auto &previous=cap.snapshot->source->source->surfaces.front().cell;const auto &r=previous.footprint;
+    const auto z=[&](double px,double py) {return previous.z00+(previous.z10-previous.z00)*(px-r.min_x)/(r.max_x-r.min_x)+
+        (previous.z01-previous.z00)*(py-r.min_y)/(r.max_y-r.min_y);};
+    const double plane=std::min(z(region.min_x,region.min_y),z(region.max_x,region.max_y))-(shoulder ? .03 : .015);
+    const auto result=assess_first_cap_next_pass(material,1,region,plane);INFO(result.reason);REQUIRE(result.snapshot);return result;
+}
+}
+
+TEST_CASE("B06 actual normal spacing proves every original affine normal ray against the actual prefix", "[Nonplanar][B06][ActualNormalSpacing]")
+{
+    STATIC_REQUIRE(first_cap_normal_spacing_contract_version==1);
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapNormalSpacingSnapshot>::value);
+    for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) for (bool sloped : {false,true}) {
+        const auto next=normal_spacing_fixture(direction,sloped,false,true);
+        const auto normal=assess_first_cap_normal_spacing(next);INFO(normal.reason);REQUIRE(normal.snapshot);
+        const auto &proof=*normal.snapshot;REQUIRE(proof.source==next.snapshot);REQUIRE_FALSE(proof.leaves.empty());
+        const auto &cell=next.snapshot->cell;const auto &r=cell.footprint;
+        using Q=boost::multiprecision::cpp_bin_float_quad;
+        const Q sx=(Q(cell.z10)-cell.z00)/(Q(r.max_x)-r.min_x),sy=(Q(cell.z01)-cell.z00)/(Q(r.max_y)-r.min_y);
+        const auto &previous=next.snapshot->source->source->source->source->surfaces.front().cell;const auto &p=previous.footprint;
+        const Q previous_z=Q(previous.z00)+(Q(previous.z10)-previous.z00)*(Q(r.min_x)-p.min_x)/(Q(p.max_x)-p.min_x)+
+            (Q(previous.z01)-previous.z00)*(Q(r.min_y)-p.min_y)/(Q(p.max_y)-p.min_y);
+        const Q expected=(Q(cell.z00)-previous_z)/sqrt(1+sx*sx+sy*sy);
+        REQUIRE(Q(proof.normal_spacing_mm.lower)<expected);REQUIRE(Q(proof.normal_spacing_mm.upper)>expected);
+        Q area=0;Q highest=-100;
+        const auto &prefix=*next.snapshot->source->material;
+        for (size_t i=0;i<prefix.completed_records;++i) if (prefix.sequence->records[i].bead) {
+            const auto &m=prefix.sequence->records[i].motion;highest=std::max(highest,std::max(Q(m.start.z()),Q(m.end.z())));
+        }
+        for (const auto &leaf : proof.leaves) {
+            area+=(Q(leaf.footprint.max_x)-leaf.footprint.min_x)*(Q(leaf.footprint.max_y)-leaf.footprint.min_y);
+            REQUIRE(Q(leaf.near_ray_box.min.z())>highest);
+            REQUIRE((leaf.terminal_runs || leaf.terminal_events));
+            if (leaf.terminal_runs) for (const auto &part : leaf.terminal_runs->leaves) {
+                REQUIRE(part.run_index);test::independent_run_box(*leaf.terminal_runs->runs[*part.run_index],part.domain,false);
+            }
+            if (leaf.terminal_events) REQUIRE(leaf.terminal_events->status==MaterialCoverageStatus::Covered);
+        }
+        REQUIRE(area==(Q(r.max_x)-r.min_x)*(Q(r.max_y)-r.min_y));
+    }
+}
+
+TEST_CASE("B06 normal spacing retains real shoulder deficit and refuses uncaptured or exhausted proofs", "[Nonplanar][B06][ActualNormalSpacing]")
+{
+    const auto shoulder=normal_spacing_fixture(HatchDirection::AlongX,false,true);
+    const auto refused=assess_first_cap_normal_spacing(shoulder);INFO(refused.reason);
+    REQUIRE_FALSE(refused.snapshot);REQUIRE(refused.reason=="FIRST_CAP_NORMAL_COMPLETE_RAY_EMPTY");
+    using Q=boost::multiprecision::cpp_bin_float_quad;
+    const auto &r=shoulder.snapshot->cell.footprint;
+    const double px=(r.min_x+r.max_x)/2,py=(r.min_y+r.max_y)/2;
+    const auto roof=test::independent_nominal_roof(*shoulder.snapshot->source->material,px,py);REQUIRE(roof);
+    REQUIRE(Q(shoulder.snapshot->cell.z00)-*roof>Q(.21));
+    const auto tiny=normal_spacing_fixture(HatchDirection::AlongX,true,false,false,Length(.000001),.000001);
+    REQUIRE(assess_first_cap_normal_spacing(tiny).reason=="FIRST_CAP_NORMAL_NUMERIC_BUDGET");
+    const auto next=normal_spacing_fixture(HatchDirection::AlongX,true);const auto owned=next.snapshot;
+    MaterialCoverageLimits limits;limits.max_evaluations=1;REQUIRE_FALSE(assess_first_cap_normal_spacing(next,limits).snapshot);
+    limits={};limits.max_cells=0;REQUIRE_FALSE(assess_first_cap_normal_spacing(next,limits).snapshot);
+    REQUIRE_FALSE(assess_first_cap_normal_spacing({}).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE(assess_first_cap_normal_spacing(next,limits).reason=="CANCELLED");
+    limits={};limits.is_current=[](uint64_t) {return false;};REQUIRE(assess_first_cap_normal_spacing(next,limits).reason=="STALE_REVISION");
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE(assess_first_cap_normal_spacing(next,limits).reason=="MATERIAL_DEADLINE");
+    auto mutable_next=next;limits={};limits.cancelled=[&] {mutable_next={};return false;};
+    const auto captured=assess_first_cap_normal_spacing(mutable_next,limits);REQUIRE(captured.snapshot);REQUIRE(captured.snapshot->source==owned);
+    size_t calls=0;limits={};limits.cancelled=[&] {++calls;return false;};REQUIRE(assess_first_cap_normal_spacing(next,limits).snapshot);
+    const size_t final_call=calls;calls=0;limits.cancelled=[&] {return ++calls==final_call;};REQUIRE_FALSE(assess_first_cap_normal_spacing(next,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounding=assess_first_cap_normal_spacing(next,limits);REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+}
+
 TEST_CASE("B07 next finite-width bead derives its dose from actual cap roof and whole run-union support", "[Nonplanar][B07][NextCapBead]")
 {
     STATIC_REQUIRE_FALSE(std::is_aggregate<NextCapBeadSnapshot>::value);
+    STATIC_REQUIRE(next_cap_bead_contract_version==3);
     for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) for (bool sloped : {false,true}) {
         INFO("next direction=" << int(direction) << " sloped=" << sloped);
         const auto cap=plan_first_cap(first_cap_fixture(direction,sloped),{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
@@ -3278,6 +3363,11 @@ TEST_CASE("B07 next finite-width bead derives its dose from actual cap roof and 
         limits.maximum_gap_error=Length(.0002);limits.packets.maximum_width_error=Length(.002);limits.packets.maximum_volume_error=Volume(.001);
         const auto laid=plan_next_cap_bead(next,direction,WidthXY(.45),limits);INFO(laid.reason);REQUIRE(laid.snapshot);
         REQUIRE(laid.snapshot->source==next.snapshot);REQUIRE_FALSE(laid.snapshot->pieces.empty());REQUIRE_FALSE(laid.snapshot->roof_proofs.empty());
+        REQUIRE(laid.snapshot->normal_spacing);REQUIRE(laid.snapshot->normal_spacing->source==next.snapshot);
+        REQUIRE(laid.snapshot->evaluations>laid.snapshot->normal_spacing->evaluations);
+        REQUIRE(laid.snapshot->cells>=laid.snapshot->normal_spacing->cells);
+        auto normal_only=limits;normal_only.max_evaluations=laid.snapshot->normal_spacing->evaluations;
+        REQUIRE_FALSE(plan_next_cap_bead(next,direction,WidthXY(.45),normal_only).snapshot);
         REQUIRE(laid.snapshot->maximum_gap_error_mm<=limits.maximum_gap_error.value());REQUIRE(laid.snapshot->maximum_width_error_mm<=limits.packets.maximum_width_error.value());
         using Q=boost::multiprecision::cpp_bin_float_quad;Q amount=0;
         for (const auto &packet : laid.snapshot->pieces) {

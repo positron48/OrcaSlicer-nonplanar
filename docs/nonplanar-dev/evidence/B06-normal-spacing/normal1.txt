@@ -1,0 +1,971 @@
+Filters: [ActualNormalSpacing]
+Randomness seeded to: 2472407616
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B06 actual normal spacing proves every original affine normal ray against the
+actual prefix
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3281
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3283: PASSED:
+with message:
+  first_cap_normal_spacing_contract_version==1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3284: PASSED:
+with message:
+  !(std::is_aggregate<FirstCapNormalSpacingSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x714c481f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2108: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x1087f3b40
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2109: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x714c0a920
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3266: PASSED:
+  REQUIRE( cap.snapshot )
+with expansion:
+  0x71506c840
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3268: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x715178000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3277: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x714d40000
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3287: PASSED:
+  REQUIRE( normal.snapshot )
+with expansion:
+  0x714c1ebc0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3288: PASSED:
+  REQUIRE( proof.source==next.snapshot )
+with expansion:
+  0x714d40000 == 0x714d40000
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3288: PASSED:
+  REQUIRE_FALSE( proof.leaves.empty() )
+with expansion:
+  !false
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3296: PASSED:
+  REQUIRE( Q(proof.normal_spacing_mm.lower)<expected )
+with expansion:
+  0.14 < 0.198333
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3296: PASSED:
+  REQUIRE( Q(proof.normal_spacing_mm.upper)>expected )
+with expansion:
+  0.24 > 0.198333
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3304: PASSED:
+  REQUIRE( Q(leaf.near_ray_box.min.z())>highest )
+with expansion:
+  1.26333 > 1.205
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3305: PASSED:
+  REQUIRE( (leaf.terminal_runs || leaf.terminal_events) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3307: PASSED:
+  REQUIRE( part.run_index )
+with expansion:
+  {?}
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.95 > 1.2775
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.05 < 2.7225
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.465398 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.534602 <= 1
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00640469 < 0.0105063
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3311: PASSED:
+  REQUIRE( area==(Q(r.max_x)-r.min_x)*(Q(r.max_y)-r.min_y) )
+with expansion:
+  0.0004 == 0.0004
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x714c481f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2108: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x715170000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2109: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x714c0a8b0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3266: PASSED:
+  REQUIRE( cap.snapshot )
+with expansion:
+  0x71506c840
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3268: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x715178000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3277: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x714d40000
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3287: PASSED:
+  REQUIRE( normal.snapshot )
+with expansion:
+  0x714c1ebc0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3288: PASSED:
+  REQUIRE( proof.source==next.snapshot )
+with expansion:
+  0x714d40000 == 0x714d40000
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3288: PASSED:
+  REQUIRE_FALSE( proof.leaves.empty() )
+with expansion:
+  !false
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3296: PASSED:
+  REQUIRE( Q(proof.normal_spacing_mm.lower)<expected )
+with expansion:
+  0.14 < 0.204959
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3296: PASSED:
+  REQUIRE( Q(proof.normal_spacing_mm.upper)>expected )
+with expansion:
+  0.24 > 0.204959
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3304: PASSED:
+  REQUIRE( Q(leaf.near_ray_box.min.z())>highest )
+with expansion:
+  1.26554 > 1.21945
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3305: PASSED:
+  REQUIRE( (leaf.terminal_runs || leaf.terminal_events) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3307: PASSED:
+  REQUIRE( part.run_index )
+with expansion:
+  {?}
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.95131 > 1.2775
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.05829 < 2.7225
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.730449 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  1 <= 1
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.120903 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.102013 > 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00851787 < 0.0104067
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.322689 <= 1
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.122479 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00827015 < 0.0105062
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3311: PASSED:
+  REQUIRE( area==(Q(r.max_x)-r.min_x)*(Q(r.max_y)-r.min_y) )
+with expansion:
+  0.0004 == 0.0004
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x714c481f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2108: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x715170000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2109: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x714c0a920
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3266: PASSED:
+  REQUIRE( cap.snapshot )
+with expansion:
+  0x71506c840
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3268: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x715178000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3277: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x714d40000
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3287: PASSED:
+  REQUIRE( normal.snapshot )
+with expansion:
+  0x714c1ebc0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3288: PASSED:
+  REQUIRE( proof.source==next.snapshot )
+with expansion:
+  0x714d40000 == 0x714d40000
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3288: PASSED:
+  REQUIRE_FALSE( proof.leaves.empty() )
+with expansion:
+  !false
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3296: PASSED:
+  REQUIRE( Q(proof.normal_spacing_mm.lower)<expected )
+with expansion:
+  0.14 < 0.198333
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3296: PASSED:
+  REQUIRE( Q(proof.normal_spacing_mm.upper)>expected )
+with expansion:
+  0.24 > 0.198333
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3304: PASSED:
+  REQUIRE( Q(leaf.near_ray_box.min.z())>highest )
+with expansion:
+  1.26333 > 1.205
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3305: PASSED:
+  REQUIRE( (leaf.terminal_runs || leaf.terminal_events) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3307: PASSED:
+  REQUIRE( part.run_index )
+with expansion:
+  {?}
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  -0.05 > -0.5225
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  0.05 < 0.5225
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.452153 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.547847 <= 1
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00709376 < 0.0105063
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3311: PASSED:
+  REQUIRE( area==(Q(r.max_x)-r.min_x)*(Q(r.max_y)-r.min_y) )
+with expansion:
+  0.0004 == 0.0004
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x714c481f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2108: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x715170000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2109: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x714c0a8b0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3266: PASSED:
+  REQUIRE( cap.snapshot )
+with expansion:
+  0x71506c840
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3268: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x715178000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3277: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x714d40000
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3287: PASSED:
+  REQUIRE( normal.snapshot )
+with expansion:
+  0x714c1ebc0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3288: PASSED:
+  REQUIRE( proof.source==next.snapshot )
+with expansion:
+  0x714d40000 == 0x714d40000
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3288: PASSED:
+  REQUIRE_FALSE( proof.leaves.empty() )
+with expansion:
+  !false
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3296: PASSED:
+  REQUIRE( Q(proof.normal_spacing_mm.lower)<expected )
+with expansion:
+  0.14 < 0.204936
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3296: PASSED:
+  REQUIRE( Q(proof.normal_spacing_mm.upper)>expected )
+with expansion:
+  0.24 > 0.204936
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3304: PASSED:
+  REQUIRE( Q(leaf.near_ray_box.min.z())>highest )
+with expansion:
+  1.26567 > 1.21806
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3305: PASSED:
+  REQUIRE( (leaf.terminal_runs || leaf.terminal_events) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3307: PASSED:
+  REQUIRE( part.run_index )
+with expansion:
+  {?}
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  -0.0471262 > -0.5225
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  0.0591225 < 0.5225
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.547388 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  1 <= 1
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.121896 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00901798 < 0.0105062
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  -0 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.360775 <= 1
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.121057 >= 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.101911 > 0
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00920785 < 0.0103858
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3311: PASSED:
+  REQUIRE( area==(Q(r.max_x)-r.min_x)*(Q(r.max_y)-r.min_y) )
+with expansion:
+  0.0004 == 0.0004
+with message:
+  WHOLE_AFFINE_NORMAL_RAYS_REACH_ORIGINAL_ACTUAL_NOMINAL_MATERIAL_WITHIN_ORIGI-
+  NAL_NORMAL_LIMITS
+
+-------------------------------------------------------------------------------
+B06 normal spacing retains real shoulder deficit and refuses uncaptured or
+exhausted proofs
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3315
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x714c481f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2108: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x715170000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2109: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x714c0a920
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3266: PASSED:
+  REQUIRE( cap.snapshot )
+with expansion:
+  0x71506c840
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3268: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x7151780a0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3277: FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+with message:
+  MATERIAL_TRANSITION_UNCERTAIN_GAP
+
+===============================================================================
+test cases:   2 |   1 passed | 1 failed
+assertions: 128 | 127 passed | 1 failed
+

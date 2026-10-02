@@ -24,7 +24,10 @@ Next software tasks, in dependency order:
    time is 57.688 -> 39.116 seconds; the native case is 16.780 -> 8.095 seconds.
    All old printed material/native expansions match with the original native seed;
    final CTest is 358/358 and six OFF/ZAA comparisons pass. Observe the new-source
-   Linux result separately; local acceleration does not close the timeout gate.
+   Linux result separately; local acceleration does not close the timeout gate. The
+   a258877a run 36951729301 repeated the same failures. Saved 03:26 UTC observation
+   has optimized parent 458537e8 / 36957287331 in progress; this normal milestone
+   also needs its own observed Linux result.
    The inherited native-fill deadline failures at 84a709ef, 7f71cc98 and 946d3da7 are retained
    as historical evidence. `B07-constant-section-roof.md` is now verified by
    successful run 36847680702 at 2d8bebaa: selected native suites, STL CLI and
@@ -142,7 +145,10 @@ Next software tasks, in dependency order:
    exact old rows, new owned packet origins and selected actual fronts. The
    existing surface/bead factories consume this material for a third pass;
    unlaid future support and backwards/stale batches refuse. Extend to complete
-   later path/layer construction, normal thickness and contact qualification.
+   later path/layer construction and contact qualification. B06-normal-spacing.md
+   now requires a whole-parent actual nominal normal-ray band in next-cap-bead
+   contract 3, with original shared limits and independent rounded-shoulder refusal.
+   Extend this local affine proof to complete curved/stepped later domains.
    Overlapping batches need sequential re-planning on the updated actual prefix.
    Add exact partial-body/partial-before continuation while retaining
    the original packet geometry and actual fraction.

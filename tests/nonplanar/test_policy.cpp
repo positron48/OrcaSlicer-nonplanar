@@ -2564,6 +2564,16 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     NextCapBeadLimits later_limits;later_limits.timeout=std::chrono::seconds(5);later_limits.packets.timeout=std::chrono::seconds(5);
     const auto later=plan_next_cap_bead(wide_next,rx ? HatchDirection::AlongX : HatchDirection::AlongY,WidthXY(.38),later_limits);
     INFO(later.reason);REQUIRE(later.snapshot);REQUIRE(later.snapshot->source==wide_next.snapshot);REQUIRE_FALSE(later.snapshot->roof_proofs.empty());
+    REQUIRE(later.snapshot->normal_spacing);REQUIRE(later.snapshot->normal_spacing->source==wide_next.snapshot);
+    REQUIRE(later.snapshot->normal_spacing->normal_spacing_mm.lower==.14);
+    REQUIRE(later.snapshot->normal_spacing->normal_spacing_mm.upper==.24);
+    for (const auto &part : later.snapshot->normal_spacing->leaves) {
+        REQUIRE(part.terminal_runs);REQUIRE(part.terminal_runs->source==assembled.snapshot->material);
+        for (const auto &leaf : part.terminal_runs->leaves) {
+            REQUIRE(leaf.run_index);test::independent_run_box(*part.terminal_runs->runs[*leaf.run_index],leaf.domain,false);
+        }
+    }
+    INFO("native normal cells=" << later.snapshot->normal_spacing->cells << " work=" << later.snapshot->normal_spacing->evaluations);
     REQUIRE(later.snapshot->maximum_gap_error_mm<=later_limits.maximum_gap_error.value());
     REQUIRE(later.snapshot->maximum_width_error_mm<=later_limits.packets.maximum_width_error.value());
     REQUIRE(later.snapshot->total_volume_error_mm3<=later_limits.packets.maximum_volume_error.value());

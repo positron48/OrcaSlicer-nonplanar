@@ -976,11 +976,44 @@ struct FirstCapNextPassResult {std::string reason;std::shared_ptr<const FirstCap
 FirstCapNextPassResult assess_first_cap_next_pass(const FirstCapMaterialResult &,size_t pass_index,const RectangleXY &,
     double support_plane_z_mm,const MaterialCoverageLimits &limits={});
 
-inline constexpr unsigned next_cap_bead_contract_version=2;
+inline constexpr unsigned first_cap_normal_spacing_contract_version=1;
+struct FirstCapNormalSpacingLeaf {
+    RectangleXY footprint;
+    SceneBox near_ray_box,terminal_box;
+    std::shared_ptr<const MaterialRunUnionSnapshot> terminal_runs;
+    std::optional<MaterialCoverageResult> terminal_events;
+};
+struct FirstCapNormalSpacingResult;
+struct FirstCapNormalSpacingSnapshot {
+    const std::shared_ptr<const FirstCapNextPassSnapshot> source;
+    const ScalarBounds normal_spacing_mm;
+    const double numerical_error_upper_mm;
+    const std::vector<FirstCapNormalSpacingLeaf> leaves;
+    const size_t cells,evaluations;
+private:
+    FirstCapNormalSpacingSnapshot(std::shared_ptr<const FirstCapNextPassSnapshot> s,ScalarBounds spacing,double error,
+        std::vector<FirstCapNormalSpacingLeaf> parts,size_t count,size_t work)
+        : source(std::move(s)),normal_spacing_mm(spacing),numerical_error_upper_mm(error),leaves(std::move(parts)),cells(count),evaluations(work) {}
+    friend FirstCapNormalSpacingResult assess_first_cap_normal_spacing(const FirstCapNextPassResult &,const MaterialCoverageLimits &);
+};
+struct FirstCapNormalSpacingResult {
+    std::string reason;std::shared_ptr<const FirstCapNormalSpacingSnapshot> snapshot;size_t cells=0,evaluations=0;
+};
+// First intersection of every downward normal ray from the original affine
+// later surface with the actual previous nominal material lies in the original
+// stack's normal limits. Whole near-ray boxes are empty; terminal planes are
+// covered by actual nominal run/event unions. Future rows remain absent.
+// Surface/captured-coordinate errors enter the boxes and affine normal field.
+// No vertical-to-normal conversion of an unqualified roof, extrapolated support,
+// calibrated contact/bonding, complete cap fill, tool/job or export permission.
+FirstCapNormalSpacingResult assess_first_cap_normal_spacing(const FirstCapNextPassResult &,const MaterialCoverageLimits &limits={});
+
+inline constexpr unsigned next_cap_bead_contract_version=3;
 struct NextCapBeadLimits : FirstHatchBeadLimits {size_t max_roof_cells=65535;};
 struct NextCapBeadResult;
 struct NextCapBeadSnapshot {
     const std::shared_ptr<const FirstCapNextPassSnapshot> source;
+    const std::shared_ptr<const FirstCapNormalSpacingSnapshot> normal_spacing;
     const PhysicalPosition path_start,path_end;
     const std::vector<FixedWidthBeadPiece> pieces;
     const std::vector<std::shared_ptr<const MaterialRunUnionSnapshot>> roof_proofs;
@@ -988,10 +1021,11 @@ struct NextCapBeadSnapshot {
     const double maximum_gap_error_mm,maximum_width_error_mm,total_volume_error_mm3,numerical_error_upper_mm;
     const size_t roof_segments,cells,evaluations;
 private:
-    NextCapBeadSnapshot(std::shared_ptr<const FirstCapNextPassSnapshot> s,PhysicalPosition start,PhysicalPosition end,
+    NextCapBeadSnapshot(std::shared_ptr<const FirstCapNextPassSnapshot> s,std::shared_ptr<const FirstCapNormalSpacingSnapshot> normal,
+        PhysicalPosition start,PhysicalPosition end,
         std::vector<FixedWidthBeadPiece> packets,std::vector<std::shared_ptr<const MaterialRunUnionSnapshot>> proofs,
         ScalarBounds target,ScalarBounds amount,double gap,double width,double volume,double numeric,size_t roofs,size_t count,size_t work)
-        : source(std::move(s)),path_start(start),path_end(end),pieces(std::move(packets)),roof_proofs(std::move(proofs)),
+        : source(std::move(s)),normal_spacing(std::move(normal)),path_start(start),path_end(end),pieces(std::move(packets)),roof_proofs(std::move(proofs)),
           actual_target_volume_mm3(target),deposited_volume_mm3(amount),maximum_gap_error_mm(gap),maximum_width_error_mm(width),
           total_volume_error_mm3(volume),numerical_error_upper_mm(numeric),roof_segments(roofs),cells(count),evaluations(work) {}
     friend NextCapBeadResult plan_next_cap_bead(const FirstCapNextPassResult &,HatchDirection,WidthXY,const NextCapBeadLimits &);
@@ -1001,7 +1035,8 @@ struct NextCapBeadResult {std::string reason;std::shared_ptr<const NextCapBeadSn
 // complete admitted width must fit the already certified support footprint.
 // Reconstruct the highest actual body/cap nominal roof, using certified nominal
 // run-union planes for lower bounds. Reuse first-bead constant-flux/error solving;
-// retain original later vertical limits. Normal thickness, head/contact/order,
+// retain original later vertical limits and require whole-parent actual normal
+// spacing under the same work/cell/deadline limits. Head/contact/order,
 // complete later fill and material append/replay/export remain separate.
 NextCapBeadResult plan_next_cap_bead(const FirstCapNextPassResult &,HatchDirection,WidthXY,const NextCapBeadLimits &limits={});
 

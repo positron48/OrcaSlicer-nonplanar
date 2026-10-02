@@ -15,6 +15,14 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B06-normal-spacing.md` and ADR-0066 now require an actual nominal normal-ray
+certificate before constructing a local later bead. Whole near-ray emptiness and
+terminal run/event coverage retain original normal limits, source/current/future
+geometry and shared work/cell/deadline budgets. Independent shoulder/tiny-cell
+negatives, both X/Y slopes and the actual native eight-packet bead pass. Final
+material 115/47331, body 14/121123, CTest 360/360 and six fresh OFF/ZAA pairs pass.
+Complete curved/cap/contact/job/replay, independent review and physical work remain.
+
 `B07-exact-union-reuse.md` and ADR-0065 reuse exact local axial/rectangle
 geometry under unchanged budgets after inherited Linux deadline failures. The
 material suite falls from 57.688 to 39.116 seconds; the actual native cap/later

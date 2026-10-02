@@ -1,0 +1,67 @@
+diff --git a/src/libslic3r/Nonplanar/DepositionModel.hpp b/src/libslic3r/Nonplanar/DepositionModel.hpp
+index a06c1ec7..27310b95 100644
+--- a/src/libslic3r/Nonplanar/DepositionModel.hpp
++++ b/src/libslic3r/Nonplanar/DepositionModel.hpp
+@@ -979 +979,33 @@ FirstCapNextPassResult assess_first_cap_next_pass(const FirstCapMaterialResult &
+-inline constexpr unsigned next_cap_bead_contract_version=2;
++inline constexpr unsigned first_cap_normal_spacing_contract_version=1;
++struct FirstCapNormalSpacingLeaf {
++    RectangleXY footprint;
++    SceneBox near_ray_box,terminal_box;
++    std::shared_ptr<const MaterialRunUnionSnapshot> terminal_runs;
++    std::optional<MaterialCoverageResult> terminal_events;
++};
++struct FirstCapNormalSpacingResult;
++struct FirstCapNormalSpacingSnapshot {
++    const std::shared_ptr<const FirstCapNextPassSnapshot> source;
++    const ScalarBounds normal_spacing_mm;
++    const double numerical_error_upper_mm;
++    const std::vector<FirstCapNormalSpacingLeaf> leaves;
++    const size_t cells,evaluations;
++private:
++    FirstCapNormalSpacingSnapshot(std::shared_ptr<const FirstCapNextPassSnapshot> s,ScalarBounds spacing,double error,
++        std::vector<FirstCapNormalSpacingLeaf> parts,size_t count,size_t work)
++        : source(std::move(s)),normal_spacing_mm(spacing),numerical_error_upper_mm(error),leaves(std::move(parts)),cells(count),evaluations(work) {}
++    friend FirstCapNormalSpacingResult assess_first_cap_normal_spacing(const FirstCapNextPassResult &,const MaterialCoverageLimits &);
++};
++struct FirstCapNormalSpacingResult {
++    std::string reason;std::shared_ptr<const FirstCapNormalSpacingSnapshot> snapshot;size_t cells=0,evaluations=0;
++};
++// First intersection of every downward normal ray from the original affine
++// later surface with the actual previous nominal material lies in the original
++// stack's normal limits. Whole near-ray boxes are empty; terminal planes are
++// covered by actual nominal run/event unions. Future rows remain absent.
++// Surface/captured-coordinate errors enter the boxes and affine normal field.
++// No vertical-to-normal conversion of an unqualified roof, extrapolated support,
++// calibrated contact/bonding, complete cap fill, tool/job or export permission.
++FirstCapNormalSpacingResult assess_first_cap_normal_spacing(const FirstCapNextPassResult &,const MaterialCoverageLimits &limits={});
++
++inline constexpr unsigned next_cap_bead_contract_version=3;
+@@ -983,0 +1016 @@ struct NextCapBeadSnapshot {
++    const std::shared_ptr<const FirstCapNormalSpacingSnapshot> normal_spacing;
+@@ -991 +1024,2 @@ private:
+-    NextCapBeadSnapshot(std::shared_ptr<const FirstCapNextPassSnapshot> s,PhysicalPosition start,PhysicalPosition end,
++    NextCapBeadSnapshot(std::shared_ptr<const FirstCapNextPassSnapshot> s,std::shared_ptr<const FirstCapNormalSpacingSnapshot> normal,
++        PhysicalPosition start,PhysicalPosition end,
+@@ -994 +1028 @@ private:
+-        : source(std::move(s)),path_start(start),path_end(end),pieces(std::move(packets)),roof_proofs(std::move(proofs)),
++        : source(std::move(s)),normal_spacing(std::move(normal)),path_start(start),path_end(end),pieces(std::move(packets)),roof_proofs(std::move(proofs)),
+@@ -1004 +1038,2 @@ struct NextCapBeadResult {std::string reason;std::shared_ptr<const NextCapBeadSn
+-// retain original later vertical limits. Normal thickness, head/contact/order,
++// retain original later vertical limits and require whole-parent actual normal
++// spacing under the same work/cell/deadline limits. Head/contact/order,
+diff --git a/tests/nonplanar/test_policy.cpp b/tests/nonplanar/test_policy.cpp
+index eac8ef1b..48b53cc7 100644
+--- a/tests/nonplanar/test_policy.cpp
++++ b/tests/nonplanar/test_policy.cpp
+@@ -2566,0 +2567,10 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
++    REQUIRE(later.snapshot->normal_spacing);REQUIRE(later.snapshot->normal_spacing->source==wide_next.snapshot);
++    REQUIRE(later.snapshot->normal_spacing->normal_spacing_mm.lower==.14);
++    REQUIRE(later.snapshot->normal_spacing->normal_spacing_mm.upper==.24);
++    for (const auto &part : later.snapshot->normal_spacing->leaves) {
++        REQUIRE(part.terminal_runs);REQUIRE(part.terminal_runs->source==assembled.snapshot->material);
++        for (const auto &leaf : part.terminal_runs->leaves) {
++            REQUIRE(leaf.run_index);test::independent_run_box(*part.terminal_runs->runs[*leaf.run_index],leaf.domain,false);
++        }
++    }
++    INFO("native normal cells=" << later.snapshot->normal_spacing->cells << " work=" << later.snapshot->normal_spacing->evaluations);

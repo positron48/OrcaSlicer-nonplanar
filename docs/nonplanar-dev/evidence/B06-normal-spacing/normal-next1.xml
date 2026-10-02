@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="12264" hostname="tbd" time="0.499" timestamp="2026-10-02T03:31:34Z">
+    <properties>
+      <property name="random-seed" value="2044097171"/>
+      <property name="filters" value="[ActualNormalSpacing],[NextCapBead],[NextCapMaterial]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B06 actual normal spacing proves every original affine normal ray against the actual prefix" time="0.048" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 next finite-width bead derives its dose from actual cap roof and whole run-union support" time="0.303" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B06 normal spacing retains real shoulder deficit and refuses uncaptured or exhausted proofs" time="0.021" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 later material refuses stale batches conflicts prefixes and shared publication failures" time="0.016" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 later material preserves the whole prefix and grows ordered bead batches continuously" time="0.000" status="run">
+      <failure message="backwards.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( backwards.snapshot )
+with expansion:
+  0
+0 sloped=1
+EXACT_PREVIOUS_AND_SELECTED_LATER_CAP_MATERIAL_WITH_OWNED_PATH_ORIGINS_ONLY
+EXACT_PREVIOUS_AND_SELECTED_LATER_CAP_MATERIAL_WITH_OWNED_PATH_ORIGINS_ONLY
+LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+BOUNDED_LATER_FINITE_FOOTPRINT_ACTUAL_NORMAL_SPACING_ROOF_AND_CONSTANT_FLUX_DOSE_ONLY
+EXACT_PREVIOUS_AND_SELECTED_LATER_CAP_MATERIAL_WITH_OWNED_PATH_ORIGINS_ONLY
+MATERIAL_RUN_UNION_DEPTH_LIMIT
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3507
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 next bead publication keeps owned inputs and shared numerical budgets" time="0.028" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
