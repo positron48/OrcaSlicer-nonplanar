@@ -2735,6 +2735,18 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE(joined_cover.snapshot->leaves.size()==1);const auto &joined_run=joined_material.snapshot->runs[joined_cover.snapshot->leaves.front().run_index];
     REQUIRE(joined_run.first_record<=interior_record);REQUIRE(joined_run.last_record==new_ledger.records.size()-1);
     nptop_test::check_joined_lower(*joined_cover.snapshot);
+    const auto &target_cell=later.snapshot->source->cell;const auto &target_xy=target_cell.footprint;
+    const double target_gx=(target_cell.z10-target_cell.z00)/(target_xy.max_x-target_xy.min_x),target_gy=(target_cell.z01-target_cell.z00)/(target_xy.max_y-target_xy.min_y);
+    const auto &target_start=rounded_material.snapshot->declarations[joined_run.first_record].start,&target_end=rounded_material.snapshot->declarations[joined_run.first_record].end;
+    const double target_dx=target_end[0]-target_start[0],target_dy=target_end[1]-target_start[1],target_length=std::hypot(target_dx,target_dy);
+    const nptop_verify::LinearRunSupportPolicy final_support_policy{1,95,1,true,false,(-target_dy*target_gx+target_dx*target_gy)/target_length,
+        later.snapshot->source->policy.minimum.value(),later.snapshot->source->policy.maximum.value(),
+        later.snapshot->normal_spacing->normal_spacing_mm.lower,later.snapshot->normal_spacing->normal_spacing_mm.upper};
+    const auto final_support=nptop_verify::verify_linear_run_support(joined_material.snapshot,joined_cover.snapshot->leaves.front().run_index,final_support_policy);
+    REQUIRE(final_support.evaluations>joined_material.evaluations);
+    if(final_support.snapshot){REQUIRE(final_support.snapshot->support->source->completed_records==joined_run.first_record);REQUIRE(final_support.status==nptop_verify::RateStatus::Pass);}
+    else {REQUIRE(final_support.status!=nptop_verify::RateStatus::Pass);if(final_support.status==nptop_verify::RateStatus::Fail)REQUIRE(final_support.witness);else REQUIRE_FALSE(final_support.witness);}
+    std::cout<<"native final support status="<<int(final_support.status)<<" reason="<<final_support.reason<<" work="<<final_support.evaluations<<" cells="<<final_support.cells<<'\n';
     INFO("native joined runs="<<joined_material.snapshot->runs.size()<<" work="<<joined_cover.evaluations<<" cells="<<joined_cover.cells);
     REQUIRE(rounded_material.snapshot->rates->bytes==bytes.bytes);REQUIRE(rounded_material.evaluations>final_rates.evaluations);
     INFO("native final rates work=" << final_rates.evaluations << " ideal duration=[" << final_rates.snapshot->duration.lower << ',' << final_rates.snapshot->duration.upper << ']');
@@ -2782,6 +2794,8 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         rate_file<<rate_document.dump(2)<<'\n';rate_file.close();REQUIRE(rate_file.good());
         boost::nowide::ofstream joined_file((dir/"native-joined-policy.json").string());REQUIRE(joined_file.good());
         joined_file<<nptop_verify::joined_material_document(joined_material.snapshot->policy).dump(2)<<'\n';joined_file.close();REQUIRE(joined_file.good());
+        const auto support_query=nptop_verify::run_support_document({rounded_front.snapshot->completed_records,joined_cover.snapshot->leaves.front().run_index,rounded_front.snapshot->current_progress,final_support_policy});
+        boost::nowide::ofstream support_file((dir/"native-support-query.json").string());REQUIRE(support_file.good());support_file<<support_query.dump(2)<<'\n';support_file.close();REQUIRE(support_file.good());
         for(bool interior:{false,true}){
             const auto &region=interior ? interior_box : laid_box;
             const nlohmann::json query={{"version",1},{"completed_records",rounded_front.snapshot->completed_records},{"current_progress",rounded_front.snapshot->current_progress},

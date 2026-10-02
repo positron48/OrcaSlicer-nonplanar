@@ -21,6 +21,32 @@ inline JoinedMaterialPolicy parse_joined_material_document(const std::string &te
  JoinedMaterialPolicy p;p.version=id("version");p.policy_id=id("policy_id");p.revision=id("revision");
  p.synthetic=j.at("synthetic").get<bool>();p.operator_confirmed_claim=j.at("operator_confirmed_claim").get<bool>();return p;
 }
+struct LinearRunSupportQuery {size_t completed_records,run_index;double current_progress;LinearRunSupportPolicy policy;};
+inline nlohmann::json run_support_document(const LinearRunSupportQuery &q)
+{
+ const auto &p=q.policy;return {{"version",1},{"completed_records",q.completed_records},{"current_progress",q.current_progress},{"run_index",q.run_index},
+  {"policy",{{"version",p.version},{"policy_id",p.policy_id},{"revision",p.revision},{"synthetic",p.synthetic},{"operator_confirmed_claim",p.operator_confirmed_claim},
+   {"cross_slope",p.cross_slope},{"vertical_min",p.vertical_min},{"vertical_max",p.vertical_max},{"normal_min",p.normal_min},{"normal_max",p.normal_max}}}};
+}
+inline LinearRunSupportQuery parse_run_support_document(const std::string &text)
+{
+ using Json=nlohmann::json;std::vector<std::set<std::string>> objects;
+ const auto j=Json::parse(text,[&](int depth,Json::parse_event_t event,Json &v){
+  if(depth>2)throw std::runtime_error("support nesting");if(event==Json::parse_event_t::object_start)objects.emplace_back();
+  if(event==Json::parse_event_t::key && (objects.empty() || !objects.back().insert(v.get<std::string>()).second))throw std::runtime_error("duplicate support key");
+  if(event==Json::parse_event_t::object_end)objects.pop_back();return true;
+ });
+ const auto registry=[](const Json &v,std::initializer_list<const char*> names){std::set<std::string> expected(names.begin(),names.end()),actual;
+  if(!v.is_object())throw std::runtime_error("support object");for(auto i=v.begin();i!=v.end();++i)actual.insert(i.key());if(actual!=expected)throw std::runtime_error("support registry");};
+ const auto id=[](const Json &v){if(!v.is_number_unsigned() || !v.get<uint64_t>())throw std::runtime_error("support id");return v.get<uint64_t>();};
+ registry(j,{"version","completed_records","current_progress","run_index","policy"});if(id(j.at("version"))!=1)throw std::runtime_error("support version");
+ for(const char *key:{"completed_records","run_index"})if(!j.at(key).is_number_unsigned() || j.at(key).get<uint64_t>()>200000)throw std::runtime_error("support count");
+ const auto &v=j.at("policy");registry(v,{"version","policy_id","revision","synthetic","operator_confirmed_claim","cross_slope","vertical_min","vertical_max","normal_min","normal_max"});
+ LinearRunSupportPolicy p;p.version=id(v.at("version"));p.policy_id=id(v.at("policy_id"));p.revision=id(v.at("revision"));
+ p.synthetic=v.at("synthetic").get<bool>();p.operator_confirmed_claim=v.at("operator_confirmed_claim").get<bool>();p.cross_slope=v.at("cross_slope").get<double>();
+ p.vertical_min=v.at("vertical_min").get<double>();p.vertical_max=v.at("vertical_max").get<double>();p.normal_min=v.at("normal_min").get<double>();p.normal_max=v.at("normal_max").get<double>();
+ return {j.at("completed_records").get<size_t>(),j.at("run_index").get<size_t>(),j.at("current_progress").get<double>(),p};
+}
 inline nlohmann::json material_document(const LinearMaterialSnapshot &m)
 {
  const auto &p=m.policy;nlohmann::json policy={{"version",p.version},{"model_id",p.model_id},{"policy_id",p.policy_id},{"revision",p.revision},{"source_revision",p.source_revision},{"source_fingerprint",p.source_fingerprint},{"synthetic",p.synthetic},{"operator_confirmed_claim",p.operator_confirmed_claim},

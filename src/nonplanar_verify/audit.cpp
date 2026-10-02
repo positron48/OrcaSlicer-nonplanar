@@ -73,10 +73,41 @@ CoverQuery parse_cover_query(const std::string &text)
     else if(r=="lower")representation=nptop_verify::MaterialRepresentation::Lower;else throw std::runtime_error("cover representation");
     return {j.at("completed_records").get<size_t>(),j.at("current_progress").get<double>(),representation,{array3("region_min"),array3("region_max")}};
 }
+int audit_run_support(char **argv)
+{
+    using namespace nptop_verify;LinearRateResult rates;LinearMaterialResult material;LinearMaterialPrefixResult prefix;JoinedMaterialResult joined;LinearRunSupportResult support;
+    std::optional<LinearRunSupportQuery> query;const auto deadline=std::chrono::steady_clock::now()+std::chrono::milliseconds(1000);
+    LinearRunSupportLimits limits;limits.cancelled=[&]{return std::chrono::steady_clock::now()>=deadline;};
+    const auto refused=[&](const auto &stage){support.status=stage.status;support.reason=stage.reason;support.evaluations=stage.evaluations;};
+    try{
+        std::array<double,3> initial;const auto rate_policy=parse_policy(read_bounded(argv[2],65536),initial);
+        const auto declaration=parse_material_document(read_bounded(argv[3],32*1024*1024));
+        const auto join_policy=parse_joined_material_document(read_bounded(argv[4],65536));query=parse_run_support_document(read_bounded(argv[5],65536));
+        rates=verify_linear_rates(read_bounded(argv[6],32*1024*1024),initial,rate_policy,limits);refused(rates);
+        if(rates.snapshot){material=reconstruct_linear_material(rates.snapshot,declaration.second,declaration.first,limits);refused(material);}
+        if(material.snapshot){prefix=linear_material_at(material.snapshot,query->completed_records,query->current_progress,limits);refused(prefix);}
+        if(prefix.snapshot){joined=reconstruct_joined_linear_material(prefix.snapshot,join_policy,limits);refused(joined);}
+        if(joined.snapshot)support=verify_linear_run_support(joined.snapshot,query->run_index,query->policy,limits);
+    }catch(const std::exception &){support.status=RateStatus::Unknown;support.snapshot.reset();support.witness.reset();support.reason="BOUNDED_RUN_SUPPORT_INPUT_ERROR";}
+    const char *status=support.status==RateStatus::Pass ? "PASS" : support.status==RateStatus::Fail ? "FAIL" : "UNKNOWN";
+    nlohmann::json report={{"schema_version",1},{"component","final_byte_run_support"},{"component_status",status},{"job_status","UNKNOWN"},{"export_allowed",false},
+        {"scope","actual_complete_run_footprint_synthetic_nominal_gap_bands_and_lower_anchor_only"},{"reason",support.reason},{"work",support.evaluations},{"cells",support.cells},
+        {"support_leaves",support.snapshot ? support.snapshot->leaves.size() : 0},{"witness",nullptr},
+        {"mandatory_checks_pending",{"general_support_contact","head_current_contact","complete_cap_routes","dose_profile_qualification","job_patch_integrity","firmware_transform","machine_state"}}};
+    if(query)report["query"]=run_support_document(*query);
+    if(joined.snapshot){report["records"]=joined.snapshot->source->source->declarations.size();report["runs"]=joined.snapshot->runs.size();}
+    if(support.snapshot){report["support_completed_records"]=support.snapshot->support->source->completed_records;report["query_error_mm"]=support.snapshot->query_error_mm;
+        size_t lower=0,nominal=0;for(const auto &leaf:support.snapshot->leaves){lower+=leaf.lower_anchor->leaves.size();nominal+=leaf.nominal_terminal->leaves.size();}
+        report["lower_anchor_leaves"]=lower;report["nominal_terminal_leaves"]=nominal;}
+    if(support.witness){const auto &w=*support.witness;report["witness"]={{"target_record",w.target_record},{"progress",{w.progress.lower,w.progress.upper}},
+        {"transverse",{w.transverse.lower,w.transverse.upper}},{"region_min",w.region.min},{"region_max",w.region.max}};}
+    std::cout<<report.dump(2)<<'\n';if(!std::cout)return 74;return support.status==RateStatus::Pass ? 0 : support.status==RateStatus::Fail ? 2 : 3;
+}
 }
 int main(int argc,char **argv)
 {
     boost::nowide::args utf8(argc,argv);
+    if(argc==7 && std::string(argv[1])=="--linear-run-support-only")return audit_run_support(argv);
     const bool joined_mode=argc==7 && std::string(argv[1])=="--linear-material-joined-cover-only";
     const bool cover_mode=joined_mode || (argc==6 && std::string(argv[1])=="--linear-material-cover-only");
     const bool material_mode=cover_mode || (argc==5 && std::string(argv[1])=="--linear-material-only");
@@ -85,6 +116,7 @@ int main(int argc,char **argv)
                     "       nonplanar_rate_audit --linear-material-only POLICY.json MATERIAL.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-material-cover-only POLICY.json MATERIAL.json QUERY.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-material-joined-cover-only POLICY.json MATERIAL.json JOIN.json QUERY.json CANDIDATE.txt\n"
+                    "       nonplanar_rate_audit --linear-run-support-only POLICY.json MATERIAL.json JOIN.json SUPPORT_QUERY.json CANDIDATE.txt\n"
                     "Numerical component only; complete job and export remain blocked.\n";return 64;
     }
     nptop_verify::LinearRateResult result;nptop_verify::LinearMaterialResult material;nptop_verify::MaterialCoverResult cover;

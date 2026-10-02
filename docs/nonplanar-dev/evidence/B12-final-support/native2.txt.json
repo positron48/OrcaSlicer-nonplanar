@@ -1,0 +1,21 @@
+{
+  "command": [
+    "env",
+    "NPTOP_CANDIDATE_EVIDENCE_DIR=build/nonplanar-evidence/B12-final-support/native2",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+    "B07 native first footprint derives bounded amounts inside an actual flat bead core",
+    "--warn",
+    "NoAssertions",
+    "--reporter",
+    "junit",
+    "--out",
+    "build/nonplanar-evidence/B12-final-support/native2.xml",
+    "--reporter",
+    "console::out=-"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-02T12:16:32.737075+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 9.249
+}

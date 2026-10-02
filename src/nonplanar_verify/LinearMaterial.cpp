@@ -33,6 +33,32 @@ struct Work {
    limits.timeout.count()<=0 || limits.timeout>std::chrono::seconds(30))unknown("INVALID_FINAL_MATERIAL_LIMITS");
  }
 };
+// Conservative immutable outer boxes only prune complete disjoint queries.
+// Every retained leaf still uses exact sections; no index box grants Inside.
+// Build, sort, traversal and leaf checks all share the original work guards.
+template<class Bounds> MaterialBoundsIndex bounds_index(size_t count,Bounds bounds,Work &work)
+{
+ MaterialBoundsIndex index;index.order.reserve(count);for(size_t i=0;i<count;++i){work();index.order.push_back(i);}
+ const auto build=[&](auto &&self,size_t begin,size_t end)->size_t {
+  work();MaterialBox box=bounds(index.order[begin]);
+  for(size_t i=begin+1;i<end;++i){work();const auto &b=bounds(index.order[i]);for(size_t axis=0;axis<3;++axis){box.coordinate[axis].lower=std::min(box.coordinate[axis].lower,b.coordinate[axis].lower);box.coordinate[axis].upper=std::max(box.coordinate[axis].upper,b.coordinate[axis].upper);}}
+  const size_t node=index.nodes.size();index.nodes.push_back({box,begin,end});
+  if(end-begin>8){size_t axis=0;for(size_t i=1;i<3;++i)if(box.coordinate[i].upper-box.coordinate[i].lower>box.coordinate[axis].upper-box.coordinate[axis].lower)axis=i;
+   std::sort(index.order.begin()+begin,index.order.begin()+end,[&](size_t a,size_t b){work();const auto &va=bounds(a).coordinate[axis],&vb=bounds(b).coordinate[axis];const double ca=va.lower+va.upper,cb=vb.lower+vb.upper;return ca<cb || (ca==cb && a<b);});
+   const size_t middle=begin+(end-begin)/2,left=self(self,begin,middle),right=self(self,middle,end);index.nodes[node].left=left;index.nodes[node].right=right;
+  }return node;
+ };
+ if(count)build(build,0,count);return index;
+}
+template<class Visitor> bool visit_bounds(const MaterialBoundsIndex &index,const MaterialRegion &box,Work &work,Visitor visitor)
+{
+ const auto visit=[&](auto &&self,size_t node)->bool {
+  work();const auto &n=index.nodes[node];for(size_t axis=0;axis<3;++axis)if(box.min[axis]>n.bounds.coordinate[axis].upper || box.max[axis]<n.bounds.coordinate[axis].lower)return false;
+  if(n.left)return self(self,n.left) || self(self,n.right);
+  for(size_t i=n.begin;i<n.end;++i){work();if(visitor(index.order[i]))return true;}return false;
+ };
+ return !index.nodes.empty() && visit(visit,0);
+}
 void validate_policy(const LinearMaterialPolicy &p)
 {
  if(p.version!=linear_material_version || !p.model_id || !p.policy_id || !p.revision || !p.source_revision || !p.synthetic || p.operator_confirmed_claim ||
@@ -158,7 +184,8 @@ LinearMaterialPrefixResult linear_material_at(std::shared_ptr<const LinearMateri
    nominal.lo+=s.nominal.lo*fraction;nominal.hi+=s.nominal.hi*fraction;delivered.lo+=s.delivered.lo*fraction;delivered.hi+=s.delivered.hi*fraction;
   }
   const std::function<void()> poll=[&]{work();};const auto n=bound(nominal,poll),d=bound(delivered,poll);work.stop();
-  result.snapshot=std::shared_ptr<const LinearMaterialPrefixSnapshot>(new LinearMaterialPrefixSnapshot(source,completed,progress,std::move(pieces),n,d,result.evaluations));work.stop();
+  auto order=bounds_index(pieces.size(),[&](size_t i)->const MaterialBox&{return pieces[i].nominal_bounds;},work);work.stop();
+  result.snapshot=std::shared_ptr<const LinearMaterialPrefixSnapshot>(new LinearMaterialPrefixSnapshot(source,completed,progress,std::move(pieces),std::move(order),n,d,result.evaluations));work.stop();
   result.status=RateStatus::Pass;result.reason="ACTUAL_FINAL_BYTE_PREFIX_ONLY_SUPPORT_CONTACT_PENDING";
  }catch(const Refusal &e){result.snapshot.reset();result.status=e.status;result.reason=e.what();}
  catch(const std::exception &e){result.snapshot.reset();result.status=RateStatus::Unknown;result.reason=e.what();}return result;
@@ -220,6 +247,8 @@ struct SolidQuery {
  MaterialMembership piece(const ReplayedBead &b,const MaterialRegion &box)
  {
   work();if(representation==MaterialRepresentation::Lower && b.empty_inner)return MaterialMembership::Outside;
+  if(representation==MaterialRepresentation::Nominal)for(size_t axis=0;axis<3;++axis)
+   if(box.min[axis]>b.nominal_bounds.coordinate[axis].upper || box.max[axis]<b.nominal_bounds.coordinate[axis].lower)return MaterialMembership::Outside;
   const auto &s=data.steps[b.record];const auto &row=prefix.source->declarations[b.record];
   const Q progress=b.record<prefix.completed_records ? Q(1) : binary(prefix.current_progress);
   const auto l=prefix.source->beads[b.record]->xy_length;const Range length{binary(l.lower),binary(l.upper)};
@@ -252,11 +281,10 @@ struct SolidQuery {
  MaterialBoxResult query(const MaterialRegion &box)
  {
   MaterialBoxResult result;bool uncertain=false;
-  for(const auto &b:prefix.pieces) {
-   const auto membership=piece(b,box);
-   if(membership==MaterialMembership::Inside){result.membership=membership;result.event_id=b.event_id;return result;}
-   uncertain|=membership==MaterialMembership::Unknown;
-  }
+  const auto inspect=[&](size_t i){const auto &b=prefix.pieces[i];const auto membership=piece(b,box);
+   if(membership==MaterialMembership::Inside){result.membership=membership;result.event_id=b.event_id;return true;}uncertain|=membership==MaterialMembership::Unknown;return false;};
+  if(representation==MaterialRepresentation::Nominal){if(visit_bounds(prefix.nominal_index,box,work,inspect))return result;}
+  else for(size_t i=0;i<prefix.pieces.size();++i)if(inspect(i))return result;
   result.membership=uncertain ? MaterialMembership::Unknown : MaterialMembership::Outside;return result;
  }
 };
@@ -364,7 +392,9 @@ struct JoinedQuery {
  std::pair<MaterialMembership,size_t> query(const MaterialRegion &box)
  {
   bool uncertain=false;
-  for(size_t i=0;i<source.runs.size();++i){const auto membership=run(source.runs[i],box);if(membership==MaterialMembership::Inside)return {membership,i};uncertain|=membership==MaterialMembership::Unknown;}
+  size_t owner=0;
+  const bool inside=visit_bounds(source.outer_index,box,work,[&](size_t i){const auto membership=run(source.runs[i],box);if(membership==MaterialMembership::Inside){owner=i;return true;}uncertain|=membership==MaterialMembership::Unknown;return false;});
+  if(inside)return {MaterialMembership::Inside,owner};
   return {uncertain ? MaterialMembership::Unknown : MaterialMembership::Outside,0};
  }
 };
@@ -388,7 +418,8 @@ JoinedMaterialResult reconstruct_joined_linear_material(std::shared_ptr<const Li
    if(!continuous)runs.push_back({b.record,b.record,b.upper_bounds});
    else {auto &run=runs.back();run.last_record=b.record;for(size_t axis=0;axis<3;++axis){work();auto &v=run.outer_bounds.coordinate[axis];v.lower=std::min(v.lower,b.upper_bounds.coordinate[axis].lower);v.upper=std::max(v.upper,b.upper_bounds.coordinate[axis].upper);}}
   }
-  work.stop();result.snapshot=std::shared_ptr<const JoinedMaterialSnapshot>(new JoinedMaterialSnapshot(prefix,policy,std::move(runs),result.evaluations));work.stop();
+  auto order=bounds_index(runs.size(),[&](size_t i)->const MaterialBox&{return runs[i].outer_bounds;},work);
+  work.stop();result.snapshot=std::shared_ptr<const JoinedMaterialSnapshot>(new JoinedMaterialSnapshot(prefix,policy,std::move(runs),std::move(order),result.evaluations));work.stop();
   result.status=RateStatus::Pass;result.reason="DECLARED_FINAL_BYTE_CONTINUOUS_RUNS_RECONSTRUCTED_PHYSICAL_BONDING_UNQUALIFIED";
  }catch(const std::exception &e){result.snapshot.reset();result.reason=e.what();}return result;
 }
@@ -414,5 +445,128 @@ JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<con
   work.stop();result.snapshot=std::shared_ptr<const JoinedMaterialCoverSnapshot>(new JoinedMaterialCoverSnapshot(source,region,std::move(leaves),result.evaluations,result.cells));work.stop();
   result.status=RateStatus::Pass;result.reason="WHOLE_REGION_IN_DECLARED_FINAL_JOINED_LOWER_UNION";
  }catch(const std::exception &e){result.snapshot.reset();result.uncovered.reset();result.status=RateStatus::Unknown;result.reason=e.what();}return result;
+}
+namespace {
+Range range_add(Range a,Range b){return {a.lo+b.lo,a.hi+b.hi};}
+Range range_multiply(Range a,Range b)
+{const Q values[]={a.lo*b.lo,a.lo*b.hi,a.hi*b.lo,a.hi*b.hi};return {*std::min_element(values,values+4),*std::max_element(values,values+4)};}
+Range range_scale(Range a,const Q &v){return range_multiply(a,{v,v});}
+Range range_divide(Range a,Range b){if(b.lo<=0)unknown("UNCERTAIN_FINAL_SUPPORT_DIVISOR");return range_multiply(a,{1/b.hi,1/b.lo});}
+Range range_square(Range a){const auto v=absolute(a);return {square(v.lo),square(v.hi)};}
+Range range_root(Range a,Work &work)
+{const auto lo=enclose(a.lo,true,[&]{work();}),hi=enclose(a.hi,true,[&]{work();});return {binary(lo.lower),binary(hi.upper)};}
+struct SupportRay {
+ const ExactStep &step;const MaterialDeclaration &row;Range length;Q cross,error;Work &work;
+ std::array<Range,3> direction;
+ SupportRay(const ExactStep &s,const MaterialDeclaration &r,RateBounds l,double slope,const Q &e,Work &w)
+  :step(s),row(r),length{binary(l.lower),binary(l.upper)},cross(binary(slope)),error(e),work(w)
+ {
+  const auto x=range_divide({s.end[0]-s.start[0],s.end[0]-s.start[0]},length),y=range_divide({s.end[1]-s.start[1],s.end[1]-s.start[1]},length);
+  const auto parallel=range_divide({s.end[2]-s.start[2],s.end[2]-s.start[2]},length);
+  const auto gx=range_add(range_multiply(parallel,x),range_scale(y,-cross)),gy=range_add(range_multiply(parallel,y),range_scale(x,cross));
+  const auto normal=range_root(range_add(range_add(range_square(gx),range_square(gy)),{1,1}),work);
+  direction={range_divide(gx,normal),range_divide(gy,normal),range_divide({-1,-1},normal)};
+ }
+ MaterialRegion box(Range t,Range transverse,Range distance,bool normal)
+ {
+  work();std::array<Range,3> p;
+  const auto x=range_divide({step.end[0]-step.start[0],step.end[0]-step.start[0]},length),y=range_divide({step.end[1]-step.start[1],step.end[1]-step.start[1]},length);
+  p[0]=range_add(affine(step.start[0],step.end[0]-step.start[0],t),range_multiply(range_scale(y,-1),transverse));
+  p[1]=range_add(affine(step.start[1],step.end[1]-step.start[1],t),range_multiply(x,transverse));
+  p[2]=range_add(affine(step.start[2],step.end[2]-step.start[2],t),range_scale(transverse,cross));
+  MaterialRegion result;
+  for(size_t axis=0;axis<3;++axis){work();p[axis]=range_add(p[axis],range_multiply(normal ? direction[axis] : Range{axis==2 ? Q(-1) : Q(0),axis==2 ? Q(-1) : Q(0)},distance));
+   const auto v=bound({p[axis].lo-error,p[axis].hi+error},[&]{work();});result.min[axis]=v.lower;result.max[axis]=v.upper;}
+  valid_region(result);return result;
+ }
+ bool footprint(SolidQuery &target,const Q &t,const Q &transverse,const Q &progress)
+ {
+  const Q h=binary(row.section->gap_begin_mm)+(binary(row.section->gap_end_mm)-binary(row.section->gap_begin_mm))*t;
+  const Q middle=step.start[2]+(step.end[2]-step.start[2])*t-h/2;
+  return target.section(step,row,length,progress,{{t,t},{transverse,transverse},{middle,middle}},false)==MaterialMembership::Inside;
+ }
+};
+bool support_boundary(const std::string &reason)
+{return reason=="FINAL_MATERIAL_COVER_DEPTH_LIMIT" || reason=="FINAL_MATERIAL_COVER_UNSPLITTABLE_BOUNDARY" || reason=="FINAL_JOINED_COVER_DEPTH_LIMIT" || reason=="FINAL_JOINED_COVER_UNSPLITTABLE_BOUNDARY";}
+}
+LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot> source,size_t run_index,
+ const LinearRunSupportPolicy &requested,const LinearRunSupportLimits &requested_limits)
+{
+ const auto policy=requested;const auto limits=requested_limits;LinearRunSupportResult result;
+ try {
+  if(!source || run_index>=source->runs.size())unknown("MISSING_FINAL_SUPPORT_RUN");
+  result.evaluations=std::max(source->evaluations,limits.initial_evaluations);
+  if(policy.version!=linear_run_support_version || !policy.policy_id || !policy.revision || !policy.synthetic || policy.operator_confirmed_claim ||
+   !std::isfinite(policy.cross_slope) || std::abs(policy.cross_slope)>10)unknown("UNSUPPORTED_FINAL_SUPPORT_POLICY");
+  for(double v:{policy.vertical_min,policy.vertical_max,policy.normal_min,policy.normal_max})if(!std::isfinite(v) || v<=0 || v>1000)unknown("INVALID_FINAL_SUPPORT_BAND");
+  if(policy.vertical_min>=policy.vertical_max || policy.normal_min>=policy.normal_max || !limits.max_cells || limits.max_cells>1000000 || !limits.max_depth || limits.max_depth>64)unknown("INVALID_FINAL_SUPPORT_LIMITS_OR_BAND");
+  auto guarded=limits;const auto deadline=std::chrono::steady_clock::now()+limits.timeout;
+  guarded.cancelled=[policy,current=limits.is_support_current,cancel=limits.cancelled,deadline]{
+   if(current && !current(policy.policy_id,policy.revision))unknown("STALE_FINAL_SUPPORT_POLICY");
+   if(std::chrono::steady_clock::now()>=deadline)unknown("FINAL_RUN_SUPPORT_DEADLINE");return cancel && cancel();
+  };
+  const auto &prefix=*source->source;const auto &material=*prefix.source;const auto &run=source->runs[run_index];
+  Work work{*material.rates,material.policy,joined_limits(source->policy,guarded),result.evaluations};work.admission();work();
+  // Each of two local along/normal XY coordinate allowances contributes at
+  // most two world-axis allowances. Keep this query error separate from all
+  // original material growth/loss. Bound the full query allowance cube's
+  // Euclidean radius, not only one coordinate, by the original .05 mm cap.
+  const Q error=4*binary(material.policy.numerical_coordinate_error_mm);if(3*square(error)>square(binary(.05)))unknown("FINAL_SUPPORT_SPATIAL_ERROR_BUDGET");
+  const double stored_error=enclose(error,false,[&]{work();}).upper;
+  auto old_limits=joined_limits(source->policy,guarded);old_limits.initial_evaluations=result.evaluations;
+  const auto before=linear_material_at(prefix.source,run.first_record,0,old_limits);result.evaluations=before.evaluations;work.stop();if(!before.snapshot)unknown(before.reason.c_str());
+  guarded.initial_evaluations=result.evaluations;
+  const auto old=reconstruct_joined_linear_material(before.snapshot,source->policy,guarded);result.evaluations=old.evaluations;work.stop();if(!old.snapshot)unknown(old.reason.c_str());
+  const auto &data=*material.exact;SolidQuery nominal{*before.snapshot,data,MaterialRepresentation::Nominal,work},target{prefix,data,MaterialRepresentation::Nominal,work};
+  JoinedQuery lower{*old.snapshot,data,work};std::vector<LinearRunSupportLeaf> leaves;
+  struct Node{double lo,hi,near,far;unsigned depth;};
+  for(const auto &piece:prefix.pieces){work();if(piece.record<run.first_record || piece.record>run.last_record)continue;
+   const size_t record=piece.record;const Q progress=record<prefix.completed_records ? Q(1) : binary(prefix.current_progress);
+   const double last=record<prefix.completed_records ? 1 : prefix.current_progress,half=piece.nominal_width.upper/2;
+   SupportRay ray{data.steps[record],material.declarations[record],material.beads[record]->xy_length,policy.cross_slope,error,work};
+   std::deque<Node> pending{{0,last,-half,half,0}};
+   while(!pending.empty()){
+    work();if(++result.cells>limits.max_cells)unknown("FINAL_RUN_SUPPORT_CELL_LIMIT");const auto node=pending.front();pending.pop_front();
+    const Range t{binary(node.lo),binary(node.hi)},n{binary(node.near),binary(node.far)};
+    const auto vn=ray.box(t,n,{0,binary(policy.vertical_min)},false),vt=ray.box(t,n,{binary(policy.vertical_max),binary(policy.vertical_max)},false);
+    const auto nn=ray.box(t,n,{0,binary(policy.normal_min)},true),nt=ray.box(t,n,{binary(policy.normal_max),binary(policy.normal_max)},true);
+    const bool clear=nominal.query(vn).membership==MaterialMembership::Outside && nominal.query(nn).membership==MaterialMembership::Outside;
+    if(clear && node.depth<limits.max_depth){
+     guarded.initial_evaluations=result.evaluations;if(result.cells>=limits.max_cells)unknown("FINAL_RUN_SUPPORT_CELL_LIMIT");guarded.max_cells=limits.max_cells-result.cells;guarded.max_depth=1;
+     const auto anchor=cover_joined_linear_material_lower(old.snapshot,vt,guarded);result.evaluations=anchor.evaluations;result.cells+=anchor.cells;work.stop();
+     if(anchor.status==RateStatus::Unknown && !support_boundary(anchor.reason))unknown(anchor.reason.c_str());
+     if(anchor.snapshot){
+      MaterialCoverLimits terminal=guarded;terminal.initial_evaluations=result.evaluations;if(result.cells>=limits.max_cells)unknown("FINAL_RUN_SUPPORT_CELL_LIMIT");terminal.max_cells=limits.max_cells-result.cells;
+      const auto occupied=cover_linear_material(before.snapshot,nt,MaterialRepresentation::Nominal,terminal);result.evaluations=occupied.evaluations;result.cells+=occupied.cells;work.stop();
+      if(occupied.status==RateStatus::Unknown && !support_boundary(occupied.reason))unknown(occupied.reason.c_str());
+      if(occupied.snapshot){leaves.push_back({record,{node.lo,node.hi},{node.near,node.far},vn,vt,nn,nt,anchor.snapshot,occupied.snapshot});continue;}
+     }
+    }
+    // Refute only an actual target-footprint point. Enclosed complete rays or
+    // endpoints must be Outside/Inside; sampled positives never accept a tile.
+    const Q mid=(t.lo+t.hi)/2,transverse=(n.lo+n.hi)/2;
+    if(ray.footprint(target,mid,transverse,progress)){
+     const Range point_t{mid,mid},point_n{transverse,transverse};std::optional<MaterialRegion> witness;const char *reason=nullptr;
+     for(bool normal:{false,true}){
+      const double minimum=normal ? policy.normal_min : policy.vertical_min,maximum=normal ? policy.normal_max : policy.vertical_max;
+      const auto near=ray.box(point_t,point_n,{binary(minimum)/2,binary(minimum)/2},normal);
+      if(nominal.query(near).membership==MaterialMembership::Inside){witness=near;reason=normal ? "FINAL_RUN_NORMAL_GAP_TOO_SMALL" : "FINAL_RUN_VERTICAL_GAP_TOO_SMALL";break;}
+      const auto far=ray.box(point_t,point_n,{0,binary(maximum)},normal);
+      if(nominal.query(far).membership==MaterialMembership::Outside){witness=far;reason=normal ? "FINAL_RUN_NORMAL_NO_HIT_IN_BAND" : "FINAL_RUN_VERTICAL_NO_HIT_IN_BAND";break;}
+     }
+     if(!witness){const auto anchor=ray.box(point_t,point_n,{binary(policy.vertical_max),binary(policy.vertical_max)},false);
+      if(lower.query(anchor).first==MaterialMembership::Outside){witness=anchor;reason="FINAL_RUN_DECLARED_LOWER_ANCHOR_MISSING";}}
+     if(witness){const auto mt=signed_bound(mid,[&]{work();}),mn=signed_bound(transverse,[&]{work();});work.stop();
+      result.witness=LinearRunSupportWitness{record,mt,mn,*witness};work.stop();result.status=RateStatus::Fail;result.reason=reason;return result;}
+    }
+    if(node.depth>=limits.max_depth)unknown("FINAL_RUN_SUPPORT_DEPTH_LIMIT");
+    const bool along=(t.hi-t.lo)*ray.length.hi>=n.hi-n.lo;const double middle=along ? node.lo+(node.hi-node.lo)/2 : node.near+(node.far-node.near)/2;
+    if(along ? !(middle>node.lo && middle<node.hi) : !(middle>node.near && middle<node.far))unknown("FINAL_RUN_SUPPORT_UNSPLITTABLE_BOUNDARY");
+    auto a=node,b=node;a.depth=b.depth=node.depth+1;if(along){a.hi=middle;b.lo=middle;}else{a.far=middle;b.near=middle;}pending.push_back(a);pending.push_back(b);
+   }
+  }
+  work.stop();result.snapshot=std::shared_ptr<const LinearRunSupportSnapshot>(new LinearRunSupportSnapshot(source,old.snapshot,run_index,policy,stored_error,std::move(leaves),result.evaluations,result.cells));work.stop();
+  result.status=RateStatus::Pass;result.reason="WHOLE_ACTUAL_RUN_FOOTPRINT_NOMINAL_GAP_BANDS_AND_DECLARED_LOWER_ANCHORS";
+ }catch(const std::exception &e){result.status=RateStatus::Unknown;result.snapshot.reset();result.witness.reset();result.reason=e.what();}return result;
 }
 }

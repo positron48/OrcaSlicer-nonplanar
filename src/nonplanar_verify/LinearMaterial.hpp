@@ -24,6 +24,8 @@ struct LinearMaterialLimits : LinearRateLimits {
  std::function<bool(uint64_t,uint64_t)> is_rate_current;
 };
 struct MaterialBox {std::array<RateBounds,3> coordinate;}; // Outer bounds, never a solid/coverage proof.
+struct MaterialBoundsNode {MaterialBox bounds;size_t begin,end,left=0,right=0;};
+struct MaterialBoundsIndex {std::vector<size_t> order;std::vector<MaterialBoundsNode> nodes;};
 struct ReplayedBead {
  size_t record;uint64_t event_id;
  std::array<RateBounds,3> start,end;
@@ -46,6 +48,9 @@ struct JoinedMaterialLimits;
 struct JoinedMaterialResult;
 struct JoinedMaterialSnapshot;
 struct JoinedMaterialCoverResult;
+struct LinearRunSupportPolicy;
+struct LinearRunSupportLimits;
+struct LinearRunSupportResult;
 struct LinearMaterialSnapshot {
  const std::shared_ptr<const LinearRateSnapshot> rates;
  const std::vector<MaterialDeclaration> declarations;
@@ -65,6 +70,7 @@ private:
  friend MaterialCoverResult cover_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,MaterialRepresentation,const MaterialCoverLimits&);
  friend JoinedMaterialResult reconstruct_joined_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const JoinedMaterialPolicy&,const JoinedMaterialLimits&);
  friend JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,const MaterialRegion&,const JoinedMaterialLimits&);
+ friend LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot>,size_t,const LinearRunSupportPolicy&,const LinearRunSupportLimits&);
 };
 struct LinearMaterialResult {
  RateStatus status=RateStatus::Unknown;std::string reason;std::optional<size_t> record;
@@ -74,10 +80,11 @@ struct LinearMaterialPrefixSnapshot {
  const std::shared_ptr<const LinearMaterialSnapshot> source;
  const size_t completed_records;const double current_progress;
  const std::vector<ReplayedBead> pieces;
+ const MaterialBoundsIndex nominal_index; // protected broad-phase only, never filled material
  const RateBounds nominal_volume,delivered_volume;const size_t evaluations;
 private:
- LinearMaterialPrefixSnapshot(std::shared_ptr<const LinearMaterialSnapshot> s,size_t n,double t,std::vector<ReplayedBead> b,RateBounds v,RateBounds delivered,size_t work)
-  :source(std::move(s)),completed_records(n),current_progress(t),pieces(std::move(b)),nominal_volume(v),delivered_volume(delivered),evaluations(work){}
+ LinearMaterialPrefixSnapshot(std::shared_ptr<const LinearMaterialSnapshot> s,size_t n,double t,std::vector<ReplayedBead> b,MaterialBoundsIndex index,RateBounds v,RateBounds delivered,size_t work)
+  :source(std::move(s)),completed_records(n),current_progress(t),pieces(std::move(b)),nominal_index(std::move(index)),nominal_volume(v),delivered_volume(delivered),evaluations(work){}
  friend LinearMaterialPrefixResult linear_material_at(std::shared_ptr<const LinearMaterialSnapshot>,size_t,double,const LinearMaterialLimits&);
 };
 struct LinearMaterialPrefixResult {
@@ -130,10 +137,10 @@ struct JoinedMaterialLimits : MaterialCoverLimits {std::function<bool(uint64_t,u
 struct JoinedMaterialRun {size_t first_record,last_record;MaterialBox outer_bounds;};
 struct JoinedMaterialSnapshot {
  const std::shared_ptr<const LinearMaterialPrefixSnapshot> source;
- const JoinedMaterialPolicy policy;const std::vector<JoinedMaterialRun> runs;const size_t evaluations;
+ const JoinedMaterialPolicy policy;const std::vector<JoinedMaterialRun> runs;const MaterialBoundsIndex outer_index;const size_t evaluations;
 private:
- JoinedMaterialSnapshot(std::shared_ptr<const LinearMaterialPrefixSnapshot> s,JoinedMaterialPolicy p,std::vector<JoinedMaterialRun> r,size_t work)
-  :source(std::move(s)),policy(p),runs(std::move(r)),evaluations(work){}
+ JoinedMaterialSnapshot(std::shared_ptr<const LinearMaterialPrefixSnapshot> s,JoinedMaterialPolicy p,std::vector<JoinedMaterialRun> r,MaterialBoundsIndex index,size_t work)
+  :source(std::move(s)),policy(p),runs(std::move(r)),outer_index(std::move(index)),evaluations(work){}
  friend JoinedMaterialResult reconstruct_joined_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const JoinedMaterialPolicy&,const JoinedMaterialLimits&);
 };
 struct JoinedMaterialResult {
@@ -162,4 +169,38 @@ JoinedMaterialResult reconstruct_joined_linear_material(std::shared_ptr<const Li
 // Actual run ends/front stay strict; no future or pressure material appears.
 JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,
  const MaterialRegion&,const JoinedMaterialLimits &limits={});
+inline constexpr unsigned linear_run_support_version=1;
+struct LinearRunSupportPolicy {
+ uint64_t version=1,policy_id=0,revision=0;bool synthetic=true,operator_confirmed_claim=false;
+ double cross_slope=0,vertical_min=0,vertical_max=0,normal_min=0,normal_max=0;
+};
+struct LinearRunSupportLimits : JoinedMaterialLimits {std::function<bool(uint64_t,uint64_t)> is_support_current;};
+struct LinearRunSupportLeaf {
+ size_t target_record;RateBounds progress,transverse;
+ MaterialRegion vertical_near,vertical_terminal,normal_near,normal_terminal;
+ std::shared_ptr<const JoinedMaterialCoverSnapshot> lower_anchor;
+ std::shared_ptr<const MaterialCoverSnapshot> nominal_terminal;
+};
+struct LinearRunSupportResult;
+struct LinearRunSupportSnapshot {
+ const std::shared_ptr<const JoinedMaterialSnapshot> source,support;
+ const size_t run_index;const LinearRunSupportPolicy policy;
+ const double query_error_mm;const std::vector<LinearRunSupportLeaf> leaves;
+ const size_t evaluations,cells;
+private:
+ LinearRunSupportSnapshot(std::shared_ptr<const JoinedMaterialSnapshot> s,std::shared_ptr<const JoinedMaterialSnapshot> old,size_t index,
+  LinearRunSupportPolicy p,double error,std::vector<LinearRunSupportLeaf> parts,size_t work,size_t count)
+  :source(std::move(s)),support(std::move(old)),run_index(index),policy(p),query_error_mm(error),leaves(std::move(parts)),evaluations(work),cells(count){}
+ friend LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot>,size_t,const LinearRunSupportPolicy&,const LinearRunSupportLimits&);
+};
+struct LinearRunSupportWitness {size_t target_record;RateBounds progress,transverse;MaterialRegion region;};
+struct LinearRunSupportResult {
+ RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const LinearRunSupportSnapshot> snapshot;
+ std::optional<LinearRunSupportWitness> witness;size_t evaluations=0,cells=0;
+};
+// Whole actual run footprint and explicit affine carrier slope. Only material
+// before this run can supply nominal gap bands and a guaranteed Lower anchor.
+// All source/errors/bands/limits remain; this is not contact/export approval.
+LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot>,size_t,
+ const LinearRunSupportPolicy&,const LinearRunSupportLimits &limits={});
 }

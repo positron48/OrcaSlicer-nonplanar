@@ -1,0 +1,54 @@
+[1/2] Building CXX object tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_final_material.cpp.o
+FAILED: [code=1] tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_final_material.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_ASIO_DISABLE_KQUEUE -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"6b0fc1f9\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_final_material.cpp.o -MF tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_final_material.cpp.o.d -o tests/fff_print/CMakeFiles/fff_print_tests.dir/Release/__/nonplanar/test_final_material.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:467:72: error: no member named 'set' in namespace 'std'
+  467 |   REQUIRE(index.nodes.size()>1);REQUIRE(index.order.size()==size);std::set<size_t> unique(index.order.begin(),index.order.end());REQUIRE(unique.size()==size);
+      |                                                                        ^~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:467:76: error: unexpected type name 'size_t': expected expression
+  467 |   REQUIRE(index.nodes.size()>1);REQUIRE(index.order.size()==size);std::set<size_t> unique(index.order.begin(),index.order.end());REQUIRE(unique.size()==size);
+      |                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:467:138: error: use of undeclared identifier 'unique'
+  467 |   REQUIRE(index.nodes.size()>1);REQUIRE(index.order.size()==size);std::set<size_t> unique(index.order.begin(),index.order.end());REQUIRE(unique.size()==size);
+      |                                                                                                                                          ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:467:138: error: use of undeclared identifier 'unique'
+  467 |   REQUIRE(index.nodes.size()>1);REQUIRE(index.order.size()==size);std::set<size_t> unique(index.order.begin(),index.order.end());REQUIRE(unique.size()==size);
+      |                                                                                                                                          ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:467:138: error: use of undeclared identifier 'unique'; did you mean 'std::unique'?
+  467 |   REQUIRE(index.nodes.size()>1);REQUIRE(index.order.size()==size);std::set<size_t> unique(index.order.begin(),index.order.end());REQUIRE(unique.size()==size);
+      |                                                                                                                                          ^~~~~~
+      |                                                                                                                                          std::unique
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/unique.h:52:1: note: 'std::unique' declared here
+   52 | unique(_ForwardIterator __first, _ForwardIterator __last, _BinaryPredicate __pred) {
+      | ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:467:138: error: reference to overloaded function could not be resolved; did you mean to call it?
+  467 |   REQUIRE(index.nodes.size()>1);REQUIRE(index.order.size()==size);std::set<size_t> unique(index.order.begin(),index.order.end());REQUIRE(unique.size()==size);
+      |                                                                                                                                          ^~~~~~
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__algorithm/unique.h:52:1: note: possible target for call
+   52 | unique(_ForwardIterator __first, _ForwardIterator __last, _BinaryPredicate __pred) {
+      | ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:468:12: error: use of undeclared identifier 'unique'
+  468 |   REQUIRE(*unique.begin()==0);REQUIRE(*unique.rbegin()==size-1);
+      |            ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:468:12: error: use of undeclared identifier 'unique'
+  468 |   REQUIRE(*unique.begin()==0);REQUIRE(*unique.rbegin()==size-1);
+      |            ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:468:12: error: use of undeclared identifier 'unique'
+  468 |   REQUIRE(*unique.begin()==0);REQUIRE(*unique.rbegin()==size-1);
+      |            ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:468:40: error: use of undeclared identifier 'unique'
+  468 |   REQUIRE(*unique.begin()==0);REQUIRE(*unique.rbegin()==size-1);
+      |                                        ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:468:40: error: use of undeclared identifier 'unique'
+  468 |   REQUIRE(*unique.begin()==0);REQUIRE(*unique.rbegin()==size-1);
+      |                                        ^~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:468:40: error: use of undeclared identifier 'unique'
+  468 |   REQUIRE(*unique.begin()==0);REQUIRE(*unique.rbegin()==size-1);
+      |                                        ^~~~~~
+12 errors generated.
+ninja: build stopped: subcommand failed.

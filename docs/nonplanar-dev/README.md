@@ -15,6 +15,15 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B12-final-support.md` and ADR-0074 independently check complete actual run
+footprints against the pre-run prefix for nominal vertical/normal gaps and
+separate joined Lower anchors. Four new cases are included in 37/13211 combined
+assertions, CTest 396/396, 79 CLI cases and six fresh OFF/ZAA pairs. Analytical
+full/partial/rotated footprints pass; the complete native eight-packet footprint
+remains UNKNOWN at the original work/deadline budgets, without a partial proof.
+Native interior PASS and per-event/front refusals remain; original losses/errors/
+bands are unchanged. Full B01–B15 stays IN_PROGRESS, export BLOCK.
+
 `B12-final-joined.md` and ADR-0073 independently reconstruct exact continuous
 final-byte runs under a separate explicit synthetic envelope. Four new cases
 are included in 33/2888 combined assertions, CTest 392/392, 59 CLI cases and six

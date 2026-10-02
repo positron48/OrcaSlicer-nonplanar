@@ -7,15 +7,18 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
-`B12-final-joined.md` now independently reconstructs exact continuous final-byte
-runs with a separate explicit synthetic common-run envelope and unchanged loss/
-error. Whole deeper native interior Lower cover passes; original per-event
-Lower and actual external-front refusals remain. Validate actual support gaps
-and complete head/contact/cap/exit coverage, general curved/zigzag run geometry,
-qualified delivery/transforms and B13 job/plate/resources/software/bytes/report
-binding. The original complete B09 exit remains UNKNOWN at unchanged margins.
-User-declared standard U1 head/.4 mm nozzle is retained. Continue software without
-firmware-version/material-brand questions; physical bounds remain separate.
+`B12-final-support.md` independently checks actual complete run footprints
+against only the pre-run prefix, with original nominal vertical/normal bands and
+separate Lower anchors. Analytical full/partial/rotated coverage passes. The
+complete native eight-packet half-prefix remains UNKNOWN at original work/
+deadline budgets; no partial certificate or witness is published. Complete that
+coverage without shrinking the footprint/error/loss/band or bypassing exhaustion.
+Protected broad-phase indexes only prune disjoint regions. Native deeper joined
+interior PASS and per-event/external-front refusals remain. General curved/
+stepped head/contact/cap/exit coverage, qualified delivery/transforms and B13
+job/plate/resources/software/bytes/report binding remain. The original complete
+B09 exit stays UNKNOWN at unchanged margins. Standard U1 head/.4 mm nozzle is
+retained; software does not await firmware-version/material-brand questions.
 
 1. Complete B01 compatibility and whole-job provenance, then B02 original STL
    and actual GUI/native plate binding. `B01-inputs.md` now retains exact source

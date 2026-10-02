@@ -1,0 +1,1354 @@
+[
+  {
+    "evidence": "baseline-capture-final.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/capture_baselines.py",
+      "--label",
+      "B12-final-support-baselines"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:33:48.493974+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 1.87
+  },
+  {
+    "evidence": "baseline-compare-final.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/compare_baselines.py",
+      "tests/nonplanar/data/stock-v2.4.2",
+      "build/nonplanar-evidence/B12-final-support-baselines",
+      "--allow-nptop-off-default"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:36:33.344965+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.234
+  },
+  {
+    "evidence": "build-final.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "nonplanar_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:30:34.250913+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.156
+  },
+  {
+    "evidence": "build-final2.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "nonplanar_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:42:26.701211+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 6.117
+  },
+  {
+    "evidence": "build1.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "nonplanar_rate_audit",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T11:59:21.760953+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 6.166
+  },
+  {
+    "evidence": "build2.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "nonplanar_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:05:09.485134+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 28.493
+  },
+  {
+    "evidence": "build3.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "nonplanar_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:09:49.455829+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 19.058
+  },
+  {
+    "evidence": "build4.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "nonplanar_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:14:12.787029+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 4.879
+  },
+  {
+    "evidence": "build5.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "nonplanar_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:21:40.375985+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 28.215
+  },
+  {
+    "evidence": "build6.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "nonplanar_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:24:17.534527+00:00",
+    "status": "COMPLETED",
+    "exit_code": 1,
+    "elapsed_seconds": 1.161
+  },
+  {
+    "evidence": "build7.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "nonplanar_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:26:13.669333+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 28.19
+  },
+  {
+    "evidence": "build8.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "nonplanar_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:27:27.429562+00:00",
+    "status": "COMPLETED",
+    "exit_code": 1,
+    "elapsed_seconds": 1.326
+  },
+  {
+    "evidence": "build9.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "nonplanar_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:28:29.138404+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 4.724
+  },
+  {
+    "evidence": "compiler.txt.json",
+    "command": [
+      "/usr/bin/c++",
+      "--version"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:46.807649+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.016
+  },
+  {
+    "evidence": "cover-cli-final.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_material_cover_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B12-final-support/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/cover-cli-final"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:03.345879+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.139
+  },
+  {
+    "evidence": "cover-cli-final2.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_material_cover_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B12-final-support/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/cover-cli-final2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:43:31.492064+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.475
+  },
+  {
+    "evidence": "ctest-final.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/ctest_gate.py",
+      "--build-dir",
+      "build/arm64",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/ctest-final",
+      "--target-executable",
+      "nonplanar_tests",
+      "--target-executable",
+      "fff_print_tests"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:45.647948+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 96.452
+  },
+  {
+    "evidence": "ctest-final2.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/ctest_gate.py",
+      "--build-dir",
+      "build/arm64",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/ctest-final2",
+      "--target-executable",
+      "nonplanar_tests",
+      "--target-executable",
+      "fff_print_tests"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:44:23.029209+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 96.271
+  },
+  {
+    "evidence": "diff-check-final.txt.json",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:38:46.229204+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.061
+  },
+  {
+    "evidence": "diff-check-final2.txt.json",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:48:20.130487+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.064
+  },
+  {
+    "evidence": "focus-final.txt.json",
+    "command": [
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "[A06],[A08Stress],[LinearCandidate],[FullStopReplay],[FinalByteRates],[FinalByteMaterial],[FinalByteSolids],[FinalByteJoined],[FinalByteSupport]",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/focus-final.xml",
+      "--reporter",
+      "console::out=-"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:30:35.674222+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.136
+  },
+  {
+    "evidence": "focus-final2.txt.json",
+    "command": [
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "[A06],[A08Stress],[LinearCandidate],[FullStopReplay],[FinalByteRates],[FinalByteMaterial],[FinalByteSolids],[FinalByteJoined],[FinalByteSupport]",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/focus-final2.xml",
+      "--reporter",
+      "console::out=-"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:43:31.309414+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.121
+  },
+  {
+    "evidence": "focus1.txt.json",
+    "command": [
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "[A06],[A08Stress],[LinearCandidate],[FullStopReplay],[FinalByteRates],[FinalByteMaterial],[FinalByteSolids],[FinalByteJoined],[FinalByteSupport]",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/focus1.xml"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:12:19.808742+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.114
+  },
+  {
+    "evidence": "focus2.txt.json",
+    "command": [
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "[A06],[A08Stress],[LinearCandidate],[FullStopReplay],[FinalByteRates],[FinalByteMaterial],[FinalByteSolids],[FinalByteJoined],[FinalByteSupport]",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/focus2.xml"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:16:32.737075+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.115
+  },
+  {
+    "evidence": "focus3.txt.json",
+    "command": [
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "[A06],[A08Stress],[LinearCandidate],[FullStopReplay],[FinalByteRates],[FinalByteMaterial],[FinalByteSolids],[FinalByteJoined],[FinalByteSupport]",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/focus3.xml",
+      "--reporter",
+      "console::out=-"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:22:48.009345+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.112
+  },
+  {
+    "evidence": "focus4.txt.json",
+    "command": [
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "[A06],[A08Stress],[LinearCandidate],[FullStopReplay],[FinalByteRates],[FinalByteMaterial],[FinalByteSolids],[FinalByteJoined],[FinalByteSupport]",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/focus4.xml",
+      "--reporter",
+      "console::out=-"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:28:44.135174+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.119
+  },
+  {
+    "evidence": "headless-link-command.txt.json",
+    "command": [
+      "ninja",
+      "-C",
+      "build/arm64",
+      "-f",
+      "build-Release.ninja",
+      "-t",
+      "commands",
+      "src/nonplanar_verify/Release/nonplanar_rate_audit"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:46.807590+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.016
+  },
+  {
+    "evidence": "input-binding-final.txt.json",
+    "command": [
+      "python3",
+      "build/nonplanar-evidence/B12-final-support/input-binding-check.py"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:34:37.212325+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.046
+  },
+  {
+    "evidence": "input-binding-final2.txt.json",
+    "command": [
+      "python3",
+      "build/nonplanar-evidence/B12-final-support/input-binding-check2.py"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:45:19.747190+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.049
+  },
+  {
+    "evidence": "joined-cli-final.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_joined_material_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B12-final-support/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/joined-cli-final"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:03.345760+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.163
+  },
+  {
+    "evidence": "joined-cli-final2.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_joined_material_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B12-final-support/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/joined-cli-final2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:43:31.491152+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.496
+  },
+  {
+    "evidence": "material-cli-final.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_material_audit_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/material-cli-final"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:03.192015+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.094
+  },
+  {
+    "evidence": "material-cli-final2.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_material_audit_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/material-cli-final2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:43:31.491424+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.429
+  },
+  {
+    "evidence": "native-cli-front.txt.json",
+    "command": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-material-joined-cover-only",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-rate-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-material.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-joined-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-joined-front-query.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-full-stop.candidate.txt"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:44.773575+00:00",
+    "status": "COMPLETED",
+    "exit_code": 2,
+    "elapsed_seconds": 0.376
+  },
+  {
+    "evidence": "native-cli-front2.txt.json",
+    "command": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-material-joined-cover-only",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-rate-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-material.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-joined-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-joined-front-query.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-full-stop.candidate.txt"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:44:22.139343+00:00",
+    "status": "COMPLETED",
+    "exit_code": 2,
+    "elapsed_seconds": 0.387
+  },
+  {
+    "evidence": "native-cli-interior.txt.json",
+    "command": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-material-joined-cover-only",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-rate-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-material.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-joined-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-joined-interior-query.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-full-stop.candidate.txt"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:22.210581+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.388
+  },
+  {
+    "evidence": "native-cli-interior2.txt.json",
+    "command": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-material-joined-cover-only",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-rate-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-material.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-joined-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-joined-interior-query.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-full-stop.candidate.txt"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:44:21.699605+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.389
+  },
+  {
+    "evidence": "native-cli-per-event-lower.txt.json",
+    "command": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-material-cover-only",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-rate-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-material.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-joined-interior-query.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-full-stop.candidate.txt"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:45.200933+00:00",
+    "status": "COMPLETED",
+    "exit_code": 2,
+    "elapsed_seconds": 0.394
+  },
+  {
+    "evidence": "native-cli-per-event-lower2.txt.json",
+    "command": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-material-cover-only",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-rate-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-material.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-joined-interior-query.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-full-stop.candidate.txt"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:44:22.576354+00:00",
+    "status": "COMPLETED",
+    "exit_code": 2,
+    "elapsed_seconds": 0.401
+  },
+  {
+    "evidence": "native-cli-support.txt.json",
+    "command": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-run-support-only",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-rate-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-material.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-joined-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-support-query.json",
+      "build/nonplanar-evidence/B12-final-support/native-final/native-full-stop.candidate.txt"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:21.146302+00:00",
+    "status": "COMPLETED",
+    "exit_code": 3,
+    "elapsed_seconds": 1.005
+  },
+  {
+    "evidence": "native-cli-support2.txt.json",
+    "command": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-run-support-only",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-rate-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-material.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-joined-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-support-query.json",
+      "build/nonplanar-evidence/B12-final-support/native-final2/native-full-stop.candidate.txt"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:44:20.632873+00:00",
+    "status": "COMPLETED",
+    "exit_code": 3,
+    "elapsed_seconds": 1.005
+  },
+  {
+    "evidence": "native-cli3.txt.json",
+    "command": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-run-support-only",
+      "build/nonplanar-evidence/B12-final-support/native3/native-rate-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native3/native-material.json",
+      "build/nonplanar-evidence/B12-final-support/native3/native-joined-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native3/native-support-query.json",
+      "build/nonplanar-evidence/B12-final-support/native3/native-full-stop.candidate.txt"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:24:16.380697+00:00",
+    "status": "COMPLETED",
+    "exit_code": 3,
+    "elapsed_seconds": 1.37
+  },
+  {
+    "evidence": "native-cli4.txt.json",
+    "command": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-run-support-only",
+      "build/nonplanar-evidence/B12-final-support/native4/native-rate-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native4/native-material.json",
+      "build/nonplanar-evidence/B12-final-support/native4/native-joined-policy.json",
+      "build/nonplanar-evidence/B12-final-support/native4/native-support-query.json",
+      "build/nonplanar-evidence/B12-final-support/native4/native-full-stop.candidate.txt"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:28:44.304471+00:00",
+    "status": "COMPLETED",
+    "exit_code": 3,
+    "elapsed_seconds": 1.298
+  },
+  {
+    "evidence": "native-final.txt.json",
+    "command": [
+      "env",
+      "NPTOP_CANDIDATE_EVIDENCE_DIR=build/nonplanar-evidence/B12-final-support/native-final",
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "B07 native first footprint derives bounded amounts inside an actual flat bead core",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/native-final.xml",
+      "--reporter",
+      "console::out=-"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:30:34.505423+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 9.917
+  },
+  {
+    "evidence": "native-final2.txt.json",
+    "command": [
+      "env",
+      "NPTOP_CANDIDATE_EVIDENCE_DIR=build/nonplanar-evidence/B12-final-support/native-final2",
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "B07 native first footprint derives bounded amounts inside an actual flat bead core",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/native-final2.xml",
+      "--reporter",
+      "console::out=-"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:43:30.177837+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 9.571
+  },
+  {
+    "evidence": "native1.txt.json",
+    "command": [
+      "env",
+      "NPTOP_CANDIDATE_EVIDENCE_DIR=build/nonplanar-evidence/B12-final-support/native1",
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "B07 native first footprint derives bounded amounts inside an actual flat bead core",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/native1.xml",
+      "--reporter",
+      "console::out=-"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:12:19.808742+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 9.715
+  },
+  {
+    "evidence": "native2.txt.json",
+    "command": [
+      "env",
+      "NPTOP_CANDIDATE_EVIDENCE_DIR=build/nonplanar-evidence/B12-final-support/native2",
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "B07 native first footprint derives bounded amounts inside an actual flat bead core",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/native2.xml",
+      "--reporter",
+      "console::out=-"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:16:32.737075+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 9.249
+  },
+  {
+    "evidence": "native3.txt.json",
+    "command": [
+      "env",
+      "NPTOP_CANDIDATE_EVIDENCE_DIR=build/nonplanar-evidence/B12-final-support/native3",
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "B07 native first footprint derives bounded amounts inside an actual flat bead core",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/native3.xml",
+      "--reporter",
+      "console::out=-"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:22:46.871081+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 9.473
+  },
+  {
+    "evidence": "native4.txt.json",
+    "command": [
+      "env",
+      "NPTOP_CANDIDATE_EVIDENCE_DIR=build/nonplanar-evidence/B12-final-support/native4",
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "B07 native first footprint derives bounded amounts inside an actual flat bead core",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/native4.xml",
+      "--reporter",
+      "console::out=-"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:27:26.172526+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 9.515
+  },
+  {
+    "evidence": "package-final.txt.json",
+    "command": [
+      "python3",
+      "docs/nonplanar/scripts/validate_package.py"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:30:35.674081+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.09
+  },
+  {
+    "evidence": "rate-cli-final.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_rate_audit_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/rate-cli-final"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:03.344874+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.088
+  },
+  {
+    "evidence": "rate-cli-final2.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_rate_audit_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/rate-cli-final2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:43:31.491865+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.423
+  },
+  {
+    "evidence": "scaffold-build.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "fff_print_tests",
+      "-j",
+      "2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T11:54:39.146239+00:00",
+    "status": "COMPLETED",
+    "exit_code": 1,
+    "elapsed_seconds": 26.434
+  },
+  {
+    "evidence": "source-audit-final.txt.json",
+    "command": [
+      "python3",
+      "docs/nonplanar/scripts/audit_orca_checkout.py",
+      "--repo",
+      "."
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:30:35.673500+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.325
+  },
+  {
+    "evidence": "strict-command.txt.json",
+    "command": [
+      "ninja",
+      "-C",
+      "build/arm64",
+      "-f",
+      "build-Release.ninja",
+      "-t",
+      "commands",
+      "src/nonplanar_verify/CMakeFiles/nonplanar_final_rates.dir/Release/LinearMaterial.cpp.o"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:46.807658+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.015
+  },
+  {
+    "evidence": "support-cli-final.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_run_support_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B12-final-support/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/support-cli-final"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:31:03.345782+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.151
+  },
+  {
+    "evidence": "support-cli-final2.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_run_support_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B12-final-support/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/support-cli-final2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:43:31.488296+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.488
+  },
+  {
+    "evidence": "support-cli1.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_run_support_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B12-final-joined/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/support-cli1"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:12:19.808766+00:00",
+    "status": "COMPLETED",
+    "exit_code": 1,
+    "elapsed_seconds": 0.445
+  },
+  {
+    "evidence": "support-cli2.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_run_support_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B12-final-joined/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/support-cli2"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:14:13.926897+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.14
+  },
+  {
+    "evidence": "support-cli3.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/validate_run_support_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B12-final-joined/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B12-final-support/support-cli3"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:16:32.737147+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.491
+  },
+  {
+    "evidence": "support1.txt.json",
+    "command": [
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "[FinalByteSupport]",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/support1.xml"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:00:42.759016+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.043
+  },
+  {
+    "evidence": "support2.txt.json",
+    "command": [
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "[FinalByteSupport]",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/support2.xml"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:07:24.674237+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.043
+  },
+  {
+    "evidence": "support4.txt.json",
+    "command": [
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "[FinalByteSupport]",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "build/nonplanar-evidence/B12-final-support/support4.xml",
+      "--reporter",
+      "console::out=-"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-02T12:27:27.308584+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.047
+  },
+  {
+    "evidence": "baselines/flat_block-off/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/flat_block-off/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/flat_block-off/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-off.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/flat_block-off/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/flat_block-off/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/flat_block-off",
+    "started_utc": "2026-10-02T12:33:48.620655+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.996
+  },
+  {
+    "evidence": "baselines/flat_block-zaa/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/flat_block-zaa/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/flat_block-zaa/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-zaa.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/flat_block-zaa/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/flat_block-zaa/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/flat_block-zaa",
+    "started_utc": "2026-10-02T12:33:49.656326+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.083
+  },
+  {
+    "evidence": "baselines/shallow_sphere-off/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/shallow_sphere-off/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/shallow_sphere-off/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-off.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/shallow_sphere-off/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/shallow_sphere-off/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/shallow_sphere.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/shallow_sphere-off",
+    "started_utc": "2026-10-02T12:33:50.058760+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.124
+  },
+  {
+    "evidence": "baselines/shallow_sphere-zaa/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/shallow_sphere-zaa/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/shallow_sphere-zaa/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-zaa.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/shallow_sphere-zaa/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/shallow_sphere-zaa/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/shallow_sphere.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/shallow_sphere-zaa",
+    "started_utc": "2026-10-02T12:33:50.222310+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.129
+  },
+  {
+    "evidence": "baselines/wedge_5deg-off/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/wedge_5deg-off/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/wedge_5deg-off/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-off.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/wedge_5deg-off/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/wedge_5deg-off/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/wedge_5deg.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/wedge_5deg-off",
+    "started_utc": "2026-10-02T12:33:49.777765+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.098
+  },
+  {
+    "evidence": "baselines/wedge_5deg-zaa/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/wedge_5deg-zaa/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/wedge_5deg-zaa/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-zaa.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/wedge_5deg-zaa/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/wedge_5deg-zaa/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/wedge_5deg.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-support-baselines/wedge_5deg-zaa",
+    "started_utc": "2026-10-02T12:33:49.915832+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.104
+  }
+]
