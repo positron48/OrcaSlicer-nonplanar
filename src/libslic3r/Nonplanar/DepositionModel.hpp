@@ -77,13 +77,15 @@ struct MaterialQueryResult {
     uint64_t source_event_id=0;
     size_t evaluations=0;
 };
-inline constexpr unsigned material_motion_contract_version=1;
+inline constexpr unsigned material_motion_contract_version=2;
 struct MaterialMotionPreparationLimits : MaterialLimits { size_t max_evaluations=2000000; };
 struct MaterialMotionSourceResult;
 struct MaterialMotionSourceSnapshot {
     const std::shared_ptr<const MaterialSequenceSnapshot> ledger;
+    const std::optional<ScalarBounds> full_upper_z_mm; // All original rows, including future: coverage only.
 private:
-    explicit MaterialMotionSourceSnapshot(std::shared_ptr<const MaterialSequenceSnapshot> s) : ledger(std::move(s)) {}
+    MaterialMotionSourceSnapshot(std::shared_ptr<const MaterialSequenceSnapshot> s,std::optional<ScalarBounds> z)
+        : ledger(std::move(s)),full_upper_z_mm(z) {}
     friend MaterialMotionSourceResult prepare_material_motion(const MaterialSequenceResult &,const MaterialMotionPreparationLimits &);
 };
 struct MaterialMotionSourceResult { std::string reason;std::shared_ptr<const MaterialMotionSourceSnapshot> snapshot;size_t evaluations=0; };

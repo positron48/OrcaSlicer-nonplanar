@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="101" hostname="tbd" time="0.014" timestamp="2026-10-02T01:48:34Z">
+    <properties>
+      <property name="random-seed" value="1889922794"/>
+      <property name="filters" value="[SceneMaterialMotion]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B08 full scene source and motion refuse incomplete coverage stale ownership and budgets" time="0.010" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B08 full simulation head composes original deposition material and static scene" time="0.003" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B08 full head localizes a static duct collision and an actual current tip collision" time="0.000" status="run">
+      <failure message="blocked.scene_check->component_id==scene.head[3].id" type="REQUIRE">
+FAILED:
+  REQUIRE( blocked.scene_check->component_id==scene.head[3].id )
+with expansion:
+  7 == 4
+OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+STATIC_SCENE_CLEARANCE_BLOCKED
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:315
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

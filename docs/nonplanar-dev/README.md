@@ -15,6 +15,17 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B08-scene-material.md` and ADR-0064 compose every captured head/static pair
+with the complete actual material proof for the same original event. Coverage
+includes full potential Upper tops and all errors; scene and material revisions
+are separate. Original-index Travel and all 65 components pass. The actual native
+next packet passes at the Z=0 annulus; a low recaptured rigid body refuses that
+current row. Three new cases / 145 assertions, 39 geometry / 112 material / 14 body
+cases, 357/357 selected CTest without skips and six fresh OFF/ZAA comparisons
+pass. Material-motion/composed contracts
+are 2/1. Measured head/contact, complete cap/job/order/flow/replay and export remain
+pending; independent review and physical evidence remain separate.
+
 `B08-material-motion.md` and ADR-0063 now prove complete supplied rigid boxes
 and flat annuli continuously against old and growing current Upper material.
 A protected revalidated journal supplies the original event; future and pressure

@@ -5,6 +5,7 @@
 #include <libslic3r/Nonplanar/InputSnapshot.hpp>
 #include <libslic3r/Nonplanar/PlanarBody.hpp>
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
+#include <libslic3r/Nonplanar/ProfileScene.hpp>
 #include <libslic3r/ClipperUtils.hpp>
 #include <libslic3r/Nonplanar/StlFile.hpp>
 #include <libslic3r/Format/STL.hpp>
@@ -2620,6 +2621,26 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE(unsafe_motion.tools[0].id==low_tool.id);
     INFO("native material motion source work=" << motion_source.evaluations << " cells=" << safe_motion.cells <<
         " work=" << safe_motion.evaluations << " connector cells=" << safe_connector.cells << " collision row=" << unsafe_motion.witness->material_record);
+    SimulationScene full_scene{1,41,7,ProfileOrigin::Synthetic,false,{{0,0,0},Length(.2),Length(.5)}, {},
+        {{-1,-1,-.1},{40,40,10}},{{-5,-5,-5},{45,45,20}}, {},true,Length(30),Length(0)};
+    uint64_t head_id=1;
+    for (auto part : {HeadPart::NozzleBody,HeadPart::Heater,HeadPart::Sock,HeadPart::Duct,HeadPart::Sensor,HeadPart::Mount})
+        full_scene.head.push_back({head_id++,part,{{-.05,-.05,.5},{.05,.05,.8}},false,false});
+    const auto full_source=prepare_simulation_motion(full_scene,motion_source,motion_policy);INFO(full_source.reason);REQUIRE(full_source.snapshot);
+    REQUIRE(full_source.snapshot->components.size()==7);
+    const auto full_motion=check_simulation_motion(full_source,first_later);INFO(full_motion.reason);
+    REQUIRE(full_motion.status==ClearanceStatus::Pass);REQUIRE(full_motion.snapshot);
+    REQUIRE(full_motion.snapshot->material->tools.size()==7);REQUIRE(full_motion.snapshot->material->event_index==first_later);
+    full_scene.head[0].outer={{-.003,-.003,0},{.003,.003,.02}};
+    const auto low_source=prepare_simulation_motion(full_scene,motion_source,motion_policy);REQUIRE(low_source.snapshot);
+    const auto low_head=check_simulation_motion(low_source,first_later);INFO(low_head.reason);
+    REQUIRE(low_head.status==ClearanceStatus::Fail);REQUIRE_FALSE(low_head.snapshot);REQUIRE(low_head.material_check);
+    REQUIRE(low_head.material_check->witness);REQUIRE(low_head.material_check->witness->component_index==1);
+    REQUIRE(low_head.material_check->witness->material_record==first_later);
+    REQUIRE(low_head.material_check->tools[1].id==full_scene.head[0].id);
+    REQUIRE(full_source.snapshot->scene.head[0].outer.min.z()==.5);
+    INFO("native complete head cells=" << full_motion.snapshot->material->cells << " work=" << full_motion.evaluations <<
+        " blocked material row=" << low_head.material_check->witness->material_record << " event=" << first_later);
     const double lx=(la.x()+lb.x())/2,ly=(la.y()+lb.y())/2,lower_plane=(la.z()+lb.z())/2-.025;
     const RectangleXY third_region=rx ? RectangleXY{lx-.025,ly-.01,lx+.025,ly+.01} : RectangleXY{lx-.01,ly-.025,lx+.01,ly+.025};
     const auto third=assess_first_cap_next_pass(added,2,third_region,lower_plane,next_limits);INFO(third.reason);REQUIRE(third.snapshot);

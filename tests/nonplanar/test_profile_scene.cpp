@@ -256,3 +256,121 @@ TEST_CASE("A07 travel owns callback inputs and never publishes cancelled stale o
     REQUIRE(mutated);
     REQUIRE(events.empty());
 }
+
+namespace {
+MaterialMotionSourceResult scene_material(bool descending=false,double growth=0)
+{
+    const double z0=descending ? 2 : 1,z1=descending ? 1 : 2;
+    const double h=.2,width=.4,area=h*(width-(1-std::acos(-1.L)/4)*h);
+    const MaterialRecord row{{1,0,33,{0,0,z0},{2,0,z1},Speed(10),Acceleration(100),
+        Deposition{Volume(2*area),WidthXY(width),VerticalGap(h),VerticalGap(h),
+            {NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)},7,8}},
+        BeadSection{BeadSectionKind::RoundedRectangle,h,h,{width-1e-12,width+1e-12}}};
+    const auto ledger=capture_material_sequence({row},{17,Length(growth),Length(growth),Length(0),Length(0),Length(0)},23,std::string(64,'a'));
+    REQUIRE(ledger.snapshot);const auto prepared=prepare_material_motion(ledger);REQUIRE(prepared.snapshot);return prepared;
+}
+SimulationScene material_scene()
+{
+    // Complete synthetic inventory, not measured U1 geometry.
+    SimulationScene s{1,41,7,ProfileOrigin::Synthetic,false,
+        {{0,0,0},Length(.25),Length(.5)}, {},
+        {{-1,-1,.5},{3,1,2.5}}, {{-4,-4,-1},{6,4,6}},
+        {{{-3,-3,-.8},{5,3,-.6}}},true,Length(10),Length(0)};
+    uint64_t id=1;
+    for (auto part : {HeadPart::NozzleBody,HeadPart::Heater,HeadPart::Sock,HeadPart::Duct,HeadPart::Sensor,HeadPart::Mount})
+        s.head.push_back({id++,part,{{-.05,-.05,.5},{.05,.05,.8}},false,false});
+    return s;
+}
+ClearancePolicy material_scene_policy()
+{ return {Length(.005),NumericBudget(0,0,0,0),Length(0),Length(0),Length(0)}; }
+}
+TEST_CASE("B08 full simulation head composes original deposition material and static scene", "[Nonplanar][B08][SceneMaterialMotion]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<SimulationMotionSourceSnapshot>::value);
+    STATIC_REQUIRE_FALSE(std::is_aggregate<SimulationMotionSnapshot>::value);
+    const auto material=scene_material();const auto prepared=prepare_simulation_motion(material_scene(),material,material_scene_policy());
+    INFO(prepared.reason);REQUIRE(prepared.snapshot);REQUIRE(prepared.applicability==SceneApplicability::SimulationOnly);
+    REQUIRE(prepared.snapshot->components.size()==7);REQUIRE(prepared.snapshot->tip_component_id==7);
+    REQUIRE(prepared.snapshot->material==material.snapshot);REQUIRE(material.snapshot->full_upper_z_mm);
+    REQUIRE(material.snapshot->full_upper_z_mm->lower<=.8);REQUIRE(material.snapshot->full_upper_z_mm->upper>=2);
+    const auto checked=check_simulation_motion(prepared,0);INFO(checked.reason);REQUIRE(checked.status==ClearanceStatus::Pass);REQUIRE(checked.snapshot);
+    REQUIRE(checked.snapshot->source==prepared.snapshot);REQUIRE(checked.snapshot->scene_checks.size()==7);
+    REQUIRE(checked.snapshot->material->source==material.snapshot);REQUIRE(checked.snapshot->material->event_index==0);
+    REQUIRE(checked.snapshot->material->tools.size()==7);REQUIRE_FALSE(checked.snapshot->material->leaves.empty());
+    for (const auto &pair : checked.snapshot->scene_checks) {
+        REQUIRE(pair.status==ClearanceStatus::Pass);REQUIRE(pair.event_id==1);REQUIRE(pair.sequence_index==0);REQUIRE(pair.bounds);
+    }
+    auto uncertain=material_scene();uncertain.uncertainty=Length(.001);
+    const auto budget=prepare_simulation_motion(uncertain,material,material_scene_policy());REQUIRE(budget.snapshot);
+    REQUIRE(budget.snapshot->static_policy.scene_geometry.value()>=.002);
+    REQUIRE(budget.snapshot->material_policy.scene_geometry.value()>=.001);
+    REQUIRE(check_simulation_motion(budget,0).snapshot);
+    auto rows=material.snapshot->ledger->records;const auto &ledger=*material.snapshot->ledger;
+    rows.push_back({{2,1,0,rows.back().motion.end,{0,0,2.4},Speed(10),Acceleration(100),Travel{}},{}});
+    const auto ordered=prepare_material_motion(capture_material_sequence(rows,ledger.model,ledger.revision,ledger.source_fingerprint));REQUIRE(ordered.snapshot);
+    const auto travel_source=prepare_simulation_motion(material_scene(),ordered,material_scene_policy());REQUIRE(travel_source.snapshot);
+    const auto travel=check_simulation_motion(travel_source,1);INFO(travel.reason);REQUIRE(travel.snapshot);
+    REQUIRE(travel.event_index==1);REQUIRE(travel.snapshot->material->event_index==1);
+    for (const auto &pair : travel.snapshot->scene_checks) {REQUIRE(pair.sequence_index==1);REQUIRE(pair.event_id==2);}
+    // The original A07 scene maximum of 64 boxes needs 65 complete material
+    // components with its separately represented tip; none may be dropped.
+    auto many=material_scene();while (many.head.size()<64) {auto part=many.head.front();part.id=many.head.size()+1;many.head.push_back(part);}
+    const auto complete=prepare_simulation_motion(many,material,material_scene_policy());REQUIRE(complete.snapshot);
+    REQUIRE(complete.snapshot->components.size()==65);REQUIRE(check_simulation_motion(complete,0).snapshot);
+}
+TEST_CASE("B08 full head localizes a static duct collision and an actual current tip collision", "[Nonplanar][B08][SceneMaterialMotion]")
+{
+    auto scene=material_scene();scene.head[3].outer={{1,-.05,.5},{1.2,.05,.7}};
+    scene.obstacles.push_back({{2,-.05,1.99},{2.1,.05,2.01}});
+    const auto prepared=prepare_simulation_motion(scene,scene_material(),material_scene_policy());INFO(prepared.reason);REQUIRE(prepared.snapshot);
+    const auto blocked=check_simulation_motion(prepared,0);INFO(blocked.reason);REQUIRE(blocked.status==ClearanceStatus::Fail);REQUIRE_FALSE(blocked.snapshot);
+    REQUIRE(blocked.scene_check);REQUIRE(blocked.scene_check->component_id==scene.head[3].id);REQUIRE(blocked.scene_check->obstacle_id==2);
+    REQUIRE(blocked.scene_check->witness);const double t=blocked.scene_check->witness->parameter;
+    // Independent strict overlap at the returned pose, and disjoint X at both ends.
+    REQUIRE(2*t+1<2.1);REQUIRE(2*t+1.2>2);REQUIRE(1+t+.5<2.01);REQUIRE(1+t+.7>1.99);
+    REQUIRE(1.2<2);REQUIRE(2+1>2.1);
+    const auto falling=prepare_simulation_motion(material_scene(),scene_material(true),material_scene_policy());REQUIRE(falling.snapshot);
+    const auto struck=check_simulation_motion(falling,0);INFO(struck.reason);REQUIRE(struck.status==ClearanceStatus::Fail);REQUIRE_FALSE(struck.snapshot);
+    REQUIRE(struck.material_check);REQUIRE(struck.material_check->witness);REQUIRE(struck.material_check->witness->component_index==0);
+    REQUIRE(struck.material_check->witness->material_record==0);REQUIRE(struck.material_check->tools[0].id==7);
+    const auto &w=*struck.material_check->witness;const long double x=2.L*w.parameter+w.local_point.x();
+    const long double top=2-x/2,z=2.L-w.parameter;
+    REQUIRE(x>0);REQUIRE(x<2.L*w.parameter);REQUIRE(z<top);REQUIRE(z>top-.2L);
+}
+TEST_CASE("B08 full scene source and motion refuse incomplete coverage stale ownership and budgets", "[Nonplanar][B08][SceneMaterialMotion]")
+{
+    auto scene=material_scene();auto material=scene_material();auto policy=material_scene_policy();
+    const auto source=prepare_simulation_motion(scene,material,policy);REQUIRE(source.snapshot);
+    REQUIRE_FALSE(prepare_simulation_motion(scene,{},policy).snapshot);
+    auto missing=scene;missing.head.pop_back();REQUIRE_FALSE(prepare_simulation_motion(missing,material,policy).snapshot);
+    missing=scene;missing.obstacle_inventory_complete=false;REQUIRE_FALSE(prepare_simulation_motion(missing,material,policy).snapshot);
+    missing=scene;missing.operator_confirmed_claim=true;REQUIRE_FALSE(prepare_simulation_motion(missing,material,policy).snapshot);
+    const auto tall=prepare_simulation_motion(scene,scene_material(false,10),policy);
+    INFO(tall.reason);REQUIRE_FALSE(tall.snapshot);REQUIRE(tall.applicability==SceneApplicability::OutsideCoverage);
+    auto huge=policy;huge.required=Length(10);REQUIRE_FALSE(prepare_simulation_motion(scene,material,huge).snapshot);
+    SimulationMotionPreparationLimits capture;capture.max_evaluations=1;REQUIRE_FALSE(prepare_simulation_motion(scene,material,policy,capture).snapshot);
+    const auto old=material.snapshot;capture={};capture.cancelled=[&] {scene.head.clear();material={};policy.required=Length(10);return false;};
+    const auto owned=prepare_simulation_motion(scene,material,policy,capture);INFO(owned.reason);REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->material==old);REQUIRE(owned.snapshot->components.size()==7);REQUIRE(owned.snapshot->policy.required.value()==.005);
+    REQUIRE_FALSE(check_simulation_motion({},0).snapshot);REQUIRE_FALSE(check_simulation_motion(source,1).snapshot);
+    for (int mode=0;mode<9;++mode) {
+        SimulationMotionLimits limits;
+        if (mode==0) limits.max_evaluations=1;
+        if (mode==1) limits.max_scene_pairs=6;
+        if (mode==2) limits.max_evaluations_per_scene_pair=0;
+        if (mode==3) limits.max_cells=1;
+        if (mode==4) limits.max_depth=1;
+        if (mode==5) limits.cancelled=[] {return true;};
+        if (mode==6) limits.is_scene_current=[](uint64_t,uint64_t) {return false;};
+        if (mode==7) limits.is_current=[](uint64_t) {return false;};
+        if (mode==8) {limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        const auto denied=check_simulation_motion(source,0,limits);INFO(mode << ' ' << denied.reason);REQUIRE(denied.status==ClearanceStatus::Unknown);REQUIRE_FALSE(denied.snapshot);
+    }
+    auto mutable_source=source;SimulationMotionLimits limits;limits.cancelled=[&] {mutable_source={};return false;};
+    REQUIRE(check_simulation_motion(mutable_source,0,limits).snapshot);
+    limits={};size_t calls=0;limits.cancelled=[&] {++calls;return false;};REQUIRE(check_simulation_motion(source,0,limits).snapshot);
+    const size_t final_call=calls;calls=0;limits.cancelled=[&] {return ++calls==final_call;};
+    REQUIRE_FALSE(check_simulation_motion(source,0,limits).snapshot);REQUIRE(calls==final_call);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounding=check_simulation_motion(source,0,limits);std::fesetround(FE_TONEAREST);REQUIRE_FALSE(rounding.snapshot);
+}

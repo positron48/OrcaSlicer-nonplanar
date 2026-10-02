@@ -150,7 +150,13 @@ Next software tasks, in dependency order:
    a low rigid box refuses on that current row. Compose the complete measured head
    and static scene, qualify exact deposition contacts and applicability, and bind
    whole-job ordered entry/exit/travel/parking, independent final-byte replay and
-   guarded export. Continue the normative backlog without closing P2 from bounded
+   guarded export. `B08-scene-material.md` now composes all captured head/static
+   pairs with the actual material proof for the same original event and shared
+   budgets; full potential Upper tops constrain omitted-head coverage. The actual
+   native next packet passes with a Z=0 annulus and six head boxes; a recaptured
+   low rigid box refuses that current row. Original-index Travel and the complete
+   64-box-plus-tip maximum pass. Qualification/contact/job remain pending.
+   Continue the normative backlog without closing P2 from bounded
    modules. The saved 01:23 UTC Linux observation confirms 2c446685 succeeded;
    current e8f40123 is in progress and the new B08 source remains unverified.
 

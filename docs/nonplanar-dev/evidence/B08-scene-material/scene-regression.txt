@@ -1,0 +1,2976 @@
+Filters: [A07],[A04],[MaterialMotion],[SceneMaterialMotion]
+Randomness seeded to: 1026057357
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+A07 analytic Minkowski bounds include uncertainty at coverage boundaries
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:96
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:100: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::SimulationOnly )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:102: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:105: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::SimulationOnly )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:107: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+-------------------------------------------------------------------------------
+ORC-38 missing head dimensions inventory and moving envelope reject
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:44
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:48: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry )
+with expansion:
+  4 == 4
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:48: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry )
+with expansion:
+  4 == 4
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:48: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry )
+with expansion:
+  4 == 4
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:48: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry )
+with expansion:
+  4 == 4
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:48: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry )
+with expansion:
+  4 == 4
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:48: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry )
+with expansion:
+  4 == 4
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:51: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::InvalidInput )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:53: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry )
+with expansion:
+  4 == 4
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:55: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry )
+with expansion:
+  4 == 4
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:57: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::IncompleteGeometry )
+with expansion:
+  4 == 4
+
+-------------------------------------------------------------------------------
+B08 material motion checks complete rigid tools with a coupled current front
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3433
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3435: PASSED:
+with message:
+  !(std::is_aggregate<MaterialMotionSourceSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3436: PASSED:
+with message:
+  !(std::is_aggregate<MaterialMotionSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7290dab38
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3440: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x729113b10
+with message:
+  DECLARED_MATERIAL_MOTION_SOURCE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3441: PASSED:
+  REQUIRE( clear.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3441: PASSED:
+  REQUIRE( clear.snapshot )
+with expansion:
+  0x729007b60
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3442: PASSED:
+  REQUIRE( clear.snapshot->source==prepared.snapshot )
+with expansion:
+  0x729113b10 == 0x729113b10
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3442: PASSED:
+  REQUIRE_FALSE( clear.snapshot->leaves.empty() )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3446: PASSED:
+  REQUIRE( Q(.35)-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.125 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.25 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.375 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.375 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.5 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.5 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.625 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.625 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.75 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.75 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.875 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.875 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3457: PASSED:
+  REQUIRE( partition==(Q(whole.max.x())-whole.min.x())*(Q(whole.max.y())-whole.min.y())*(Q(whole.max.z())-whole.min.z()) )
+with expansion:
+  0.0006 == 0.0006
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7290dac78
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3461: PASSED:
+  REQUIRE( collided.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3461: PASSED:
+  REQUIRE( collided.witness )
+with expansion:
+  {?}
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3461: PASSED:
+  REQUIRE_FALSE( collided.snapshot )
+with expansion:
+  !0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3462: PASSED:
+  REQUIRE( w.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3462: PASSED:
+  REQUIRE( w.parameter>0 )
+with expansion:
+  0.5 > 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3462: PASSED:
+  REQUIRE( w.parameter<1 )
+with expansion:
+  0.5 < 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3465: PASSED:
+  REQUIRE( x>0 )
+with expansion:
+  0.6 > 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3465: PASSED:
+  REQUIRE( x<2*t )
+with expansion:
+  0.6 < 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3465: PASSED:
+  REQUIRE( z<top )
+with expansion:
+  1.65 < 1.7
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3465: PASSED:
+  REQUIRE( z>top-Q(.2) )
+with expansion:
+  1.65 > 1.5
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3468: PASSED:
+  REQUIRE( verify_material_motion(prepared,0,{high,annulus},policy).status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3470: PASSED:
+  REQUIRE( verify_material_motion(prepared,0,{contact},policy).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7290dadb8
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3472: PASSED:
+  REQUIRE( angled.snapshot )
+with expansion:
+  0x72918cb10
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3473: PASSED:
+  REQUIRE( verify_material_motion(angled,0,{high,annulus},policy).snapshot )
+with expansion:
+  0x729007ca0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3475: PASSED:
+  REQUIRE( struck.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3476: PASSED:
+  REQUIRE( struck.witness )
+with expansion:
+  {?}
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3476: PASSED:
+  REQUIRE( struck.witness->material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7290dae58
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3472: PASSED:
+  REQUIRE( angled.snapshot )
+with expansion:
+  0x72918c9f0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3473: PASSED:
+  REQUIRE( verify_material_motion(angled,0,{high,annulus},policy).snapshot )
+with expansion:
+  0x729007ca0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3475: PASSED:
+  REQUIRE( struck.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3476: PASSED:
+  REQUIRE( struck.witness )
+with expansion:
+  {?}
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3476: PASSED:
+  REQUIRE( struck.witness->material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+-------------------------------------------------------------------------------
+B08 full head localizes a static duct collision and an actual current tip
+collision
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:309
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:270: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0x7290dab38
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:270: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x72918ca50
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:313: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x104b1c690
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:314: PASSED:
+  REQUIRE( blocked.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:314: PASSED:
+  REQUIRE_FALSE( blocked.snapshot )
+with expansion:
+  !0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:315: PASSED:
+  REQUIRE( blocked.scene_check )
+with expansion:
+  {?}
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:315: PASSED:
+  REQUIRE( blocked.scene_check->component_id==scene.head[3].id )
+with expansion:
+  4 == 4
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:315: PASSED:
+  REQUIRE( blocked.scene_check->obstacle_id==2 )
+with expansion:
+  2 == 2
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:316: PASSED:
+  REQUIRE( blocked.scene_check->witness )
+with expansion:
+  {?}
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:318: PASSED:
+  REQUIRE( 2*t+1<2.1 )
+with expansion:
+  2.0 < 2.10000000000000009
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:318: PASSED:
+  REQUIRE( 2*t+1.2>2 )
+with expansion:
+  2.20000000000000018 > 2
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:318: PASSED:
+  REQUIRE( 1+t+.5<2.01 )
+with expansion:
+  2.0 < 2.00999999999999979
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:318: PASSED:
+  REQUIRE( 1+t+.7>1.99 )
+with expansion:
+  2.20000000000000018 > 1.98999999999999999
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:319: PASSED:
+  REQUIRE( 1.2<2 )
+with expansion:
+  1.19999999999999996 < 2
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:319: PASSED:
+  REQUIRE( 2+1>2.1 )
+with expansion:
+  3 > 2.10000000000000009
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:270: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0x7290dab38
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:270: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x72918c5a0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:320: PASSED:
+  REQUIRE( falling.snapshot )
+with expansion:
+  0x104b1b4d0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:321: PASSED:
+  REQUIRE( struck.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+  DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:321: PASSED:
+  REQUIRE_FALSE( struck.snapshot )
+with expansion:
+  !0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+  DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:322: PASSED:
+  REQUIRE( struck.material_check )
+with expansion:
+  {?}
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+  DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:322: PASSED:
+  REQUIRE( struck.material_check->witness )
+with expansion:
+  {?}
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+  DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:322: PASSED:
+  REQUIRE( struck.material_check->witness->component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+  DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:323: PASSED:
+  REQUIRE( struck.material_check->witness->material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+  DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:323: PASSED:
+  REQUIRE( struck.material_check->tools[0].id==7 )
+with expansion:
+  7 == 7
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+  DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:326: PASSED:
+  REQUIRE( x>0 )
+with expansion:
+  0.625 > 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+  DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:326: PASSED:
+  REQUIRE( x<2.L*w.parameter )
+with expansion:
+  0.625 < 1
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+  DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:326: PASSED:
+  REQUIRE( z<top )
+with expansion:
+  1.5 < 1.6875
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+  DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:326: PASSED:
+  REQUIRE( z>top-.2L )
+with expansion:
+  1.5 > 1.4875
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  STATIC_SCENE_CLEARANCE_BLOCKED
+  DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+-------------------------------------------------------------------------------
+B08 full simulation head composes original deposition material and static scene
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:287
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:289: PASSED:
+with message:
+  !(std::is_aggregate<SimulationMotionSourceSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:290: PASSED:
+with message:
+  !(std::is_aggregate<SimulationMotionSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:270: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0x7290dabd8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:270: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x72918cab0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:292: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x104b1b410
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:292: PASSED:
+  REQUIRE( prepared.applicability==SceneApplicability::SimulationOnly )
+with expansion:
+  0 == 0
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:293: PASSED:
+  REQUIRE( prepared.snapshot->components.size()==7 )
+with expansion:
+  7 == 7
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:293: PASSED:
+  REQUIRE( prepared.snapshot->tip_component_id==7 )
+with expansion:
+  7 == 7
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:294: PASSED:
+  REQUIRE( prepared.snapshot->material==material.snapshot )
+with expansion:
+  0x72918cab0 == 0x72918cab0
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:294: PASSED:
+  REQUIRE( material.snapshot->full_upper_z_mm )
+with expansion:
+  {?}
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:295: PASSED:
+  REQUIRE( material.snapshot->full_upper_z_mm->lower<=.8 )
+with expansion:
+  0.79999999999999982 <= 0.80000000000000004
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:295: PASSED:
+  REQUIRE( material.snapshot->full_upper_z_mm->upper>=2 )
+with expansion:
+  2.00000000000000044 >= 2
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:296: PASSED:
+  REQUIRE( checked.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:296: PASSED:
+  REQUIRE( checked.snapshot )
+with expansion:
+  0x728c084c0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:297: PASSED:
+  REQUIRE( checked.snapshot->source==prepared.snapshot )
+with expansion:
+  0x104b1b410 == 0x104b1b410
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:297: PASSED:
+  REQUIRE( checked.snapshot->scene_checks.size()==7 )
+with expansion:
+  7 == 7
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:298: PASSED:
+  REQUIRE( checked.snapshot->material->source==material.snapshot )
+with expansion:
+  0x72918cab0 == 0x72918cab0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:298: PASSED:
+  REQUIRE( checked.snapshot->material->event_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:299: PASSED:
+  REQUIRE( checked.snapshot->material->tools.size()==7 )
+with expansion:
+  7 == 7
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:299: PASSED:
+  REQUIRE_FALSE( checked.snapshot->material->leaves.empty() )
+with expansion:
+  !false
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.event_id==1 )
+with expansion:
+  1 == 1
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.sequence_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.bounds )
+with expansion:
+  {?}
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.event_id==1 )
+with expansion:
+  1 == 1
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.sequence_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.bounds )
+with expansion:
+  {?}
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.event_id==1 )
+with expansion:
+  1 == 1
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.sequence_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.bounds )
+with expansion:
+  {?}
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.event_id==1 )
+with expansion:
+  1 == 1
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.sequence_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.bounds )
+with expansion:
+  {?}
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.event_id==1 )
+with expansion:
+  1 == 1
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.sequence_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.bounds )
+with expansion:
+  {?}
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.event_id==1 )
+with expansion:
+  1 == 1
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.sequence_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.bounds )
+with expansion:
+  {?}
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.event_id==1 )
+with expansion:
+  1 == 1
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.sequence_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:301: PASSED:
+  REQUIRE( pair.bounds )
+with expansion:
+  {?}
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:304: PASSED:
+  REQUIRE( budget.snapshot )
+with expansion:
+  0x728de0000
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:305: PASSED:
+  REQUIRE( budget.snapshot->static_policy.scene_geometry.value()>=.002 )
+with expansion:
+  0.002 >= 0.002
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:306: PASSED:
+  REQUIRE( budget.snapshot->material_policy.scene_geometry.value()>=.001 )
+with expansion:
+  0.001 >= 0.001
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:307: PASSED:
+  REQUIRE( check_simulation_motion(budget,0).snapshot )
+with expansion:
+  0x728c08480
+with messages:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+-------------------------------------------------------------------------------
+A07 travel owns callback inputs and never publishes cancelled stale or
+exhausted work
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:209
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:213: PASSED:
+  REQUIRE( check_simulation_travel(scene,events,policy,limits).reason=="PAIR_LIMIT" )
+with expansion:
+  "PAIR_LIMIT" == "PAIR_LIMIT"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:216: PASSED:
+  REQUIRE( exhausted.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:217: PASSED:
+  REQUIRE( exhausted.limiting_check->reason==ClearanceReason::WorkLimit )
+with expansion:
+  7 == 7
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:219: PASSED:
+  REQUIRE( check_simulation_travel(scene,events,policy,limits).reason=="INVALID_LIMITS" )
+with expansion:
+  "INVALID_LIMITS" == "INVALID_LIMITS"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:221: PASSED:
+  REQUIRE( check_simulation_travel(scene,events,policy,limits).reason=="INVALID_LIMITS" )
+with expansion:
+  "INVALID_LIMITS" == "INVALID_LIMITS"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:223: PASSED:
+  REQUIRE( rev==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:224: PASSED:
+  REQUIRE( check_simulation_travel(scene,events,policy,limits).status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:225: PASSED:
+  REQUIRE( final_call>14 )
+with expansion:
+  31 > 14
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:228: PASSED:
+  REQUIRE( stale.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:229: PASSED:
+  REQUIRE( stale.reason=="STALE_REVISION" )
+with expansion:
+  "STALE_REVISION" == "STALE_REVISION"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:230: PASSED:
+  REQUIRE( stale.checked_pairs==14 )
+with expansion:
+  14 == 14
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:233: PASSED:
+  REQUIRE( cancelled.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:234: PASSED:
+  REQUIRE( cancelled.reason=="CANCELLED" )
+with expansion:
+  "CANCELLED" == "CANCELLED"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:237: PASSED:
+  REQUIRE( check_simulation_travel(scene,events,policy,limits).reason=="DEADLINE" )
+with expansion:
+  "DEADLINE" == "DEADLINE"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:239: PASSED:
+  REQUIRE( check_simulation_travel(scene,events,policy,limits).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:242: PASSED:
+  REQUIRE( check_simulation_travel(scene,events,policy,limits).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:254: PASSED:
+  REQUIRE( owned.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:255: PASSED:
+  REQUIRE( owned.checked_pairs==14 )
+with expansion:
+  14 == 14
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:256: PASSED:
+  REQUIRE( mutated )
+with expansion:
+  true
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:257: PASSED:
+  REQUIRE( events.empty() )
+with expansion:
+  true
+
+-------------------------------------------------------------------------------
+PRF-01 complete synthetic scene is usable only for simulation
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:26
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:28: PASSED:
+  REQUIRE( assess_simulation_scene(fixture(),motions()) == SceneApplicability::SimulationOnly )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:30: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::SimulationOnly )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:33: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::SimulationOnly )
+with expansion:
+  0 == 0
+
+-------------------------------------------------------------------------------
+A07 full head and omitted upper parts must fit declared scene coverage
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:59
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:62: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:64: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:66: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:68: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:70: PASSED:
+  REQUIRE( assess_simulation_scene(s,m) == SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:73: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+-------------------------------------------------------------------------------
+A07 whole-head travel detects a duct collision between clear endpoint poses
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:153
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:159: PASSED:
+  REQUIRE( check_simulation_travel(scene,fixed,travel_policy()).status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:159: PASSED:
+  REQUIRE( check_simulation_travel(scene,fixed,travel_policy()).status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:161: PASSED:
+  REQUIRE( query_clearance(events.front(),{7,scene.tip},{3,scene.obstacles.back()},travel_policy()).status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:163: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:164: PASSED:
+  REQUIRE( result.limiting_check )
+with expansion:
+  {?}
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:165: PASSED:
+  REQUIRE( result.limiting_check->component_id==scene.head[3].id )
+with expansion:
+  4 == 4
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:166: PASSED:
+  REQUIRE( result.limiting_check->obstacle_id==3 )
+with expansion:
+  3 == 3
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:167: PASSED:
+  REQUIRE( result.limiting_check->event_id==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:168: PASSED:
+  REQUIRE( result.limiting_check->witness )
+with expansion:
+  {?}
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:169: PASSED:
+  REQUIRE( result.checked_pairs<result.required_pairs )
+with expansion:
+  15 < 21
+
+-------------------------------------------------------------------------------
+PRF-06 confirmation flags cannot qualify synthetic geometry
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:35
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:38: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::UnsupportedQualification )
+with expansion:
+  3 == 3
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:40: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::UnsupportedQualification )
+with expansion:
+  3 == 3
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:42: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::UnsupportedQualification )
+with expansion:
+  3 == 3
+
+-------------------------------------------------------------------------------
+A07 complete travel checks every declared component obstacle and event
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:125
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:129: PASSED:
+  REQUIRE( result.applicability==SceneApplicability::SimulationOnly )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:130: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:131: PASSED:
+  REQUIRE( result.required_pairs==14 )
+with expansion:
+  14 == 14
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:132: PASSED:
+  REQUIRE( result.checked_pairs==14 )
+with expansion:
+  14 == 14
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:133: PASSED:
+  REQUIRE( result.tip_component_id==7 )
+with expansion:
+  7 == 7
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:134: PASSED:
+  REQUIRE( result.profile_id==scene.profile_id )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:135: PASSED:
+  REQUIRE( result.revision==scene.revision )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:136: PASSED:
+  REQUIRE( result.limiting_check )
+with expansion:
+  {?}
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:137: PASSED:
+  REQUIRE( result.limiting_check->bounds->lower_mm>.1 )
+with expansion:
+  1.29999999999999871 > 0.10000000000000001
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:138: PASSED:
+  REQUIRE( result.limiting_check->bounds->bound_error_mm>=.2 )
+with expansion:
+  0.20000000000000007 >= 0.20000000000000001
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:143: PASSED:
+  REQUIRE( complete.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:144: PASSED:
+  REQUIRE( complete.checked_pairs==28 )
+with expansion:
+  28 == 28
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:147: PASSED:
+  REQUIRE( empty.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:148: PASSED:
+  REQUIRE( empty.checked_pairs==0 )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:149: PASSED:
+  REQUIRE_FALSE( empty.limiting_check )
+with expansion:
+  !{?}
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:151: PASSED:
+  REQUIRE( check_simulation_travel(scene,events,travel_policy()).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+-------------------------------------------------------------------------------
+B08 material motion rejects an interior collision and excludes future and
+opening material
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3480
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7290dac78
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3486: PASSED:
+  REQUIRE( source.snapshot )
+with expansion:
+  0x72918cab0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3488: PASSED:
+  REQUIRE( collision.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3489: PASSED:
+  REQUIRE( collision.witness )
+with expansion:
+  {?}
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3489: PASSED:
+  REQUIRE( collision.witness->material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3489: PASSED:
+  REQUIRE( collision.witness->parameter>.4 )
+with expansion:
+  0.5 > 0.40000000000000002
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3489: PASSED:
+  REQUIRE( collision.witness->parameter<.6 )
+with expansion:
+  0.5 < 0.59999999999999998
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3491: PASSED:
+  REQUIRE( .025<2-.05 )
+with expansion:
+  0.025 < 1.94999999999999996
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3491: PASSED:
+  REQUIRE( 4-.025>2+.05 )
+with expansion:
+  3.97500000000000009 > 2.04999999999999982
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7290dac78
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3495: PASSED:
+  REQUIRE( future.snapshot )
+with expansion:
+  0x72918c5a0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3496: PASSED:
+  REQUIRE( verify_material_motion(future,2,{cube},policy).status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7290dac78
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3502: PASSED:
+  REQUIRE( pressure.snapshot )
+with expansion:
+  0x72918ca50
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3504: PASSED:
+  REQUIRE( checked.snapshot )
+with expansion:
+  0x729007ac0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3505: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3504: PASSED:
+  REQUIRE( checked.snapshot )
+with expansion:
+  0x729007ac0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3505: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7290dac78
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3512: PASSED:
+  REQUIRE( hole.snapshot )
+with expansion:
+  0x72918e160
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3514: PASSED:
+  REQUIRE( hollow.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3516: PASSED:
+  REQUIRE( verify_material_motion(hole,2,{filled},policy).status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3519: PASSED:
+  REQUIRE( (-.1+.4)/2>.04 )
+with expansion:
+  0.15000000000000002 > 0.04
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3521: PASSED:
+  REQUIRE( edge_collision.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3521: PASSED:
+  REQUIRE( edge_collision.witness )
+with expansion:
+  {?}
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3522: PASSED:
+  REQUIRE( edge_collision.witness->local_point.x()>-.04 )
+with expansion:
+  0.02499999999999999 > -0.04
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3522: PASSED:
+  REQUIRE( edge_collision.witness->local_point.x()<.04 )
+with expansion:
+  0.02499999999999999 < 0.04
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+-------------------------------------------------------------------------------
+A07 travel charges both scene envelopes and rejects unsupported material state
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:171
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:175: PASSED:
+  REQUIRE( query_clearance(events.front(),{7,scene.tip},{1,scene.obstacles.front()},travel_policy()).status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:177: PASSED:
+  REQUIRE( uncertain.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:178: PASSED:
+  REQUIRE( uncertain.limiting_check )
+with expansion:
+  {?}
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:179: PASSED:
+  REQUIRE( uncertain.limiting_check->bounds->bound_error_mm>=.2 )
+with expansion:
+  0.20000000000000007 >= 0.20000000000000001
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:181: PASSED:
+  REQUIRE( check_simulation_travel(scene,events,travel_policy()).status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:184: PASSED:
+  REQUIRE( check_simulation_travel(scene,changed,travel_policy()).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:186: PASSED:
+  REQUIRE( check_simulation_travel(scene,events,travel_policy()).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:188: PASSED:
+  REQUIRE( check_simulation_travel(scene,events,travel_policy()).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+-------------------------------------------------------------------------------
+B08 full scene source and motion refuse incomplete coverage stale ownership and
+budgets
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:328
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:270: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0x7290dabd8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:270: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x72918c5a0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:331: PASSED:
+  REQUIRE( source.snapshot )
+with expansion:
+  0x728de0000
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:332: PASSED:
+  REQUIRE_FALSE( prepare_simulation_motion(scene,{},policy).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:333: PASSED:
+  REQUIRE_FALSE( prepare_simulation_motion(missing,material,policy).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:334: PASSED:
+  REQUIRE_FALSE( prepare_simulation_motion(missing,material,policy).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:335: PASSED:
+  REQUIRE_FALSE( prepare_simulation_motion(missing,material,policy).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:270: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0x7290dabd8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:270: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x72918e160
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:337: PASSED:
+  REQUIRE_FALSE( tall.snapshot )
+with expansion:
+  !0
+with message:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:337: PASSED:
+  REQUIRE( tall.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+with message:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:338: PASSED:
+  REQUIRE_FALSE( prepare_simulation_motion(scene,material,huge).snapshot )
+with expansion:
+  !0
+with message:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:339: PASSED:
+  REQUIRE_FALSE( prepare_simulation_motion(scene,material,policy,capture).snapshot )
+with expansion:
+  !0
+with message:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:341: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0x728de0200
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:342: PASSED:
+  REQUIRE( owned.snapshot->material==old )
+with expansion:
+  0x72918c5a0 == 0x72918c5a0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:342: PASSED:
+  REQUIRE( owned.snapshot->components.size()==7 )
+with expansion:
+  7 == 7
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:342: PASSED:
+  REQUIRE( owned.snapshot->policy.required.value()==.005 )
+with expansion:
+  0.005 == 0.005
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:343: PASSED:
+  REQUIRE_FALSE( check_simulation_motion({},0).snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:343: PASSED:
+  REQUIRE_FALSE( check_simulation_motion(source,1).snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  0 MOTION_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  0 MOTION_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  1 MOTION_SCENE_PAIR_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  1 MOTION_SCENE_PAIR_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  2 INVALID_SIMULATION_MOTION_QUERY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  2 INVALID_SIMULATION_MOTION_QUERY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  3 DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  3 DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  4 DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  4 DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  5 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  5 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  6 STALE_SCENE_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  6 STALE_SCENE_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  7 STALE_MATERIAL_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  7 STALE_MATERIAL_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  8 MOTION_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:355: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  8 MOTION_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:358: PASSED:
+  REQUIRE( check_simulation_motion(mutable_source,0,limits).snapshot )
+with expansion:
+  0x728c084c0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:359: PASSED:
+  REQUIRE( check_simulation_motion(source,0,limits).snapshot )
+with expansion:
+  0x728c084c0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:361: PASSED:
+  REQUIRE_FALSE( check_simulation_motion(source,0,limits).snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:361: PASSED:
+  REQUIRE( calls==final_call )
+with expansion:
+  10367 (0x287f) == 10367 (0x287f)
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:363: PASSED:
+  REQUIRE_FALSE( rounding.snapshot )
+with expansion:
+  !0
+with messages:
+  UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+-------------------------------------------------------------------------------
+A07 travel budgets must fit declared scene coverage even with no obstacles
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:190
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:193: PASSED:
+  REQUIRE( check_simulation_travel(scene,travel_events(),travel_policy()).status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:204: PASSED:
+  CHECK( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:205: PASSED:
+  CHECK( result.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:204: PASSED:
+  CHECK( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:205: PASSED:
+  CHECK( result.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:204: PASSED:
+  CHECK( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:205: PASSED:
+  CHECK( result.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:204: PASSED:
+  CHECK( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:205: PASSED:
+  CHECK( result.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:204: PASSED:
+  CHECK( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:205: PASSED:
+  CHECK( result.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:204: PASSED:
+  CHECK( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:205: PASSED:
+  CHECK( result.applicability==SceneApplicability::OutsideCoverage )
+with expansion:
+  5 == 5
+
+-------------------------------------------------------------------------------
+A07 malformed versions identities chronology and numeric state fail closed
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:75
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:78: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::UnsupportedVersion )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:80: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::InvalidInput )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:82: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::InvalidInput )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:84: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::InvalidInput )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:86: PASSED:
+  REQUIRE( assess_simulation_scene(s,motions()) == SceneApplicability::InvalidInput )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:87: PASSED:
+  REQUIRE( assess_simulation_scene(fixture(),{}) == SceneApplicability::InvalidInput )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:89: PASSED:
+  REQUIRE( assess_simulation_scene(fixture(),m) == SceneApplicability::InvalidInput )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:94: PASSED:
+  REQUIRE( result == SceneApplicability::NumericalFailure )
+with expansion:
+  6 == 6
+
+-------------------------------------------------------------------------------
+B08 material motion owns inputs and refuses incomplete numeric or work proofs
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3525
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7290dab38
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3530: PASSED:
+  REQUIRE( source.snapshot )
+with expansion:
+  0x729210120
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3531: PASSED:
+  REQUIRE( source.snapshot->ledger->fingerprint()==original->fingerprint() )
+with expansion:
+  "8eeb6c8f2fde7454275a9549e9e8abee8936edf22afe5f18cd224184c057f7c8"
+  ==
+  "8eeb6c8f2fde7454275a9549e9e8abee8936edf22afe5f18cd224184c057f7c8"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3532: PASSED:
+  REQUIRE_FALSE( prepare_material_motion({}).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3535: PASSED:
+  REQUIRE( recaptured.snapshot )
+with expansion:
+  0x7292104e0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3536: PASSED:
+  REQUIRE( recaptured.snapshot->ledger->fingerprint()==original->fingerprint() )
+with expansion:
+  "8eeb6c8f2fde7454275a9549e9e8abee8936edf22afe5f18cd224184c057f7c8"
+  ==
+  "8eeb6c8f2fde7454275a9549e9e8abee8936edf22afe5f18cd224184c057f7c8"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3537: PASSED:
+  REQUIRE( recaptured.snapshot->ledger->fingerprint()!=forged->fingerprint() )
+with expansion:
+  "8eeb6c8f2fde7454275a9549e9e8abee8936edf22afe5f18cd224184c057f7c8"
+  !=
+  "94d7990fcc9d3d1ba4348ff4e21eb0846e35521c451b90c71378d59348fe2e55"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3538: PASSED:
+  REQUIRE_FALSE( prepare_material_motion({"",original},preparation).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3541: PASSED:
+  REQUIRE( verify_material_motion({},0,tools,policy).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3542: PASSED:
+  REQUIRE( verify_material_motion(source,1,tools,policy).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3543: PASSED:
+  REQUIRE( verify_material_motion(source,0,{},policy).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3544: PASSED:
+  REQUIRE( verify_material_motion(source,0,{tools[0],tools[0]},policy).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  0 MATERIAL_MOTION_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  0 MATERIAL_MOTION_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  1 MATERIAL_MOTION_CELL_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  1 MATERIAL_MOTION_CELL_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  2 MATERIAL_MOTION_UNCERTAIN_BOUNDARY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  2 MATERIAL_MOTION_UNCERTAIN_BOUNDARY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  3 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  3 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  4 STALE_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  4 STALE_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  5 MATERIAL_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  5 MATERIAL_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  6 MATERIAL_MOTION_NUMERIC_FAILURE: unsupported interval rounding
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  6 MATERIAL_MOTION_NUMERIC_FAILURE: unsupported interval rounding
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3558: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0x729007c00
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3558: PASSED:
+  REQUIRE( owned.snapshot->tools.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3560: PASSED:
+  REQUIRE( verify_material_motion(source,0,tools,policy,limits).snapshot )
+with expansion:
+  0x729007ca0
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3561: PASSED:
+  REQUIRE_FALSE( verify_material_motion(source,0,tools,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3561: PASSED:
+  REQUIRE( calls==final_call )
+with expansion:
+  40 == 40
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3563: PASSED:
+  REQUIRE( verify_material_motion(source,0,tools,uncertain).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+No test cases matched '[A04]'
+===============================================================================
+All tests passed (427 assertions in 17 test cases)
+

@@ -34,7 +34,8 @@ bool swept_box_covered(const SimulationScene &s, const ToolBox &box)
     return true;
 }
 }
-SceneApplicability assess_simulation_scene(const SimulationScene &s, const std::vector<MotionEvent> &events)
+namespace {
+SceneApplicability scene_geometry(const SimulationScene &s)
 {
     using Result=SceneApplicability;
     try {
@@ -45,7 +46,7 @@ SceneApplicability assess_simulation_scene(const SimulationScene &s, const std::
         if (s.origin != ProfileOrigin::Synthetic || s.operator_confirmed_claim)
             return Result::UnsupportedQualification;
         if (!s.profile_id || !s.revision || !valid_box(s.nozzle_domain) || !valid_box(s.scene_domain) ||
-            events.empty() || events.size()>10000 || s.head.size()>64 || s.obstacles.size()>10000 ||
+            s.head.size()>64 || s.obstacles.size()>10000 ||
             s.uncertainty.value()>10000 || s.unmodelled_parts_min_local_z.value()>10000)
             return Result::InvalidInput;
         if (!s.obstacle_inventory_complete || s.tip.center.x()!=0 || s.tip.center.y()!=0 || s.tip.center.z()!=0 ||
@@ -81,7 +82,18 @@ SceneApplicability assess_simulation_scene(const SimulationScene &s, const std::
                 if (inflated.lo<scene_lo[i] || inflated.hi>scene_hi[i]) return Result::OutsideCoverage;
             }
         }
-        ids.clear();
+        return Result::SimulationOnly;
+    } catch (const std::invalid_argument &) { return Result::InvalidInput; }
+      catch (const std::overflow_error &) { return Result::NumericalFailure; }
+}
+}
+SceneApplicability assess_simulation_scene(const SimulationScene &s, const std::vector<MotionEvent> &events)
+{
+    using Result=SceneApplicability;
+    try {
+        const auto geometry=scene_geometry(s);if (geometry!=Result::SimulationOnly) return geometry;
+        if (events.empty() || events.size()>10000) return Result::InvalidInput;
+        std::set<uint64_t> ids;
         for (size_t i=0;i<events.size();++i) {
             const auto &event=events[i];
             validate_event(event);
@@ -190,4 +202,111 @@ SimulationTravelResult check_simulation_travel(const SimulationScene &source, co
     }
     return result;
 }
+namespace {
+struct MotionRefusal : std::runtime_error {using std::runtime_error::runtime_error;};
+void motion_refuse(const char *reason) {throw MotionRefusal(reason);}
+template<class Limits> void motion_stop(const Limits &limits,const SimulationMotionSourceSnapshot &source,std::chrono::steady_clock::time_point started)
+{
+    if (limits.cancelled && limits.cancelled()) motion_refuse("CANCELLED");
+    if (limits.is_current && !limits.is_current(source.material->ledger->revision)) motion_refuse("STALE_MATERIAL_REVISION");
+    if (limits.is_scene_current && !limits.is_scene_current(source.scene.profile_id,source.scene.revision)) motion_refuse("STALE_SCENE_REVISION");
+    detail::require_interval_environment();
+    if (std::chrono::steady_clock::now()-started>=limits.timeout) motion_refuse("MOTION_DEADLINE");
+}
+}
+SimulationMotionSourceResult prepare_simulation_motion(const SimulationScene &requested,const MaterialMotionSourceResult &requested_material,
+    const ClearancePolicy &requested_policy,const SimulationMotionPreparationLimits &requested_limits)
+{
+    SimulationMotionSourceResult result;const auto started=std::chrono::steady_clock::now();
+    try {
+        if (requested.head.size()>64 || requested.obstacles.size()>10000) motion_refuse("MOTION_SOURCE_SIZE_LIMIT");
+        const auto scene=requested;const auto material=requested_material.snapshot;const auto policy=requested_policy;const auto limits=requested_limits;
+        if (!material || !material->ledger || !limits.max_evaluations || limits.max_evaluations>2000000 || limits.timeout.count()<=0 ||
+            limits.timeout>std::chrono::seconds(30)) motion_refuse("INVALID_SIMULATION_MOTION_SOURCE");
+        std::vector<ToolComponent> components;uint64_t tip=1;std::set<uint64_t> ids;
+        for (const auto &head : scene.head) ids.insert(head.id);
+        while (ids.count(tip)) ++tip;
+        components.push_back({tip,scene.tip});for (const auto &head : scene.head) components.push_back({head.id,head.outer});
+        auto static_policy=policy,material_policy=policy;
+        const detail::Interval error(scene.uncertainty.value());
+        static_policy.scene_geometry=Length((detail::Interval(policy.scene_geometry.value())+error+error).hi);
+        material_policy.scene_geometry=Length((detail::Interval(policy.scene_geometry.value())+error).hi);
+        auto owned=std::shared_ptr<const SimulationMotionSourceSnapshot>(new SimulationMotionSourceSnapshot(scene,material,policy,
+            static_policy,material_policy,std::move(components),tip));
+        const auto work=[&] {
+            if (++result.evaluations>limits.max_evaluations) motion_refuse("MOTION_PREPARATION_WORK_LIMIT");
+            motion_stop(limits,*owned,started);
+        };
+        work();
+        if ((detail::Interval(policy.numeric.total_mm())+detail::Interval(material->ledger->model.numerical_coordinate_error.value())).hi>.05)
+            motion_refuse("MOTION_NUMERIC_BUDGET");
+        auto covered=scene;detail::Interval inflation(scene.uncertainty.value());
+        for (double term : {policy.numeric.total_mm(),policy.tool_measurement.value(),policy.positioning.value(),policy.material.value(),
+                           policy.scene_geometry.value(),policy.required.value()}) inflation=inflation+detail::Interval(term);
+        covered.uncertainty=Length(inflation.hi);
+        // Charge the bounded complete geometry/inventory walk before invoking
+        // the shared coverage predicate. It cannot silently skip a head part.
+        result.evaluations+=scene.head.size()+scene.obstacles.size();
+        if (result.evaluations>limits.max_evaluations) motion_refuse("MOTION_PREPARATION_WORK_LIMIT");
+        result.applicability=scene_geometry(covered);work();
+        if (result.applicability!=SceneApplicability::SimulationOnly) motion_refuse("SCENE_NOT_APPLICABLE");
+        if (material->full_upper_z_mm && material->full_upper_z_mm->upper>=scene.scene_domain.max.z()) {
+            result.applicability=SceneApplicability::OutsideCoverage;motion_refuse("UPPER_MATERIAL_OUTSIDE_OMITTED_HEAD_COVERAGE");
+        }
+        for (const auto &row : material->ledger->records) {
+            work();
+            if (!contains(scene.nozzle_domain,row.motion.start) || !contains(scene.nozzle_domain,row.motion.end)) {
+                result.applicability=SceneApplicability::OutsideCoverage;motion_refuse("ORIGINAL_LEDGER_OUTSIDE_NOZZLE_DOMAIN");
+            }
+        }
+        work();result.snapshot=std::move(owned);result.reason="OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY";
+    } catch (const MotionRefusal &e) {result.snapshot.reset();result.reason=e.what();}
+      catch (const std::exception &e) {result.snapshot.reset();result.reason="SIMULATION_MOTION_CAPTURE_FAILURE: "+std::string(e.what());}
+    return result;
+}
+SimulationMotionResult check_simulation_motion(const SimulationMotionSourceResult &requested,size_t index,const SimulationMotionLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();SimulationMotionResult result;result.source=source;result.event_index=index;
+    try {
+        if (!source || index>=source->material->ledger->records.size() || !limits.max_evaluations || limits.max_evaluations>2000000 ||
+            limits.max_scene_pairs>1000000 || !limits.max_evaluations_per_scene_pair || limits.max_evaluations_per_scene_pair>65535 ||
+            limits.timeout.count()<=0 || limits.timeout>std::chrono::seconds(30)) motion_refuse("INVALID_SIMULATION_MOTION_QUERY");
+        const auto stop=[&] {motion_stop(limits,*source,started);};
+        const auto work=[&] {
+            if (++result.evaluations>limits.max_evaluations) motion_refuse("MOTION_WORK_LIMIT");stop();
+        };
+        work();const auto &scene=source->scene;
+        if (scene.obstacles.size()>limits.max_scene_pairs/source->components.size()) motion_refuse("MOTION_SCENE_PAIR_LIMIT");
+        const auto &event=source->material->ledger->records[index].motion;
+        std::vector<ClearanceResult> checks;
+        for (const auto &component : source->components) for (size_t obstacle=0;obstacle<scene.obstacles.size();++obstacle) {
+            work();const size_t remaining=limits.max_evaluations-result.evaluations;
+            if (!remaining) motion_refuse("MOTION_WORK_LIMIT");
+            const QueryLimits query{std::min(remaining,limits.max_evaluations_per_scene_pair),started+limits.timeout};
+            auto check=query_clearance(event,component,{uint64_t(obstacle)+1,scene.obstacles[obstacle]},source->static_policy,query);
+            result.evaluations+=check.evaluations;++result.checked_scene_pairs;stop();
+            if (check.status!=ClearanceStatus::Pass) {
+                result.scene_check=std::move(check);result.status=result.scene_check->status;result.reason="STATIC_SCENE_CLEARANCE_BLOCKED";return result;
+            }
+            if (!check.bounds) motion_refuse("MISSING_STATIC_PAIR_BOUND");
+            checks.push_back(std::move(check));
+        }
+        work();const size_t remaining=limits.max_evaluations-result.evaluations;
+        if (!remaining) motion_refuse("MOTION_WORK_LIMIT");
+        MaterialMotionLimits material_limits=limits;material_limits.max_evaluations=remaining;
+        material_limits.cancelled=[&] {stop();return false;};material_limits.is_current={};
+        auto material=verify_material_motion({"",source->material},index,source->components,source->material_policy,material_limits);
+        result.evaluations+=material.evaluations;stop();
+        if (material.status!=ClearanceStatus::Pass || !material.snapshot) {
+            result.status=material.status==ClearanceStatus::Pass ? ClearanceStatus::Unknown : material.status;
+            result.material_check=std::move(material);result.reason="DEPOSITED_MATERIAL_CLEARANCE_BLOCKED";return result;
+        }
+        stop();result.snapshot=std::shared_ptr<const SimulationMotionSnapshot>(new SimulationMotionSnapshot(source,material.snapshot,std::move(checks),result.evaluations));
+        result.status=ClearanceStatus::Pass;result.reason="COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY";
+    } catch (const MotionRefusal &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason=e.what();}
+      catch (const std::exception &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason="SIMULATION_MOTION_NUMERIC_FAILURE: "+std::string(e.what());}
+    return result;
+}
+
 }

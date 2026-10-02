@@ -1,0 +1,67 @@
+[1/2] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_profile_scene.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_profile_scene.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_profile_scene.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_profile_scene.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_profile_scene.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:261:1: error: unknown type name 'MaterialMotionSourceResult'
+  261 | MaterialMotionSourceResult scene_material(bool descending=false,double growth=0)
+      | ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:265:11: error: unknown type name 'MaterialRecord'
+  265 |     const MaterialRecord row{{1,0,33,{0,0,z0},{2,0,z1},Speed(10),Acceleration(100),
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:268:9: error: use of undeclared identifier 'BeadSection'
+  268 |         BeadSection{BeadSectionKind::RoundedRectangle,h,h,{width-1e-12,width+1e-12}}};
+      |         ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:289:44: error: use of undeclared identifier 'SimulationMotionSourceSnapshot'
+  289 |     STATIC_REQUIRE_FALSE(std::is_aggregate<SimulationMotionSourceSnapshot>::value);
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:290:44: error: use of undeclared identifier 'SimulationMotionSnapshot'
+  290 |     STATIC_REQUIRE_FALSE(std::is_aggregate<SimulationMotionSnapshot>::value);
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:332:19: error: use of undeclared identifier 'prepare_simulation_motion'
+  332 |     REQUIRE_FALSE(prepare_simulation_motion(scene,{},policy).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:332:19: error: use of undeclared identifier 'prepare_simulation_motion'
+  332 |     REQUIRE_FALSE(prepare_simulation_motion(scene,{},policy).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:332:19: error: use of undeclared identifier 'prepare_simulation_motion'
+  332 |     REQUIRE_FALSE(prepare_simulation_motion(scene,{},policy).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:339:5: error: unknown type name 'SimulationMotionPreparationLimits'
+  339 |     SimulationMotionPreparationLimits capture;capture.max_evaluations=1;REQUIRE_FALSE(prepare_simulation_motion(scene,material,policy,capture).snapshot);
+      |     ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:343:19: error: use of undeclared identifier 'check_simulation_motion'
+  343 |     REQUIRE_FALSE(check_simulation_motion({},0).snapshot);REQUIRE_FALSE(check_simulation_motion(source,1).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:343:19: error: use of undeclared identifier 'check_simulation_motion'
+  343 |     REQUIRE_FALSE(check_simulation_motion({},0).snapshot);REQUIRE_FALSE(check_simulation_motion(source,1).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:343:19: error: use of undeclared identifier 'check_simulation_motion'
+  343 |     REQUIRE_FALSE(check_simulation_motion({},0).snapshot);REQUIRE_FALSE(check_simulation_motion(source,1).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:345:9: error: unknown type name 'SimulationMotionLimits'; did you mean 'SimulationTravelLimits'?
+  345 |         SimulationMotionLimits limits;
+      |         ^~~~~~~~~~~~~~~~~~~~~~
+      |         SimulationTravelLimits
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/ProfileScene.hpp:40:8: note: 'SimulationTravelLimits' declared here
+   40 | struct SimulationTravelLimits {
+      |        ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:346:29: error: no member named 'max_evaluations' in 'Slic3r::nptop::SimulationTravelLimits'
+  346 |         if (mode==0) limits.max_evaluations=1;
+      |                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:347:29: error: no member named 'max_scene_pairs' in 'Slic3r::nptop::SimulationTravelLimits'
+  347 |         if (mode==1) limits.max_scene_pairs=6;
+      |                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:348:29: error: no member named 'max_evaluations_per_scene_pair' in 'Slic3r::nptop::SimulationTravelLimits'
+  348 |         if (mode==2) limits.max_evaluations_per_scene_pair=0;
+      |                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:349:29: error: no member named 'max_cells' in 'Slic3r::nptop::SimulationTravelLimits'
+  349 |         if (mode==3) limits.max_cells=1;
+      |                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:350:29: error: no member named 'max_depth' in 'Slic3r::nptop::SimulationTravelLimits'
+  350 |         if (mode==4) limits.max_depth=1;
+      |                      ~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:352:29: error: no member named 'is_scene_current' in 'Slic3r::nptop::SimulationTravelLimits'
+  352 |         if (mode==6) limits.is_scene_current=[](uint64_t,uint64_t) {return false;};
+      |                      ~~~~~~ ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+ninja: build stopped: subcommand failed.

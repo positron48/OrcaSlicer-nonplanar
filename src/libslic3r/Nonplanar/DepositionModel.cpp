@@ -321,11 +321,30 @@ MaterialMotionSourceResult prepare_material_motion(const MaterialSequenceResult 
         capture_limits.is_current={};
         const auto validated=capture_material_sequence(ledger->records,ledger->model,ledger->revision,ledger->source_fingerprint,capture_limits);
         if (!validated.snapshot) {result.reason=validated.reason;return result;}
+        std::optional<ScalarBounds> upper_z;
+        for (const auto &row : validated.snapshot->records) {
+            if (++result.evaluations>limits.max_evaluations) reject("MATERIAL_MOTION_PREPARATION_WORK_LIMIT");
+            stop(limits,ledger->revision,started);if (!row.bead) continue;
+            const auto &m=row.motion;const auto &b=*row.bead;
+            const auto xy=Interval(ledger->model.outer_xy_growth.value())+Interval(ledger->model.numerical_coordinate_error.value());
+            const auto z=Interval(ledger->model.outer_z_growth.value())+Interval(ledger->model.numerical_coordinate_error.value());
+            const auto dz=Interval(m.end.z())-Interval(m.start.z()),dh=Interval(b.gap_end_mm)-Interval(b.gap_begin_mm);
+            const auto shift=detail::minimum(xy/detail::root(length_squared(row)),Interval(1));
+            auto top_error=z+absolute(dz)*shift,bottom_error=z+absolute(dz-dh)*shift;
+            if (b.kind==BeadSectionKind::RoundedRectangle)
+                top_error=bottom_error=xy+z+(absolute(dz-dh/Interval(2))+absolute(dh)/Interval(2))*shift;
+            // Same Upper vertical extremes as piece_interval, over every
+            // original full/partial front. Width cannot raise its top.
+            const auto bottom=detail::minimum(Interval(m.start.z())-Interval(b.gap_begin_mm),Interval(m.end.z())-Interval(b.gap_end_mm))-bottom_error;
+            const auto top=Interval(std::max(m.start.z(),m.end.z()))+top_error;
+            if (!upper_z) upper_z=ScalarBounds{bottom.lo,top.hi};
+            else {upper_z->lower=std::min(upper_z->lower,bottom.lo);upper_z->upper=std::max(upper_z->upper,top.hi);}
+        }
         stop(limits,ledger->revision,started);
-        result.snapshot=std::shared_ptr<const MaterialMotionSourceSnapshot>(new MaterialMotionSourceSnapshot(validated.snapshot));
+        result.snapshot=std::shared_ptr<const MaterialMotionSourceSnapshot>(new MaterialMotionSourceSnapshot(validated.snapshot,upper_z));
         result.reason="DECLARED_MATERIAL_MOTION_SOURCE";
-    } catch (const Rejection &e) {result.reason=e.what();}
-    catch (const std::exception &e) {result.reason="MATERIAL_MOTION_SOURCE_FAILURE: "+std::string(e.what());}
+    } catch (const Rejection &e) {result.snapshot.reset();result.reason=e.what();}
+    catch (const std::exception &e) {result.snapshot.reset();result.reason="MATERIAL_MOTION_SOURCE_FAILURE: "+std::string(e.what());}
     return result;
 }
 
@@ -337,7 +356,7 @@ MaterialMotionResult verify_material_motion(const MaterialMotionSourceResult &re
     result.source=source;result.event_index=index;result.policy=policy;
     try {
         detail::require_interval_environment();
-        if (!source || !source->ledger || index>=source->ledger->records.size() || requested_tools.empty() || requested_tools.size()>64 ||
+        if (!source || !source->ledger || index>=source->ledger->records.size() || requested_tools.empty() || requested_tools.size()>65 ||
             !limits.max_evaluations || limits.max_evaluations>2000000 || !limits.max_cells || limits.max_cells>1000000 ||
             !limits.max_depth || limits.max_depth>64 || !valid_timeout(limits.timeout)) reject("INVALID_MATERIAL_MOTION_QUERY");
         const auto tools=requested_tools;result.tools=tools; // Own before the first callback.
@@ -452,8 +471,8 @@ MaterialMotionResult verify_material_motion(const MaterialMotionSourceResult &re
         stop(limits,ledger->revision,started);
         result.snapshot=std::shared_ptr<const MaterialMotionSnapshot>(new MaterialMotionSnapshot(source,index,tools,policy,std::move(leaves),result.cells,result.evaluations));
         result.status=ClearanceStatus::Pass;result.reason="DECLARED_RIGID_MATERIAL_MOTION_ONLY";
-    } catch (const Rejection &e) {result.reason=e.what();}
-    catch (const std::exception &e) {result.reason="MATERIAL_MOTION_NUMERIC_FAILURE: "+std::string(e.what());}
+    } catch (const Rejection &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason=e.what();}
+    catch (const std::exception &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason="MATERIAL_MOTION_NUMERIC_FAILURE: "+std::string(e.what());}
     return result;
 }
 
