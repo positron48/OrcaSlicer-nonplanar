@@ -31,7 +31,9 @@ Next software tasks, in dependency order:
    passes those timeout calculations but fails a test's macOS-only body count
    (2034 instead of actual Linux 2073). B07-native-body-count.md replaces the
    literal with both authoritative source counts; exact canonical row checks
-   remain. Observe the corrected source and all later Linux checks separately.
+   remain. The saved 04:33 UTC observation has corrected 574acc54 / 36962895029
+   pending and 4903be4a / 36961569541 in progress. Observe the corrected source
+   and all later Linux checks separately.
    The inherited native-fill deadline failures at 84a709ef, 7f71cc98 and 946d3da7 are retained
    as historical evidence. `B07-constant-section-roof.md` is now verified by
    successful run 36847680702 at 2d8bebaa: selected native suites, STL CLI and
@@ -153,6 +155,17 @@ Next software tasks, in dependency order:
    now requires a whole-parent actual nominal normal-ray band in next-cap-bead
    contract 3, with original shared limits and independent rounded-shoulder refusal.
    Extend this local affine proof to complete curved/stepped later domains.
+   Complete adjacent hatch construction needs qualified bounded contact/overlap
+   and excess; original disjoint-batch and actual normal-gap checks cannot be
+   weakened to force a full later pass.
+   `B09-lifted-travel.md` now owns and continuously checks one original Travel's
+   lift/transfer/descent, preserving every other row and sharing all budgets.
+   Analytical full routes pass; the complete native ledger's exit is UNKNOWN at
+   the original margin, despite a proposal above its global Upper ceiling. Solve
+   actual tool access/ROI and qualified contact before accepting that exit; do
+   not shorten the prefix or infer safe lift from the horizontal height. Extend
+   admissible height selection and legal order to every motion in the full job,
+   including prolog/parking/wipe/end and final-byte replay.
    Overlapping batches need sequential re-planning on the updated actual prefix.
    Add exact partial-body/partial-before continuation while retaining
    the original packet geometry and actual fraction.

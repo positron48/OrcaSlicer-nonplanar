@@ -2,6 +2,7 @@
 #include "Interval.hpp"
 #include <array>
 #include <set>
+#include <limits>
 
 namespace Slic3r::nptop {
 namespace {
@@ -306,6 +307,92 @@ SimulationMotionResult check_simulation_motion(const SimulationMotionSourceResul
         result.status=ClearanceStatus::Pass;result.reason="COMPLETE_SIMULATION_HEAD_SCENE_MATERIAL_ONLY";
     } catch (const MotionRefusal &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason=e.what();}
       catch (const std::exception &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason="SIMULATION_MOTION_NUMERIC_FAILURE: "+std::string(e.what());}
+    return result;
+}
+
+SimulationLiftRouteResult plan_simulation_lifted_travel(const SimulationMotionSourceResult &requested,size_t index,double lift_z,
+    const SimulationLiftRouteLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();SimulationLiftRouteResult result;result.source=source;
+    try {
+        if (!source || !limits.max_records || limits.max_records>200000 || !limits.max_evaluations || limits.max_evaluations>2000000 ||
+            !limits.max_cells || limits.max_cells>1000000 || !limits.max_depth || limits.max_depth>64 || limits.max_scene_pairs>1000000 ||
+            !limits.max_evaluations_per_scene_pair || limits.max_evaluations_per_scene_pair>65535 ||
+            limits.timeout.count()<=0 || limits.timeout>std::chrono::seconds(30) || !std::isfinite(lift_z) || std::abs(lift_z)>10000)
+            motion_refuse("INVALID_SIMULATION_LIFT_ROUTE");
+        const auto &old=*source->material->ledger;
+        if (index>=old.records.size() || old.records.size()>limits.max_records ||
+            !std::holds_alternative<Travel>(old.records[index].motion.payload)) motion_refuse("LIFT_ROUTE_REQUIRES_ORIGINAL_TRAVEL");
+        const auto stop=[&] {motion_stop(limits,*source,started);};
+        const auto charge=[&] {if (++result.evaluations>limits.max_evaluations) motion_refuse("LIFT_ROUTE_WORK_LIMIT");stop();};charge();
+        const auto remaining_time=[&] {
+            stop();const auto time=limits.timeout-std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+            if (time.count()<=0) motion_refuse("MOTION_DEADLINE");return time;
+        };
+        const auto remaining_work=[&] {
+            stop();if (result.evaluations>=limits.max_evaluations) motion_refuse("LIFT_ROUTE_WORK_LIMIT");
+            return limits.max_evaluations-result.evaluations;
+        };
+        const auto &original=old.records[index].motion;
+        if (lift_z<std::max(original.start.z(),original.end.z())) motion_refuse("LIFT_ROUTE_HEIGHT_BELOW_ENDPOINT");
+        std::vector<PhysicalPosition> points{original.start};
+        for (auto p : {PhysicalPosition{original.start.x(),original.start.y(),lift_z},
+                       PhysicalPosition{original.end.x(),original.end.y(),lift_z},original.end}) {
+            const auto &last=points.back();if (p.x()!=last.x() || p.y()!=last.y() || p.z()!=last.z()) points.push_back(p);
+        }
+        // Preserve an original zero-length Travel as an instant clearance
+        // obligation rather than accepting an empty set of unchecked legs.
+        if (points.size()==1) points.push_back(original.end);
+        const size_t extra=points.size()-2;
+        if (extra>limits.max_records-old.records.size()) motion_refuse("LIFT_ROUTE_RECORD_LIMIT");
+        uint64_t id=0;for (const auto &row : old.records) {charge();id=std::max(id,row.motion.event_id);}
+        if (id>std::numeric_limits<uint64_t>::max()-extra) motion_refuse("LIFT_ROUTE_EVENT_ID_LIMIT");
+        std::vector<MaterialRecord> rows;std::vector<size_t> origins;
+        const auto append=[&](MaterialRecord row,size_t origin) {
+            charge();row.motion.sequence_index=rows.size();rows.push_back(std::move(row));origins.push_back(origin);
+        };
+        for (size_t i=0;i<old.records.size();++i) {
+            if (i!=index) append(old.records[i],i);
+            else for (size_t leg=0;leg+1<points.size();++leg) {
+                auto row=old.records[i];row.motion.start=points[leg];row.motion.end=points[leg+1];
+                if (leg) row.motion.event_id=++id;append(std::move(row),i);
+            }
+        }
+        // The public aggregate is only owned raw input. The existing protected
+        // preparation factory revalidates every record and rebuilds geometry;
+        // no caller-supplied derived geometry is trusted or carried forward.
+        auto raw=std::make_shared<const MaterialSequenceSnapshot>(MaterialSequenceSnapshot{old.revision,old.source_fingerprint,old.model,std::move(rows),{}});
+        MaterialMotionPreparationLimits material_limits;material_limits.max_records=limits.max_records;
+        material_limits.max_evaluations=remaining_work();material_limits.timeout=remaining_time();material_limits.cancelled=[&] {stop();return false;};
+        const auto material=prepare_material_motion({"",raw},material_limits);result.evaluations+=material.evaluations;stop();
+        if (!material.snapshot) throw MotionRefusal(material.reason);
+        SimulationMotionPreparationLimits scene_limits;scene_limits.max_evaluations=remaining_work();scene_limits.timeout=remaining_time();
+        scene_limits.cancelled=[&] {stop();return false;};
+        const auto planned=prepare_simulation_motion(source->scene,material,source->policy,scene_limits);
+        result.evaluations+=planned.evaluations;stop();if (!planned.snapshot) throw MotionRefusal(planned.reason);
+        std::vector<std::shared_ptr<const SimulationMotionSnapshot>> checks;
+        for (size_t leg=0;leg+1<points.size();++leg) {
+            if (result.cells>=limits.max_cells) motion_refuse("LIFT_ROUTE_CELL_LIMIT");
+            SimulationMotionLimits next=limits;next.max_evaluations=remaining_work();next.max_cells-=result.cells;
+            next.max_scene_pairs-=result.checked_scene_pairs;next.timeout=remaining_time();next.cancelled=[&] {stop();return false;};
+            next.is_current={};next.is_scene_current={};
+            auto check=check_simulation_motion(planned,index+leg,next);result.evaluations+=check.evaluations;
+            result.checked_scene_pairs+=check.checked_scene_pairs;
+            if (check.snapshot) result.cells+=check.snapshot->material->cells;
+            else if (check.material_check) result.cells+=check.material_check->cells;
+            stop();
+            if (check.status!=ClearanceStatus::Pass || !check.snapshot) {
+                result.status=check.status==ClearanceStatus::Pass ? ClearanceStatus::Unknown : check.status;
+                result.blocked_leg=leg;result.reason=check.reason;result.motion_check=std::move(check);return result;
+            }
+            checks.push_back(std::move(check.snapshot));
+        }
+        stop();result.snapshot=std::shared_ptr<const SimulationLiftRouteSnapshot>(new SimulationLiftRouteSnapshot(source,planned.snapshot,index,lift_z,
+            std::move(origins),std::move(checks),result.cells,result.checked_scene_pairs,result.evaluations));stop();
+        result.status=ClearanceStatus::Pass;result.reason="COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY";
+    } catch (const MotionRefusal &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason=e.what();}
+      catch (const std::exception &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason="LIFT_ROUTE_NUMERIC_FAILURE: "+std::string(e.what());}
     return result;
 }
 

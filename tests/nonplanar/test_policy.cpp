@@ -2652,6 +2652,30 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE(full_source.snapshot->scene.head[0].outer.min.z()==.5);
     INFO("native complete head cells=" << full_motion.snapshot->material->cells << " work=" << full_motion.evaluations <<
         " blocked material row=" << low_head.material_check->witness->material_record << " event=" << first_later);
+    // Plan a declared exit after the actual later bead. Preserve every original
+    // body/cap/later row; the complete U1-sized synthetic tip remains at Z=0.
+    auto exit_rows=new_ledger.records;uint64_t exit_id=0;
+    for (const auto &row : exit_rows) exit_id=std::max(exit_id,row.motion.event_id);
+    const auto exit_start=exit_rows.back().motion.end;const size_t exit_index=exit_rows.size();
+    exit_rows.push_back({{exit_id+1,exit_index,0,exit_start,{exit_start.x()+1,exit_start.y(),exit_start.z()},Speed(10),Acceleration(100),Travel{}},{}});
+    const auto exit_material=prepare_material_motion(capture_material_sequence(exit_rows,new_ledger.model,new_ledger.revision,new_ledger.source_fingerprint));REQUIRE(exit_material.snapshot);
+    const auto exit_source=prepare_simulation_motion(full_source.snapshot->scene,exit_material,motion_policy);INFO(exit_source.reason);REQUIRE(exit_source.snapshot);
+    SimulationLiftRouteLimits exit_limits;exit_limits.timeout=std::chrono::seconds(5);
+    REQUIRE(exit_material.snapshot->full_upper_z_mm);
+    const double exit_height=exit_material.snapshot->full_upper_z_mm->upper+.1;
+    REQUIRE(exit_height>exit_start.z());REQUIRE(exit_height<full_source.snapshot->scene.nozzle_domain.max.z());
+    INFO("native exit start Z=" << exit_start.z() << " complete Upper ceiling=" << exit_material.snapshot->full_upper_z_mm->upper << " proposed Z=" << exit_height);
+    const auto exit_route=plan_simulation_lifted_travel(exit_source,exit_index,exit_height,exit_limits);INFO(exit_route.reason << " cells=" << exit_route.cells << " work=" << exit_route.evaluations);
+    REQUIRE_FALSE(exit_route.snapshot);REQUIRE(exit_route.status==ClearanceStatus::Unknown);
+    REQUIRE(exit_route.blocked_leg==0);REQUIRE(exit_route.motion_check);REQUIRE(exit_route.motion_check->material_check);
+    const auto &exit_material_check=*exit_route.motion_check->material_check;INFO(exit_material_check.reason);
+    REQUIRE(exit_material_check.reason=="MATERIAL_MOTION_UNCERTAIN_BOUNDARY");
+    // A high horizontal ceiling does not qualify the full exit. Keep its
+    // original required margin and incomplete boundary proof; never publish.
+    const auto &exit_ledger=*exit_material_check.source->ledger;
+    REQUIRE(exit_ledger.records.size()==new_ledger.records.size()+3);
+    for (size_t i=0;i<new_ledger.records.size();++i) REQUIRE(exit_ledger.canonical_record(i)==new_ledger.canonical_record(i));
+    REQUIRE(exit_route.source==exit_source.snapshot);REQUIRE(exit_material_check.tools.size()==7);
     const double lx=(la.x()+lb.x())/2,ly=(la.y()+lb.y())/2,lower_plane=(la.z()+lb.z())/2-.025;
     const RectangleXY third_region=rx ? RectangleXY{lx-.025,ly-.01,lx+.025,ly+.01} : RectangleXY{lx-.01,ly-.025,lx+.01,ly+.025};
     const auto third=assess_first_cap_next_pass(added,2,third_region,lower_plane,next_limits);INFO(third.reason);REQUIRE(third.snapshot);

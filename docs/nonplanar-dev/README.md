@@ -15,6 +15,18 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B09-lifted-travel.md` and ADR-0067 now replace one original Travel with owned
+continuously checked lift/transfer/descent. Every other material/pressure record
+and its order remain; all legs share original work/cell/pair/deadline budgets.
+Three analytical cases / 468 assertions include full positive sweeps and blocked
+interior exit/descent with clear endpoints. The complete native ledger's exit
+remains UNKNOWN at its original margin, even above its complete Upper ceiling;
+no partial route is published. Final material 118/47799, body 14/123356 and
+CTest 363/363 pass. Six fresh OFF/ZAA comparisons are recorded in the manifest.
+Complete native contact/access, cap/order/job/replay, independent review and
+physical evidence remain. `B07-native-body-count.md` also preserves exact row
+checks using actual source counts (macOS 2034, Linux 2073) instead of a macOS literal.
+
 `B06-normal-spacing.md` and ADR-0066 now require an actual nominal normal-ray
 certificate before constructing a local later bead. Whole near-ray emptiness and
 terminal run/event coverage retain original normal limits, source/current/future

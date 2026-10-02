@@ -1,0 +1,3119 @@
+Filters: [LiftedTravel]
+Randomness seeded to: 3871392267
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B09 an interior exit or descent collision blocks lifted travel despite clear
+leg endpoints
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:434
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:271: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0x722c7c338
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:271: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x7230dcab0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:387: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x7230dc3f0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:390: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x722d8c600
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:439: PASSED:
+  REQUIRE( blocked.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:439: PASSED:
+  REQUIRE_FALSE( blocked.snapshot )
+with expansion:
+  !0
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:439: PASSED:
+  REQUIRE( blocked.blocked_leg==leg )
+with expansion:
+  {?} == 0
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:440: PASSED:
+  REQUIRE( blocked.motion_check )
+with expansion:
+  {?}
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:440: PASSED:
+  REQUIRE( blocked.motion_check->scene_check )
+with expansion:
+  {?}
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:441: PASSED:
+  REQUIRE( check.witness )
+with expansion:
+  {?}
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:441: PASSED:
+  REQUIRE( check.obstacle_id==2 )
+with expansion:
+  2 == 2
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:441: PASSED:
+  REQUIRE( check.component_id==1 )
+with expansion:
+  1 == 1
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:444: PASSED:
+  REQUIRE( z+.5L<=obstacle.max.z() )
+with expansion:
+  3 <= 3.0
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:444: PASSED:
+  REQUIRE( z+.8L>=obstacle.min.z() )
+with expansion:
+  3.3 >= 2.89999999999999991
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:447: PASSED:
+  REQUIRE( (p+.8L<obstacle.min.z()-.005L || p+.5L>obstacle.max.z()+.005L) )
+with expansion:
+  true
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:447: PASSED:
+  REQUIRE( (p+.8L<obstacle.min.z()-.005L || p+.5L>obstacle.max.z()+.005L) )
+with expansion:
+  true
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:271: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0x722c7c478
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:271: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x7230dc3f0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:387: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x7230dc870
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:390: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x722d8c600
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:439: PASSED:
+  REQUIRE( blocked.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:439: PASSED:
+  REQUIRE_FALSE( blocked.snapshot )
+with expansion:
+  !0
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:439: PASSED:
+  REQUIRE( blocked.blocked_leg==leg )
+with expansion:
+  {?} == 2
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:440: PASSED:
+  REQUIRE( blocked.motion_check )
+with expansion:
+  {?}
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:440: PASSED:
+  REQUIRE( blocked.motion_check->scene_check )
+with expansion:
+  {?}
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:441: PASSED:
+  REQUIRE( check.witness )
+with expansion:
+  {?}
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:441: PASSED:
+  REQUIRE( check.obstacle_id==2 )
+with expansion:
+  2 == 2
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:441: PASSED:
+  REQUIRE( check.component_id==1 )
+with expansion:
+  1 == 1
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:444: PASSED:
+  REQUIRE( z+.5L<=obstacle.max.z() )
+with expansion:
+  3.2 <= 3.2799999999999998
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:444: PASSED:
+  REQUIRE( z+.8L>=obstacle.min.z() )
+with expansion:
+  3.5 >= 3.25999999999999979
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:447: PASSED:
+  REQUIRE( (p+.8L<obstacle.min.z()-.005L || p+.5L>obstacle.max.z()+.005L) )
+with expansion:
+  true
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:447: PASSED:
+  REQUIRE( (p+.8L<obstacle.min.z()-.005L || p+.5L>obstacle.max.z()+.005L) )
+with expansion:
+  true
+with message:
+  STATIC_SCENE_CLEARANCE_BLOCKED
+
+-------------------------------------------------------------------------------
+B09 lifted travel preserves original deposits and checks all three legs against
+the actual prefix
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:393
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:395: PASSED:
+with message:
+  simulation_lift_route_version==1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:396: PASSED:
+with message:
+  !(std::is_aggregate<SimulationLiftRouteSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:271: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0x722c7c298
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:271: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x7230dc870
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:387: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x7230dc570
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:390: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x722d8c600
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:399: PASSED:
+  REQUIRE( direct.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:399: PASSED:
+  REQUIRE( direct.scene_check )
+with expansion:
+  {?}
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:400: PASSED:
+  REQUIRE( route.snapshot )
+with expansion:
+  0x72300d580
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:401: PASSED:
+  REQUIRE( route.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:402: PASSED:
+  REQUIRE( r.source==source.snapshot )
+with expansion:
+  0x722d8c600 == 0x722d8c600
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:402: PASSED:
+  REQUIRE( r.original_event_index==1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:402: PASSED:
+  REQUIRE( r.legs.size()==3 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:403: PASSED:
+  REQUIRE( (r.source_records==std::vector<size_t>{0,1,1,1,2,3}) )
+with expansion:
+  true
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:403: PASSED:
+  REQUIRE( planned.records.size()==6 )
+with expansion:
+  6 == 6
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:404: PASSED:
+  REQUIRE( planned.records[1].motion.event_id==20 )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:404: PASSED:
+  REQUIRE( planned.records[2].motion.event_id==41 )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:404: PASSED:
+  REQUIRE( planned.records[3].motion.event_id==42 )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:409: PASSED:
+  REQUIRE( std::holds_alternative<Travel>(row.motion.payload) )
+with expansion:
+  true
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:409: PASSED:
+  REQUIRE_FALSE( row.bead )
+with expansion:
+  !{?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:410: PASSED:
+  REQUIRE( row.motion.start.x()==points[i].x() )
+with expansion:
+  2.0 == 2.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:410: PASSED:
+  REQUIRE( row.motion.start.y()==points[i].y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:410: PASSED:
+  REQUIRE( row.motion.start.z()==points[i].z() )
+with expansion:
+  2.0 == 2.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:411: PASSED:
+  REQUIRE( row.motion.end.x()==points[i+1].x() )
+with expansion:
+  2.0 == 2.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:411: PASSED:
+  REQUIRE( row.motion.end.y()==points[i+1].y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:411: PASSED:
+  REQUIRE( row.motion.end.z()==points[i+1].z() )
+with expansion:
+  3.0 == 3.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:412: PASSED:
+  REQUIRE( proof.source==r.planned )
+with expansion:
+  0x722d8c800 == 0x722d8c800
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:412: PASSED:
+  REQUIRE( proof.material->event_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:412: PASSED:
+  REQUIRE( proof.material->tools.size()==7 )
+with expansion:
+  7 == 7
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0625 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.125 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.25 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.5 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0625 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.125 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.25 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.5 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0625 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.125 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.25 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.5 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.0625 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0625 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.125 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.25 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.5 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.5 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:409: PASSED:
+  REQUIRE( std::holds_alternative<Travel>(row.motion.payload) )
+with expansion:
+  true
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:409: PASSED:
+  REQUIRE_FALSE( row.bead )
+with expansion:
+  !{?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:410: PASSED:
+  REQUIRE( row.motion.start.x()==points[i].x() )
+with expansion:
+  2.0 == 2.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:410: PASSED:
+  REQUIRE( row.motion.start.y()==points[i].y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:410: PASSED:
+  REQUIRE( row.motion.start.z()==points[i].z() )
+with expansion:
+  3.0 == 3.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:411: PASSED:
+  REQUIRE( row.motion.end.x()==points[i+1].x() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:411: PASSED:
+  REQUIRE( row.motion.end.y()==points[i+1].y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:411: PASSED:
+  REQUIRE( row.motion.end.z()==points[i+1].z() )
+with expansion:
+  3.0 == 3.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:412: PASSED:
+  REQUIRE( proof.source==r.planned )
+with expansion:
+  0x722d8c800 == 0x722d8c800
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:412: PASSED:
+  REQUIRE( proof.material->event_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:412: PASSED:
+  REQUIRE( proof.material->tools.size()==7 )
+with expansion:
+  7 == 7
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  41 == 41
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:409: PASSED:
+  REQUIRE( std::holds_alternative<Travel>(row.motion.payload) )
+with expansion:
+  true
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:409: PASSED:
+  REQUIRE_FALSE( row.bead )
+with expansion:
+  !{?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:410: PASSED:
+  REQUIRE( row.motion.start.x()==points[i].x() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:410: PASSED:
+  REQUIRE( row.motion.start.y()==points[i].y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:410: PASSED:
+  REQUIRE( row.motion.start.z()==points[i].z() )
+with expansion:
+  3.0 == 3.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:411: PASSED:
+  REQUIRE( row.motion.end.x()==points[i+1].x() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:411: PASSED:
+  REQUIRE( row.motion.end.y()==points[i+1].y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:411: PASSED:
+  REQUIRE( row.motion.end.z()==points[i+1].z() )
+with expansion:
+  2.39999999999999991 == 2.39999999999999991
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:412: PASSED:
+  REQUIRE( proof.source==r.planned )
+with expansion:
+  0x722d8c800 == 0x722d8c800
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:412: PASSED:
+  REQUIRE( proof.material->event_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:412: PASSED:
+  REQUIRE( proof.material->tools.size()==7 )
+with expansion:
+  7 == 7
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:415: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:416: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.event_id==row.motion.event_id )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.sequence_index==i+1 )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:418: PASSED:
+  REQUIRE( check.bounds )
+with expansion:
+  {?}
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:420: PASSED:
+  REQUIRE( pairs==42 )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:420: PASSED:
+  REQUIRE( route.checked_scene_pairs==pairs )
+with expansion:
+  42 == 42
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:420: PASSED:
+  REQUIRE( route.evaluations>work )
+with expansion:
+  712 (0x2c8) > 651 (0x28b)
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:420: PASSED:
+  REQUIRE( route.cells==cells )
+with expansion:
+  101 == 101
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:425: PASSED:
+  REQUIRE( position!=std::string::npos )
+with expansion:
+  182
+  !=
+  18446744073709551615 (0xffffffffffffffff)
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:426: PASSED:
+  REQUIRE( planned.canonical_record(i)==expected )
+with expansion:
+  "{"bead":[1,"3fc999999999999a","3fc999999999999a",["3fd999999999533c",
+  "3fd999999999dff8"]],"geometry":[["3ffffffffffffffd","4000000000000003"],
+  ["3fc248506ce29dcb","3fc248506ce29dcb"]],"motion":[1,0,33,
+  ["0000000000000000","0000000000000000","3ff0000000000000"],
+  ["4000000000000000","0000000000000000","4000000000000000"],
+  "4024000000000000","4059000000000000",[1,"3fc248506ce29dcb",
+  "3fd999999999999a","3fc999999999999a","3fc999999999999a",1,2,3,7,8],-1]}"
+  ==
+  "{"bead":[1,"3fc999999999999a","3fc999999999999a",["3fd999999999533c",
+  "3fd999999999dff8"]],"geometry":[["3ffffffffffffffd","4000000000000003"],
+  ["3fc248506ce29dcb","3fc248506ce29dcb"]],"motion":[1,0,33,
+  ["0000000000000000","0000000000000000","3ff0000000000000"],
+  ["4000000000000000","0000000000000000","4000000000000000"],
+  "4024000000000000","4059000000000000",[1,"3fc248506ce29dcb",
+  "3fd999999999999a","3fc999999999999a","3fc999999999999a",1,2,3,7,8],-1]}"
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:425: PASSED:
+  REQUIRE( position!=std::string::npos )
+with expansion:
+  28
+  !=
+  18446744073709551615 (0xffffffffffffffff)
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:426: PASSED:
+  REQUIRE( planned.canonical_record(i)==expected )
+with expansion:
+  "{"bead":null,"geometry":null,"motion":[30,4,33,["0000000000000000",
+  "0000000000000000","4003333333333333"],["0000000000000000",
+  "0000000000000000","400e666666666666"],"4024000000000000","4059000000000000",
+  [0],-1]}"
+  ==
+  "{"bead":null,"geometry":null,"motion":[30,4,33,["0000000000000000",
+  "0000000000000000","4003333333333333"],["0000000000000000",
+  "0000000000000000","400e666666666666"],"4024000000000000","4059000000000000",
+  [0],-1]}"
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:425: PASSED:
+  REQUIRE( position!=std::string::npos )
+with expansion:
+  182
+  !=
+  18446744073709551615 (0xffffffffffffffff)
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:426: PASSED:
+  REQUIRE( planned.canonical_record(i)==expected )
+with expansion:
+  "{"bead":[1,"3fc999999999999a","3fc999999999999a",["3fd999999999533c",
+  "3fd999999999dff8"]],"geometry":[["3ffffffffffffffd","4000000000000003"],
+  ["3fc248506ce29dcb","3fc248506ce29dcb"]],"motion":[40,5,33,
+  ["0000000000000000","0000000000000000","400e666666666666"],
+  ["4000000000000000","0000000000000000","400e666666666666"],
+  "4024000000000000","4059000000000000",[1,"3fc248506ce29dcb",
+  "3fd999999999999a","3fc999999999999a","3fc999999999999a",1,2,3,7,8],-1]}"
+  ==
+  "{"bead":[1,"3fc999999999999a","3fc999999999999a",["3fd999999999533c",
+  "3fd999999999dff8"]],"geometry":[["3ffffffffffffffd","4000000000000003"],
+  ["3fc248506ce29dcb","3fc248506ce29dcb"]],"motion":[40,5,33,
+  ["0000000000000000","0000000000000000","400e666666666666"],
+  ["4000000000000000","0000000000000000","400e666666666666"],
+  "4024000000000000","4059000000000000",[1,"3fc248506ce29dcb",
+  "3fd999999999999a","3fc999999999999a","3fc999999999999a",1,2,3,7,8],-1]}"
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:428: PASSED:
+  REQUIRE( old.fingerprint()==fingerprint )
+with expansion:
+  "125255dbd3d53616d2c7b3ac1b02d6e2dcad5300f2c81e770833ed304375e607"
+  ==
+  "125255dbd3d53616d2c7b3ac1b02d6e2dcad5300f2c81e770833ed304375e607"
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:428: PASSED:
+  REQUIRE( planned.fingerprint()!=fingerprint )
+with expansion:
+  "2ce8e5bd163bf696688ecd84faa0c994a55082b6e60ad846e5bd2b97deb68a15"
+  !=
+  "125255dbd3d53616d2c7b3ac1b02d6e2dcad5300f2c81e770833ed304375e607"
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:429: PASSED:
+  REQUIRE( r.planned->scene.origin==ProfileOrigin::Synthetic )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:429: PASSED:
+  REQUIRE_FALSE( r.planned->scene.operator_confirmed_claim )
+with expansion:
+  !false
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:430: PASSED:
+  REQUIRE_FALSE( plan_simulation_lifted_travel(source,1,3,limits).snapshot )
+with expansion:
+  !0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:432: PASSED:
+  REQUIRE_FALSE( plan_simulation_lifted_travel(source,1,3,limits).snapshot )
+with expansion:
+  !0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+-------------------------------------------------------------------------------
+B09 lifted travel owns callbacks and refuses invalid routes or shared resource
+exhaustion
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:450
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:271: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0x722c7c338
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:271: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x7230dc570
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:387: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x7230dc870
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:390: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x722d8c600
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:453: PASSED:
+  REQUIRE_FALSE( plan_simulation_lifted_travel({},1,3).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:453: PASSED:
+  REQUIRE_FALSE( plan_simulation_lifted_travel(source,0,3).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:454: PASSED:
+  REQUIRE_FALSE( plan_simulation_lifted_travel(source,99,3).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:454: PASSED:
+  REQUIRE_FALSE( plan_simulation_lifted_travel(source,1,2).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:455: PASSED:
+  REQUIRE_FALSE( plan_simulation_lifted_travel(source,1,5).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:456: PASSED:
+  REQUIRE_FALSE( plan_simulation_lifted_travel(source,1,std::numeric_limits<double>::quiet_NaN()).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:271: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0x722c7c338
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:271: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x7230dc480
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:387: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x7230dc420
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:390: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x722d8c800
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:457: PASSED:
+  REQUIRE( plan_simulation_lifted_travel(lift_source({},true),1,3).reason=="LIFT_ROUTE_EVENT_ID_LIMIT" )
+with expansion:
+  "LIFT_ROUTE_EVENT_ID_LIMIT"
+  ==
+  "LIFT_ROUTE_EVENT_ID_LIMIT"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  0 LIFT_ROUTE_RECORD_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with message:
+  0 LIFT_ROUTE_RECORD_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  1 LIFT_ROUTE_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with message:
+  1 LIFT_ROUTE_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  2 DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with message:
+  2 DEPOSITED_MATERIAL_CLEARANCE_BLOCKED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  3 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with message:
+  3 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  4 STALE_SCENE_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with message:
+  4 STALE_SCENE_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  5 STALE_MATERIAL_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with message:
+  5 STALE_MATERIAL_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE( denied.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  6 MOTION_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:468: PASSED:
+  REQUIRE_FALSE( denied.snapshot )
+with expansion:
+  !0
+with message:
+  6 MOTION_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:472: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0x72300d580
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:472: PASSED:
+  REQUIRE( owned.snapshot->source==source.snapshot )
+with expansion:
+  0x722d8c600 == 0x722d8c600
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:473: PASSED:
+  REQUIRE( plan_simulation_lifted_travel(source,1,3,limits).snapshot )
+with expansion:
+  0x72300d600
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:475: PASSED:
+  REQUIRE( plan_simulation_lifted_travel(source,1,3,limits).reason=="CANCELLED" )
+with expansion:
+  "CANCELLED" == "CANCELLED"
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:477: PASSED:
+  REQUIRE_FALSE( rounding.snapshot )
+with expansion:
+  !0
+with message:
+  COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY
+
+===============================================================================
+All tests passed (442 assertions in 3 test cases)
+

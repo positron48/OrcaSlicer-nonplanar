@@ -2,6 +2,8 @@
 #include <libslic3r/Nonplanar/ProfileScene.hpp>
 #include <cfenv>
 #include <thread>
+#include <limits>
+#include <boost/multiprecision/cpp_bin_float.hpp>
 using namespace Slic3r::nptop;
 namespace {
 SimulationScene fixture()
@@ -373,4 +375,143 @@ TEST_CASE("B08 full scene source and motion refuse incomplete coverage stale own
     REQUIRE_FALSE(check_simulation_motion(source,0,limits).snapshot);REQUIRE(calls==final_call);
     limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
     const auto rounding=check_simulation_motion(source,0,limits);std::fesetround(FE_TONEAREST);REQUIRE_FALSE(rounding.snapshot);
+}
+
+namespace {
+SimulationMotionSourceResult lift_source(const std::vector<SceneBox> &obstacles={},bool exhausted_ids=false)
+{
+    const auto original=scene_material();const auto &ledger=*original.snapshot->ledger;auto rows=ledger.records;
+    rows.push_back({{20,1,33,rows.back().motion.end,{0,0,2.4},Speed(10),Acceleration(100),Travel{}},{}});
+    rows.push_back({{30,2,33,{0,0,2.4},{0,0,3.8},Speed(10),Acceleration(100),Travel{}},{}});
+    auto future=rows.front();future.motion.event_id=exhausted_ids ? std::numeric_limits<uint64_t>::max() : 40;
+    future.motion.sequence_index=3;future.motion.start={0,0,3.8};future.motion.end={2,0,3.8};rows.push_back(future);
+    const auto material=prepare_material_motion(capture_material_sequence(rows,ledger.model,ledger.revision,ledger.source_fingerprint));REQUIRE(material.snapshot);
+    auto scene=material_scene();scene.nozzle_domain.max={3,1,4};
+    scene.obstacles.insert(scene.obstacles.end(),obstacles.begin(),obstacles.end());
+    const auto result=prepare_simulation_motion(scene,material,material_scene_policy());INFO(result.reason);REQUIRE(result.snapshot);return result;
+}
+}
+TEST_CASE("B09 lifted travel preserves original deposits and checks all three legs against the actual prefix", "[Nonplanar][B09][LiftedTravel]")
+{
+    STATIC_REQUIRE(simulation_lift_route_version==1);
+    STATIC_REQUIRE_FALSE(std::is_aggregate<SimulationLiftRouteSnapshot>::value);
+    const auto source=lift_source({{{.95,-.05,2.75},{1.05,.05,2.8}}});const auto &old=*source.snapshot->material->ledger;
+    const auto fingerprint=old.fingerprint();const auto direct=check_simulation_motion(source,1);
+    REQUIRE(direct.status==ClearanceStatus::Fail);REQUIRE(direct.scene_check);
+    const auto route=plan_simulation_lifted_travel(source,1,3);INFO(route.reason);REQUIRE(route.snapshot);
+    REQUIRE(route.status==ClearanceStatus::Pass);const auto &r=*route.snapshot;const auto &planned=*r.planned->material->ledger;
+    REQUIRE(r.source==source.snapshot);REQUIRE(r.original_event_index==1);REQUIRE(r.legs.size()==3);
+    REQUIRE((r.source_records==std::vector<size_t>{0,1,1,1,2,3}));REQUIRE(planned.records.size()==6);
+    REQUIRE(planned.records[1].motion.event_id==20);REQUIRE(planned.records[2].motion.event_id==41);REQUIRE(planned.records[3].motion.event_id==42);
+    const std::array<PhysicalPosition,4> points{{{2,0,2},{2,0,3},{0,0,3},{0,0,2.4}}};
+    // Independent continuous bounds for the whole old bead, annulus and boxes.
+    // A tip point over its XY shadow and outside the opening has |dx|>=tangent.
+    // Ahead points are beyond the finite butt; behind points have a lower roof.
+    using Q=boost::multiprecision::cpp_bin_float_quad;
+    const Q margin=source.snapshot->policy.required.value(),inner=source.snapshot->scene.tip.opening_radius.value();
+    const Q max_y=Q(old.records[0].bead->width_mm.upper)/2+margin,tangent=sqrt(inner*inner-max_y*max_y);
+    REQUIRE(tangent>margin);REQUIRE(Q(2)-margin>1+(Q(2)-tangent+margin)/2);
+    REQUIRE(Q(2)+Q(.5)-margin>2); // all six head boxes throughout every leg
+    REQUIRE(Q(3)-margin>2);REQUIRE(Q(2.4)-margin>2); // transfer and descent tip
+    REQUIRE(Q(2)-Q(.5)-margin>Q(1.05));REQUIRE(Q(.5)+margin<Q(.95)); // complete vertical sweeps avoid wall
+    REQUIRE(Q(3)-margin>Q(2.8));REQUIRE(Q(2)-margin>Q(-.6)); // full transfer/wall and plate
+
+    size_t pairs=0,work=0,cells=0;
+    for (size_t i=0;i<3;++i) {
+        const auto &row=planned.records[i+1];const auto &proof=*r.legs[i];
+        REQUIRE(std::holds_alternative<Travel>(row.motion.payload));REQUIRE_FALSE(row.bead);
+        REQUIRE(row.motion.start.x()==points[i].x());REQUIRE(row.motion.start.y()==points[i].y());REQUIRE(row.motion.start.z()==points[i].z());
+        REQUIRE(row.motion.end.x()==points[i+1].x());REQUIRE(row.motion.end.y()==points[i+1].y());REQUIRE(row.motion.end.z()==points[i+1].z());
+        REQUIRE(proof.source==r.planned);REQUIRE(proof.material->event_index==i+1);REQUIRE(proof.material->tools.size()==7);
+        pairs+=proof.scene_checks.size();work+=proof.evaluations;cells+=proof.material->cells;
+        for (const auto &leaf : proof.material->leaves) {
+            REQUIRE(leaf.material_record==0); // The high future bead must never obstruct this route.
+            REQUIRE(leaf.parameter.lower>=0);REQUIRE(leaf.parameter.upper<=1);
+        }
+        for (const auto &check : proof.scene_checks) {REQUIRE(check.event_id==row.motion.event_id);REQUIRE(check.sequence_index==i+1);REQUIRE(check.bounds);}
+    }
+    REQUIRE(pairs==42);REQUIRE(route.checked_scene_pairs==pairs);REQUIRE(route.evaluations>work);REQUIRE(route.cells==cells);
+    for (size_t i : {size_t(0),size_t(4),size_t(5)}) {
+        const size_t original=r.source_records[i];auto expected=old.canonical_record(original);
+        const auto from=",\"motion\":["+std::to_string(old.records[original].motion.event_id)+","+std::to_string(original)+",";
+        const auto to=",\"motion\":["+std::to_string(old.records[original].motion.event_id)+","+std::to_string(i)+",";
+        const auto position=expected.find(from);REQUIRE(position!=std::string::npos);expected.replace(position,from.size(),to);
+        REQUIRE(planned.canonical_record(i)==expected);
+    }
+    REQUIRE(old.fingerprint()==fingerprint);REQUIRE(planned.fingerprint()!=fingerprint);
+    auto pressure_rows=old.records;
+    const MaterialRecord retract{{50,1,33,old.records[1].motion.start,old.records[1].motion.start,Speed(10),Acceleration(100),
+        Retraction{FilamentLength(.8),RetractionState::Ready,RetractionState::Retracted}},{}};
+    const MaterialRecord restore{{60,3,33,old.records[1].motion.end,old.records[1].motion.end,Speed(10),Acceleration(100),
+        Retraction{FilamentLength(.8),RetractionState::Retracted,RetractionState::Ready}},{}};
+    pressure_rows.insert(pressure_rows.begin()+1,retract);pressure_rows.insert(pressure_rows.begin()+3,restore);
+    for (size_t i=0;i<pressure_rows.size();++i) pressure_rows[i].motion.sequence_index=i;
+    const auto pressure_material=prepare_material_motion(capture_material_sequence(pressure_rows,old.model,old.revision,old.source_fingerprint));REQUIRE(pressure_material.snapshot);
+    const auto pressure_source=prepare_simulation_motion(source.snapshot->scene,pressure_material,source.snapshot->policy);REQUIRE(pressure_source.snapshot);
+    const auto pressure_route=plan_simulation_lifted_travel(pressure_source,2,3);INFO(pressure_route.reason);REQUIRE(pressure_route.snapshot);
+    const auto &pressure=*pressure_route.snapshot->planned->material->ledger;
+    REQUIRE(std::holds_alternative<Retraction>(pressure.records[1].motion.payload));
+    REQUIRE(std::holds_alternative<Retraction>(pressure.records[5].motion.payload));
+    REQUIRE(std::get<Retraction>(pressure.records[1].motion.payload).after==RetractionState::Retracted);
+    REQUIRE(std::get<Retraction>(pressure.records[5].motion.payload).after==RetractionState::Ready);
+    REQUIRE(std::get<Retraction>(pressure.records[1].motion.payload).amount.value()==.8);
+    REQUIRE(std::get<Retraction>(pressure.records[5].motion.payload).amount.value()==.8);
+    REQUIRE_FALSE(plan_simulation_lifted_travel(pressure_source,1,3).snapshot);
+
+    REQUIRE(r.planned->scene.origin==ProfileOrigin::Synthetic);REQUIRE_FALSE(r.planned->scene.operator_confirmed_claim);
+    SimulationLiftRouteLimits limits;limits.max_scene_pairs=41;REQUIRE_FALSE(plan_simulation_lifted_travel(source,1,3,limits).snapshot);
+    limits={};limits.max_evaluations=route.evaluations-r.legs.back()->evaluations;
+    REQUIRE_FALSE(plan_simulation_lifted_travel(source,1,3,limits).snapshot);
+}
+TEST_CASE("B09 an interior exit or descent collision blocks lifted travel despite clear leg endpoints", "[Nonplanar][B09][LiftedTravel]")
+{
+    for (size_t leg : {size_t(0),size_t(2)}) {
+        const SceneBox obstacle=leg==0 ? SceneBox{{1.98,-.02,2.9},{2.02,.02,3.0}} : SceneBox{{-.02,-.02,3.26},{.02,.02,3.28}};
+        const auto source=lift_source({obstacle});const auto blocked=plan_simulation_lifted_travel(source,1,3);INFO(blocked.reason);
+        REQUIRE(blocked.status==ClearanceStatus::Fail);REQUIRE_FALSE(blocked.snapshot);REQUIRE(blocked.blocked_leg==leg);
+        REQUIRE(blocked.motion_check);REQUIRE(blocked.motion_check->scene_check);const auto &check=*blocked.motion_check->scene_check;
+        REQUIRE(check.witness);REQUIRE(check.obstacle_id==2);REQUIRE(check.component_id==1);
+        const long double t=check.witness->parameter;
+        const long double z=leg==0 ? 2+t : 3-.6L*t;
+        REQUIRE(z+.5L<=obstacle.max.z());REQUIRE(z+.8L>=obstacle.min.z());
+        // Both endpoints of the colliding vertical leg have strict clearance.
+        const long double za=leg==0 ? 2 : 3,zb=leg==0 ? 3 : 2.4L;
+        for (auto p : {za,zb}) REQUIRE((p+.8L<obstacle.min.z()-.005L || p+.5L>obstacle.max.z()+.005L));
+    }
+}
+TEST_CASE("B09 lifted travel owns callbacks and refuses invalid routes or shared resource exhaustion", "[Nonplanar][B09][LiftedTravel]")
+{
+    const auto source=lift_source();
+    REQUIRE_FALSE(plan_simulation_lifted_travel({},1,3).snapshot);REQUIRE_FALSE(plan_simulation_lifted_travel(source,0,3).snapshot);
+    REQUIRE_FALSE(plan_simulation_lifted_travel(source,99,3).snapshot);REQUIRE_FALSE(plan_simulation_lifted_travel(source,1,2).snapshot);
+    REQUIRE_FALSE(plan_simulation_lifted_travel(source,1,5).snapshot);
+    REQUIRE_FALSE(plan_simulation_lifted_travel(source,1,std::numeric_limits<double>::quiet_NaN()).snapshot);
+    REQUIRE(plan_simulation_lifted_travel(lift_source({},true),1,3).reason=="LIFT_ROUTE_EVENT_ID_LIMIT");
+    for (int mode=0;mode<7;++mode) {
+        SimulationLiftRouteLimits limits;
+        if (mode==0) limits.max_records=4;
+        if (mode==1) limits.max_evaluations=1;
+        if (mode==2) limits.max_cells=1;
+        if (mode==3) limits.cancelled=[] {return true;};
+        if (mode==4) limits.is_scene_current=[](uint64_t,uint64_t) {return false;};
+        if (mode==5) limits.is_current=[](uint64_t) {return false;};
+        if (mode==6) {limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        const auto denied=plan_simulation_lifted_travel(source,1,3,limits);INFO(mode << ' ' << denied.reason);
+        REQUIRE(denied.status==ClearanceStatus::Unknown);REQUIRE_FALSE(denied.snapshot);
+    }
+    const auto &ledger=*source.snapshot->material->ledger;auto zero_rows=ledger.records;zero_rows.erase(zero_rows.begin()+2,zero_rows.end());
+    zero_rows[1].motion.end=zero_rows[1].motion.start;
+    const auto zero_material=prepare_material_motion(capture_material_sequence(zero_rows,ledger.model,ledger.revision,ledger.source_fingerprint));REQUIRE(zero_material.snapshot);
+    const auto zero_source=prepare_simulation_motion(source.snapshot->scene,zero_material,source.snapshot->policy);REQUIRE(zero_source.snapshot);
+    const auto instant=plan_simulation_lifted_travel(zero_source,1,zero_rows[1].motion.start.z());REQUIRE(instant.snapshot);
+    REQUIRE(instant.snapshot->legs.size()==1);REQUIRE(instant.snapshot->planned->material->ledger->fingerprint()==zero_material.snapshot->ledger->fingerprint());
+    const auto up_down=plan_simulation_lifted_travel(zero_source,1,3);REQUIRE(up_down.snapshot);REQUIRE(up_down.snapshot->legs.size()==2);
+    SimulationLiftRouteLimits limits;auto mutable_source=source;
+    limits.cancelled=[&] {mutable_source={};limits.max_records=0;return false;};
+    const auto owned=plan_simulation_lifted_travel(mutable_source,1,3,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==source.snapshot);
+    limits={};size_t calls=0;limits.cancelled=[&] {++calls;return false;};REQUIRE(plan_simulation_lifted_travel(source,1,3,limits).snapshot);
+    const size_t last=calls;calls=0;limits.cancelled=[&] {return ++calls==last;};
+    REQUIRE(plan_simulation_lifted_travel(source,1,3,limits).reason=="CANCELLED");
+    limits={};limits.cancelled=[] {std::fesetround(FE_UPWARD);return false;};
+    const auto rounding=plan_simulation_lifted_travel(source,1,3,limits);std::fesetround(FE_TONEAREST);REQUIRE_FALSE(rounding.snapshot);
 }

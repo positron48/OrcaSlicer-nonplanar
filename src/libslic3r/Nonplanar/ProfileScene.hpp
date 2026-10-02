@@ -111,4 +111,38 @@ struct SimulationMotionResult {
 // material proof. One shared work/deadline; partial diagnostics never grant the
 // protected complete result. PASS remains SimulationOnly, not job/export approval.
 SimulationMotionResult check_simulation_motion(const SimulationMotionSourceResult &,size_t event_index,const SimulationMotionLimits &limits={});
+inline constexpr unsigned simulation_lift_route_version=1;
+struct SimulationLiftRouteLimits : SimulationMotionLimits {size_t max_records=200000;};
+struct SimulationLiftRouteResult;
+struct SimulationLiftRouteSnapshot {
+    const std::shared_ptr<const SimulationMotionSourceSnapshot> source,planned;
+    const size_t original_event_index;
+    const double lift_z_mm;
+    const std::vector<size_t> source_records;
+    const std::vector<std::shared_ptr<const SimulationMotionSnapshot>> legs;
+    const size_t cells,checked_scene_pairs,evaluations;
+private:
+    SimulationLiftRouteSnapshot(std::shared_ptr<const SimulationMotionSourceSnapshot> original,
+        std::shared_ptr<const SimulationMotionSourceSnapshot> route,size_t index,double z,std::vector<size_t> origins,
+        std::vector<std::shared_ptr<const SimulationMotionSnapshot>> checks,size_t count,size_t pairs,size_t work)
+        : source(std::move(original)),planned(std::move(route)),original_event_index(index),lift_z_mm(z),source_records(std::move(origins)),
+          legs(std::move(checks)),cells(count),checked_scene_pairs(pairs),evaluations(work) {}
+    friend SimulationLiftRouteResult plan_simulation_lifted_travel(const SimulationMotionSourceResult &,size_t,double,const SimulationLiftRouteLimits &);
+};
+struct SimulationLiftRouteResult {
+    ClearanceStatus status=ClearanceStatus::Unknown;std::string reason;
+    std::shared_ptr<const SimulationMotionSourceSnapshot> source;
+    std::shared_ptr<const SimulationLiftRouteSnapshot> snapshot;
+    std::optional<size_t> blocked_leg;
+    std::optional<SimulationMotionResult> motion_check;
+    size_t cells=0,checked_scene_pairs=0,evaluations=0;
+};
+// Replace one original Travel by exit/lift, level transfer and descent/entry at
+// an explicit physical Z. Revalidate the complete candidate ledger, preserving
+// every other payload/pose/ID and its order; only sequence indices shift.
+// Each leg uses its original actual prefix with every captured head/static pair.
+// Shared source/preparation/pair/material work/cells/deadline; no unchecked lift,
+// automatic Z-hop, deposition contact, whole-job or export qualification.
+SimulationLiftRouteResult plan_simulation_lifted_travel(const SimulationMotionSourceResult &,size_t event_index,double lift_z_mm,
+    const SimulationLiftRouteLimits &limits={});
 }

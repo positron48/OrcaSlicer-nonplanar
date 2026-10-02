@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="468" hostname="tbd" time="0.008" timestamp="2026-10-02T04:15:27Z">
+    <properties>
+      <property name="random-seed" value="3455330939"/>
+      <property name="filters" value="[LiftedTravel]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B09 an interior exit or descent collision blocks lifted travel despite clear leg endpoints" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B09 lifted travel preserves original deposits and checks all three legs against the actual prefix" time="0.002" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B09 lifted travel owns callbacks and refuses invalid routes or shared resource exhaustion" time="0.006" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
