@@ -7,6 +7,22 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B12-forming-contact.md` and ADR-0084 now check a declared synthetic working-face
+model for complete forward collinear final-decimal Deposit runs. Recent-material
+age, full width/gap/gradient/top domain and every other rigid Upper/head/static
+pair retain original margins/limits. Native closed contour108 packets remains
+UNKNOWN, hatch53 FAIL against the earlier contour at t=0, prospective4 PASS
+with28 cells/leaves and4 contact cells. Focus15/1975217, CTest440/440, CLI161+81,
+native CLI0.433 s at1s, six strict OFF/ZAA pairs; old19 native files and four
+Travel/four Deposit inputs/proofs exact. This is a simulation assumption, not
+qualified deposition calibration/support or complete job permission. Next
+qualified old-support/adjacent contact, continuous contours/turns/seams, complete
+fixed-width fill and all earlier/print/prolog/parking/end geometry/order. Complete
+job/source/resources/software/transforms/delivery/publication and all13 missing
+mandatory domains remain. Linux new source/Windows/full GUI/physical and separate
+independent review pending. U1 standard head/.4 nozzle known; firmware/material
+brand do not block ongoing software work.
+
 `B12-final-deposition.md` and ADR-0083 independently verify maximal complete
 final-decimal Deposit blocks against rigid head/static/earlier and simultaneous
 current Upper. The original owned native four-packet nonplanar block passes at

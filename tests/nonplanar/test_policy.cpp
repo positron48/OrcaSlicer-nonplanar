@@ -17,6 +17,7 @@
 #include "job_report_evidence.hpp"
 #include <nonplanar_verify/MaterialJson.hpp>
 #include <nonplanar_verify/TravelJson.hpp>
+#include <nonplanar_verify/FormingContactJson.hpp>
 #include <libslic3r/ClipperUtils.hpp>
 #include <libslic3r/Nonplanar/StlFile.hpp>
 #include <libslic3r/Format/STL.hpp>
@@ -3532,10 +3533,14 @@ template<class Result> void save_final_geometry(const std::string &stem,const np
         save(stem+".material.json",nptop_verify::material_document(material).dump(2)+'\n');
         save(stem+".query.json",nptop_verify::travel_document({first,count,s}).dump(2)+'\n');
         save(stem+".candidate.txt",rates.bytes);
+        if constexpr(std::is_same_v<Result,nptop_verify::LinearFormingContactResult>)save(stem+".contact.json",nptop_verify::forming_contact_document(result.snapshot->contact).dump(2)+'\n');
         nlohmann::json leaves=nlohmann::json::array();
-        for(const auto &l:result.snapshot->leaves)leaves.push_back({{"record",l.record},{"component",l.component},
+        for(const auto &l:result.snapshot->leaves){nlohmann::json leaf={{"record",l.record},{"component",l.component},
             {"progress",{l.progress.lower,l.progress.upper}},{"local_min",l.local.min},{"local_max",l.local.max},
-            {"world_min",l.world.min},{"world_max",l.world.max},{"outside_annulus",l.outside_annulus}});
+            {"world_min",l.world.min},{"world_max",l.world.max},{"outside_annulus",l.outside_annulus}};
+            if constexpr(std::is_same_v<Result,nptop_verify::LinearFormingContactResult>)leaf["forming_contact"]=l.forming_contact;
+            leaves.push_back(std::move(leaf));
+        }
         const nlohmann::json proof={{"schema_version",1},{"component_status","PASS"},{"job_status","UNKNOWN"},{"export_allowed",false},
             {"prefix_completed_records",result.snapshot->prefix->completed_records},{"previous_deposits",result.snapshot->prefix->pieces.size()},
             {"work",result.evaluations},{"cells",result.cells},{"leaves",leaves}};
@@ -3639,4 +3644,42 @@ TEST_CASE("B12 independent final deposition geometry verifies every packet of th
     REQUIRE_FALSE(nptop_verify::verify_linear_deposition_geometry(material.snapshot,first,count-1,s).snapshot);
     REQUIRE_FALSE(nptop_verify::verify_linear_deposition_geometry(material.snapshot,first+1,count-1,s).snapshot);
     save_final_geometry("native-final-deposition",*material.snapshot,first,count,s,result);
+}
+TEST_CASE("B12 independent forming contact retains native contour and adjacent material refusals and verifies the owned prospective run", "[Nonplanar][B12][FinalByteFormingContactNative]")
+{
+    NativeDepartureFixture fixture;const auto &d=*fixture.departure.snapshot;
+    const auto material=verify_linear_candidate_material(fixture.bytes,{93,1,5e-9,.0001,1e-9,.02,0});INFO(material.reason);REQUIRE(material.snapshot);
+    const auto scene=final_geometry_scene(*d.route->planned);
+    nptop_verify::LinearFormingContactModel model;model.model_id=101;model.revision=1;model.profile_id=scene.profile_id;model.profile_revision=scene.revision;model.material_model_id=material.snapshot->policy.model_id;
+    model.working_radius_mm=.5;model.wake_length_mm=.65;model.max_top_above_tip_mm=.08;
+    model.gap_min_mm=.1;model.gap_max_mm=.4;model.width_min_mm=.1;model.width_max_mm=.55;model.max_path_gradient=.1;
+    const auto block=[&](size_t seed){const auto &rows=material.snapshot->declarations;REQUIRE(rows[seed].kind==nptop_verify::MaterialEventKind::Deposit);
+        size_t a=seed,b=seed+1;while(a && rows[a-1].kind==nptop_verify::MaterialEventKind::Deposit)--a;
+        while(b<rows.size() && rows[b].kind==nptop_verify::MaterialEventKind::Deposit)++b;return std::pair<size_t,size_t>{a,b-a};};
+    const auto contour=block(fixture.before.snapshot->runs.front().material->first_record);
+    const auto turn=nptop_verify::verify_linear_forming_contact_geometry(material.snapshot,contour.first,contour.second,scene,model);
+    INFO(turn.reason);REQUIRE(turn.status==nptop_verify::RateStatus::Unknown);REQUIRE(turn.reason=="FINAL_FORMING_CONTACT_REQUIRES_ONE_FORWARD_RUN");
+    const auto hatch=block(fixture.before.snapshot->runs[4].material->first_record);
+    const auto old=nptop_verify::verify_linear_forming_contact_geometry(material.snapshot,hatch.first,hatch.second,scene,model);
+    INFO(old.reason);REQUIRE(old.status==nptop_verify::RateStatus::Fail);REQUIRE(old.witness);REQUIRE(old.witness->material_event);
+    const auto &rows=material.snapshot->declarations;const auto hit=std::find_if(rows.begin(),rows.end(),[&](const auto &row){return row.event_id==*old.witness->material_event;});
+    REQUIRE(hit!=rows.end());REQUIRE(size_t(hit-rows.begin())>=contour.first);REQUIRE(size_t(hit-rows.begin())<hatch.first);
+    nptop_test::check_deposition_witness(*material.snapshot,scene,*old.witness);
+    const auto prospective=block(d.before->material->sequence->records.size()+1);const auto first=prospective.first,count=prospective.second;
+    REQUIRE(count==d.bead->pieces.size());
+    const auto result=nptop_verify::verify_linear_forming_contact_geometry(material.snapshot,first,count,scene,model);
+    INFO(result.reason<<" work="<<result.evaluations<<" cells="<<result.cells);REQUIRE(result.snapshot);REQUIRE(result.status==nptop_verify::RateStatus::Pass);
+    REQUIRE(result.snapshot->prefix->completed_records==first);REQUIRE(result.snapshot->scene.clearance_mm==scene.clearance_mm);
+    nptop_test::check_final_forming_contact(*result.snapshot);
+    save_final_geometry("native-final-forming-contact",*material.snapshot,first,count,scene,result);
+    if(const char *directory=std::getenv("NPTOP_CANDIDATE_EVIDENCE_DIR")) {
+        const auto &w=*old.witness;
+        const nlohmann::json refusal={{"schema_version",1},{"job_status","UNKNOWN"},{"export_allowed",false},
+            {"contour",{{"first_record",contour.first},{"record_count",contour.second},{"status","UNKNOWN"},{"reason",turn.reason},{"work",turn.evaluations}}},
+            {"hatch",{{"first_record",hatch.first},{"record_count",hatch.second},{"status","FAIL"},{"reason",old.reason},{"work",old.evaluations},
+                {"witness",{{"record",w.record},{"component",w.component},{"progress",{w.progress.lower,w.progress.upper}},
+                    {"min",w.point.min},{"max",w.point.max},{"material_event",*w.material_event}}}}}};
+        const auto path=boost::filesystem::path(directory)/"native-final-forming-contact.refusals.json";REQUIRE_FALSE(boost::filesystem::exists(path));
+        boost::nowide::ofstream file(path.string(),std::ios::binary);REQUIRE(file.good());file<<refusal.dump(2)<<'\n';file.close();REQUIRE(file.good());
+    }
 }

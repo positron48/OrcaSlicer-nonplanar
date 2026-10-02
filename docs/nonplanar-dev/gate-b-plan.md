@@ -4,6 +4,15 @@ Active objective: implement the entire B01–B15 scope. A bounded primitive or a
 green unit suite is evidence for its own contract, not completion of a B task.
 The normative backlog, SPEC and acceptance matrix remain unchanged.
 
+ADR-0084 / `B12-forming-contact.md` add a bounded independent final-byte recent
+forming-run working-face model. Original rigid scene/material/margins remain;
+only complete forward collinear Deposit runs qualify. Native closed contour
+remains UNKNOWN at turns and adjacent hatch FAIL against the earlier contour;
+prospective nonplanar4-packet run PASS. This declared synthetic assumption does
+not complete qualified support/contact, cap/seam/fill or full job B12. New focus
+15/1975217, CTest440/440, CLI161+81 and six strict OFF/ZAA pass; mandatory17
+retains13 UNKNOWN/NOT_RUN and export BLOCK. Full B01–B15 remains active.
+
 | Task | Required deliverable | Current authoritative state | Remaining work |
 |---|---|---|---|
 | B01 | Namespaced config; mutual exclusion; immutable policy snapshot | Policy.cpp, PrintConfigSnapshot, NativeInputSnapshot/Print revision; native/CLI rejection tests | Bind complete job dependencies and plate invalidation; finish explicit compatibility registry and UI/import coverage. |

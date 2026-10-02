@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="1895215" hostname="tbd" time="5.043" timestamp="2026-10-02T22:27:19Z">
+    <properties>
+      <property name="random-seed" value="3361284098"/>
+      <property name="filters" value="[FinalByteFormingContact],[FinalByteFormingContactNative],[FinalByteDepositionGeometry],[FinalByteDepositionGeometryNative],[FinalByteTravel],[FinalByteTravelNative]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B12 independent forming contact verifies the original complete native first cap run without erasing other material" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+DECLARED_FINAL_BYTE_MATERIAL_RECONSTRUCTED_CONTACT_SUPPORT_JOB_PENDING
+FINAL_DEPOSITION_INCOMPLETE_CONTIGUOUS_BLOCK
+FINAL_DEPOSITION_INCOMPLETE_CONTIGUOUS_BLOCK work=115610 cells=0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:3659
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B12 independent final deposition geometry verifies every packet of the owned native prospective bead" time="0.853" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 forming contact model JSON owns each bound and rejects duplicate missing unknown and ambiguous data" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 independent deposition geometry retains only simultaneous growing material and no future packets" time="0.596" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 final travel partitions the annulus hole over previous actual material without filling the disk" time="0.004" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 independent final decimal geometry verifies every leg of the owned native cap departure" time="0.802" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 final travel honors actual rounded decimal positions instead of nominal source poses" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 final travel checks the complete head against actual past material and excludes future deposits" time="0.002" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 final travel rejects interior static and full head collisions even when travel endpoints clear" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 independent deposition geometry keeps original guards and clears late positive and negative results" time="0.039" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 final travel JSON preserves every dependency and rejects duplicate ambiguous numeric or unknown fields" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 forming contact retains packet cuts and rejects old neighbors turns reversals and interrupted material" time="1.002" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 forming contact rejects mismatched domains and stale late proofs without changing rigid admission" time="0.560" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 final travel owns callers and refuses incomplete scenes stale callbacks budgets and late publication" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B12 forming contact checks the whole rigid head and permits only the current run working face" time="0.515" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

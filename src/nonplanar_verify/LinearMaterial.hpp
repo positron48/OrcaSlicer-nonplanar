@@ -55,6 +55,9 @@ struct LinearTravelScene;
 struct LinearTravelLimits;
 struct LinearTravelResult;
 struct LinearDepositionGeometryResult;
+struct LinearFormingContactResult;
+struct LinearFormingContactModel;
+struct LinearFormingContactLimits;
 struct LinearMaterialSnapshot {
  const std::shared_ptr<const LinearRateSnapshot> rates;
  const std::vector<MaterialDeclaration> declarations;
@@ -78,6 +81,7 @@ private:
  friend LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot>,size_t,const LinearRunSupportPolicy&,const LinearRunSupportLimits&);
  friend LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearTravelLimits&);
  friend LinearDepositionGeometryResult verify_linear_deposition_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearTravelLimits&);
+ friend LinearFormingContactResult verify_linear_forming_contact_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearFormingContactModel&,const LinearFormingContactLimits&);
 };
 struct LinearMaterialResult {
  RateStatus status=RateStatus::Unknown;std::string reason;std::optional<size_t> record;
@@ -248,6 +252,7 @@ private:
  friend LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearTravelLimits&);
 };
 struct LinearTravelResult {
+ using Leaf=LinearTravelLeaf;
  RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const LinearTravelSnapshot> snapshot;
  std::optional<LinearTravelWitness> witness;size_t evaluations=0,cells=0;
 };
@@ -269,6 +274,7 @@ private:
  friend LinearDepositionGeometryResult verify_linear_deposition_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearTravelLimits&);
 };
 struct LinearDepositionGeometryResult {
+ using Leaf=LinearTravelLeaf;
  RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const LinearDepositionGeometrySnapshot> snapshot;
  std::optional<LinearTravelWitness> witness;size_t evaluations=0,cells=0;
 };
@@ -278,4 +284,37 @@ struct LinearDepositionGeometryResult {
 // support/bonding/fill/whole-job/export qualification is inferred.
 LinearDepositionGeometryResult verify_linear_deposition_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t first_record,size_t record_count,
  const LinearTravelScene&,const LinearTravelLimits &limits={});
+inline constexpr unsigned linear_forming_contact_version=1;
+// Explicit synthetic calibration domain. This does not qualify delivered
+// material or installed geometry. Only the nozzle working face can use it.
+struct LinearFormingContactModel {
+ uint64_t version=1,model_id=0,revision=0,profile_id=0,profile_revision=0,material_model_id=0;
+ bool synthetic=true,operator_confirmed_claim=false;
+ double working_radius_mm=0,wake_length_mm=0,max_top_above_tip_mm=0;
+ double gap_min_mm=0,gap_max_mm=0,width_min_mm=0,width_max_mm=0,max_path_gradient=0;
+};
+struct LinearFormingContactLimits:LinearTravelLimits {std::function<bool(uint64_t,uint64_t)> is_contact_current;};
+struct LinearFormingContactLeaf:LinearTravelLeaf {bool forming_contact=false;};
+struct LinearFormingContactSnapshot {
+ const std::shared_ptr<const LinearMaterialSnapshot> source;
+ const std::shared_ptr<const LinearMaterialPrefixSnapshot> prefix;
+ const size_t first_record,record_count;const LinearTravelScene scene;const LinearFormingContactModel contact;
+ const std::vector<LinearFormingContactLeaf> leaves;const size_t evaluations,cells;
+private:
+ LinearFormingContactSnapshot(std::shared_ptr<const LinearMaterialSnapshot> s,std::shared_ptr<const LinearMaterialPrefixSnapshot> p,
+  size_t first,size_t count,LinearTravelScene head,LinearFormingContactModel model,std::vector<LinearFormingContactLeaf> parts,size_t work,size_t n)
+  :source(std::move(s)),prefix(std::move(p)),first_record(first),record_count(count),scene(std::move(head)),contact(model),leaves(std::move(parts)),evaluations(work),cells(n){}
+ friend LinearFormingContactResult verify_linear_forming_contact_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearFormingContactModel&,const LinearFormingContactLimits&);
+};
+struct LinearFormingContactResult {
+ using Leaf=LinearFormingContactLeaf;
+ RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const LinearFormingContactSnapshot> snapshot;
+ std::optional<LinearTravelWitness> witness;size_t evaluations=0,cells=0;
+};
+// Complete maximal collinear forward Deposit block. The declared small working
+// face can contact only that same forming run's recent material. All other
+// material/static/head remains rigid forbidden, with every original margin.
+// No travel/support/physical/job/export qualification is implied.
+LinearFormingContactResult verify_linear_forming_contact_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t first_record,size_t record_count,
+ const LinearTravelScene&,const LinearFormingContactModel&,const LinearFormingContactLimits &limits={});
 }

@@ -26,7 +26,7 @@
     "B09": "OWNED_EXACT_PROSPECTIVE_BEAD_PARENT_MATERIAL_COMPLETE_SIMULATION_DEPARTURE_AND_NATIVE_JOB_EDGE_PASS_ORIGINAL_WIDE_EXIT_FAIL_RETAINED_FULL_FIXED_WIDTH_FILL_CONTACT_HEIGHT_ORDER_BYTE_GEOMETRY_PENDING",
     "B10": "OWNED_COMPLETE_JOURNAL_LINEAR_XYZ_CARTESIAN_COREXY_DRIVE_E_Q_CROSS_SECTION_ACCELERATION_PRESSURE_EVENT_RATE_FULL_STOP_PASS_EXPORT_ENFORCEMENT_FIRMWARE_TRANSFORM_FLOW_CONTACT_JOB_PENDING",
     "B11": "OWNED_COMPLETE_LINEAR_NATIVE_FINAL_BYTES_HASH_POLICY_EVENT_MAP_EXPLICIT_XYZ_E_PRESSURE_DWELL_FULL_STOP_ANALYTICAL_AND_NATIVE_PASS_AUDITED_FILTERS_FULL_PROLOG_JOB_EXPORT_PENDING",
-    "B12": "INDEPENDENT_FINAL_BYTE_RATES_DOSE_SECTIONS_PREFIX_SOLIDS_COMMON_RUN_LOWER_EXACT_NOMINAL_CUTS_COMPLETE_ANALYTICAL_NATIVE_RUN_SUPPORT_GAP_BANDS_ANCHORS_COMPLETE_FINAL_TRAVEL_AND_MAXIMAL_DEPOSIT_BLOCK_RIGID_HEAD_STATIC_PREVIOUS_SIMULTANEOUS_CURRENT_UPPER_GEOMETRY_PARTITIONS_PASS_ORIGINAL_BUDGET_FRONT_PER_EVENT_REFUSALS_RETAINED_FULL_CONTACT_QUALIFICATION_TRANSFORM_JOB_PENDING",
+    "B12": "INDEPENDENT_FINAL_BYTE_RATES_DOSE_SECTIONS_PREFIX_SOLIDS_RUN_SUPPORT_GAP_BANDS_ANCHORS_COMPLETE_TRAVEL_MAXIMAL_RIGID_DEPOSIT_AND_DECLARED_RECENT_FORMING_RUN_WORKING_FACE_AGE_WIDTH_GAP_GRADIENT_TOP_DOMAIN_WHOLE_PARTITIONS_PASS_ORIGINAL_MARGINS_LIMITS_OLD_NEIGHBOR_CONTOUR_REFUSALS_RETAINED_QUALIFIED_SUPPORT_CONTACT_TURNS_SEAMS_FILL_TRANSFORM_JOB_PENDING",
     "B13": "OWNED_NATIVE_BODY_HATCH_CAP_PROTECTED_DEPARTURE_ROUTE_ATTEMPT_CANDIDATE_MANIFEST_AND_FINAL_BYTE_REPLAY_FIXED17_PASS_THIRTEEN_FULL_JOB_DOMAINS_UNKNOWN_NOT_RUN_EXPORT_BLOCK_QUALIFIED_PROVENANCE_VERIFIED_PUBLICATION_ALL_ROUTES_PENDING",
     "B14": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B15": "NOT_IMPLEMENTED_FULL_SCOPE"
@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_AND_LOCAL_ACTUAL_AFFINE_NORMAL_RAYS_ROUNDED_SHOULDER_NEGATIVE_GENERAL_CURVED_PENDING",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 361,
+    "new_native_cases": 366,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 435,
-    "final_ctest_executed": 435,
+    "final_ctest_discovered": 440,
+    "final_ctest_executed": 440,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -1233,7 +1233,14 @@
     "B12_final_deposition_ctest": 435,
     "B12_final_deposition_ctest_seconds": 101.761,
     "B12_final_deposition_CLI_cases": 21,
-    "B12_final_deposition_all_CLI_cases": 161
+    "B12_final_deposition_all_CLI_cases": 161,
+    "B12_forming_contact_new_cases": 5,
+    "B12_forming_contact_focus_cases": 15,
+    "B12_forming_contact_focus_assertions": 1975217,
+    "B12_forming_contact_ctest": 440,
+    "B12_forming_contact_ctest_seconds": 105.015,
+    "B12_forming_contact_CLI_cases": 81,
+    "B12_forming_contact_all_CLI_cases": 242
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -1674,6 +1681,105 @@
     "physical": "NOT_RUN_STANDARD_U1_HEAD_NOZZLE_0_4_UNCONFIRMED",
     "complete_source_provenance": "UNQUALIFIED_EACH_GRAPH_OWNER_RETAINED_NO_NORMALIZATION_OR_REUSE",
     "retained_failures": "INITIAL_ZERO_LENGTH_ANALYTIC_TRAVEL_FAILED_WITNESS_REFERENCE_MISSING_XY_GROWTH_WRONG_EXECUTABLE_AND_TWO_MISTYPED_HELPER_PATHS_FINAL_CORRECTED_RUNS_PASS_NO_LIMIT_RELAXATION",
+    "full_B01_B15": "IN_PROGRESS",
+    "guarded_export": "BLOCK"
+  },
+  "B12_forming_contact_evidence": {
+    "status": "BOUNDED_DECLARED_SYNTHETIC_RECENT_RUN_WORKING_FACE_MODEL_IMPLEMENTED_QUALIFIED_CONTACT_FULL_SCOPE_PENDING",
+    "document": "B12-forming-contact.md",
+    "review": "B12-forming-contact-review.md",
+    "adr": "adr-0084-declared-final-byte-forming-contact.md",
+    "manifest": "evidence/B12-forming-contact/source-manifest.json",
+    "diagnostic_query_version": 1,
+    "diagnostic_contact_version": 1,
+    "contact_fields": 16,
+    "production_and_previous_formats": "UNCHANGED",
+    "new_cases": 5,
+    "focused_cases": 15,
+    "focused_assertions": 1975217,
+    "ctest": 440,
+    "ctest_failures": 0,
+    "ctest_skips": 0,
+    "gate_wall_seconds": 105.015,
+    "native": {
+      "candidate_sha256": "b8eb15681127c1a8db57ce0aa257326763f16832b82fdafd13ed091c4bd98ef8",
+      "bytes": 128014,
+      "records": 2205,
+      "before_records": 2198,
+      "previous_deposits": 2072,
+      "deposit_records": 4,
+      "head_parts": 6,
+      "cells": 28,
+      "leaves": 28,
+      "contact_leaves": 4,
+      "work": 309964,
+      "refusals": {
+        "contour": {
+          "first_record": 2035,
+          "reason": "FINAL_FORMING_CONTACT_REQUIRES_ONE_FORWARD_RUN",
+          "record_count": 108,
+          "status": "UNKNOWN",
+          "work": 115772
+        },
+        "export_allowed": false,
+        "hatch": {
+          "first_record": 2144,
+          "reason": "FINAL_DEPOSITION_RIGID_UPPER_OR_STATIC_INTERSECTION",
+          "record_count": 53,
+          "status": "FAIL",
+          "witness": {
+            "component": 0,
+            "material_event": 2056,
+            "max": [
+              19.751032000000002,
+              19.005581000000003,
+              4.363179000000001
+            ],
+            "min": [
+              19.751032,
+              19.005581,
+              4.363179
+            ],
+            "progress": [
+              0.0,
+              0.0
+            ],
+            "record": 2144
+          },
+          "work": 305742
+        },
+        "job_status": "UNKNOWN",
+        "schema_version": 1
+      }
+    },
+    "native_CLI": {
+      "work": 270219,
+      "wall_seconds": 0.433,
+      "absolute_deadline_ms": 1000,
+      "cells": 28,
+      "leaves": 28,
+      "contact_cells": 4
+    },
+    "independent_oracle": "113_BIT_FINAL_TEXT_DOSE_DOMAIN_WORKING_FACE_RECENT_SOURCE_AGE_ALL_OTHER_UPPER_HEAD_STATIC_CELLS_COMPLETE_PARTITIONS_RECTANGLE_ROUNDED_WITNESSES",
+    "CLI_original_cases": 161,
+    "CLI_new_cases": 81,
+    "old_native_files_identical": 19,
+    "old_travel_files_identical": 4,
+    "old_deposition_files_identical": 4,
+    "material_policy_events": "EXACT_SOURCE_FINGERPRINT_SEPARATE_UNQUALIFIED_OWNERS_NO_NORMALIZATION_OR_REUSE",
+    "OFF_ZAA": "SIX_FRESH_STRICT_PASS",
+    "mandatory_report": {
+      "checks": 17,
+      "pass_run": 4,
+      "unknown_not_run": 13
+    },
+    "Linux": "NEW_SOURCE_PENDING_AFTER_PUSH_PARENT396468CC_IN_PROGRESS_AT_2247_UTC",
+    "Windows": "NOT_RUN",
+    "GUI": "NOT_RUN_FULL_PIPELINE",
+    "review_status": "SEPARATE_AUTHOR_AUDIT_INDEPENDENT_PENDING",
+    "physical": "NOT_RUN_STANDARD_U1_HEAD_NOZZLE0_4_UNCONFIRMED",
+    "retained_failures": "TEST_FIRST_LINKER_NATIVE_PARTIAL_CONTOUR_BLOCK_REFUSAL_AND_WRONG_CLI_WITNESS_KEY_CORRECTED_NO_MARGIN_LIMIT_RELAXATION",
+    "qualified_contact_support_turns_seams_complete_fill_full_job": "PENDING",
     "full_B01_B15": "IN_PROGRESS",
     "guarded_export": "BLOCK"
   }

@@ -15,6 +15,21 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-03
 
+`B12-forming-contact.md` and ADR-0084 add a separate declared synthetic
+recent-run contact model for the finite working face. Complete co-oriented
+collinear Deposit runs only; padded whole-cell age/domain proofs retain old
+material, all rigid head/static checks and original margins. Native contour108
+packets remains UNKNOWN at turns; hatch53 fails against earlier contour at t=0;
+prospective4 packets pass (28 cells/leaves,4 contact cells, CLI0.433 s at1s).
+Independent113-bit full-cell and rectangle/rounded witness references pass;
+focus15/1975217, CTest440/440, original CLI161 plus new81, six strict OFF/ZAA
+pairs. Old19 native outputs and four Travel/four Deposit inputs/proofs are exact.
+Source provenance remains separately owned/unqualified. Mandatory17 retains13
+UNKNOWN/NOT_RUN; full B01–B15 remains active, export BLOCK. Qualified old-support/
+adjacent contact, continuous contours/seams, complete fill and full job/order/
+provenance/publication remain. Linux new source/Windows/full GUI/physical and
+independent review remain pending; parent396468cc in progress at22:47 UTC.
+
 `B12-final-deposition.md` and ADR-0083 independently verify maximal complete
 final-decimal Deposit blocks against rigid head/static/earlier and simultaneous
 current Upper. The original owned native four-packet nonplanar block passes at

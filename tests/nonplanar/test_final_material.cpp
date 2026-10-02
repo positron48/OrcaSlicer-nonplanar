@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <nonplanar_verify/LinearMaterial.hpp>
 #include <nonplanar_verify/TravelJson.hpp>
+#include <nonplanar_verify/FormingContactJson.hpp>
 #include <boost/multiprecision/cpp_bin_float.hpp>
 #include <cfenv>
 #include <iomanip>
@@ -696,4 +697,100 @@ TEST_CASE("B12 independent deposition geometry keeps original guards and clears 
   const auto last=calls;calls=0;l.cancelled=[&]{return ++calls==last;};const auto late=verify_linear_deposition_geometry(m.snapshot,0,1,scene,l);
   REQUIRE(late.status==RateStatus::Unknown);REQUIRE_FALSE(late.snapshot);REQUIRE_FALSE(late.witness);REQUIRE(calls==last);
  }
+}
+namespace {
+LinearFormingContactModel forming_model(const LinearMaterialSnapshot &source,const LinearTravelScene &scene)
+{
+ LinearFormingContactModel m;m.model_id=101;m.revision=1;m.profile_id=scene.profile_id;m.profile_revision=scene.revision;m.material_model_id=source.policy.model_id;
+ m.working_radius_mm=.5;m.wake_length_mm=.65;m.max_top_above_tip_mm=.08;
+ m.gap_min_mm=.1;m.gap_max_mm=.3;m.width_min_mm=.1;m.width_max_mm=.55;m.max_path_gradient=.1;return m;
+}
+}
+TEST_CASE("B12 forming contact checks the whole rigid head and permits only the current run working face", "[Nonplanar][B12][FinalByteFormingContact]")
+{
+ const auto source=deposition_material(true);const auto scene=travel_scene();const auto model=forming_model(*source.snapshot,scene);
+ const auto rigid=verify_linear_deposition_geometry(source.snapshot,0,1,scene);REQUIRE(rigid.status==RateStatus::Fail);REQUIRE(rigid.witness);
+ const auto formed=verify_linear_forming_contact_geometry(source.snapshot,0,1,scene,model);INFO(formed.reason);REQUIRE(formed.snapshot);
+ REQUIRE(formed.status==RateStatus::Pass);REQUIRE(formed.snapshot->source==source.snapshot);REQUIRE(formed.snapshot->contact.working_radius_mm==.5);
+ REQUIRE(std::any_of(formed.snapshot->leaves.begin(),formed.snapshot->leaves.end(),[](const auto &leaf){return leaf.forming_contact;}));
+ nptop_test::check_final_forming_contact(*formed.snapshot);
+ auto low=scene;low.head[4].local={{-.05,-.05,-.15},{.05,.05,-.1}};
+ const auto head=verify_linear_forming_contact_geometry(source.snapshot,0,1,low,model);REQUIRE(head.status==RateStatus::Fail);REQUIRE(head.witness);REQUIRE(head.witness->component==5);
+ nptop_test::check_deposition_witness(*source.snapshot,low,*head.witness);
+ auto obstacle=scene;obstacle.obstacles.push_back({{1.499,2.499,.549},{1.501,2.501,.551}});
+ const auto stat=verify_linear_forming_contact_geometry(source.snapshot,0,1,obstacle,model);REQUIRE(stat.status==RateStatus::Fail);REQUIRE(stat.witness);REQUIRE(stat.witness->obstacle);
+ REQUIRE_FALSE(verify_linear_forming_contact_geometry(source.snapshot,1,1,scene,model).snapshot);
+ auto partial=model;partial.working_radius_mm=.25;
+ const auto outside=verify_linear_forming_contact_geometry(source.snapshot,0,1,scene,partial);REQUIRE(outside.status!=RateStatus::Pass);REQUIRE_FALSE(outside.snapshot);
+}
+TEST_CASE("B12 forming contact rejects mismatched domains and stale late proofs without changing rigid admission", "[Nonplanar][B12][FinalByteFormingContact]")
+{
+ STATIC_REQUIRE_FALSE(std::is_aggregate<LinearFormingContactSnapshot>::value);
+ const auto source=deposition_material(true);const auto scene=travel_scene();const auto model=forming_model(*source.snapshot,scene);
+ for(int mode=0;mode<20;++mode){auto p=model;LinearFormingContactLimits limits;
+  if(mode==0)p.profile_id++;if(mode==1)p.profile_revision++;if(mode==2)p.material_model_id++;if(mode==3)p.operator_confirmed_claim=true;
+  if(mode==4)p.synthetic=false;if(mode==5)p.version++;if(mode==6)p.working_radius_mm=.51;if(mode==7)p.wake_length_mm=.05;
+  if(mode==8)p.max_top_above_tip_mm=.01;if(mode==9)p.gap_min_mm=.21;if(mode==10)p.width_max_mm=.1;
+  if(mode==11)p.max_path_gradient=.001;if(mode==12)limits.is_contact_current=[](uint64_t,uint64_t){return false;};
+  if(mode==13)limits.max_cells=1;if(mode==14)limits.cancelled=[]()->bool {throw 1;};
+  if(mode==15)limits.is_contact_current=[](uint64_t,uint64_t)->bool {throw 1;};
+  if(mode==16)limits.is_contact_current=[](uint64_t,uint64_t){std::fesetround(FE_DOWNWARD);return true;};
+  if(mode==17)limits.max_evaluations=source.snapshot->evaluations;
+  if(mode==18)limits.timeout=std::chrono::milliseconds(0);if(mode==19)limits.cancelled=[] {return true;};
+  const auto refused=verify_linear_forming_contact_geometry(source.snapshot,0,1,scene,p,limits);INFO(mode<<' '<<refused.reason);
+  if(mode==16)REQUIRE(std::fesetround(FE_TONEAREST)==0);
+  REQUIRE(refused.status==RateStatus::Unknown);REQUIRE_FALSE(refused.snapshot);REQUIRE_FALSE(refused.witness);
+ }
+ auto copy=model;auto head=scene;LinearFormingContactLimits limits;limits.cancelled=[&]{copy.working_radius_mm=5;head.head.clear();limits.max_cells=0;return false;};
+ const auto owned=verify_linear_forming_contact_geometry(source.snapshot,0,1,head,copy,limits);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->contact.working_radius_mm==.5);REQUIRE(owned.snapshot->scene.head.size()==6);
+ limits={};size_t calls=0;limits.cancelled=[&]{++calls;return false;};const auto normal=verify_linear_forming_contact_geometry(source.snapshot,0,1,scene,model,limits);REQUIRE(normal.snapshot);
+ const auto last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};const auto late=verify_linear_forming_contact_geometry(source.snapshot,0,1,scene,model,limits);
+ REQUIRE(late.status==RateStatus::Unknown);REQUIRE_FALSE(late.snapshot);REQUIRE_FALSE(late.witness);
+}
+namespace {
+LinearMaterialResult forming_material(int mode=0,bool reverse=false,bool diagonal=false)
+{
+ auto p=material_policy();std::array<double,3> previous{0,0,.5};std::vector<MaterialDeclaration> rows;
+ std::ostringstream bytes;bytes.imbue(std::locale::classic());bytes<<"G90\nM83\nM400\nM204 S4\n"<<std::fixed<<std::setprecision(9);
+ const auto pose=[&](double t){return std::array<double,3>{t*(reverse ? -1 : 1)*(diagonal ? .6 : 1),diagonal ? .8*t : 0,.5+(mode==1 ? .02*t : 0)};};
+ const auto append=[&](std::array<double,3> end,double e,double h0=.2,double h1=.2){bytes<<"G1 X"<<end[0]<<" Y"<<end[1]<<" Z"<<end[2];if(e)bytes<<" E"<<e;bytes<<" F30\nM400\n";
+  const double volume=(High(e)*acos(High(-1))*High("1.75")*High("1.75")/4/High(rate_policy().flow)).convert_to<double>();
+  rows.push_back({uint64_t(rows.size()+1),rows.size(),e ? MaterialEventKind::Deposit : MaterialEventKind::Travel,previous,end,volume,0,
+   e ? std::optional<MaterialSection>(MaterialSection{MaterialSectionKind::Rectangle,h0,h1}) : std::nullopt});previous=end;};
+ if(mode==2){append(pose(4),.16);append(pose(0),0);append(pose(4),.16);}
+ else {append(pose(2),.08,.2,mode==1 ? .22 : .2);append(mode==3 ? std::array<double,3>{2,2,.5} : mode==4 ? pose(0) : pose(4),.08,mode==1 ? .22 : .2,mode==1 ? .24 : .2);}
+ auto travel=previous;travel[2]+=.1;append(travel,0);travel[0]+=4;append(travel,.16);
+ const auto rates=verify_linear_rates(bytes.str(),{0,0,.5},rate_policy());REQUIRE(rates.snapshot);return reconstruct_linear_material(rates.snapshot,rows,p);
+}
+}
+TEST_CASE("B12 forming contact retains packet cuts and rejects old neighbors turns reversals and interrupted material", "[Nonplanar][B12][FinalByteFormingContact]")
+{
+ const auto scene=travel_scene();
+ for(int mode:{0,1})for(bool reverse:{false,true})for(bool diagonal:{false,true}){
+  const auto source=forming_material(mode,reverse,diagonal);REQUIRE(source.snapshot);const auto model=forming_model(*source.snapshot,scene);
+  const auto result=verify_linear_forming_contact_geometry(source.snapshot,0,2,scene,model);INFO(mode<<' '<<reverse<<' '<<diagonal<<' '<<result.reason);REQUIRE(result.snapshot);
+  nptop_test::check_final_forming_contact(*result.snapshot);
+  REQUIRE_FALSE(verify_linear_forming_contact_geometry(source.snapshot,0,1,scene,model).snapshot);
+  REQUIRE_FALSE(verify_linear_forming_contact_geometry(source.snapshot,1,1,scene,model).snapshot);
+ }
+ const auto old=forming_material(2);REQUIRE(old.snapshot);const auto model=forming_model(*old.snapshot,scene);
+ const auto struck=verify_linear_forming_contact_geometry(old.snapshot,2,1,scene,model);REQUIRE(struck.status==RateStatus::Fail);REQUIRE(struck.witness);REQUIRE(struck.witness->material_event==1);
+ nptop_test::check_deposition_witness(*old.snapshot,scene,*struck.witness);
+ LinearFormingContactLimits limits;size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(verify_linear_forming_contact_geometry(old.snapshot,2,1,scene,model,limits).witness);
+ const auto last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};const auto late=verify_linear_forming_contact_geometry(old.snapshot,2,1,scene,model,limits);
+ REQUIRE(late.status==RateStatus::Unknown);REQUIRE_FALSE(late.snapshot);REQUIRE_FALSE(late.witness);
+ for(int mode:{3,4}){const auto changed=forming_material(mode);REQUIRE(changed.snapshot);
+  const auto refused=verify_linear_forming_contact_geometry(changed.snapshot,0,2,scene,forming_model(*changed.snapshot,scene));REQUIRE(refused.status==RateStatus::Unknown);REQUIRE_FALSE(refused.snapshot);}
+}
+TEST_CASE("B12 forming contact model JSON owns each bound and rejects duplicate missing unknown and ambiguous data", "[Nonplanar][B12][FinalByteFormingContact]")
+{
+ const auto source=deposition_material(true);const auto model=forming_model(*source.snapshot,travel_scene());const auto document=forming_contact_document(model);
+ REQUIRE(forming_contact_document(parse_forming_contact_document(document.dump()))==document);
+ for(const auto &item:document.items()){auto missing=document;missing.erase(item.key());REQUIRE_THROWS(parse_forming_contact_document(missing.dump()));
+  auto duplicate=document.dump();const auto at=duplicate.find('\"'+item.key()+'\"');REQUIRE(at!=std::string::npos);
+  duplicate.insert(at,'\"'+item.key()+"\":"+item.value().dump()+',');REQUIRE_THROWS(parse_forming_contact_document(duplicate));}
+ for(const auto &key:{"model_id","profile_id","material_model_id","working_radius_mm","max_path_gradient"}){auto boolean=document;boolean[key]=true;REQUIRE_THROWS(parse_forming_contact_document(boolean.dump()));}
+ auto unknown=document;unknown["allow_all_material"]=true;REQUIRE_THROWS(parse_forming_contact_document(unknown.dump()));
+ auto nested=document;nested["working_radius_mm"]=nlohmann::json{{"value",.5}};REQUIRE_THROWS(parse_forming_contact_document(nested.dump()));
+ auto version=document;version["version"]=2;REQUIRE_THROWS(parse_forming_contact_document(version.dump()));
 }

@@ -4,6 +4,7 @@
 #include <deque>
 #include <exception>
 #include <set>
+#include <type_traits>
 namespace nptop_verify {
 namespace {
 using namespace exact;
@@ -614,15 +615,47 @@ MaterialRegion swept_region(const ExactStep &move,RateBounds t,const MaterialReg
 }
 bool disjoint(const MaterialRegion &a,const MaterialRegion &b)
 {for(size_t i=0;i<3;++i)if(a.max[i]<b.min[i] || a.min[i]>b.max[i])return true;return false;}
+void valid_forming_contact(const LinearMaterialSnapshot &source,const MaterialReplayData &data,size_t first,size_t count,
+ const LinearTravelScene &scene,const LinearFormingContactModel &model,Work &work)
+{
+ if(model.version!=linear_forming_contact_version || !model.model_id || !model.revision || !model.synthetic || model.operator_confirmed_claim ||
+  model.profile_id!=scene.profile_id || model.profile_revision!=scene.revision || model.material_model_id!=source.policy.model_id ||
+  scene.tip_center!=std::array<double,3>{0,0,0})unknown("UNSUPPORTED_FINAL_FORMING_CONTACT_MODEL");
+ for(double v:{model.working_radius_mm,model.wake_length_mm,model.max_top_above_tip_mm,model.gap_min_mm,model.gap_max_mm,
+  model.width_min_mm,model.width_max_mm,model.max_path_gradient})if(!std::isfinite(v) || v<0 || v>10000)unknown("INVALID_FINAL_FORMING_CONTACT_DOMAIN");
+ Q margin=binary(scene.uncertainty_mm);for(double v:scene.clearance_mm)margin+=binary(v);
+ const Q xy=binary(source.policy.outer_xy_growth_mm)+binary(source.policy.numerical_coordinate_error_mm),z=binary(source.policy.outer_z_growth_mm)+binary(source.policy.numerical_coordinate_error_mm);
+ if(model.working_radius_mm<=scene.opening_radius_mm || model.working_radius_mm>scene.outer_radius_mm ||
+  binary(model.wake_length_mm)<binary(model.working_radius_mm)+margin+xy || model.gap_min_mm<=0 || model.gap_min_mm>model.gap_max_mm ||
+  model.width_min_mm<=0 || model.width_min_mm>model.width_max_mm || model.max_top_above_tip_mm<=0 || model.max_top_above_tip_mm>=model.gap_min_mm)
+  unknown("UNSUPPORTED_FINAL_FORMING_CONTACT_DOMAIN");
+ const auto &origin=data.steps[first];const Q dx=origin.end[0]-origin.start[0],dy=origin.end[1]-origin.start[1];Q length=0;
+ for(size_t i=first;i<first+count;++i){work();const auto &step=data.steps[i];const auto &bead=*source.beads[i];const auto &section=*source.declarations[i].section;
+  const Q nx=step.end[0]-step.start[0],ny=step.end[1]-step.start[1],dz=step.end[2]-step.start[2];
+  if(dx*ny!=dy*nx || dx*nx+dy*ny<=0 || (i>first && data.steps[i-1].end!=step.start) ||
+   section.kind!=source.declarations[first].section->kind)unknown("FINAL_FORMING_CONTACT_REQUIRES_ONE_FORWARD_RUN");
+  if(std::min(section.gap_begin_mm,section.gap_end_mm)<model.gap_min_mm || std::max(section.gap_begin_mm,section.gap_end_mm)>model.gap_max_mm ||
+   bead.delivered_width.lower<model.width_min_mm || bead.delivered_width.upper>model.width_max_mm ||
+   square(dz)>square(binary(model.max_path_gradient))*step.xy2)unknown("FINAL_FORMING_CONTACT_OUTSIDE_CALIBRATION_DOMAIN");
+  length+=binary(bead.xy_length.upper);
+ }
+ // For this forward run, source height is Lipschitz in arc length. Every
+ // permitted nominal source point is within the recent wake; fixed Z growth
+ // can put its top at most this much above the simultaneous working plane.
+ if(binary(model.max_path_gradient)*std::min(length,binary(model.wake_length_mm))+z>binary(model.max_top_above_tip_mm))
+  unknown("FINAL_FORMING_CONTACT_TOP_DEPTH_DOMAIN");
+}
 template<class Result,class Publish>
 void verify_linear_motion_geometry(std::shared_ptr<const LinearMaterialSnapshot> source,const std::shared_ptr<const MaterialReplayData> &data,
  size_t first,size_t count,bool depositing,const LinearTravelScene &requested_scene,const LinearTravelLimits &requested_limits,
- Result &result,Publish publish)
+ Result &result,Publish publish,const LinearFormingContactModel *requested_contact=nullptr,
+ std::function<bool(uint64_t,uint64_t)> contact_current={})
 {
  const auto started=std::chrono::steady_clock::now();
  try {
   if(requested_scene.head.size()>64 || requested_scene.obstacles.size()>10000)unknown("FINAL_TRAVEL_SCENE_SIZE_LIMIT");
   const auto scene=requested_scene;const auto limits=requested_limits;
+  const std::optional<LinearFormingContactModel> contact=requested_contact ? std::optional<LinearFormingContactModel>(*requested_contact) : std::nullopt;
   if(!source || !count || first>=source->declarations.size() || count>source->declarations.size()-first ||
    !limits.max_cells || limits.max_cells>1000000 || !limits.max_depth || limits.max_depth>48)unknown("INVALID_FINAL_TRAVEL_SOURCE_OR_LIMITS");
   valid_travel_scene(scene);result.evaluations=std::max(source->evaluations,limits.initial_evaluations);
@@ -634,6 +667,7 @@ void verify_linear_motion_geometry(std::shared_ptr<const LinearMaterialSnapshot>
    try {
     if(limits.cancelled && limits.cancelled())unknown("FINAL_TRAVEL_CANCELLED");
     if(limits.is_scene_current && !limits.is_scene_current(scene.profile_id,scene.revision))unknown("STALE_FINAL_TRAVEL_SCENE");
+    if(contact && contact_current && !contact_current(contact->model_id,contact->revision))unknown("STALE_FINAL_FORMING_CONTACT_MODEL");
     if(std::chrono::steady_clock::now()-started>=limits.timeout)unknown("FINAL_TRAVEL_DEADLINE");
    }catch(...){stopped=std::current_exception();throw;}return false;
   };
@@ -643,6 +677,7 @@ void verify_linear_motion_geometry(std::shared_ptr<const LinearMaterialSnapshot>
    (first+count<source->declarations.size() && source->declarations[first+count].kind==kind))
    unknown(depositing ? "FINAL_DEPOSITION_INCOMPLETE_CONTIGUOUS_BLOCK" : "FINAL_TRAVEL_INCOMPLETE_CONTIGUOUS_BLOCK");
   for(size_t i=first;i<first+count;++i){work();if(source->declarations[i].kind!=kind)unknown(depositing ? "FINAL_DEPOSITION_REQUIRES_COMPLETE_DEPOSIT_BLOCK" : "FINAL_TRAVEL_REQUIRES_COMPLETE_TRAVEL_BLOCK");}
+  if(contact){if(!depositing)unknown("FINAL_FORMING_CONTACT_DEPOSIT_ONLY");valid_forming_contact(*source,*data,first,count,scene,*contact,work);}
   guarded.initial_evaluations=result.evaluations;
   const auto prepared=linear_material_at(source,first,0,guarded);result.evaluations=prepared.evaluations;work.stop();
   if(!prepared.snapshot)unknown(prepared.reason.empty() ? "FINAL_TRAVEL_PREFIX_REFUSAL" : prepared.reason.c_str());
@@ -656,11 +691,14 @@ void verify_linear_motion_geometry(std::shared_ptr<const LinearMaterialSnapshot>
   const auto bead_at=[&](size_t i)->const ReplayedBead&{return depositing ? *deposits[i] : prefix->pieces[i];};
   const auto index=bounds_index(bead_count,[&](size_t i){return bead_at(i).upper_bounds;},work);
   SolidQuery query{*prefix,*data,MaterialRepresentation::Upper,work};
-  const auto material_query=[&](const MaterialRegion &box,size_t record,double progress){MaterialBoxResult answer;bool uncertain=false;
+  const auto material_query=[&](const MaterialRegion &box,size_t record,double progress,bool forming_contact){MaterialBoxResult answer;bool uncertain=false;
    const bool inside=visit_bounds(index,box,work,[&](size_t i){const auto &bead=bead_at(i);
     // Future nodes can only make broad-phase pruning less effective. They
     // supply neither an obstacle nor an Inside result; zero progress is empty.
     if(depositing && (bead.record>record || (bead.record==record && progress==0)))return false;
+    // Only a separately proven working-face/wet-window cell may omit the
+    // permitted portion of this exact forming run. Other rows are unchanged.
+    if(forming_contact && bead.record>=first && bead.record<=record)return false;
     // A leaf node encloses several beads. Prune each complete disjoint Upper
     // box before exact sections; an overlapping box never grants clearance.
     work();for(size_t a=0;a<3;++a)if(box.min[a]>bead.upper_bounds.coordinate[a].upper || box.max[a]<bead.upper_bounds.coordinate[a].lower)return false;
@@ -671,7 +709,27 @@ void verify_linear_motion_geometry(std::shared_ptr<const LinearMaterialSnapshot>
   std::optional<Q> ceiling;
   for(size_t i=0;i<bead_count;++i){work();const Q top=binary(bead_at(i).upper_bounds.coordinate[2].upper);ceiling=ceiling ? std::max(*ceiling,top) : top;}
   for(const auto &b:scene.obstacles){work();const Q top=binary(b.max[2]);ceiling=ceiling ? std::max(*ceiling,top) : top;}
-  std::vector<LinearTravelLeaf> leaves;
+  using Leaf=typename Result::Leaf;std::vector<Leaf> leaves;
+  const auto add_leaf=[&](size_t record,size_t component,RateBounds progress,const MaterialRegion &local,const MaterialRegion &world,bool empty,bool forming){
+   Leaf leaf;static_cast<LinearTravelLeaf&>(leaf)={record,component,progress,local,world,empty};
+   if constexpr(std::is_same_v<Leaf,LinearFormingContactLeaf>)leaf.forming_contact=forming;
+   leaves.push_back(std::move(leaf));
+  };
+  const auto allowed_contact=[&](size_t record,size_t component,RateBounds time,const MaterialRegion &local,const MaterialRegion &world){
+   if(!contact || component)return false;work();
+   if(contact->working_radius_mm<scene.outer_radius_mm){Q far=0;for(size_t a=0;a<2;++a)
+    far+=std::max(square(binary(local.min[a])),square(binary(local.max[a])));
+    if(far>square(binary(contact->working_radius_mm)))return false;
+   }
+   const auto length=source->beads[record]->xy_length;
+   const auto p=project_solid(data->steps[record],{binary(length.lower),binary(length.upper)},world,[&]{work();});
+   const auto relative=range_multiply({p.t.lo-binary(time.upper),p.t.hi-binary(time.lower)},{binary(length.lower),binary(length.upper)});
+   const Q growth=binary(source->policy.outer_xy_growth_mm)+binary(source->policy.numerical_coordinate_error_mm);
+   // The same source point can be shifted along by at most growth. The cell
+   // uses the latest front for this LOWER age bound, covering every time and
+   // every query point. Chronology already excludes all nominal future points.
+   return relative.lo-growth>=-binary(contact->wake_length_mm);
+  };
   for(size_t record=first;record<first+count;++record){const auto &move=data->steps[record];work();
    for(size_t a=0;a<3;++a)if(std::min(move.start[a],move.end[a])<binary(scene.nozzle_domain.min[a]) ||
     std::max(move.start[a],move.end[a])>binary(scene.nozzle_domain.max[a]))unknown("FINAL_TRAVEL_NOZZLE_COVERAGE");
@@ -688,15 +746,16 @@ void verify_linear_motion_geometry(std::shared_ptr<const LinearMaterialSnapshot>
     while(!pending.empty()){
      work();if(++result.cells>limits.max_cells)unknown("FINAL_TRAVEL_CELL_LIMIT");const auto node=pending.back();pending.pop_back();
      const auto world=swept_region(move,node.t,node.local,margin,work);
-     if(component==0 && outside_annulus(node.local,scene)){leaves.push_back({record,component,node.t,node.local,world,true});continue;}
+     if(component==0 && outside_annulus(node.local,scene)){add_leaf(record,component,node.t,node.local,world,true,false);continue;}
      bool outside=true;for(const auto &b:scene.obstacles){work();outside&=disjoint(world,b);}
      // The independent constant-flux section is fixed along its material
      // coordinate. Its nominal prefix solids are nested, and the same fixed
      // growth of that union preserves inclusion. Only this model permits the
      // end-progress Upper to enclose every growing prefix in the time cell.
      // FAIL below still uses the exact simultaneous point/front, never the end.
-     if(outside)outside=material_query(world,record,node.t.upper).membership==MaterialMembership::Outside;
-     if(outside){leaves.push_back({record,component,node.t,node.local,world,false});continue;}
+     const bool forming=allowed_contact(record,component,node.t,node.local,world);
+     if(outside)outside=material_query(world,record,node.t.upper,forming).membership==MaterialMembership::Outside;
+     if(outside){add_leaf(record,component,node.t,node.local,world,false,forming);continue;}
      // A rigorously enclosed actual tool point inside the declared Upper/static
      // solid can refuse. Samples never establish clearance for the whole cell.
      const auto samples=[](double lo,double hi){std::vector<double> values{lo};const double mid=lo+(hi-lo)*.5;
@@ -708,7 +767,7 @@ void verify_linear_motion_geometry(std::shared_ptr<const LinearMaterialSnapshot>
        const MaterialRegion point=swept_region(move,{t,t},{{x,y,z},{x,y,z}},Q(0),work);
        std::optional<size_t> obstacle;for(size_t i=0;i<scene.obstacles.size();++i){work();bool contained=true;for(size_t a=0;a<3;++a)
         contained&=point.min[a]>=scene.obstacles[i].min[a] && point.max[a]<=scene.obstacles[i].max[a];if(contained){obstacle=i;break;}}
-       const auto hit=material_query(point,record,t);
+       const auto hit=material_query(point,record,t,allowed_contact(record,component,{t,t},{{x,y,z},{x,y,z}},point));
        if(obstacle || hit.membership==MaterialMembership::Inside){result.witness=LinearTravelWitness{record,component,{t,t},point,hit.event_id,obstacle};
         work.stop();fail(depositing ? "FINAL_DEPOSITION_RIGID_UPPER_OR_STATIC_INTERSECTION" : "FINAL_TRAVEL_DECLARED_UPPER_OR_STATIC_INTERSECTION");}
       }
@@ -723,7 +782,8 @@ void verify_linear_motion_geometry(std::shared_ptr<const LinearMaterialSnapshot>
    }
   }
   work.stop();publish(source,prefix,first,count,scene,std::move(leaves));work.stop();
-  result.status=RateStatus::Pass;result.reason=depositing ? "WHOLE_FINAL_DECIMAL_DEPOSITION_BLOCK_RIGID_HEAD_STATIC_AND_GROWING_ACTUAL_UPPER_ONLY" : "WHOLE_FINAL_DECIMAL_TRAVEL_BLOCK_HEAD_STATIC_AND_ACTUAL_PREFIX_UPPER_ONLY";
+  result.status=RateStatus::Pass;result.reason=contact ? "WHOLE_FINAL_DECIMAL_FORMING_RUN_DECLARED_RECENT_WORKING_FACE_CONTACT_RIGID_OTHER_MATERIAL_HEAD_STATIC_ONLY" :
+   depositing ? "WHOLE_FINAL_DECIMAL_DEPOSITION_BLOCK_RIGID_HEAD_STATIC_AND_GROWING_ACTUAL_UPPER_ONLY" : "WHOLE_FINAL_DECIMAL_TRAVEL_BLOCK_HEAD_STATIC_AND_ACTUAL_PREFIX_UPPER_ONLY";
  }catch(const Refusal &e){result.snapshot.reset();result.status=e.status;result.reason=e.what();if(e.status!=RateStatus::Fail)result.witness.reset();}
  catch(const std::exception &e){result.snapshot.reset();result.witness.reset();result.status=RateStatus::Unknown;result.reason=*e.what() ? e.what() : "FINAL_TRAVEL_EXCEPTION_WITHOUT_REASON";}
  catch(...){result.snapshot.reset();result.witness.reset();result.status=RateStatus::Unknown;result.reason="FINAL_TRAVEL_UNKNOWN_EXCEPTION";}
@@ -740,5 +800,13 @@ LinearDepositionGeometryResult verify_linear_deposition_geometry(std::shared_ptr
 {
  LinearDepositionGeometryResult result;verify_linear_motion_geometry(source,source ? source->exact : nullptr,first,count,true,scene,limits,result,
   [&](auto s,auto p,size_t a,size_t n,auto head,auto leaves){result.snapshot=std::shared_ptr<const LinearDepositionGeometrySnapshot>(new LinearDepositionGeometrySnapshot(s,p,a,n,std::move(head),std::move(leaves),result.evaluations,result.cells));});return result;
+}
+LinearFormingContactResult verify_linear_forming_contact_geometry(std::shared_ptr<const LinearMaterialSnapshot> source,size_t first,size_t count,
+ const LinearTravelScene &scene,const LinearFormingContactModel &model,const LinearFormingContactLimits &limits)
+{
+ LinearFormingContactResult result;const auto contact=model;
+ verify_linear_motion_geometry(source,source ? source->exact : nullptr,first,count,true,scene,limits,result,
+  [&](auto s,auto p,size_t a,size_t n,auto head,auto leaves){result.snapshot=std::shared_ptr<const LinearFormingContactSnapshot>(new LinearFormingContactSnapshot(s,p,a,n,std::move(head),contact,std::move(leaves),result.evaluations,result.cells));},
+  &contact,limits.is_contact_current);return result;
 }
 }
