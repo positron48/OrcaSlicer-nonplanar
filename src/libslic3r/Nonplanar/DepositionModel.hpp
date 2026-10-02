@@ -168,6 +168,33 @@ struct MaterialRunCoverResult {std::string reason;std::shared_ptr<const Material
 // error. Closed internal packet faces are covered by adjacent actual sections;
 // real run ends and the actual current front remain eroded. No bonding/tool approval.
 MaterialRunCoverResult cover_material_run_lower(const MaterialRunResult &,const SceneBox &,const MaterialCoverageLimits &limits={});
+inline constexpr unsigned material_run_union_contract_version=1;
+struct MaterialRunUnionLeaf {SceneBox domain;std::optional<size_t> run_index,event_index;};
+struct MaterialRunUnionResult;
+struct MaterialRunUnionSnapshot {
+    const std::shared_ptr<const MaterialPrefixSnapshot> source;
+    const std::vector<std::shared_ptr<const MaterialRunSnapshot>> runs;
+    const SceneBox domain;
+    const MaterialRepresentation representation;
+    const std::vector<MaterialRunUnionLeaf> leaves;
+    const size_t cells,evaluations;
+private:
+    MaterialRunUnionSnapshot(std::shared_ptr<const MaterialPrefixSnapshot> s,std::vector<std::shared_ptr<const MaterialRunSnapshot>> paths,
+        SceneBox box,MaterialRepresentation rep,std::vector<MaterialRunUnionLeaf> parts,size_t count,size_t work)
+        : source(std::move(s)),runs(std::move(paths)),domain(box),representation(rep),leaves(std::move(parts)),cells(count),evaluations(work) {}
+    static MaterialRunUnionResult cover(const std::vector<MaterialRunResult> &,const std::shared_ptr<const MaterialPrefixSnapshot> &,
+        const SceneBox &,MaterialRepresentation,const MaterialCoverageLimits &);
+    friend MaterialRunUnionResult cover_material_runs_lower(const std::vector<MaterialRunResult> &,const LowerMaterialView &,const SceneBox &,const MaterialCoverageLimits &);
+    friend MaterialRunUnionResult cover_material_runs_nominal(const std::vector<MaterialRunResult> &,const SceneBox &,const MaterialCoverageLimits &);
+};
+struct MaterialRunUnionResult {std::string reason;std::shared_ptr<const MaterialRunUnionSnapshot> snapshot;size_t cells=0,evaluations=0;};
+// Partition the whole requested box into certified closed leaves. Each leaf is
+// in one actual nominal run, or its original-loss erosion for Lower. Lower may
+// also use an independent event from the same prefix. No erosion of the entire
+// union, future packets, sampled-point acceptance or physical bonding inference.
+MaterialRunUnionResult cover_material_runs_lower(const std::vector<MaterialRunResult> &,const LowerMaterialView &,
+    const SceneBox &,const MaterialCoverageLimits &limits={});
+MaterialRunUnionResult cover_material_runs_nominal(const std::vector<MaterialRunResult> &,const SceneBox &,const MaterialCoverageLimits &limits={});
 struct MaterialRunJoinResult;
 struct FirstCapRunJoinsResult;
 struct MaterialRunJoinSnapshot {
@@ -832,26 +859,29 @@ struct FirstCapMaterialResult {std::string reason;std::shared_ptr<const FirstCap
 FirstCapMaterialResult reconstruct_first_cap_material(const FirstCapResult &,std::optional<size_t> completed_cap_records={},
     double current_progress=0,const FirstCapMaterialLimits &limits={});
 
-inline constexpr unsigned first_cap_support_contract_version=1;
+inline constexpr unsigned first_cap_support_contract_version=2;
 struct FirstCapSupportResult;
 struct FirstCapSupportSnapshot {
     const std::shared_ptr<const FirstCapMaterialSnapshot> source;
     const SceneBox domain;
     const std::shared_ptr<const MaterialRunCoverSnapshot> run;
     const std::optional<MaterialCoverageResult> independent_events;
+    const std::shared_ptr<const MaterialRunUnionSnapshot> run_union;
 private:
     FirstCapSupportSnapshot(std::shared_ptr<const FirstCapMaterialSnapshot> s,SceneBox box,
-        std::shared_ptr<const MaterialRunCoverSnapshot> continuous,std::optional<MaterialCoverageResult> events)
-        : source(std::move(s)),domain(box),run(std::move(continuous)),independent_events(std::move(events)) {}
+        std::shared_ptr<const MaterialRunCoverSnapshot> continuous,std::optional<MaterialCoverageResult> events,
+        std::shared_ptr<const MaterialRunUnionSnapshot> joined={})
+        : source(std::move(s)),domain(box),run(std::move(continuous)),independent_events(std::move(events)),run_union(std::move(joined)) {}
     friend FirstCapSupportResult cover_first_cap_material_lower(const FirstCapMaterialResult &,const SceneBox &,const MaterialCoverageLimits &);
 };
 struct FirstCapSupportResult {std::string reason;std::shared_ptr<const FirstCapSupportSnapshot> snapshot;size_t cells=0,evaluations=0;};
 // Whole-box support from one actual cap run or the original independent-event
 // lower union of body/cap. These two erosion models retain distinct certificates.
-// No inference from prospective surfaces or combined partial run certificates.
+// Otherwise retain a complete partition into certified run/event lower leaves.
+// No inference from prospective surfaces or uncertified partial run boxes.
 FirstCapSupportResult cover_first_cap_material_lower(const FirstCapMaterialResult &,const SceneBox &,const MaterialCoverageLimits &limits={});
 
-inline constexpr unsigned first_cap_next_pass_contract_version=1;
+inline constexpr unsigned first_cap_next_pass_contract_version=2;
 struct FirstCapNextPassResult;
 struct FirstCapNextPassSnapshot {
     const std::shared_ptr<const FirstCapMaterialSnapshot> source;
@@ -875,6 +905,35 @@ struct FirstCapNextPassResult {std::string reason;std::shared_ptr<const FirstCap
 // certify normal thickness, complete pass coverage, motion/contact, bonding or export.
 FirstCapNextPassResult assess_first_cap_next_pass(const FirstCapMaterialResult &,size_t pass_index,const RectangleXY &,
     double support_plane_z_mm,const MaterialCoverageLimits &limits={});
+
+inline constexpr unsigned next_cap_bead_contract_version=1;
+struct NextCapBeadLimits : FirstHatchBeadLimits {size_t max_roof_cells=65535;};
+struct NextCapBeadResult;
+struct NextCapBeadSnapshot {
+    const std::shared_ptr<const FirstCapNextPassSnapshot> source;
+    const PhysicalPosition path_start,path_end;
+    const std::vector<FixedWidthBeadPiece> pieces;
+    const std::vector<std::shared_ptr<const MaterialRunUnionSnapshot>> roof_proofs;
+    const ScalarBounds actual_target_volume_mm3,deposited_volume_mm3;
+    const double maximum_gap_error_mm,maximum_width_error_mm,total_volume_error_mm3,numerical_error_upper_mm;
+    const size_t roof_segments,cells,evaluations;
+private:
+    NextCapBeadSnapshot(std::shared_ptr<const FirstCapNextPassSnapshot> s,PhysicalPosition start,PhysicalPosition end,
+        std::vector<FixedWidthBeadPiece> packets,std::vector<std::shared_ptr<const MaterialRunUnionSnapshot>> proofs,
+        ScalarBounds target,ScalarBounds amount,double gap,double width,double volume,double numeric,size_t roofs,size_t count,size_t work)
+        : source(std::move(s)),path_start(start),path_end(end),pieces(std::move(packets)),roof_proofs(std::move(proofs)),
+          actual_target_volume_mm3(target),deposited_volume_mm3(amount),maximum_gap_error_mm(gap),maximum_width_error_mm(width),
+          total_volume_error_mm3(volume),numerical_error_upper_mm(numeric),roof_segments(roofs),cells(count),evaluations(work) {}
+    friend NextCapBeadResult plan_next_cap_bead(const FirstCapNextPassResult &,HatchDirection,WidthXY,const NextCapBeadLimits &);
+};
+struct NextCapBeadResult {std::string reason;std::shared_ptr<const NextCapBeadSnapshot> snapshot;};
+// Derive a finite axis-aligned bead through the owned local later cell. Its
+// complete admitted width must fit the already certified support footprint.
+// Reconstruct the highest actual body/cap nominal roof, using certified nominal
+// run-union planes for lower bounds. Reuse first-bead constant-flux/error solving;
+// retain original later vertical limits. Normal thickness, head/contact/order,
+// complete later fill and material append/replay/export remain separate.
+NextCapBeadResult plan_next_cap_bead(const FirstCapNextPassResult &,HatchDirection,WidthXY,const NextCapBeadLimits &limits={});
 
 inline constexpr unsigned first_cap_replan_contract_version=1;
 struct FirstCapReplanPolicy {Volume minimum_covered_gain{.001},maximum_outside_target{.001};};

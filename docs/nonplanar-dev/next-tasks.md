@@ -126,9 +126,15 @@ Next software tasks, in dependency order:
    selected actual cap fraction in one source-mapped prefix, excluding future
    material. One actual continuous run or the original independent-event lower
    union certifies local boxes; the native original second surface has a qualified
-   local footprint. Full-ROI/future-cap support still refuses. Extend to general
-   run-union lower planes, exact partial-body continuation and actual later bead
-   construction after solving the unchanged shoulder/seam deficit.
+   local footprint. Full-ROI/future-cap support still refuses.
+   `B07-next-cap-bead.md` now partitions whole Lower support across several
+   actual runs/events and constructs one local actual later finite-width bead
+   using certified nominal run-union roof planes. The native .4 mm footprint
+   supports eight .38 mm packets with unchanged error limits and original later
+   vertical policy. Extend to complete later path/layer construction and append
+   its actual material with source/sequence ownership; qualify normal thickness
+   and contact independently. Add exact partial-body continuation while retaining
+   the original packet geometry and actual fraction.
    Qualify allowable repeated material and complete shoulder/seam volumes,
    construct/replan paths for both remaining 3D volumes and reconstruct later support;
    short-packet motion/flow limits remain unverified.

@@ -2098,7 +2098,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan][NativeFirstCapWidthReplan][NativeFirstCapMaterial]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan][NativeFirstCapWidthReplan][NativeFirstCapMaterial][NativeNextCapBead]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2551,6 +2551,39 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE_FALSE(assess_first_cap_next_pass(assembled,1,narrow.source->source->final_surface.footprint,support_z,next_limits).snapshot);
     INFO("native composed body records=" << assembled.snapshot->body_records << " active cap runs=" << assembled.snapshot->runs.size() <<
         " support cells=" << supported.cells << " work=" << supported.evaluations << " next gap=[" << next.snapshot->gap_mm.lower << ',' << next.snapshot->gap_mm.upper << ']');
+    const SceneBox whole_width{{next_support.min.x()-(rx ? 0 : .19),next_support.min.y()-(rx ? .19 : 0),support_z-.007},
+        {next_support.max.x()+(rx ? 0 : .19),next_support.max.y()+(rx ? .19 : 0),support_z-.007}};
+    const RectangleXY width_region{whole_width.min.x(),whole_width.min.y(),whole_width.max.x(),whole_width.max.y()};
+    const auto wide_next=assess_first_cap_next_pass(assembled,1,width_region,whole_width.min.z(),next_limits);
+    INFO(wide_next.reason << " cells=" << wide_next.cells << " work=" << wide_next.evaluations);REQUIRE(wide_next.snapshot);
+    REQUIRE(wide_next.snapshot->support->run_union);REQUIRE(wide_next.snapshot->support->run_union->leaves.size()>1);
+    for (const auto &leaf : wide_next.snapshot->support->run_union->leaves) {
+        REQUIRE(leaf.run_index);test::independent_run_box(*wide_next.snapshot->support->run_union->runs[*leaf.run_index],leaf.domain);
+    }
+    NextCapBeadLimits later_limits;later_limits.timeout=std::chrono::seconds(5);later_limits.packets.timeout=std::chrono::seconds(5);
+    const auto later=plan_next_cap_bead(wide_next,rx ? HatchDirection::AlongX : HatchDirection::AlongY,WidthXY(.38),later_limits);
+    INFO(later.reason);REQUIRE(later.snapshot);REQUIRE(later.snapshot->source==wide_next.snapshot);REQUIRE_FALSE(later.snapshot->roof_proofs.empty());
+    REQUIRE(later.snapshot->maximum_gap_error_mm<=later_limits.maximum_gap_error.value());
+    REQUIRE(later.snapshot->maximum_width_error_mm<=later_limits.packets.maximum_width_error.value());
+    REQUIRE(later.snapshot->total_volume_error_mm3<=later_limits.packets.maximum_volume_error.value());
+    for (const auto &proof : later.snapshot->roof_proofs) {
+        REQUIRE(proof->source==assembled.snapshot->material);REQUIRE(proof->representation==MaterialRepresentation::Nominal);
+        for (const auto &leaf : proof->leaves) {REQUIRE(leaf.run_index);test::independent_run_box(*proof->runs[*leaf.run_index],leaf.domain,false);}
+    }
+    LayerAmount later_amount=0;
+    for (const auto &piece : later.snapshot->pieces) {later_amount+=LayerAmount(piece.volume.value());REQUIRE(piece.nominal_width.value()==.38);}
+    contains(later.snapshot->deposited_volume_mm3,later_amount);
+    const auto &la=later.snapshot->path_start,&lb=later.snapshot->path_end;
+    const auto roof_a=test::independent_nominal_roof(*assembled.snapshot->material,la.x(),la.y());
+    const auto roof_b=test::independent_nominal_roof(*assembled.snapshot->material,lb.x(),lb.y());REQUIRE(roof_a);REQUIRE(roof_b);
+    const LayerAmount later_length=sqrt(pow(LayerAmount(lb.x())-la.x(),2)+pow(LayerAmount(lb.y())-la.y(),2));
+    const LayerAmount gap_a=LayerAmount(la.z())-*roof_a,gap_b=LayerAmount(lb.z())-*roof_b,later_k=1-acos(LayerAmount(-1))/4;
+    const LayerAmount later_ideal=later_length*(LayerAmount(.38)*(gap_a+gap_b)/2-later_k*(gap_a*gap_a+gap_a*gap_b+gap_b*gap_b)/3);
+    contains(later.snapshot->actual_target_volume_mm3,later_ideal);
+    REQUIRE(abs(later_amount-later_ideal)<=LayerAmount(later_limits.packets.maximum_volume_error.value()));
+    INFO("native next bead packets=" << later.snapshot->pieces.size() << " roofs=" << later.snapshot->roof_segments <<
+        " cells=" << later.snapshot->cells << " work=" << later.snapshot->evaluations << " gap error=" << later.snapshot->maximum_gap_error_mm <<
+        " width error=" << later.snapshot->maximum_width_error_mm << " dose error=" << later.snapshot->total_volume_error_mm3);
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 

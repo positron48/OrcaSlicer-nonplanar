@@ -1298,6 +1298,167 @@ FirstHatchBeadResult plan_first_hatch_footprint_bead(const AffineHatchResult &re
                                                    const FirstHatchBeadLimits &requested_limits)
 { return FirstHatchBeadSnapshot::plan(requested,line_index,requested_limits,FirstHatchRoofDomain::FiniteWidth); }
 
+namespace {
+struct RoofFloorProof {double height=0;std::shared_ptr<const MaterialRunUnionSnapshot> proof;};
+using RoofFloorProvider=std::function<RoofFloorProof(const Polygon &,double,size_t &,const std::function<void(size_t)> &)>;
+struct MaterialBeadData {
+    std::vector<FixedWidthBeadPiece> pieces;
+    std::vector<std::shared_ptr<const MaterialRunUnionSnapshot>> roof_proofs;
+    ScalarBounds target,delivered;
+    double maximum_gap,maximum_width,error,numeric;
+    size_t segments,evaluations;
+};
+bool valid_material_bead_limits(const FirstHatchBeadLimits &limits)
+{
+    return limits.max_evaluations && limits.max_evaluations<=200000 && valid_timeout(limits.timeout) &&
+        valid_timeout(limits.packets.timeout) && limits.maximum_gap_error.value()>0 && limits.maximum_gap_error.value()<=.05 &&
+        limits.max_roof_segments && limits.max_roof_segments<=65535 && limits.max_depth && limits.max_depth<=32 &&
+        limits.packets.max_segments && limits.packets.max_segments<=65535 && limits.packets.max_depth && limits.packets.max_depth<=32 &&
+        limits.packets.maximum_width_error.value()>0 && limits.packets.maximum_width_error.value()<=.05 && limits.packets.maximum_volume_error.value()>0;
+}
+MaterialBeadData derive_material_bead(const std::shared_ptr<const MaterialPrefixSnapshot> &cursor,const AffineHatchLine &line,
+    const RectangleXY &region,double support_plane,double source_numeric,double slice_error,const FirstHatchBeadLimits &limits,
+    FirstHatchRoofDomain domain,std::chrono::steady_clock::time_point started,const RoofFloorProvider &raise_floor={},
+    const std::optional<TransitionPolicy> &gap_policy={})
+{
+    const auto sequence=cursor->sequence;
+    const bool x_axis=line.start.y()==line.end.y(), y_axis=line.start.x()==line.end.x();
+    if (x_axis==y_axis) reject("FIRST_HATCH_REQUIRES_AXIS_ALIGNED_CENTERLINE");
+    // Any admitted actual-gap width lies in nominal +/- this requested
+    // error. Query its exact outer strip before deriving the gap/amount;
+    // shrinking the query to the nominal centerline would be circular.
+    const Exact half=(Exact(line.width.value())+Exact(limits.packets.maximum_width_error.value()))/Exact(2);
+    const auto footprint=[&](PhysicalPosition a,PhysicalPosition b) {
+        if (domain==FirstHatchRoofDomain::Centerline)
+            return Polygon{{Exact(a.x()),Exact(a.y())},{Exact(b.x()),Exact(b.y())}};
+        const Exact x0=Exact(std::min(a.x(),b.x()))-(y_axis ? half : Exact(0));
+        const Exact x1=Exact(std::max(a.x(),b.x()))+(y_axis ? half : Exact(0));
+        const Exact y0=Exact(std::min(a.y(),b.y()))-(x_axis ? half : Exact(0));
+        const Exact y1=Exact(std::max(a.y(),b.y()))+(x_axis ? half : Exact(0));
+        const auto &roi=region;
+        if (x0<Exact(roi.min_x) || x1>Exact(roi.max_x) || y0<Exact(roi.min_y) || y1>Exact(roi.max_y))
+            reject("FIRST_HATCH_FINITE_FOOTPRINT_OUTSIDE_SUPPORTED_ROI");
+        return Polygon{{x0,y0},{x1,y0},{x1,y1},{x0,y1}};
+    };
+    const auto poll=[&] { stop(limits,sequence->revision,started);stop(limits.packets,sequence->revision,started); };poll();
+    const auto context=sequence_hash(*sequence,poll);
+    size_t evaluations=0, segments=0;
+    const auto evaluate=[&](size_t count=1) {
+        if (count>limits.max_evaluations-evaluations) reject("FIRST_HATCH_ROOF_WORK_LIMIT");
+        if (evaluations%128==0) poll();evaluations+=count;
+    };
+    struct Endpoint { PhysicalPosition point;double error; };
+    const auto endpoint=[&](const Exact &t) {
+        const auto x=stored_exact(Exact(line.start.x())+(Exact(line.end.x())-Exact(line.start.x()))*t);
+        const auto y=stored_exact(Exact(line.start.y())+(Exact(line.end.y())-Exact(line.start.y()))*t);
+        const auto z=stored_exact(Exact(line.start.z())+(Exact(line.end.z())-Exact(line.start.z()))*t);
+        return Endpoint{{x.first,y.first,z.first},(Interval(x.second)+Interval(y.second)+Interval(z.second)).hi};
+    };
+    struct Node { Exact begin,end;Endpoint a,b;size_t depth;std::vector<size_t> candidates; };
+    std::vector<size_t> active;
+    const size_t end=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence->records.size());
+    for (size_t i=0;i<end;++i) { if (i%128==0) poll();if (sequence->records[i].bead) active.push_back(i); }
+    std::vector<Node> pending{{Exact(0),Exact(1),endpoint(Exact(0)),endpoint(Exact(1)),0,std::move(active)}};
+    std::vector<FixedWidthBeadPiece> pieces;
+    Exact target_lower(0),target_upper(0),deposited(0);double maximum_gap=0,maximum_width=0,coordinate_error=slice_error;
+    std::vector<std::shared_ptr<const MaterialRunUnionSnapshot>> roof_proofs;
+    const auto correction=Interval(1)-pi()/Interval(4);
+    while (!pending.empty()) {
+        poll();auto node=std::move(pending.back());pending.pop_back();
+        auto roof_bound=nominal_roof_bounds(*cursor,footprint(node.a.point,node.b.point),node.candidates,support_plane,evaluate);
+        RoofFloorProof floor_proof;
+        if (raise_floor) {
+            floor_proof=raise_floor(footprint(node.a.point,node.b.point),roof_bound.height.lo,evaluations,evaluate);
+            if (floor_proof.proof && floor_proof.height>roof_bound.height.hi)
+                throw Rejection("ACTUAL_RUN_ROOF_EXCEEDS_NOMINAL_CEILING lower="+std::to_string(floor_proof.height)+" upper="+std::to_string(roof_bound.height.hi));
+            if (floor_proof.proof && floor_proof.height>roof_bound.height.lo)
+                roof_bound.height=Interval(floor_proof.height,roof_bound.height.hi);
+        }
+        const double lower=roof_bound.height.lo,upper=roof_bound.height.hi;
+        auto candidates=std::move(roof_bound.active);
+        // The owned parent proves D_lower covers the whole ROI at plane.
+        // It is a lower bound on the nominal roof, never its actual value.
+        if (candidates.empty() || lower>upper) reject("FIRST_HATCH_INCONSISTENT_NOMINAL_ROOF");
+        const Interval roof(lower,upper);const double middle=(lower+upper)/2;
+        const double h0=node.a.point.z()-middle,h1=node.b.point.z()-middle;
+        const auto bottom0=Interval(node.a.point.z())-Interval(h0),bottom1=Interval(node.b.point.z())-Interval(h1);
+        const Interval bottom(std::min(bottom0.lo,bottom1.lo),std::max(bottom0.hi,bottom1.hi));
+        const auto gap_difference=bottom-roof;
+        double gap_error=std::max(std::abs(gap_difference.lo),std::abs(gap_difference.hi));
+        if (gap_policy) gap_error=(Interval(gap_error)+Interval(gap_policy->corner_height_error.value())).hi;
+        const auto fraction=exact_interval(node.end-node.begin);
+        const double budget=(Interval(limits.packets.maximum_volume_error.value())*fraction).lo;
+        bool accepted=false;FixedWidthBeadResult packets;Interval target(0);double width_error=0;
+        if (h0>0 && h1>0 && std::max(h0,h1)<line.width.value() && gap_error<=limits.maximum_gap_error.value()) {
+            auto packet_limits=limits.packets;
+            if (pieces.size()>=packet_limits.max_segments) reject("FIRST_HATCH_PACKET_COUNT_LIMIT");
+            packet_limits.max_segments-=pieces.size();packet_limits.maximum_volume_error=Volume(budget/4);
+            packet_limits.timeout=std::min(limits.timeout,limits.packets.timeout)-
+                std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+            packet_limits.cancelled=[&] { poll();return false; };packet_limits.is_current={};
+            packets=plan_fixed_width_bead({node.a.point,node.b.point,line.width,VerticalGap(h0),VerticalGap(h1),
+                BeadSectionKind::RoundedRectangle,sequence->revision,context},packet_limits);
+            poll();
+            if (packets.snapshot) {
+                // Axis-aligned stored endpoints stay on the queried segment.
+                // Charge its Z/gap interpolation rounding to the roof model.
+                gap_error=(Interval(gap_error)+Interval(packets.snapshot->numerical_error_upper_mm)).hi;
+                bool domain=true;
+                for (const auto &piece : packets.snapshot->pieces) {
+                    const auto within=[&](PhysicalPosition p) {
+                        return p.x()>=std::min(node.a.point.x(),node.b.point.x()) && p.x()<=std::max(node.a.point.x(),node.b.point.x()) &&
+                            p.y()>=std::min(node.a.point.y(),node.b.point.y()) && p.y()<=std::max(node.a.point.y(),node.b.point.y());
+                    };
+                    if (!within(piece.start) || !within(piece.end)) reject("FIRST_HATCH_PACKET_OUTSIDE_QUERIED_SEGMENT");
+                    const auto hmin=Interval(std::min(piece.section.gap_begin_mm,piece.section.gap_end_mm))-Interval(gap_error);
+                    const auto hmax=Interval(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm))+Interval(gap_error);
+                    if (hmin.lo<=0 || (gap_policy && (hmin.lo<=gap_policy->minimum.value() || hmax.hi>=gap_policy->maximum.value()))) { domain=false;break; }
+                    const auto area=Interval(piece.volume.value())/detail::root(length_squared(piece.start,piece.end));
+                    if (area.lo<=(pi()/Interval(4)*square(hmax)).hi) { domain=false;break; }
+                    const auto wmin=section_width(area,hmax,BeadSectionKind::RoundedRectangle),wmax=section_width(area,hmin,BeadSectionKind::RoundedRectangle);
+                    width_error=std::max({width_error,(Interval(line.width.value())-wmin).hi,(wmax-Interval(line.width.value())).hi});
+                }
+                const auto length=detail::root(length_squared(node.a.point,node.b.point));
+                const auto maximum_h=Interval(std::max(h0,h1))+Interval(gap_error);
+                const auto uncertainty=length*Interval(gap_error)*(Interval(line.width.value())+Interval(2)*correction*maximum_h);
+                target=interval(packets.snapshot->target_volume_mm3)+Interval(-uncertainty.hi,uncertainty.hi);
+                const auto difference=interval(packets.snapshot->deposited_volume_mm3)-target;
+                accepted=domain && target.lo>0 && gap_error<=limits.maximum_gap_error.value() &&
+                    width_error<=limits.packets.maximum_width_error.value() && std::max(std::abs(difference.lo),std::abs(difference.hi))<=budget;
+            } else if (packets.reason!="FIXED_WIDTH_PACKET_COUNT_LIMIT" && packets.reason!="FIXED_WIDTH_PACKET_DEPTH_LIMIT")
+                throw Rejection(packets.reason);
+        }
+        if (!accepted) {
+            if (node.depth>=limits.max_depth) {
+                if (gap_policy) throw Rejection("NEXT_CAP_ROOF_DEPTH_LIMIT lower="+std::to_string(lower)+" upper="+std::to_string(upper)+
+                    " gap_error="+std::to_string(gap_error)+" width_error="+std::to_string(width_error)+" nominal_union="+std::to_string(bool(floor_proof.proof)));
+                reject("FIRST_HATCH_ROOF_DEPTH_LIMIT");
+            }
+            if (segments+pending.size()+2>limits.max_roof_segments) reject("FIRST_HATCH_ROOF_SEGMENT_LIMIT");
+            const Exact t=(node.begin+node.end)/Exact(2);const auto point=endpoint(t);
+            pending.push_back({t,node.end,point,node.b,node.depth+1,candidates});
+            pending.push_back({node.begin,t,node.a,point,node.depth+1,std::move(candidates)});continue;
+        }
+        if (floor_proof.proof) roof_proofs.push_back(std::move(floor_proof.proof));
+        ++segments;maximum_gap=std::max(maximum_gap,gap_error);maximum_width=std::max(maximum_width,width_error);
+        coordinate_error=std::max({coordinate_error,node.a.error,node.b.error,packets.snapshot->numerical_error_upper_mm});
+        target_lower+=Exact(target.lo);target_upper+=Exact(target.hi);
+        for (auto piece : packets.snapshot->pieces) {
+            deposited+=Exact(piece.volume.value());pieces.push_back(std::move(piece));
+        }
+    }
+    const Interval target(exact_interval(target_lower).lo,exact_interval(target_upper).hi),delivered=exact_interval(deposited);
+    const auto difference=delivered-target;const double error=std::max(std::abs(difference.lo),std::abs(difference.hi));
+    // Both actual and affine-model widths lie within nominal +/- maximum_width.
+    // Their edge difference is therefore at most maximum_width, not half it.
+    const double numeric=(Interval(source_numeric)+Interval(coordinate_error)+Interval(maximum_gap)+Interval(maximum_width)).hi;
+    if (error>limits.packets.maximum_volume_error.value()) reject("FIRST_HATCH_GLOBAL_VOLUME_ERROR");
+    if (numeric>.05) reject("FIRST_HATCH_NUMERICAL_BUDGET");
+
+    poll();return {std::move(pieces),std::move(roof_proofs),bounds(target),bounds(delivered),maximum_gap,maximum_width,error,numeric,segments,evaluations};
+}
+}
+
 FirstHatchBeadResult FirstHatchBeadSnapshot::plan(const AffineHatchResult &requested, std::optional<size_t> line_index,
     const FirstHatchBeadLimits &requested_limits, FirstHatchRoofDomain domain,const AffineHatchLine *slice,double slice_error)
 {
@@ -1307,136 +1468,17 @@ FirstHatchBeadResult FirstHatchBeadSnapshot::plan(const AffineHatchResult &reque
         detail::require_interval_environment();
         if (!source || !source->source || source->passes.empty() || (line_index && *line_index>=source->passes.front().lines.size()) ||
             (!line_index && (!slice || domain!=FirstHatchRoofDomain::FiniteWidth)) ||
-            !limits.max_evaluations || limits.max_evaluations>200000 || !valid_timeout(limits.timeout) ||
-            !valid_timeout(limits.packets.timeout) || limits.maximum_gap_error.value()<=0 || limits.maximum_gap_error.value()>.05 ||
-            !limits.max_roof_segments || limits.max_roof_segments>65535 || !limits.max_depth || limits.max_depth>32 ||
-            !limits.packets.max_segments || limits.packets.max_segments>65535 || !limits.packets.max_depth || limits.packets.max_depth>32 ||
-            limits.packets.maximum_width_error.value()<=0 || limits.packets.maximum_width_error.value()>.05 ||
-            limits.packets.maximum_volume_error.value()<=0)
+            !valid_material_bead_limits(limits))
             reject("INVALID_FIRST_HATCH_BEAD");
         const auto stack=source->source;const auto cursor=stack->source;
         if (!cursor || !cursor->sequence || !stack->first_pass.proof || stack->first_pass.status!=MaterialIntegralStatus::Bounded)
             reject("FIRST_HATCH_MISSING_OWNED_ROOF_PROOF");
         const auto sequence=cursor->sequence; const auto line=slice ? *slice : source->passes.front().lines[*line_index];
-        const bool x_axis=line.start.y()==line.end.y(), y_axis=line.start.x()==line.end.x();
-        if (x_axis==y_axis) reject("FIRST_HATCH_REQUIRES_AXIS_ALIGNED_CENTERLINE");
-        // Any admitted actual-gap width lies in nominal +/- this requested
-        // error. Query its exact outer strip before deriving the gap/amount;
-        // shrinking the query to the nominal centerline would be circular.
-        const Exact half=(Exact(line.width.value())+Exact(limits.packets.maximum_width_error.value()))/Exact(2);
-        const auto footprint=[&](PhysicalPosition a,PhysicalPosition b) {
-            if (domain==FirstHatchRoofDomain::Centerline)
-                return Polygon{{Exact(a.x()),Exact(a.y())},{Exact(b.x()),Exact(b.y())}};
-            const Exact x0=Exact(std::min(a.x(),b.x()))-(y_axis ? half : Exact(0));
-            const Exact x1=Exact(std::max(a.x(),b.x()))+(y_axis ? half : Exact(0));
-            const Exact y0=Exact(std::min(a.y(),b.y()))-(x_axis ? half : Exact(0));
-            const Exact y1=Exact(std::max(a.y(),b.y()))+(x_axis ? half : Exact(0));
-            const auto &roi=stack->surfaces.front().cell.footprint;
-            if (x0<Exact(roi.min_x) || x1>Exact(roi.max_x) || y0<Exact(roi.min_y) || y1>Exact(roi.max_y))
-                reject("FIRST_HATCH_FINITE_FOOTPRINT_OUTSIDE_SUPPORTED_ROI");
-            return Polygon{{x0,y0},{x1,y0},{x1,y1},{x0,y1}};
-        };
-        const auto poll=[&] { stop(limits,sequence->revision,started);stop(limits.packets,sequence->revision,started); };poll();
-        const auto context=sequence_hash(*sequence,poll);
-        size_t evaluations=0, segments=0;
-        const auto evaluate=[&] {
-            if (evaluations>=limits.max_evaluations) reject("FIRST_HATCH_ROOF_WORK_LIMIT");
-            if (evaluations%128==0) poll();++evaluations;
-        };
-        struct Endpoint { PhysicalPosition point;double error; };
-        const auto endpoint=[&](const Exact &t) {
-            const auto x=stored_exact(Exact(line.start.x())+(Exact(line.end.x())-Exact(line.start.x()))*t);
-            const auto y=stored_exact(Exact(line.start.y())+(Exact(line.end.y())-Exact(line.start.y()))*t);
-            const auto z=stored_exact(Exact(line.start.z())+(Exact(line.end.z())-Exact(line.start.z()))*t);
-            return Endpoint{{x.first,y.first,z.first},(Interval(x.second)+Interval(y.second)+Interval(z.second)).hi};
-        };
-        struct Node { Exact begin,end;Endpoint a,b;size_t depth;std::vector<size_t> candidates; };
-        std::vector<size_t> active;
-        const size_t end=cursor->completed_records+(cursor->current_progress>0 && cursor->completed_records<sequence->records.size());
-        for (size_t i=0;i<end;++i) { if (i%128==0) poll();if (sequence->records[i].bead) active.push_back(i); }
-        std::vector<Node> pending{{Exact(0),Exact(1),endpoint(Exact(0)),endpoint(Exact(1)),0,std::move(active)}};
-        std::vector<FixedWidthBeadPiece> pieces;
-        Exact target_lower(0),target_upper(0),deposited(0);double maximum_gap=0,maximum_width=0,coordinate_error=slice_error;
-        const auto correction=Interval(1)-pi()/Interval(4);
-        while (!pending.empty()) {
-            poll();auto node=std::move(pending.back());pending.pop_back();
-            auto roof_bound=nominal_roof_bounds(*cursor,footprint(node.a.point,node.b.point),node.candidates,stack->support_plane_z_mm,evaluate);
-            const double lower=roof_bound.height.lo,upper=roof_bound.height.hi;
-            auto candidates=std::move(roof_bound.active);
-            // The owned parent proves D_lower covers the whole ROI at plane.
-            // It is a lower bound on the nominal roof, never its actual value.
-            if (candidates.empty() || lower>upper) reject("FIRST_HATCH_INCONSISTENT_NOMINAL_ROOF");
-            const Interval roof(lower,upper);const double middle=(lower+upper)/2;
-            const double h0=node.a.point.z()-middle,h1=node.b.point.z()-middle;
-            const auto bottom0=Interval(node.a.point.z())-Interval(h0),bottom1=Interval(node.b.point.z())-Interval(h1);
-            const Interval bottom(std::min(bottom0.lo,bottom1.lo),std::max(bottom0.hi,bottom1.hi));
-            const auto gap_difference=bottom-roof;
-            double gap_error=std::max(std::abs(gap_difference.lo),std::abs(gap_difference.hi));
-            const auto fraction=exact_interval(node.end-node.begin);
-            const double budget=(Interval(limits.packets.maximum_volume_error.value())*fraction).lo;
-            bool accepted=false;FixedWidthBeadResult packets;Interval target(0);double width_error=0;
-            if (h0>0 && h1>0 && std::max(h0,h1)<line.width.value() && gap_error<=limits.maximum_gap_error.value()) {
-                auto packet_limits=limits.packets;
-                if (pieces.size()>=packet_limits.max_segments) reject("FIRST_HATCH_PACKET_COUNT_LIMIT");
-                packet_limits.max_segments-=pieces.size();packet_limits.maximum_volume_error=Volume(budget/4);
-                packet_limits.timeout=std::min(limits.timeout,limits.packets.timeout)-
-                    std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
-                packet_limits.cancelled=[&] { poll();return false; };packet_limits.is_current={};
-                packets=plan_fixed_width_bead({node.a.point,node.b.point,line.width,VerticalGap(h0),VerticalGap(h1),
-                    BeadSectionKind::RoundedRectangle,sequence->revision,context},packet_limits);
-                poll();
-                if (packets.snapshot) {
-                    // Axis-aligned stored endpoints stay on the queried segment.
-                    // Charge its Z/gap interpolation rounding to the roof model.
-                    gap_error=(Interval(gap_error)+Interval(packets.snapshot->numerical_error_upper_mm)).hi;
-                    bool domain=true;
-                    for (const auto &piece : packets.snapshot->pieces) {
-                        const auto within=[&](PhysicalPosition p) {
-                            return p.x()>=std::min(node.a.point.x(),node.b.point.x()) && p.x()<=std::max(node.a.point.x(),node.b.point.x()) &&
-                                p.y()>=std::min(node.a.point.y(),node.b.point.y()) && p.y()<=std::max(node.a.point.y(),node.b.point.y());
-                        };
-                        if (!within(piece.start) || !within(piece.end)) reject("FIRST_HATCH_PACKET_OUTSIDE_QUERIED_SEGMENT");
-                        const auto hmin=Interval(std::min(piece.section.gap_begin_mm,piece.section.gap_end_mm))-Interval(gap_error);
-                        const auto hmax=Interval(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm))+Interval(gap_error);
-                        if (hmin.lo<=0) { domain=false;break; }
-                        const auto area=Interval(piece.volume.value())/detail::root(length_squared(piece.start,piece.end));
-                        if (area.lo<=(pi()/Interval(4)*square(hmax)).hi) { domain=false;break; }
-                        const auto wmin=section_width(area,hmax,BeadSectionKind::RoundedRectangle),wmax=section_width(area,hmin,BeadSectionKind::RoundedRectangle);
-                        width_error=std::max({width_error,(Interval(line.width.value())-wmin).hi,(wmax-Interval(line.width.value())).hi});
-                    }
-                    const auto length=detail::root(length_squared(node.a.point,node.b.point));
-                    const auto maximum_h=Interval(std::max(h0,h1))+Interval(gap_error);
-                    const auto uncertainty=length*Interval(gap_error)*(Interval(line.width.value())+Interval(2)*correction*maximum_h);
-                    target=interval(packets.snapshot->target_volume_mm3)+Interval(-uncertainty.hi,uncertainty.hi);
-                    const auto difference=interval(packets.snapshot->deposited_volume_mm3)-target;
-                    accepted=domain && target.lo>0 && gap_error<=limits.maximum_gap_error.value() &&
-                        width_error<=limits.packets.maximum_width_error.value() && std::max(std::abs(difference.lo),std::abs(difference.hi))<=budget;
-                } else if (packets.reason!="FIXED_WIDTH_PACKET_COUNT_LIMIT" && packets.reason!="FIXED_WIDTH_PACKET_DEPTH_LIMIT")
-                    throw Rejection(packets.reason);
-            }
-            if (!accepted) {
-                if (node.depth>=limits.max_depth) reject("FIRST_HATCH_ROOF_DEPTH_LIMIT");
-                if (segments+pending.size()+2>limits.max_roof_segments) reject("FIRST_HATCH_ROOF_SEGMENT_LIMIT");
-                const Exact t=(node.begin+node.end)/Exact(2);const auto point=endpoint(t);
-                pending.push_back({t,node.end,point,node.b,node.depth+1,candidates});
-                pending.push_back({node.begin,t,node.a,point,node.depth+1,std::move(candidates)});continue;
-            }
-            ++segments;maximum_gap=std::max(maximum_gap,gap_error);maximum_width=std::max(maximum_width,width_error);
-            coordinate_error=std::max({coordinate_error,node.a.error,node.b.error,packets.snapshot->numerical_error_upper_mm});
-            target_lower+=Exact(target.lo);target_upper+=Exact(target.hi);
-            for (auto piece : packets.snapshot->pieces) {
-                deposited+=Exact(piece.volume.value());pieces.push_back(std::move(piece));
-            }
-        }
-        const Interval target(exact_interval(target_lower).lo,exact_interval(target_upper).hi),delivered=exact_interval(deposited);
-        const auto difference=delivered-target;const double error=std::max(std::abs(difference.lo),std::abs(difference.hi));
-        // Both actual and affine-model widths lie within nominal +/- maximum_width.
-        // Their edge difference is therefore at most maximum_width, not half it.
-        const double numeric=(Interval(source->numerical_error_upper_mm)+Interval(coordinate_error)+Interval(maximum_gap)+Interval(maximum_width)).hi;
-        if (error>limits.packets.maximum_volume_error.value()) reject("FIRST_HATCH_GLOBAL_VOLUME_ERROR");
-        if (numeric>.05) reject("FIRST_HATCH_NUMERICAL_BUDGET");
-        poll();auto snapshot=std::shared_ptr<const FirstHatchBeadSnapshot>(new FirstHatchBeadSnapshot(source,line_index,domain,line.start,line.end,std::move(pieces),
-            bounds(target),bounds(delivered),maximum_gap,maximum_width,error,numeric,segments,evaluations));
+        auto data=derive_material_bead(cursor,line,stack->surfaces.front().cell.footprint,stack->support_plane_z_mm,
+            source->numerical_error_upper_mm,slice_error,limits,domain,started);
+        const auto poll=[&] {stop(limits,sequence->revision,started);stop(limits.packets,sequence->revision,started);};poll();
+        auto snapshot=std::shared_ptr<const FirstHatchBeadSnapshot>(new FirstHatchBeadSnapshot(source,line_index,domain,line.start,line.end,std::move(data.pieces),
+            data.target,data.delivered,data.maximum_gap,data.maximum_width,data.error,data.numeric,data.segments,data.evaluations));
         poll();return {domain==FirstHatchRoofDomain::FiniteWidth ? "BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY" :
             "BOUNDED_FIRST_CENTERLINE_NOMINAL_ROOF_GAP_AND_AMOUNTS_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) { return {e.what(),{}}; }
@@ -3621,9 +3663,10 @@ SceneBox expand_run_box(const MaterialRunSnapshot &run,const SceneBox &box)
 // longitudinal slice. Internal butt faces are closed; the real ends are strict.
 // Callbacks share the caller's counters and deadline, including nested join searches.
 bool cover_run_box(const MaterialRunSnapshot &run,const SceneBox &domain,size_t max_depth,
-    const std::function<void()> &charge,const std::function<void()> &visit)
+    const std::function<void()> &charge,const std::function<void()> &visit,MaterialRepresentation representation=MaterialRepresentation::Lower)
 {
-    const auto box=expand_run_box(run,domain);const auto &sequence=*run.source->sequence;
+    const auto box=representation==MaterialRepresentation::Lower ? expand_run_box(run,domain) : domain;
+    const auto &sequence=*run.source->sequence;
     const Exact lo(run_coordinate(box.min,run.axis)),hi(run_coordinate(box.max,run.axis));
     const Exact start(run_coordinate(sequence.records[run.first_record].motion.start,run.axis)),end=run_end(run);
     if (lo<=std::min(start,end) || hi>=std::max(start,end)) return false;
@@ -3847,6 +3890,101 @@ MaterialRunCoverResult cover_material_run_lower(const MaterialRunResult &request
     } catch (const Rejection &e) {return {e.what(),{},cells,work};}
     catch (const std::exception &e) {return {"MATERIAL_RUN_COVER_NUMERIC_FAILURE: "+std::string(e.what()),{},cells,work};}
 }
+
+MaterialRunUnionResult MaterialRunUnionSnapshot::cover(const std::vector<MaterialRunResult> &requested,
+    const std::shared_ptr<const MaterialPrefixSnapshot> &fallback,const SceneBox &requested_box,
+    MaterialRepresentation representation,const MaterialCoverageLimits &requested_limits)
+{
+    const auto box=requested_box;const auto limits=requested_limits;auto source=fallback;
+    const auto started=std::chrono::steady_clock::now();size_t cells=0,work=0;
+    try {
+        detail::require_interval_environment();
+        if (!valid_coverage_limits(limits) || requested.size()>20000 || box.min.x()>box.max.x() || box.min.y()>box.max.y() || box.min.z()>box.max.z())
+            reject("INVALID_MATERIAL_RUN_UNION");
+        std::vector<std::shared_ptr<const MaterialRunSnapshot>> runs; // Own handles before callbacks.
+        for (const auto &r : requested) {
+            if (!r.snapshot) reject("INVALID_MATERIAL_RUN_UNION_SOURCE");
+            if (!source) source=r.snapshot->source;
+            if (r.snapshot->source!=source) reject("MATERIAL_RUN_UNION_SOURCE_MISMATCH");runs.push_back(r.snapshot);
+        }
+        if (!source || !source->sequence || source->sequence->records.size()>200000 || source->sequence->geometry.size()!=source->sequence->records.size() ||
+            source->completed_records>source->sequence->records.size() || !std::isfinite(source->current_progress) || source->current_progress<0 || source->current_progress>1 ||
+            (source->completed_records==source->sequence->records.size() && source->current_progress!=0)) reject("INVALID_MATERIAL_RUN_UNION_SOURCE");
+        for (const auto &p : {box.min,box.max}) {coordinate(p.x());coordinate(p.y());coordinate(p.z());}
+        const auto poll=[&] {stop(limits,source->sequence->revision,started);};
+        const auto charge=[&] {poll();if (work>=limits.max_evaluations) reject("MATERIAL_RUN_UNION_WORK_LIMIT");++work;};
+        const auto visit=[&] {poll();if (cells>=limits.max_cells) reject("MATERIAL_RUN_UNION_CELL_LIMIT");++cells;};poll();
+        std::vector<size_t> indices,events;for (size_t i=0;i<runs.size();++i) {charge();indices.push_back(i);}
+        const auto &sequence=*source->sequence;
+        if (fallback) {
+            const size_t end=source->completed_records+(source->current_progress>0 && source->completed_records<sequence.records.size());
+            for (size_t i=0;i<end;++i) {charge();if (sequence.records[i].bead) events.push_back(i);}
+        }
+        struct Node {SceneBox box;size_t depth;std::vector<size_t> runs,events;};
+        std::vector<Node> pending{{box,0,std::move(indices),std::move(events)}};std::vector<MaterialRunUnionLeaf> leaves;
+        while (!pending.empty()) {
+            visit();auto node=std::move(pending.back());pending.pop_back();bool covered=false;
+            std::vector<size_t> possible_runs,possible_events;
+            for (size_t i : node.runs) {
+                charge();const auto &outer=runs[i]->nominal_bounds;
+                if (node.box.max.x()<outer.min.x() || node.box.min.x()>outer.max.x() || node.box.max.y()<outer.min.y() || node.box.min.y()>outer.max.y() ||
+                    node.box.max.z()<outer.min.z() || node.box.min.z()>outer.max.z()) continue;
+                possible_runs.push_back(i);
+                if (cover_run_box(*runs[i],node.box,limits.max_depth-node.depth,charge,visit,representation)) {
+                    leaves.push_back({node.box,i,{}});covered=true;break;
+                }
+            }
+            if (covered) continue;
+            for (size_t i : node.events) {
+                charge();const auto &row=sequence.records[i];
+                if (!sequence.geometry[i] || !std::holds_alternative<Deposition>(row.motion.payload)) reject("INVALID_MATERIAL_RUN_UNION_GEOMETRY");
+                const auto membership=piece(row,sequence.model,project(row,{node.box.min.x(),node.box.max.x()},
+                    {node.box.min.y(),node.box.max.y()},{node.box.min.z(),node.box.max.z()}),run_progress(*source,i),Representation::Lower);
+                if (membership==MaterialMembership::Inside) {leaves.push_back({node.box,{},i});covered=true;break;}
+                if (membership==MaterialMembership::Unknown) possible_events.push_back(i);
+            }
+            if (covered) continue;
+            if (possible_runs.empty() && possible_events.empty()) reject("MATERIAL_RUN_UNION_NOT_COVERED");
+            // A continuously certified outside point can reject, never accept.
+            // Run erosion is contained in its actual nominal sections; do not
+            // use independent-event Lower cuts to reject a continuous run.
+            const PhysicalPosition witness{stored_exact((Exact(node.box.min.x())+Exact(node.box.max.x()))/Exact(2)).first,
+                stored_exact((Exact(node.box.min.y())+Exact(node.box.max.y()))/Exact(2)).first,
+                stored_exact((Exact(node.box.min.z())+Exact(node.box.max.z()))/Exact(2)).first};
+            bool outside=true;
+            for (size_t i : possible_runs) {
+                for (size_t row=runs[i]->first_record;row<=runs[i]->last_record;++row) {
+                    charge();const auto &record=sequence.records[row];
+                    if (piece(record,sequence.model,project(record,Interval(witness.x()),Interval(witness.y()),Interval(witness.z())),
+                        run_progress(*source,row),Representation::Nominal,true)!=MaterialMembership::Outside) {outside=false;break;}
+                }
+                if (!outside) break;
+            }
+            if (outside) for (size_t i : possible_events) {
+                charge();const auto &row=sequence.records[i];
+                if (piece(row,sequence.model,project(row,Interval(witness.x()),Interval(witness.y()),Interval(witness.z())),
+                    run_progress(*source,i),Representation::Lower)!=MaterialMembership::Outside) {outside=false;break;}
+            }
+            if (outside) reject("MATERIAL_RUN_UNION_UNCOVERED_POINT");
+            if (node.depth>=limits.max_depth) reject("MATERIAL_RUN_UNION_DEPTH_LIMIT");
+            std::array<double,3> lo{node.box.min.x(),node.box.min.y(),node.box.min.z()},hi{node.box.max.x(),node.box.max.y(),node.box.max.z()};
+            size_t axis=0;for (size_t i=1;i<3;++i) if (Exact(hi[i])-Exact(lo[i])>Exact(hi[axis])-Exact(lo[axis])) axis=i;
+            const double middle=stored_exact((Exact(lo[axis])+Exact(hi[axis]))/Exact(2)).first;
+            if (middle<=lo[axis] || middle>=hi[axis]) reject("MATERIAL_RUN_UNION_UNCERTAIN_BOUNDARY");
+            auto lower_hi=hi,upper_lo=lo;lower_hi[axis]=middle;upper_lo[axis]=middle;
+            pending.push_back({{{upper_lo[0],upper_lo[1],upper_lo[2]},{hi[0],hi[1],hi[2]}},node.depth+1,possible_runs,possible_events});
+            pending.push_back({{{lo[0],lo[1],lo[2]},{lower_hi[0],lower_hi[1],lower_hi[2]}},node.depth+1,std::move(possible_runs),std::move(possible_events)});
+        }
+        poll();auto snapshot=std::shared_ptr<const MaterialRunUnionSnapshot>(new MaterialRunUnionSnapshot(source,std::move(runs),box,representation,
+            std::move(leaves),cells,work));poll();return {"WHOLE_BOX_PARTITION_IN_ACTUAL_RUN_UNION_ONLY",std::move(snapshot),cells,work};
+    } catch (const Rejection &e) {return {e.what(),{},cells,work};}
+    catch (const std::exception &e) {return {"MATERIAL_RUN_UNION_NUMERIC_FAILURE: "+std::string(e.what()),{},cells,work};}
+}
+MaterialRunUnionResult cover_material_runs_lower(const std::vector<MaterialRunResult> &runs,const LowerMaterialView &fallback,
+    const SceneBox &box,const MaterialCoverageLimits &limits)
+{ return MaterialRunUnionSnapshot::cover(runs,fallback.snapshot,box,MaterialRepresentation::Lower,limits); }
+MaterialRunUnionResult cover_material_runs_nominal(const std::vector<MaterialRunResult> &runs,const SceneBox &box,const MaterialCoverageLimits &limits)
+{ return MaterialRunUnionSnapshot::cover(runs,{},box,MaterialRepresentation::Nominal,limits); }
 
 MaterialRunJoinResult find_material_run_join(const MaterialRunResult &requested_first,const MaterialRunResult &requested_second,
     const SceneBox &requested_box,const MaterialJoinLimits &requested_limits)
@@ -4202,10 +4340,12 @@ FirstCapSupportResult cover_first_cap_material_lower(const FirstCapMaterialResul
             next.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
             if (!valid_timeout(next.timeout)) reject("MATERIAL_DEADLINE");next.cancelled=[&] {poll();return false;};next.is_current={};return next;
         };
-        poll();
+        poll();bool intersects_run=false;
         for (const auto &path : source->runs) {
             if (work>=limits.max_evaluations) reject("FIRST_CAP_SUPPORT_WORK_LIMIT");++work;poll();
             const auto &outer=path.material->nominal_bounds;
+            intersects_run|=box.max.x()>=outer.min.x() && box.min.x()<=outer.max.x() && box.max.y()>=outer.min.y() && box.min.y()<=outer.max.y() &&
+                box.max.z()>=outer.min.z() && box.min.z()<=outer.max.z();
             if (box.min.x()<outer.min.x() || box.max.x()>outer.max.x() || box.min.y()<outer.min.y() || box.max.y()>outer.max.y() ||
                 box.min.z()<outer.min.z() || box.max.z()>outer.max.z()) continue; // Enclosure only prunes; never certifies.
             const auto covered=cover_material_run_lower({"",path.material},box,remaining());work+=covered.evaluations;cells+=covered.cells;poll();
@@ -4214,6 +4354,13 @@ FirstCapSupportResult cover_first_cap_material_lower(const FirstCapMaterialResul
                 return {"WHOLE_BOX_IN_SELECTED_ACTUAL_CAP_RUN_LOWER",std::move(snapshot),cells,work};
             }
             if (covered.reason!="MATERIAL_RUN_LOWER_NOT_CERTIFIED") throw Rejection(covered.reason);
+        }
+        if (intersects_run) {
+            std::vector<MaterialRunResult> paths;for (const auto &path : source->runs) paths.push_back({"",path.material});
+            const auto joined=cover_material_runs_lower(paths,{source->material},box,remaining());work+=joined.evaluations;cells+=joined.cells;poll();
+            if (!joined.snapshot) throw Rejection(joined.reason);
+            auto snapshot=std::shared_ptr<const FirstCapSupportSnapshot>(new FirstCapSupportSnapshot(source,box,{},{},joined.snapshot));poll();
+            return {"WHOLE_BOX_IN_ACTUAL_CAP_RUN_AND_EVENT_LOWER_UNION",std::move(snapshot),cells,work};
         }
         const auto covered=cover_material(LowerMaterialView{source->material},box,remaining());work+=covered.evaluations;cells+=covered.cells;poll();
         if (covered.status!=MaterialCoverageStatus::Covered) return {covered.reason,{},cells,work};
@@ -4267,6 +4414,87 @@ FirstCapNextPassResult assess_first_cap_next_pass(const FirstCapMaterialResult &
             gap.gap,gap.volume,support.snapshot));poll();return {"LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX",std::move(snapshot),cells,work};
     } catch (const Rejection &e) {return {e.what(),{},cells,work};}
     catch (const std::exception &e) {return {"FIRST_CAP_NEXT_PASS_NUMERIC_FAILURE: "+std::string(e.what()),{},cells,work};}
+}
+
+NextCapBeadResult plan_next_cap_bead(const FirstCapNextPassResult &requested,HatchDirection direction,WidthXY width,
+    const NextCapBeadLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto limits=requested_limits;const auto started=std::chrono::steady_clock::now();size_t cells=0;
+    try {
+        detail::require_interval_environment();
+        if (!source || !valid_material_bead_limits(limits) || !limits.max_roof_cells || limits.max_roof_cells>65535 ||
+            (direction!=HatchDirection::AlongX && direction!=HatchDirection::AlongY)) reject("INVALID_NEXT_CAP_BEAD");
+        const auto material=source->source;const auto cursor=material->material;const auto &cell=source->cell;const auto &r=cell.footprint;
+        const auto poll=[&] {stop(limits,cursor->sequence->revision,started);stop(limits.packets,cursor->sequence->revision,started);};poll();
+        const bool x=direction==HatchDirection::AlongX;double coordinate_error=0;
+        const auto point=[&](Exact px,Exact py) {
+            const auto xx=stored_exact(px),yy=stored_exact(py);
+            const auto z=stored_exact(Exact(cell.z00)+(Exact(cell.z10)-Exact(cell.z00))*(px-Exact(r.min_x))/(Exact(r.max_x)-Exact(r.min_x))+
+                (Exact(cell.z01)-Exact(cell.z00))*(py-Exact(r.min_y))/(Exact(r.max_y)-Exact(r.min_y)));
+            coordinate_error=std::max(coordinate_error,(Interval(xx.second)+Interval(yy.second)+Interval(z.second)).hi);
+            return PhysicalPosition{xx.first,yy.first,z.first};
+        };
+        const auto middle_x=(Exact(r.min_x)+Exact(r.max_x))/Exact(2),middle_y=(Exact(r.min_y)+Exact(r.max_y))/Exact(2);
+        const auto a=point(x ? Exact(r.min_x) : middle_x,x ? middle_y : Exact(r.min_y));
+        const auto b=point(x ? Exact(r.max_x) : middle_x,x ? middle_y : Exact(r.max_y));
+        const auto length=detail::root(length_squared(a,b));
+        const AffineHatchLine line{a,b,b,a,width,r,{0,0},bounds(length),coordinate_error};
+        std::vector<MaterialRunResult> runs;for (const auto &run : material->runs) runs.push_back({"",run.material});
+        const RoofFloorProvider raise_floor=[&](const Polygon &polygon,double floor,size_t &work,const std::function<void(size_t)> &charge) {
+            Exact xmin=polygon.front()[0],xmax=xmin,ymin=polygon.front()[1],ymax=ymin;
+            for (const auto &p : polygon) {xmin=std::min(xmin,p[0]);xmax=std::max(xmax,p[0]);ymin=std::min(ymin,p[1]);ymax=std::max(ymax,p[1]);}
+            const auto xb=exact_interval(xmin),xe=exact_interval(xmax),yb=exact_interval(ymin),ye=exact_interval(ymax);
+            std::vector<double> proposals;
+            for (const auto &candidate : runs) {
+                charge(1);const auto &run=*candidate.snapshot;const auto &outer=run.nominal_bounds;
+                if (xe.hi<outer.min.x() || xb.lo>outer.max.x() || ye.hi<outer.min.y() || yb.lo>outer.max.y()) continue;
+                const Interval longitudinal=run.axis==MaterialRunAxis::X ? Interval(xb.lo,xe.hi) : Interval(yb.lo,ye.hi);
+                std::optional<double> run_minimum;
+                for (size_t i=run.first_record;i<=run.last_record;++i) {
+                    charge(1);const auto &row=cursor->sequence->records[i];const auto &m=row.motion;
+                    const auto origin=Interval(run_coordinate(m.start,run.axis)),end=Interval(run_coordinate(m.end,run.axis));
+                    // Interval division admits a positive denominator only.
+                    const auto t=run.positive ? (longitudinal-origin)/(end-origin) : (origin-longitudinal)/(origin-end);
+                    const double lo=std::max(0.,t.lo),hi=std::min(run_progress(*cursor,i),t.hi);if (lo>hi) continue;
+                    const auto top=Interval(m.start.z())+(Interval(m.end.z())-Interval(m.start.z()))*Interval(lo,hi);
+                    if (top.hi<floor) continue;run_minimum=run_minimum ? std::min(*run_minimum,top.lo) : top.lo;
+                }
+                // A low shoulder of an unrelated transverse run must not
+                // suppress a stronger proposal. Only the subsequent whole
+                // union certificate can turn this proposal into a lower bound.
+                if (run_minimum) proposals.push_back(*run_minimum);
+            }
+            std::sort(proposals.begin(),proposals.end(),std::greater<double>());
+            proposals.erase(std::unique(proposals.begin(),proposals.end()),proposals.end());
+            // Proposals only. A lower plane avoids touching the rounded numeric
+            // boundary; its independently certified distance from the roof is
+            // still charged to the unchanged final gap/width/amount budgets.
+            for (double proposed : proposals) for (double fraction : {.25,.5,1.,1.5}) {
+                const double z=(Interval(proposed)-Interval(limits.maximum_gap_error.value())*Interval(fraction)).lo;
+                if (z<=floor) continue;
+                if (work>=limits.max_evaluations) reject("NEXT_CAP_BEAD_ROOF_WORK_LIMIT");
+                if (cells>=limits.max_roof_cells) reject("NEXT_CAP_BEAD_ROOF_CELL_LIMIT");
+                MaterialCoverageLimits remaining;remaining.max_evaluations=limits.max_evaluations-work;remaining.max_cells=limits.max_roof_cells-cells;
+                remaining.max_depth=limits.max_depth;remaining.timeout=std::min(limits.timeout,limits.packets.timeout)-
+                    std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+                if (!valid_timeout(remaining.timeout)) reject("MATERIAL_DEADLINE");remaining.cancelled=[&] {poll();return false;};
+                const auto proof=cover_material_runs_nominal(runs,{{xb.lo,yb.lo,z},{xe.hi,ye.hi,z}},remaining);
+                charge(proof.evaluations);cells+=proof.cells;poll();
+                if (proof.snapshot) return RoofFloorProof{z,proof.snapshot};
+                if (proof.reason!="MATERIAL_RUN_UNION_NOT_COVERED" && proof.reason!="MATERIAL_RUN_UNION_UNCOVERED_POINT" &&
+                    proof.reason!="MATERIAL_RUN_UNION_DEPTH_LIMIT" && proof.reason!="MATERIAL_RUN_UNION_UNCERTAIN_BOUNDARY") throw Rejection(proof.reason);
+            }
+            return RoofFloorProof{};
+        };
+        const double numeric=(Interval(material->source->source->numerical_error_upper_mm)+
+            Interval(cursor->sequence->model.numerical_coordinate_error.value())+Interval(source->policy.corner_height_error.value())).hi;
+        auto data=derive_material_bead(cursor,line,r,source->support_plane_z_mm,numeric,coordinate_error,limits,
+            FirstHatchRoofDomain::FiniteWidth,started,raise_floor,source->policy);
+        poll();auto snapshot=std::shared_ptr<const NextCapBeadSnapshot>(new NextCapBeadSnapshot(source,a,b,std::move(data.pieces),std::move(data.roof_proofs),
+            data.target,data.delivered,data.maximum_gap,data.maximum_width,data.error,data.numeric,data.segments,cells,data.evaluations));poll();
+        return {"BOUNDED_LATER_FINITE_FOOTPRINT_ACTUAL_ROOF_AND_CONSTANT_FLUX_DOSE_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) {return {e.what(),{}};}
+    catch (const std::exception &e) {return {"NEXT_CAP_BEAD_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
 }
 
 }

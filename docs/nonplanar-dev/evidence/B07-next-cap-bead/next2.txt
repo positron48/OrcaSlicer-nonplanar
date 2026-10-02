@@ -1,0 +1,1192 @@
+Filters: [NextCapBead]
+Randomness seeded to: 3333930164
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B07 next finite-width bead derives its dose from actual cap roof and whole run-
+union support
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3227
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3229: PASSED:
+with message:
+  !(std::is_aggregate<NextCapBeadSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x8a9082db8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2074: PASSED:
+  REQUIRE( stack.snapshot )
+with expansion:
+  0x10927d7c0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:2075: PASSED:
+  REQUIRE( hatches.snapshot )
+with expansion:
+  0x10927e1c0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3231: PASSED:
+  REQUIRE( cap.snapshot )
+with expansion:
+  0x10927f0c0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3232: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x10927f280
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3238: PASSED:
+  REQUIRE( next.snapshot )
+with expansion:
+  0x10927dc40
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3239: PASSED:
+  REQUIRE( next.snapshot->support->run_union )
+with expansion:
+  0x8a8c07980
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.64 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  1.835 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.250865 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.385813 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00950625 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.64 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  1.835 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.250865 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.385813 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.0095125 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.815 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.01 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.371972 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.50692 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00950625 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.815 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.01 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.371972 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.50692 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.0095125 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.64 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  1.835 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.250865 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.385813 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.0095125 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.64 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  1.835 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.250865 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.385813 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00950625 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.815 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.01 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.371972 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.50692 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.0095125 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.815 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.01 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.371972 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.50692 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00950625 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.99 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.185 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.49308 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.628028 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00950625 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.99 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.185 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.49308 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.628028 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.0095125 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  2.165 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.36 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.614187 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.749135 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00950625 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  2.165 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.36 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.614187 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.749135 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.0095125 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.99 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.185 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.49308 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.628028 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.0095125 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  1.99 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.185 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.49308 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.628028 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00950625 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  2.165 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.36 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.614187 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.749135 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.0095125 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3241: PASSED:
+  REQUIRE( leaf.run_index )
+with expansion:
+  {?}
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( lo>std::min(start,end) )
+with expansion:
+  2.165 > 1.2775
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:72: PASSED:
+  REQUIRE( hi<std::max(start,end) )
+with expansion:
+  2.36 < 2.7225
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:74: PASSED:
+  REQUIRE( (i<source.completed_records || (i==source.completed_records && source.current_progress>0)) )
+with expansion:
+  true
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::min(t0,t1)>=0 )
+with expansion:
+  0.614187 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:79: PASSED:
+  REQUIRE( std::max(t0,t1)<=fraction(i) )
+with expansion:
+  0.749135 <= 1
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( core>=0 )
+with expansion:
+  0.1225 >= 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( radius>0 )
+with expansion:
+  0.1025 > 0
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:88: PASSED:
+  REQUIRE( horizontal*horizontal+vertical*vertical<radius*radius )
+with expansion:
+  0.00950625 < 0.0105063
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/material_join_oracle.hpp:94: PASSED:
+  REQUIRE( abs(covered-(hi-lo))<Q("1e-30") )
+with expansion:
+  0 < 1e-30
+with message:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3245: FAILED:
+  REQUIRE( laid.snapshot )
+with expansion:
+  0
+with messages:
+  LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+  NEXT_CAP_ROOF_DEPTH_LIMIT lower=1.190000 upper=1.205000 gap_error=0.007500
+  width_error=0.000000 nominal_union=0
+
+===============================================================================
+test cases:   1 |   0 passed | 1 failed
+assertions: 169 | 168 passed | 1 failed
+

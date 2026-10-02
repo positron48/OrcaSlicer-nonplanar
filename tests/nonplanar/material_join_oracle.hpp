@@ -56,14 +56,14 @@ inline void independent_join_box(const MaterialJoinSnapshot &join)
 
 // Independent 113-bit continuous bound of the mathematically inflated box.
 // Use actual binary packet flux, not nominal_width or production predicates.
-inline void independent_run_box(const MaterialRunSnapshot &run,const SceneBox &box)
+inline void independent_run_box(const MaterialRunSnapshot &run,const SceneBox &box,bool lower=true)
 {
     using Q=boost::multiprecision::cpp_bin_float_quad;
     const auto &source=*run.source;const auto &sequence=*source.sequence;
     const auto s=[&](PhysicalPosition p) {return Q(run.axis==MaterialRunAxis::X ? p.x() : p.y());};
     const auto n=[&](PhysicalPosition p) {return Q(run.axis==MaterialRunAxis::X ? p.y() : p.x());};
-    const Q xy=Q(sequence.model.inner_xy_loss.value())+sequence.model.numerical_coordinate_error.value();
-    const Q ze=Q(sequence.model.inner_z_loss.value())+sequence.model.numerical_coordinate_error.value();
+    const Q xy=lower ? Q(sequence.model.inner_xy_loss.value())+sequence.model.numerical_coordinate_error.value() : Q(0);
+    const Q ze=lower ? Q(sequence.model.inner_z_loss.value())+sequence.model.numerical_coordinate_error.value() : Q(0);
     const Q lo=s(box.min)-xy,hi=s(box.max)+xy,nlo=n(box.min)-xy,nhi=n(box.max)+xy;
     const Q zlo=Q(box.min.z())-ze,zhi=Q(box.max.z())+ze;
     const auto fraction=[&](size_t i) {return i<source.completed_records ? Q(1) : Q(source.current_progress);};
@@ -93,4 +93,29 @@ inline void independent_run_box(const MaterialRunSnapshot &run,const SceneBox &b
     // Only accumulated high-precision arithmetic rounding is tolerated here.
     REQUIRE(abs(covered-(hi-lo))<Q("1e-30"));
 }
+// Independent analytic point roof, used for dose checks and geometric negative
+// cases only. Acceptance still requires whole-domain certificates.
+inline std::optional<boost::multiprecision::cpp_bin_float_quad> independent_nominal_roof(const MaterialPrefixSnapshot &source,double x,double y)
+{
+    using Q=boost::multiprecision::cpp_bin_float_quad;std::optional<Q> highest;
+    const size_t end=source.completed_records+(source.current_progress>0 && source.completed_records<source.sequence->records.size());
+    for (size_t i=0;i<end;++i) {
+        const auto &row=source.sequence->records[i];if (!row.bead) continue;
+        const auto &m=row.motion;const auto &b=*row.bead;
+        const Q dx=Q(m.end.x())-m.start.x(),dy=Q(m.end.y())-m.start.y(),l2=dx*dx+dy*dy,l=sqrt(l2);
+        const Q t=(dx*(Q(x)-m.start.x())+dy*(Q(y)-m.start.y()))/l2;
+        const Q progress=i<source.completed_records ? Q(1) : Q(source.current_progress);if (t<0 || t>progress) continue;
+        const Q n=abs((-dy*(Q(x)-m.start.x())+dx*(Q(y)-m.start.y()))/l),h=Q(b.gap_begin_mm)+(Q(b.gap_end_mm)-b.gap_begin_mm)*t;
+        const Q a=Q(std::get<Deposition>(m.payload).volume.value())/l,top=Q(m.start.z())+(Q(m.end.z())-m.start.z())*t;
+        Q roof=top;
+        if (b.kind==BeadSectionKind::Rectangle) {if (n>a/h/2) continue;}
+        else {
+            const Q radius=h/2,core=(a/h-acos(Q(-1))*h/4)/2,horizontal=std::max(Q(0),n-core);
+            if (horizontal>radius) continue;roof=top-radius+sqrt(radius*radius-horizontal*horizontal);
+        }
+        highest=highest ? std::max(*highest,roof) : roof;
+    }
+    return highest;
+}
+
 }

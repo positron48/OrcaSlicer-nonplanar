@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="9615" hostname="tbd" time="0.431" timestamp="2026-10-01T23:58:46Z">
+    <properties>
+      <property name="random-seed" value="2871207491"/>
+      <property name="filters" value="[MaterialRunUnion],[NextCapBead],[FirstCapMaterial]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 body and active first cap form one exact material prefix for later local support" time="0.098" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 next finite-width bead derives its dose from actual cap roof and whole run-union support" time="0.000" status="run">
+      <failure message="laid.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( laid.snapshot )
+with expansion:
+  0
+next direction=1 sloped=1
+LOCAL_LATER_SURFACE_FEASIBLE_ON_ACTUAL_BODY_CAP_PREFIX
+NEXT_CAP_ROOF_DEPTH_LIMIT lower=1.182500 upper=1.212438 gap_error=0.014969 width_error=0.000000 nominal_union=0
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3246
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 continuous run unions certify every leaf without closing real gaps or future fronts" time="0.011" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B07 composed cap refuses partial body and stale invalid or exhausted requests" time="0.016" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

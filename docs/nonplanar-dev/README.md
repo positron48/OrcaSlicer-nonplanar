@@ -15,10 +15,19 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B07-next-cap-bead.md` and ADR-0061 now certify complete support planes across
+several actual runs and construct a finite-width later bead from the exact
+body/active-cap roof. The native .4 mm support footprint produces eight .38 mm
+bead packets under unchanged gap/width/amount limits and original later vertical
+policy. Independent whole-leaf and dose oracles pass. First-cap-support and
+first-cap-next-pass runtime contracts are 2; run-union and next-cap-bead are 1.
+Three new cases / 12439 assertions, combined 104 material / 14 body cases and
+349/349 selected CTest pass; six fresh OFF/ZAA comparisons pass. Complete later
+fill, normal/contact/head/order/flow and export remain pending.
 `B07-first-cap-material.md` and ADR-0060 now compose exact completed body
 and selected active cap material, with explicit continuous-run lower support
 and local later-surface feasibility. Future material and full-ROI unsupported
-requests refuse; actual later beads and complete cap fill remain pending.
+requests refuse; complete cap fill remains pending.
 `B07-first-cap-width-replan.md` and ADR-0059 now narrow only central packets,
 retaining original XYZ/gaps, contour snapshots, end doses and body/target/band/losses.
 The native .40 -> .38 mm candidate changes 53 of 173 packets and reduces S/R by

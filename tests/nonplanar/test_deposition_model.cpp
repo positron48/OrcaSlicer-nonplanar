@@ -3179,3 +3179,129 @@ TEST_CASE("B07 composed cap refuses partial body and stale invalid or exhausted 
     const auto bad_next=assess_first_cap_next_pass(owned,1,region,z);std::fesetround(rounding);
     REQUIRE_FALSE(bad_capture.snapshot);REQUIRE_FALSE(bad_support.snapshot);REQUIRE_FALSE(bad_next.snapshot);
 }
+
+TEST_CASE("B07 continuous run unions certify every leaf without closing real gaps or future fronts", "[Nonplanar][B07][MaterialRunUnion]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialRunUnionSnapshot>::value);
+    std::vector<MaterialRecord> rows;
+    for (double y : {-.08,.08}) {
+        if (!rows.empty()) {const auto end=rows.back().motion.end;const size_t i=rows.size();rows.push_back({{i+1,i,0,end,{0,y,1},Speed(20),Acceleration(100),Travel{}},{}});}
+        for (int n=0;n<8;++n) {const size_t i=rows.size();rows.push_back(bead(i+1,i,{n*.5,y,1},{(n+1)*.5,y,1},.4,.2,.2));}
+    }
+    const auto state=material_at(captured(rows,model(.01,.01)),rows.size(),0);
+    const std::vector<MaterialRunResult> runs{reconstruct_material_run(state.nominal,0,7),reconstruct_material_run(state.nominal,9,16)};
+    REQUIRE(runs[0].snapshot);REQUIRE(runs[1].snapshot);
+    const SceneBox lower{{.2,-.22,.97},{3.8,.22,.97}},nominal{{.2,-.17,.999999999},{3.8,.17,.999999999}};
+    REQUIRE_FALSE(cover_material_run_lower(runs[0],lower).snapshot);REQUIRE_FALSE(cover_material_run_lower(runs[1],lower).snapshot);
+    const auto joined=cover_material_runs_lower(runs,state.lower,lower);INFO(joined.reason);REQUIRE(joined.snapshot);
+    REQUIRE(joined.snapshot->source==state.nominal.snapshot);REQUIRE(joined.snapshot->representation==MaterialRepresentation::Lower);
+    REQUIRE(joined.snapshot->leaves.size()>1);
+    using Q=boost::multiprecision::cpp_bin_float_quad;Q area=0;
+    std::set<size_t> owners;
+    for (const auto &leaf : joined.snapshot->leaves) {
+        REQUIRE(leaf.run_index);REQUIRE_FALSE(leaf.event_index);owners.insert(*leaf.run_index);
+        test::independent_run_box(*joined.snapshot->runs[*leaf.run_index],leaf.domain);
+        area+=(Q(leaf.domain.max.x())-leaf.domain.min.x())*(Q(leaf.domain.max.y())-leaf.domain.min.y());
+    }
+    REQUIRE(owners.size()==2);REQUIRE(area==(Q(lower.max.x())-lower.min.x())*(Q(lower.max.y())-lower.min.y()));
+    const auto roof=cover_material_runs_nominal(runs,nominal);INFO(roof.reason);REQUIRE(roof.snapshot);
+    REQUIRE(roof.snapshot->representation==MaterialRepresentation::Nominal);
+    for (const auto &leaf : roof.snapshot->leaves) {
+        REQUIRE(leaf.run_index);test::independent_run_box(*roof.snapshot->runs[*leaf.run_index],leaf.domain,false);
+    }
+    const auto current=material_at(state.nominal.snapshot->sequence,3,.5);
+    const std::vector<MaterialRunResult> partial{reconstruct_material_run(current.nominal,0,3)};REQUIRE(partial[0].snapshot);
+    REQUIRE_FALSE(cover_material_runs_lower(partial,current.lower,lower).snapshot);
+    REQUIRE_FALSE(cover_material_runs_nominal(partial,nominal).snapshot);
+    auto mixed=runs;mixed[1]=partial[0];REQUIRE_FALSE(cover_material_runs_lower(mixed,state.lower,lower).snapshot);
+    const auto gapped=material_at(captured({bead(1,0,{0,-.3,1},{4,-.3,1},.4,.2,.2),
+        {{2,1,0,{4,-.3,1},{0,.3,1},Speed(20),Acceleration(100),Travel{}},{}},bead(3,2,{0,.3,1},{4,.3,1},.4,.2,.2)},model(.01,.01)),3,0);
+    const std::vector<MaterialRunResult> holes{reconstruct_material_run(gapped.nominal,0,0),reconstruct_material_run(gapped.nominal,2,2)};
+    REQUIRE_FALSE(cover_material_runs_lower(holes,gapped.lower,{{.2,-.2,.97},{3.8,.2,.97}}).snapshot);
+    MaterialCoverageLimits limits;limits.max_evaluations=1;REQUIRE_FALSE(cover_material_runs_lower(runs,state.lower,lower,limits).snapshot);
+    limits={};limits.max_cells=1;REQUIRE_FALSE(cover_material_runs_lower(runs,state.lower,lower,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE(cover_material_runs_lower(runs,state.lower,lower,limits).reason=="CANCELLED");
+    limits={};limits.is_current=[](uint64_t) {return false;};REQUIRE(cover_material_runs_nominal(runs,nominal,limits).reason=="STALE_REVISION");
+}
+
+TEST_CASE("B07 next finite-width bead derives its dose from actual cap roof and whole run-union support", "[Nonplanar][B07][NextCapBead]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<NextCapBeadSnapshot>::value);
+    for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) for (bool sloped : {false,true}) {
+        INFO("next direction=" << int(direction) << " sloped=" << sloped);
+        const auto cap=plan_first_cap(first_cap_fixture(direction,sloped),{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
+        const auto material=reconstruct_first_cap_material(cap);REQUIRE(material.snapshot);
+        const bool x=direction==HatchDirection::AlongX;const RectangleXY region=x ? RectangleXY{1.65,-.23,2.35,.23} : RectangleXY{1.77,-.3,2.23,.3};
+        const auto &previous=cap.snapshot->source->source->surfaces.front().cell;
+        const auto z=[&](double px,double py) {const auto &r=previous.footprint;return previous.z00+(previous.z10-previous.z00)*(px-r.min_x)/(r.max_x-r.min_x)+
+            (previous.z01-previous.z00)*(py-r.min_y)/(r.max_y-r.min_y);};
+        const double plane=std::min(z(region.min_x,region.min_y),z(region.max_x,region.max_y))-.015;
+        const auto next=assess_first_cap_next_pass(material,1,region,plane);INFO(next.reason);REQUIRE(next.snapshot);
+        REQUIRE(next.snapshot->support->run_union);
+        for (const auto &leaf : next.snapshot->support->run_union->leaves) {
+            REQUIRE(leaf.run_index);test::independent_run_box(*next.snapshot->support->run_union->runs[*leaf.run_index],leaf.domain);
+        }
+        NextCapBeadLimits limits;limits.timeout=std::chrono::seconds(5);limits.packets.timeout=std::chrono::seconds(5);
+        limits.maximum_gap_error=Length(.0002);limits.packets.maximum_width_error=Length(.002);limits.packets.maximum_volume_error=Volume(.001);
+        const auto laid=plan_next_cap_bead(next,direction,WidthXY(.45),limits);INFO(laid.reason);REQUIRE(laid.snapshot);
+        REQUIRE(laid.snapshot->source==next.snapshot);REQUIRE_FALSE(laid.snapshot->pieces.empty());REQUIRE_FALSE(laid.snapshot->roof_proofs.empty());
+        REQUIRE(laid.snapshot->maximum_gap_error_mm<=limits.maximum_gap_error.value());REQUIRE(laid.snapshot->maximum_width_error_mm<=limits.packets.maximum_width_error.value());
+        using Q=boost::multiprecision::cpp_bin_float_quad;Q amount=0;
+        for (const auto &packet : laid.snapshot->pieces) {
+            amount+=Q(packet.volume.value());REQUIRE(packet.nominal_width.value()==.45);
+            REQUIRE(packet.section.gap_begin_mm>.14);REQUIRE(packet.section.gap_end_mm<.24);
+        }
+        const auto &a=laid.snapshot->path_start,&b=laid.snapshot->path_end;
+        const Q length=sqrt(pow(Q(b.x())-a.x(),2)+pow(Q(b.y())-a.y(),2));
+        const Q h0=Q(a.z())-z(a.x(),a.y()),h1=Q(b.z())-z(b.x(),b.y()),k=1-acos(Q(-1))/4;
+        const Q target=length*(Q(.45)*(h0+h1)/2-k*(h0*h0+h0*h1+h1*h1)/3);
+        REQUIRE(Q(laid.snapshot->actual_target_volume_mm3.lower)<=target);REQUIRE(Q(laid.snapshot->actual_target_volume_mm3.upper)>=target);
+        REQUIRE(Q(laid.snapshot->deposited_volume_mm3.lower)<=amount);REQUIRE(Q(laid.snapshot->deposited_volume_mm3.upper)>=amount);
+        REQUIRE(abs(amount-target)<=Q(limits.packets.maximum_volume_error.value()));
+        for (const auto &proof : laid.snapshot->roof_proofs) {
+            REQUIRE(proof->representation==MaterialRepresentation::Nominal);REQUIRE(proof->source==material.snapshot->material);
+            for (const auto &leaf : proof->leaves) {REQUIRE(leaf.run_index);test::independent_run_box(*proof->runs[*leaf.run_index],leaf.domain,false);}
+        }
+        if (sloped) {
+            const double cx=(region.min_x+region.max_x)/2,cy=(region.min_y+region.max_y)/2;
+            const auto low=test::independent_nominal_roof(*material.snapshot->material,x ? region.min_x : cx,x ? cy : region.min_y);
+            const auto high=test::independent_nominal_roof(*material.snapshot->material,x ? region.max_x : cx,x ? cy : region.max_y);
+            REQUIRE(low);REQUIRE(high);REQUIRE(abs(*high-*low)>Q(2)*Q(limits.maximum_gap_error.value()));
+            auto transverse=limits;transverse.max_depth=4;
+            REQUIRE_FALSE(plan_next_cap_bead(next,x ? HatchDirection::AlongY : HatchDirection::AlongX,WidthXY(.45),transverse).snapshot);
+        }
+        REQUIRE_FALSE(plan_next_cap_bead(next,direction,WidthXY(.48),limits).snapshot);
+        auto exhausted=limits;exhausted.max_evaluations=1;REQUIRE_FALSE(plan_next_cap_bead(next,direction,WidthXY(.45),exhausted).snapshot);
+        exhausted=limits;exhausted.cancelled=[] {return true;};REQUIRE(plan_next_cap_bead(next,direction,WidthXY(.45),exhausted).reason=="CANCELLED");
+        exhausted=limits;exhausted.is_current=[](uint64_t) {return false;};REQUIRE(plan_next_cap_bead(next,direction,WidthXY(.45),exhausted).reason=="STALE_REVISION");
+    }
+}
+
+TEST_CASE("B07 next bead publication keeps owned inputs and shared numerical budgets", "[Nonplanar][B07][NextCapBead]")
+{
+    const auto cap=plan_first_cap(first_cap_fixture(HatchDirection::AlongX),{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
+    const auto material=reconstruct_first_cap_material(cap);REQUIRE(material.snapshot);
+    const double plane=cap.snapshot->source->source->surfaces.front().cell.z00-.015;
+    const auto next=assess_first_cap_next_pass(material,1,{1.65,-.23,2.35,.23},plane);REQUIRE(next.snapshot);
+    NextCapBeadLimits limits;limits.max_roof_cells=1;REQUIRE_FALSE(plan_next_cap_bead(next,HatchDirection::AlongX,WidthXY(.45),limits).snapshot);
+    limits={};limits.max_roof_cells=0;REQUIRE_FALSE(plan_next_cap_bead(next,HatchDirection::AlongX,WidthXY(.45),limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE(plan_next_cap_bead(next,HatchDirection::AlongX,WidthXY(.45),limits).reason=="MATERIAL_DEADLINE");
+    limits={};auto mutable_next=next;limits.cancelled=[&] {mutable_next={};return false;};
+    const auto owned=plan_next_cap_bead(mutable_next,HatchDirection::AlongX,WidthXY(.45),limits);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->source==next.snapshot);
+    size_t callbacks=0;limits={};limits.cancelled=[&] {++callbacks;return false;};REQUIRE(plan_next_cap_bead(next,HatchDirection::AlongX,WidthXY(.45),limits).snapshot);
+    const size_t final_callback=callbacks;callbacks=0;limits.cancelled=[&] {return ++callbacks==final_callback;};
+    REQUIRE(plan_next_cap_bead(next,HatchDirection::AlongX,WidthXY(.45),limits).reason=="CANCELLED");
+    REQUIRE_FALSE(plan_next_cap_bead({},HatchDirection::AlongX,WidthXY(.45)).snapshot);
+    REQUIRE_FALSE(plan_next_cap_bead(next,static_cast<HatchDirection>(99),WidthXY(.45)).snapshot);
+    const int rounding=std::fegetround();std::fesetround(FE_DOWNWARD);
+    const auto invalid=plan_next_cap_bead(next,HatchDirection::AlongX,WidthXY(.45));std::fesetround(rounding);REQUIRE_FALSE(invalid.snapshot);
+    std::vector<MaterialRunResult> runs;for (const auto &r : material.snapshot->runs) runs.push_back({"",r.material});
+    const SceneBox support{{1.65,-.23,plane},{2.35,.23,plane}};
+    MaterialCoverageLimits cover;cover.timeout=std::chrono::milliseconds(1);cover.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE(cover_material_runs_lower(runs,{material.snapshot->material},support,cover).reason=="MATERIAL_DEADLINE");
+    cover={};auto mutable_runs=runs;cover.cancelled=[&] {mutable_runs.clear();return false;};
+    const auto captured=cover_material_runs_lower(mutable_runs,{material.snapshot->material},support,cover);REQUIRE(captured.snapshot);REQUIRE(captured.snapshot->runs.size()==runs.size());
+    std::fesetround(FE_DOWNWARD);const auto invalid_cover=cover_material_runs_lower(runs,{material.snapshot->material},support);std::fesetround(rounding);
+    REQUIRE_FALSE(invalid_cover.snapshot);
+}
