@@ -4322,6 +4322,114 @@ FirstCapMaterialResult reconstruct_first_cap_material(const FirstCapResult &requ
     catch (const std::exception &e) {return {"FIRST_CAP_MATERIAL_NUMERIC_FAILURE: "+std::string(e.what()),{},work};}
 }
 
+FirstCapMaterialResult append_next_cap_material(const FirstCapMaterialResult &requested,const std::vector<NextCapBeadResult> &requested_paths,
+    std::optional<size_t> requested_count,double progress,const NextCapMaterialLimits &requested_limits)
+{
+    const auto before=requested.snapshot;const auto count=requested_count;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();size_t work=0;
+    try {
+        detail::require_interval_environment();
+        if (!before || !limits.max_records || limits.max_records>200000 || !limits.max_evaluations || limits.max_evaluations>2000000 ||
+            !limits.max_paths || limits.max_paths>4096 || !valid_timeout(limits.timeout) || requested_paths.empty() ||
+            requested_paths.size()>limits.max_paths || before->later_paths.size()>limits.max_paths-requested_paths.size() ||
+            !std::isfinite(progress) || progress<0 || progress>1 || (!count && progress!=0)) reject("INVALID_NEXT_CAP_MATERIAL");
+        std::vector<std::shared_ptr<const NextCapBeadSnapshot>> paths;
+        for (const auto &path : requested_paths) {
+            if (!path.snapshot || !path.snapshot->source || path.snapshot->source->source!=before || path.snapshot->pieces.empty())
+                reject("NEXT_CAP_MATERIAL_SOURCE_MISMATCH");paths.push_back(path.snapshot);
+        }
+        const auto cursor=before->material;const auto sequence=cursor->sequence;
+        if (cursor->completed_records!=sequence->records.size() || cursor->current_progress!=0)
+            reject("NEXT_CAP_MATERIAL_INCOMPLETE_BEFORE_PREFIX");
+        if (before->origins.size()!=sequence->records.size()) reject("NEXT_CAP_MATERIAL_ORIGIN_MISMATCH");
+        const size_t previous_pass=before->later_paths.empty() ? 0 : before->later_paths.back()->source->pass_index;
+        const size_t pass=paths.front()->source->pass_index;
+        if (pass==0 || pass<previous_pass || pass>previous_pass+1) reject("NEXT_CAP_MATERIAL_PASS_ORDER");
+        const auto poll=[&] {stop(limits,sequence->revision,started);};
+        const auto charge=[&](size_t n=1) {poll();if (n>limits.max_evaluations-work) reject("NEXT_CAP_MATERIAL_WORK_LIMIT");work+=n;};
+        const auto remaining=[&] {
+            MaterialLimits child=limits;child.timeout-=std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+            if (!valid_timeout(child.timeout)) reject("MATERIAL_DEADLINE");child.cancelled=[&] {poll();return false;};child.is_current={};return child;
+        };poll();
+        // All batch doses used the same source roof. Require disjoint upper XY
+        // projections; otherwise sequential deposition must re-plan the later
+        // bead against a newly owned actual prefix instead of reusing its dose.
+        auto model=sequence->model;
+        for (const auto &path : paths) {charge();if (path->source->pass_index!=pass) reject("NEXT_CAP_MATERIAL_MIXED_PASS");
+            model.numerical_coordinate_error=Length(std::max(model.numerical_coordinate_error.value(),path->numerical_error_upper_mm));}
+        std::vector<RectangleXY> footprints;
+        const auto xy=Interval(model.outer_xy_growth.value())+Interval(model.numerical_coordinate_error.value());
+        for (const auto &path : paths) {
+            std::optional<RectangleXY> box;
+            for (const auto &piece : path->pieces) {
+                charge();const bool x=piece.start.y()==piece.end.y();
+                if (x==(piece.start.x()==piece.end.x())) reject("NEXT_CAP_MATERIAL_NON_AXIS_PACKET");
+                const auto half=Interval(piece.section.width_mm.upper)/Interval(2);
+                const double xmin=(Interval(std::min(piece.start.x(),piece.end.x()))-xy-(x ? Interval(0) : half)).lo;
+                const double xmax=(Interval(std::max(piece.start.x(),piece.end.x()))+xy+(x ? Interval(0) : half)).hi;
+                const double ymin=(Interval(std::min(piece.start.y(),piece.end.y()))-xy-(x ? half : Interval(0))).lo;
+                const double ymax=(Interval(std::max(piece.start.y(),piece.end.y()))+xy+(x ? half : Interval(0))).hi;
+                if (box) {box->min_x=std::min(box->min_x,xmin);box->min_y=std::min(box->min_y,ymin);box->max_x=std::max(box->max_x,xmax);box->max_y=std::max(box->max_y,ymax);}
+                else box=RectangleXY{xmin,ymin,xmax,ymax};
+            }
+            for (const auto &old : footprints) {charge();if (!(box->max_x<old.min_x || box->min_x>old.max_x || box->max_y<old.min_y || box->min_y>old.max_y))
+                reject("NEXT_CAP_MATERIAL_BATCH_FOOTPRINT_CONFLICT");}
+            footprints.push_back(*box);
+        }
+        std::vector<MaterialRecord> rows;std::vector<FirstCapMaterialOrigin> origins;uint64_t id=0;const MaterialRecord *context=nullptr;
+        const auto append=[&](MaterialRecord row,FirstCapMaterialOrigin origin) {
+            charge();if (rows.size()>=limits.max_records) reject("NEXT_CAP_MATERIAL_RECORD_LIMIT");rows.push_back(std::move(row));origins.push_back(origin);
+        };
+        for (size_t i=0;i<sequence->records.size();++i) {
+            const auto &row=sequence->records[i];id=std::max(id,row.motion.event_id);if (row.bead) context=&row;
+            append(row,before->origins[i]);
+        }
+        if (!context) reject("NEXT_CAP_MATERIAL_MISSING_DEPOSITION_CONTEXT");
+        const auto metadata=std::get<Deposition>(context->motion.payload);
+        const auto append_new=[&](MaterialRecord row,FirstCapMaterialOrigin origin) {
+            if (id==std::numeric_limits<uint64_t>::max()) reject("NEXT_CAP_MATERIAL_EVENT_ID_LIMIT");
+            row.motion.event_id=++id;row.motion.sequence_index=rows.size();append(std::move(row),origin);
+        };
+        const size_t start=rows.size();std::vector<std::pair<size_t,size_t>> spans;
+        auto owners=before->later_paths;
+        for (const auto &path : paths) {
+            const size_t owner=owners.size();charge();owners.push_back(path);
+            const auto end=rows.back().motion.end;
+            if (end.x()!=path->path_start.x() || end.y()!=path->path_start.y() || end.z()!=path->path_start.z())
+                append_new({{0,0,context->motion.source_patch_id,end,path->path_start,context->motion.speed_limit,context->motion.acceleration_limit,Travel{}},{}},
+                    {FirstCapMaterialOriginKind::Connector,0,owner});
+            const size_t first=rows.size();
+            for (size_t i=0;i<path->pieces.size();++i) {
+                const auto &piece=path->pieces[i];
+                append_new({{0,0,context->motion.source_patch_id,piece.start,piece.end,context->motion.speed_limit,context->motion.acceleration_limit,
+                    Deposition{piece.volume,piece.nominal_width,VerticalGap(std::min(piece.section.gap_begin_mm,piece.section.gap_end_mm)),
+                        VerticalGap(std::max(piece.section.gap_begin_mm,piece.section.gap_end_mm)),metadata.material,metadata.support_provenance_id,metadata.contact_model_id}},piece.section},
+                    {FirstCapMaterialOriginKind::LaterCap,i,owner});
+            }
+            spans.push_back({first,rows.size()});
+        }
+        const size_t completed=count.value_or(rows.size()-start);
+        if (completed>rows.size()-start || (completed==rows.size()-start && progress!=0)) reject("INVALID_NEXT_CAP_MATERIAL_PREFIX");
+        charge(3*rows.size());const auto ledger=capture_material_sequence(rows,model,sequence->revision,sequence->source_fingerprint,remaining());
+        if (!ledger.snapshot) throw Rejection(ledger.reason);
+        const auto active=material_at(ledger.snapshot,start+completed,progress,remaining());if (!active.nominal.snapshot) throw Rejection(active.reason);
+        std::vector<FirstCapMaterialRun> runs;
+        const auto run=[&](size_t first,size_t last,size_t path,FirstCapMaterialOriginKind origin) {
+            charge(last-first+1);const auto result=reconstruct_material_run(active.nominal,first,last,remaining());
+            if (!result.snapshot) throw Rejection(result.reason);runs.push_back({path,result.snapshot,origin});
+        };
+        for (const auto &old : before->runs) {charge();run(old.material->first_record,old.material->last_record,old.path,old.origin);}
+        for (size_t i=0;i<spans.size();++i) {
+            charge();const size_t end=std::min(spans[i].second,start+completed+(progress>0));
+            if (end>spans[i].first) run(spans[i].first,end-1,before->later_paths.size()+i,FirstCapMaterialOriginKind::LaterCap);
+        }
+        poll();auto snapshot=std::shared_ptr<const FirstCapMaterialSnapshot>(new FirstCapMaterialSnapshot(before->source,before->body,active.nominal.snapshot,
+            before->body_records,before->cap_start_record,std::move(origins),std::move(runs),std::move(owners)));poll();
+        return {"EXACT_PREVIOUS_AND_SELECTED_LATER_CAP_MATERIAL_WITH_OWNED_PATH_ORIGINS_ONLY",std::move(snapshot),work};
+    } catch (const Rejection &e) {return {e.what(),{},work};}
+    catch (const std::exception &e) {return {"NEXT_CAP_MATERIAL_NUMERIC_FAILURE: "+std::string(e.what()),{},work};}
+}
+
 FirstCapSupportResult cover_first_cap_material_lower(const FirstCapMaterialResult &requested,const SceneBox &requested_box,
     const MaterialCoverageLimits &requested_limits)
 {

@@ -3305,3 +3305,127 @@ TEST_CASE("B07 next bead publication keeps owned inputs and shared numerical bud
     std::fesetround(FE_DOWNWARD);const auto invalid_cover=cover_material_runs_lower(runs,{material.snapshot->material},support);std::fesetround(rounding);
     REQUIRE_FALSE(invalid_cover.snapshot);
 }
+
+TEST_CASE("B07 later material preserves the whole prefix and grows ordered bead batches continuously", "[Nonplanar][B07][NextCapMaterial]")
+{
+    STATIC_REQUIRE(first_cap_material_contract_version==2);
+    for (auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}) for (bool sloped : {false,true}) {
+        INFO(int(direction) << " sloped=" << sloped);
+        const auto cap=plan_first_cap(first_cap_fixture(direction,sloped),{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
+        const auto before=reconstruct_first_cap_material(cap);REQUIRE(before.snapshot);
+        const bool x=direction==HatchDirection::AlongX;
+        const auto &first=cap.snapshot->source->source->surfaces.front().cell;
+        const auto height=[&](const AffineCapCell &c,double px,double py) {const auto &r=c.footprint;return c.z00+(c.z10-c.z00)*(px-r.min_x)/(r.max_x-r.min_x)+
+            (c.z01-c.z00)*(py-r.min_y)/(r.max_y-r.min_y);};
+        std::vector<NextCapBeadResult> paths;
+        for (int i=0;i<2;++i) {
+            const RectangleXY r=x ? (i ? RectangleXY{2.25,-.23,2.65,.23} : RectangleXY{1.35,-.23,1.75,.23}) :
+                (i ? RectangleXY{1.77,.25,2.23,.55} : RectangleXY{1.77,-.55,2.23,-.25});
+            const double plane=std::min(height(first,r.min_x,r.min_y),height(first,r.max_x,r.max_y))-.02;
+            const auto next=assess_first_cap_next_pass(before,1,r,plane);INFO(next.reason);REQUIRE(next.snapshot);
+            paths.push_back(plan_next_cap_bead(next,direction,WidthXY(.45)));INFO(paths.back().reason);REQUIRE(paths.back().snapshot);
+        }
+        const auto added=append_next_cap_material(before,paths);INFO(added.reason);REQUIRE(added.snapshot);
+        const auto &a=*added.snapshot;const auto &old=*before.snapshot->material->sequence,&ledger=*a.material->sequence;
+        REQUIRE(a.source==before.snapshot->source);REQUIRE(a.body==before.snapshot->body);REQUIRE(a.later_paths.size()==2);
+        REQUIRE(a.body_records==before.snapshot->body_records);REQUIRE(a.cap_start_record==before.snapshot->cap_start_record);
+        REQUIRE(a.material->completed_records==ledger.records.size());REQUIRE(a.material->current_progress==0);
+        REQUIRE(ledger.model.inner_xy_loss.value()==old.model.inner_xy_loss.value());REQUIRE(ledger.model.inner_z_loss.value()==old.model.inner_z_loss.value());
+        REQUIRE(ledger.source_fingerprint==old.source_fingerprint);REQUIRE(ledger.revision==old.revision);
+        REQUIRE(a.material->fingerprint()!=before.snapshot->material->fingerprint());
+        using Q=boost::multiprecision::cpp_bin_float_quad;Q amount=0;uint64_t id=0;
+        for (size_t i=0;i<old.records.size();++i) {
+            REQUIRE(ledger.canonical_record(i)==old.canonical_record(i));REQUIRE(a.origins[i].kind==before.snapshot->origins[i].kind);
+            REQUIRE(a.origins[i].source_record==before.snapshot->origins[i].source_record);REQUIRE(a.origins[i].later_path_index==before.snapshot->origins[i].later_path_index);
+            id=std::max(id,old.records[i].motion.event_id);
+            if (old.records[i].bead) amount+=std::get<Deposition>(old.records[i].motion.payload).volume.value();
+        }
+        const Q old_amount=amount;std::vector<size_t> starts;
+        for (size_t i=old.records.size();i<ledger.records.size();++i) {
+            const auto &row=ledger.records[i];REQUIRE(row.motion.event_id>id);id=row.motion.event_id;REQUIRE(row.motion.sequence_index==i);
+            REQUIRE(a.origins[i].later_path_index);const size_t owner=*a.origins[i].later_path_index;REQUIRE(owner<paths.size());
+            if (!row.bead) {REQUIRE(a.origins[i].kind==FirstCapMaterialOriginKind::Connector);REQUIRE(std::holds_alternative<Travel>(row.motion.payload));continue;}
+            REQUIRE(a.origins[i].kind==FirstCapMaterialOriginKind::LaterCap);
+            const auto &piece=paths[owner].snapshot->pieces[a.origins[i].source_record];
+            if (a.origins[i].source_record==0) starts.push_back(i);
+            REQUIRE(row.motion.start.x()==piece.start.x());REQUIRE(row.motion.start.y()==piece.start.y());REQUIRE(row.motion.start.z()==piece.start.z());
+            REQUIRE(row.motion.end.x()==piece.end.x());REQUIRE(row.motion.end.y()==piece.end.y());REQUIRE(row.motion.end.z()==piece.end.z());
+            REQUIRE(std::get<Deposition>(row.motion.payload).volume.value()==piece.volume.value());REQUIRE(row.bead->gap_begin_mm==piece.section.gap_begin_mm);
+            REQUIRE(row.bead->gap_end_mm==piece.section.gap_end_mm);REQUIRE(row.bead->width_mm.lower==piece.section.width_mm.lower);REQUIRE(row.bead->width_mm.upper==piece.section.width_mm.upper);
+            amount+=piece.volume.value();
+        }
+        REQUIRE(starts.size()==2);REQUIRE(Q(a.material->nominal_deposited_volume_mm3.lower)<=amount);REQUIRE(Q(a.material->nominal_deposited_volume_mm3.upper)>=amount);
+        for (const auto &run : a.runs) REQUIRE(run.material->source==a.material);
+        const size_t count=starts[0]-old.records.size();const auto partial=append_next_cap_material(before,paths,count,.5);INFO(partial.reason);REQUIRE(partial.snapshot);
+        const auto &current=ledger.records[starts[0]];const auto midpoint=[&](const MaterialRecord &row,double t) {
+            const auto &m=row.motion;const double h=row.bead->gap_begin_mm+(row.bead->gap_end_mm-row.bead->gap_begin_mm)*t;
+            return PhysicalPosition{m.start.x()+(m.end.x()-m.start.x())*t,m.start.y()+(m.end.y()-m.start.y())*t,m.start.z()+(m.end.z()-m.start.z())*t-h/2};
+        };
+        const Q partial_amount=old_amount+Q(std::get<Deposition>(current.motion.payload).volume.value())/2;
+        REQUIRE(Q(partial.snapshot->material->nominal_deposited_volume_mm3.lower)<=partial_amount);
+        REQUIRE(Q(partial.snapshot->material->nominal_deposited_volume_mm3.upper)>=partial_amount);
+        REQUIRE(classify_material(NominalMaterialView{partial.snapshot->material},midpoint(current,.25)).membership==MaterialMembership::Inside);
+        REQUIRE(classify_material(NominalMaterialView{partial.snapshot->material},midpoint(current,.75)).membership==MaterialMembership::Outside);
+        REQUIRE(classify_material(NominalMaterialView{partial.snapshot->material},midpoint(ledger.records[starts[1]],.5)).membership==MaterialMembership::Outside);
+        const auto future=append_next_cap_material(before,paths,0,0);REQUIRE(future.snapshot);
+        REQUIRE(classify_material(NominalMaterialView{future.snapshot->material},midpoint(current,.25)).membership==MaterialMembership::Outside);
+        // A third original surface must use this actual later material, never
+        // an old first-cap roof or a selected hypothetical future bead.
+        const auto &second=paths[0].snapshot->source->cell;
+        const double cx=(second.footprint.min_x+second.footprint.max_x)/2,cy=(second.footprint.min_y+second.footprint.max_y)/2;
+        const RectangleXY r=x ? RectangleXY{cx-.04,cy-.12,cx+.04,cy+.12} : RectangleXY{cx-.12,cy-.04,cx+.12,cy+.04};
+        const double plane=std::min(height(second,r.min_x,r.min_y),height(second,r.max_x,r.max_y))-.028;
+        const auto next=assess_first_cap_next_pass(added,2,r,plane);INFO(next.reason);REQUIRE(next.snapshot);
+        REQUIRE(next.snapshot->support->run);test::independent_run_box(*next.snapshot->support->run->source,next.snapshot->support->domain);
+        REQUIRE_FALSE(assess_first_cap_next_pass(future,2,r,plane).snapshot);
+        const auto third=plan_next_cap_bead(next,direction,WidthXY(.21));INFO(third.reason);REQUIRE(third.snapshot);
+        const auto twice=append_next_cap_material(added,{third});INFO(twice.reason);REQUIRE(twice.snapshot);REQUIRE(twice.snapshot->later_paths.size()==3);
+        REQUIRE(twice.snapshot->later_paths[0]==paths[0].snapshot);REQUIRE(twice.snapshot->later_paths[2]==third.snapshot);
+        for (size_t i=0;i<ledger.records.size();++i) REQUIRE(twice.snapshot->material->sequence->canonical_record(i)==ledger.canonical_record(i));
+        const RectangleXY remaining=x ? RectangleXY{1.88,-.23,2.12,.23} : RectangleXY{1.77,-.12,2.23,.12};
+        const double old_plane=std::min(height(first,remaining.min_x,remaining.min_y),height(first,remaining.max_x,remaining.max_y))-.028;
+        const auto backwards=assess_first_cap_next_pass(twice,1,remaining,old_plane);INFO(backwards.reason);REQUIRE(backwards.snapshot);
+        const auto obsolete=plan_next_cap_bead(backwards,direction,WidthXY(.45));INFO(obsolete.reason);REQUIRE(obsolete.snapshot);
+        REQUIRE(append_next_cap_material(twice,{obsolete}).reason=="NEXT_CAP_MATERIAL_PASS_ORDER");
+    }
+}
+
+TEST_CASE("B07 later material refuses stale batches conflicts prefixes and shared publication failures", "[Nonplanar][B07][NextCapMaterial]")
+{
+    const auto cap=plan_first_cap(first_cap_fixture(HatchDirection::AlongX),{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
+    auto before=reconstruct_first_cap_material(cap);REQUIRE(before.snapshot);
+    const auto next=assess_first_cap_next_pass(before,1,{1.35,-.23,1.75,.23},cap.snapshot->source->source->surfaces.front().cell.z00-.02);REQUIRE(next.snapshot);
+    std::vector<NextCapBeadResult> paths{plan_next_cap_bead(next,HatchDirection::AlongX,WidthXY(.45))};REQUIRE(paths[0].snapshot);
+    REQUIRE_FALSE(append_next_cap_material({},paths).snapshot);REQUIRE_FALSE(append_next_cap_material(before,{}).snapshot);
+    REQUIRE_FALSE(append_next_cap_material(before,{{}}).snapshot);
+    REQUIRE(append_next_cap_material(before,{paths[0],paths[0]}).reason=="NEXT_CAP_MATERIAL_BATCH_FOOTPRINT_CONFLICT");
+    const auto other=reconstruct_first_cap_material(cap);REQUIRE(other.snapshot);REQUIRE_FALSE(append_next_cap_material(other,paths).snapshot);
+    REQUIRE_FALSE(append_next_cap_material(before,paths,{},.5).snapshot);REQUIRE_FALSE(append_next_cap_material(before,paths,0,std::numeric_limits<double>::quiet_NaN()).snapshot);
+    const auto result=append_next_cap_material(before,paths);REQUIRE(result.snapshot);
+    const size_t suffix=result.snapshot->material->sequence->records.size()-before.snapshot->material->sequence->records.size();
+    REQUIRE_FALSE(append_next_cap_material(before,paths,suffix+1,0).snapshot);REQUIRE_FALSE(append_next_cap_material(before,paths,suffix,.1).snapshot);
+    const auto current=append_next_cap_material(before,paths,1,.5);REQUIRE(current.snapshot);REQUIRE_FALSE(append_next_cap_material(current,paths).snapshot);
+    const auto on_current=assess_first_cap_next_pass(current,1,{2.25,-.23,2.65,.23},cap.snapshot->source->source->surfaces.front().cell.z00-.03);
+    INFO(on_current.reason);REQUIRE(on_current.snapshot);
+    const auto pending=plan_next_cap_bead(on_current,HatchDirection::AlongX,WidthXY(.45));INFO(pending.reason);REQUIRE(pending.snapshot);
+    REQUIRE(append_next_cap_material(current,{pending}).reason=="NEXT_CAP_MATERIAL_INCOMPLETE_BEFORE_PREFIX");
+    for (int mode=0;mode<8;++mode) {
+        NextCapMaterialLimits limits;
+        if (mode==0) limits.max_records=1;
+        if (mode==1) limits.max_evaluations=result.evaluations-1;
+        if (mode==2) limits.max_paths=0;
+        if (mode==3) limits.cancelled=[] {return true;};
+        if (mode==4) limits.is_current=[](uint64_t) {return false;};
+        if (mode==5) {limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if (mode==6) limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+        if (mode==7) limits.max_evaluations=0;
+        const auto refused=append_next_cap_material(before,paths,{},0,limits);if (mode==6) std::fesetround(FE_TONEAREST);
+        INFO(mode << ' ' << refused.reason);REQUIRE_FALSE(refused.snapshot);
+    }
+    const auto source=before.snapshot;const auto path=paths[0].snapshot;NextCapMaterialLimits limits;
+    limits.cancelled=[&] {before={};paths.clear();limits.max_records=0;return false;};
+    const auto owned=append_next_cap_material(before,paths,{},0,limits);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->later_paths[0]==path);
+    before.snapshot=source;paths={{"",path}};limits={};size_t calls=0;limits.cancelled=[&] {++calls;return false;};REQUIRE(append_next_cap_material(before,paths,{},0,limits).snapshot);
+    const size_t final_callback=calls;calls=0;limits.cancelled=[&] {return ++calls==final_callback;};
+    REQUIRE(append_next_cap_material(before,paths,{},0,limits).reason=="CANCELLED");REQUIRE(calls==final_callback);
+}

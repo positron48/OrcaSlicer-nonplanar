@@ -830,11 +830,18 @@ struct FirstCapResult {std::string reason;std::shared_ptr<const FirstCapSnapshot
 FirstCapResult plan_first_cap(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,
     const FirstHatchLayerLimits &limits={});
 
-inline constexpr unsigned first_cap_material_contract_version=1;
+inline constexpr unsigned first_cap_material_contract_version=2;
 struct FirstCapMaterialLimits : MaterialLimits {size_t max_evaluations=2000000;};
-enum class FirstCapMaterialOriginKind { Body,Connector,FirstCap };
-struct FirstCapMaterialOrigin {FirstCapMaterialOriginKind kind;size_t source_record;};
-struct FirstCapMaterialRun {size_t path;std::shared_ptr<const MaterialRunSnapshot> material;};
+struct NextCapBeadSnapshot;
+struct NextCapBeadResult;
+struct NextCapMaterialLimits;
+enum class FirstCapMaterialOriginKind { Body,Connector,FirstCap,LaterCap };
+struct FirstCapMaterialOrigin {FirstCapMaterialOriginKind kind;size_t source_record;std::optional<size_t> later_path_index={};};
+struct FirstCapMaterialRun {
+    size_t path;
+    std::shared_ptr<const MaterialRunSnapshot> material;
+    FirstCapMaterialOriginKind origin=FirstCapMaterialOriginKind::FirstCap;
+};
 struct FirstCapMaterialResult;
 struct FirstCapMaterialSnapshot {
     const std::shared_ptr<const FirstCapSnapshot> source;
@@ -842,13 +849,16 @@ struct FirstCapMaterialSnapshot {
     const size_t body_records,cap_start_record;
     const std::vector<FirstCapMaterialOrigin> origins;
     const std::vector<FirstCapMaterialRun> runs;
+    const std::vector<std::shared_ptr<const NextCapBeadSnapshot>> later_paths;
 private:
     FirstCapMaterialSnapshot(std::shared_ptr<const FirstCapSnapshot> cap,std::shared_ptr<const MaterialPrefixSnapshot> original,
         std::shared_ptr<const MaterialPrefixSnapshot> active,size_t count,size_t start,std::vector<FirstCapMaterialOrigin> mapping,
-        std::vector<FirstCapMaterialRun> paths)
+        std::vector<FirstCapMaterialRun> paths,std::vector<std::shared_ptr<const NextCapBeadSnapshot>> later={})
         : source(std::move(cap)),body(std::move(original)),material(std::move(active)),body_records(count),cap_start_record(start),
-          origins(std::move(mapping)),runs(std::move(paths)) {}
+          origins(std::move(mapping)),runs(std::move(paths)),later_paths(std::move(later)) {}
     friend FirstCapMaterialResult reconstruct_first_cap_material(const FirstCapResult &,std::optional<size_t>,double,const FirstCapMaterialLimits &);
+    friend FirstCapMaterialResult append_next_cap_material(const FirstCapMaterialResult &,const std::vector<NextCapBeadResult> &,
+        std::optional<size_t>,double,const NextCapMaterialLimits &);
 };
 struct FirstCapMaterialResult {std::string reason;std::shared_ptr<const FirstCapMaterialSnapshot> snapshot;size_t evaluations=0;};
 // Preserve completed body records exactly, omit its future records, then append
@@ -859,7 +869,7 @@ struct FirstCapMaterialResult {std::string reason;std::shared_ptr<const FirstCap
 FirstCapMaterialResult reconstruct_first_cap_material(const FirstCapResult &,std::optional<size_t> completed_cap_records={},
     double current_progress=0,const FirstCapMaterialLimits &limits={});
 
-inline constexpr unsigned first_cap_support_contract_version=2;
+inline constexpr unsigned first_cap_support_contract_version=3;
 struct FirstCapSupportResult;
 struct FirstCapSupportSnapshot {
     const std::shared_ptr<const FirstCapMaterialSnapshot> source;
@@ -881,7 +891,7 @@ struct FirstCapSupportResult {std::string reason;std::shared_ptr<const FirstCapS
 // No inference from prospective surfaces or uncertified partial run boxes.
 FirstCapSupportResult cover_first_cap_material_lower(const FirstCapMaterialResult &,const SceneBox &,const MaterialCoverageLimits &limits={});
 
-inline constexpr unsigned first_cap_next_pass_contract_version=2;
+inline constexpr unsigned first_cap_next_pass_contract_version=3;
 struct FirstCapNextPassResult;
 struct FirstCapNextPassSnapshot {
     const std::shared_ptr<const FirstCapMaterialSnapshot> source;
@@ -906,7 +916,7 @@ struct FirstCapNextPassResult {std::string reason;std::shared_ptr<const FirstCap
 FirstCapNextPassResult assess_first_cap_next_pass(const FirstCapMaterialResult &,size_t pass_index,const RectangleXY &,
     double support_plane_z_mm,const MaterialCoverageLimits &limits={});
 
-inline constexpr unsigned next_cap_bead_contract_version=1;
+inline constexpr unsigned next_cap_bead_contract_version=2;
 struct NextCapBeadLimits : FirstHatchBeadLimits {size_t max_roof_cells=65535;};
 struct NextCapBeadResult;
 struct NextCapBeadSnapshot {
@@ -934,6 +944,18 @@ struct NextCapBeadResult {std::string reason;std::shared_ptr<const NextCapBeadSn
 // retain original later vertical limits. Normal thickness, head/contact/order,
 // complete later fill and material append/replay/export remain separate.
 NextCapBeadResult plan_next_cap_bead(const FirstCapNextPassResult &,HatchDirection,WidthXY,const NextCapBeadLimits &limits={});
+
+struct NextCapMaterialLimits : FirstCapMaterialLimits {size_t max_paths=4096;};
+// Append an ordered batch calculated on this exact complete material prefix.
+// Preserve all old rows and origins. Retain new bead owners and unique global
+// IDs, declaring connector travel without motion approval. Batch upper XY
+// projections must be disjoint, so earlier batch rows cannot change a later
+// bead's source roof. Select only the actual appended record count/fraction;
+// future records stay owned but inactive. Reconstruct all active runs against
+// the new prefix. Partial-before continuation, bonding/head/order/flow, complete
+// fill and job/replay/export qualification remain separate.
+FirstCapMaterialResult append_next_cap_material(const FirstCapMaterialResult &,const std::vector<NextCapBeadResult> &,
+    std::optional<size_t> completed_appended_records={},double current_progress=0,const NextCapMaterialLimits &limits={});
 
 inline constexpr unsigned first_cap_replan_contract_version=1;
 struct FirstCapReplanPolicy {Volume minimum_covered_gain{.001},maximum_outside_target{.001};};

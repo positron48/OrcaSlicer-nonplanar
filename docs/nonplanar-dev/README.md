@@ -15,6 +15,16 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B07-next-cap-material.md` and ADR-0062 now append ordered source-bound later
+bead batches to the actual journal, preserving every previous row and retaining
+explicit bead/piece owners. Actual partial/future fronts are reconstructed; batch
+overlap, an incomplete previous ledger and backwards pass order refuse. The
+original native wedge's added eight .38 mm packets support a local third surface;
+the zero-prefix equivalent refuses. Material/support/next-pass/next-bead runtime
+contracts are now 2/3/3/2. Two new cases / 1928 assertions, 106 material /
+14 body cases, 351/351 selected CTest and six fresh OFF/ZAA comparisons pass.
+Complete original cap/later fill, normal/contact/head/
+order/flow, whole-job resource/provenance binding and export remain pending.
 `B07-next-cap-bead.md` and ADR-0061 now certify complete support planes across
 several actual runs and construct a finite-width later bead from the exact
 body/active-cap roof. The native .4 mm support footprint produces eight .38 mm

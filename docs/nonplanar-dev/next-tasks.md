@@ -131,9 +131,13 @@ Next software tasks, in dependency order:
    actual runs/events and constructs one local actual later finite-width bead
    using certified nominal run-union roof planes. The native .4 mm footprint
    supports eight .38 mm packets with unchanged error limits and original later
-   vertical policy. Extend to complete later path/layer construction and append
-   its actual material with source/sequence ownership; qualify normal thickness
-   and contact independently. Add exact partial-body continuation while retaining
+   vertical policy. `B07-next-cap-material.md` now appends ordered batches with
+   exact old rows, new owned packet origins and selected actual fronts. The
+   existing surface/bead factories consume this material for a third pass;
+   unlaid future support and backwards/stale batches refuse. Extend to complete
+   later path/layer construction, normal thickness and contact qualification.
+   Overlapping batches need sequential re-planning on the updated actual prefix.
+   Add exact partial-body/partial-before continuation while retaining
    the original packet geometry and actual fraction.
    Qualify allowable repeated material and complete shoulder/seam volumes,
    construct/replan paths for both remaining 3D volumes and reconstruct later support;

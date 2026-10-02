@@ -1,0 +1,93 @@
+[1/2] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3311:20: error: static assertion failed due to requirement 'first_cap_material_contract_version == 2': first_cap_material_contract_version==2
+ 3311 |     STATIC_REQUIRE(first_cap_material_contract_version==2);
+      |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:171:58: note: expanded from macro 'STATIC_REQUIRE'
+  171 |     #define STATIC_REQUIRE( ... )       static_assert(   __VA_ARGS__,  #__VA_ARGS__ ); SUCCEED( #__VA_ARGS__ )
+      |                                                          ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3311:55: note: expression evaluates to '1 == 2'
+ 3311 |     STATIC_REQUIRE(first_cap_material_contract_version==2);
+      |                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:171:58: note: expanded from macro 'STATIC_REQUIRE'
+  171 |     #define STATIC_REQUIRE( ... )       static_assert(   __VA_ARGS__,  #__VA_ARGS__ ); SUCCEED( #__VA_ARGS__ )
+      |                                                          ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3328:26: error: use of undeclared identifier 'append_next_cap_material'
+ 3328 |         const auto added=append_next_cap_material(before,paths);INFO(added.reason);REQUIRE(added.snapshot);
+      |                          ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3337:159: error: no member named 'later_path_index' in 'Slic3r::nptop::FirstCapMaterialOrigin'
+ 3337 |             REQUIRE(a.origins[i].source_record==before.snapshot->origins[i].source_record);REQUIRE(a.origins[i].later_path_index==before.snapshot->origins[i].later_path_index);
+      |                                                                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:45:40: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   45 |         CATCH_INTERNAL_IGNORE_BUT_WARN(__VA_ARGS__); \
+      |                                        ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_compiler_capabilities.hpp:386:37: note: expanded from macro 'CATCH_INTERNAL_IGNORE_BUT_WARN'
+  386 |         (void)__builtin_constant_p( __VA_ARGS__ ) /* NOLINT(cppcoreguidelines-pro-type-vararg, \
+      |                                     ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3337:159: error: no member named 'later_path_index' in 'Slic3r::nptop::FirstCapMaterialOrigin'
+ 3337 |             REQUIRE(a.origins[i].source_record==before.snapshot->origins[i].source_record);REQUIRE(a.origins[i].later_path_index==before.snapshot->origins[i].later_path_index);
+      |                                                                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:50:70: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   50 |             catchAssertionHandler.handleExpr( Catch::Decomposer() <= __VA_ARGS__ ); /* NOLINT(bugprone-chained-comparison) */ \
+      |                                                                      ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3337:159: error: no member named 'later_path_index' in 'Slic3r::nptop::FirstCapMaterialOrigin'
+ 3337 |             REQUIRE(a.origins[i].source_record==before.snapshot->origins[i].source_record);REQUIRE(a.origins[i].later_path_index==before.snapshot->origins[i].later_path_index);
+      |                                                                                                                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:134:92: note: expanded from macro 'REQUIRE'
+  134 |   #define REQUIRE( ... ) INTERNAL_CATCH_TEST( "REQUIRE", Catch::ResultDisposition::Normal, __VA_ARGS__  )
+      |                                                                                            ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:54:63: note: expanded from macro 'INTERNAL_CATCH_TEST'
+   54 |     } while( (void)0, (false) && static_cast<const bool&>( !!(__VA_ARGS__) ) ) // the expression here is never evaluated at runtime but it forces the compiler to give it a look
+      |                                                               ^~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3346:68: error: no member named 'LaterCap' in 'Slic3r::nptop::FirstCapMaterialOriginKind'
+ 3346 |             REQUIRE(a.origins[i].kind==FirstCapMaterialOriginKind::LaterCap);
+      |                                                                    ^~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3346:68: error: no member named 'LaterCap' in 'Slic3r::nptop::FirstCapMaterialOriginKind'
+ 3346 |             REQUIRE(a.origins[i].kind==FirstCapMaterialOriginKind::LaterCap);
+      |                                                                    ^~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3346:68: error: no member named 'LaterCap' in 'Slic3r::nptop::FirstCapMaterialOriginKind'
+ 3346 |             REQUIRE(a.origins[i].kind==FirstCapMaterialOriginKind::LaterCap);
+      |                                                                    ^~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3357:76: error: use of undeclared identifier 'append_next_cap_material'
+ 3357 |         const size_t count=starts[0]-old.records.size();const auto partial=append_next_cap_material(before,paths,count,.5);INFO(partial.reason);REQUIRE(partial.snapshot);
+      |                                                                            ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3365:27: error: use of undeclared identifier 'append_next_cap_material'
+ 3365 |         const auto future=append_next_cap_material(before,paths,0,0);REQUIRE(future.snapshot);
+      |                           ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3388:19: error: use of undeclared identifier 'append_next_cap_material'
+ 3388 |     REQUIRE_FALSE(append_next_cap_material({},paths).snapshot);REQUIRE_FALSE(append_next_cap_material(before,{}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3388:19: error: use of undeclared identifier 'append_next_cap_material'
+ 3388 |     REQUIRE_FALSE(append_next_cap_material({},paths).snapshot);REQUIRE_FALSE(append_next_cap_material(before,{}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3388:19: error: use of undeclared identifier 'append_next_cap_material'
+ 3388 |     REQUIRE_FALSE(append_next_cap_material({},paths).snapshot);REQUIRE_FALSE(append_next_cap_material(before,{}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3388:78: error: use of undeclared identifier 'append_next_cap_material'
+ 3388 |     REQUIRE_FALSE(append_next_cap_material({},paths).snapshot);REQUIRE_FALSE(append_next_cap_material(before,{}).snapshot);
+      |                                                                              ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3388:78: error: use of undeclared identifier 'append_next_cap_material'
+ 3388 |     REQUIRE_FALSE(append_next_cap_material({},paths).snapshot);REQUIRE_FALSE(append_next_cap_material(before,{}).snapshot);
+      |                                                                              ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3388:78: error: use of undeclared identifier 'append_next_cap_material'
+ 3388 |     REQUIRE_FALSE(append_next_cap_material({},paths).snapshot);REQUIRE_FALSE(append_next_cap_material(before,{}).snapshot);
+      |                                                                              ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3389:19: error: use of undeclared identifier 'append_next_cap_material'
+ 3389 |     REQUIRE_FALSE(append_next_cap_material(before,{{}}).snapshot);REQUIRE_FALSE(append_next_cap_material(before,{paths[0],paths[0]}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3389:19: error: use of undeclared identifier 'append_next_cap_material'
+ 3389 |     REQUIRE_FALSE(append_next_cap_material(before,{{}}).snapshot);REQUIRE_FALSE(append_next_cap_material(before,{paths[0],paths[0]}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3389:19: error: use of undeclared identifier 'append_next_cap_material'
+ 3389 |     REQUIRE_FALSE(append_next_cap_material(before,{{}}).snapshot);REQUIRE_FALSE(append_next_cap_material(before,{paths[0],paths[0]}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~~
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+ninja: build stopped: subcommand failed.

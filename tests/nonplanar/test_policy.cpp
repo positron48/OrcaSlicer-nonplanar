@@ -2098,7 +2098,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan][NativeFirstCapWidthReplan][NativeFirstCapMaterial][NativeNextCapBead]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan][NativeFirstCapWidthReplan][NativeFirstCapMaterial][NativeNextCapBead][NativeNextCapMaterial]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2584,6 +2584,29 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     INFO("native next bead packets=" << later.snapshot->pieces.size() << " roofs=" << later.snapshot->roof_segments <<
         " cells=" << later.snapshot->cells << " work=" << later.snapshot->evaluations << " gap error=" << later.snapshot->maximum_gap_error_mm <<
         " width error=" << later.snapshot->maximum_width_error_mm << " dose error=" << later.snapshot->total_volume_error_mm3);
+    const auto added=append_next_cap_material(assembled,{later});INFO(added.reason);REQUIRE(added.snapshot);
+    const auto &old_ledger=*assembled.snapshot->material->sequence,&new_ledger=*added.snapshot->material->sequence;
+    REQUIRE(added.snapshot->body_records==2034);REQUIRE(added.snapshot->later_paths.size()==1);REQUIRE(added.snapshot->later_paths[0]==later.snapshot);
+    for (size_t i=0;i<old_ledger.records.size();++i) REQUIRE(new_ledger.canonical_record(i)==old_ledger.canonical_record(i));
+    size_t first_later=old_ledger.records.size();while (!new_ledger.records[first_later].bead) ++first_later;
+    const auto current_later=append_next_cap_material(assembled,{later},first_later-old_ledger.records.size(),.5);REQUIRE(current_later.snapshot);
+    const auto unlaid_later=append_next_cap_material(assembled,{later},0,0);REQUIRE(unlaid_later.snapshot);
+    const auto &packet=new_ledger.records[first_later];const auto interior=[&](double t) {
+        const auto &m=packet.motion;const double h=packet.bead->gap_begin_mm+(packet.bead->gap_end_mm-packet.bead->gap_begin_mm)*t;
+        return PhysicalPosition{m.start.x()+(m.end.x()-m.start.x())*t,m.start.y()+(m.end.y()-m.start.y())*t,m.start.z()+(m.end.z()-m.start.z())*t-h/2};
+    };
+    REQUIRE(classify_material(NominalMaterialView{current_later.snapshot->material},interior(.25)).membership==MaterialMembership::Inside);
+    REQUIRE(classify_material(NominalMaterialView{current_later.snapshot->material},interior(.75)).membership==MaterialMembership::Outside);
+    REQUIRE(classify_material(NominalMaterialView{unlaid_later.snapshot->material},interior(.25)).membership==MaterialMembership::Outside);
+    const double lx=(la.x()+lb.x())/2,ly=(la.y()+lb.y())/2,lower_plane=(la.z()+lb.z())/2-.025;
+    const RectangleXY third_region=rx ? RectangleXY{lx-.025,ly-.01,lx+.025,ly+.01} : RectangleXY{lx-.01,ly-.025,lx+.01,ly+.025};
+    const auto third=assess_first_cap_next_pass(added,2,third_region,lower_plane,next_limits);INFO(third.reason);REQUIRE(third.snapshot);
+    REQUIRE(third.snapshot->support->run);REQUIRE(third.snapshot->support->run->source==added.snapshot->runs.back().material);
+    REQUIRE(added.snapshot->runs.back().origin==FirstCapMaterialOriginKind::LaterCap);
+    test::independent_run_box(*third.snapshot->support->run->source,third.snapshot->support->domain);
+    REQUIRE_FALSE(assess_first_cap_next_pass(unlaid_later,2,third_region,lower_plane,next_limits).snapshot);
+    INFO("native appended records=" << new_ledger.records.size()-old_ledger.records.size() << " work=" << added.evaluations <<
+        " third cells=" << third.cells << " work=" << third.evaluations << " gap=[" << third.snapshot->gap_mm.lower << ',' << third.snapshot->gap_mm.upper << ']');
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_footprint_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
