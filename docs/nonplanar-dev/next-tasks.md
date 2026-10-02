@@ -7,13 +7,11 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
-`B12-final-solids.md` now independently classifies whole closed regions against
-nominal/upper/lower final-byte actual-prefix solids, with protected union-cover
-partitions. Native nominal half-front coverage passes, but per-event finite butt
-erosion leaves no guaranteed lower cover at the selected cap box. Reconstruct
-continuous joined packets from final bytes with explicit continuity and retained
-uncertainty; do not repair seams by filling AABBs or reusing old certificates.
-Then validate actual support gaps and complete head/contact/cap/exit coverage,
+`B12-final-joined.md` now independently reconstructs exact continuous final-byte
+runs with a separate explicit synthetic common-run envelope and unchanged loss/
+error. Whole deeper native interior Lower cover passes; original per-event
+Lower and actual external-front refusals remain. Validate actual support gaps
+and complete head/contact/cap/exit coverage, general curved/zigzag run geometry,
 qualified delivery/transforms and B13 job/plate/resources/software/bytes/report
 binding. The original complete B09 exit remains UNKNOWN at unchanged margins.
 User-declared standard U1 head/.4 mm nozzle is retained. Continue software without

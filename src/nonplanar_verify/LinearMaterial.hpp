@@ -41,6 +41,11 @@ struct MaterialBoxResult;
 struct MaterialCoverResult;
 struct MaterialCoverLimits;
 struct LinearMaterialPrefixSnapshot;
+struct JoinedMaterialPolicy;
+struct JoinedMaterialLimits;
+struct JoinedMaterialResult;
+struct JoinedMaterialSnapshot;
+struct JoinedMaterialCoverResult;
 struct LinearMaterialSnapshot {
  const std::shared_ptr<const LinearRateSnapshot> rates;
  const std::vector<MaterialDeclaration> declarations;
@@ -58,6 +63,8 @@ private:
  friend LinearMaterialPrefixResult linear_material_at(std::shared_ptr<const LinearMaterialSnapshot>,size_t,double,const LinearMaterialLimits&);
  friend MaterialBoxResult classify_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,MaterialRepresentation,const LinearMaterialLimits&);
  friend MaterialCoverResult cover_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,MaterialRepresentation,const MaterialCoverLimits&);
+ friend JoinedMaterialResult reconstruct_joined_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const JoinedMaterialPolicy&,const JoinedMaterialLimits&);
+ friend JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,const MaterialRegion&,const JoinedMaterialLimits&);
 };
 struct LinearMaterialResult {
  RateStatus status=RateStatus::Unknown;std::string reason;std::optional<size_t> record;
@@ -113,4 +120,46 @@ MaterialBoxResult classify_linear_material(std::shared_ptr<const LinearMaterialP
 // bead witnesses. An uncovered box proves a missing part; exhaustion is UNKNOWN.
 MaterialCoverResult cover_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const MaterialRegion&,
  MaterialRepresentation,const MaterialCoverLimits &limits={});
+inline constexpr unsigned joined_material_version=1;
+enum class JoinedMaterialModel { CommonRunEnvelope };
+struct JoinedMaterialPolicy {
+ uint64_t version=1,policy_id=0,revision=0;bool synthetic=true,operator_confirmed_claim=false;
+ JoinedMaterialModel model=JoinedMaterialModel::CommonRunEnvelope;
+};
+struct JoinedMaterialLimits : MaterialCoverLimits {std::function<bool(uint64_t,uint64_t)> is_join_current;};
+struct JoinedMaterialRun {size_t first_record,last_record;MaterialBox outer_bounds;};
+struct JoinedMaterialSnapshot {
+ const std::shared_ptr<const LinearMaterialPrefixSnapshot> source;
+ const JoinedMaterialPolicy policy;const std::vector<JoinedMaterialRun> runs;const size_t evaluations;
+private:
+ JoinedMaterialSnapshot(std::shared_ptr<const LinearMaterialPrefixSnapshot> s,JoinedMaterialPolicy p,std::vector<JoinedMaterialRun> r,size_t work)
+  :source(std::move(s)),policy(p),runs(std::move(r)),evaluations(work){}
+ friend JoinedMaterialResult reconstruct_joined_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,const JoinedMaterialPolicy&,const JoinedMaterialLimits&);
+};
+struct JoinedMaterialResult {
+ RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const JoinedMaterialSnapshot> snapshot;size_t evaluations=0;
+};
+struct JoinedMaterialCoverLeaf {MaterialRegion region;size_t run_index;};
+struct JoinedMaterialCoverSnapshot {
+ const std::shared_ptr<const JoinedMaterialSnapshot> source;const MaterialRegion region;
+ const std::vector<JoinedMaterialCoverLeaf> leaves;const size_t evaluations,cells;
+private:
+ JoinedMaterialCoverSnapshot(std::shared_ptr<const JoinedMaterialSnapshot> s,MaterialRegion b,std::vector<JoinedMaterialCoverLeaf> l,size_t work,size_t count)
+  :source(std::move(s)),region(b),leaves(std::move(l)),evaluations(work),cells(count){}
+ friend JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,const MaterialRegion&,const JoinedMaterialLimits&);
+};
+struct JoinedMaterialCoverResult {
+ RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const JoinedMaterialCoverSnapshot> snapshot;
+ std::optional<MaterialRegion> uncovered;size_t evaluations=0,cells=0;
+};
+// Explicit synthetic continuous-run envelope, distinct from per-event erosion.
+// Only adjacent deposits with exact final XYZ continuity, collinear forward XY
+// and matching section kind join. Interruptions/turns/reversals split the run.
+JoinedMaterialResult reconstruct_joined_linear_material(std::shared_ptr<const LinearMaterialPrefixSnapshot>,
+ const JoinedMaterialPolicy&,const JoinedMaterialLimits &limits={});
+// Inflate the complete query with unchanged loss/error, clip at every actual
+// packet boundary and prove every complete slice in its smallest-dose solid.
+// Actual run ends/front stay strict; no future or pressure material appears.
+JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,
+ const MaterialRegion&,const JoinedMaterialLimits &limits={});
 }

@@ -3,6 +3,24 @@
 #include <nlohmann/json.hpp>
 #include <set>
 namespace nptop_verify {
+inline nlohmann::json joined_material_document(const JoinedMaterialPolicy &p)
+{
+ return {{"version",p.version},{"policy_id",p.policy_id},{"revision",p.revision},{"synthetic",p.synthetic},
+  {"operator_confirmed_claim",p.operator_confirmed_claim},{"model","common_run_envelope"}};
+}
+inline JoinedMaterialPolicy parse_joined_material_document(const std::string &text)
+{
+ using Json=nlohmann::json;std::set<std::string> keys;
+ const auto j=Json::parse(text,[&](int depth,Json::parse_event_t event,Json &value){
+  if(depth>1)throw std::runtime_error("joined policy nesting");
+  if(event==Json::parse_event_t::key && !keys.insert(value.get<std::string>()).second)throw std::runtime_error("duplicate joined key");return true;
+ });
+ if(!j.is_object() || keys!=std::set<std::string>{"version","policy_id","revision","synthetic","operator_confirmed_claim","model"})throw std::runtime_error("joined registry");
+ const auto id=[&](const char *key){const auto &v=j.at(key);if(!v.is_number_unsigned() || !v.get<uint64_t>())throw std::runtime_error("joined id");return v.get<uint64_t>();};
+ if(j.at("model").get<std::string>()!="common_run_envelope")throw std::runtime_error("joined model");
+ JoinedMaterialPolicy p;p.version=id("version");p.policy_id=id("policy_id");p.revision=id("revision");
+ p.synthetic=j.at("synthetic").get<bool>();p.operator_confirmed_claim=j.at("operator_confirmed_claim").get<bool>();return p;
+}
 inline nlohmann::json material_document(const LinearMaterialSnapshot &m)
 {
  const auto &p=m.policy;nlohmann::json policy={{"version",p.version},{"model_id",p.model_id},{"policy_id",p.policy_id},{"revision",p.revision},{"source_revision",p.source_revision},{"source_fingerprint",p.source_fingerprint},{"synthetic",p.synthetic},{"operator_confirmed_claim",p.operator_confirmed_claim},

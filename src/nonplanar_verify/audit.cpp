@@ -77,21 +77,24 @@ CoverQuery parse_cover_query(const std::string &text)
 int main(int argc,char **argv)
 {
     boost::nowide::args utf8(argc,argv);
-    const bool cover_mode=argc==6 && std::string(argv[1])=="--linear-material-cover-only";
+    const bool joined_mode=argc==7 && std::string(argv[1])=="--linear-material-joined-cover-only";
+    const bool cover_mode=joined_mode || (argc==6 && std::string(argv[1])=="--linear-material-cover-only");
     const bool material_mode=cover_mode || (argc==5 && std::string(argv[1])=="--linear-material-only");
     if(!material_mode && (argc!=4 || std::string(argv[1])!="--linear-rates-only")) {
         std::cerr<<"Usage: nonplanar_rate_audit --linear-rates-only POLICY.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-material-only POLICY.json MATERIAL.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-material-cover-only POLICY.json MATERIAL.json QUERY.json CANDIDATE.txt\n"
+                    "       nonplanar_rate_audit --linear-material-joined-cover-only POLICY.json MATERIAL.json JOIN.json QUERY.json CANDIDATE.txt\n"
                     "Numerical component only; complete job and export remain blocked.\n";return 64;
     }
     nptop_verify::LinearRateResult result;nptop_verify::LinearMaterialResult material;nptop_verify::MaterialCoverResult cover;
+    nptop_verify::JoinedMaterialResult joined;nptop_verify::JoinedMaterialCoverResult joined_cover;
     std::optional<CoverQuery> query;
     const auto deadline=std::chrono::steady_clock::now()+std::chrono::milliseconds(1000);
     const auto expired=[&]{return std::chrono::steady_clock::now()>=deadline;};
     try {
         std::array<double,3> initial;const auto policy=parse_policy(read_bounded(argv[2],65536),initial);
-        const auto bytes=read_bounded(argv[cover_mode ? 5 : material_mode ? 4 : 3],32*1024*1024);
+        const auto bytes=read_bounded(argv[joined_mode ? 6 : cover_mode ? 5 : material_mode ? 4 : 3],32*1024*1024);
         nptop_verify::LinearRateLimits rate_limits;if(cover_mode)rate_limits.cancelled=expired;
         result=nptop_verify::verify_linear_rates(bytes,initial,policy,rate_limits);
         if(material_mode){
@@ -99,20 +102,32 @@ int main(int argc,char **argv)
             nptop_verify::LinearMaterialLimits material_limits;if(cover_mode)material_limits.cancelled=expired;
             material=nptop_verify::reconstruct_linear_material(result.snapshot,declaration.second,declaration.first,material_limits);
             if(cover_mode){
-                query=parse_cover_query(read_bounded(argv[4],65536));
+                query=parse_cover_query(read_bounded(argv[joined_mode ? 5 : 4],65536));
+                std::optional<nptop_verify::JoinedMaterialPolicy> joined_policy;
+                if(joined_mode){joined_policy=nptop_verify::parse_joined_material_document(read_bounded(argv[4],65536));
+                    if(query->representation!=nptop_verify::MaterialRepresentation::Lower)throw std::runtime_error("joined lower only");}
                 if(!material.snapshot){cover.status=material.status;cover.reason=material.reason;cover.evaluations=std::max(material.evaluations,result.evaluations);}
                 else {
                     const auto prefix=nptop_verify::linear_material_at(material.snapshot,query->completed,query->progress,material_limits);
                     nptop_verify::MaterialCoverLimits cover_limits;cover_limits.cancelled=expired;
-                    if(prefix.snapshot)cover=nptop_verify::cover_linear_material(prefix.snapshot,query->region,query->representation,cover_limits);
+                    if(prefix.snapshot && joined_mode){
+                        nptop_verify::JoinedMaterialLimits joined_limits;joined_limits.cancelled=expired;
+                        joined=nptop_verify::reconstruct_joined_linear_material(prefix.snapshot,*joined_policy,joined_limits);
+                        if(joined.snapshot)joined_cover=nptop_verify::cover_joined_linear_material_lower(joined.snapshot,query->region,joined_limits);
+                        else {joined_cover.reason=joined.reason;joined_cover.evaluations=joined.evaluations;}
+                    }
+                    else if(prefix.snapshot)cover=nptop_verify::cover_linear_material(prefix.snapshot,query->region,query->representation,cover_limits);
                     else {cover.reason=prefix.reason;cover.evaluations=prefix.evaluations;}
                 }
+                if(joined_mode && !joined.snapshot){joined_cover.status=cover.status;joined_cover.reason=cover.reason.empty() ? joined.reason : cover.reason;
+                    joined_cover.evaluations=std::max(joined.evaluations,cover.evaluations);}
             }
         }
-    } catch(const std::exception &){if(cover_mode){cover.reason="BOUNDED_MATERIAL_COVER_INPUT_ERROR";cover.evaluations=std::max(material.evaluations,result.evaluations);}
+    } catch(const std::exception &){if(joined_mode){joined_cover={};joined_cover.reason="BOUNDED_JOINED_MATERIAL_COVER_INPUT_ERROR";joined_cover.evaluations=std::max(material.evaluations,result.evaluations);}
+        else if(cover_mode){cover.reason="BOUNDED_MATERIAL_COVER_INPUT_ERROR";cover.evaluations=std::max(material.evaluations,result.evaluations);}
         else if(material_mode)material.reason="BOUNDED_MATERIAL_INPUT_ERROR";else result.reason="BOUNDED_RATE_INPUT_ERROR";}
     const auto bounds=[](nptop_verify::RateBounds value) {return nlohmann::json::array({value.lower,value.upper});};
-    const auto component_status=cover_mode ? cover.status : material_mode ? material.status : result.status;
+    const auto component_status=joined_mode ? joined_cover.status : cover_mode ? cover.status : material_mode ? material.status : result.status;
     const char *status=component_status==nptop_verify::RateStatus::Pass ? "PASS" : component_status==nptop_verify::RateStatus::Fail ? "FAIL" : "UNKNOWN";
     nlohmann::json report{{"schema_version",1},{"component","final_byte_linear_rates"},{"component_status",status},{"job_status","UNKNOWN"},
         {"scope","synthetic_identity_transform_full_stop_rates_and_ideal_mechanical_time_only"},{"export_allowed",false},
@@ -141,6 +156,17 @@ int main(int argc,char **argv)
         report["uncovered"]=cover.uncovered ? nlohmann::json{{"min",cover.uncovered->min},{"max",cover.uncovered->max}} : nlohmann::json(nullptr);
         if(query){const char *representations[]={"nominal","upper","lower"};report["completed_records"]=query->completed;report["current_progress"]=query->progress;report["representation"]=representations[int(query->representation)];}
         report["mandatory_checks_pending"]={"complete_material_geometry","packet_seams","actual_support_gaps","contact","dose_qualification","job_integrity","qualified_profile","machine_state"};
+    }
+    if(joined_mode){
+        report["component"]="final_byte_joined_lower_region_cover";report["scope"]="actual_prefix_declared_synthetic_common_run_lower_envelope_only";
+        report["reason"]=joined_cover.reason;report["work"]=joined_cover.evaluations;report["cells"]=joined_cover.cells;
+        report["cover_leaves"]=joined_cover.snapshot ? joined_cover.snapshot->leaves.size() : 0;
+        report["uncovered"]=joined_cover.uncovered ? nlohmann::json{{"min",joined_cover.uncovered->min},{"max",joined_cover.uncovered->max}} : nlohmann::json(nullptr);
+        if(joined.snapshot){report["joined_policy"]=nptop_verify::joined_material_document(joined.snapshot->policy);report["runs"]=joined.snapshot->runs.size();}
+        if(joined_cover.snapshot){nlohmann::json owners=nlohmann::json::array();for(const auto &leaf:joined_cover.snapshot->leaves){
+            const auto &run=joined.snapshot->runs[leaf.run_index];owners.push_back({{"run_index",leaf.run_index},{"first_record",run.first_record},{"last_record",run.last_record},
+                {"region_min",leaf.region.min},{"region_max",leaf.region.max}});}report["owners"]=std::move(owners);}
+        report["mandatory_checks_pending"]={"general_material_geometry","actual_support_gaps","head_contact","complete_routes","dose_qualification","job_integrity","qualified_profile","machine_state"};
     }
     std::cout<<report.dump(2)<<'\n';if(!std::cout)return 74;
     return component_status==nptop_verify::RateStatus::Pass ? 0 : component_status==nptop_verify::RateStatus::Fail ? 2 : 3;

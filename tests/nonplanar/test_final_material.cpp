@@ -2,6 +2,9 @@
 #include <nonplanar_verify/LinearMaterial.hpp>
 #include <boost/multiprecision/cpp_bin_float.hpp>
 #include <cfenv>
+#include <iomanip>
+#include <type_traits>
+#include "final_material_oracle.hpp"
 using namespace nptop_verify;
 namespace {
 using High=boost::multiprecision::cpp_bin_float_quad;
@@ -182,6 +185,21 @@ TEST_CASE("B12 final solid union coverage spans different beads and reports an a
   for(size_t axis=0;axis<3;++axis)disjoint|=cover.snapshot->leaves[i].region.min[axis]>=cover.snapshot->leaves[j].region.max[axis] || cover.snapshot->leaves[j].region.min[axis]>=cover.snapshot->leaves[i].region.max[axis];REQUIRE(disjoint);
  }
  REQUIRE(first);REQUIRE(second);
+ JoinedMaterialPolicy join;join.policy_id=31;join.revision=1;
+ const auto runs=reconstruct_joined_linear_material(prefix.snapshot,join);REQUIRE(runs.snapshot);REQUIRE(runs.snapshot->runs.size()==2);
+ const auto joined_cover=cover_joined_linear_material_lower(runs.snapshot,joined);REQUIRE(joined_cover.snapshot);REQUIRE(joined_cover.snapshot->leaves.size()>1);
+ nptop_test::check_joined_lower(*joined_cover.snapshot);
+ bool run0=false,run1=false;High joined_volume=0;
+ for(const auto &leaf:joined_cover.snapshot->leaves){run0|=leaf.run_index==0;run1|=leaf.run_index==1;High volume=1;
+  for(size_t axis=0;axis<3;++axis){REQUIRE(leaf.region.min[axis]>=joined.min[axis]);REQUIRE(leaf.region.max[axis]<=joined.max[axis]);volume*=High(leaf.region.max[axis])-High(leaf.region.min[axis]);}joined_volume+=volume;
+ }
+ REQUIRE(run0);REQUIRE(run1);REQUIRE(abs(joined_volume-expected)<High("1e-30"));
+ for(size_t i=0;i<joined_cover.snapshot->leaves.size();++i)for(size_t j=0;j<i;++j){bool disjoint=false;
+  for(size_t axis=0;axis<3;++axis)disjoint|=joined_cover.snapshot->leaves[i].region.min[axis]>=joined_cover.snapshot->leaves[j].region.max[axis] || joined_cover.snapshot->leaves[j].region.min[axis]>=joined_cover.snapshot->leaves[i].region.max[axis];REQUIRE(disjoint);
+ }
+ REQUIRE(cover_joined_linear_material_lower(runs.snapshot,{{1,-.20,-.13},{2,1,-.08}}).status==RateStatus::Fail);
+ JoinedMaterialLimits budget;budget.max_cells=1;REQUIRE(cover_joined_linear_material_lower(runs.snapshot,joined,budget).status==RateStatus::Unknown);
+ budget={};budget.max_depth=1;REQUIRE(cover_joined_linear_material_lower(runs.snapshot,joined,budget).status==RateStatus::Unknown);
  const auto missing=cover_linear_material(prefix.snapshot,{{1,-.20,-.13},{2,1,-.08}},MaterialRepresentation::Lower);
  REQUIRE(missing.status==RateStatus::Fail);REQUIRE_FALSE(missing.snapshot);REQUIRE(missing.uncovered);
  REQUIRE(classify_linear_material(prefix.snapshot,*missing.uncovered,MaterialRepresentation::Lower).membership==MaterialMembership::Outside);
@@ -232,4 +250,98 @@ TEST_CASE("B12 final delivered dose bounds change solids in opposite directions 
  REQUIRE(classify_linear_material(prefix.snapshot,{more,more},MaterialRepresentation::Upper).membership==MaterialMembership::Inside);
  REQUIRE(classify_linear_material(prefix.snapshot,{less,less},MaterialRepresentation::Nominal).membership==MaterialMembership::Inside);
  REQUIRE(classify_linear_material(prefix.snapshot,{less,less},MaterialRepresentation::Lower).membership==MaterialMembership::Outside);
+}
+namespace {
+JoinedMaterialPolicy join_policy(){JoinedMaterialPolicy p;p.policy_id=31;p.revision=1;return p;}
+struct JoinedFixture {std::shared_ptr<const LinearMaterialPrefixSnapshot> prefix;MaterialRegion box;};
+JoinedFixture joined_fixture(bool rounded=false,int interruption=0,bool diagonal=false,bool reverse=false,int deformation=0)
+{
+ std::ostringstream bytes;bytes.imbue(std::locale::classic());bytes<<"G90\nM83\nM400\nM204 S4\n"<<std::fixed<<std::setprecision(6);
+ std::vector<MaterialDeclaration> rows;std::array<double,3> previous{0,0,0};
+ const double amount=(High(".001")*acos(High(-1))*High("1.75")*High("1.75")/4/High(rate_policy().flow)).convert_to<double>();
+ for(size_t i=1;i<=5;++i){
+  if(i==4 && interruption){
+   if(interruption==1){bytes<<"G4 P10\nM400\n";rows.push_back({uint64_t(rows.size()+1),rows.size(),MaterialEventKind::Dwell,previous,previous,0,0,{}});}
+   else {for(int sign:{-1,1}){bytes<<"G1 E"<<sign*.01<<" F60\nM400\n";rows.push_back({uint64_t(rows.size()+1),rows.size(),sign<0 ? MaterialEventKind::Retraction : MaterialEventKind::Restore,previous,previous,0,.01,{}});}}
+  }
+  const double direction=reverse ? -1 : 1;
+  std::array<double,3> end{direction*(diagonal ? .012 : .02)*i,diagonal ? .016*i : 0,.01*i};
+  if(deformation==3 && i>=4)end[1]+=.000001;
+  if(deformation==4 && i>=4)end[0]=.12-.02*i;
+  const bool narrow=deformation==1 && i==3;const double gap=deformation==2 && i==3 ? .05 : .2;
+  bytes<<"G1 X"<<end[0]<<" Y"<<end[1]<<" Z"<<end[2]<<(narrow ? " E.0001 F30\nM400\n" : " E.001 F30\nM400\n");
+  rows.push_back({uint64_t(rows.size()+1),rows.size(),MaterialEventKind::Deposit,previous,end,narrow ? amount/10 : amount,0,
+   MaterialSection{(rounded || (deformation==5 && i==4)) ? MaterialSectionKind::RoundedRectangle : MaterialSectionKind::Rectangle,gap,rounded ? .3 : gap}});previous=end;
+ }
+ const auto rates=verify_linear_rates(bytes.str(),{0,0,0},rate_policy());INFO(rates.reason);REQUIRE(rates.snapshot);
+ const auto material=reconstruct_linear_material(rates.snapshot,rows,material_policy());INFO(material.reason);REQUIRE(material.snapshot);
+ const auto prefix=linear_material_at(material.snapshot,rows.size(),0);REQUIRE(prefix.snapshot);
+ const double x=(reverse ? -1 : 1)*(diagonal ? .03 : .05),y=diagonal ? .04 : 0,z=.025-(rounded ? .25 : .2)/2;
+ return {prefix.snapshot,{{x-.001,y-.001,z-.002},{x+.001,y+.001,z+.002}}};
+}
+}
+TEST_CASE("B12 final joined lower covers complete internal packet seams with unchanged losses in rotated frames", "[Nonplanar][B12][FinalByteJoined]")
+{
+ for(bool rounded:{false,true})for(bool diagonal:{false,true})for(bool reverse:{false,true}){
+  const auto fixture=joined_fixture(rounded,0,diagonal,reverse);
+  const auto old=cover_linear_material(fixture.prefix,fixture.box,MaterialRepresentation::Lower);REQUIRE(old.status==RateStatus::Fail);
+  const auto joined=reconstruct_joined_linear_material(fixture.prefix,join_policy());INFO(joined.reason);REQUIRE(joined.snapshot);
+  REQUIRE(joined.snapshot->runs.size()==1);REQUIRE(joined.snapshot->runs[0].first_record==0);REQUIRE(joined.snapshot->runs[0].last_record==4);
+  REQUIRE(joined.evaluations>fixture.prefix->evaluations);const auto covered=cover_joined_linear_material_lower(joined.snapshot,fixture.box);INFO(covered.reason);
+  REQUIRE(covered.status==RateStatus::Pass);REQUIRE(covered.snapshot);REQUIRE(covered.snapshot->leaves.size()==1);REQUIRE(covered.snapshot->source==joined.snapshot);
+  nptop_test::check_joined_lower(*covered.snapshot);
+  REQUIRE(joined.snapshot->source->source->policy.inner_xy_loss_mm==material_policy().inner_xy_loss_mm);
+ }
+}
+TEST_CASE("B12 final joined sections retain each narrow dose raised floor and exact direction split", "[Nonplanar][B12][FinalByteJoined]")
+{
+ for(int deformation=1;deformation<=5;++deformation){const auto f=joined_fixture(false,0,false,false,deformation);
+  const auto joined=reconstruct_joined_linear_material(f.prefix,join_policy());REQUIRE(joined.snapshot);
+  REQUIRE(joined.snapshot->runs.size()==(deformation<=2 ? 1 : deformation==4 ? 2 : 3));
+  const auto covered=cover_joined_linear_material_lower(joined.snapshot,f.box);INFO(deformation<<" "<<covered.reason);
+  REQUIRE(covered.status!=RateStatus::Pass);REQUIRE_FALSE(covered.snapshot);
+ }
+}
+TEST_CASE("B12 final joined model preserves interruptions partial fronts and empty-prefix refusal", "[Nonplanar][B12][FinalByteJoined]")
+{
+ for(int interruption:{1,2}){const auto f=joined_fixture(false,interruption);const auto joined=reconstruct_joined_linear_material(f.prefix,join_policy());REQUIRE(joined.snapshot);
+  REQUIRE(joined.snapshot->runs.size()==2);const auto covered=cover_joined_linear_material_lower(joined.snapshot,f.box);REQUIRE(covered.status==RateStatus::Fail);REQUIRE_FALSE(covered.snapshot);
+ }
+ const auto f=joined_fixture();const auto partial=linear_material_at(f.prefix->source,2,.5);REQUIRE(partial.snapshot);
+ const auto joined=reconstruct_joined_linear_material(partial.snapshot,join_policy());REQUIRE(joined.snapshot);
+ REQUIRE(cover_joined_linear_material_lower(joined.snapshot,f.box).status==RateStatus::Fail);
+ const auto empty=linear_material_at(f.prefix->source,0,0);REQUIRE(empty.snapshot);const auto no_runs=reconstruct_joined_linear_material(empty.snapshot,join_policy());REQUIRE(no_runs.snapshot);REQUIRE(no_runs.snapshot->runs.empty());
+ REQUIRE(cover_joined_linear_material_lower(no_runs.snapshot,f.box).status==RateStatus::Fail);
+}
+TEST_CASE("B12 final joined capture policy ownership and late publication keep independent refusals", "[Nonplanar][B12][FinalByteJoined]")
+{
+ STATIC_REQUIRE_FALSE(std::is_aggregate<JoinedMaterialSnapshot>::value);
+ STATIC_REQUIRE_FALSE(std::is_aggregate<JoinedMaterialCoverSnapshot>::value);
+ const auto f=joined_fixture();
+ for(int mode=0;mode<4;++mode){auto p=join_policy();if(mode==0)p.version=2;if(mode==1)p.synthetic=false;if(mode==2)p.operator_confirmed_claim=true;if(mode==3)p.model=static_cast<JoinedMaterialModel>(99);
+  REQUIRE_FALSE(reconstruct_joined_linear_material(f.prefix,p).snapshot);
+ }
+ for(int mode=0;mode<6;++mode){JoinedMaterialLimits limits;
+  if(mode==0)limits.max_evaluations=f.prefix->evaluations+1;if(mode==1)limits.cancelled=[] {return true;};
+  if(mode==2)limits.is_join_current=[](uint64_t,uint64_t){return false;};if(mode==3)limits.is_source_current=[](uint64_t){return false;};
+  if(mode==4)limits.is_rate_current=[](uint64_t,uint64_t){return false;};if(mode==5)limits.is_current=[](uint64_t,uint64_t){return false;};
+  const auto r=reconstruct_joined_linear_material(f.prefix,join_policy(),limits);REQUIRE_FALSE(r.snapshot);REQUIRE(r.status==RateStatus::Unknown);
+ }
+ auto p=join_policy();JoinedMaterialLimits limits;limits.cancelled=[&]{p.operator_confirmed_claim=true;limits.max_events=0;return false;};
+ const auto owned=reconstruct_joined_linear_material(f.prefix,p,limits);REQUIRE(owned.snapshot);REQUIRE_FALSE(owned.snapshot->policy.operator_confirmed_claim);
+ for(int mode=0;mode<6;++mode){JoinedMaterialLimits guard;
+  if(mode==0)guard.max_evaluations=owned.evaluations+1;if(mode==1)guard.cancelled=[] {return true;};
+  if(mode==2)guard.is_join_current=[](uint64_t,uint64_t){return false;};if(mode==3)guard.is_source_current=[](uint64_t){return false;};
+  if(mode==4)guard.is_rate_current=[](uint64_t,uint64_t){return false;};if(mode==5)guard.is_current=[](uint64_t,uint64_t){return false;};
+  const auto r=cover_joined_linear_material_lower(owned.snapshot,f.box,guard);REQUIRE(r.status==RateStatus::Unknown);REQUIRE_FALSE(r.snapshot);REQUIRE_FALSE(r.uncovered);
+ }
+ auto region=f.box;limits={};limits.cancelled=[&]{region.min[0]=50;limits.max_cells=0;return false;};
+ const auto captured=cover_joined_linear_material_lower(owned.snapshot,region,limits);REQUIRE(captured.snapshot);REQUIRE(captured.snapshot->region.min==f.box.min);
+ limits={};size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(cover_joined_linear_material_lower(owned.snapshot,f.box,limits).snapshot);
+ const auto last=calls;calls=0;limits.cancelled=[&]{if(++calls==last)std::fesetround(FE_UPWARD);return false;};
+ const auto refused=cover_joined_linear_material_lower(owned.snapshot,f.box,limits);std::fesetround(FE_TONEAREST);REQUIRE(refused.status==RateStatus::Unknown);REQUIRE_FALSE(refused.snapshot);
+ const auto empty=linear_material_at(f.prefix->source,0,0);REQUIRE(empty.snapshot);const auto no_runs=reconstruct_joined_linear_material(empty.snapshot,join_policy());REQUIRE(no_runs.snapshot);
+ limits={};calls=0;limits.cancelled=[&]{++calls;return false;};const auto absent=cover_joined_linear_material_lower(no_runs.snapshot,f.box,limits);REQUIRE(absent.uncovered);
+ const auto negative_last=calls;calls=0;limits.is_join_current=[&](uint64_t,uint64_t){if(++calls==negative_last)std::fesetround(FE_UPWARD);return true;};limits.cancelled={};
+ const auto stale_absent=cover_joined_linear_material_lower(no_runs.snapshot,f.box,limits);std::fesetround(FE_TONEAREST);REQUIRE(stale_absent.status==RateStatus::Unknown);REQUIRE_FALSE(stale_absent.uncovered);
 }

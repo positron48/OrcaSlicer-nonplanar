@@ -10,6 +10,7 @@
 #include <libslic3r/Nonplanar/GCodeAdapter.hpp>
 #include <nonplanar_verify/FullStopReplay.hpp>
 #include "full_stop_oracle.hpp"
+#include "final_material_oracle.hpp"
 #include <nonplanar_verify/MaterialJson.hpp>
 #include <libslic3r/ClipperUtils.hpp>
 #include <libslic3r/Nonplanar/StlFile.hpp>
@@ -2718,6 +2719,23 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE(last_piece.empty_inner);
     const auto lower_solid=nptop_verify::cover_linear_material(rounded_front.snapshot,laid_box,nptop_verify::MaterialRepresentation::Lower);
     INFO(lower_solid.reason);REQUIRE(lower_solid.status==nptop_verify::RateStatus::Fail);REQUIRE(lower_solid.uncovered);REQUIRE_FALSE(lower_solid.snapshot);
+    const nptop_verify::JoinedMaterialPolicy joined_policy{1,94,1,true,false,nptop_verify::JoinedMaterialModel::CommonRunEnvelope};
+    const auto joined_material=nptop_verify::reconstruct_joined_linear_material(rounded_front.snapshot,joined_policy);INFO(joined_material.reason);REQUIRE(joined_material.snapshot);
+    // Joining cannot cover the current eroded front. A separate deeper laid
+    // packet crosses internal seams while preserving the original loss/error.
+    const auto joined_front=nptop_verify::cover_joined_linear_material_lower(joined_material.snapshot,laid_box);
+    INFO(joined_front.reason);REQUIRE(joined_front.status==nptop_verify::RateStatus::Fail);REQUIRE_FALSE(joined_front.snapshot);
+    const size_t interior_record=new_ledger.records.size()-3;const auto &interior_piece=*rounded_material.snapshot->beads[interior_record];
+    std::array<double,3> interior_center;for(size_t axis=0;axis<3;++axis)interior_center[axis]=(interior_piece.start[axis].lower+interior_piece.end[axis].lower)/2;
+    const auto interior_section=*rounded_material.snapshot->declarations[interior_record].section;
+    interior_center[2]-=(interior_section.gap_begin_mm+interior_section.gap_end_mm)/4;
+    nptop_verify::MaterialRegion interior_box{interior_center,interior_center};for(size_t axis=0;axis<3;++axis){interior_box.min[axis]-=1e-5;interior_box.max[axis]+=1e-5;}
+    REQUIRE(nptop_verify::cover_linear_material(rounded_front.snapshot,interior_box,nptop_verify::MaterialRepresentation::Lower).status==nptop_verify::RateStatus::Fail);
+    const auto joined_cover=nptop_verify::cover_joined_linear_material_lower(joined_material.snapshot,interior_box);INFO(joined_cover.reason);REQUIRE(joined_cover.snapshot);
+    REQUIRE(joined_cover.snapshot->leaves.size()==1);const auto &joined_run=joined_material.snapshot->runs[joined_cover.snapshot->leaves.front().run_index];
+    REQUIRE(joined_run.first_record<=interior_record);REQUIRE(joined_run.last_record==new_ledger.records.size()-1);
+    nptop_test::check_joined_lower(*joined_cover.snapshot);
+    INFO("native joined runs="<<joined_material.snapshot->runs.size()<<" work="<<joined_cover.evaluations<<" cells="<<joined_cover.cells);
     REQUIRE(rounded_material.snapshot->rates->bytes==bytes.bytes);REQUIRE(rounded_material.evaluations>final_rates.evaluations);
     INFO("native final rates work=" << final_rates.evaluations << " ideal duration=[" << final_rates.snapshot->duration.lower << ',' << final_rates.snapshot->duration.upper << ']');
     REQUIRE(bytes.plan==byte_plan.snapshot);REQUIRE(bytes.events.size()==new_ledger.records.size());
@@ -2762,6 +2780,15 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
             {"max_volume_rate",rp.max_volume_rate},{"max_cross_section",rp.max_cross_section},{"max_event_rate",rp.max_event_rate}};
         boost::nowide::ofstream rate_file((dir/"native-rate-policy.json").string());REQUIRE(rate_file.good());
         rate_file<<rate_document.dump(2)<<'\n';rate_file.close();REQUIRE(rate_file.good());
+        boost::nowide::ofstream joined_file((dir/"native-joined-policy.json").string());REQUIRE(joined_file.good());
+        joined_file<<nptop_verify::joined_material_document(joined_material.snapshot->policy).dump(2)<<'\n';joined_file.close();REQUIRE(joined_file.good());
+        for(bool interior:{false,true}){
+            const auto &region=interior ? interior_box : laid_box;
+            const nlohmann::json query={{"version",1},{"completed_records",rounded_front.snapshot->completed_records},{"current_progress",rounded_front.snapshot->current_progress},
+                {"representation","lower"},{"region_min",region.min},{"region_max",region.max}};
+            boost::nowide::ofstream query_file((dir/(interior ? "native-joined-interior-query.json" : "native-joined-front-query.json")).string());REQUIRE(query_file.good());
+            query_file<<query.dump(2)<<'\n';query_file.close();REQUIRE(query_file.good());
+        }
         for(const char *representation:{"nominal","lower"}) {
             const nlohmann::json query={{"version",1},{"completed_records",rounded_front.snapshot->completed_records},
                 {"current_progress",rounded_front.snapshot->current_progress},{"representation",representation},{"region_min",laid_box.min},{"region_max",laid_box.max}};

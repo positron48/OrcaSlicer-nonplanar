@@ -94,6 +94,8 @@ jobs:
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/material-cli.log -- python3 scripts/nonplanar/validate_material_audit_cli.py --executable build/src/nonplanar_verify/Release/nonplanar_rate_audit --output-dir build/nonplanar-evidence/linux/material-cli
       - name: Exercise independent actual-prefix material region coverage
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/material-cover-cli.log -- python3 scripts/nonplanar/validate_material_cover_cli.py --executable build/src/nonplanar_verify/Release/nonplanar_rate_audit --fixture-dir build/nonplanar-evidence/linux/material-cli/positive --output-dir build/nonplanar-evidence/linux/material-cover-cli
+      - name: Exercise independent actual-prefix joined lower envelope
+        run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/material-joined-cli.log -- python3 scripts/nonplanar/validate_joined_material_cli.py --executable build/src/nonplanar_verify/Release/nonplanar_rate_audit --fixture-dir build/nonplanar-evidence/linux/material-cli/positive --output-dir build/nonplanar-evidence/linux/material-joined-cli
       - name: Build native application after test verification
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/app-build.log -- ./build_linux.sh -srlL -j 2
       - name: Preserve observed results even on failure

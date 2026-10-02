@@ -15,6 +15,14 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B12-final-joined.md` and ADR-0073 independently reconstruct exact continuous
+final-byte runs under a separate explicit synthetic envelope. Four new cases
+are included in 33/2888 combined assertions, CTest 392/392, 59 CLI cases and six
+fresh OFF/ZAA pairs. Native joined interior Lower cover passes; per-event Lower
+and actual external-front refusals remain at unchanged losses. Actual support
+gaps, general/head/contact/route/cap geometry and B13 binding remain pending;
+full B01–B15 stays IN_PROGRESS, export BLOCK.
+
 `B12-final-solids.md` and ADR-0072 add independent whole-region classification
 of nominal/upper/lower actual-prefix solids and protected continuous union-cover
 partitions. Five new cases are included in 29/1940 combined assertions, CTest
