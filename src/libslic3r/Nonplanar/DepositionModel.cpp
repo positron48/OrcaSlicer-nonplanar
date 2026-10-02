@@ -203,8 +203,9 @@ Projection project(const MaterialRecord &row, Interval x, Interval y, Interval z
     x=x-Interval(m.start.x()); y=y-Interval(m.start.y());
     return {(dx*x+dy*y)/length2,(dx*y-dy*x)/detail::root(length2),z};
 }
-MaterialMembership piece(const MaterialRecord &row, const MaterialModel &model, Projection projection, double progress, Representation rep,bool closed_nominal=false)
+MaterialMembership piece_interval(const MaterialRecord &row, const MaterialModel &model, Projection projection, Interval progress, Representation rep,bool closed_nominal=false)
 {
+    if (progress.hi<=0) return MaterialMembership::Outside;
     const auto &b=*row.bead; const auto &m=row.motion;
     const auto length=detail::root(length_squared(row));
     const auto t=projection.t, n=absolute(projection.normal), point_z=projection.z;
@@ -218,13 +219,13 @@ MaterialMembership piece(const MaterialRecord &row, const MaterialModel &model, 
     }
     if (begin.lo>=end.hi || t.hi<begin.lo || t.lo>end.hi) return MaterialMembership::Outside;
     const bool along_inside=closed_nominal && rep==Representation::Nominal ? t.lo>=begin.hi && t.hi<=end.lo : t.lo>begin.hi && t.hi<end.lo;
-    const auto local=detail::maximum(Interval(0),detail::minimum(t,Interval(progress)));
+    const auto local=detail::maximum(Interval(0),detail::minimum(t,progress));
     const auto dh=Interval(b.gap_end_mm)-Interval(b.gap_begin_mm), dz=Interval(m.end.z())-Interval(m.start.z());
     const auto h=Interval(b.gap_begin_mm)+dh*local, top=Interval(m.start.z())+dz*local;
-    const auto shift=detail::minimum(xy/length,Interval(progress));
+    const auto shift=detail::minimum(xy/length,progress);
     const auto area=Interval(std::get<Deposition>(m.payload).volume.value())/length;
     const auto w=section_width(area,h,b.kind);
-    const auto prefix_h=Interval(b.gap_begin_mm)+dh*Interval(progress);
+    const auto prefix_h=Interval(b.gap_begin_mm)+dh*progress;
     const auto hmin=detail::minimum(Interval(b.gap_begin_mm),prefix_h), hmax=detail::maximum(Interval(b.gap_begin_mm),prefix_h);
     const auto width_derivative=area/square(hmin)*absolute(dh);
     if (b.kind==BeadSectionKind::Rectangle) {
@@ -258,6 +259,8 @@ MaterialMembership piece(const MaterialRecord &row, const MaterialModel &model, 
     if (along_inside && distance2.hi<radius2.lo) return MaterialMembership::Inside;
     return MaterialMembership::Unknown;
 }
+MaterialMembership piece(const MaterialRecord &row,const MaterialModel &model,Projection projection,double progress,Representation rep,bool closed_nominal=false)
+{ return piece_interval(row,model,projection,Interval(progress),rep,closed_nominal); }
 MaterialQueryResult query(std::shared_ptr<const MaterialPrefixSnapshot> cursor, PhysicalPosition point, Representation rep,
                           const MaterialQueryLimits &requested_limits)
 {
@@ -297,6 +300,162 @@ MaterialQueryResult classify_material(const UpperMaterialView &v, const Physical
 { return query(v.snapshot,p,Representation::Upper,l); }
 MaterialQueryResult classify_material(const LowerMaterialView &v, const PhysicalPosition &p, const MaterialQueryLimits &l)
 { return query(v.snapshot,p,Representation::Lower,l); }
+
+MaterialMotionSourceResult prepare_material_motion(const MaterialSequenceResult &requested,const MaterialMotionPreparationLimits &requested_limits)
+{
+    const auto ledger=requested.snapshot;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();MaterialMotionSourceResult result;
+    try {
+        detail::require_interval_environment();
+        if (!ledger || !limits.max_evaluations || limits.max_evaluations>2000000 || !valid_timeout(limits.timeout) ||
+            ledger->records.size()>200000) reject("INVALID_MATERIAL_MOTION_SOURCE");
+        // Charge the copy, validation and canonical hash walks, even though
+        // the capture routine polls its hash walk in bounded groups.
+        result.evaluations=1+3*ledger->records.size();
+        if (result.evaluations>limits.max_evaluations) reject("MATERIAL_MOTION_PREPARATION_WORK_LIMIT");
+        MaterialLimits capture_limits=limits;
+        capture_limits.cancelled=[&] {
+            if (++result.evaluations>limits.max_evaluations) reject("MATERIAL_MOTION_PREPARATION_WORK_LIMIT");
+            stop(limits,ledger->revision,started);return false;
+        };
+        capture_limits.is_current={};
+        const auto validated=capture_material_sequence(ledger->records,ledger->model,ledger->revision,ledger->source_fingerprint,capture_limits);
+        if (!validated.snapshot) {result.reason=validated.reason;return result;}
+        stop(limits,ledger->revision,started);
+        result.snapshot=std::shared_ptr<const MaterialMotionSourceSnapshot>(new MaterialMotionSourceSnapshot(validated.snapshot));
+        result.reason="DECLARED_MATERIAL_MOTION_SOURCE";
+    } catch (const Rejection &e) {result.reason=e.what();}
+    catch (const std::exception &e) {result.reason="MATERIAL_MOTION_SOURCE_FAILURE: "+std::string(e.what());}
+    return result;
+}
+
+MaterialMotionResult verify_material_motion(const MaterialMotionSourceResult &requested,size_t index,const std::vector<ToolComponent> &requested_tools,
+    const ClearancePolicy &requested_policy,const MaterialMotionLimits &requested_limits)
+{
+    const auto source=requested.snapshot;const auto policy=requested_policy;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();MaterialMotionResult result;
+    result.source=source;result.event_index=index;result.policy=policy;
+    try {
+        detail::require_interval_environment();
+        if (!source || !source->ledger || index>=source->ledger->records.size() || requested_tools.empty() || requested_tools.size()>64 ||
+            !limits.max_evaluations || limits.max_evaluations>2000000 || !limits.max_cells || limits.max_cells>1000000 ||
+            !limits.max_depth || limits.max_depth>64 || !valid_timeout(limits.timeout)) reject("INVALID_MATERIAL_MOTION_QUERY");
+        const auto tools=requested_tools;result.tools=tools; // Own before the first callback.
+        const auto ledger=source->ledger;
+        const auto work=[&] {
+            if (++result.evaluations>limits.max_evaluations) reject("MATERIAL_MOTION_WORK_LIMIT");
+            stop(limits,ledger->revision,started);
+        };
+        const auto numeric=policy.numeric.total_mm();
+        if ((Interval(numeric)+Interval(ledger->model.numerical_coordinate_error.value())).hi>0.05) reject("MATERIAL_MOTION_NUMERIC_BUDGET");
+        Interval uncertainty(numeric);
+        for (auto v : {policy.tool_measurement,policy.positioning,policy.material,policy.scene_geometry}) {
+            coordinate(v.value());uncertainty=uncertainty+Interval(v.value());
+        }
+        coordinate(policy.required.value());
+        const auto margin=uncertainty+Interval(policy.required.value());coordinate(margin.hi);
+        std::vector<ToolBox> domains;domains.reserve(tools.size());std::set<uint64_t> identities;
+        for (const auto &tool : tools) {
+            work();
+            if (!tool.id || !identities.insert(tool.id).second) reject("INVALID_MATERIAL_MOTION_COMPONENT_ID");
+            if (tool.interaction!=InteractionClass::RigidForbidden) reject("MATERIAL_MOTION_CONTACT_UNSUPPORTED");
+            ToolBox box{{0,0,0},{0,0,0}};
+            if (const auto *b=std::get_if<ToolBox>(&tool.geometry)) box=*b;
+            else {
+                const auto &tip=std::get<FiniteTip>(tool.geometry);
+                if (tip.opening_radius.value()>=tip.outer_radius.value()) reject("INVALID_MATERIAL_MOTION_TIP");
+                const auto x=Interval(tip.center.x())+Interval(-tip.outer_radius.value(),tip.outer_radius.value());
+                const auto y=Interval(tip.center.y())+Interval(-tip.outer_radius.value(),tip.outer_radius.value());
+                box={{x.lo,y.lo,tip.center.z()},{x.hi,y.hi,tip.center.z()}};
+            }
+            for (auto p : {box.min,box.max}) {coordinate(p.x());coordinate(p.y());coordinate(p.z());}
+            if (box.min.x()>box.max.x() || box.min.y()>box.max.y() || box.min.z()>box.max.z()) reject("INVALID_MATERIAL_MOTION_TOOL_BOX");
+            domains.push_back(box);
+        }
+        const auto &event=ledger->records[index].motion;
+        const std::array<Interval,3> start{Interval(event.start.x()),Interval(event.start.y()),Interval(event.start.z())};
+        const std::array<Interval,3> delta{Interval(event.end.x())-start[0],Interval(event.end.y())-start[1],Interval(event.end.z())-start[2]};
+        const auto physical=[&](Interval time,const ToolBox &box,double padding) {
+            const std::array<Interval,3> local{Interval(box.min.x(),box.max.x()),Interval(box.min.y(),box.max.y()),Interval(box.min.z(),box.max.z())};
+            std::array<Interval,3> p=start;
+            for (size_t a=0;a<3;++a) p[a]=p[a]+time*delta[a]+local[a]+Interval(-padding,padding);
+            return p;
+        };
+        const auto radius2=[](const FiniteTip &tip,const ToolBox &box) {
+            return square(Interval(box.min.x(),box.max.x())-Interval(tip.center.x()))+
+                   square(Interval(box.min.y(),box.max.y())-Interval(tip.center.y()));
+        };
+        struct Cell {ScalarBounds time;ToolBox box;size_t depth;};
+        std::vector<MaterialMotionLeaf> leaves;
+        for (size_t component=0;component<tools.size();++component) for (size_t row_index=0;row_index<=index;++row_index) {
+            work();const auto &row=ledger->records[row_index];if (!row.bead) continue;
+            const auto *tip=std::get_if<FiniteTip>(&tools[component].geometry);
+            std::vector<Cell> pending{{{0,1},domains[component],0}};
+            while (!pending.empty()) {
+                work();if (++result.cells>limits.max_cells) reject("MATERIAL_MOTION_CELL_LIMIT");
+                const auto cell=pending.back();pending.pop_back();
+                bool empty=false;
+                if (tip) {
+                    work();const auto r=radius2(*tip,cell.box);
+                    empty=r.hi<square(Interval(tip->opening_radius.value())).lo || r.lo>square(Interval(tip->outer_radius.value())).hi;
+                }
+                if (empty) {leaves.push_back({component,row_index,cell.time,cell.box,true});continue;}
+                work();const Interval time(cell.time.lower,cell.time.upper);
+                const auto p=physical(time,cell.box,margin.hi);
+                // Interval progress encloses EVERY growing front in this time
+                // cell. End-of-cell Upper alone is not assumed monotone.
+                const auto membership=piece_interval(row,ledger->model,project(row,p[0],p[1],p[2]),row_index==index ? time : Interval(1),Representation::Upper);
+                if (membership==MaterialMembership::Outside) {leaves.push_back({component,row_index,cell.time,cell.box,false});continue;}
+                const double t=cell.time.lower+(cell.time.upper-cell.time.lower)/2;
+                std::vector<ToolPosition> probes{{cell.box.min.x()+(cell.box.max.x()-cell.box.min.x())/2,
+                    cell.box.min.y()+(cell.box.max.y()-cell.box.min.y())/2,cell.box.min.z()+(cell.box.max.z()-cell.box.min.z())/2}};
+                if (tip) {
+                    const double r=(tip->opening_radius.value()+tip->outer_radius.value())/2;
+                    for (auto offset : {std::array<double,2>{r,0},{-r,0},{0,r},{0,-r}})
+                        probes.push_back({tip->center.x()+offset[0],tip->center.y()+offset[1],tip->center.z()});
+                }
+                for (auto probe : probes) {
+                    work();
+                    if (probe.x()<cell.box.min.x() || probe.x()>cell.box.max.x() || probe.y()<cell.box.min.y() || probe.y()>cell.box.max.y() ||
+                        probe.z()<cell.box.min.z() || probe.z()>cell.box.max.z()) continue;
+                    const ToolBox point{probe,probe};
+                    if (tip) {
+                        const auto r=radius2(*tip,point);
+                        if (r.lo<=square(Interval(tip->opening_radius.value())).hi || r.hi>=square(Interval(tip->outer_radius.value())).lo) continue;
+                    }
+                    const auto q=physical(Interval(t),point,uncertainty.hi);
+                    if (piece(row,ledger->model,project(row,q[0],q[1],q[2]),row_index==index ? t : 1,Representation::Upper)==MaterialMembership::Inside) {
+                        stop(limits,ledger->revision,started);
+                        result.status=ClearanceStatus::Fail;result.reason="MATERIAL_MOTION_UPPER_INTERSECTION";
+                        result.witness=MaterialMotionWitness{component,row_index,t,probe};return result;
+                    }
+                }
+                if (cell.depth>=limits.max_depth) reject("MATERIAL_MOTION_UNCERTAIN_BOUNDARY");
+                const std::array<double,3> lo{cell.box.min.x(),cell.box.min.y(),cell.box.min.z()},hi{cell.box.max.x(),cell.box.max.y(),cell.box.max.z()};
+                size_t axis=0;for (size_t a=1;a<3;++a) if (hi[a]-lo[a]>hi[axis]-lo[axis]) axis=a;
+                double variation=0;for (auto d : delta) variation=std::max(variation,absolute(d).hi);
+                if (row_index==index) variation=std::max(variation,std::abs(row.bead->gap_end_mm-row.bead->gap_begin_mm));
+                const double time_extent=(cell.time.upper-cell.time.lower)*variation;
+                Cell left=cell,right=cell;left.depth=right.depth=cell.depth+1;
+                if (time_extent>=hi[axis]-lo[axis] && t>cell.time.lower && t<cell.time.upper) {
+                    left.time.upper=t;right.time.lower=t;
+                } else {
+                    const double middle=lo[axis]+(hi[axis]-lo[axis])/2;
+                    if (middle<=lo[axis] || middle>=hi[axis]) reject("MATERIAL_MOTION_UNSPLITTABLE_BOUNDARY");
+                    auto lhi=hi,rlo=lo;lhi[axis]=rlo[axis]=middle;
+                    left.box={{lo[0],lo[1],lo[2]},{lhi[0],lhi[1],lhi[2]}};
+                    right.box={{rlo[0],rlo[1],rlo[2]},{hi[0],hi[1],hi[2]}};
+                }
+                pending.push_back(right);pending.push_back(left);
+            }
+        }
+        stop(limits,ledger->revision,started);
+        result.snapshot=std::shared_ptr<const MaterialMotionSnapshot>(new MaterialMotionSnapshot(source,index,tools,policy,std::move(leaves),result.cells,result.evaluations));
+        result.status=ClearanceStatus::Pass;result.reason="DECLARED_RIGID_MATERIAL_MOTION_ONLY";
+    } catch (const Rejection &e) {result.reason=e.what();}
+    catch (const std::exception &e) {result.reason="MATERIAL_MOTION_NUMERIC_FAILURE: "+std::string(e.what());}
+    return result;
+}
 
 namespace {
 // Eager rationals keep each bounded split independent of a deferred expression

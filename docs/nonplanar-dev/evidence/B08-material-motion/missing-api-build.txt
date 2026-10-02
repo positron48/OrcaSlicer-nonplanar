@@ -1,0 +1,53 @@
+[1/2] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3435:44: error: use of undeclared identifier 'MaterialMotionSourceSnapshot'
+ 3435 |     STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialMotionSourceSnapshot>::value);
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3436:44: error: use of undeclared identifier 'MaterialMotionSnapshot'
+ 3436 |     STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialMotionSnapshot>::value);
+      |                                            ^~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3440:25: error: use of undeclared identifier 'prepare_material_motion'
+ 3440 |     const auto prepared=prepare_material_motion({"",rising});INFO(prepared.reason);REQUIRE(prepared.snapshot);
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449:48: error: use of undeclared identifier 'prepare_material_motion'
+ 3449 |     const auto collided=verify_material_motion(prepare_material_motion({"",falling}),0,{behind},policy);
+      |                                                ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3468:23: error: use of undeclared identifier 'prepare_material_motion'
+ 3468 |     const auto source=prepare_material_motion({"",captured(rows,model(0,0))});REQUIRE(source.snapshot);
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3477:23: error: use of undeclared identifier 'prepare_material_motion'
+ 3477 |     const auto future=prepare_material_motion({"",captured(rows)});REQUIRE(future.snapshot);
+      |                       ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3484:21: error: use of undeclared identifier 'prepare_material_motion'
+ 3484 |     const auto hole=prepare_material_motion({"",hole_ledger});REQUIRE(hole.snapshot);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3494:41: error: unknown type name 'MaterialMotionPreparationLimits'
+ 3494 |     const auto original=ledger.snapshot;MaterialMotionPreparationLimits preparation;
+      |                                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3498:19: error: use of undeclared identifier 'prepare_material_motion'
+ 3498 |     REQUIRE_FALSE(prepare_material_motion({}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3498:19: error: use of undeclared identifier 'prepare_material_motion'
+ 3498 |     REQUIRE_FALSE(prepare_material_motion({}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3498:19: error: use of undeclared identifier 'prepare_material_motion'
+ 3498 |     REQUIRE_FALSE(prepare_material_motion({}).snapshot);
+      |                   ^~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3502:13: error: use of undeclared identifier 'verify_material_motion'
+ 3502 |     REQUIRE(verify_material_motion({},0,tools,policy).status==ClearanceStatus::Unknown);
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3502:13: error: use of undeclared identifier 'verify_material_motion'
+ 3502 |     REQUIRE(verify_material_motion({},0,tools,policy).status==ClearanceStatus::Unknown);
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3502:13: error: use of undeclared identifier 'verify_material_motion'
+ 3502 |     REQUIRE(verify_material_motion({},0,tools,policy).status==ClearanceStatus::Unknown);
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3507:9: error: unknown type name 'MaterialMotionLimits'
+ 3507 |         MaterialMotionLimits limits;
+      |         ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3518:32: error: unknown type name 'MaterialMotionLimits'
+ 3518 |     auto mutable_source=source;MaterialMotionLimits limits;limits.cancelled=[&] {mutable_source={};tools.clear();return false;};
+      |                                ^
+16 errors generated.
+ninja: build stopped: subcommand failed.

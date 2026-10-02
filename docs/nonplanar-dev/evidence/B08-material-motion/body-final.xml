@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="0" skipped="0" tests="120928" hostname="tbd" time="50.183" timestamp="2026-10-02T01:28:17Z">
+    <properties>
+      <property name="random-seed" value="3150112589"/>
+      <property name="filters" value="[BodyMaterial],[NativeCoverage],[NativeTransition],[NativeIntegral],[NativePassStack],[NativeIntegralStrips],[NativeAffineHatches],[NativeHatchCells],[NativeFixedWidthBeads],[NativeFirstHatchBeads],[NativeMaterialUnion],[NativeMaterialFill],[NativeMaterialDeficit],[NativeFirstHatchFootprint],[NativeRemainderHatch],[NativeFirstHatchLayer],[NativeFirstHatchEndReplan],[NativeFirstHatchWidthReplan],[NativeFirstContour],[NativeFirstCap],[NativeFirstCapJoin],[NativeMaterialRun],[NativeCapInterface],[NativeMaterialVoid],[NativeFirstCapEndReplan],[NativeFirstCapWidthReplan]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B04 actual dense native floor has continuous inner coverage under the cap" time="0.083" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B07 native affine wedge creates finite nonplanar hatch candidates from the owned source" time="1.358" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B06 actual native bead union refines the corrugated first-pass volume" time="0.603" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B05 native material source references match independent chained encoding" time="0.001" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B07 native first footprint derives bounded amounts inside an actual flat bead core" time="17.019" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B05 native body material retains every source segment and conserves native flow" time="0.234" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B05 native body material refuses unsupported flow stale budgets and malformed context" time="0.092" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B06 actual native reserved body bounds the first affine pass and missing cap volume" time="0.527" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B07 native first hatches reconstruct actual laid roof gaps and consume bounded amounts" time="1.563" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B07 native first-hatch union measures rounded overlap rather than summed extrusion" time="22.394" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B07 native finite hatch cells keep end and boundary volume in an explicit remainder" time="0.749" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B07 native prospective later affine hatches select consistent rounded bead amounts" time="0.540" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B06 native refined integral allocates complete X and Y strips from the same owned proof" time="2.589" status="run"/>
+    <testcase classname="fff_print_tests.global" name="B06 native pass stack derives the target from the owned source and stays in the reserved cap" time="2.433" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

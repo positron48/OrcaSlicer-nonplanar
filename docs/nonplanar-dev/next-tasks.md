@@ -142,8 +142,17 @@ Next software tasks, in dependency order:
    Qualify allowable repeated material and complete shoulder/seam volumes,
    construct/replan paths for both remaining 3D volumes and reconstruct later support;
    short-packet motion/flow limits remain unverified.
-5. Continue the dependent planner, safety/replay and guarded export integration
-   against the normative backlog; do not close P2 from these partial modules.
+5. `B08-material-motion.md` now checks complete supplied rigid boxes and annuli
+   continuously against the original actual journal: prior material is complete,
+   current deposition grows with the nozzle, and future/pressure rows are absent.
+   Whole-volume interval leaves accept; actual interior witnesses only refuse.
+   The original native later packet and connector pass for high simulation tools;
+   a low rigid box refuses on that current row. Compose the complete measured head
+   and static scene, qualify exact deposition contacts and applicability, and bind
+   whole-job ordered entry/exit/travel/parking, independent final-byte replay and
+   guarded export. Continue the normative backlog without closing P2 from bounded
+   modules. The saved 01:23 UTC Linux observation confirms 2c446685 succeeded;
+   current e8f40123 is in progress and the new B08 source remains unverified.
 
 Independent review of A03–A08 remains required for Gate A closure. Operator
 measurements, machine/material confirmation and physical coupon runs remain

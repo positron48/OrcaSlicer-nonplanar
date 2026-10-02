@@ -77,6 +77,64 @@ struct MaterialQueryResult {
     uint64_t source_event_id=0;
     size_t evaluations=0;
 };
+inline constexpr unsigned material_motion_contract_version=1;
+struct MaterialMotionPreparationLimits : MaterialLimits { size_t max_evaluations=2000000; };
+struct MaterialMotionSourceResult;
+struct MaterialMotionSourceSnapshot {
+    const std::shared_ptr<const MaterialSequenceSnapshot> ledger;
+private:
+    explicit MaterialMotionSourceSnapshot(std::shared_ptr<const MaterialSequenceSnapshot> s) : ledger(std::move(s)) {}
+    friend MaterialMotionSourceResult prepare_material_motion(const MaterialSequenceResult &,const MaterialMotionPreparationLimits &);
+};
+struct MaterialMotionSourceResult { std::string reason;std::shared_ptr<const MaterialMotionSourceSnapshot> snapshot;size_t evaluations=0; };
+// Revalidate and own the canonical ledger once. Public raw ledger aggregates
+// cannot grant continuous-motion approval by inventing derived geometry.
+MaterialMotionSourceResult prepare_material_motion(const MaterialSequenceResult &,const MaterialMotionPreparationLimits &limits={});
+struct MaterialMotionLimits : MaterialQueryLimits { size_t max_cells=65535,max_depth=32; };
+struct MaterialMotionLeaf {
+    size_t component_index,material_record;
+    ScalarBounds parameter;
+    ToolBox local_domain;
+    bool outside_tool; // Annulus bounding cells may be empty tool volume.
+};
+struct MaterialMotionWitness {
+    size_t component_index,material_record;
+    double parameter;
+    ToolPosition local_point;
+};
+struct MaterialMotionResult;
+struct MaterialMotionSnapshot {
+    const std::shared_ptr<const MaterialMotionSourceSnapshot> source;
+    const size_t event_index;
+    const std::vector<ToolComponent> tools;
+    const ClearancePolicy policy;
+    const std::vector<MaterialMotionLeaf> leaves;
+    const size_t cells,evaluations;
+private:
+    MaterialMotionSnapshot(std::shared_ptr<const MaterialMotionSourceSnapshot> s,size_t index,std::vector<ToolComponent> components,
+        ClearancePolicy p,std::vector<MaterialMotionLeaf> parts,size_t count,size_t work)
+        : source(std::move(s)),event_index(index),tools(std::move(components)),policy(p),leaves(std::move(parts)),cells(count),evaluations(work) {}
+    friend MaterialMotionResult verify_material_motion(const MaterialMotionSourceResult &,size_t,const std::vector<ToolComponent> &,
+        const ClearancePolicy &,const MaterialMotionLimits &);
+};
+struct MaterialMotionResult {
+    ClearanceStatus status=ClearanceStatus::Unknown;
+    std::string reason;
+    std::shared_ptr<const MaterialMotionSourceSnapshot> source;
+    size_t event_index=0;
+    std::vector<ToolComponent> tools;
+    std::optional<ClearancePolicy> policy;
+    std::shared_ptr<const MaterialMotionSnapshot> snapshot;
+    std::optional<MaterialMotionWitness> witness;
+    size_t cells=0,evaluations=0;
+};
+// Complete supplied rigid tool volumes over the original event. Prior rows
+// are complete; current deposition grows at the same parameter as the nozzle;
+// future rows are absent. PASS needs a complete interval partition disjoint
+// from D_upper plus clearance/uncertainty. Points can only establish FAIL.
+// DepositionContact is unsupported; scene/profile/job/export remain separate.
+MaterialMotionResult verify_material_motion(const MaterialMotionSourceResult &,size_t event_index,const std::vector<ToolComponent> &,
+    const ClearancePolicy &,const MaterialMotionLimits &limits={});
 // Point membership in distinct model representations, not a whole footprint,
 // support, continuous tool sweep, physical-state or export approval.
 MaterialQueryResult classify_material(const NominalMaterialView &, const PhysicalPosition &, const MaterialQueryLimits &limits = {});

@@ -3429,3 +3429,136 @@ TEST_CASE("B07 later material refuses stale batches conflicts prefixes and share
     const size_t final_callback=calls;calls=0;limits.cancelled=[&] {return ++calls==final_callback;};
     REQUIRE(append_next_cap_material(before,paths,{},0,limits).reason=="CANCELLED");REQUIRE(calls==final_callback);
 }
+
+TEST_CASE("B08 material motion checks complete rigid tools with a coupled current front", "[Nonplanar][B08][MaterialMotion]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialMotionSourceSnapshot>::value);
+    STATIC_REQUIRE_FALSE(std::is_aggregate<MaterialMotionSnapshot>::value);
+    const ClearancePolicy policy{Length(.01),NumericBudget(0,0,0,0),Length(0),Length(0),Length(0)};
+    const ToolComponent forward{71,ToolBox{{.35,-.05,.12},{.45,.05,.18}}};
+    const auto rising=captured({bead(1,0,{0,0,1},{2,0,2},.4,.2,.2)});
+    const auto prepared=prepare_material_motion({"",rising});INFO(prepared.reason);REQUIRE(prepared.snapshot);
+    const auto clear=verify_material_motion(prepared,0,{forward},policy);INFO(clear.reason);REQUIRE(clear.status==ClearanceStatus::Pass);REQUIRE(clear.snapshot);
+    REQUIRE(clear.snapshot->source==prepared.snapshot);REQUIRE_FALSE(clear.snapshot->leaves.empty());
+    // Independent whole-time bound: forward tool begins at 2t+.35, while
+    // the Upper current front ends at 2t+.01. Buffer is only .01 mm.
+    using Q=boost::multiprecision::cpp_bin_float_quad;
+    REQUIRE(Q(.35)-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()));
+    Q partition=0;
+    for (const auto &leaf : clear.snapshot->leaves) {
+        REQUIRE(leaf.component_index==0);REQUIRE(leaf.material_record==0);REQUIRE_FALSE(leaf.outside_tool);
+        REQUIRE(leaf.parameter.lower>=0);REQUIRE(leaf.parameter.upper<=1);
+        const auto &b=leaf.local_domain;
+        partition+=(Q(leaf.parameter.upper)-leaf.parameter.lower)*(Q(b.max.x())-b.min.x())*
+            (Q(b.max.y())-b.min.y())*(Q(b.max.z())-b.min.z());
+        REQUIRE(Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()));
+    }
+    const auto &whole=std::get<ToolBox>(forward.geometry);
+    REQUIRE(partition==(Q(whole.max.x())-whole.min.x())*(Q(whole.max.y())-whole.min.y())*(Q(whole.max.z())-whole.min.z()));
+    const auto falling=captured({bead(1,0,{0,0,2},{2,0,1},.4,.2,.2)});
+    const ToolComponent behind{72,ToolBox{{-.45,-.05,.12},{-.35,.05,.18}}};
+    const auto collided=verify_material_motion(prepare_material_motion({"",falling}),0,{behind},policy);
+    INFO(collided.reason);REQUIRE(collided.status==ClearanceStatus::Fail);REQUIRE(collided.witness);REQUIRE_FALSE(collided.snapshot);
+    const auto &w=*collided.witness;REQUIRE(w.material_record==0);REQUIRE(w.parameter>0);REQUIRE(w.parameter<1);
+    // The exact tool centre lies strictly in the already-laid nominal core.
+    const Q t=w.parameter,x=2*t-Q(.4),top=Q(2)-x/2,z=Q(2)-t+Q(.15);
+    REQUIRE(x>0);REQUIRE(x<2*t);REQUIRE(z<top);REQUIRE(z>top-Q(.2));
+    const ToolComponent high{73,ToolBox{{-.1,-.1,1},{.1,.1,1.2}}};
+    const ToolComponent annulus{74,FiniteTip{{0,0,1},Length(.02),Length(.15)}};
+    REQUIRE(verify_material_motion(prepared,0,{high,annulus},policy).status==ClearanceStatus::Pass);
+    auto contact=forward;contact.interaction=InteractionClass::DepositionContact;
+    REQUIRE(verify_material_motion(prepared,0,{contact},policy).status==ClearanceStatus::Unknown);
+    for (auto section : {BeadSectionKind::Rectangle,BeadSectionKind::RoundedRectangle}) {
+        const auto angled=prepare_material_motion({"",captured({bead(1,0,{0,0,1},{3,4,2},.5,.2,.3,section)})});REQUIRE(angled.snapshot);
+        REQUIRE(verify_material_motion(angled,0,{high,annulus},policy).snapshot);
+        const ToolComponent low{75,ToolBox{{-.002,-.002,-.13},{.002,.002,-.11}}};
+        const auto struck=verify_material_motion(angled,0,{low},policy);INFO(struck.reason);REQUIRE(struck.status==ClearanceStatus::Fail);
+        REQUIRE(struck.witness);REQUIRE(struck.witness->material_record==0);
+    }
+}
+
+TEST_CASE("B08 material motion rejects an interior collision and excludes future and opening material", "[Nonplanar][B08][MaterialMotion]")
+{
+    const ClearancePolicy policy{Length(.005),NumericBudget(0,0,0,0),Length(0),Length(0),Length(0)};
+    std::vector<MaterialRecord> rows{bead(1,0,{2,-.1,1},{2,.1,1},.1,.1,.1,BeadSectionKind::Rectangle),
+        {{2,1,0,{2,.1,1},{0,0,.95},Speed(10),Acceleration(100),Travel{}},{}},
+        {{3,2,0,{0,0,.95},{4,0,.95},Speed(10),Acceleration(100),Travel{}},{}}};
+    const auto source=prepare_material_motion({"",captured(rows,model(0,0))});REQUIRE(source.snapshot);
+    const ToolComponent cube{81,ToolBox{{-.025,-.025,-.02},{.025,.025,.02}}};
+    const auto collision=verify_material_motion(source,2,{cube},policy);INFO(collision.reason);REQUIRE(collision.status==ClearanceStatus::Fail);
+    REQUIRE(collision.witness);REQUIRE(collision.witness->material_record==0);REQUIRE(collision.witness->parameter>.4);REQUIRE(collision.witness->parameter<.6);
+    // Both end tool volumes are independently XY-disjoint from the old bead.
+    REQUIRE(.025<2-.05);REQUIRE(4-.025>2+.05);
+    rows[2].motion.start={0,0,2};rows[1].motion.end=rows[2].motion.start;rows[2].motion.end={4,0,2};
+    rows.push_back({{4,3,0,rows.back().motion.end,{0,0,2},Speed(10),Acceleration(100),Travel{}},{}});
+    rows.push_back(bead(5,4,{0,0,2},{4,0,2},.8,.2,.2));
+    const auto future=prepare_material_motion({"",captured(rows)});REQUIRE(future.snapshot);
+    REQUIRE(verify_material_motion(future,2,{cube},policy).status==ClearanceStatus::Pass);
+    rows.erase(rows.begin()+3,rows.end());const auto end=rows.back().motion.end;
+    rows.push_back({{4,3,0,end,end,Speed(10),Acceleration(100),
+        Retraction{FilamentLength(.8),RetractionState::Ready,RetractionState::Retracted}}, {}});
+    rows.push_back({{5,4,0,end,end,Speed(10),Acceleration(100),
+        Retraction{FilamentLength(.8),RetractionState::Retracted,RetractionState::Ready}}, {}});
+    const auto pressure=prepare_material_motion({"",captured(rows)});REQUIRE(pressure.snapshot);
+    for (size_t index : {3,4}) {
+        const auto checked=verify_material_motion(pressure,index,{cube},policy);REQUIRE(checked.snapshot);
+        for (const auto &leaf : checked.snapshot->leaves) REQUIRE(leaf.material_record==0);
+    }
+    // A small old solid lies entirely in the empty opening of a stationary
+    // annulus. Its enclosing square alone must not certify collision.
+    const auto hole_ledger=captured({bead(1,0,{-.04,0,1},{.04,0,1},.08,.08,.08,BeadSectionKind::Rectangle),
+        {{2,1,0,{.04,0,1},{0,0,.96},Speed(10),Acceleration(100),Travel{}},{}},
+        {{3,2,0,{0,0,.96},{0,0,.96},Speed(10),Acceleration(100),Travel{}},{}}},model(0,0));
+    const auto hole=prepare_material_motion({"",hole_ledger});REQUIRE(hole.snapshot);
+    const ToolComponent ring{82,FiniteTip{{0,0,0},Length(.15),Length(.2)}};
+    const auto hollow=verify_material_motion(hole,2,{ring},policy);INFO(hollow.reason);REQUIRE(hollow.status==ClearanceStatus::Pass);
+    auto filled=ring;filled.geometry=FiniteTip{{0,0,0},Length(.005),Length(.2)};
+    REQUIRE(verify_material_motion(hole,2,{filled},policy).status==ClearanceStatus::Fail);
+    const ToolComponent edge{83,ToolBox{{-.1,-.01,-.01},{.4,.01,.01}}};
+    // The centre x=.15 is outside the bead; the left part still intersects.
+    REQUIRE((-.1+.4)/2>.04);
+    const auto edge_collision=verify_material_motion(hole,2,{edge},policy);INFO(edge_collision.reason);
+    REQUIRE(edge_collision.status==ClearanceStatus::Fail);REQUIRE(edge_collision.witness);
+    REQUIRE(edge_collision.witness->local_point.x()>-.04);REQUIRE(edge_collision.witness->local_point.x()<.04);
+}
+
+TEST_CASE("B08 material motion owns inputs and refuses incomplete numeric or work proofs", "[Nonplanar][B08][MaterialMotion]")
+{
+    auto ledger=MaterialSequenceResult{"",captured({bead(1,0,{0,0,1},{2,0,2},.4,.2,.2)})};
+    const auto original=ledger.snapshot;MaterialMotionPreparationLimits preparation;
+    preparation.cancelled=[&] {ledger.snapshot.reset();preparation.max_records=0;return false;};
+    const auto source=prepare_material_motion(ledger,preparation);REQUIRE(source.snapshot);
+    REQUIRE(source.snapshot->ledger->fingerprint()==original->fingerprint());
+    REQUIRE_FALSE(prepare_material_motion({}).snapshot);
+    auto forged=std::make_shared<const MaterialSequenceSnapshot>(MaterialSequenceSnapshot{original->revision,original->source_fingerprint,
+        original->model,original->records,{DepositedBeadGeometry{{1,1},{1,1}}}});
+    const auto recaptured=prepare_material_motion({"",forged});REQUIRE(recaptured.snapshot);
+    REQUIRE(recaptured.snapshot->ledger->fingerprint()==original->fingerprint());
+    REQUIRE(recaptured.snapshot->ledger->fingerprint()!=forged->fingerprint());
+    preparation={};preparation.max_evaluations=1;REQUIRE_FALSE(prepare_material_motion({"",original},preparation).snapshot);
+    const ClearancePolicy policy{Length(.01),NumericBudget(0,0,0,0),Length(0),Length(0),Length(0)};
+    std::vector<ToolComponent> tools{{91,ToolBox{{.35,-.05,.12},{.45,.05,.18}}}};
+    REQUIRE(verify_material_motion({},0,tools,policy).status==ClearanceStatus::Unknown);
+    REQUIRE(verify_material_motion(source,1,tools,policy).status==ClearanceStatus::Unknown);
+    REQUIRE(verify_material_motion(source,0,{},policy).status==ClearanceStatus::Unknown);
+    REQUIRE(verify_material_motion(source,0,{tools[0],tools[0]},policy).status==ClearanceStatus::Unknown);
+    for (int mode=0;mode<7;++mode) {
+        MaterialMotionLimits limits;
+        if (mode==0) limits.max_evaluations=1;
+        if (mode==1) limits.max_cells=1;
+        if (mode==2) limits.max_depth=1;
+        if (mode==3) limits.cancelled=[] {return true;};
+        if (mode==4) limits.is_current=[](uint64_t) {return false;};
+        if (mode==5) {limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if (mode==6) limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+        const auto result=verify_material_motion(source,0,tools,policy,limits);if (mode==6) std::fesetround(FE_TONEAREST);
+        INFO(mode << ' ' << result.reason);REQUIRE(result.status==ClearanceStatus::Unknown);REQUIRE_FALSE(result.snapshot);
+    }
+    auto mutable_source=source;MaterialMotionLimits limits;limits.cancelled=[&] {mutable_source={};tools.clear();return false;};
+    const auto owned=verify_material_motion(mutable_source,0,tools,policy,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->tools.size()==1);
+    tools=owned.snapshot->tools;limits={};size_t calls=0;limits.cancelled=[&] {++calls;return false;};
+    REQUIRE(verify_material_motion(source,0,tools,policy,limits).snapshot);const auto final_call=calls;calls=0;
+    limits.cancelled=[&] {return ++calls==final_call;};REQUIRE_FALSE(verify_material_motion(source,0,tools,policy,limits).snapshot);REQUIRE(calls==final_call);
+    auto uncertain=policy;uncertain.numeric=NumericBudget(.05,0,0,.01);
+    REQUIRE(verify_material_motion(source,0,tools,uncertain).status==ClearanceStatus::Unknown);
+}

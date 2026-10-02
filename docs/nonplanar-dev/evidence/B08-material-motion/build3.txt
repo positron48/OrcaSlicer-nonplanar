@@ -1,0 +1,36 @@
+[1/2] Building CXX object tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o
+FAILED: [code=1] tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o 
+/usr/bin/c++ -DBBL_RELEASE_TO_PUBLIC=1 -DBOOST_NO_CXX98_FUNCTION_BASE -DCATCH_CONFIG_FAST_COMPILE -DGIT_COMMIT_HASH=\"31461d50\" -DLIBNEST2D_GEOMETRIES_libslic3r -DLIBNEST2D_OPTIMIZER_nlopt -DLIBNEST2D_STATIC -DLIBNEST2D_THREADING_tbb -DNDEBUG -DNPTOP_PROBE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/nonplanar/Release/nonplanar_worker_probe\" -DNPTOP_STL_FIXTURE_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl\" -DNPTOP_WORKER_PATH=\"/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_import/Release/nonplanar_import_worker\" -DSLIC3R_DESKTOP_INTEGRATION -DSLIC3R_GUI -DTBB_USE_CAPTURED_EXCEPTION=0 -DTEST_DATA_DIR="R\"(/Users/antonfilatov/www/my/orca-nonplanar/tests/data)\"" -DUNICODE -DUSE_TBB -DWXINTL_NO_GETTEXT_MACRO -D_HAS_AUTO_PTR_ETC=0 -D_UNICODE -DwxNO_UNSAFE_WXSTRING_CONV -DwxUSE_UNICODE -DCMAKE_INTDIR=\"Release\" -I/Users/antonfilatov/www/my/orca-nonplanar/tests -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/libslic3r -I/Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/.. -I/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/tests/catch2/generated-includes -isystem /Users/antonfilatov/www/my/orca-nonplanar/src -isystem /Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/dev-utils/platform -isystem /Users/antonfilatov/www/my/orca-nonplanar/src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencascade -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/eigen3 -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/admesh/.. -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libigl -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/libnest2d/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps_src/miniz -isystem /Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/opencv4 -Wall -Wno-reorder -Werror=partial-availability -Werror=unguarded-availability -Werror=unguarded-availability-new -O3 -DNDEBUG -std=gnu++17 -arch arm64 -mmacosx-version-min=11.3 -fPIE -fsigned-char -Werror=return-type -Wno-unused-function -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-label -Wno-unused-local-typedefs -Wno-sign-compare -Wno-misleading-indentation -Wno-switch -Wno-ignored-attributes -Wno-deprecated-declarations -MD -MT tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -MF tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o.d -o tests/nonplanar/CMakeFiles/nonplanar_tests.dir/Release/test_deposition_model.cpp.o -c /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:1:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_test_macros.hpp:11:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_test_macro_impl.hpp:12:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_assertion_handler.hpp:11:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/catch_assertion_info.hpp:13:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/tests/catch2/src/catch2/../catch2/internal/catch_stringref.hpp:14:
+In file included from /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/string:611:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:153:24: error: call to implicitly-deleted default constructor of 'Slic3r::nptop::MaterialRecord'
+  153 |     ::new ((void*)__p) _Up(std::forward<_Args>(__args)...);
+      |                        ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator_traits.h:296:9: note: in instantiation of function template specialization 'std::allocator<Slic3r::nptop::MaterialRecord>::construct<Slic3r::nptop::MaterialRecord>' requested here
+  296 |     __a.construct(__p, std::forward<_Args>(__args)...);
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:920:21: note: in instantiation of function template specialization 'std::allocator_traits<std::allocator<Slic3r::nptop::MaterialRecord>>::construct<Slic3r::nptop::MaterialRecord, 0>' requested here
+  920 |     __alloc_traits::construct(this->__alloc_, std::__to_address(__pos));
+      |                     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:955:11: note: in instantiation of member function 'std::vector<Slic3r::nptop::MaterialRecord>::__construct_at_end' requested here
+  955 |     this->__construct_at_end(__n);
+      |           ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:1361:11: note: in instantiation of member function 'std::vector<Slic3r::nptop::MaterialRecord>::__append' requested here
+ 1361 |     this->__append(__sz - __cs);
+      |           ^
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3497:10: note: in instantiation of member function 'std::vector<Slic3r::nptop::MaterialRecord>::resize' requested here
+ 3497 |     rows.resize(3);const auto end=rows.back().motion.end;
+      |          ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/DepositionModel.hpp:14:37: note: default constructor of 'MaterialRecord' is implicitly deleted because field 'motion' has a deleted default constructor
+   14 | struct MaterialRecord { MotionEvent motion; std::optional<BeadSection> bead; };
+      |                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Contracts.hpp:122:22: note: default constructor of 'MotionEvent' is implicitly deleted because field 'start' has no default constructor
+  122 |     PhysicalPosition start, end;
+      |                      ^
+1 error generated.
+ninja: build stopped: subcommand failed.

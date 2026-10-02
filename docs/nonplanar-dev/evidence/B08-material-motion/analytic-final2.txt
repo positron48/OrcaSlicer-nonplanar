@@ -1,0 +1,1125 @@
+Filters: [MaterialMotion]
+Randomness seeded to: 126959969
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B08 material motion rejects an interior collision and excludes future and
+opening material
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3480
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x84f003858
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3486: PASSED:
+  REQUIRE( source.snapshot )
+with expansion:
+  0x84ec260f0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3488: PASSED:
+  REQUIRE( collision.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3489: PASSED:
+  REQUIRE( collision.witness )
+with expansion:
+  {?}
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3489: PASSED:
+  REQUIRE( collision.witness->material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3489: PASSED:
+  REQUIRE( collision.witness->parameter>.4 )
+with expansion:
+  0.5 > 0.40000000000000002
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3489: PASSED:
+  REQUIRE( collision.witness->parameter<.6 )
+with expansion:
+  0.5 < 0.59999999999999998
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3491: PASSED:
+  REQUIRE( .025<2-.05 )
+with expansion:
+  0.025 < 1.94999999999999996
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3491: PASSED:
+  REQUIRE( 4-.025>2+.05 )
+with expansion:
+  3.97500000000000009 > 2.04999999999999982
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x84f003858
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3495: PASSED:
+  REQUIRE( future.snapshot )
+with expansion:
+  0x84ec26110
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3496: PASSED:
+  REQUIRE( verify_material_motion(future,2,{cube},policy).status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x84f003858
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3502: PASSED:
+  REQUIRE( pressure.snapshot )
+with expansion:
+  0x84ec26120
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3504: PASSED:
+  REQUIRE( checked.snapshot )
+with expansion:
+  0x84ec364e0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3505: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3504: PASSED:
+  REQUIRE( checked.snapshot )
+with expansion:
+  0x84ec364e0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3505: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x84f003858
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3512: PASSED:
+  REQUIRE( hole.snapshot )
+with expansion:
+  0x84ec26130
+with message:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3514: PASSED:
+  REQUIRE( hollow.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3516: PASSED:
+  REQUIRE( verify_material_motion(hole,2,{filled},policy).status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3519: PASSED:
+  REQUIRE( (-.1+.4)/2>.04 )
+with expansion:
+  0.15000000000000002 > 0.04
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3521: PASSED:
+  REQUIRE( edge_collision.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3521: PASSED:
+  REQUIRE( edge_collision.witness )
+with expansion:
+  {?}
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3522: PASSED:
+  REQUIRE( edge_collision.witness->local_point.x()>-.04 )
+with expansion:
+  0.02499999999999999 > -0.04
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3522: PASSED:
+  REQUIRE( edge_collision.witness->local_point.x()<.04 )
+with expansion:
+  0.02499999999999999 < 0.04
+with messages:
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+-------------------------------------------------------------------------------
+B08 material motion checks complete rigid tools with a coupled current front
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3433
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3435: PASSED:
+with message:
+  !(std::is_aggregate<MaterialMotionSourceSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3436: PASSED:
+with message:
+  !(std::is_aggregate<MaterialMotionSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x84f0038f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3440: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0x84ec260f0
+with message:
+  DECLARED_MATERIAL_MOTION_SOURCE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3441: PASSED:
+  REQUIRE( clear.status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3441: PASSED:
+  REQUIRE( clear.snapshot )
+with expansion:
+  0x84ec364e0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3442: PASSED:
+  REQUIRE( clear.snapshot->source==prepared.snapshot )
+with expansion:
+  0x84ec260f0 == 0x84ec260f0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3442: PASSED:
+  REQUIRE_FALSE( clear.snapshot->leaves.empty() )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3446: PASSED:
+  REQUIRE( Q(.35)-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.0 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.125 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.125 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.25 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.25 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.375 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.375 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.5 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.5 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.625 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.625 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.75 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.75 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  0.875 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.component_index==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE( leaf.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3449: PASSED:
+  REQUIRE_FALSE( leaf.outside_tool )
+with expansion:
+  !false
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.lower>=0 )
+with expansion:
+  0.875 >= 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3450: PASSED:
+  REQUIRE( leaf.parameter.upper<=1 )
+with expansion:
+  1.0 <= 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3454: PASSED:
+  REQUIRE( Q(b.min.x())-Q(rising->model.outer_xy_growth.value())>Q(policy.required.value()) )
+with expansion:
+  0.34 > 0.01
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3457: PASSED:
+  REQUIRE( partition==(Q(whole.max.x())-whole.min.x())*(Q(whole.max.y())-whole.min.y())*(Q(whole.max.z())-whole.min.z()) )
+with expansion:
+  0.0006 == 0.0006
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x84f003a38
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3461: PASSED:
+  REQUIRE( collided.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3461: PASSED:
+  REQUIRE( collided.witness )
+with expansion:
+  {?}
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3461: PASSED:
+  REQUIRE_FALSE( collided.snapshot )
+with expansion:
+  !0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3462: PASSED:
+  REQUIRE( w.material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3462: PASSED:
+  REQUIRE( w.parameter>0 )
+with expansion:
+  0.5 > 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3462: PASSED:
+  REQUIRE( w.parameter<1 )
+with expansion:
+  0.5 < 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3465: PASSED:
+  REQUIRE( x>0 )
+with expansion:
+  0.6 > 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3465: PASSED:
+  REQUIRE( x<2*t )
+with expansion:
+  0.6 < 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3465: PASSED:
+  REQUIRE( z<top )
+with expansion:
+  1.65 < 1.7
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3465: PASSED:
+  REQUIRE( z>top-Q(.2) )
+with expansion:
+  1.65 > 1.5
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3468: PASSED:
+  REQUIRE( verify_material_motion(prepared,0,{high,annulus},policy).status==ClearanceStatus::Pass )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3470: PASSED:
+  REQUIRE( verify_material_motion(prepared,0,{contact},policy).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x84f003ad8
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3472: PASSED:
+  REQUIRE( angled.snapshot )
+with expansion:
+  0x84ec26120
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3473: PASSED:
+  REQUIRE( verify_material_motion(angled,0,{high,annulus},policy).snapshot )
+with expansion:
+  0x84ec36620
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3475: PASSED:
+  REQUIRE( struck.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3476: PASSED:
+  REQUIRE( struck.witness )
+with expansion:
+  {?}
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3476: PASSED:
+  REQUIRE( struck.witness->material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x84f003b78
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3472: PASSED:
+  REQUIRE( angled.snapshot )
+with expansion:
+  0x84ec26120
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3473: PASSED:
+  REQUIRE( verify_material_motion(angled,0,{high,annulus},policy).snapshot )
+with expansion:
+  0x84ec36620
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3475: PASSED:
+  REQUIRE( struck.status==ClearanceStatus::Fail )
+with expansion:
+  1 == 1
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3476: PASSED:
+  REQUIRE( struck.witness )
+with expansion:
+  {?}
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3476: PASSED:
+  REQUIRE( struck.witness->material_record==0 )
+with expansion:
+  0 == 0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+  MATERIAL_MOTION_UPPER_INTERSECTION
+  MATERIAL_MOTION_UPPER_INTERSECTION
+
+-------------------------------------------------------------------------------
+B08 material motion owns inputs and refuses incomplete numeric or work proofs
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3525
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:37: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x84f0038f8
+with message:
+  DECLARED_MATERIAL_MODEL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3530: PASSED:
+  REQUIRE( source.snapshot )
+with expansion:
+  0x84ec260f0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3531: PASSED:
+  REQUIRE( source.snapshot->ledger->fingerprint()==original->fingerprint() )
+with expansion:
+  "8eeb6c8f2fde7454275a9549e9e8abee8936edf22afe5f18cd224184c057f7c8"
+  ==
+  "8eeb6c8f2fde7454275a9549e9e8abee8936edf22afe5f18cd224184c057f7c8"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3532: PASSED:
+  REQUIRE_FALSE( prepare_material_motion({}).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3535: PASSED:
+  REQUIRE( recaptured.snapshot )
+with expansion:
+  0x84ec26110
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3536: PASSED:
+  REQUIRE( recaptured.snapshot->ledger->fingerprint()==original->fingerprint() )
+with expansion:
+  "8eeb6c8f2fde7454275a9549e9e8abee8936edf22afe5f18cd224184c057f7c8"
+  ==
+  "8eeb6c8f2fde7454275a9549e9e8abee8936edf22afe5f18cd224184c057f7c8"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3537: PASSED:
+  REQUIRE( recaptured.snapshot->ledger->fingerprint()!=forged->fingerprint() )
+with expansion:
+  "8eeb6c8f2fde7454275a9549e9e8abee8936edf22afe5f18cd224184c057f7c8"
+  !=
+  "94d7990fcc9d3d1ba4348ff4e21eb0846e35521c451b90c71378d59348fe2e55"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3538: PASSED:
+  REQUIRE_FALSE( prepare_material_motion({"",original},preparation).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3541: PASSED:
+  REQUIRE( verify_material_motion({},0,tools,policy).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3542: PASSED:
+  REQUIRE( verify_material_motion(source,1,tools,policy).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3543: PASSED:
+  REQUIRE( verify_material_motion(source,0,{},policy).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3544: PASSED:
+  REQUIRE( verify_material_motion(source,0,{tools[0],tools[0]},policy).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  0 MATERIAL_MOTION_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  0 MATERIAL_MOTION_WORK_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  1 MATERIAL_MOTION_CELL_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  1 MATERIAL_MOTION_CELL_LIMIT
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  2 MATERIAL_MOTION_UNCERTAIN_BOUNDARY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  2 MATERIAL_MOTION_UNCERTAIN_BOUNDARY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  3 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  3 CANCELLED
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  4 STALE_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  4 STALE_REVISION
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  5 MATERIAL_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  5 MATERIAL_DEADLINE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE( result.status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  6 MATERIAL_MOTION_NUMERIC_FAILURE: unsupported interval rounding
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3555: PASSED:
+  REQUIRE_FALSE( result.snapshot )
+with expansion:
+  !0
+with message:
+  6 MATERIAL_MOTION_NUMERIC_FAILURE: unsupported interval rounding
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3558: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0x84ec364e0
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3558: PASSED:
+  REQUIRE( owned.snapshot->tools.size()==1 )
+with expansion:
+  1 == 1
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3560: PASSED:
+  REQUIRE( verify_material_motion(source,0,tools,policy,limits).snapshot )
+with expansion:
+  0x84ec36580
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3561: PASSED:
+  REQUIRE_FALSE( verify_material_motion(source,0,tools,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3561: PASSED:
+  REQUIRE( calls==final_call )
+with expansion:
+  40 == 40
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3563: PASSED:
+  REQUIRE( verify_material_motion(source,0,tools,uncertain).status==ClearanceStatus::Unknown )
+with expansion:
+  2 == 2
+with message:
+  DECLARED_RIGID_MATERIAL_MOTION_ONLY
+
+===============================================================================
+All tests passed (142 assertions in 3 test cases)
+

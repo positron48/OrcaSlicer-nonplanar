@@ -2098,7 +2098,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan][NativeFirstCapWidthReplan][NativeFirstCapMaterial][NativeNextCapBead][NativeNextCapMaterial]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan][NativeFirstCapWidthReplan][NativeFirstCapMaterial][NativeNextCapBead][NativeNextCapMaterial][NativeMaterialMotion]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2598,6 +2598,28 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE(classify_material(NominalMaterialView{current_later.snapshot->material},interior(.25)).membership==MaterialMembership::Inside);
     REQUIRE(classify_material(NominalMaterialView{current_later.snapshot->material},interior(.75)).membership==MaterialMembership::Outside);
     REQUIRE(classify_material(NominalMaterialView{unlaid_later.snapshot->material},interior(.25)).membership==MaterialMembership::Outside);
+    const auto motion_source=prepare_material_motion({"",added.snapshot->material->sequence});INFO(motion_source.reason);REQUIRE(motion_source.snapshot);
+    REQUIRE(motion_source.snapshot->ledger->fingerprint()==new_ledger.fingerprint());
+    const ClearancePolicy motion_policy{Length(.01),NumericBudget(0,0,0,0),Length(0),Length(0),Length(0)};
+    // Declared simulation tools, not a measured Snapmaker head. Check the
+    // actual 2034-row body, first cap and this growing original later packet.
+    const std::vector<ToolComponent> high_tools{{101,ToolBox{{-.1,-.1,1},{.1,.1,1.2}}},
+        {102,FiniteTip{{0,0,1},Length(.02),Length(.15)}}};
+    const auto safe_motion=verify_material_motion(motion_source,first_later,high_tools,motion_policy);
+    INFO(safe_motion.reason);REQUIRE(safe_motion.snapshot);REQUIRE(safe_motion.status==ClearanceStatus::Pass);
+    const auto safe_connector=verify_material_motion(motion_source,old_ledger.records.size(),high_tools,motion_policy);
+    INFO(safe_connector.reason);REQUIRE(safe_connector.snapshot);
+    const ToolComponent low_tool{103,ToolBox{{-.003,-.003,-.11},{.003,.003,-.09}}};
+    const auto unsafe_motion=verify_material_motion(motion_source,first_later,{low_tool},motion_policy);
+    INFO(unsafe_motion.reason);REQUIRE(unsafe_motion.status==ClearanceStatus::Fail);REQUIRE(unsafe_motion.witness);
+    REQUIRE(unsafe_motion.witness->material_record==first_later);REQUIRE_FALSE(unsafe_motion.snapshot);
+    const LayerAmount mt=unsafe_motion.witness->parameter;
+    const LayerAmount mh=LayerAmount(packet.bead->gap_begin_mm)+(LayerAmount(packet.bead->gap_end_mm)-packet.bead->gap_begin_mm)*mt;
+    const LayerAmount mz=unsafe_motion.witness->local_point.z();REQUIRE(mz<0);REQUIRE(mz>-mh);
+    REQUIRE(unsafe_motion.source==motion_source.snapshot);REQUIRE(unsafe_motion.event_index==first_later);
+    REQUIRE(unsafe_motion.tools[0].id==low_tool.id);
+    INFO("native material motion source work=" << motion_source.evaluations << " cells=" << safe_motion.cells <<
+        " work=" << safe_motion.evaluations << " connector cells=" << safe_connector.cells << " collision row=" << unsafe_motion.witness->material_record);
     const double lx=(la.x()+lb.x())/2,ly=(la.y()+lb.y())/2,lower_plane=(la.z()+lb.z())/2-.025;
     const RectangleXY third_region=rx ? RectangleXY{lx-.025,ly-.01,lx+.025,ly+.01} : RectangleXY{lx-.01,ly-.025,lx+.01,ly+.025};
     const auto third=assess_first_cap_next_pass(added,2,third_region,lower_plane,next_limits);INFO(third.reason);REQUIRE(third.snapshot);

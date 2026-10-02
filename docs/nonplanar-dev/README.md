@@ -15,6 +15,20 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B08-material-motion.md` and ADR-0063 now prove complete supplied rigid boxes
+and flat annuli continuously against old and growing current Upper material.
+A protected revalidated journal supplies the original event; future and pressure
+rows add no volume. Full-volume interval leaves accept; actual interior witnesses
+only refuse. Three new analytical cases / 142 assertions and the actual native
+later packet/connector pass; a low rigid tool refuses on the current later row.
+The material group passes 109 cases / 46920 assertions and native body 14 cases /
+120928 assertions; selected CTest executes 354/354 without skips and six fresh
+OFF/ZAA comparisons pass. Complete measured
+head/scene/contact, legal order/flow, job/replay and guarded export remain pending.
+The saved 01:23 UTC Linux observation confirms 2c446685 succeeded; parent e8f40123
+is in progress. Current-source Linux, independent review and physical tests remain
+separate. B01-B15 is IN_PROGRESS.
+
 `B07-next-cap-material.md` and ADR-0062 now append ordered source-bound later
 bead batches to the actual journal, preserving every previous row and retaining
 explicit bead/piece owners. Actual partial/future fronts are reconstructed; batch

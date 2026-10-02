@@ -1,0 +1,12 @@
+{
+  "command": [
+    "python3",
+    "-c",
+    "import json,subprocess; a=json.load(open(\"build/nonplanar-evidence/B07-next-cap-material/body-final.log.json\"))[\"command\"]; a[a.index(\"--out\")+1]=\"build/nonplanar-evidence/B08-material-motion/body-final.xml\"; raise SystemExit(subprocess.call(a))"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-02T01:27:26.834392+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 50.27
+}
