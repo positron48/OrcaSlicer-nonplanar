@@ -7,6 +7,9 @@
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
 #include <libslic3r/Nonplanar/ProfileScene.hpp>
 #include <libslic3r/Nonplanar/MotionPlan.hpp>
+#include <libslic3r/Nonplanar/GCodeAdapter.hpp>
+#include <nonplanar_verify/FullStopReplay.hpp>
+#include "full_stop_oracle.hpp"
 #include <libslic3r/ClipperUtils.hpp>
 #include <libslic3r/Nonplanar/StlFile.hpp>
 #include <libslic3r/Format/STL.hpp>
@@ -19,6 +22,7 @@
 #include <boost/multiprecision/cpp_bin_float.hpp>
 #include <boost/filesystem.hpp>
 #include <cmath>
+#include <cstdlib>
 #include <cfenv>
 #include <limits>
 #include <cstring>
@@ -2675,6 +2679,49 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     const auto expected_limited=prepare_material_motion(capture_material_sequence(expected_rows,new_ledger.model,new_ledger.revision,new_ledger.source_fingerprint));REQUIRE(expected_limited.snapshot);
     for(size_t i=0;i<expected_rows.size();++i) REQUIRE(timed.snapshot->planned->material->ledger->canonical_record(i)==expected_limited.snapshot->ledger->canonical_record(i));
     INFO("native full motion records=" << timed.snapshot->steps.size() << " work=" << timed.evaluations << " duration upper=" << timed.snapshot->duration_s.upper);
+    // The old zero-conversion policy cannot qualify new rounded bytes. Keep
+    // that refusal and recapture every original row/head with an explicit added
+    // rounding allowance. This does not qualify final-byte geometry or export.
+    const LinearCandidatePolicy byte_policy{92,1,Acceleration(100)};
+    REQUIRE_FALSE(serialize_linear_candidate(timed,byte_policy).snapshot);
+    auto byte_geometry=motion_policy;byte_geometry.numeric.conversion_mm=2e-6;
+    const auto byte_source=prepare_simulation_motion(full_source.snapshot->scene,motion_source,byte_geometry);REQUIRE(byte_source.snapshot);
+    const auto byte_plan=plan_linear_motion(byte_source,kinematics,kinematic_limits);INFO(byte_plan.reason);REQUIRE(byte_plan.snapshot);
+    LinearCandidateLimits byte_limits;byte_limits.timeout=std::chrono::seconds(5);
+    const auto candidate=serialize_linear_candidate(byte_plan,byte_policy,byte_limits);INFO(candidate.reason);REQUIRE(candidate.snapshot);
+    const auto &bytes=*candidate.snapshot;REQUIRE(bytes.sha256==sha256_bytes(bytes.bytes));
+    REQUIRE(bytes.plan==byte_plan.snapshot);REQUIRE(bytes.events.size()==new_ledger.records.size());
+    const auto parsed=nptop_verify::replay_full_stop(bytes.bytes,{bytes.initial_position.x(),bytes.initial_position.y(),bytes.initial_position.z()});
+    nptop_test::check_full_stop_rates(parsed,kinematics,true);
+    REQUIRE(parsed.size()==new_ledger.records.size());long double replay_e=0,expected_e=0;
+    for(size_t i=0;i<parsed.size();++i) {
+        const auto &original=new_ledger.records[i].motion;
+        REQUIRE(std::abs(parsed[i].end[0]-original.end.x())<=.000000501);
+        REQUIRE(std::abs(parsed[i].end[1]-original.end.y())<=.000000501);
+        REQUIRE(std::abs(parsed[i].end[2]-original.end.z())<=.000000501);
+        if(const auto *deposit=std::get_if<Deposition>(&original.payload)) {
+            const long double amount=(long double)deposit->volume.value()/(acosl(-1.L)*1.75L*1.75L/4);
+            REQUIRE(std::abs((long double)parsed[i].e-amount)<=.000000000501L);replay_e+=parsed[i].e;expected_e+=amount;
+        } else if(std::holds_alternative<Travel>(original.payload)) REQUIRE(parsed[i].e==0);
+    }
+    REQUIRE(std::abs(replay_e-expected_e)<=parsed.size()*.000000000501L);
+    REQUIRE(full_source.snapshot->policy.numeric.conversion_mm==0);
+    REQUIRE(bytes.plan->source->policy.required.value()==motion_policy.required.value());
+    // Optional software-evidence output, never a production export path.
+    if(const char *directory=std::getenv("NPTOP_CANDIDATE_EVIDENCE_DIR")) {
+        const boost::filesystem::path dir(directory);REQUIRE(boost::filesystem::is_directory(dir));
+        const auto payload=dir/"native-full-stop.candidate.txt";REQUIRE_FALSE(boost::filesystem::exists(payload));
+        boost::nowide::ofstream output(payload.string(),std::ios::binary);REQUIRE(output.good());output<<bytes.bytes;output.close();REQUIRE(output.good());
+        nlohmann::json mapping=nlohmann::json::array();
+        for(size_t i=0;i<bytes.events.size();++i)mapping.push_back({{"event_id",new_ledger.records[i].motion.event_id},{"sequence_index",i},{"begin",bytes.events[i].begin},{"end",bytes.events[i].end}});
+        const nlohmann::json metadata={{"schema",1},{"scope","SYNTHETIC_SIMULATION_CANDIDATE_NOT_VERIFIED_NOT_FOR_PRINTING"},
+            {"export","BLOCK"},{"native_B09_exit","UNKNOWN"},{"sha256",bytes.sha256},{"policy_fingerprint",bytes.policy_fingerprint},
+            {"motion_policy_fingerprint",bytes.plan->policy_fingerprint},{"records",parsed.size()},{"bytes",bytes.bytes.size()},
+            {"work",candidate.evaluations},{"coordinate_error_mm",bytes.coordinate_rounding_error_mm},{"global_acceleration_mm_s2",bytes.acceleration_mm_s2},
+            {"initial_position",{bytes.initial_position.x(),bytes.initial_position.y(),bytes.initial_position.z()}},{"events",mapping}};
+        boost::nowide::ofstream sidecar((dir/"native-full-stop.bytes.json").string());REQUIRE(sidecar.good());sidecar<<metadata.dump(2)<<'\n';sidecar.close();REQUIRE(sidecar.good());
+    }
+    INFO("native final candidate records=" << parsed.size() << " bytes=" << bytes.bytes.size() << " work=" << candidate.evaluations << " sha256=" << bytes.sha256);
     // Plan a declared exit after the actual later bead. Preserve every original
     // body/cap/later row; the complete U1-sized synthetic tip remains at Z=0.
     auto exit_rows=new_ledger.records;uint64_t exit_id=0;

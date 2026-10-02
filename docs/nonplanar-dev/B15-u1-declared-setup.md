@@ -1,6 +1,6 @@
 # B15 U1 declared setup
 
-User report received 2026-09-30: standard Snapmaker U1 head and 0.4 mm nozzle.
+User report received 2026-09-30, reaffirmed 2026-10-02: standard Snapmaker U1 head and 0.4 mm nozzle.
 Treat 0.4 mm as the nominal nozzle opening. It does not establish the outer tip,
 radial head geometry, positioning uncertainty or a qualified installed profile.
 No measurement or physical print evidence was supplied; operator record remains
@@ -9,3 +9,7 @@ Configuration questions about firmware version or filament brand are not needed
 for the present source-input implementation. Future qualification must rely on
 observed geometric, motion and delivered-volume bounds required by the normative
 contracts, rather than inferring those bounds from a version or brand name.
+
+The user explicitly declined firmware-version/material-brand questions on
+2026-10-02. Continue software implementation without requesting those details.
+The declared standard head/nozzle remains distinct from measured qualification.

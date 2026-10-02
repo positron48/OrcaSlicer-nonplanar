@@ -1,0 +1,1222 @@
+Filters: [LinearCandidate],[FullStopReplay]
+Randomness seeded to: 1058254917
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fff_print_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B11 owned native candidate emits every full-stop step with pressure dwell
+precision and byte identity
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:200
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:202: PASSED:
+with message:
+  linear_candidate_version==1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:202: PASSED:
+with message:
+  !(std::is_aggregate<LinearCandidateSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:187: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x7d8cb8e10
+with message:
+  DECLARED_MATERIAL_MOTION_SOURCE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:193: PASSED:
+  REQUIRE( source.snapshot )
+with expansion:
+  0x10726e7e0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:197: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x1072726a0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:204: PASSED:
+  REQUIRE( candidate.snapshot )
+with expansion:
+  0x10726e9e0
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:205: PASSED:
+  REQUIRE( c.plan==plan.snapshot )
+with expansion:
+  0x1072726a0 == 0x1072726a0
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:205: PASSED:
+  REQUIRE( c.events.size()==plan.snapshot->steps.size() )
+with expansion:
+  5 == 5
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:206: PASSED:
+  REQUIRE( c.sha256==sha256_bytes(c.bytes) )
+with expansion:
+  "c26185c1e6a46d4f7859a86f79196d1c874774eebe57919643ca4a3fd20a8a18"
+  ==
+  "c26185c1e6a46d4f7859a86f79196d1c874774eebe57919643ca4a3fd20a8a18"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:206: PASSED:
+  REQUIRE( c.policy_fingerprint==policy.fingerprint() )
+with expansion:
+  "aacb3c1b504f76470ef3135aec421b67e691d91c44e9b56287f5529ca61e12e2"
+  ==
+  "aacb3c1b504f76470ef3135aec421b67e691d91c44e9b56287f5529ca61e12e2"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:207: PASSED:
+  REQUIRE( changed_policy.fingerprint()!=policy.fingerprint() )
+with expansion:
+  "2b00ca0d7ab69cd0210660dcd00dd69e4d730f6dbe69d7ca4d31704bc5f7cabd"
+  !=
+  "aacb3c1b504f76470ef3135aec421b67e691d91c44e9b56287f5529ca61e12e2"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:208: PASSED:
+  REQUIRE( changed_policy.fingerprint()!=policy.fingerprint() )
+with expansion:
+  "ce699aaab597fba1f956ae662b36ca20c5fe6185e6b08e13043b8a9b561a104c"
+  !=
+  "aacb3c1b504f76470ef3135aec421b67e691d91c44e9b56287f5529ca61e12e2"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:208: PASSED:
+  REQUIRE( changed_policy.fingerprint()!=policy.fingerprint() )
+with expansion:
+  "d586ca7ca0a1bad19a4f27b965141e0afd64383df681dd4a8283835b57833d84"
+  !=
+  "aacb3c1b504f76470ef3135aec421b67e691d91c44e9b56287f5529ca61e12e2"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:208: PASSED:
+  REQUIRE( changed_policy.fingerprint()!=policy.fingerprint() )
+with expansion:
+  "1997c8b878ef58358c8f7f4bd3de8e20af5e4dbbe535d9a65bb03783c3a5cbec"
+  !=
+  "aacb3c1b504f76470ef3135aec421b67e691d91c44e9b56287f5529ca61e12e2"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:208: PASSED:
+  REQUIRE( changed_policy.fingerprint()!=policy.fingerprint() )
+with expansion:
+  "9b8acc4f98a8d4de2931462278fcb993c4d6a8d9d640611f08bc1b95d088ff29"
+  !=
+  "aacb3c1b504f76470ef3135aec421b67e691d91c44e9b56287f5529ca61e12e2"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:208: PASSED:
+  REQUIRE( changed_policy.fingerprint()!=policy.fingerprint() )
+with expansion:
+  "8e3c2a8c0fc9f0f320ff06e6c2e35125022071d28fa6bce2623c80f28de1ab30"
+  !=
+  "aacb3c1b504f76470ef3135aec421b67e691d91c44e9b56287f5529ca61e12e2"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:209: PASSED:
+  REQUIRE( changed_policy.fingerprint()!=policy.fingerprint() )
+with expansion:
+  "6dd8f7abe1cf94dfed98837e06fa793ec625f8346b5d8034f4e5dda3a1af1c77"
+  !=
+  "aacb3c1b504f76470ef3135aec421b67e691d91c44e9b56287f5529ca61e12e2"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:209: PASSED:
+  REQUIRE( c.bytes.find("SET_VELOCITY_LIMIT")==std::string::npos )
+with expansion:
+  18446744073709551615 (0xffffffffffffffff)
+  ==
+  18446744073709551615 (0xffffffffffffffff)
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:22: PASSED:
+  REQUIRE( length>0 )
+with expansion:
+  3.00042 > 0
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:24: PASSED:
+  CHECK( peak/length<=High(policy.max_events_per_second) )
+with expansion:
+  1.33315 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:28: PASSED:
+  CHECK( abs(delta[axis])*peak/length<=High(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  3.99944 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:29: PASSED:
+  CHECK( abs(delta[axis])*acceleration/length<=High(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  39.9944 <= 1000
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:30: PASSED:
+  CHECK( abs(drive[axis])*peak/length<=High(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  3.99944 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:31: PASSED:
+  CHECK( abs(drive[axis])*acceleration/length<=High(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  39.9944 <= 1000
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:28: PASSED:
+  CHECK( abs(delta[axis])*peak/length<=High(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:29: PASSED:
+  CHECK( abs(delta[axis])*acceleration/length<=High(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  0 <= 1000
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:30: PASSED:
+  CHECK( abs(drive[axis])*peak/length<=High(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  3.99944 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:31: PASSED:
+  CHECK( abs(drive[axis])*acceleration/length<=High(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  39.9944 <= 1000
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:28: PASSED:
+  CHECK( abs(delta[axis])*peak/length<=High(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0.0666574 <= 2
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:29: PASSED:
+  CHECK( abs(delta[axis])*acceleration/length<=High(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  0.666574 <= 20
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:30: PASSED:
+  CHECK( abs(drive[axis])*peak/length<=High(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  0.0666574 <= 2
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:31: PASSED:
+  CHECK( abs(drive[axis])*acceleration/length<=High(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  0.666574 <= 20
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:35: PASSED:
+  CHECK( section<=High(policy.max_extrude_cross_section_mm2) )
+with expansion:
+  0.093587 <= 1
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:35: PASSED:
+  CHECK( section*peak<=High(policy.max_volume_mm3_s) )
+with expansion:
+  0.374348 <= 2
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:38: PASSED:
+  CHECK( abs(High(m.e))*peak/length<=High(policy.filament_speed.value()) )
+with expansion:
+  0.155636 <= 3
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:39: PASSED:
+  CHECK( abs(High(m.e))*acceleration/length<=High(policy.filament_acceleration.value()) )
+with expansion:
+  1.55636 <= 40
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:22: PASSED:
+  REQUIRE( length>0 )
+with expansion:
+  0.8 > 0
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:24: PASSED:
+  CHECK( peak/length<=High(policy.max_events_per_second) )
+with expansion:
+  3.75 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:37: PASSED:
+  CHECK( abs(High(m.e))<=High(policy.max_retraction.value()) )
+with expansion:
+  0.8 <= 2
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:38: PASSED:
+  CHECK( abs(High(m.e))*peak/length<=High(policy.filament_speed.value()) )
+with expansion:
+  3 <= 3
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:39: PASSED:
+  CHECK( abs(High(m.e))*acceleration/length<=High(policy.filament_acceleration.value()) )
+with expansion:
+  40 <= 40
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:22: PASSED:
+  REQUIRE( length>0 )
+with expansion:
+  3.00042 > 0
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:24: PASSED:
+  CHECK( peak/length<=High(policy.max_events_per_second) )
+with expansion:
+  1.33315 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:28: PASSED:
+  CHECK( abs(delta[axis])*peak/length<=High(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:29: PASSED:
+  CHECK( abs(delta[axis])*acceleration/length<=High(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  0 <= 1000
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:30: PASSED:
+  CHECK( abs(drive[axis])*peak/length<=High(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  3.99944 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:31: PASSED:
+  CHECK( abs(drive[axis])*acceleration/length<=High(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  39.9944 <= 1000
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:28: PASSED:
+  CHECK( abs(delta[axis])*peak/length<=High(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  3.99944 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:29: PASSED:
+  CHECK( abs(delta[axis])*acceleration/length<=High(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  39.9944 <= 1000
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:30: PASSED:
+  CHECK( abs(drive[axis])*peak/length<=High(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  3.99944 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:31: PASSED:
+  CHECK( abs(drive[axis])*acceleration/length<=High(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  39.9944 <= 1000
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:28: PASSED:
+  CHECK( abs(delta[axis])*peak/length<=High(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0.0666574 <= 2
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:29: PASSED:
+  CHECK( abs(delta[axis])*acceleration/length<=High(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  0.666574 <= 20
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:30: PASSED:
+  CHECK( abs(drive[axis])*peak/length<=High(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  0.0666574 <= 2
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:31: PASSED:
+  CHECK( abs(drive[axis])*acceleration/length<=High(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  0.666574 <= 20
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:38: PASSED:
+  CHECK( abs(High(m.e))*peak/length<=High(policy.filament_speed.value()) )
+with expansion:
+  0 <= 3
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:39: PASSED:
+  CHECK( abs(High(m.e))*acceleration/length<=High(policy.filament_acceleration.value()) )
+with expansion:
+  0 <= 40
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=2
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:22: PASSED:
+  REQUIRE( length>0 )
+with expansion:
+  0.8 > 0
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=3
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:24: PASSED:
+  CHECK( peak/length<=High(policy.max_events_per_second) )
+with expansion:
+  3.75 <= 100
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=3
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:37: PASSED:
+  CHECK( abs(High(m.e))<=High(policy.max_retraction.value()) )
+with expansion:
+  0.8 <= 2
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=3
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:38: PASSED:
+  CHECK( abs(High(m.e))*peak/length<=High(policy.filament_speed.value()) )
+with expansion:
+  3 <= 3
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=3
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:39: PASSED:
+  CHECK( abs(High(m.e))*acceleration/length<=High(policy.filament_acceleration.value()) )
+with expansion:
+  40 <= 40
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=3
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:18: PASSED:
+  CHECK( High(m.dwell_seconds)*High(policy.max_events_per_second)>=1 )
+with expansion:
+  1.0001 >= 1
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  final-byte rate oracle record=4
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/full_stop_oracle.hpp:42: PASSED:
+  CHECK( total_time>0 )
+with expansion:
+  2.39354 > 0
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:212: PASSED:
+  REQUIRE( replay.size()==c.events.size() )
+with expansion:
+  5 == 5
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:215: PASSED:
+  REQUIRE( c.events[i].begin==end )
+with expansion:
+  29 == 29
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:215: PASSED:
+  REQUIRE( c.events[i].end>c.events[i].begin )
+with expansion:
+  91 > 29
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:216: PASSED:
+  REQUIRE( c.bytes.substr(c.events[i].end-5,5)=="M400\n" )
+with expansion:
+  "M400
+  "
+  ==
+  "M400
+  "
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:217: PASSED:
+  REQUIRE( (replay[i].acceleration<=plan.snapshot->steps[i].acceleration_mm_s2 || replay[i].kind==nptop_verify::FullStopKind::Dwell) )
+with expansion:
+  true
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:219: PASSED:
+  REQUIRE( std::abs(replay[i].end[0]-event.end.x())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:220: PASSED:
+  REQUIRE( std::abs(replay[i].end[1]-event.end.y())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:221: PASSED:
+  REQUIRE( std::abs(replay[i].end[2]-event.end.z())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:215: PASSED:
+  REQUIRE( c.events[i].begin==end )
+with expansion:
+  91 == 91
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:215: PASSED:
+  REQUIRE( c.events[i].end>c.events[i].begin )
+with expansion:
+  116 > 91
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:216: PASSED:
+  REQUIRE( c.bytes.substr(c.events[i].end-5,5)=="M400\n" )
+with expansion:
+  "M400
+  "
+  ==
+  "M400
+  "
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:217: PASSED:
+  REQUIRE( (replay[i].acceleration<=plan.snapshot->steps[i].acceleration_mm_s2 || replay[i].kind==nptop_verify::FullStopKind::Dwell) )
+with expansion:
+  true
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:219: PASSED:
+  REQUIRE( std::abs(replay[i].end[0]-event.end.x())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:220: PASSED:
+  REQUIRE( std::abs(replay[i].end[1]-event.end.y())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:221: PASSED:
+  REQUIRE( std::abs(replay[i].end[2]-event.end.z())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:215: PASSED:
+  REQUIRE( c.events[i].begin==end )
+with expansion:
+  116 == 116
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:215: PASSED:
+  REQUIRE( c.events[i].end>c.events[i].begin )
+with expansion:
+  166 > 116
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:216: PASSED:
+  REQUIRE( c.bytes.substr(c.events[i].end-5,5)=="M400\n" )
+with expansion:
+  "M400
+  "
+  ==
+  "M400
+  "
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:217: PASSED:
+  REQUIRE( (replay[i].acceleration<=plan.snapshot->steps[i].acceleration_mm_s2 || replay[i].kind==nptop_verify::FullStopKind::Dwell) )
+with expansion:
+  true
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:219: PASSED:
+  REQUIRE( std::abs(replay[i].end[0]-event.end.x())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:220: PASSED:
+  REQUIRE( std::abs(replay[i].end[1]-event.end.y())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:221: PASSED:
+  REQUIRE( std::abs(replay[i].end[2]-event.end.z())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:215: PASSED:
+  REQUIRE( c.events[i].begin==end )
+with expansion:
+  166 == 166
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:215: PASSED:
+  REQUIRE( c.events[i].end>c.events[i].begin )
+with expansion:
+  190 > 166
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:216: PASSED:
+  REQUIRE( c.bytes.substr(c.events[i].end-5,5)=="M400\n" )
+with expansion:
+  "M400
+  "
+  ==
+  "M400
+  "
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:217: PASSED:
+  REQUIRE( (replay[i].acceleration<=plan.snapshot->steps[i].acceleration_mm_s2 || replay[i].kind==nptop_verify::FullStopKind::Dwell) )
+with expansion:
+  true
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:219: PASSED:
+  REQUIRE( std::abs(replay[i].end[0]-event.end.x())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:220: PASSED:
+  REQUIRE( std::abs(replay[i].end[1]-event.end.y())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:221: PASSED:
+  REQUIRE( std::abs(replay[i].end[2]-event.end.z())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:215: PASSED:
+  REQUIRE( c.events[i].begin==end )
+with expansion:
+  190 == 190
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:215: PASSED:
+  REQUIRE( c.events[i].end>c.events[i].begin )
+with expansion:
+  206 > 190
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:216: PASSED:
+  REQUIRE( c.bytes.substr(c.events[i].end-5,5)=="M400\n" )
+with expansion:
+  "M400
+  "
+  ==
+  "M400
+  "
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:217: PASSED:
+  REQUIRE( (replay[i].acceleration<=plan.snapshot->steps[i].acceleration_mm_s2 || replay[i].kind==nptop_verify::FullStopKind::Dwell) )
+with expansion:
+  true
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:219: PASSED:
+  REQUIRE( std::abs(replay[i].end[0]-event.end.x())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:220: PASSED:
+  REQUIRE( std::abs(replay[i].end[1]-event.end.y())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:221: PASSED:
+  REQUIRE( std::abs(replay[i].end[2]-event.end.z())<=.000000501 )
+with expansion:
+  0.0 <= 0.000000501
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:223: PASSED:
+  REQUIRE( end==c.bytes.size() )
+with expansion:
+  206 == 206
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:223: PASSED:
+  REQUIRE( replay[1].kind==nptop_verify::FullStopKind::Pressure )
+with expansion:
+  1 == 1
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:223: PASSED:
+  REQUIRE( replay[1].e==-.8 )
+with expansion:
+  -0.80000000000000004
+  ==
+  -0.80000000000000004
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:224: PASSED:
+  REQUIRE( replay[3].kind==nptop_verify::FullStopKind::Pressure )
+with expansion:
+  1 == 1
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:224: PASSED:
+  REQUIRE( replay[3].e==.8 )
+with expansion:
+  0.80000000000000004 == 0.80000000000000004
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:225: PASSED:
+  REQUIRE( replay[4].kind==nptop_verify::FullStopKind::Dwell )
+with expansion:
+  2 == 2
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:225: PASSED:
+  REQUIRE( replay[4].dwell_seconds>=.01 )
+with expansion:
+  0.010001 >= 0.01
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:227: PASSED:
+  REQUIRE( std::abs((long double)replay[0].e-e)<=.000000000501L )
+with expansion:
+  1.1962e-11 <= 5.01e-10
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:229: PASSED:
+  REQUIRE( at!=std::string::npos )
+with expansion:
+  32
+  !=
+  18446744073709551615 (0xffffffffffffffff)
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:231: PASSED:
+  REQUIRE( sha256_bytes(changed)!=c.sha256 )
+with expansion:
+  "784fc7a1b017379ad029ba45c5e6b70a370d5419587c55f52ee7b07bd2773287"
+  !=
+  "c26185c1e6a46d4f7859a86f79196d1c874774eebe57919643ca4a3fd20a8a18"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:229: PASSED:
+  REQUIRE( at!=std::string::npos )
+with expansion:
+  94
+  !=
+  18446744073709551615 (0xffffffffffffffff)
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:231: PASSED:
+  REQUIRE( sha256_bytes(changed)!=c.sha256 )
+with expansion:
+  "faefda55798d4de435ef7a83a58f9402e6079689d7503aa0e6e03de4f15e6035"
+  !=
+  "c26185c1e6a46d4f7859a86f79196d1c874774eebe57919643ca4a3fd20a8a18"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:229: PASSED:
+  REQUIRE( at!=std::string::npos )
+with expansion:
+  74
+  !=
+  18446744073709551615 (0xffffffffffffffff)
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:231: PASSED:
+  REQUIRE( sha256_bytes(changed)!=c.sha256 )
+with expansion:
+  "2be62cd775d4db1d2f2027d62d2bddf75a11fba16d91c8234e89e3590cd6d5db"
+  !=
+  "c26185c1e6a46d4f7859a86f79196d1c874774eebe57919643ca4a3fd20a8a18"
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:186: PASSED:
+  REQUIRE_FALSE( material.snapshot )
+with expansion:
+  !0
+with messages:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+  INVALID_MATERIAL_MOTION_SOURCE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:233: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(full_stop_plan(true),policy).snapshot )
+with expansion:
+  !0
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+-------------------------------------------------------------------------------
+B12 independent full-stop replay refuses missing barriers modal reset pure-E
+purge and malformed fields
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:235
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:242: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(header+body,{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:244: PASSED:
+  REQUIRE( pressure.size()==3 )
+with expansion:
+  3 == 3
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:244: PASSED:
+  REQUIRE( pressure[0].e==-pressure[1].e )
+with expansion:
+  -0.80000000000000004
+  ==
+  -0.80000000000000004
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:244: PASSED:
+  REQUIRE( pressure[2].e==0 )
+with expansion:
+  0.0 == 0
+
+-------------------------------------------------------------------------------
+B11 candidate owns callbacks and never returns partial stale cancelled
+exhausted or collapsed bytes
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:246
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:187: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x7d8cb8e10
+with message:
+  DECLARED_MATERIAL_MOTION_SOURCE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:193: PASSED:
+  REQUIRE( source.snapshot )
+with expansion:
+  0x10726e740
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:197: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7d8cec000
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:249: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate({},policy).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:256: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:256: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:256: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:256: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:256: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:256: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:256: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:256: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:187: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x7d8c34030
+with message:
+  DECLARED_MATERIAL_MOTION_SOURCE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:193: PASSED:
+  REQUIRE( source.snapshot )
+with expansion:
+  0x107271be0
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:197: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7d8cec180
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:258: PASSED:
+  REQUIRE( serialize_linear_candidate(full_stop_plan(false,true),policy).reason=="CANDIDATE_XYZ_COLLAPSES" )
+with expansion:
+  "CANDIDATE_XYZ_COLLAPSES"
+  ==
+  "CANDIDATE_XYZ_COLLAPSES"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:187: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0x7d8cb8f30
+with message:
+  DECLARED_MATERIAL_MOTION_SOURCE
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:193: PASSED:
+  REQUIRE( source.snapshot )
+with expansion:
+  0x7d8d24000
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:197: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0x7d8cec180
+with messages:
+  DECLARED_MATERIAL_MOTION_SOURCE
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:259: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(full_stop_plan(false,false,true),policy).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:260: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:261: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:262: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:265: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0x7d8d1c000
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:265: PASSED:
+  REQUIRE( owned.snapshot->plan==plan.snapshot )
+with expansion:
+  0x7d8cec000 == 0x7d8cec000
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:266: PASSED:
+  REQUIRE( serialize_linear_candidate(plan,policy,limits).snapshot )
+with expansion:
+  0x7d8d1c0e0
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:267: PASSED:
+  REQUIRE_FALSE( serialize_linear_candidate(plan,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:269: PASSED:
+  REQUIRE_FALSE( rounded.snapshot )
+with expansion:
+  !0
+with message:
+  OWNED_NATIVE_FULL_STOP_CANDIDATE_REQUIRES_FINAL_REPLAY
+
+-------------------------------------------------------------------------------
+B12 replay owns input and rejects cancellation deadline resources final
+truncation and rounding
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:272
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:275: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(bytes.substr(0,bytes.size()-1),{0,0,0}) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:281: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(bytes,{0,0,0},limits) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:281: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(bytes,{0,0,0},limits) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:281: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(bytes,{0,0,0},limits) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:281: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(bytes,{0,0,0},limits) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:281: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(bytes,{0,0,0},limits) )
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:285: PASSED:
+  REQUIRE( nptop_verify::replay_full_stop(mutable_bytes,{0,0,0},limits).size()==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:286: PASSED:
+  REQUIRE( nptop_verify::replay_full_stop(bytes,{0,0,0},limits).size()==1 )
+with expansion:
+  1 == 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_serialization.cpp:287: PASSED:
+  REQUIRE_THROWS( nptop_verify::replay_full_stop(bytes,{0,0,0},limits) )
+
+===============================================================================
+All tests passed (172 assertions in 4 test cases)
+

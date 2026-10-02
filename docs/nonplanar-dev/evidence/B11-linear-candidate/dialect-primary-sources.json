@@ -1,0 +1,14 @@
+{
+  "read_utc": "2026-10-02T05:56:36.374428+00:00",
+  "sources": [
+    {
+      "url": "https://www.klipper3d.org/G-Codes.html#g-code-commands",
+      "observed": "G1 linear movement, G90 absolute XYZ, M83 relative E, G4 P milliseconds, M400 waits for motion, M204 S acceleration."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/Klipper3d/klipper/master/klippy/toolhead.py",
+      "observed": "cmd_M204 calls set_max_velocities(None,accel,None,None): global acceleration changes. Candidate uses one lower value, bounded by synthetic known initial state and every step. cmd_M400 calls wait_moves."
+    }
+  ],
+  "scope": "PRIMARY_REFERENCE_ONLY_NOT_INSTALLED_MACHINE_CONFIGURATION_OR_QUALIFICATION"
+}

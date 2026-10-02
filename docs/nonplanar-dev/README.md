@@ -15,6 +15,16 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B11-linear-candidate.md` and ADR-0069 add protected complete native final bytes,
+policy/hash/event ownership, explicit XYZ/F/E, balanced pressure, full-stop
+barriers and dwell. Independent final-byte parser and 113-bit test rate formulas
+cover four new cases/172 assertions and all 2218 native rows (128890 bytes).
+Material 122/48037, body 14/183008 and CTest 371/371 pass. Fresh OFF/ZAA results
+are in the report/manifest. Final-byte material/contact/support/time and complete
+headless verifier/filter/job/export integration remain pending; guarded export
+stays BLOCK. User-declared standard U1 head/.4 mm nozzle does not qualify a
+measured profile or block software work on firmware/material-brand questions.
+
 `B10-motion-plan.md` and ADR-0068 now limit every complete journal row for XYZ,
 Cartesian/CoreXY drives, E, commanded-equivalent Q/cross-section, acceleration,
 retraction length and event rate without changing poses/dose/order. Full stops

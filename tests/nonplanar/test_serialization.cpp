@@ -2,6 +2,11 @@
 #include <catch2/catch_approx.hpp>
 #include <libslic3r/Nonplanar/GCodeAdapter.hpp>
 #include <nonplanar_verify/Replay.hpp>
+#include <nonplanar_verify/FullStopReplay.hpp>
+#include "full_stop_oracle.hpp"
+#include <libslic3r/Nonplanar/StlImport.hpp>
+#include <cfenv>
+#include <thread>
 
 using namespace Slic3r::nptop;
 using Catch::Approx;
@@ -155,4 +160,129 @@ TEST_CASE("A08 bounded 10000 move candidate roundtrip preserves endpoint and tot
     events.push_back(prototype);
     REQUIRE_THROWS_AS(serialize_candidate(events, Length(1.75), FlowCompensation(1)), std::invalid_argument);
     REQUIRE_THROWS(nptop_verify::replay(bytes+"G1 X202\n", {101,202,3}));
+}
+
+namespace {
+LinearMotionPlanResult full_stop_plan(bool mismatch=false,bool collapsed=false,bool tiny_pressure=false)
+{
+    const MaterialModel model{1,Length(0),Length(0),Length(0),Length(0),Length(0)};
+    const MaterialIds ids{NominalMaterialId(1),UpperMaterialId(2),LowerMaterialId(3)};
+    const Deposition deposit{Volume(.24),WidthXY(.4),VerticalGap(.2),VerticalGap(.2),ids,1,1};
+    const BeadSection bead{BeadSectionKind::Rectangle,.2,.2,{.399999999,.400000001}};
+    const double retract=tiny_pressure ? 1e-10 : .8;
+    const PhysicalPosition a{1.001234,2.002345,3.003456},b{4.001234,2.002345,3.053456},c{4.001234,5.002345,3.103456};
+    std::vector<MaterialRecord> rows{
+        {{1,0,1,a,b,Speed(4),Acceleration(100),deposit,20},bead},
+        {{2,1,0,b,b,Speed(10),Acceleration(100),Retraction{FilamentLength(retract),RetractionState::Ready,RetractionState::Retracted},2},{}},
+        {{3,2,0,b,c,Speed(4),Acceleration(100),Travel{},1},{}},
+        {{4,3,0,c,c,Speed(10),Acceleration(100),Retraction{FilamentLength(mismatch ? .9 : retract),RetractionState::Retracted,RetractionState::Ready},0},{}},
+        {{5,4,0,c,c,Speed(10),Acceleration(100),Travel{},-1},{}}};
+    if(collapsed) {
+        const PhysicalPosition end{c.x()+1e-7,c.y(),c.z()};
+        rows.back().motion.end=end;
+        rows.push_back({{6,5,0,end,end,Speed(10),Acceleration(100),Travel{},-1},{}});
+    }
+    const auto material=prepare_material_motion(capture_material_sequence(rows,model,7,std::string(64,'a')));INFO(material.reason);
+    if(mismatch){REQUIRE_FALSE(material.snapshot);return {};}
+    REQUIRE(material.snapshot);
+    SimulationScene scene{1,1,1,ProfileOrigin::Synthetic,false,{{0,0,0},Length(.2),Length(.5)},{},
+        {{1,1,1},{10,10,8}},{{-1,-1,-1},{20,20,20}},{{{0,0,.1},{10,10,.2}}},true,Length(20),Length(0)};
+    uint64_t id=1;for(auto part : {HeadPart::NozzleBody,HeadPart::Heater,HeadPart::Sock,HeadPart::Duct,HeadPart::Sensor,HeadPart::Mount})
+        scene.head.push_back({id++,part,{{-.4,-.4,.4},{.4,.4,1}},false,false});
+    const ClearancePolicy geometry{Length(.005),NumericBudget(0,0,0,.002),Length(0),Length(0),Length(0)};
+    const auto source=prepare_simulation_motion(scene,material,geometry);INFO(source.reason);REQUIRE(source.snapshot);
+    const LinearMotionPolicy policy{1,2,1,ProfileOrigin::Synthetic,false,LinearPlannerModel::FullStop,LinearKinematics::CoreXY,
+        scene.nozzle_domain,{100,100,2},{1000,1000,20},{100,100,2},{1000,1000,20},Length(1.75),FlowCompensation(1.17),
+        Speed(3),Acceleration(40),Length(2),2,1,100};
+    const auto result=plan_linear_motion(source,policy);INFO(result.reason);REQUIRE(result.snapshot);return result;
+}
+}
+TEST_CASE("B11 owned native candidate emits every full-stop step with pressure dwell precision and byte identity", "[Nonplanar][B11][LinearCandidate]")
+{
+    STATIC_REQUIRE(linear_candidate_version==1);STATIC_REQUIRE_FALSE(std::is_aggregate<LinearCandidateSnapshot>::value);
+    const auto plan=full_stop_plan();const LinearCandidatePolicy policy{3,1,Acceleration(100)};
+    const auto candidate=serialize_linear_candidate(plan,policy);INFO(candidate.reason);REQUIRE(candidate.snapshot);
+    const auto &c=*candidate.snapshot;REQUIRE(c.plan==plan.snapshot);REQUIRE(c.events.size()==plan.snapshot->steps.size());
+    REQUIRE(c.sha256==sha256_bytes(c.bytes));REQUIRE(c.policy_fingerprint==policy.fingerprint());
+    auto changed_policy=policy;changed_policy.revision++;REQUIRE(changed_policy.fingerprint()!=policy.fingerprint());
+    for(unsigned digit=0;digit<5;++digit) {changed_policy=policy;switch(digit) {case 0:++changed_policy.xyz_digits;break;case 1:--changed_policy.e_digits;break;case 2:++changed_policy.feed_digits;break;case 3:++changed_policy.acceleration_digits;break;case 4:++changed_policy.dwell_digits;break;}REQUIRE(changed_policy.fingerprint()!=policy.fingerprint());}
+    changed_policy=policy;changed_policy.initial_acceleration=Acceleration(99);REQUIRE(changed_policy.fingerprint()!=policy.fingerprint());REQUIRE(c.bytes.find("SET_VELOCITY_LIMIT")==std::string::npos);
+    const auto replay=nptop_verify::replay_full_stop(c.bytes,{c.initial_position.x(),c.initial_position.y(),c.initial_position.z()});
+    nptop_test::check_full_stop_rates(replay,plan.snapshot->policy,true);
+    REQUIRE(replay.size()==c.events.size());const auto &rows=plan.snapshot->planned->material->ledger->records;
+    size_t end=c.events.front().begin;
+    for(size_t i=0;i<replay.size();++i) {
+        REQUIRE(c.events[i].begin==end);REQUIRE(c.events[i].end>c.events[i].begin);end=c.events[i].end;
+        REQUIRE(c.bytes.substr(c.events[i].end-5,5)=="M400\n");
+        REQUIRE((replay[i].acceleration<=plan.snapshot->steps[i].acceleration_mm_s2 || replay[i].kind==nptop_verify::FullStopKind::Dwell));
+        const auto &event=rows[i].motion;
+        REQUIRE(std::abs(replay[i].end[0]-event.end.x())<=.000000501);
+        REQUIRE(std::abs(replay[i].end[1]-event.end.y())<=.000000501);
+        REQUIRE(std::abs(replay[i].end[2]-event.end.z())<=.000000501);
+    }
+    REQUIRE(end==c.bytes.size());REQUIRE(replay[1].kind==nptop_verify::FullStopKind::Pressure);REQUIRE(replay[1].e==-.8);
+    REQUIRE(replay[3].kind==nptop_verify::FullStopKind::Pressure);REQUIRE(replay[3].e==.8);
+    REQUIRE(replay[4].kind==nptop_verify::FullStopKind::Dwell);REQUIRE(replay[4].dwell_seconds>=.01);
+    const long double e=.24L*1.17L/(acosl(-1.L)*1.75L*1.75L/4);
+    REQUIRE(std::abs((long double)replay[0].e-e)<=.000000000501L);
+    for(const std::string word : {"X4.001234","E-.8","F"}) {
+        auto changed=c.bytes;const auto at=changed.find(word);REQUIRE(at!=std::string::npos);
+        if(word=="F")changed.insert(at+1,"1");else changed[at+word.size()-1]='5';
+        REQUIRE(sha256_bytes(changed)!=c.sha256);
+    }
+    REQUIRE_FALSE(serialize_linear_candidate(full_stop_plan(true),policy).snapshot);
+}
+TEST_CASE("B12 independent full-stop replay refuses missing barriers modal reset pure-E purge and malformed fields", "[Nonplanar][B12][FullStopReplay]")
+{
+    const std::string header="G90\nM83\nM400\nM204 S10\n";
+    for(const std::string body : {"G1 X1 Y0 Z0 F60\n", "G1 X1 Y0 Z0 F60\nG1 X2 Y0 Z0 F60\nM400\n", "G1 E1 F60\nM400\n",
+        "G1 X0 Y0 Z0 E1 F60\nM400\n", "G1 E-.8 F60\nM400\nG1 E.9 F60\nM400\n", "G1 E-.8 F60\nM400\nG1 X1 Y0 Z0 E1 F60\nM400\n",
+        "G1 X1 Y0 Z0 Fnan\nM400\n", "G1 X1e2 Y0 Z0 F60\nM400\n", "G1 X1 X2 Y0 Z0 F60\nM400\n", "G1 X1 Y0 Z0\nM400\n",
+        "G1 X1 Y0 Z0 F60 ; safe\nM400\n", "G92 E0\n", "M82\n", "G91\n", "SET_VELOCITY_LIMIT ACCEL=10000\n", "PRINT_START\n"})
+        REQUIRE_THROWS(nptop_verify::replay_full_stop(header+body,{0,0,0}));
+    const auto pressure=nptop_verify::replay_full_stop(header+"G1 E-.8 F60\nM400\nG1 E.8 F60\nM400\nG4 P10\nM400\n",{0,0,0});
+    REQUIRE(pressure.size()==3);REQUIRE(pressure[0].e==-pressure[1].e);REQUIRE(pressure[2].e==0);
+}
+TEST_CASE("B11 candidate owns callbacks and never returns partial stale cancelled exhausted or collapsed bytes", "[Nonplanar][B11][LinearCandidate]")
+{
+    const auto plan=full_stop_plan();const LinearCandidatePolicy policy{3,1,Acceleration(100)};
+    REQUIRE_FALSE(serialize_linear_candidate({},policy).snapshot);
+    for(int mode=0;mode<8;++mode) {
+        LinearCandidateLimits limits;if(mode==0)limits.max_bytes=20;if(mode==1)limits.max_records=1;if(mode==2)limits.max_evaluations=1;
+        if(mode==3)limits.cancelled=[] {return true;};if(mode==4)limits.is_current=[](uint64_t) {return false;};
+        if(mode==5)limits.is_policy_current=[](uint64_t,uint64_t) {return false;};
+        if(mode==6){limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if(mode==7)limits.is_scene_current=[](uint64_t,uint64_t) {return false;};
+        REQUIRE_FALSE(serialize_linear_candidate(plan,policy,limits).snapshot);
+    }
+    REQUIRE(serialize_linear_candidate(full_stop_plan(false,true),policy).reason=="CANDIDATE_XYZ_COLLAPSES");
+    REQUIRE_FALSE(serialize_linear_candidate(full_stop_plan(false,false,true),policy).snapshot);
+    auto bad=policy;bad.initial_acceleration=Acceleration(1000001);REQUIRE_FALSE(serialize_linear_candidate(plan,bad).snapshot);
+    bad=policy;bad.xyz_digits=2;REQUIRE_FALSE(serialize_linear_candidate(plan,bad).snapshot);
+    bad=policy;bad.xyz_digits=10;REQUIRE_FALSE(serialize_linear_candidate(plan,bad).snapshot);
+    auto mutable_plan=plan;auto mutable_policy=policy;LinearCandidateLimits limits;
+    limits.cancelled=[&] {mutable_plan={};mutable_policy.xyz_digits=10;limits.max_bytes=0;return false;};
+    const auto owned=serialize_linear_candidate(mutable_plan,mutable_policy,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->plan==plan.snapshot);
+    limits={};size_t calls=0;limits.cancelled=[&] {++calls;return false;};REQUIRE(serialize_linear_candidate(plan,policy,limits).snapshot);
+    const size_t last=calls;calls=0;limits.cancelled=[&] {return ++calls==last;};REQUIRE_FALSE(serialize_linear_candidate(plan,policy,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_UPWARD);return false;};
+    const auto rounded=serialize_linear_candidate(plan,policy,limits);std::fesetround(FE_TONEAREST);REQUIRE_FALSE(rounded.snapshot);
+}
+
+TEST_CASE("B12 replay owns input and rejects cancellation deadline resources final truncation and rounding", "[Nonplanar][B12][FullStopReplay]")
+{
+    const std::string bytes="G90\nM83\nM400\nM204 S10\nG1 X1 Y0 Z0 F60\nM400\n";
+    REQUIRE_THROWS(nptop_verify::replay_full_stop(bytes.substr(0,bytes.size()-1),{0,0,0}));
+    for(int mode=0;mode<5;++mode) {
+        nptop_verify::FullStopReplayLimits limits;
+        if(mode==0)limits.max_bytes=1;if(mode==1)limits.max_events=0;if(mode==2)limits.cancelled=[] {return true;};
+        if(mode==3){limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if(mode==4)limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+        REQUIRE_THROWS(nptop_verify::replay_full_stop(bytes,{0,0,0},limits));std::fesetround(FE_TONEAREST);
+    }
+    auto mutable_bytes=bytes;nptop_verify::FullStopReplayLimits limits;
+    limits.cancelled=[&] {mutable_bytes="M82\n";limits.max_events=0;return false;};
+    REQUIRE(nptop_verify::replay_full_stop(mutable_bytes,{0,0,0},limits).size()==1);
+    limits={};size_t calls=0;limits.cancelled=[&] {++calls;return false;};REQUIRE(nptop_verify::replay_full_stop(bytes,{0,0,0},limits).size()==1);
+    const size_t last=calls;calls=0;limits.cancelled=[&] {return ++calls==last;};REQUIRE_THROWS(nptop_verify::replay_full_stop(bytes,{0,0,0},limits));
 }

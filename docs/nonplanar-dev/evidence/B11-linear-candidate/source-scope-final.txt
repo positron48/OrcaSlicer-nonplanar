@@ -1,0 +1,11 @@
+ docs/nonplanar-dev/B15-u1-declared-setup.md |   6 +-
+ docs/nonplanar-dev/README.md                |  10 +++
+ docs/nonplanar-dev/gate-b-plan.md           |   6 +-
+ docs/nonplanar-dev/next-tasks.md            |  18 ++--
+ docs/nonplanar-dev/status.json              |  40 +++++++--
+ src/libslic3r/CMakeLists.txt                |   6 +-
+ src/libslic3r/Nonplanar/GCodeAdapter.cpp    |  95 ++++++++++++++++++++
+ src/libslic3r/Nonplanar/GCodeAdapter.hpp    |  38 ++++++++
+ tests/nonplanar/test_policy.cpp             |  47 ++++++++++
+ tests/nonplanar/test_serialization.cpp      | 130 ++++++++++++++++++++++++++++
+ 10 files changed, 373 insertions(+), 23 deletions(-)
