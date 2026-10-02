@@ -145,4 +145,44 @@ struct SimulationLiftRouteResult {
 // automatic Z-hop, deposition contact, whole-job or export qualification.
 SimulationLiftRouteResult plan_simulation_lifted_travel(const SimulationMotionSourceResult &,size_t event_index,double lift_z_mm,
     const SimulationLiftRouteLimits &limits={});
+
+inline constexpr unsigned simulation_cap_departure_version=1;
+struct SimulationCapDepartureRequest {
+    PhysicalPosition destination;
+    double lift_z_mm;
+    Speed travel_speed;
+    Acceleration travel_acceleration;
+};
+struct SimulationCapDepartureLimits : SimulationLiftRouteLimits { FirstCapMaterialLimits material; };
+struct SimulationCapDepartureResult;
+struct SimulationCapDepartureSnapshot {
+    const std::shared_ptr<const FirstCapMaterialSnapshot> before,material;
+    const std::shared_ptr<const NextCapBeadSnapshot> bead;
+    const std::shared_ptr<const SimulationLiftRouteSnapshot> route;
+    const SimulationCapDepartureRequest request;
+    const size_t evaluations;
+private:
+    SimulationCapDepartureSnapshot(std::shared_ptr<const FirstCapMaterialSnapshot> original,
+        std::shared_ptr<const FirstCapMaterialSnapshot> laid,std::shared_ptr<const NextCapBeadSnapshot> path,
+        std::shared_ptr<const SimulationLiftRouteSnapshot> travel,SimulationCapDepartureRequest options,size_t work)
+        :before(std::move(original)),material(std::move(laid)),bead(std::move(path)),route(std::move(travel)),request(options),evaluations(work) {}
+    friend SimulationCapDepartureResult plan_simulation_cap_departure(const FirstCapMaterialResult &,const NextCapBeadResult &,
+        const SimulationScene &,const ClearancePolicy &,const SimulationCapDepartureRequest &,const SimulationCapDepartureLimits &);
+};
+struct SimulationCapDepartureResult {
+    ClearanceStatus status=ClearanceStatus::Unknown;std::string reason;
+    std::shared_ptr<const FirstCapMaterialSnapshot> before;
+    std::shared_ptr<const NextCapBeadSnapshot> bead;
+    std::shared_ptr<const SimulationCapDepartureSnapshot> snapshot;
+    std::optional<SimulationLiftRouteResult> route_check;
+    size_t evaluations=0;
+};
+// Append one already calculated prospective bead on its exact complete parent,
+// preserving all old records and original cap/cell targets. Then append and
+// continuously prove its complete exit/transfer/entry with the whole head and
+// actual new prefix. All assembly/preparation/route stages share original limits.
+// Does not select widths, repair already-laid material, qualify the bead's print
+// motion/contact, full target fill, whole job, independent byte replay or export.
+SimulationCapDepartureResult plan_simulation_cap_departure(const FirstCapMaterialResult &,const NextCapBeadResult &,
+    const SimulationScene &,const ClearancePolicy &,const SimulationCapDepartureRequest &,const SimulationCapDepartureLimits &limits={});
 }

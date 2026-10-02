@@ -3,6 +3,7 @@
 #include <array>
 #include <set>
 #include <limits>
+#include <exception>
 
 namespace Slic3r::nptop {
 namespace {
@@ -393,6 +394,83 @@ SimulationLiftRouteResult plan_simulation_lifted_travel(const SimulationMotionSo
         result.status=ClearanceStatus::Pass;result.reason="COMPLETE_SIMULATION_LIFT_TRANSFER_DESCENT_WITH_ORIGINAL_DEPOSITS_ONLY";
     } catch (const MotionRefusal &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason=e.what();}
       catch (const std::exception &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason="LIFT_ROUTE_NUMERIC_FAILURE: "+std::string(e.what());}
+    return result;
+}
+
+SimulationCapDepartureResult plan_simulation_cap_departure(const FirstCapMaterialResult &requested_before,const NextCapBeadResult &requested_bead,
+    const SimulationScene &requested_scene,const ClearancePolicy &requested_policy,const SimulationCapDepartureRequest &requested,
+    const SimulationCapDepartureLimits &requested_limits)
+{
+    SimulationCapDepartureResult result;const auto started=std::chrono::steady_clock::now();
+    try {
+        if (requested_scene.head.size()>64 || requested_scene.obstacles.size()>10000) motion_refuse("DEPARTURE_SCENE_SIZE_LIMIT");
+        const auto before=requested_before.snapshot;const auto bead=requested_bead.snapshot;
+        const auto scene=requested_scene;const auto policy=requested_policy;const auto request=requested;const auto limits=requested_limits;
+        result.before=before;result.bead=bead;
+        if (!before || !bead || !bead->source || bead->source->source!=before || !bead->normal_spacing ||
+            bead->normal_spacing->source!=bead->source || !limits.max_records || limits.max_records>200000 ||
+            !limits.max_evaluations || limits.max_evaluations>2000000 || limits.timeout.count()<=0 || limits.timeout>std::chrono::seconds(30))
+            motion_refuse("INVALID_CAP_DEPARTURE_SOURCE_OR_LIMITS");
+        const auto revision=before->material->sequence->revision;
+        std::exception_ptr stopped;
+        const auto poll=[&] {
+            if (stopped) std::rethrow_exception(stopped);
+            try {
+                if ((limits.cancelled && limits.cancelled()) || (limits.material.cancelled && limits.material.cancelled())) motion_refuse("CANCELLED");
+                if ((limits.is_current && !limits.is_current(revision)) ||
+                    (limits.material.is_current && !limits.material.is_current(revision))) motion_refuse("STALE_MATERIAL_REVISION");
+                if (limits.is_scene_current && !limits.is_scene_current(scene.profile_id,scene.revision)) motion_refuse("STALE_SCENE_REVISION");
+                detail::require_interval_environment();
+                if (std::chrono::steady_clock::now()-started>=limits.timeout) motion_refuse("CAP_DEPARTURE_DEADLINE");
+            } catch (...) {stopped=std::current_exception();throw;}
+        };
+        const auto time_left=[&](std::chrono::milliseconds original) {
+            poll();if (original.count()<=0 || original>std::chrono::seconds(30)) motion_refuse("INVALID_CAP_DEPARTURE_NESTED_TIMEOUT");
+            const auto left=limits.timeout-std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+            if (left.count()<=0) motion_refuse("CAP_DEPARTURE_DEADLINE");return std::min(original,left);
+        };
+        const auto work_left=[&] {
+            poll();if (result.evaluations>=limits.max_evaluations) motion_refuse("CAP_DEPARTURE_WORK_LIMIT");
+            return limits.max_evaluations-result.evaluations;
+        };
+        const auto charge=[&](size_t n) {if (n>work_left()) motion_refuse("CAP_DEPARTURE_WORK_LIMIT");result.evaluations+=n;poll();};
+        poll();
+        auto material_limits=limits.material;material_limits.max_records=std::min(material_limits.max_records,limits.max_records);
+        material_limits.max_evaluations=std::min(material_limits.max_evaluations,work_left());material_limits.timeout=time_left(material_limits.timeout);
+        material_limits.cancelled=[&] {poll();return false;};material_limits.is_current={};
+        NextCapMaterialLimits append_limits;static_cast<FirstCapMaterialLimits &>(append_limits)=material_limits;
+        const auto material=append_next_cap_material({"",before},{{"",bead}},{},0,append_limits);charge(material.evaluations);
+        if (!material.snapshot) throw MotionRefusal(material.reason);
+        const auto &old=*material.snapshot->material->sequence;
+        if (old.records.size()>=material_limits.max_records) motion_refuse("CAP_DEPARTURE_RECORD_LIMIT");
+        uint64_t id=0;std::vector<MaterialRecord> rows;rows.reserve(old.records.size()+1);
+        for (const auto &row : old.records) {charge(1);id=std::max(id,row.motion.event_id);rows.push_back(row);}
+        if (id==std::numeric_limits<uint64_t>::max()) motion_refuse("CAP_DEPARTURE_EVENT_ID_LIMIT");
+        charge(1);const size_t index=rows.size();
+        rows.push_back({{id+1,index,0,rows.back().motion.end,request.destination,request.travel_speed,request.travel_acceleration,Travel{}},{}});
+        auto raw=std::make_shared<const MaterialSequenceSnapshot>(MaterialSequenceSnapshot{old.revision,old.source_fingerprint,old.model,std::move(rows),{}});
+        MaterialMotionPreparationLimits preparation;preparation.max_records=material_limits.max_records;
+        preparation.max_evaluations=work_left();preparation.timeout=time_left(material_limits.timeout);preparation.cancelled=[&] {poll();return false;};
+        const auto motion=prepare_material_motion({"",raw},preparation);charge(motion.evaluations);
+        if (!motion.snapshot) throw MotionRefusal(motion.reason);
+        SimulationMotionPreparationLimits scene_limits;scene_limits.max_evaluations=work_left();scene_limits.timeout=time_left(scene_limits.timeout);
+        scene_limits.cancelled=[&] {poll();return false;};
+        const auto source=prepare_simulation_motion(scene,motion,policy,scene_limits);charge(source.evaluations);
+        if (!source.snapshot) throw MotionRefusal(source.reason);
+        auto route_limits=static_cast<const SimulationLiftRouteLimits &>(limits);route_limits.max_records=material_limits.max_records;
+        route_limits.max_evaluations=work_left();route_limits.timeout=time_left(route_limits.timeout);
+        route_limits.cancelled=[&] {poll();return false;};route_limits.is_current={};route_limits.is_scene_current={};
+        auto route=plan_simulation_lifted_travel(source,index,request.lift_z_mm,route_limits);charge(route.evaluations);
+        if (!route.snapshot || route.status!=ClearanceStatus::Pass) {
+            result.status=route.status==ClearanceStatus::Pass ? ClearanceStatus::Unknown : route.status;
+            result.reason=route.reason;result.route_check=std::move(route);return result;
+        }
+        poll();result.snapshot=std::shared_ptr<const SimulationCapDepartureSnapshot>(new SimulationCapDepartureSnapshot(before,material.snapshot,bead,
+            route.snapshot,request,result.evaluations));poll();
+        result.status=ClearanceStatus::Pass;result.reason="OWNED_NEXT_CAP_AND_COMPLETE_SIMULATION_DEPARTURE_ONLY";
+    } catch (const MotionRefusal &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason=e.what();}
+      catch (const std::exception &e) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason="CAP_DEPARTURE_FAILURE: "+std::string(e.what());}
+      catch (...) {result.status=ClearanceStatus::Unknown;result.snapshot.reset();result.reason="CAP_DEPARTURE_CALLBACK_FAILURE";}
     return result;
 }
 

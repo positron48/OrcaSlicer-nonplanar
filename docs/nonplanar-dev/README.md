@@ -15,6 +15,17 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B09-native-departure.md` and ADR-0080 bind one prospective later bead to its exact
+complete parent, recalculated material and continuously proven lift/transfer/
+descent. The separate .28 mm native variant retains all old body/first-cap rows,
+whole targets, head/margins/budgets and has2221 final rows with rate/material replay;
+full fill/contact/byte geometry remain pending. The .2 mm variant retains its
+independent rounded-section refusal; original wide exit remains FAIL. Focus9/7354,
+CTest422/422 and six fresh strict OFF/ZAA pairs pass. All15 original native files
+are exact. Next bind the protected departure/origin map to the B13 native job/
+attempt without loosening canonical identity. Full B01–B15 stays active; export
+BLOCK and synthetic profiles unconfirmed. See separate author review/evidence.
+
 `B09-annulus-endpoints.md` and ADR-0079 refine the original native exit refusal:
 strict interval point checks now find a declared Upper intersection at its
 original starting pose (inner butt / first later packet / t=0), independently

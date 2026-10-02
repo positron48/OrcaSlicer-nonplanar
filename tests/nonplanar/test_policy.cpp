@@ -2881,15 +2881,108 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE(exit_ledger.records.size()==new_ledger.records.size()+3);
     for (size_t i=0;i<new_ledger.records.size();++i) REQUIRE(exit_ledger.canonical_record(i)==new_ledger.canonical_record(i));
     REQUIRE(exit_route.source==exit_source.snapshot);REQUIRE(exit_material_check.tools.size()==7);
+    // Prospective alternative on the same whole parent cell; unchanged target
+    // fill remains pending. Never replace the already completed wide journal.
+    const auto departure_bead=plan_next_cap_bead(wide_next,rx ? HatchDirection::AlongX : HatchDirection::AlongY,WidthXY(.28),later_limits);
+    INFO(departure_bead.reason);REQUIRE(departure_bead.snapshot);
+    const auto &departure_end=departure_bead.snapshot->path_end;
+    const SimulationCapDepartureRequest departure_request{{departure_end.x()+1,departure_end.y(),departure_end.z()},exit_height,Speed(10),Acceleration(100)};
+    SimulationCapDepartureLimits departure_limits;departure_limits.timeout=std::chrono::seconds(5);
+    const auto departure=plan_simulation_cap_departure(assembled,departure_bead,full_source.snapshot->scene,motion_policy,departure_request,departure_limits);
+    INFO(departure.reason << " work=" << departure.evaluations);REQUIRE(departure.snapshot);REQUIRE(departure.status==ClearanceStatus::Pass);
+    const auto &departure_plan=*departure.snapshot;REQUIRE(departure_plan.before==assembled.snapshot);
+    REQUIRE(departure_plan.bead==departure_bead.snapshot);REQUIRE(departure_plan.material->source==assembled.snapshot->source);
+    REQUIRE(departure_plan.bead->source==wide_next.snapshot);REQUIRE(departure_plan.route->legs.size()==3);
+    REQUIRE(departure_plan.route->planned->components.size()==7);REQUIRE(departure_plan.route->planned->scene.tip.center.z()==0);
+    REQUIRE(departure_plan.route->planned->policy.required.value()==motion_policy.required.value());
+    for(const auto &leg : departure_plan.route->legs) test::independent_travel_material_partition(*leg->material);
+    const auto &departure_ledger=*departure_plan.route->planned->material->ledger;
+    REQUIRE(departure_ledger.records.size()==departure_plan.material->material->sequence->records.size()+3);
+    for(size_t i=0;i<old_ledger.records.size();++i) REQUIRE(departure_ledger.canonical_record(i)==old_ledger.canonical_record(i));
+    REQUIRE(departure_plan.bead->actual_target_volume_mm3.upper<later.snapshot->actual_target_volume_mm3.lower);
+    REQUIRE(departure_plan.bead->source->nominal_volume_mm3.lower==later.snapshot->source->nominal_volume_mm3.lower);
+    REQUIRE(departure_plan.bead->source->nominal_volume_mm3.upper==later.snapshot->source->nominal_volume_mm3.upper);
+    REQUIRE_FALSE(plan_simulation_cap_departure(added,departure_bead,full_source.snapshot->scene,motion_policy,departure_request,departure_limits).snapshot);
+    const auto blocked_departure=plan_simulation_cap_departure(assembled,later,full_source.snapshot->scene,motion_policy,departure_request,departure_limits);
+    REQUIRE_FALSE(blocked_departure.snapshot);REQUIRE(blocked_departure.status==ClearanceStatus::Fail);REQUIRE(blocked_departure.route_check);
+    REQUIRE(blocked_departure.route_check->motion_check);REQUIRE(blocked_departure.route_check->motion_check->material_check);
+    test::independent_annulus_upper_witness(*blocked_departure.route_check->motion_check->material_check);
+    // Recapture the same departure with the existing explicit byte-rounding
+    // budget. Rates/material replay do not qualify final-byte head/contact/fill.
+    const auto byte_departure=plan_simulation_cap_departure(assembled,departure_bead,full_source.snapshot->scene,byte_geometry,departure_request,departure_limits);
+    INFO(byte_departure.reason);REQUIRE(byte_departure.snapshot);
+    SimulationMotionSourceResult departure_source;departure_source.snapshot=byte_departure.snapshot->route->planned;
+    const auto departure_timed=plan_linear_motion(departure_source,kinematics,kinematic_limits);INFO(departure_timed.reason);REQUIRE(departure_timed.snapshot);
+    const auto departure_bytes=serialize_linear_candidate(departure_timed,byte_policy,byte_limits);INFO(departure_bytes.reason);REQUIRE(departure_bytes.snapshot);
+    const auto departure_rates=verify_linear_candidate_rates(departure_bytes,byte_limits);INFO(departure_rates.reason);REQUIRE(departure_rates.snapshot);
+    const auto departure_material=verify_linear_candidate_material(departure_bytes,material_options,byte_limits);INFO(departure_material.reason);REQUIRE(departure_material.snapshot);
+    const auto departure_parsed=nptop_verify::replay_full_stop(departure_bytes.snapshot->bytes,
+        {departure_bytes.snapshot->initial_position.x(),departure_bytes.snapshot->initial_position.y(),departure_bytes.snapshot->initial_position.z()});
+    nptop_test::check_full_stop_rates(departure_parsed,kinematics,true);REQUIRE(departure_parsed.size()==departure_ledger.records.size());
+    for(size_t i=0;i<departure_parsed.size();++i) {
+        const auto &event=departure_ledger.records[i].motion;
+        REQUIRE(std::abs(departure_parsed[i].end[0]-event.end.x())<=.000000501);
+        REQUIRE(std::abs(departure_parsed[i].end[1]-event.end.y())<=.000000501);
+        REQUIRE(std::abs(departure_parsed[i].end[2]-event.end.z())<=.000000501);
+        if(const auto *deposit=std::get_if<Deposition>(&event.payload))
+            REQUIRE(std::abs((long double)departure_parsed[i].e-(long double)deposit->volume.value()/(acosl(-1.L)*1.75L*1.75L/4))<=.000000000501L);
+        else REQUIRE(departure_parsed[i].e==0);
+    }
+    // A narrower prospective bead can clear the head yet fail the unchanged
+    // delivered-dose section domain. Preserve that independent replay refusal.
+    const auto narrow_bead=plan_next_cap_bead(wide_next,rx ? HatchDirection::AlongX : HatchDirection::AlongY,WidthXY(.2),later_limits);REQUIRE(narrow_bead.snapshot);
+    const auto narrow_departure=plan_simulation_cap_departure(assembled,narrow_bead,full_source.snapshot->scene,byte_geometry,departure_request,departure_limits);REQUIRE(narrow_departure.snapshot);
+    SimulationMotionSourceResult narrow_source;narrow_source.snapshot=narrow_departure.snapshot->route->planned;
+    const auto narrow_timed=plan_linear_motion(narrow_source,kinematics,kinematic_limits);REQUIRE(narrow_timed.snapshot);
+    const auto narrow_bytes=serialize_linear_candidate(narrow_timed,byte_policy,byte_limits);REQUIRE(narrow_bytes.snapshot);
+    const auto narrow_material=verify_linear_candidate_material(narrow_bytes,material_options,byte_limits);
+    REQUIRE_FALSE(narrow_material.snapshot);REQUIRE(narrow_material.status==nptop_verify::RateStatus::Unknown);
+    REQUIRE(narrow_material.reason=="UNSUPPORTED_FINAL_ROUNDED_SECTION");REQUIRE(narrow_material.record);
     if (const char *directory=std::getenv("NPTOP_CANDIDATE_EVIDENCE_DIR")) {
-        const auto &w=*exit_material_check.witness;const auto &tip=std::get<FiniteTip>(exit_material_check.tools[w.component_index].geometry);
+        const boost::filesystem::path dir(directory);
+        const auto save=[&](const char *name,const std::string &text) {
+            const auto path=dir/name;REQUIRE_FALSE(boost::filesystem::exists(path));boost::nowide::ofstream file(path.string(),std::ios::binary);
+            REQUIRE(file.good());file<<text;file.close();REQUIRE(file.good());
+        };
+        const auto journal=[](const MaterialSequenceSnapshot &s) {
+            std::vector<std::string> rows;for(size_t i=0;i<s.records.size();++i) rows.push_back(s.canonical_record(i));
+            return nlohmann::json{{"context",s.canonical_context()},{"records",rows},{"sha256",s.fingerprint()}};
+        };
+        const auto position=[](PhysicalPosition p) {return nlohmann::json::array({p.x(),p.y(),p.z()});};
+        nlohmann::json legs=nlohmann::json::array(),head=nlohmann::json::array();
+        for(const auto &part : departure_plan.route->planned->scene.head)
+            head.push_back({{"id",part.id},{"part",int(part.part)},{"min",{part.outer.min.x(),part.outer.min.y(),part.outer.min.z()}},
+                {"max",{part.outer.max.x(),part.outer.max.y(),part.outer.max.z()}}});
+        for(const auto &leg : departure_plan.route->legs) {
+            nlohmann::json leaves=nlohmann::json::array();
+            for(const auto &p : leg->material->leaves) leaves.push_back({p.component_index,p.material_record,p.parameter.lower,p.parameter.upper,
+                p.local_domain.min.x(),p.local_domain.min.y(),p.local_domain.min.z(),p.local_domain.max.x(),p.local_domain.max.y(),p.local_domain.max.z(),p.outside_tool});
+            legs.push_back({{"event_index",leg->material->event_index},{"cells",leg->material->cells},{"evaluations",leg->evaluations},{"leaves",leaves}});
+        }
+        const auto &tip=departure_plan.route->planned->scene.tip;const auto &cell=departure_plan.bead->source->cell;
+        const nlohmann::json departure_trace={{"version",simulation_cap_departure_version},{"scope","PROSPECTIVE_BEAD_AND_COMPLETE_SIMULATION_DEPARTURE_ONLY"},
+            {"export","BLOCK"},{"full_cap_fill","NOT_RUN"},{"deposition_contact","NOT_RUN"},{"final_byte_geometry","NOT_RUN"},
+            {"before",journal(old_ledger)},{"laid",journal(*departure_plan.material->material->sequence)},{"planned",journal(departure_ledger)},
+            {"source_records",departure_plan.route->source_records},{"work",departure.evaluations},{"required_margin",motion_policy.required.value()},
+            {"lift_z_mm",departure_request.lift_z_mm},{"destination",position(departure_request.destination)},
+            {"tip",{{"center",{tip.center.x(),tip.center.y(),tip.center.z()}},{"opening_radius",tip.opening_radius.value()},{"outer_radius",tip.outer_radius.value()}}},
+            {"head",head},{"legs",legs},{"cell",{{"xy",{cell.footprint.min_x,cell.footprint.min_y,cell.footprint.max_x,cell.footprint.max_y}},
+                {"z",{cell.z00,cell.z10,cell.z01}},{"nominal_volume",{departure_plan.bead->source->nominal_volume_mm3.lower,departure_plan.bead->source->nominal_volume_mm3.upper}}}},
+            {"selected_width_mm",.28},{"selected_target_volume",{departure_plan.bead->actual_target_volume_mm3.lower,departure_plan.bead->actual_target_volume_mm3.upper}},
+            {"original_wide_target_volume",{later.snapshot->actual_target_volume_mm3.lower,later.snapshot->actual_target_volume_mm3.upper}},
+            {"candidate_sha256",departure_bytes.snapshot->sha256},{"candidate_bytes",departure_bytes.snapshot->bytes.size()},
+            {"candidate_rows",departure_parsed.size()},{"coordinate_error_mm",departure_bytes.snapshot->coordinate_rounding_error_mm},
+            {"rate_replay","PASS_COMPONENT_ONLY"},{"material_replay","PASS_COMPONENT_ONLY"}};
+        save("native-departure.json",departure_trace.dump(2)+'\n');save("native-departure.candidate.txt",departure_bytes.snapshot->bytes);
+        save("native-departure-material.json",nptop_verify::material_document(*departure_material.snapshot).dump(2)+'\n');
+        const auto &w=*exit_material_check.witness;const auto &witness_tip=std::get<FiniteTip>(exit_material_check.tools[w.component_index].geometry);
         const auto path=boost::filesystem::path(directory)/"native-exit-witness.json";REQUIRE_FALSE(boost::filesystem::exists(path));
         const nlohmann::json trace={{"version",1},{"scope","declared_upper_point_refutation_only"},{"status","FAIL"},{"reason",exit_material_check.reason},
             {"ledger_fingerprint",exit_ledger.fingerprint()},{"context",exit_ledger.canonical_context()},
             {"motion",exit_ledger.canonical_record(exit_material_check.event_index)},{"material",exit_ledger.canonical_record(w.material_record)},
             {"event_index",exit_material_check.event_index},{"component_index",w.component_index},{"material_record",w.material_record},{"parameter",w.parameter},
             {"local_point",{w.local_point.x(),w.local_point.y(),w.local_point.z()}},
-            {"tip_center",{tip.center.x(),tip.center.y(),tip.center.z()}},{"opening_radius",tip.opening_radius.value()},{"outer_radius",tip.outer_radius.value()}};
+            {"tip_center",{witness_tip.center.x(),witness_tip.center.y(),witness_tip.center.z()}},{"opening_radius",witness_tip.opening_radius.value()},{"outer_radius",witness_tip.outer_radius.value()}};
         boost::nowide::ofstream output(path.string());REQUIRE(output.good());output<<trace.dump(2)<<'\n';output.close();REQUIRE(output.good());
     }
     const double lx=(la.x()+lb.x())/2,ly=(la.y()+lb.y())/2,lower_plane=(la.z()+lb.z())/2-.025;

@@ -2,6 +2,7 @@
 #include "material_join_oracle.hpp"
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
 #include <libslic3r/Nonplanar/Collision.hpp>
+#include <libslic3r/Nonplanar/ProfileScene.hpp>
 #include <cmath>
 #include <cfenv>
 #include <thread>
@@ -3733,4 +3734,90 @@ TEST_CASE("B09 short rounded bead blocks the inner annulus at a travel endpoint"
         REQUIRE(clear.snapshot);REQUIRE(clear.status==ClearanceStatus::Pass);
         REQUIRE(Q(high.z())-Q(policy.required.value())>Q(safe_source.snapshot->full_upper_z_mm->upper));
     }
+}
+
+namespace {
+struct DepartureFixture {
+    FirstCapMaterialResult before;NextCapBeadResult bead;SimulationScene scene;SimulationCapDepartureRequest request;
+};
+DepartureFixture departure_fixture()
+{
+    const auto next=normal_spacing_fixture(HatchDirection::AlongX,false,false,false,Length(0),.23);
+    const auto bead=plan_next_cap_bead(next,HatchDirection::AlongX,WidthXY(.45));INFO(bead.reason);REQUIRE(bead.snapshot);
+    SimulationScene scene{1,41,7,ProfileOrigin::Synthetic,false,{{0,0,0},Length(.4),Length(.7)}, {},
+        {{-2,-2,-.1},{12,8,10}},{{-5,-5,-5},{15,15,20}}, {},true,Length(30),Length(0)};
+    uint64_t id=1;for (auto part : {HeadPart::NozzleBody,HeadPart::Heater,HeadPart::Sock,HeadPart::Duct,HeadPart::Sensor,HeadPart::Mount})
+        scene.head.push_back({id++,part,{{-.05,-.05,.5},{.05,.05,.8}},false,false});
+    const auto end=bead.snapshot->path_end;
+    return {{"",next.snapshot->source},bead,scene,{{end.x()+1,end.y(),end.z()},4,Speed(10),Acceleration(100)}};
+}
+const ClearancePolicy departure_policy{Length(.01),NumericBudget(0,0,0,0),Length(0),Length(0),Length(0)};
+}
+
+TEST_CASE("B09 cap departure owns one exact prospective bead and preserves every earlier row and target", "[Nonplanar][B09][CapDeparture]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<SimulationCapDepartureSnapshot>::value);
+    auto fixture=departure_fixture();const auto before=fixture.before.snapshot;const auto bead=fixture.bead.snapshot;
+    SimulationCapDepartureLimits limits;limits.timeout=std::chrono::seconds(5);
+    const auto result=plan_simulation_cap_departure(fixture.before,fixture.bead,fixture.scene,departure_policy,fixture.request,limits);
+    INFO(result.reason << ' ' << result.evaluations);REQUIRE(result.snapshot);REQUIRE(result.status==ClearanceStatus::Pass);
+    const auto &snapshot=*result.snapshot;REQUIRE(snapshot.before==before);REQUIRE(snapshot.bead==bead);
+    REQUIRE(snapshot.material->source==before->source);REQUIRE(snapshot.material->later_paths.back()==bead);
+    REQUIRE(snapshot.material->material->completed_records==snapshot.material->material->sequence->records.size());
+    REQUIRE(snapshot.route->legs.size()==3);REQUIRE(snapshot.route->planned->components.size()==7);
+    const auto &old=*before->material->sequence,&laid=*snapshot.material->material->sequence,&planned=*snapshot.route->planned->material->ledger;
+    REQUIRE(planned.records.size()==laid.records.size()+3);
+    for (size_t i=0;i<laid.records.size();++i) {
+        REQUIRE(planned.canonical_record(i)==laid.canonical_record(i));
+        if(i<old.records.size()) REQUIRE(planned.canonical_record(i)==old.canonical_record(i));
+    }
+    for (const auto &leg : snapshot.route->legs) test::independent_travel_material_partition(*leg->material);
+    limits.cancelled=[&] {fixture.before={};fixture.bead={};fixture.scene.head.clear();fixture.request.lift_z_mm=0;limits.max_records=0;return false;};
+    fixture=departure_fixture();
+    const auto owned_before=fixture.before.snapshot;const auto owned_bead=fixture.bead.snapshot;
+    const auto owned=plan_simulation_cap_departure(fixture.before,fixture.bead,fixture.scene,departure_policy,fixture.request,limits);
+    INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->route->planned->components.size()==7);
+    REQUIRE(owned.snapshot->before==owned_before);REQUIRE(owned.snapshot->bead==owned_bead);
+}
+
+TEST_CASE("B09 cap departure refuses stale parents incomplete resource budgets and late callbacks", "[Nonplanar][B09][CapDeparture]")
+{
+    auto f=departure_fixture();SimulationCapDepartureLimits limits;limits.timeout=std::chrono::seconds(5);
+    const auto valid=plan_simulation_cap_departure(f.before,f.bead,f.scene,departure_policy,f.request,limits);INFO(valid.reason);REQUIRE(valid.snapshot);
+    REQUIRE_FALSE(plan_simulation_cap_departure({},f.bead,f.scene,departure_policy,f.request,limits).snapshot);
+    REQUIRE_FALSE(plan_simulation_cap_departure(f.before,{},f.scene,departure_policy,f.request,limits).snapshot);
+    const auto other=reconstruct_first_cap_material({"",f.before.snapshot->source});REQUIRE(other.snapshot);
+    REQUIRE(other.snapshot->material->sequence->fingerprint()==f.before.snapshot->material->sequence->fingerprint());
+    REQUIRE_FALSE(plan_simulation_cap_departure(other,f.bead,f.scene,departure_policy,f.request,limits).snapshot);
+    REQUIRE_FALSE(plan_simulation_cap_departure({"",valid.snapshot->material},f.bead,f.scene,departure_policy,f.request,limits).snapshot);
+    for (int mode=0;mode<18;++mode) {
+        auto bound=limits;auto scene=f.scene;auto request=f.request;
+        if(mode==0) bound.max_evaluations=valid.evaluations-1;
+        if(mode==1) bound.max_records=f.before.snapshot->material->sequence->records.size();
+        if(mode==2) bound.max_cells=1;
+        if(mode==3) bound.cancelled=[] {return true;};
+        if(mode==4) bound.is_current=[](uint64_t) {return false;};
+        if(mode==5) bound.is_scene_current=[](uint64_t,uint64_t) {return false;};
+        if(mode==6) bound.material.is_current=[](uint64_t) {return false;};
+        if(mode==7) bound.material.cancelled=[] {throw 17;return false;};
+        if(mode==8) bound.material.cancelled=[] {throw std::runtime_error("");return false;};
+        if(mode==9) {bound.timeout=std::chrono::milliseconds(1);bound.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if(mode==10) bound.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+        if(mode==11) bound.material.timeout=std::chrono::milliseconds(0);
+        if(mode==12) bound.material.max_evaluations=1;
+        if(mode==13) request.lift_z_mm=0;
+        if(mode==14) request.destination={100,100,100};
+        if(mode==15) {scene.obstacles.push_back({{9,9,7},{10,10,8}});bound.max_scene_pairs=0;}
+        if(mode==16) scene.operator_confirmed_claim=true;
+        if(mode==17) request.lift_z_mm=std::numeric_limits<double>::quiet_NaN();
+        const auto refused=plan_simulation_cap_departure(f.before,f.bead,scene,departure_policy,request,bound);
+        if(mode==10) REQUIRE(std::fesetround(FE_TONEAREST)==0);
+        INFO(mode << ' ' << refused.reason);REQUIRE_FALSE(refused.snapshot);REQUIRE(refused.status==ClearanceStatus::Unknown);
+        REQUIRE_FALSE(refused.reason.empty());REQUIRE(refused.before==f.before.snapshot);
+    }
+    size_t calls=0;limits.cancelled=[&] {++calls;return false;};
+    REQUIRE(plan_simulation_cap_departure(f.before,f.bead,f.scene,departure_policy,f.request,limits).snapshot);
+    const auto last=calls;calls=0;limits.cancelled=[&] {return ++calls==last;};
+    const auto refused=plan_simulation_cap_departure(f.before,f.bead,f.scene,departure_policy,f.request,limits);
+    REQUIRE_FALSE(refused.snapshot);REQUIRE(refused.reason=="CANCELLED");REQUIRE(calls==last);
 }

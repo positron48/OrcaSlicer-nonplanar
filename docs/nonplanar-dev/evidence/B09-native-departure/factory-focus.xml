@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="2" skipped="0" tests="17" hostname="tbd" time="0.010" timestamp="2026-10-02T18:52:26Z">
+    <properties>
+      <property name="random-seed" value="2408968523"/>
+      <property name="filters" value="[CapDeparture]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B09 cap departure refuses stale parents incomplete resource budgets and late callbacks" time="0.000" status="run">
+      <failure message="valid.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( valid.snapshot )
+with expansion:
+  0
+ORIGINAL_LEDGER_OUTSIDE_NOZZLE_DOMAIN
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3786
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B09 cap departure owns one exact prospective bead and preserves every earlier row and target" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+ORIGINAL_LEDGER_OUTSIDE_NOZZLE_DOMAIN 221
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3763
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
