@@ -245,13 +245,13 @@ struct SolidQuery {
   if(along && (interior ? distance_hi<square(h.lo/2) : distance_hi<=square(h.lo/2)))return MaterialMembership::Inside;
   return MaterialMembership::Unknown;
  }
- MaterialMembership piece(const ReplayedBead &b,const MaterialRegion &box)
+ MaterialMembership piece(const ReplayedBead &b,const MaterialRegion &box,std::optional<double> current_progress={})
  {
   work();if(representation==MaterialRepresentation::Lower && b.empty_inner)return MaterialMembership::Outside;
   if(representation==MaterialRepresentation::Nominal)for(size_t axis=0;axis<3;++axis)
    if(box.min[axis]>b.nominal_bounds.coordinate[axis].upper || box.max[axis]<b.nominal_bounds.coordinate[axis].lower)return MaterialMembership::Outside;
   const auto &s=data.steps[b.record];const auto &row=prefix.source->declarations[b.record];
-  const Q progress=b.record<prefix.completed_records ? Q(1) : binary(prefix.current_progress);
+  const Q progress=current_progress ? binary(*current_progress) : b.record<prefix.completed_records ? Q(1) : binary(prefix.current_progress);
   const auto l=prefix.source->beads[b.record]->xy_length;const Range length{binary(l.lower),binary(l.upper)};
   const auto original=project_solid(s,length,box,[&]{work();});
   const auto base=section(s,row,length,progress,original,false);
@@ -614,11 +614,12 @@ MaterialRegion swept_region(const ExactStep &move,RateBounds t,const MaterialReg
 }
 bool disjoint(const MaterialRegion &a,const MaterialRegion &b)
 {for(size_t i=0;i<3;++i)if(a.max[i]<b.min[i] || a.min[i]>b.max[i])return true;return false;}
-}
-LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMaterialSnapshot> source,size_t first,size_t count,
- const LinearTravelScene &requested_scene,const LinearTravelLimits &requested_limits)
+template<class Result,class Publish>
+void verify_linear_motion_geometry(std::shared_ptr<const LinearMaterialSnapshot> source,const std::shared_ptr<const MaterialReplayData> &data,
+ size_t first,size_t count,bool depositing,const LinearTravelScene &requested_scene,const LinearTravelLimits &requested_limits,
+ Result &result,Publish publish)
 {
- LinearTravelResult result;const auto started=std::chrono::steady_clock::now();
+ const auto started=std::chrono::steady_clock::now();
  try {
   if(requested_scene.head.size()>64 || requested_scene.obstacles.size()>10000)unknown("FINAL_TRAVEL_SCENE_SIZE_LIMIT");
   const auto scene=requested_scene;const auto limits=requested_limits;
@@ -637,30 +638,41 @@ LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMat
    }catch(...){stopped=std::current_exception();throw;}return false;
   };
   Work work{*source->rates,source->policy,guarded,result.evaluations};work.admission();work();
-  if((first && source->declarations[first-1].kind==MaterialEventKind::Travel) ||
-   (first+count<source->declarations.size() && source->declarations[first+count].kind==MaterialEventKind::Travel))
-   unknown("FINAL_TRAVEL_INCOMPLETE_CONTIGUOUS_BLOCK");
-  for(size_t i=first;i<first+count;++i){work();if(source->declarations[i].kind!=MaterialEventKind::Travel)unknown("FINAL_TRAVEL_REQUIRES_COMPLETE_TRAVEL_BLOCK");}
+  const auto kind=depositing ? MaterialEventKind::Deposit : MaterialEventKind::Travel;
+  if((first && source->declarations[first-1].kind==kind) ||
+   (first+count<source->declarations.size() && source->declarations[first+count].kind==kind))
+   unknown(depositing ? "FINAL_DEPOSITION_INCOMPLETE_CONTIGUOUS_BLOCK" : "FINAL_TRAVEL_INCOMPLETE_CONTIGUOUS_BLOCK");
+  for(size_t i=first;i<first+count;++i){work();if(source->declarations[i].kind!=kind)unknown(depositing ? "FINAL_DEPOSITION_REQUIRES_COMPLETE_DEPOSIT_BLOCK" : "FINAL_TRAVEL_REQUIRES_COMPLETE_TRAVEL_BLOCK");}
   guarded.initial_evaluations=result.evaluations;
   const auto prepared=linear_material_at(source,first,0,guarded);result.evaluations=prepared.evaluations;work.stop();
   if(!prepared.snapshot)unknown(prepared.reason.empty() ? "FINAL_TRAVEL_PREFIX_REFUSAL" : prepared.reason.c_str());
   const auto prefix=prepared.snapshot;
-  const auto index=bounds_index(prefix->pieces.size(),[&](size_t i){return prefix->pieces[i].upper_bounds;},work);
-  SolidQuery query{*prefix,*source->exact,MaterialRepresentation::Upper,work};
-  const auto material_query=[&](const MaterialRegion &box){MaterialBoxResult answer;bool uncertain=false;
-   const bool inside=visit_bounds(index,box,work,[&](size_t i){const auto &bead=prefix->pieces[i];
+  // Replay already reconstructed immutable complete bead bounds. Index all
+  // previous/selected packets once; chronology is checked again per query.
+  // The protected prefix still denotes the material before the whole block.
+  std::vector<const ReplayedBead*> deposits;
+  if(depositing)for(size_t i=0;i<first+count;++i){work();if(source->beads[i])deposits.push_back(&*source->beads[i]);}
+  const size_t bead_count=depositing ? deposits.size() : prefix->pieces.size();
+  const auto bead_at=[&](size_t i)->const ReplayedBead&{return depositing ? *deposits[i] : prefix->pieces[i];};
+  const auto index=bounds_index(bead_count,[&](size_t i){return bead_at(i).upper_bounds;},work);
+  SolidQuery query{*prefix,*data,MaterialRepresentation::Upper,work};
+  const auto material_query=[&](const MaterialRegion &box,size_t record,double progress){MaterialBoxResult answer;bool uncertain=false;
+   const bool inside=visit_bounds(index,box,work,[&](size_t i){const auto &bead=bead_at(i);
+    // Future nodes can only make broad-phase pruning less effective. They
+    // supply neither an obstacle nor an Inside result; zero progress is empty.
+    if(depositing && (bead.record>record || (bead.record==record && progress==0)))return false;
     // A leaf node encloses several beads. Prune each complete disjoint Upper
     // box before exact sections; an overlapping box never grants clearance.
     work();for(size_t a=0;a<3;++a)if(box.min[a]>bead.upper_bounds.coordinate[a].upper || box.max[a]<bead.upper_bounds.coordinate[a].lower)return false;
-    const auto m=query.piece(bead,box);
+    const auto m=query.piece(bead,box,depositing && bead.record>=first ? std::optional<double>(bead.record==record ? progress : 1) : std::nullopt);
     if(m==MaterialMembership::Inside){answer.event_id=bead.event_id;return true;}uncertain|=m==MaterialMembership::Unknown;return false;});
    answer.membership=inside ? MaterialMembership::Inside : uncertain ? MaterialMembership::Unknown : MaterialMembership::Outside;return answer;};
   Q margin=binary(scene.uncertainty_mm);for(double v:scene.clearance_mm)margin+=binary(v);
   std::optional<Q> ceiling;
-  for(const auto &b:prefix->pieces){work();const Q top=binary(b.upper_bounds.coordinate[2].upper);ceiling=ceiling ? std::max(*ceiling,top) : top;}
+  for(size_t i=0;i<bead_count;++i){work();const Q top=binary(bead_at(i).upper_bounds.coordinate[2].upper);ceiling=ceiling ? std::max(*ceiling,top) : top;}
   for(const auto &b:scene.obstacles){work();const Q top=binary(b.max[2]);ceiling=ceiling ? std::max(*ceiling,top) : top;}
   std::vector<LinearTravelLeaf> leaves;
-  for(size_t record=first;record<first+count;++record){const auto &move=source->exact->steps[record];work();
+  for(size_t record=first;record<first+count;++record){const auto &move=data->steps[record];work();
    for(size_t a=0;a<3;++a)if(std::min(move.start[a],move.end[a])<binary(scene.nozzle_domain.min[a]) ||
     std::max(move.start[a],move.end[a])>binary(scene.nozzle_domain.max[a]))unknown("FINAL_TRAVEL_NOZZLE_COVERAGE");
    if(ceiling && std::min(move.start[2],move.end[2])+binary(scene.unmodelled_parts_min_local_z_mm)<=*ceiling+margin)
@@ -678,7 +690,12 @@ LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMat
      const auto world=swept_region(move,node.t,node.local,margin,work);
      if(component==0 && outside_annulus(node.local,scene)){leaves.push_back({record,component,node.t,node.local,world,true});continue;}
      bool outside=true;for(const auto &b:scene.obstacles){work();outside&=disjoint(world,b);}
-     if(outside)outside=material_query(world).membership==MaterialMembership::Outside;
+     // The independent constant-flux section is fixed along its material
+     // coordinate. Its nominal prefix solids are nested, and the same fixed
+     // growth of that union preserves inclusion. Only this model permits the
+     // end-progress Upper to enclose every growing prefix in the time cell.
+     // FAIL below still uses the exact simultaneous point/front, never the end.
+     if(outside)outside=material_query(world,record,node.t.upper).membership==MaterialMembership::Outside;
      if(outside){leaves.push_back({record,component,node.t,node.local,world,false});continue;}
      // A rigorously enclosed actual tool point inside the declared Upper/static
      // solid can refuse. Samples never establish clearance for the whole cell.
@@ -691,9 +708,9 @@ LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMat
        const MaterialRegion point=swept_region(move,{t,t},{{x,y,z},{x,y,z}},Q(0),work);
        std::optional<size_t> obstacle;for(size_t i=0;i<scene.obstacles.size();++i){work();bool contained=true;for(size_t a=0;a<3;++a)
         contained&=point.min[a]>=scene.obstacles[i].min[a] && point.max[a]<=scene.obstacles[i].max[a];if(contained){obstacle=i;break;}}
-       const auto hit=material_query(point);
+       const auto hit=material_query(point,record,t);
        if(obstacle || hit.membership==MaterialMembership::Inside){result.witness=LinearTravelWitness{record,component,{t,t},point,hit.event_id,obstacle};
-        work.stop();fail("FINAL_TRAVEL_DECLARED_UPPER_OR_STATIC_INTERSECTION");}
+        work.stop();fail(depositing ? "FINAL_DEPOSITION_RIGID_UPPER_OR_STATIC_INTERSECTION" : "FINAL_TRAVEL_DECLARED_UPPER_OR_STATIC_INTERSECTION");}
       }
      if(node.depth>=limits.max_depth)unknown("FINAL_TRAVEL_SUBDIVISION_LIMIT");
      size_t axis=0;double extent=0;for(size_t a=0;a<3;++a)extent=std::max(extent,std::abs(source->rates->moves[record].end[a]-source->rates->moves[record].start[a])*(node.t.upper-node.t.lower));
@@ -705,11 +722,23 @@ LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMat
     }
    }
   }
-  work.stop();result.snapshot=std::shared_ptr<const LinearTravelSnapshot>(new LinearTravelSnapshot(source,prefix,first,count,scene,std::move(leaves),result.evaluations,result.cells));work.stop();
-  result.status=RateStatus::Pass;result.reason="WHOLE_FINAL_DECIMAL_TRAVEL_BLOCK_HEAD_STATIC_AND_ACTUAL_PREFIX_UPPER_ONLY";
+  work.stop();publish(source,prefix,first,count,scene,std::move(leaves));work.stop();
+  result.status=RateStatus::Pass;result.reason=depositing ? "WHOLE_FINAL_DECIMAL_DEPOSITION_BLOCK_RIGID_HEAD_STATIC_AND_GROWING_ACTUAL_UPPER_ONLY" : "WHOLE_FINAL_DECIMAL_TRAVEL_BLOCK_HEAD_STATIC_AND_ACTUAL_PREFIX_UPPER_ONLY";
  }catch(const Refusal &e){result.snapshot.reset();result.status=e.status;result.reason=e.what();if(e.status!=RateStatus::Fail)result.witness.reset();}
  catch(const std::exception &e){result.snapshot.reset();result.witness.reset();result.status=RateStatus::Unknown;result.reason=*e.what() ? e.what() : "FINAL_TRAVEL_EXCEPTION_WITHOUT_REASON";}
  catch(...){result.snapshot.reset();result.witness.reset();result.status=RateStatus::Unknown;result.reason="FINAL_TRAVEL_UNKNOWN_EXCEPTION";}
- return result;
+}
+}
+LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMaterialSnapshot> source,size_t first,size_t count,
+ const LinearTravelScene &scene,const LinearTravelLimits &limits)
+{
+ LinearTravelResult result;verify_linear_motion_geometry(source,source ? source->exact : nullptr,first,count,false,scene,limits,result,
+  [&](auto s,auto p,size_t a,size_t n,auto head,auto leaves){result.snapshot=std::shared_ptr<const LinearTravelSnapshot>(new LinearTravelSnapshot(s,p,a,n,std::move(head),std::move(leaves),result.evaluations,result.cells));});return result;
+}
+LinearDepositionGeometryResult verify_linear_deposition_geometry(std::shared_ptr<const LinearMaterialSnapshot> source,size_t first,size_t count,
+ const LinearTravelScene &scene,const LinearTravelLimits &limits)
+{
+ LinearDepositionGeometryResult result;verify_linear_motion_geometry(source,source ? source->exact : nullptr,first,count,true,scene,limits,result,
+  [&](auto s,auto p,size_t a,size_t n,auto head,auto leaves){result.snapshot=std::shared_ptr<const LinearDepositionGeometrySnapshot>(new LinearDepositionGeometrySnapshot(s,p,a,n,std::move(head),std::move(leaves),result.evaluations,result.cells));});return result;
 }
 }

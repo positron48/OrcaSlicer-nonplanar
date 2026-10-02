@@ -7,6 +7,20 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B12-final-deposition.md` and ADR-0083 independently verify maximal complete
+final-decimal Deposit blocks against rigid head/static/earlier and simultaneous
+current Upper. The original owned native four-packet nonplanar block passes at
+all original margins/limits:2198 prefix rows/2072 past deposits,300 cells/164 leaves.
+Independent113-bit whole-cell/partition and negative witness equations pass;
+focus10/74169, CTest435/435, original CLI100 + Travel40 + Deposit21 and native CLI
+0.484 s at the original1s root deadline. Old19 native outputs and four Travel
+inputs/proof are exact; source fingerprints remain separately owned/unqualified.
+Six strict OFF/ZAA pairs pass. Fixed17 registry still retains13 UNKNOWN/NOT_RUN;
+full B01–B15 stays active and export BLOCK. Next legal local deposition contact,
+complete fixed-width cap fill/seams, all earlier/print/prolog/end geometry/order
+and all full-job source/resources/software/transforms/delivery/publication.
+Linux/Windows/full GUI/physical qualification and independent review pending.
+
 `B12-final-travel.md` and ADR-0082 independently verify complete final-decimal
 Travel blocks against full declared annulus/head/static scene and all actual
 previous Upper material. The native B13 candidate retains every byte, scene and

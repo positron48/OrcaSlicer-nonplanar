@@ -643,3 +643,57 @@ TEST_CASE("B12 final travel JSON preserves every dependency and rejects duplicat
  auto nonfinite=document.dump();const auto number=nonfinite.find("\"opening_radius_mm\":0.2");REQUIRE(number!=std::string::npos);
  nonfinite.replace(number,std::string("\"opening_radius_mm\":0.2").size(),"\"opening_radius_mm\":1e999");REQUIRE_THROWS(parse_travel_document(nonfinite));
 }
+namespace {
+LinearMaterialResult deposition_material(bool long_path=false)
+{
+ const auto p=material_policy();
+ const double e=long_path ? .2 : .00001;
+ const double volume=(High(e)*acos(High(-1))*High("1.75")*High("1.75")/4/High(rate_policy().flow)).convert_to<double>();
+ const std::array<double,3> end=long_path ? std::array<double,3>{3,4,.6} : std::array<double,3>{.01,0,.5};
+ const std::string bytes=std::string("G90\nM83\nM400\nM204 S4\n")+(long_path ? "G1 X3 Y4 Z.6 E.2 F30\n" : "G1 X.01 Y0 Z.5 E.00001 F30\n")+
+  "M400\nG1 X3 Y4 Z.5 F30\nM400\nG1 X6 Y8 Z.5 E.2 F30\nM400\n";
+ const double later=(High(".2")*acos(High(-1))*High("1.75")*High("1.75")/4/High(rate_policy().flow)).convert_to<double>();
+ const std::vector<MaterialDeclaration> rows{
+  {1,0,MaterialEventKind::Deposit,{0,0,.5},end,volume,0,MaterialSection{MaterialSectionKind::Rectangle,.2,long_path ? .25 : .2}},
+  {2,1,MaterialEventKind::Travel,end,{3,4,.5},0,0,{}},
+  {3,2,MaterialEventKind::Deposit,{3,4,.5},{6,8,.5},later,0,MaterialSection{MaterialSectionKind::Rectangle,.2,.2}}};
+ const auto rates=verify_linear_rates(bytes,{0,0,.5},rate_policy());REQUIRE(rates.snapshot);
+ const auto m=reconstruct_linear_material(rates.snapshot,rows,p);INFO(m.reason);REQUIRE(m.snapshot);return m;
+}
+}
+TEST_CASE("B12 independent deposition geometry retains only simultaneous growing material and no future packets", "[Nonplanar][B12][FinalByteDepositionGeometry]")
+{
+ const auto material=deposition_material();const auto before=verify_linear_deposition_geometry(material.snapshot,0,1,travel_scene());INFO(before.reason);REQUIRE(before.snapshot);
+ REQUIRE(before.snapshot->source==material.snapshot);REQUIRE(before.snapshot->prefix->pieces.empty());REQUIRE(before.snapshot->record_count==1);
+ nptop_test::check_final_motion(*before.snapshot);
+ const auto long_path=deposition_material(true);const auto blocked=verify_linear_deposition_geometry(long_path.snapshot,0,1,travel_scene());INFO(blocked.reason);REQUIRE(blocked.status==RateStatus::Fail);
+ REQUIRE_FALSE(blocked.snapshot);REQUIRE(blocked.witness);REQUIRE(blocked.witness->material_event==1);REQUIRE(blocked.witness->progress.lower>0);
+ nptop_test::check_deposition_witness(*long_path.snapshot,travel_scene(),*blocked.witness);
+ REQUIRE_FALSE(verify_linear_deposition_geometry(material.snapshot,0,2,travel_scene()).snapshot);
+ REQUIRE_FALSE(verify_linear_deposition_geometry(material.snapshot,1,1,travel_scene()).snapshot);
+ auto low_head=travel_scene();low_head.head[4].local={{-.05,-.05,-.15},{.05,.05,-.1}};
+ const auto fresh=verify_linear_deposition_geometry(material.snapshot,0,1,low_head);INFO(fresh.reason);REQUIRE(fresh.status==RateStatus::Fail);
+ REQUIRE(fresh.witness);REQUIRE(fresh.witness->component==5);REQUIRE(fresh.witness->material_event==1);REQUIRE(fresh.witness->progress.lower>0);
+ nptop_test::check_deposition_witness(*material.snapshot,low_head,*fresh.witness);
+}
+TEST_CASE("B12 independent deposition geometry keeps original guards and clears late positive and negative results", "[Nonplanar][B12][FinalByteDepositionGeometry]")
+{
+ const auto material=deposition_material();const auto scene=travel_scene();const auto normal=verify_linear_deposition_geometry(material.snapshot,0,1,scene);REQUIRE(normal.snapshot);
+ auto caller=material.snapshot;auto head=scene;LinearTravelLimits captured;
+ captured.cancelled=[&]{caller.reset();head.head.clear();captured.max_cells=0;return false;};
+ const auto owned=verify_linear_deposition_geometry(caller,0,1,head,captured);REQUIRE(owned.snapshot);
+ REQUIRE(owned.snapshot->source==material.snapshot);REQUIRE(owned.snapshot->scene.head.size()==6);
+ for(int mode=0;mode<8;++mode){auto limits=LinearTravelLimits{};
+  if(mode==0)limits.cancelled=[] {return true;};if(mode==1)limits.is_scene_current=[](uint64_t,uint64_t){return false;};
+  if(mode==2)limits.is_source_current=[](uint64_t){return false;};if(mode==3)limits.is_rate_current=[](uint64_t,uint64_t){return false;};
+  if(mode==4)limits.max_evaluations=normal.evaluations-1;if(mode==5)limits.max_cells=normal.cells-1;
+  if(mode==6)limits.timeout=std::chrono::milliseconds(0);if(mode==7)limits.cancelled=[]()->bool {throw 1;};
+  const auto refused=verify_linear_deposition_geometry(material.snapshot,0,1,scene,limits);INFO(mode<<' '<<refused.reason);
+  REQUIRE(refused.status==RateStatus::Unknown);REQUIRE_FALSE(refused.snapshot);REQUIRE_FALSE(refused.witness);
+ }
+ for(bool collision:{false,true}){const auto m=deposition_material(collision);LinearTravelLimits l;size_t calls=0;
+  l.cancelled=[&]{++calls;return false;};const auto complete=verify_linear_deposition_geometry(m.snapshot,0,1,scene,l);REQUIRE(complete.status==(collision ? RateStatus::Fail : RateStatus::Pass));
+  const auto last=calls;calls=0;l.cancelled=[&]{return ++calls==last;};const auto late=verify_linear_deposition_geometry(m.snapshot,0,1,scene,l);
+  REQUIRE(late.status==RateStatus::Unknown);REQUIRE_FALSE(late.snapshot);REQUIRE_FALSE(late.witness);REQUIRE(calls==last);
+ }
+}

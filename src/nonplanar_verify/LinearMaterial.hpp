@@ -54,6 +54,7 @@ struct LinearRunSupportResult;
 struct LinearTravelScene;
 struct LinearTravelLimits;
 struct LinearTravelResult;
+struct LinearDepositionGeometryResult;
 struct LinearMaterialSnapshot {
  const std::shared_ptr<const LinearRateSnapshot> rates;
  const std::vector<MaterialDeclaration> declarations;
@@ -76,6 +77,7 @@ private:
  friend JoinedMaterialCoverResult cover_joined_linear_material(std::shared_ptr<const JoinedMaterialSnapshot>,const MaterialRegion&,MaterialRepresentation,const JoinedMaterialLimits&);
  friend LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot>,size_t,const LinearRunSupportPolicy&,const LinearRunSupportLimits&);
  friend LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearTravelLimits&);
+ friend LinearDepositionGeometryResult verify_linear_deposition_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearTravelLimits&);
 };
 struct LinearMaterialResult {
  RateStatus status=RateStatus::Unknown;std::string reason;std::optional<size_t> record;
@@ -254,5 +256,26 @@ struct LinearTravelResult {
 // sweeps, exact rational bounds and complete partitions; no sampled PASS,
 // contact exception, future material, planner geometry or whole-job/export claim.
 LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t first_record,size_t record_count,
+ const LinearTravelScene&,const LinearTravelLimits &limits={});
+struct LinearDepositionGeometrySnapshot {
+ const std::shared_ptr<const LinearMaterialSnapshot> source;
+ const std::shared_ptr<const LinearMaterialPrefixSnapshot> prefix;
+ const size_t first_record,record_count;const LinearTravelScene scene;
+ const std::vector<LinearTravelLeaf> leaves;const size_t evaluations,cells;
+private:
+ LinearDepositionGeometrySnapshot(std::shared_ptr<const LinearMaterialSnapshot> s,std::shared_ptr<const LinearMaterialPrefixSnapshot> p,
+  size_t first,size_t count,LinearTravelScene head,std::vector<LinearTravelLeaf> parts,size_t work,size_t n)
+  :source(std::move(s)),prefix(std::move(p)),first_record(first),record_count(count),scene(std::move(head)),leaves(std::move(parts)),evaluations(work),cells(n){}
+ friend LinearDepositionGeometryResult verify_linear_deposition_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearTravelLimits&);
+};
+struct LinearDepositionGeometryResult {
+ RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const LinearDepositionGeometrySnapshot> snapshot;
+ std::optional<LinearTravelWitness> witness;size_t evaluations=0,cells=0;
+};
+// Every actual record in one complete contiguous Deposit block. Previous
+// packets are complete; current material grows at the same progress as the
+// nozzle, future packets are absent. Rigid geometry only: no contact exception,
+// support/bonding/fill/whole-job/export qualification is inferred.
+LinearDepositionGeometryResult verify_linear_deposition_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t first_record,size_t record_count,
  const LinearTravelScene&,const LinearTravelLimits &limits={});
 }
