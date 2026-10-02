@@ -1,11 +1,13 @@
 #include <catch2/catch_test_macros.hpp>
 #include <nonplanar_verify/LinearMaterial.hpp>
+#include <nonplanar_verify/TravelJson.hpp>
 #include <boost/multiprecision/cpp_bin_float.hpp>
 #include <cfenv>
 #include <iomanip>
 #include <set>
 #include <type_traits>
 #include "final_material_oracle.hpp"
+#include "final_travel_oracle.hpp"
 using namespace nptop_verify;
 namespace {
 using High=boost::multiprecision::cpp_bin_float_quad;
@@ -524,4 +526,120 @@ TEST_CASE("B12 exact nominal run union retains actual doses floors future and ro
  const auto refused=cover_joined_linear_material(joined.snapshot,future,MaterialRepresentation::Nominal,limits);std::fesetround(FE_TONEAREST);REQUIRE(refused.status==RateStatus::Unknown);REQUIRE_FALSE(refused.snapshot);REQUIRE_FALSE(refused.uncovered);
  auto region=f.box;limits={};limits.cancelled=[&]{region.min[0]=99;limits.max_cells=0;return false;};
  const auto owned=cover_joined_linear_material(complete.snapshot,region,MaterialRepresentation::Nominal,limits);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->region.min==f.box.min);
+}
+namespace {
+LinearTravelScene travel_scene()
+{
+ LinearTravelScene s;s.profile_id=51;s.revision=1;s.opening_radius_mm=.2;s.outer_radius_mm=.5;
+ s.nozzle_domain=s.scene_domain={{-100,-100,-100},{100,100,100}};
+ s.obstacle_inventory_complete=true;s.unmodelled_parts_min_local_z_mm=5;
+ for(int role=0;role<6;++role)s.head.push_back({uint64_t(role+1),TravelHeadRole(role),{{-.05,-.05,.5},{.05,.05,.8}}});return s;
+}
+LinearMaterialResult travel_material(bool rounded=false)
+{
+ const std::string bytes=std::string("G90\nM83\nM400\nM204 S4\nG1 X")+(rounded ? "3.000001" : "3")+" Y4 Z.5 F60\nM400\nG1 X6 Y8 Z.5 E.2 F60\nM400\nG1 X0 Y0 Z.5 F60\nM400\n";
+ auto p=material_policy();p.max_coordinate_delta_mm=2e-6;
+ const double volume=(High(".2")*acos(High(-1))*High("1.75")*High("1.75")/4/High(rate_policy().flow)).convert_to<double>();
+ const std::vector<MaterialDeclaration> rows{
+ {1,0,MaterialEventKind::Travel,{0,0,.5},{3,4,.5},0,0,{}},
+ {2,1,MaterialEventKind::Deposit,{3,4,.5},{6,8,.5},volume,0,MaterialSection{MaterialSectionKind::Rectangle,.2,.2}},
+ {3,2,MaterialEventKind::Travel,{6,8,.5},{0,0,.5},0,0,{}}};
+ const auto rates=verify_linear_rates(bytes,{0,0,.5},rate_policy());INFO(rates.reason);REQUIRE(rates.snapshot);
+ const auto result=reconstruct_linear_material(rates.snapshot,rows,p);INFO(result.reason);REQUIRE(result.snapshot);return result;
+}
+}
+TEST_CASE("B12 final travel checks the complete head against actual past material and excludes future deposits", "[Nonplanar][B12][FinalByteTravel]")
+{
+ const auto material=travel_material();const auto scene=travel_scene();
+ const auto before=verify_linear_travel_geometry(material.snapshot,0,1,scene);INFO(before.reason);REQUIRE(before.snapshot);
+ REQUIRE(before.status==RateStatus::Pass);REQUIRE(before.snapshot->source==material.snapshot);REQUIRE(before.snapshot->prefix->completed_records==0);
+ REQUIRE(before.snapshot->prefix->pieces.empty());REQUIRE(before.snapshot->leaves.size()==7);
+ nptop_test::check_final_travel(*before.snapshot);
+ for(const auto &leaf:before.snapshot->leaves){REQUIRE(leaf.record==0);REQUIRE(leaf.progress.lower==0);REQUIRE(leaf.progress.upper==1);}
+ const auto after=verify_linear_travel_geometry(material.snapshot,2,1,scene);INFO(after.reason);REQUIRE(after.status==RateStatus::Fail);
+ REQUIRE_FALSE(after.snapshot);REQUIRE(after.witness);REQUIRE(after.witness->record==2);REQUIRE(after.witness->material_event==2);
+ REQUIRE_FALSE(verify_linear_travel_geometry(material.snapshot,0,2,scene).snapshot);
+ REQUIRE_FALSE(verify_linear_travel_geometry(material.snapshot,0,0,scene).snapshot);
+ REQUIRE_FALSE(verify_linear_travel_geometry(material.snapshot,3,1,scene).snapshot);
+}
+TEST_CASE("B12 final travel rejects interior static and full head collisions even when travel endpoints clear", "[Nonplanar][B12][FinalByteTravel]")
+{
+ const auto material=travel_material();auto scene=travel_scene();
+ scene.obstacles.push_back({{1.99,1.99,.49},{2.01,2.01,.51}});
+ const auto middle=verify_linear_travel_geometry(material.snapshot,0,1,scene);INFO(middle.reason);REQUIRE(middle.status==RateStatus::Fail);
+ REQUIRE(middle.witness);REQUIRE(middle.witness->component==0);REQUIRE(middle.witness->obstacle==0);
+ REQUIRE(middle.witness->progress.lower>0);REQUIRE(middle.witness->progress.upper<1);
+ scene=travel_scene();scene.obstacles.push_back({{1.49,1.99,1.14},{1.51,2.01,1.16}});
+ const auto head=verify_linear_travel_geometry(material.snapshot,0,1,scene);INFO(head.reason);REQUIRE(head.status==RateStatus::Fail);
+ REQUIRE(head.witness);REQUIRE(head.witness->component>0);REQUIRE(head.witness->obstacle==0);
+}
+TEST_CASE("B12 final travel partitions the annulus hole over previous actual material without filling the disk", "[Nonplanar][B12][FinalByteTravel]")
+{
+ const auto rates=verify_linear_rates("G90\nM83\nM400\nM204 S4\nG1 X.01 Y0 Z.5 E.00001 F30\nM400\nG1 X.01 Y0 Z1 F30\nM400\n",{0,0,.5},rate_policy());REQUIRE(rates.snapshot);
+ const double volume=(High(".00001")*acos(High(-1))*High("1.75")*High("1.75")/4/High(rate_policy().flow)).convert_to<double>();
+ const std::vector<MaterialDeclaration> rows{
+  {1,0,MaterialEventKind::Deposit,{0,0,.5},{.01,0,.5},volume,0,MaterialSection{MaterialSectionKind::Rectangle,.2,.2}},
+  {2,1,MaterialEventKind::Travel,{.01,0,.5},{.01,0,1},0,0,{}}};
+ const auto material=reconstruct_linear_material(rates.snapshot,rows,material_policy());INFO(material.reason);REQUIRE(material.snapshot);
+ const auto proof=verify_linear_travel_geometry(material.snapshot,1,1,travel_scene());INFO(proof.reason);REQUIRE(proof.snapshot);
+ REQUIRE(proof.snapshot->prefix->pieces.size()==1);
+ REQUIRE(std::any_of(proof.snapshot->leaves.begin(),proof.snapshot->leaves.end(),[](const auto &l){return l.outside_annulus;}));
+ nptop_test::check_final_travel(*proof.snapshot);
+}
+TEST_CASE("B12 final travel honors actual rounded decimal positions instead of nominal source poses", "[Nonplanar][B12][FinalByteTravel]")
+{
+ const auto nominal=travel_material(),rounded=travel_material(true);auto scene=travel_scene();
+ // A distinct exact analytic zero-margin scene, not reduced native margins.
+ scene.obstacles.push_back({{3.5000009,3.999999,.499999},{3.5000011,4.000001,.500001}});
+ const auto old=verify_linear_travel_geometry(nominal.snapshot,0,1,scene);INFO(old.reason);REQUIRE(old.snapshot);
+ const auto actual=verify_linear_travel_geometry(rounded.snapshot,0,1,scene);INFO(actual.reason);REQUIRE(actual.status==RateStatus::Fail);
+ REQUIRE(actual.witness);REQUIRE(actual.witness->component==0);REQUIRE(actual.witness->progress.lower==1);
+ REQUIRE(actual.witness->point.min[0]>3.5);REQUIRE(actual.witness->obstacle==0);
+}
+TEST_CASE("B12 final travel owns callers and refuses incomplete scenes stale callbacks budgets and late publication", "[Nonplanar][B12][FinalByteTravel]")
+{
+ auto material=travel_material().snapshot;auto scene=travel_scene();LinearTravelLimits limits;
+ const auto source=material;limits.cancelled=[&]{material.reset();scene.head.clear();limits.max_cells=0;return false;};
+ const auto owned=verify_linear_travel_geometry(material,0,1,scene,limits);INFO(owned.reason);REQUIRE(owned.snapshot);
+ REQUIRE(owned.snapshot->source==source);REQUIRE(owned.snapshot->scene.head.size()==6);
+ for(int mode=0;mode<19;++mode){auto head=travel_scene();auto l=LinearTravelLimits{};
+  if(mode==0)head.head.pop_back();if(mode==1)head.head[0].role=TravelHeadRole(6);if(mode==2)head.operator_confirmed_claim=true;
+  if(mode==3)head.obstacle_inventory_complete=false;if(mode==4)head.head[0].moving=true;
+  if(mode==5)head.unmodelled_parts_min_local_z_mm=0; // no past solids: add a static ceiling below the omitted parts
+  if(mode==5)head.obstacles.push_back({{20,20,1},{21,21,2}});
+  if(mode==6)l.max_cells=owned.cells-1;if(mode==7)l.max_evaluations=owned.evaluations-1;
+  if(mode==8)l.is_scene_current=[](uint64_t,uint64_t){return false;};if(mode==9)l.is_source_current=[](uint64_t){return false;};
+  if(mode==10)l.cancelled=[] {return true;};if(mode==11)l.timeout=std::chrono::milliseconds(0);
+  if(mode==12)l.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+  if(mode==13)l.cancelled=[]()->bool{throw 3;};if(mode==14)l.cancelled=[]()->bool{throw std::runtime_error("");};
+  if(mode==15)head.opening_radius_mm=head.outer_radius_mm;if(mode==16)head.nozzle_domain.max[0]=1;
+  if(mode==17)l.is_current=[](uint64_t,uint64_t){return false;};if(mode==18)l.is_rate_current=[](uint64_t,uint64_t){return false;};
+  const auto r=verify_linear_travel_geometry(source,0,1,head,l);if(mode==12)REQUIRE(std::fesetround(FE_TONEAREST)==0);
+  INFO(mode<<' '<<r.reason);REQUIRE(r.status==RateStatus::Unknown);REQUIRE_FALSE(r.snapshot);REQUIRE_FALSE(r.reason.empty());
+ }
+ limits={};size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(verify_linear_travel_geometry(source,0,1,travel_scene(),limits).snapshot);
+ const auto last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};
+ const auto late=verify_linear_travel_geometry(source,0,1,travel_scene(),limits);REQUIRE_FALSE(late.snapshot);REQUIRE(late.status==RateStatus::Unknown);REQUIRE(calls==last);
+ auto collision=travel_scene();collision.obstacles.push_back({{1.99,1.99,.49},{2.01,2.01,.51}});
+ calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(verify_linear_travel_geometry(source,0,1,collision,limits).witness);
+ const auto negative_last=calls;calls=0;limits.cancelled=[&]{return ++calls==negative_last;};
+ const auto refused=verify_linear_travel_geometry(source,0,1,collision,limits);REQUIRE(refused.status==RateStatus::Unknown);REQUIRE_FALSE(refused.snapshot);REQUIRE_FALSE(refused.witness);REQUIRE(calls==negative_last);
+}
+TEST_CASE("B12 final travel JSON preserves every dependency and rejects duplicate ambiguous numeric or unknown fields", "[Nonplanar][B12][FinalByteTravel]")
+{
+ const auto document=travel_document({0,1,travel_scene()});const auto parsed=parse_travel_document(document.dump());
+ REQUIRE(travel_document(parsed)==document);
+ for(int mode=0;mode<12;++mode){auto d=document;
+  if(mode==0)d["version"]=2;if(mode==1)d["first_record"]=true;if(mode==2)d["record_count"]=0;
+  if(mode==3)d["scene"]["profile_id"]=1.0;if(mode==4)d["scene"]["tip"]["center"].push_back(0);
+  if(mode==5)d["scene"]["clearance_mm"][0]=false;if(mode==6)d["scene"]["clearance_mm"].erase(0);
+  if(mode==7)d["scene"]["head"][0]["role"]=6;if(mode==8)d["scene"]["head"][0]["id"]=0;
+  if(mode==9)d["scene"]["head"][0]["verified"]=true;if(mode==10)d["scene"]["scene_domain"]["max"][0]=nullptr;
+  if(mode==11)d["scene"]["obstacles"]={{{"min",{0,0,0}},{"max",{1,1,1}},{"hidden",true}}};
+  INFO(mode);REQUIRE_THROWS(parse_travel_document(d.dump()));
+ }
+ auto duplicate=document.dump();const auto offset=duplicate.find("\"opening_radius_mm\":");REQUIRE(offset!=std::string::npos);
+ duplicate.insert(offset,"\"opening_radius_mm\":0.2,");REQUIRE_THROWS(parse_travel_document(duplicate));
+ auto nonfinite=document.dump();const auto number=nonfinite.find("\"opening_radius_mm\":0.2");REQUIRE(number!=std::string::npos);
+ nonfinite.replace(number,std::string("\"opening_radius_mm\":0.2").size(),"\"opening_radius_mm\":1e999");REQUIRE_THROWS(parse_travel_document(nonfinite));
 }

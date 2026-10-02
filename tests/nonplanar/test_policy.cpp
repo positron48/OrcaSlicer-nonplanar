@@ -13,8 +13,10 @@
 #include <nonplanar_verify/FullStopReplay.hpp>
 #include "full_stop_oracle.hpp"
 #include "final_material_oracle.hpp"
+#include "final_travel_oracle.hpp"
 #include "job_report_evidence.hpp"
 #include <nonplanar_verify/MaterialJson.hpp>
+#include <nonplanar_verify/TravelJson.hpp>
 #include <libslic3r/ClipperUtils.hpp>
 #include <libslic3r/Nonplanar/StlFile.hpp>
 #include <libslic3r/Format/STL.hpp>
@@ -3556,4 +3558,57 @@ TEST_CASE("B13 native departure captures callers and refuses cancellation deadli
     size_t calls=0;limits={};limits.cancelled=[&]{++calls;return false;};REQUIRE(fixture.capture(limits).snapshot);
     const size_t last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};
     const auto late=fixture.capture(limits);REQUIRE_FALSE(late.snapshot);REQUIRE(late.reason=="NATIVE_JOB_CANCELLED");REQUIRE(calls==last);
+}
+TEST_CASE("B12 independent final decimal geometry verifies every leg of the owned native cap departure", "[Nonplanar][B12][FinalByteTravelNative]")
+{
+    NativeDepartureFixture fixture;const auto &d=*fixture.departure.snapshot;
+    const auto material=verify_linear_candidate_material(fixture.bytes,{93,1,5e-9,.0001,1e-9,.02,0});INFO(material.reason);REQUIRE(material.snapshot);
+    const auto &input=*d.route->planned;const auto &scene=input.scene;const auto &p=input.policy;
+    nptop_verify::LinearTravelScene s;s.profile_id=scene.profile_id;s.revision=scene.revision;
+    s.tip_center={scene.tip.center.x(),scene.tip.center.y(),scene.tip.center.z()};s.opening_radius_mm=scene.tip.opening_radius.value();s.outer_radius_mm=scene.tip.outer_radius.value();
+    const auto region=[](const auto &b){return nptop_verify::MaterialRegion{{b.min.x(),b.min.y(),b.min.z()},{b.max.x(),b.max.y(),b.max.z()}};};
+    s.nozzle_domain=region(scene.nozzle_domain);s.scene_domain=region(scene.scene_domain);s.obstacle_inventory_complete=scene.obstacle_inventory_complete;
+    s.unmodelled_parts_min_local_z_mm=scene.unmodelled_parts_min_local_z.value();s.uncertainty_mm=scene.uncertainty.value();
+    s.clearance_mm={p.required.value(),p.numeric.import_mm,p.numeric.chord_mm,p.numeric.distance_mm,p.numeric.conversion_mm,
+        p.tool_measurement.value(),p.positioning.value(),p.material.value(),p.scene_geometry.value()};
+    for(const auto &h:scene.head)s.head.push_back({h.id,nptop_verify::TravelHeadRole(int(h.part)),region(h.outer),h.moving,h.all_configurations_enclosed});
+    for(const auto &o:scene.obstacles)s.obstacles.push_back(region(o));
+    const size_t first=d.material->material->sequence->records.size(),count=d.route->legs.size();
+    const auto result=nptop_verify::verify_linear_travel_geometry(material.snapshot,first,count,s);
+    INFO(result.reason<<" work="<<result.evaluations<<" cells="<<result.cells);REQUIRE(result.snapshot);
+    REQUIRE(result.snapshot->source==material.snapshot);REQUIRE(result.snapshot->prefix->completed_records==first);
+    REQUIRE(result.snapshot->record_count==count);REQUIRE(result.status==nptop_verify::RateStatus::Pass);
+    REQUIRE(result.snapshot->scene.clearance_mm==s.clearance_mm);REQUIRE(result.snapshot->scene.head.size()==6);
+    nptop_test::check_final_travel(*result.snapshot);
+    REQUIRE_FALSE(nptop_verify::verify_linear_travel_geometry(material.snapshot,first,count-1,s).snapshot);
+    REQUIRE_FALSE(nptop_verify::verify_linear_travel_geometry(material.snapshot,first+1,count-1,s).snapshot);
+    if(const char *directory=std::getenv("NPTOP_CANDIDATE_EVIDENCE_DIR")) {
+        const auto dir=boost::filesystem::path(directory);boost::filesystem::create_directories(dir);
+        const auto save=[&](const char *name,const std::string &bytes) {
+            const auto path=dir/name;REQUIRE_FALSE(boost::filesystem::exists(path));
+            boost::nowide::ofstream file(path.string(),std::ios::binary);REQUIRE(file.good());file<<bytes;file.close();REQUIRE(file.good());
+        };
+        const auto &rates=*material.snapshot->rates;const auto &rp=rates.policy;
+        const nlohmann::json rate_document={{"version",rp.version},{"profile_id",rp.profile_id},{"revision",rp.revision},
+            {"synthetic",rp.synthetic},{"operator_confirmed_claim",rp.operator_confirmed_claim},{"model","full_stop"},
+            {"kinematics",rp.kinematics==nptop_verify::RateKinematics::CoreXY ? "corexy" : "cartesian"},
+            {"initial_position",rates.initial_position},{"position_min",rp.position_min},{"position_max",rp.position_max},
+            {"axis_speed",rp.axis_speed},{"axis_acceleration",rp.axis_acceleration},{"drive_speed",rp.drive_speed},
+            {"drive_acceleration",rp.drive_acceleration},{"initial_acceleration",rp.initial_acceleration},
+            {"filament_diameter",rp.filament_diameter},{"flow",rp.flow},{"filament_speed",rp.filament_speed},
+            {"filament_acceleration",rp.filament_acceleration},{"max_retraction",rp.max_retraction},{"max_volume_rate",rp.max_volume_rate},
+            {"max_cross_section",rp.max_cross_section},{"max_event_rate",rp.max_event_rate}};
+        save("native-final-travel.rate.json",rate_document.dump(2)+'\n');
+        save("native-final-travel.material.json",nptop_verify::material_document(*material.snapshot).dump(2)+'\n');
+        save("native-final-travel.query.json",nptop_verify::travel_document({first,count,s}).dump(2)+'\n');
+        save("native-final-travel.candidate.txt",rates.bytes);
+        nlohmann::json leaves=nlohmann::json::array();
+        for(const auto &l:result.snapshot->leaves)leaves.push_back({{"record",l.record},{"component",l.component},
+            {"progress",{l.progress.lower,l.progress.upper}},{"local_min",l.local.min},{"local_max",l.local.max},
+            {"world_min",l.world.min},{"world_max",l.world.max},{"outside_annulus",l.outside_annulus}});
+        const nlohmann::json proof={{"schema_version",1},{"component_status","PASS"},{"job_status","UNKNOWN"},{"export_allowed",false},
+            {"prefix_completed_records",result.snapshot->prefix->completed_records},{"previous_deposits",result.snapshot->prefix->pieces.size()},
+            {"work",result.evaluations},{"cells",result.cells},{"leaves",leaves}};
+        save("native-final-travel.proof.json",proof.dump(2)+'\n');
+    }
 }

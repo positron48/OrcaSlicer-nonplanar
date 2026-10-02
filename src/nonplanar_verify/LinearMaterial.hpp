@@ -51,6 +51,9 @@ struct JoinedMaterialCoverResult;
 struct LinearRunSupportPolicy;
 struct LinearRunSupportLimits;
 struct LinearRunSupportResult;
+struct LinearTravelScene;
+struct LinearTravelLimits;
+struct LinearTravelResult;
 struct LinearMaterialSnapshot {
  const std::shared_ptr<const LinearRateSnapshot> rates;
  const std::vector<MaterialDeclaration> declarations;
@@ -72,6 +75,7 @@ private:
  friend JoinedMaterialCoverResult cover_joined_linear_material_lower(std::shared_ptr<const JoinedMaterialSnapshot>,const MaterialRegion&,const JoinedMaterialLimits&);
  friend JoinedMaterialCoverResult cover_joined_linear_material(std::shared_ptr<const JoinedMaterialSnapshot>,const MaterialRegion&,MaterialRepresentation,const JoinedMaterialLimits&);
  friend LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot>,size_t,const LinearRunSupportPolicy&,const LinearRunSupportLimits&);
+ friend LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearTravelLimits&);
 };
 struct LinearMaterialResult {
  RateStatus status=RateStatus::Unknown;std::string reason;std::optional<size_t> record;
@@ -210,4 +214,45 @@ struct LinearRunSupportResult {
 // All source/errors/bands/limits remain; this is not contact/export approval.
 LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot>,size_t,
  const LinearRunSupportPolicy&,const LinearRunSupportLimits &limits={});
+
+inline constexpr unsigned linear_travel_version=1;
+enum class TravelHeadRole { NozzleBody,Heater,Sock,Duct,Sensor,Mount };
+struct TravelHeadBox {uint64_t id;TravelHeadRole role;MaterialRegion local;bool moving=false,all_configurations_enclosed=false;};
+struct LinearTravelScene {
+ uint64_t version=1,profile_id=0,revision=0;bool synthetic=true,operator_confirmed_claim=false;
+ std::array<double,3> tip_center{};double opening_radius_mm=0,outer_radius_mm=0;
+ std::vector<TravelHeadBox> head;std::vector<MaterialRegion> obstacles;
+ MaterialRegion nozzle_domain,scene_domain;
+ bool obstacle_inventory_complete=false;double unmodelled_parts_min_local_z_mm=0,uncertainty_mm=0;
+ // required, import, chord, distance, conversion, tool, positioning, material,
+ // scene. All are retained; the independent exact query adds them conservatively.
+ std::array<double,9> clearance_mm{};
+};
+struct LinearTravelLimits : MaterialCoverLimits {std::function<bool(uint64_t,uint64_t)> is_scene_current;};
+struct LinearTravelLeaf {size_t record,component;RateBounds progress;MaterialRegion local,world;bool outside_annulus=false;};
+struct LinearTravelWitness {
+ size_t record,component;RateBounds progress;MaterialRegion point;
+ std::optional<uint64_t> material_event;std::optional<size_t> obstacle;
+};
+struct LinearTravelSnapshot {
+ const std::shared_ptr<const LinearMaterialSnapshot> source;
+ const std::shared_ptr<const LinearMaterialPrefixSnapshot> prefix;
+ const size_t first_record,record_count;const LinearTravelScene scene;
+ const std::vector<LinearTravelLeaf> leaves;const size_t evaluations,cells;
+private:
+ LinearTravelSnapshot(std::shared_ptr<const LinearMaterialSnapshot> s,std::shared_ptr<const LinearMaterialPrefixSnapshot> p,
+  size_t first,size_t count,LinearTravelScene head,std::vector<LinearTravelLeaf> parts,size_t work,size_t n)
+  :source(std::move(s)),prefix(std::move(p)),first_record(first),record_count(count),scene(std::move(head)),leaves(std::move(parts)),evaluations(work),cells(n){}
+ friend LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearTravelLimits&);
+};
+struct LinearTravelResult {
+ RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const LinearTravelSnapshot> snapshot;
+ std::optional<LinearTravelWitness> witness;size_t evaluations=0,cells=0;
+};
+// Independently parsed final decimals and reconstructed Upper material before
+// one complete contiguous Travel block. Whole fixed-axis annulus/head/static
+// sweeps, exact rational bounds and complete partitions; no sampled PASS,
+// contact exception, future material, planner geometry or whole-job/export claim.
+LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t first_record,size_t record_count,
+ const LinearTravelScene&,const LinearTravelLimits &limits={});
 }

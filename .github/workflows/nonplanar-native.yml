@@ -109,6 +109,10 @@ jobs:
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/nominal-run-cli.log -- python3 scripts/nonplanar/validate_nominal_run_cli.py --executable build/src/nonplanar_verify/Release/nonplanar_rate_audit --fixture-dir build/nonplanar-evidence/linux/material-cli/positive --output-dir build/nonplanar-evidence/linux/nominal-run-cli
       - name: Exercise independent complete-run support and actual gap bands
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/run-support-cli.log -- python3 scripts/nonplanar/validate_run_support_cli.py --executable build/src/nonplanar_verify/Release/nonplanar_rate_audit --fixture-dir build/nonplanar-evidence/linux/material-cli/positive --output-dir build/nonplanar-evidence/linux/run-support-cli
+      - name: Exercise independent continuous final-byte travel geometry
+        run: |
+          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/travel-cli.log -- python3 scripts/nonplanar/validate_travel_geometry_cli.py --executable build/src/nonplanar_verify/Release/nonplanar_rate_audit --fixture-dir build/nonplanar-evidence/linux/material-cli/positive --output-dir build/nonplanar-evidence/linux/travel-cli
+          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/native-travel-cli.log -- build/src/nonplanar_verify/Release/nonplanar_rate_audit --linear-travel-geometry-only build/nonplanar-evidence/linux/candidate-fixtures/native-final-travel.rate.json build/nonplanar-evidence/linux/candidate-fixtures/native-final-travel.material.json build/nonplanar-evidence/linux/candidate-fixtures/native-final-travel.query.json build/nonplanar-evidence/linux/candidate-fixtures/native-final-travel.candidate.txt
       - name: Build native application after test verification
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/app-build.log -- ./build_linux.sh -srlL -j 2
       - name: Preserve observed results even on failure

@@ -1,0 +1,566 @@
+{
+  "cases": [
+    {
+      "case": "future-not-present",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/future-not-present/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/future-not-present/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/future-not-present/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/future-not-present/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "annulus-hole",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/annulus-hole/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/annulus-hole/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/annulus-hole/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/annulus-hole/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "offset-head",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/offset-head/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/offset-head/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/offset-head/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/offset-head/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "enclosed-moving-head",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/enclosed-moving-head/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/enclosed-moving-head/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/enclosed-moving-head/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/enclosed-moving-head/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "rounded-nominal",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/rounded-nominal/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/rounded-nominal/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/rounded-nominal/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/rounded-nominal/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "past-material",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/past-material/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/past-material/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/past-material/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/past-material/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "middle-annulus",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/middle-annulus/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/middle-annulus/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/middle-annulus/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/middle-annulus/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "middle-head",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/middle-head/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/middle-head/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/middle-head/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/middle-head/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "rounded-contact",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/rounded-contact/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/rounded-contact/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/rounded-contact/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/rounded-contact/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "changed-dose",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/changed-dose/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/changed-dose/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/changed-dose/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/changed-dose/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "incomplete-head",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/incomplete-head/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/incomplete-head/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/incomplete-head/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/incomplete-head/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "duplicate-head-id",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/duplicate-head-id/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/duplicate-head-id/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/duplicate-head-id/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/duplicate-head-id/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "missing-role",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/missing-role/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/missing-role/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/missing-role/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/missing-role/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "moving-not-enclosed",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/moving-not-enclosed/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/moving-not-enclosed/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/moving-not-enclosed/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/moving-not-enclosed/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "incomplete-inventory",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/incomplete-inventory/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/incomplete-inventory/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/incomplete-inventory/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/incomplete-inventory/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "confirmed-claim",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/confirmed-claim/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/confirmed-claim/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/confirmed-claim/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/confirmed-claim/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "head-scene-coverage",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/head-scene-coverage/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/head-scene-coverage/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/head-scene-coverage/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/head-scene-coverage/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "nozzle-coverage",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nozzle-coverage/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nozzle-coverage/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nozzle-coverage/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nozzle-coverage/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "omitted-height",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/omitted-height/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/omitted-height/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/omitted-height/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/omitted-height/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "unknown-field",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/unknown-field/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/unknown-field/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/unknown-field/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/unknown-field/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "duplicate-key",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/duplicate-key/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/duplicate-key/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/duplicate-key/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/duplicate-key/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "wrong-version",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/wrong-version/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/wrong-version/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/wrong-version/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/wrong-version/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "negative-count",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/negative-count/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/negative-count/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/negative-count/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/negative-count/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "boolean-count",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/boolean-count/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/boolean-count/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/boolean-count/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/boolean-count/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "partial-block",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/partial-block/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/partial-block/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/partial-block/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/partial-block/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "skip-first-leg",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/skip-first-leg/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/skip-first-leg/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/skip-first-leg/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/skip-first-leg/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "bad-radius",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/bad-radius/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/bad-radius/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/bad-radius/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/bad-radius/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "nonfinite",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nonfinite/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nonfinite/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nonfinite/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nonfinite/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "nested-axis",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nested-axis/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nested-axis/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nested-axis/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/nested-axis/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "margin-clear",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/margin-clear/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/margin-clear/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/margin-clear/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/margin-clear/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "uncertainty-required",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/uncertainty-required/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/uncertainty-required/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/uncertainty-required/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/uncertainty-required/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "clearance-0-required",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-0-required/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-0-required/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-0-required/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-0-required/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "clearance-1-required",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-1-required/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-1-required/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-1-required/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-1-required/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "clearance-2-required",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-2-required/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-2-required/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-2-required/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-2-required/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "clearance-3-required",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-3-required/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-3-required/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-3-required/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-3-required/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "clearance-4-required",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-4-required/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-4-required/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-4-required/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-4-required/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "clearance-5-required",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-5-required/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-5-required/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-5-required/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-5-required/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "clearance-6-required",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-6-required/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-6-required/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-6-required/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-6-required/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "clearance-7-required",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-7-required/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-7-required/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-7-required/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-7-required/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "clearance-8-required",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-travel-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-8-required/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-8-required/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-8-required/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-final-travel/travel-cli1/clearance-8-required/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    }
+  ],
+  "status": "PASS",
+  "scope": "DECLARED_TRAVEL_BLOCK_ONLY_JOB_EXPORT_BLOCKED"
+}

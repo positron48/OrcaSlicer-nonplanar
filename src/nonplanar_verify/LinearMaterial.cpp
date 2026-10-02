@@ -2,6 +2,7 @@
 #include "Exact.hpp"
 #include <algorithm>
 #include <deque>
+#include <exception>
 #include <set>
 namespace nptop_verify {
 namespace {
@@ -573,5 +574,142 @@ LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMat
   work.stop();result.snapshot=std::shared_ptr<const LinearRunSupportSnapshot>(new LinearRunSupportSnapshot(source,old.snapshot,run_index,policy,stored_error,std::move(leaves),result.evaluations,result.cells));work.stop();
   result.status=RateStatus::Pass;result.reason="WHOLE_ACTUAL_RUN_FOOTPRINT_NOMINAL_GAP_BANDS_AND_DECLARED_LOWER_ANCHORS";
  }catch(const std::exception &e){result.status=RateStatus::Unknown;result.snapshot.reset();result.witness.reset();result.reason=e.what();}return result;
+}
+namespace {
+void valid_travel_scene(const LinearTravelScene &s)
+{
+ if(s.version!=linear_travel_version || !s.profile_id || !s.revision || !s.synthetic || s.operator_confirmed_claim)
+  unknown("UNSUPPORTED_FINAL_TRAVEL_SCENE");
+ if(!s.obstacle_inventory_complete || s.head.size()<6 || s.head.size()>64 || s.obstacles.size()>10000)
+  unknown("INCOMPLETE_FINAL_TRAVEL_SCENE");
+ valid_region(s.nozzle_domain);valid_region(s.scene_domain);std::set<uint64_t> ids;unsigned roles=0;
+ for(const auto &part:s.head){
+  const int role=int(part.role);if(!part.id || !ids.insert(part.id).second || role<0 || role>=6 ||
+   (part.moving && !part.all_configurations_enclosed))unknown("INCOMPLETE_FINAL_TRAVEL_HEAD");
+  roles|=1u<<role;valid_region(part.local);
+ }
+ if(roles!=63)unknown("INCOMPLETE_FINAL_TRAVEL_HEAD");
+ for(const auto &obstacle:s.obstacles){valid_region(obstacle);for(size_t a=0;a<3;++a)
+  if(obstacle.min[a]<s.scene_domain.min[a] || obstacle.max[a]>s.scene_domain.max[a])unknown("FINAL_TRAVEL_OBSTACLE_COVERAGE");}
+ for(double v:s.tip_center)if(!std::isfinite(v) || std::abs(v)>10000)unknown("INVALID_FINAL_TRAVEL_TIP");
+ if(!std::isfinite(s.opening_radius_mm) || !std::isfinite(s.outer_radius_mm) || s.opening_radius_mm<=0 ||
+  s.outer_radius_mm<=s.opening_radius_mm || s.outer_radius_mm>100)unknown("INVALID_FINAL_TRAVEL_ANNULUS");
+ for(double v:s.clearance_mm)if(!std::isfinite(v) || v<0 || v>100)unknown("INVALID_FINAL_TRAVEL_CLEARANCE");
+ for(double v:{s.uncertainty_mm,s.unmodelled_parts_min_local_z_mm})if(!std::isfinite(v) || v<0 || v>10000)unknown("INVALID_FINAL_TRAVEL_COVERAGE");
+}
+bool outside_annulus(const MaterialRegion &box,const LinearTravelScene &s)
+{
+ Q minimum=0,maximum=0;
+ for(size_t a=0;a<2;++a){const Q lo=binary(box.min[a])-binary(s.tip_center[a]),hi=binary(box.max[a])-binary(s.tip_center[a]);
+  minimum+=lo<=0 && hi>=0 ? Q(0) : std::min(square(lo),square(hi));maximum+=std::max(square(lo),square(hi));}
+ return maximum<square(binary(s.opening_radius_mm)) || minimum>square(binary(s.outer_radius_mm));
+}
+MaterialRegion swept_region(const ExactStep &move,RateBounds t,const MaterialRegion &local,const Q &margin,Work &work)
+{
+ MaterialRegion box;
+ for(size_t a=0;a<3;++a){work();const auto p=affine(move.start[a],move.end[a]-move.start[a],{binary(t.lower),binary(t.upper)});
+  const auto enclosure=bound({p.lo+binary(local.min[a])-margin,p.hi+binary(local.max[a])+margin},[&]{work();});
+  box.min[a]=enclosure.lower;box.max[a]=enclosure.upper;}
+ valid_region(box);return box;
+}
+bool disjoint(const MaterialRegion &a,const MaterialRegion &b)
+{for(size_t i=0;i<3;++i)if(a.max[i]<b.min[i] || a.min[i]>b.max[i])return true;return false;}
+}
+LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMaterialSnapshot> source,size_t first,size_t count,
+ const LinearTravelScene &requested_scene,const LinearTravelLimits &requested_limits)
+{
+ LinearTravelResult result;const auto started=std::chrono::steady_clock::now();
+ try {
+  if(requested_scene.head.size()>64 || requested_scene.obstacles.size()>10000)unknown("FINAL_TRAVEL_SCENE_SIZE_LIMIT");
+  const auto scene=requested_scene;const auto limits=requested_limits;
+  if(!source || !count || first>=source->declarations.size() || count>source->declarations.size()-first ||
+   !limits.max_cells || limits.max_cells>1000000 || !limits.max_depth || limits.max_depth>48)unknown("INVALID_FINAL_TRAVEL_SOURCE_OR_LIMITS");
+  valid_travel_scene(scene);result.evaluations=std::max(source->evaluations,limits.initial_evaluations);
+  // Nested material-prefix work cannot outlive the root deadline or recover a
+  // cancelled/throwing callback. Copy all owners and caller options first.
+  std::exception_ptr stopped;auto guarded=static_cast<const LinearMaterialLimits &>(limits);
+  guarded.cancelled=[&]{
+   if(stopped)std::rethrow_exception(stopped);
+   try {
+    if(limits.cancelled && limits.cancelled())unknown("FINAL_TRAVEL_CANCELLED");
+    if(limits.is_scene_current && !limits.is_scene_current(scene.profile_id,scene.revision))unknown("STALE_FINAL_TRAVEL_SCENE");
+    if(std::chrono::steady_clock::now()-started>=limits.timeout)unknown("FINAL_TRAVEL_DEADLINE");
+   }catch(...){stopped=std::current_exception();throw;}return false;
+  };
+  Work work{*source->rates,source->policy,guarded,result.evaluations};work.admission();work();
+  if((first && source->declarations[first-1].kind==MaterialEventKind::Travel) ||
+   (first+count<source->declarations.size() && source->declarations[first+count].kind==MaterialEventKind::Travel))
+   unknown("FINAL_TRAVEL_INCOMPLETE_CONTIGUOUS_BLOCK");
+  for(size_t i=first;i<first+count;++i){work();if(source->declarations[i].kind!=MaterialEventKind::Travel)unknown("FINAL_TRAVEL_REQUIRES_COMPLETE_TRAVEL_BLOCK");}
+  guarded.initial_evaluations=result.evaluations;
+  const auto prepared=linear_material_at(source,first,0,guarded);result.evaluations=prepared.evaluations;work.stop();
+  if(!prepared.snapshot)unknown(prepared.reason.empty() ? "FINAL_TRAVEL_PREFIX_REFUSAL" : prepared.reason.c_str());
+  const auto prefix=prepared.snapshot;
+  const auto index=bounds_index(prefix->pieces.size(),[&](size_t i){return prefix->pieces[i].upper_bounds;},work);
+  SolidQuery query{*prefix,*source->exact,MaterialRepresentation::Upper,work};
+  const auto material_query=[&](const MaterialRegion &box){MaterialBoxResult answer;bool uncertain=false;
+   const bool inside=visit_bounds(index,box,work,[&](size_t i){const auto &bead=prefix->pieces[i];
+    // A leaf node encloses several beads. Prune each complete disjoint Upper
+    // box before exact sections; an overlapping box never grants clearance.
+    work();for(size_t a=0;a<3;++a)if(box.min[a]>bead.upper_bounds.coordinate[a].upper || box.max[a]<bead.upper_bounds.coordinate[a].lower)return false;
+    const auto m=query.piece(bead,box);
+    if(m==MaterialMembership::Inside){answer.event_id=bead.event_id;return true;}uncertain|=m==MaterialMembership::Unknown;return false;});
+   answer.membership=inside ? MaterialMembership::Inside : uncertain ? MaterialMembership::Unknown : MaterialMembership::Outside;return answer;};
+  Q margin=binary(scene.uncertainty_mm);for(double v:scene.clearance_mm)margin+=binary(v);
+  std::optional<Q> ceiling;
+  for(const auto &b:prefix->pieces){work();const Q top=binary(b.upper_bounds.coordinate[2].upper);ceiling=ceiling ? std::max(*ceiling,top) : top;}
+  for(const auto &b:scene.obstacles){work();const Q top=binary(b.max[2]);ceiling=ceiling ? std::max(*ceiling,top) : top;}
+  std::vector<LinearTravelLeaf> leaves;
+  for(size_t record=first;record<first+count;++record){const auto &move=source->exact->steps[record];work();
+   for(size_t a=0;a<3;++a)if(std::min(move.start[a],move.end[a])<binary(scene.nozzle_domain.min[a]) ||
+    std::max(move.start[a],move.end[a])>binary(scene.nozzle_domain.max[a]))unknown("FINAL_TRAVEL_NOZZLE_COVERAGE");
+   if(ceiling && std::min(move.start[2],move.end[2])+binary(scene.unmodelled_parts_min_local_z_mm)<=*ceiling+margin)
+    unknown("FINAL_TRAVEL_UNMODELLED_PARTS_HEIGHT");
+   for(size_t component=0;component<=scene.head.size();++component){
+    MaterialRegion local;
+    if(component)local=scene.head[component-1].local;
+    else {for(size_t a=0;a<3;++a)local.min[a]=local.max[a]=scene.tip_center[a];
+     for(size_t a=0;a<2;++a){const auto v=bound({binary(scene.tip_center[a])-binary(scene.outer_radius_mm),binary(scene.tip_center[a])+binary(scene.outer_radius_mm)},[&]{work();});local.min[a]=v.lower;local.max[a]=v.upper;}}
+    const auto complete=swept_region(move,{0,1},local,margin,work);
+    for(size_t a=0;a<3;++a)if(complete.min[a]<scene.scene_domain.min[a] || complete.max[a]>scene.scene_domain.max[a])unknown("FINAL_TRAVEL_HEAD_SCENE_COVERAGE");
+    struct Node{RateBounds t;MaterialRegion local;unsigned depth;};std::deque<Node> pending{{{0,1},local,0}};
+    while(!pending.empty()){
+     work();if(++result.cells>limits.max_cells)unknown("FINAL_TRAVEL_CELL_LIMIT");const auto node=pending.back();pending.pop_back();
+     const auto world=swept_region(move,node.t,node.local,margin,work);
+     if(component==0 && outside_annulus(node.local,scene)){leaves.push_back({record,component,node.t,node.local,world,true});continue;}
+     bool outside=true;for(const auto &b:scene.obstacles){work();outside&=disjoint(world,b);}
+     if(outside)outside=material_query(world).membership==MaterialMembership::Outside;
+     if(outside){leaves.push_back({record,component,node.t,node.local,world,false});continue;}
+     // A rigorously enclosed actual tool point inside the declared Upper/static
+     // solid can refuse. Samples never establish clearance for the whole cell.
+     const auto samples=[](double lo,double hi){std::vector<double> values{lo};const double mid=lo+(hi-lo)*.5;
+      if(mid>lo && mid<hi)values.push_back(mid);if(hi>lo)values.push_back(hi);return values;};
+     for(double t:samples(node.t.lower,node.t.upper))for(double x:samples(node.local.min[0],node.local.max[0]))
+      for(double y:samples(node.local.min[1],node.local.max[1]))for(double z:samples(node.local.min[2],node.local.max[2])){
+       work();if(component==0){const Q radius=square(binary(x)-binary(scene.tip_center[0]))+square(binary(y)-binary(scene.tip_center[1]));
+        if(radius<square(binary(scene.opening_radius_mm)) || radius>square(binary(scene.outer_radius_mm)))continue;}
+       const MaterialRegion point=swept_region(move,{t,t},{{x,y,z},{x,y,z}},Q(0),work);
+       std::optional<size_t> obstacle;for(size_t i=0;i<scene.obstacles.size();++i){work();bool contained=true;for(size_t a=0;a<3;++a)
+        contained&=point.min[a]>=scene.obstacles[i].min[a] && point.max[a]<=scene.obstacles[i].max[a];if(contained){obstacle=i;break;}}
+       const auto hit=material_query(point);
+       if(obstacle || hit.membership==MaterialMembership::Inside){result.witness=LinearTravelWitness{record,component,{t,t},point,hit.event_id,obstacle};
+        work.stop();fail("FINAL_TRAVEL_DECLARED_UPPER_OR_STATIC_INTERSECTION");}
+      }
+     if(node.depth>=limits.max_depth)unknown("FINAL_TRAVEL_SUBDIVISION_LIMIT");
+     size_t axis=0;double extent=0;for(size_t a=0;a<3;++a)extent=std::max(extent,std::abs(source->rates->moves[record].end[a]-source->rates->moves[record].start[a])*(node.t.upper-node.t.lower));
+     for(size_t a=0;a<3;++a)if(node.local.max[a]-node.local.min[a]>extent){extent=node.local.max[a]-node.local.min[a];axis=a+1;}
+     const double lo=axis ? node.local.min[axis-1] : node.t.lower,hi=axis ? node.local.max[axis-1] : node.t.upper,middle=lo+(hi-lo)*.5;
+     if(!(lo<middle && middle<hi))unknown("FINAL_TRAVEL_SUBDIVISION_PRECISION");
+     auto a=node,b=node;a.depth=b.depth=node.depth+1;if(axis){a.local.max[axis-1]=middle;b.local.min[axis-1]=middle;}else{a.t.upper=middle;b.t.lower=middle;}
+     pending.push_back(a);pending.push_back(b);
+    }
+   }
+  }
+  work.stop();result.snapshot=std::shared_ptr<const LinearTravelSnapshot>(new LinearTravelSnapshot(source,prefix,first,count,scene,std::move(leaves),result.evaluations,result.cells));work.stop();
+  result.status=RateStatus::Pass;result.reason="WHOLE_FINAL_DECIMAL_TRAVEL_BLOCK_HEAD_STATIC_AND_ACTUAL_PREFIX_UPPER_ONLY";
+ }catch(const Refusal &e){result.snapshot.reset();result.status=e.status;result.reason=e.what();if(e.status!=RateStatus::Fail)result.witness.reset();}
+ catch(const std::exception &e){result.snapshot.reset();result.witness.reset();result.status=RateStatus::Unknown;result.reason=*e.what() ? e.what() : "FINAL_TRAVEL_EXCEPTION_WITHOUT_REASON";}
+ catch(...){result.snapshot.reset();result.witness.reset();result.status=RateStatus::Unknown;result.reason="FINAL_TRAVEL_UNKNOWN_EXCEPTION";}
+ return result;
 }
 }

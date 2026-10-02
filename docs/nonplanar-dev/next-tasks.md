@@ -7,6 +7,20 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B12-final-travel.md` and ADR-0082 independently verify complete final-decimal
+Travel blocks against full declared annulus/head/static scene and all actual
+previous Upper material. The native B13 candidate retains every byte, scene and
+original margin: three legs,2202 prefix rows,2076 past deposits,133 cells/77 leaves.
+Independent113-bit whole-cell/partition checks pass; focus7/36076, CTest432/432,
+original CLI100 plus Travel40 and native CLI under the original1s root deadline.
+Old18 native files plus native-lineage report remain exact. Six strict OFF/ZAA
+pairs pass; frozen evidence retains initial compiler/deadline/evidence-directory
+failures. Fixed17 registry still has13 UNKNOWN/NOT_RUN domains; full B01–B15 stays
+active and export BLOCK. Next legal deposition contact, complete fixed-width
+cap fill/seams and all earlier/print/prolog/end byte geometry/order; complete
+source/resources/software/transforms/delivery and full job publication remain.
+Linux/Windows/full GUI/physical qualification and independent review pending.
+
 `B13-native-departure.md` and ADR-0081 now bind the exact protected laid bead,
 complete departure/origin map and final candidate to the current native job/
 attempt. Equal-content material/motion owners and unbound extra routes refuse.

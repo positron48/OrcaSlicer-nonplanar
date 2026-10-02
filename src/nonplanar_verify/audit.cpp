@@ -1,5 +1,6 @@
 #include "LinearRates.hpp"
 #include "MaterialJson.hpp"
+#include "TravelJson.hpp"
 #include <nlohmann/json.hpp>
 #include <boost/nowide/args.hpp>
 #include <filesystem>
@@ -73,6 +74,35 @@ CoverQuery parse_cover_query(const std::string &text)
     else if(r=="lower")representation=nptop_verify::MaterialRepresentation::Lower;else throw std::runtime_error("cover representation");
     return {j.at("completed_records").get<size_t>(),j.at("current_progress").get<double>(),representation,{array3("region_min"),array3("region_max")}};
 }
+int audit_travel(char **argv)
+{
+    using namespace nptop_verify;LinearTravelResult result;std::optional<LinearTravelQuery> query;
+    const auto deadline=std::chrono::steady_clock::now()+std::chrono::milliseconds(1000);
+    LinearTravelLimits limits;limits.cancelled=[&]{return std::chrono::steady_clock::now()>=deadline;};
+    try {
+        std::array<double,3> initial;const auto policy=parse_policy(read_bounded(argv[2],65536),initial);
+        const auto declaration=parse_material_document(read_bounded(argv[3],32*1024*1024));query=parse_travel_document(read_bounded(argv[4],2*1024*1024));
+        const auto rates=verify_linear_rates(read_bounded(argv[5],32*1024*1024),initial,policy,limits);
+        result.status=rates.status;result.reason=rates.reason;result.evaluations=rates.evaluations;
+        if(rates.snapshot){const auto material=reconstruct_linear_material(rates.snapshot,declaration.second,declaration.first,limits);
+            result.status=material.status;result.reason=material.reason;result.evaluations=material.evaluations;
+            if(material.snapshot)result=verify_linear_travel_geometry(material.snapshot,query->first_record,query->record_count,query->scene,limits);
+        }
+        // A preceding component PASS never grants a missing travel proof.
+        if(!result.snapshot && result.status==RateStatus::Pass){result.status=RateStatus::Unknown;result.reason="MISSING_FINAL_TRAVEL_PROOF";}
+    }catch(const std::exception &){result.status=RateStatus::Unknown;result.snapshot.reset();result.witness.reset();result.reason="BOUNDED_TRAVEL_INPUT_ERROR";}
+    const char *status=result.status==RateStatus::Pass ? "PASS" : result.status==RateStatus::Fail ? "FAIL" : "UNKNOWN";
+    nlohmann::json report={{"schema_version",1},{"component","final_byte_travel_geometry"},{"component_status",status},{"job_status","UNKNOWN"},{"export_allowed",false},
+        {"scope","complete_declared_travel_block_fixed_head_static_actual_upper_only"},{"reason",result.reason},{"work",result.evaluations},{"cells",result.cells},
+        {"leaves",result.snapshot ? result.snapshot->leaves.size() : 0},{"witness",nullptr},
+        {"mandatory_checks_pending",{"deposition_contact","complete_cap_routes","head_material_qualification","job_patch_integrity","firmware_transform","machine_state"}}};
+    if(query)report["query"]=travel_document(*query);
+    if(result.snapshot)report["prefix_completed_records"]=result.snapshot->prefix->completed_records;
+    if(result.witness){const auto &w=*result.witness;report["witness"]={{"record",w.record},{"component",w.component},{"progress",{w.progress.lower,w.progress.upper}},
+        {"point_min",w.point.min},{"point_max",w.point.max},{"material_event",w.material_event ? nlohmann::json(*w.material_event) : nlohmann::json(nullptr)},
+        {"obstacle",w.obstacle ? nlohmann::json(*w.obstacle) : nlohmann::json(nullptr)}};}
+    std::cout<<report.dump(2)<<'\n';if(!std::cout)return 74;return result.status==RateStatus::Pass ? 0 : result.status==RateStatus::Fail ? 2 : 3;
+}
 int audit_run_support(char **argv)
 {
     using namespace nptop_verify;LinearRateResult rates;LinearMaterialResult material;LinearMaterialPrefixResult prefix;JoinedMaterialResult joined;LinearRunSupportResult support;
@@ -107,6 +137,7 @@ int audit_run_support(char **argv)
 int main(int argc,char **argv)
 {
     boost::nowide::args utf8(argc,argv);
+    if(argc==6 && std::string(argv[1])=="--linear-travel-geometry-only")return audit_travel(argv);
     if(argc==7 && std::string(argv[1])=="--linear-run-support-only")return audit_run_support(argv);
     const bool nominal_run_mode=argc==7 && std::string(argv[1])=="--linear-material-nominal-run-cover-only";
     const bool joined_mode=nominal_run_mode || (argc==7 && std::string(argv[1])=="--linear-material-joined-cover-only");
@@ -119,6 +150,7 @@ int main(int argc,char **argv)
                     "       nonplanar_rate_audit --linear-material-joined-cover-only POLICY.json MATERIAL.json JOIN.json QUERY.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-material-nominal-run-cover-only POLICY.json MATERIAL.json JOIN.json QUERY.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-run-support-only POLICY.json MATERIAL.json JOIN.json SUPPORT_QUERY.json CANDIDATE.txt\n"
+                    "       nonplanar_rate_audit --linear-travel-geometry-only POLICY.json MATERIAL.json TRAVEL_QUERY.json CANDIDATE.txt\n"
                     "Numerical component only; complete job and export remain blocked.\n";return 64;
     }
     nptop_verify::LinearRateResult result;nptop_verify::LinearMaterialResult material;nptop_verify::MaterialCoverResult cover;
