@@ -883,7 +883,10 @@
     "B06_actual_normal_independent_review": "PENDING",
     "B06_actual_normal_author_review": "SEPARATE_CRITICAL_REVIEW_RECORDED",
     "B06_actual_normal_physical": "NOT_RUN",
-    "B06_actual_normal_remaining": "GENERAL_CURVED_STEPPED_SHOULDER_SEAM_COMPLETE_FILL_EXCESS_MEASURED_CONTACT_HEAD_ORDER_ENTRY_EXIT_TRAVEL_FLOW_PARTIAL_BEFORE_JOB_PLATE_SOFTWARE_RESOURCE_FINAL_BYTE_REPLAY_EXPORT"
+    "B06_actual_normal_remaining": "GENERAL_CURVED_STEPPED_SHOULDER_SEAM_COMPLETE_FILL_EXCESS_MEASURED_CONTACT_HEAD_ORDER_ENTRY_EXIT_TRAVEL_FLOW_PARTIAL_BEFORE_JOB_PLATE_SOFTWARE_RESOURCE_FINAL_BYTE_REPLAY_EXPORT",
+    "B07_native_body_count": "EXACT_APPENDED_COUNT_EQUALS_ORIGINAL_ASSEMBLY_AND_ACTUAL_NATIVE_BODY_ALL_CANONICAL_ROWS_REMAIN",
+    "B07_native_body_count_Linux": "458537E8_36957287331_PASSES_PRIOR_TIMEOUT_CALCULATIONS_THEN_FAILS_MACOS_LITERAL_2034_VS_ACTUAL_2073_CORRECTION_PENDING",
+    "B07_native_body_count_production": "UNCHANGED_GEOMETRY_LIMITS_PROFILES_GOLDENS_AND_PRODUCTION_CODE"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -898,7 +901,7 @@
     "operator_profile": "UNCONFIRMED"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "INHERITED_458537E8_36957287331_IN_PROGRESS_A258877A_36951729301_FAILURE_OBSERVED_2026_10_02_032626_UTC_CURRENT_NORMAL_SOURCE_PENDING",
+  "ci": "INHERITED_4903BE4A_36961569541_IN_PROGRESS_458537E8_36957287331_FAILURE_ON_PLATFORM_SPECIFIC_TEST_BODY_COUNT_OBSERVED_2026_10_02_035612_UTC_CORRECTED_SOURCE_PENDING",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
   "next_step": "Complete original shoulder/seam and under-material 3D deficit; qualify allowable excess. Construct complete later paths/layers sequentially against the updated actual journal. Extend mandatory local affine normal-ray proof to curved/stepped domains and qualify measured contact plus direction/order/entry/exit/travel/flow. Retain full-ROI/future refusals; implement exact partial-before and whole job/plate/software/resource/final-byte replay/export. Independent review, current-source Linux, Windows and physical qualification remain pending.",
@@ -987,7 +990,8 @@
     "B08_material_motion": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B08-material-motion.md",
     "B08_scene_material": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B08-scene-material.md",
     "B07_exact_union_reuse": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-exact-union-reuse.md",
-    "B06_actual_normal_spacing": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-normal-spacing.md"
+    "B06_actual_normal_spacing": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B06-normal-spacing.md",
+    "B07_native_body_count": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-native-body-count.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -1071,5 +1075,6 @@
   "B08_material_motion_evidence": "docs/nonplanar-dev/evidence/B08-material-motion/source-manifest.json",
   "B08_scene_material_evidence": "docs/nonplanar-dev/evidence/B08-scene-material/source-manifest.json",
   "B07_exact_union_reuse_evidence": "docs/nonplanar-dev/evidence/B07-union-cache/source-manifest.json",
-  "B06_actual_normal_spacing_evidence": "docs/nonplanar-dev/evidence/B06-normal-spacing/source-manifest.json"
+  "B06_actual_normal_spacing_evidence": "docs/nonplanar-dev/evidence/B06-normal-spacing/source-manifest.json",
+  "B07_native_body_count_evidence": "docs/nonplanar-dev/evidence/B07-native-body-count/source-manifest.json"
 }

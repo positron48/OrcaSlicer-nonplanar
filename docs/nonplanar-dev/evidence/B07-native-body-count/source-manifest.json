@@ -1,0 +1,94 @@
+{
+  "schema": 1,
+  "parent": "4903be4a57a7279da048932f48ad71a2c2ac97cc",
+  "recorded_utc": "2026-10-02T04:03:41.903420+00:00",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "scope": "TEST_ONLY_ACTUAL_INPUT_COUNTS_TWO_MATCHES_EXISTING_EXACT_CANONICAL_ROW_COMPARISONS_UNCHANGED_NO_PRODUCTION_OR_GOLDEN_CHANGE",
+  "source_sha256": {
+    "tests/nonplanar/test_policy.cpp": "5c3a2d5eadaa00f17f866ecf422fb50e859d52d3cfaabb833a31a0c89f6c6b01",
+    "docs/nonplanar-dev/B07-native-body-count.md": "afa0483c19fadb533cc45f804c63a8476fe3e6fa1e89d6ea233cd7dedf0db99d",
+    "docs/nonplanar-dev/status.json": "b456c971ed9768b4e1fabb8f9f96cf6420c6358cfa2535fe8e06e704b94a6c5f",
+    "docs/nonplanar-dev/next-tasks.md": "88ba07efa4a589ccd299912a9285710be1df294254a0f81c3779c9829eae365f"
+  },
+  "binary_sha256": {
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "49d8cea6cd09afc9965f8b84caf7b0a6e79fa6c2081c3d26ae8945c868852c65"
+  },
+  "commands": [
+    {
+      "command": [
+        "cmake",
+        "--build",
+        "build/arm64",
+        "--config",
+        "Release",
+        "--target",
+        "fff_print_tests",
+        "--parallel",
+        "8"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T03:58:20.195819+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 16.227
+    },
+    {
+      "command": [
+        "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+        "B07 native first footprint derives bounded amounts inside an actual flat bead core",
+        "--warn",
+        "NoAssertions",
+        "--reporter",
+        "junit",
+        "--out",
+        "build/nonplanar-evidence/B07-native-body-count/native1.xml",
+        "--reporter",
+        "console::out=-"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T03:59:17.955780+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 7.541
+    }
+  ],
+  "native": {
+    "cases": 1,
+    "assertions": 13236,
+    "failures": 0,
+    "skipped": 0
+  },
+  "OFF_ZAA": "UNCHANGED_PRODUCTION_PATHS_NOT_REPEATED_PREVIOUS_4903BE4A_FULL_SIX_PASS",
+  "ctest": "UNCHANGED_PRODUCTION_TEST_ONLY_FOCUSED_CASE_PREVIOUS_4903BE4A_360_PASS",
+  "Linux": "PENDING_CORRECTION_458537E8_FAILED_PLATFORM_COUNT_2073_VS_MACOS_LITERAL_2034_PRIOR_TIMEOUT_CALCULATIONS_PASS",
+  "archive_sha256": {
+    "docs/nonplanar-dev/evidence/B07-native-body-count/native1.txt": "722eb16827e2127de77462c8a00b6c6ef469e15ecc503addef61cf1594bb0fcd",
+    "docs/nonplanar-dev/evidence/B07-native-body-count/ci-parent-runs.json": "33386accb55263da28b2f9979c9f96d8b3fae4e7381b0643570a889d0a41c76a",
+    "docs/nonplanar-dev/evidence/B07-native-body-count/build1.txt.json": "60593c5af6c0513b1ae01781c0173c47a7ecdb3bb631fb8afe136a25510fb2a6",
+    "docs/nonplanar-dev/evidence/B07-native-body-count/ci-458-jobs.json": "c4da97930c35b8ecbe901ca7f961f540592c410840a2d5979624675c091b9a7c",
+    "docs/nonplanar-dev/evidence/B07-native-body-count/ci-458-annotations.json": "258bd63b3ab07a6a076820df12282f23dc2484cb5ffaff3c3507d3f3f5397c07",
+    "docs/nonplanar-dev/evidence/B07-native-body-count/native1.xml": "3c12572f017d68e3e0e7f1b64203b1fced42b14563049c5c24b91b5c0ce4b342",
+    "docs/nonplanar-dev/evidence/B07-native-body-count/build1.txt": "fa10a0bb253157da6d6b1fa962a8e443c8299db2572516be8a84410d888c9828",
+    "docs/nonplanar-dev/evidence/B07-native-body-count/native1.txt.json": "ba874c7290b7e4b344d8ebbb71b2f65ba1b14e68b42f90dedf9abd95e7e49f35"
+  },
+  "raw_sha256": {
+    "build/nonplanar-evidence/B07-native-body-count/native1.txt": "722eb16827e2127de77462c8a00b6c6ef469e15ecc503addef61cf1594bb0fcd",
+    "build/nonplanar-evidence/B07-native-body-count/ci-parent-runs.json": "33386accb55263da28b2f9979c9f96d8b3fae4e7381b0643570a889d0a41c76a",
+    "build/nonplanar-evidence/B07-native-body-count/build1.txt.json": "60593c5af6c0513b1ae01781c0173c47a7ecdb3bb631fb8afe136a25510fb2a6",
+    "build/nonplanar-evidence/B07-native-body-count/ci-458-jobs.json": "c4da97930c35b8ecbe901ca7f961f540592c410840a2d5979624675c091b9a7c",
+    "build/nonplanar-evidence/B07-native-body-count/ci-458-annotations.json": "258bd63b3ab07a6a076820df12282f23dc2484cb5ffaff3c3507d3f3f5397c07",
+    "build/nonplanar-evidence/B07-native-body-count/native1.xml": "3c12572f017d68e3e0e7f1b64203b1fced42b14563049c5c24b91b5c0ce4b342",
+    "build/nonplanar-evidence/B07-native-body-count/build1.txt": "fa10a0bb253157da6d6b1fa962a8e443c8299db2572516be8a84410d888c9828",
+    "build/nonplanar-evidence/B07-native-body-count/native1.txt.json": "ba874c7290b7e4b344d8ebbb71b2f65ba1b14e68b42f90dedf9abd95e7e49f35"
+  },
+  "raw_to_archive": {
+    "build/nonplanar-evidence/B07-native-body-count/build1.txt": "docs/nonplanar-dev/evidence/B07-native-body-count/build1.txt",
+    "build/nonplanar-evidence/B07-native-body-count/build1.txt.json": "docs/nonplanar-dev/evidence/B07-native-body-count/build1.txt.json",
+    "build/nonplanar-evidence/B07-native-body-count/ci-458-annotations.json": "docs/nonplanar-dev/evidence/B07-native-body-count/ci-458-annotations.json",
+    "build/nonplanar-evidence/B07-native-body-count/ci-458-jobs.json": "docs/nonplanar-dev/evidence/B07-native-body-count/ci-458-jobs.json",
+    "build/nonplanar-evidence/B07-native-body-count/ci-parent-runs.json": "docs/nonplanar-dev/evidence/B07-native-body-count/ci-parent-runs.json",
+    "build/nonplanar-evidence/B07-native-body-count/native1.txt": "docs/nonplanar-dev/evidence/B07-native-body-count/native1.txt",
+    "build/nonplanar-evidence/B07-native-body-count/native1.txt.json": "docs/nonplanar-dev/evidence/B07-native-body-count/native1.txt.json",
+    "build/nonplanar-evidence/B07-native-body-count/native1.xml": "docs/nonplanar-dev/evidence/B07-native-body-count/native1.xml"
+  }
+}

@@ -27,7 +27,11 @@ Next software tasks, in dependency order:
    Linux result separately; local acceleration does not close the timeout gate. The
    a258877a run 36951729301 repeated the same failures. Saved 03:26 UTC observation
    has optimized parent 458537e8 / 36957287331 in progress; this normal milestone
-   also needs its own observed Linux result.
+   also needs its own observed Linux result. Parent 458537e8 / 36957287331 now
+   passes those timeout calculations but fails a test's macOS-only body count
+   (2034 instead of actual Linux 2073). B07-native-body-count.md replaces the
+   literal with both authoritative source counts; exact canonical row checks
+   remain. Observe the corrected source and all later Linux checks separately.
    The inherited native-fill deadline failures at 84a709ef, 7f71cc98 and 946d3da7 are retained
    as historical evidence. `B07-constant-section-roof.md` is now verified by
    successful run 36847680702 at 2d8bebaa: selected native suites, STL CLI and

@@ -2597,7 +2597,8 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         " width error=" << later.snapshot->maximum_width_error_mm << " dose error=" << later.snapshot->total_volume_error_mm3);
     const auto added=append_next_cap_material(assembled,{later});INFO(added.reason);REQUIRE(added.snapshot);
     const auto &old_ledger=*assembled.snapshot->material->sequence,&new_ledger=*added.snapshot->material->sequence;
-    REQUIRE(added.snapshot->body_records==2034);REQUIRE(added.snapshot->later_paths.size()==1);REQUIRE(added.snapshot->later_paths[0]==later.snapshot);
+    REQUIRE(added.snapshot->body_records==assembled.snapshot->body_records);
+    REQUIRE(added.snapshot->body_records==material.snapshot->material->records.size());REQUIRE(added.snapshot->later_paths.size()==1);REQUIRE(added.snapshot->later_paths[0]==later.snapshot);
     for (size_t i=0;i<old_ledger.records.size();++i) REQUIRE(new_ledger.canonical_record(i)==old_ledger.canonical_record(i));
     size_t first_later=old_ledger.records.size();while (!new_ledger.records[first_later].bead) ++first_later;
     const auto current_later=append_next_cap_material(assembled,{later},first_later-old_ledger.records.size(),.5);REQUIRE(current_later.snapshot);
@@ -2613,7 +2614,7 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE(motion_source.snapshot->ledger->fingerprint()==new_ledger.fingerprint());
     const ClearancePolicy motion_policy{Length(.01),NumericBudget(0,0,0,0),Length(0),Length(0),Length(0)};
     // Declared simulation tools, not a measured Snapmaker head. Check the
-    // actual 2034-row body, first cap and this growing original later packet.
+    // complete actual body, first cap and this growing original later packet.
     const std::vector<ToolComponent> high_tools{{101,ToolBox{{-.1,-.1,1},{.1,.1,1.2}}},
         {102,FiniteTip{{0,0,1},Length(.02),Length(.15)}}};
     const auto safe_motion=verify_material_motion(motion_source,first_later,high_tools,motion_policy);
