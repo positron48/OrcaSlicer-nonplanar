@@ -43,7 +43,19 @@ namespace nptop {
 struct PrintConfigSnapshot;
 struct NativeInputSnapshot;
 struct NativeInputBinding;
+struct GuardedJobSnapshot;
+struct GuardedJobOwner;
+struct GuardedJobResult;
+struct GuardedJobTask;
+struct GuardedJobStatus;
+struct JobResource;
+struct GuardedJobLimits;
+enum class GuardedJobPhase;
 std::shared_ptr<const PrintConfigSnapshot> capture_print_config(const Print &);
+GuardedJobResult begin_guarded_job(Print &,uint64_t,const std::vector<JobResource> &,const GuardedJobLimits &);
+GuardedJobResult advance_guarded_job(Print &,const GuardedJobTask &,GuardedJobPhase);
+bool stop_guarded_job(Print &,const GuardedJobTask &,GuardedJobPhase);
+GuardedJobStatus guarded_job_status(Print &);
 }
 
 #define MAX_OUTER_NOZZLE_DIAMETER   4
@@ -1166,6 +1178,11 @@ private:
     std::string                             m_nonplanar_input_conflict;
     std::shared_ptr<const nptop::NativeInputSnapshot> m_nonplanar_input;
     uint64_t                                m_nonplanar_input_revision = 0;
+    std::shared_ptr<nptop::GuardedJobOwner>   m_nonplanar_job;
+    friend nptop::GuardedJobResult nptop::begin_guarded_job(Print &,uint64_t,const std::vector<nptop::JobResource> &,const nptop::GuardedJobLimits &);
+    friend nptop::GuardedJobResult nptop::advance_guarded_job(Print &,const nptop::GuardedJobTask &,nptop::GuardedJobPhase);
+    friend bool nptop::stop_guarded_job(Print &,const nptop::GuardedJobTask &,nptop::GuardedJobPhase);
+    friend nptop::GuardedJobStatus nptop::guarded_job_status(Print &);
     friend std::shared_ptr<const nptop::PrintConfigSnapshot> nptop::capture_print_config(const Print &);
     PrintObjectConfig                       m_default_object_config;
     PrintRegionConfig                       m_default_region_config;

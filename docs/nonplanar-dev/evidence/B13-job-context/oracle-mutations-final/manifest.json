@@ -1,0 +1,236 @@
+{
+  "status": "PASS",
+  "cases": [
+    {
+      "case": "context-positive",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/context-positive.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "artifact-positive",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/artifact-positive.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "exact-uint64-max",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/exact-uint64-max.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "case": "context-job_id",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/context-job_id.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "context-input_revision",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/context-input_revision.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "context-native_input_identity_fingerprint",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/context-native_input_identity_fingerprint.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "context-executed_input_identity",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/context-executed_input_identity.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "context-print_settings_identity",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/context-print_settings_identity.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "context-native_input_canonical",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/context-native_input_canonical.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "resource-bytes",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/resource-bytes.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "resource-name",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/resource-name.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "resource-kind",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/resource-kind.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "artifact-candidate_bytes",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/artifact-candidate_bytes.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "artifact-job_canonical",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/artifact-job_canonical.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "artifact-attempt",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/artifact-attempt.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "artifact-job_id",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/artifact-job_id.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "artifact-material_journal",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/artifact-material_journal.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "artifact-motion_policy",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/artifact-motion_policy.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "artifact-serializer_policy",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/artifact-serializer_policy.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "artifact-source_fingerprint",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/artifact-source_fingerprint.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "artifact-source_revision",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/artifact-source_revision.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "artifact-initial-position",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/artifact-initial-position.json"
+      ],
+      "exit_code": 1
+    },
+    {
+      "case": "rehash-wrong-manifest",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-job-context/oracle-mutations-final/rehash-wrong-manifest.json"
+      ],
+      "exit_code": 1
+    }
+  ],
+  "scope": "IDENTITY_ONLY_NO_GEOMETRY_OR_PUBLICATION_CERTIFICATE"
+}

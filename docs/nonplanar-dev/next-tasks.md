@@ -7,6 +7,17 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B13-job-context.md` now supplies immutable native/plate/settings/resources,
+private current-attempt working phases and atomic worker cancellation, with exact
+candidate/initial-pose/policy/journal manifest binding. Public identities omit
+known credentials/timestamp/log fields; raw edits still cancel attempts. Nine
+cases/264 assertions, CTest407/407, independent hash/tamper oracles, CLI100 and six
+final OFF/ZAA pairs pass. Source-to-plan/resource/software qualification, full
+independent report and mandatory checks, Verified and atomic publication across
+every export route are the next B13 invariant. Resolve the recorded CTest versus
+root-native source identity difference before whole-job provenance qualification.
+No working phase or association hash authorizes export.
+
 `B12-run-ray.md` now resolves the complete native eight-packet half-prefix
 support refusal with exact closed Nominal slices at actual decimal packet cuts.
 Original input bytes/errors/losses/widths/bands/budgets remain. Independent whole

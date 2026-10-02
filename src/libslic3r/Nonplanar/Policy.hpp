@@ -54,6 +54,7 @@ struct PolicySnapshot {
 };
 // Configuration preflight only: no profile qualification or export approval.
 PolicySnapshot resolve_policy(const ConfigBase &, size_t objects, size_t instances);
+PolicySnapshot resolve_policy(const ResolvedConfigSnapshot &, size_t objects, size_t instances);
 
 struct PrintRegionConfigSnapshot {
     const size_t object_index;

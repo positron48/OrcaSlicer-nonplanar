@@ -1,0 +1,17 @@
+{
+  "command": [
+    "python3",
+    "scripts/nonplanar/validate_material_cover_cli.py",
+    "--executable",
+    "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+    "--fixture-dir",
+    "build/nonplanar-evidence/B13-job-context/material-cli-final/positive",
+    "--output-dir",
+    "build/nonplanar-evidence/B13-job-context/cover-cli-final"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-02T14:45:05.131044+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 0.118
+}

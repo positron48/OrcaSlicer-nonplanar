@@ -509,6 +509,11 @@ PolicySnapshot resolve_policy(const ConfigBase &source, size_t objects, size_t i
     return resolve_captured_policy(config,config,objects,instances);
 }
 
+PolicySnapshot resolve_policy(const ResolvedConfigSnapshot &config, size_t objects, size_t instances)
+{
+    return resolve_captured_policy(config,config,objects,instances);
+}
+
 std::shared_ptr<const PrintConfigSnapshot> capture_print_config(const Print &print)
 {
     if (print.m_nonplanar_input_conflict.empty() &&

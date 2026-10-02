@@ -1,6 +1,13 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 #include <libslic3r/Nonplanar/GCodeAdapter.hpp>
+#include <libslic3r/Nonplanar/JobArtifact.hpp>
+#include <libslic3r/Print.hpp>
+#include <libslic3r/Model.hpp>
+#include <boost/nowide/fstream.hpp>
+#include <boost/filesystem.hpp>
+#include <nlohmann/json.hpp>
+#include <cstdlib>
 #include <nonplanar_verify/Replay.hpp>
 #include <nonplanar_verify/FullStopReplay.hpp>
 #include <nonplanar_verify/LinearRates.hpp>
@@ -445,4 +452,66 @@ TEST_CASE("B12 protected material replay owns source options original losses and
  limits={};size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(verify_linear_candidate_material(candidate,options,limits).snapshot);
  const auto last=calls;calls=0;limits.cancelled=[&]{if(++calls==last)std::fesetround(FE_UPWARD);return false;};
  const auto late=verify_linear_candidate_material(candidate,options,limits);std::fesetround(FE_TONEAREST);REQUIRE_FALSE(late.snapshot);
+}
+
+namespace {
+Slic3r::DynamicPrintConfig job_config()
+{
+    auto config=Slic3r::DynamicPrintConfig::full_print_config();config.set_deserialize_strict("nptop_mode","safe_hybrid");
+    for(const auto &[key,rule]:discrete_policy())config.set_deserialize_strict(key,rule.label);
+    for(const auto &[key,rule]:custom_code_policy()){
+        if(rule.type==Slic3r::coStrings)config.set_key_value(key,new Slic3r::ConfigOptionStrings{});
+        else config.set_key_value(key,new Slic3r::ConfigOptionString{});
+    }
+    return config;
+}
+std::vector<JobResource> artifact_resources()
+{
+    std::vector<JobResource> resources;for(int i=1;i<=7;++i)resources.push_back({JobResourceKind(i),"fixture-"+std::to_string(i),"explicit unconfirmed resource"});return resources;
+}
+GuardedJobResult serializing_job(Slic3r::Print &print)
+{
+    auto job=begin_guarded_job(print,87,artifact_resources());INFO(job.reason);REQUIRE(job.task);
+    job=advance_guarded_job(print,*job.task,GuardedJobPhase::Planning);REQUIRE(job.task);job=advance_guarded_job(print,*job.task,GuardedJobPhase::Serializing);REQUIRE(job.task);return job;
+}
+}
+TEST_CASE("B13 actual protected candidate binds bytes initial pose policies and journal to current manifest", "[Nonplanar][B13][JobArtifact]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<GuardedCandidateBindingSnapshot>::value);
+    Slic3r::Model model;auto *object=model.add_object();object->add_volume(Slic3r::make_cube(8,8,4));object->add_instance()->set_offset(Slic3r::Vec3d(20,20,0));
+    Slic3r::Print print;print.apply(model,job_config());const auto job=serializing_job(print);
+    auto candidate=serialize_linear_candidate(full_stop_plan(),LinearCandidatePolicy{3,1,Acceleration(100)});REQUIRE(candidate.snapshot);const auto original=candidate.snapshot;
+    GuardedJobLimits limits;limits.cancelled=[&]{candidate.snapshot.reset();candidate.plan.reset();limits.timeout=std::chrono::milliseconds(0);return false;};
+    const auto binding=bind_guarded_candidate(print,*job.task,candidate,limits);INFO(binding.reason);REQUIRE(binding.snapshot);REQUIRE(binding.task);REQUIRE(binding.task->phase==GuardedJobPhase::Verifying);REQUIRE(binding.task->is_current());REQUIRE_FALSE(job.task->is_current());
+    REQUIRE(binding.snapshot->job==job.snapshot);REQUIRE(binding.snapshot->candidate==original);REQUIRE(binding.snapshot->attempt==job.task->attempt);
+    const auto manifest=nlohmann::json::parse(binding.snapshot->manifest_json);REQUIRE(manifest.at("schema")==1);REQUIRE(manifest.at("scope")=="job_context_candidate_byte_identity_only");
+    REQUIRE(manifest.at("attempt")==job.task->attempt);REQUIRE(manifest.at("candidate_size")==original->bytes.size());
+    REQUIRE(sha256_bytes(original->bytes)==original->sha256);REQUIRE(sha256_bytes(binding.snapshot->manifest_json)==binding.snapshot->manifest_sha256);
+    REQUIRE(verify_linear_candidate_rates({{},original->plan,original}).snapshot);
+    if(const char *output=std::getenv("NPTOP_JOB_EVIDENCE_DIR")){
+        const auto dir=boost::filesystem::path(output);boost::filesystem::create_directories(dir);
+        const auto &ledger=*original->plan->planned->material->ledger;
+        nlohmann::json evidence={{"manifest",binding.snapshot->manifest_json},{"manifest_sha256",binding.snapshot->manifest_sha256},{"candidate_bytes",original->bytes},{"candidate_sha256",original->sha256},
+            {"job_canonical",job.snapshot->canonical_json},{"job_fingerprint",job.snapshot->fingerprint},{"attempt",job.task->attempt},{"job_id",job.snapshot->job_id},
+            {"initial_position",{original->initial_position.x(),original->initial_position.y(),original->initial_position.z()}},{"motion_policy",original->plan->policy_fingerprint},{"serializer_policy",original->policy_fingerprint},
+            {"material_journal",ledger.fingerprint()},{"source_fingerprint",ledger.source_fingerprint},{"source_revision",ledger.revision}};
+        boost::nowide::ofstream file((dir/"bound-candidate.json").string());file<<evidence.dump(2)<<'\n';file.close();REQUIRE(file.good());
+    }
+    const auto newer=begin_guarded_job(print,87,artifact_resources());REQUIRE(newer.task);REQUIRE_FALSE(binding.task->is_current());REQUIRE(binding.snapshot->candidate->bytes==original->bytes);
+    REQUIRE_THROWS(print.process());
+}
+TEST_CASE("B13 candidate manifest refuses wrong phases old jobs foreign owners cancellation and final edits", "[Nonplanar][B13][JobArtifact]")
+{
+    Slic3r::Model model;auto *object=model.add_object();object->add_volume(Slic3r::make_cube(8,8,4));object->add_instance()->set_offset(Slic3r::Vec3d(20,20,0));
+    Slic3r::Print print;print.apply(model,job_config());const auto candidate=serialize_linear_candidate(full_stop_plan(),LinearCandidatePolicy{3,1,Acceleration(100)});REQUIRE(candidate.snapshot);
+    const auto analyzing=begin_guarded_job(print,87,artifact_resources());REQUIRE(analyzing.task);REQUIRE_FALSE(bind_guarded_candidate(print,*analyzing.task,candidate).snapshot);
+    for(int mode=0;mode<4;++mode){const auto job=serializing_job(print);auto supplied=candidate;GuardedJobLimits limits;
+        if(mode==0)supplied.snapshot.reset();if(mode==1)supplied.plan.reset();if(mode==2)limits.cancelled=[] {return true;};if(mode==3)limits.timeout=std::chrono::milliseconds(0);
+        const auto refused=bind_guarded_candidate(print,*job.task,supplied,limits);REQUIRE_FALSE(refused.snapshot);REQUIRE_FALSE(refused.task);REQUIRE_FALSE(job.task->is_current());REQUIRE_FALSE(guarded_job_status(print).snapshot);
+    }
+    const auto old=serializing_job(print);const auto fresh=serializing_job(print);REQUIRE_FALSE(bind_guarded_candidate(print,*old.task,candidate).snapshot);REQUIRE(fresh.task->is_current());
+    Slic3r::Print other;other.apply(model,job_config());const auto other_job=serializing_job(other);REQUIRE_FALSE(bind_guarded_candidate(other,*fresh.task,candidate).snapshot);REQUIRE(other_job.task->is_current());
+    GuardedJobLimits limits;size_t calls=0;limits.cancelled=[&]{++calls;return false;};const auto counted=bind_guarded_candidate(print,*fresh.task,candidate,limits);REQUIRE(counted.snapshot);const auto last=calls;
+    auto job=serializing_job(print);calls=0;limits.cancelled=[&]{return ++calls==last;};const auto late=bind_guarded_candidate(print,*job.task,candidate,limits);REQUIRE_FALSE(late.snapshot);REQUIRE_FALSE(late.task);REQUIRE_FALSE(guarded_job_status(print).snapshot);
+    job=serializing_job(print);calls=0;limits.cancelled=[&]{if(++calls==last)print.set_plate_origin(Slic3r::Vec3d(.1,0,0));return false;};const auto stale=bind_guarded_candidate(print,*job.task,candidate,limits);REQUIRE_FALSE(stale.snapshot);REQUIRE_FALSE(stale.task);REQUIRE_FALSE(guarded_job_status(print).snapshot);
 }

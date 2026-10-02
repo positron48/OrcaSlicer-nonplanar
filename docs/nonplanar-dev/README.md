@@ -15,6 +15,18 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B13-job-context.md` and ADR-0076 add owned pre-apply/executed native inputs,
+settings/plate and exact opaque resources; private attempt/phase tokens with
+atomic revocation; and exact final-byte/initial-pose/policy/journal manifest
+association. Known credentials/timestamp/log metadata are excluded from public
+identity views while raw native edits still revoke attempts. Nine cases/264
+assertions, independent hash/tamper oracles, CTest407/407, original CLI100 and six
+final OFF/ZAA pairs pass. The final root native run retains 137783 assertions and
+all eleven original files. A CTest-context source-fingerprint difference is
+retained as a strict identity refusal. Full B13 qualified provenance/report/
+mandatory checks/Verified/atomic publication/every export route remain pending;
+full B01–B15 stays IN_PROGRESS, export BLOCK.
+
 `B12-run-ray.md` and ADR-0075 use exact actual packet cuts for complete Nominal
 section union, preserving original Lower/errors/footprints/bands/budgets. The
 unchanged eight-packet native half-prefix now has complete support PASS, including

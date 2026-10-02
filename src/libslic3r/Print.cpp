@@ -18,6 +18,7 @@
 #include "PrintConfig.hpp"
 #include "Nonplanar/Policy.hpp"
 #include "Nonplanar/InputSnapshot.hpp"
+#include "Nonplanar/Job.hpp"
 #include "MaterialType.hpp"
 #include "Model.hpp"
 #include "format.hpp"
@@ -72,6 +73,7 @@ void Print::clear()
 {
 	std::scoped_lock<std::mutex> lock(this->state_mutex());
     // The following call should stop background processing if it is running.
+    if (m_nonplanar_job) m_nonplanar_job->invalidate();
     this->invalidate_all_steps();
 	for (PrintObject *object : m_objects)
 		delete object;

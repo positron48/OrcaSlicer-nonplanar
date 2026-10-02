@@ -3,6 +3,7 @@
 #include "Print.hpp"
 #include "Nonplanar/Policy.hpp"
 #include "Nonplanar/InputSnapshot.hpp"
+#include "Nonplanar/Job.hpp"
 
 #include <boost/log/trivial.hpp>
 #include <cfloat>
@@ -1136,6 +1137,7 @@ Print::ApplyStatus Print::apply(const Model &model, DynamicPrintConfig new_full_
             bool(m_nonplanar_input)!=bool(nonplanar_input) ||
             (m_nonplanar_input && nonplanar_input && m_nonplanar_input->fingerprint!=nonplanar_input->fingerprint);
         if (nonplanar_inputs_changed) {
+            if (m_nonplanar_job) m_nonplanar_job->invalidate();
             this->call_cancel_callback();
             nonplanar_export_invalidated=this->invalidate_step(psGCodeExport);
             m_nonplanar_input.reset();

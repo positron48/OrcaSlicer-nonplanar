@@ -3,6 +3,7 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 #include <libslic3r/Nonplanar/Policy.hpp>
 #include <libslic3r/Nonplanar/InputSnapshot.hpp>
+#include <libslic3r/Nonplanar/Job.hpp>
 #include <libslic3r/Nonplanar/PlanarBody.hpp>
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
 #include <libslic3r/Nonplanar/ProfileScene.hpp>
@@ -2950,4 +2951,145 @@ TEST_CASE("B07 native first-hatch union measures rounded overlap rather than sum
     REQUIRE(map.snapshot->localized_missing_lower_mm3<=fit.snapshot->missing_target_mm3.upper);
     REQUIRE(map.snapshot->target_volume_mm3.upper-map.snapshot->target_volume_mm3.lower<=.02);
 
+}
+
+namespace {
+std::vector<JobResource> job_resources()
+{
+    std::vector<JobResource> resources;
+    for(int i=int(JobResourceKind::Toolhead);i<=int(JobResourceKind::Software);++i)
+        resources.push_back({JobResourceKind(i),"fixture-"+std::to_string(i),"{\"synthetic\":true,\"resource\":"+std::to_string(i)+"}"});
+    return resources;
+}
+void job_model(Model &model)
+{
+    auto *object=model.add_object();object->add_volume(make_cube(8,8,4));object->add_instance()->set_offset(Vec3d(20,20,0));
+}
+}
+TEST_CASE("B13 immutable native job binds every exact resource and preserves owned inputs", "[Nonplanar][B13][JobContext]")
+{
+    static_assert(!std::is_aggregate_v<GuardedJobSnapshot>);static_assert(!std::is_aggregate_v<GuardedJobTask>);
+    Model model;job_model(model);auto config=eligible();
+    config.set_key_value("printhost_password",new ConfigOptionString("synthetic-oracle-password"));
+    config.set_key_value("timestamp",new ConfigOptionString("synthetic-oracle-timestamp"));
+    config.set_key_value("logfile",new ConfigOptionInt(1));
+    Print print;print.apply(model,config);
+    auto resources=job_resources();resources[0].name=u8"голова 🐋";resources[0].bytes=std::string("a\0b",3);
+    const auto job=begin_guarded_job(print,81,resources);INFO(job.reason);REQUIRE(job.snapshot);REQUIRE(job.task);REQUIRE(job.task->phase==GuardedJobPhase::Analyzing);
+    REQUIRE(job.snapshot->input==print.nonplanar_input().snapshot);REQUIRE(job.snapshot->input_revision==print.nonplanar_input().revision);
+    REQUIRE(job.snapshot->settings->fingerprint()==capture_print_config(print)->fingerprint());REQUIRE(job.snapshot->resources.size()==7);
+    const auto json=nlohmann::json::parse(job.snapshot->canonical_json);REQUIRE(json.at("schema")==1);REQUIRE(json.at("job_id")==81);REQUIRE(json.at("resources").size()==7);
+    std::reverse(resources.begin(),resources.end());const auto same=begin_guarded_job(print,81,resources);REQUIRE(same.snapshot);REQUIRE(same.snapshot->fingerprint==job.snapshot->fingerprint);
+    REQUIRE_FALSE(advance_guarded_job(print,*job.task,GuardedJobPhase::Planning).task);
+    if(const char *output=std::getenv("NPTOP_JOB_EVIDENCE_DIR")){
+        const auto dir=boost::filesystem::path(output);boost::filesystem::create_directories(dir);
+        nlohmann::json evidence={{"canonical",same.snapshot->canonical_json},{"fingerprint",same.snapshot->fingerprint},{"job_id",same.snapshot->job_id},{"input_revision",same.snapshot->input_revision},
+            {"native_input_canonical",same.snapshot->input->canonical_json},{"native_input_fingerprint",same.snapshot->input->fingerprint},
+            {"executed_input_canonical",same.snapshot->executed_input->canonical_json},{"executed_input_fingerprint",same.snapshot->executed_input->fingerprint},
+            {"print_settings_canonical",same.snapshot->settings->canonical_json()},{"print_settings_fingerprint",same.snapshot->settings->fingerprint()},
+            {"native_input_identity",same.snapshot->input_identity.canonical_json},{"native_input_identity_fingerprint",same.snapshot->input_identity.fingerprint},
+            {"executed_input_identity",same.snapshot->executed_identity.canonical_json},{"executed_input_identity_fingerprint",same.snapshot->executed_identity.fingerprint},
+            {"print_settings_identity",same.snapshot->settings_identity.canonical_json},{"print_settings_identity_fingerprint",same.snapshot->settings_identity.fingerprint}};
+        evidence["resources"]=nlohmann::json::array();for(const auto &r:same.snapshot->resources)evidence["resources"].push_back({{"kind",int(r.kind)},{"name",r.name},{"bytes",r.bytes},{"sha256",r.sha256}});
+        boost::nowide::ofstream file((dir/"native-job.json").string());file<<evidence.dump(2)<<'\n';file.close();REQUIRE(file.good());
+    }
+    const auto old=job.snapshot->fingerprint;resources.clear();config.clear();model.clear_objects();print.clear();
+    REQUIRE(job.snapshot->fingerprint==old);REQUIRE(job.snapshot->input->objects.size()==1);REQUIRE(job.snapshot->resources[0].bytes==std::string("a\0b",3));
+    REQUIRE_FALSE(guarded_job_status(print).snapshot);REQUIRE_FALSE(advance_guarded_job(print,*same.task,GuardedJobPhase::Planning).task);
+}
+TEST_CASE("B13 exact resource changes and missing file bytes invalidate attempts before capture", "[Nonplanar][B13][JobContext]")
+{
+    Model model;job_model(model);auto config=eligible();Print print;print.apply(model,config);const auto resources=job_resources();
+    const auto initial=begin_guarded_job(print,82,resources);REQUIRE(initial.snapshot);
+    for(size_t i=0;i<resources.size();++i){auto changed=resources;changed[i].bytes+=' ';const auto fresh=begin_guarded_job(print,82,changed);REQUIRE(fresh.snapshot);REQUIRE(fresh.snapshot->fingerprint!=initial.snapshot->fingerprint);REQUIRE(fresh.task->attempt>initial.task->attempt);}
+    for(int mode=0;mode<7;++mode){const auto old=begin_guarded_job(print,82,resources);REQUIRE(old.task);auto bad=resources;
+        if(mode==0)bad.pop_back();if(mode==1)bad.push_back(bad.front());if(mode==2)bad.front().bytes.clear();if(mode==3)bad.front().kind=JobResourceKind(99);
+        if(mode==4)bad.front().name.clear();if(mode==5)bad.front().bytes.resize(32*1024*1024+1,'x');if(mode==6){auto duplicate=bad.front();duplicate.name="another";bad.push_back(duplicate);}
+        const auto refused=begin_guarded_job(print,82,bad);INFO(refused.reason);REQUIRE_FALSE(refused.snapshot);REQUIRE_FALSE(refused.task);REQUIRE_FALSE(guarded_job_status(print).snapshot);REQUIRE_FALSE(advance_guarded_job(print,*old.task,GuardedJobPhase::Planning).task);
+    }
+    model.objects.front()->volumes.front()->source.input_file="source.stl";print.apply(model,config);REQUIRE_FALSE(begin_guarded_job(print,82,resources).snapshot);
+    auto with_file=resources;with_file.push_back({JobResourceKind::SourceFile,"source.stl","opaque source bytes"});const auto captured=begin_guarded_job(print,82,with_file);REQUIRE(captured.snapshot);REQUIRE(captured.snapshot->resources.size()==8);
+    // Captured association/bytes are provenance only; no import geometry claim.
+    REQUIRE_THROWS(print.process());
+}
+TEST_CASE("B13 native edits mode switches plate and other owners cannot revive callbacks", "[Nonplanar][B13][JobContext]")
+{
+    Model model;job_model(model);auto config=eligible();Print print;print.apply(model,config);auto resources=job_resources();
+    const auto first=begin_guarded_job(print,83,resources);REQUIRE(first.task);print.apply(model,config);REQUIRE(advance_guarded_job(print,*first.task,GuardedJobPhase::Planning).task);
+    const auto before=begin_guarded_job(print,83,resources);REQUIRE(before.task);config.set_key_value("layer_height",new ConfigOptionFloat(std::nextafter(.2,1.)));print.apply(model,config);
+    REQUIRE_FALSE(advance_guarded_job(print,*before.task,GuardedJobPhase::Planning).task);
+    auto plate=begin_guarded_job(print,83,resources);REQUIRE(plate.task);print.set_plate_origin(Vec3d(.1,0,0));REQUIRE_FALSE(advance_guarded_job(print,*plate.task,GuardedJobPhase::Planning).task);REQUIRE_FALSE(guarded_job_status(print).snapshot);
+    plate=begin_guarded_job(print,83,resources);REQUIRE(plate.task);print.model().objects.front()->volumes.front()->set_offset(Vec3d(.1,0,0));REQUIRE_FALSE(advance_guarded_job(print,*plate.task,GuardedJobPhase::Planning).task);
+    plate=begin_guarded_job(print,83,resources);REQUIRE(plate.task);print.set_plate_index(2);REQUIRE_FALSE(stop_guarded_job(print,*plate.task,GuardedJobPhase::Unknown));REQUIRE_FALSE(begin_guarded_job(print,83,resources).snapshot);
+    print.set_plate_index(0);const auto hybrid=begin_guarded_job(print,83,resources);REQUIRE(hybrid.task);config.set_deserialize_strict("nptop_mode","off");print.apply(model,config);
+    GuardedJobLimits limits;limits.cancelled=[] {FAIL("OFF must bypass resource callbacks");return false;};REQUIRE_FALSE(begin_guarded_job(print,0,{},limits).snapshot);REQUIRE_FALSE(advance_guarded_job(print,*hybrid.task,GuardedJobPhase::Planning).task);
+    REQUIRE(print.nonplanar_block_reason().empty());config.set_deserialize_strict("nptop_mode","safe_hybrid");print.apply(model,config);const auto again=begin_guarded_job(print,83,resources);REQUIRE(again.task);
+    Print other;other.apply(model,config);REQUIRE(begin_guarded_job(other,83,resources).task);REQUIRE_FALSE(advance_guarded_job(other,*again.task,GuardedJobPhase::Planning).task);
+}
+TEST_CASE("B13 task phases retries cancellation and reentrant capture stay bound to one attempt", "[Nonplanar][B13][JobContext]")
+{
+    Model model;job_model(model);auto config=eligible();Print print;print.apply(model,config);auto resources=job_resources();
+    auto current=begin_guarded_job(print,84,resources);REQUIRE(current.task);REQUIRE_FALSE(advance_guarded_job(print,*current.task,GuardedJobPhase::Verifying).task);
+    for(auto next:{GuardedJobPhase::Planning,GuardedJobPhase::Serializing,GuardedJobPhase::Verifying}){const auto previous=current;current=advance_guarded_job(print,*previous.task,next);REQUIRE(current.task);REQUIRE(current.task->phase==next);REQUIRE_FALSE(advance_guarded_job(print,*previous.task,next).task);}
+    REQUIRE_FALSE(advance_guarded_job(print,*current.task,GuardedJobPhase::Analyzing).task);REQUIRE_FALSE(stop_guarded_job(print,*current.task,GuardedJobPhase::Editing));
+    for(auto terminal:{GuardedJobPhase::Failed,GuardedJobPhase::Unknown,GuardedJobPhase::Cancelled}){current=begin_guarded_job(print,84,resources);REQUIRE(current.task);REQUIRE(stop_guarded_job(print,*current.task,terminal));REQUIRE(guarded_job_status(print).phase==terminal);REQUIRE_FALSE(guarded_job_status(print).snapshot);REQUIRE_FALSE(advance_guarded_job(print,*current.task,GuardedJobPhase::Planning).task);}
+    GuardedJobLimits limits;limits.cancelled=[&]{resources.clear();limits.timeout=std::chrono::milliseconds(0);return false;};const auto owned=begin_guarded_job(print,84,resources=job_resources(),limits);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->resources.size()==7);
+    resources=job_resources();limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(begin_guarded_job(print,84,resources,limits).snapshot);REQUIRE_FALSE(guarded_job_status(print).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(0);REQUIRE_FALSE(begin_guarded_job(print,84,resources,limits).snapshot);
+    limits={};bool replaced=false;std::shared_ptr<const GuardedJobTask> replacement;
+    limits.cancelled=[&]{if(!replaced){replaced=true;const auto newer=begin_guarded_job(print,85,resources);REQUIRE(newer.task);replacement=newer.task;}return false;};
+    const auto late=begin_guarded_job(print,84,resources,limits);REQUIRE_FALSE(late.snapshot);REQUIRE(guarded_job_status(print).snapshot==replacement->snapshot);REQUIRE(advance_guarded_job(print,*replacement,GuardedJobPhase::Planning).task);
+    resources=job_resources();limits={};limits.cancelled=[&]{print.clear();return false;};REQUIRE_FALSE(begin_guarded_job(print,84,resources,limits).snapshot);
+}
+TEST_CASE("B13 job identities retain exact IDs labels and failed late admission clears payloads", "[Nonplanar][B13][JobContext]")
+{
+    Model model;job_model(model);auto config=eligible();Print print;print.apply(model,config);auto resources=job_resources();
+    const auto job=begin_guarded_job(print,std::numeric_limits<uint64_t>::max(),resources);REQUIRE(job.snapshot);REQUIRE(job.snapshot->job_id==std::numeric_limits<uint64_t>::max());
+    REQUIRE(nlohmann::json::parse(job.snapshot->canonical_json).at("job_id").get<uint64_t>()==std::numeric_limits<uint64_t>::max());
+    auto changed=resources;changed.front().name+="other";REQUIRE(begin_guarded_job(print,std::numeric_limits<uint64_t>::max(),changed).snapshot->fingerprint!=job.snapshot->fingerprint);
+    REQUIRE(begin_guarded_job(print,1,resources).snapshot->fingerprint!=job.snapshot->fingerprint);REQUIRE_FALSE(begin_guarded_job(print,0,resources).snapshot);
+    GuardedJobLimits limits;size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(begin_guarded_job(print,1,resources,limits).snapshot);const auto last=calls;
+    calls=0;limits.cancelled=[&]{return ++calls==last;};const auto cancelled=begin_guarded_job(print,1,resources,limits);REQUIRE_FALSE(cancelled.snapshot);REQUIRE_FALSE(cancelled.task);REQUIRE_FALSE(guarded_job_status(print).snapshot);
+    calls=0;limits.cancelled=[&]{if(++calls==last){config.set_key_value("layer_height",new ConfigOptionFloat(.21));print.apply(model,config);}return false;};const auto stale=begin_guarded_job(print,1,resources,limits);REQUIRE_FALSE(stale.snapshot);REQUIRE_FALSE(stale.task);
+    for(auto timeout:{std::chrono::milliseconds(-1),std::chrono::milliseconds(1001),std::chrono::milliseconds::max()}){limits={};limits.timeout=timeout;REQUIRE_FALSE(begin_guarded_job(print,1,resources,limits).snapshot);}
+    print.set_plate_origin(Vec3d(std::numeric_limits<double>::quiet_NaN(),0,0));REQUIRE_FALSE(begin_guarded_job(print,1,resources).snapshot);
+}
+TEST_CASE("B13 background work sees atomic invalidation without reading live Print", "[Nonplanar][B13][JobContext]")
+{
+    Model model;job_model(model);auto config=eligible();auto resources=job_resources();std::shared_ptr<const GuardedJobTask> retained;
+    {
+        Print print;print.apply(model,config);auto job=begin_guarded_job(print,86,resources);REQUIRE(job.task);REQUIRE(job.task->is_current());retained=job.task;
+        std::atomic<bool> stopped{false};std::thread worker([task=job.task,&stopped]{const auto deadline=std::chrono::steady_clock::now()+std::chrono::seconds(1);
+            while(task->is_current() && std::chrono::steady_clock::now()<deadline)std::this_thread::yield();stopped.store(!task->is_current());});
+        resources.front().bytes+=' ';const auto fresh=begin_guarded_job(print,86,resources);worker.join();REQUIRE(stopped.load());REQUIRE(fresh.task);REQUIRE_FALSE(job.task->is_current());
+        const auto next=advance_guarded_job(print,*fresh.task,GuardedJobPhase::Planning);REQUIRE(next.task);REQUIRE_FALSE(fresh.task->is_current());REQUIRE(next.task->is_current());retained=next.task;
+    }
+    REQUIRE_FALSE(retained->is_current());REQUIRE(retained->snapshot->input->objects.size()==1);
+}
+TEST_CASE("B13 publishable identity excludes transport credentials and retains exact slicing inputs", "[Nonplanar][B13][JobContext]")
+{
+    Model model;job_model(model);auto config=eligible();auto other_config=config;
+    for(const char *key:{"print_host","print_host_webui","printhost_apikey","printhost_user","printhost_password","timestamp"}){
+        config.set_key_value(key,new ConfigOptionString("synthetic-first-credential"));
+        other_config.set_key_value(key,new ConfigOptionString("synthetic-second-credential"));
+    }
+    config.set_key_value("logfile",new ConfigOptionInt(1));other_config.set_key_value("logfile",new ConfigOptionInt(2));
+    Print print,other;print.apply(model,config);other.apply(model,other_config);
+    const auto a=begin_guarded_job(print,88,job_resources()),b=begin_guarded_job(other,88,job_resources());
+    INFO(a.reason);INFO(b.reason);REQUIRE(a.task);REQUIRE(b.task);
+    REQUIRE(a.snapshot->input->fingerprint!=b.snapshot->input->fingerprint);
+    REQUIRE(a.snapshot->settings->fingerprint()!=b.snapshot->settings->fingerprint());
+    REQUIRE(a.snapshot->input_identity.fingerprint==b.snapshot->input_identity.fingerprint);
+    REQUIRE(a.snapshot->executed_identity.fingerprint==b.snapshot->executed_identity.fingerprint);
+    REQUIRE(a.snapshot->settings_identity.fingerprint==b.snapshot->settings_identity.fingerprint);
+    REQUIRE(a.snapshot->fingerprint==b.snapshot->fingerprint);
+    // Credentials still invalidate the exact native attempt, even though they
+    // are excluded from the public semantic view. Revision never rewinds.
+    print.apply(model,other_config);REQUIRE_FALSE(a.task->is_current());
+    other_config.set_key_value("layer_height",new ConfigOptionFloat(std::nextafter(.2,1.)));other.apply(model,other_config);
+    const auto geometry=begin_guarded_job(other,88,job_resources());REQUIRE(geometry.task);
+    REQUIRE(geometry.snapshot->input_identity.fingerprint!=b.snapshot->input_identity.fingerprint);
+    model.objects.front()->config.set_key_value("future_geometry_setting",new ConfigOptionFloat(.1));other.apply(model,other_config);
+    const auto unknown=begin_guarded_job(other,88,job_resources());REQUIRE(unknown.task);
+    REQUIRE(unknown.snapshot->input_identity.fingerprint!=geometry.snapshot->input_identity.fingerprint);
 }
