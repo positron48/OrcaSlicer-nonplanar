@@ -1,0 +1,308 @@
+{
+  "status": "PASS",
+  "positives": 6,
+  "refusals": 44,
+  "scope": "IDENTITY_ORDER_REQUEST_ONLY_NO_CLEARANCE_OR_FILE_AUTHENTICITY_OR_EXPORT",
+  "cases": [
+    {
+      "name": "candidate-report",
+      "expected": "PASS",
+      "reason": null,
+      "input_sha256": "17d56af751b37ae0ec51d2271ce288e3b3fb430b01178e5af6c1f91f8d1df29e"
+    },
+    {
+      "name": "candidate-report-invalid-material",
+      "expected": "PASS",
+      "reason": null,
+      "input_sha256": "d8b29f67161ab282700b54b080efde08f3c491fc1ab2855be44cc25e2ad8c62a"
+    },
+    {
+      "name": "candidate-report-failed-material",
+      "expected": "PASS",
+      "reason": null,
+      "input_sha256": "61cd21d056d29f3b050801017bf64f767833657a117f8a71c6dc7f91557c909d"
+    },
+    {
+      "name": "native-lineage-report",
+      "expected": "PASS",
+      "reason": null,
+      "input_sha256": "6fe97d318e49823d740116b68ca24d5ac7d67532be14c4379bef384fe6a3d812"
+    },
+    {
+      "name": "native-departure-report",
+      "expected": "PASS",
+      "reason": null,
+      "input_sha256": "fb2f45b192c51b933c08cf7243a5a4de7bb1235c8563376fac4c89afbe147942"
+    },
+    {
+      "name": "native-departure-final-independent-graph",
+      "expected": "PASS",
+      "reason": null,
+      "input_sha256": "bbf59f46dd4385d71ed0cda6ab46ea157b0c5ed6dd42e64870b95337c71b4e81"
+    },
+    {
+      "name": "origin-map-missing",
+      "expected": "REFUSE",
+      "reason": "Departure exact origin map",
+      "input_sha256": "ddea88990241616df2ea6ddba6e4ca09eb3302faebe72db554b9bd30eeda1f62"
+    },
+    {
+      "name": "origin-map-foreign-parent",
+      "expected": "REFUSE",
+      "reason": "Departure exact origin map",
+      "input_sha256": "d933aa6eee4286ecff0aef33c4aa60639a592922ad5dd1ad722fcac2e88039ce"
+    },
+    {
+      "name": "origin-map-boolean",
+      "expected": "REFUSE",
+      "reason": "Departure exact origin map",
+      "input_sha256": "50847630223e49e9406475633d934b9dcb100c7f87b1f5bce6de3374e32d2ce6"
+    },
+    {
+      "name": "leg-missing",
+      "expected": "REFUSE",
+      "reason": "Departure leg obligations",
+      "input_sha256": "0040e54873d5ab35c57b2d9ba105a16a7b9fb0f8d842a15cd5ea256a54b14288"
+    },
+    {
+      "name": "leg-reordered",
+      "expected": "REFUSE",
+      "reason": "Departure leg obligations",
+      "input_sha256": "c2ad6a464b486769e81bdba5673b209355c2688ae994f20926225436d90ae88a"
+    },
+    {
+      "name": "leg-boolean-cells",
+      "expected": "REFUSE",
+      "reason": "Departure leg obligations",
+      "input_sha256": "c6025496f4b1695d29ec7861cf47d945dd59d5993fb4dcf7a8bd25a0e7538cca"
+    },
+    {
+      "name": "leg-unbounded",
+      "expected": "REFUSE",
+      "reason": "Departure leg obligations",
+      "input_sha256": "c1a6b15fe5d6e7620c976ed710f72f581c6a12d82b7b1ac4fb121d1e0f980497"
+    },
+    {
+      "name": "request-wrong-destination",
+      "expected": "REFUSE",
+      "reason": "Departure exact Travel poses IDs order and payload",
+      "input_sha256": "4564626cdabf36ee973197c380b6211df7d80338835d476575255469ea094f61"
+    },
+    {
+      "name": "request-wrong-lift",
+      "expected": "REFUSE",
+      "reason": "Departure exact Travel poses IDs order and payload",
+      "input_sha256": "b0dad3a708ac4d95fc631abcb3e6dfd7ed644e4324f38f9d0bc42cfebd38e785"
+    },
+    {
+      "name": "request-negative-speed",
+      "expected": "REFUSE",
+      "reason": "Departure height/motion domain",
+      "input_sha256": "7edb65b845e804acf4dbe5b366b1c4938a4a08cbb58b753932dcec191550cce4"
+    },
+    {
+      "name": "routed-missing-descent",
+      "expected": "REFUSE",
+      "reason": "Departure complete route length",
+      "input_sha256": "e93cb01d43ac2d30b75069170fd4d685a2efe29f6ab2f9bfb14a4319c0ada593"
+    },
+    {
+      "name": "routed-foreign-order",
+      "expected": "REFUSE",
+      "reason": "Departure exact Travel poses IDs order and payload",
+      "input_sha256": "bc9937b8e797ce6ddcacd8810a8985da812ef25501312d33dd6bf634521e2d2e"
+    },
+    {
+      "name": "routed-reused-event-id",
+      "expected": "REFUSE",
+      "reason": "Departure exact Travel poses IDs order and payload",
+      "input_sha256": "caf154160bb6608dd7b267165f07707d769b1ac04d0ebac7d04dc71470a16064"
+    },
+    {
+      "name": "routed-wrong-pose",
+      "expected": "REFUSE",
+      "reason": "Departure exact Travel poses IDs order and payload",
+      "input_sha256": "1cb46c98eb7a4b2246fb5a5c6502758bbeb67cae656e4c590ef9b86aaa804e3a"
+    },
+    {
+      "name": "routed-phantom-deposition",
+      "expected": "REFUSE",
+      "reason": "Departure exact Travel poses IDs order and payload",
+      "input_sha256": "4643fe761b337c87c7067e8852fd332ae60cbd7a12e5b3f7a4aa186680f68cb8"
+    },
+    {
+      "name": "routed-changed-old-row",
+      "expected": "REFUSE",
+      "reason": "Departure preserves every laid row",
+      "input_sha256": "aaeea8c96f9e5c1559762ed6d7585c1ede8eeddd9bc514ab14a1b5b057943092"
+    },
+    {
+      "name": "laid-changed-old-row",
+      "expected": "REFUSE",
+      "reason": "Departure preserves complete parent before prospective bead",
+      "input_sha256": "9a42c60ebf26e413cb42884a495414a2979a845d6d4bd55a6b7b5a7ac411e03d"
+    },
+    {
+      "name": "before-body-prefix",
+      "expected": "REFUSE",
+      "reason": "Departure complete original body/cap",
+      "input_sha256": "c77f786d1d7802222c13bcedd2387170e059cae31b52f663b4e35ff088cb0e0b"
+    },
+    {
+      "name": "before-source",
+      "expected": "REFUSE",
+      "reason": "Departure source context",
+      "input_sha256": "ab33b6ee6127df8d4a0c108d8ce191e66721e3c0fa5028d9e90fdc995c225a26"
+    },
+    {
+      "name": "laid-reduced-error",
+      "expected": "REFUSE",
+      "reason": "Departure preserves model/losses/error budget",
+      "input_sha256": "3adc943f4cbb8eeb9ff209a102db1e3b9ec0fb5bdd40a3918ec009ad27e130c4"
+    },
+    {
+      "name": "routed-reduced-error",
+      "expected": "REFUSE",
+      "reason": "Departure routed context",
+      "input_sha256": "62fd17e1353ce03117b2245a31ff8f04429c8f334cd81cd3dffd4c067351b103"
+    },
+    {
+      "name": "planned-extra-row",
+      "expected": "REFUSE",
+      "reason": "Native planned context",
+      "input_sha256": "643dcc00a88097764cbdfdcfdc64e88b29ad8fcd5e05bab743a782bdd20dade4"
+    },
+    {
+      "name": "planned-speed-increase",
+      "expected": "REFUSE",
+      "reason": "Native motion limit reduction",
+      "input_sha256": "ba15ebe9e0b2373f6e8274ffd72455ae5e4ff7119c6e85cf70a16916f94a6834"
+    },
+    {
+      "name": "planned-pose-change",
+      "expected": "REFUSE",
+      "reason": "Native planner changed geometry/order/material",
+      "input_sha256": "feb43a62005ac0a3e495fe03bdda47d38dcceba640e7943eb9e75bdb2ac553d1"
+    },
+    {
+      "name": "clearance-negative",
+      "expected": "REFUSE",
+      "reason": "Departure clearance policy",
+      "input_sha256": "f143a40ab400d49299b18dc52ffbde0cc4fb85287509674e922e8abcfb82544f"
+    },
+    {
+      "name": "clearance-nonfinite",
+      "expected": "REFUSE",
+      "reason": "Departure finite quantity",
+      "input_sha256": "47fb9f8bd9ed48ac27c444900634df6934ddc90dce74636c4b1a498e7ebb3f45"
+    },
+    {
+      "name": "clearance-component-missing",
+      "expected": "REFUSE",
+      "reason": "Departure clearance policy",
+      "input_sha256": "a126d9ae01cb34dd64aa70a65015801903ccb1ee9067f656f8ec2d9522d8fc9e"
+    },
+    {
+      "name": "head-missing-role",
+      "expected": "REFUSE",
+      "reason": "Departure complete head",
+      "input_sha256": "ab34126924e8abf1e7500927002d5681110e6745c53c08d449f37bb3ff623e61"
+    },
+    {
+      "name": "head-reused-id",
+      "expected": "REFUSE",
+      "reason": "Departure head identity/coverage",
+      "input_sha256": "d5e739063977f9cb3224f38a9ba620ef9759b732c988eccfadaf324de443105c"
+    },
+    {
+      "name": "head-unknown-role",
+      "expected": "REFUSE",
+      "reason": "Departure head identity/coverage",
+      "input_sha256": "b9091364ae03ee66e982728b8036ed8a28d3ea0bfea42a43078f947274341bc2"
+    },
+    {
+      "name": "head-inverted-box",
+      "expected": "REFUSE",
+      "reason": "Departure box order",
+      "input_sha256": "91378d0434004058dac46330ce5312dd14a0228525fe94f4751ae32d61af3644"
+    },
+    {
+      "name": "annulus-confused-diameter",
+      "expected": "REFUSE",
+      "reason": "Departure opening/outer radius",
+      "input_sha256": "45057818730e3dca44231b800b413ef38b13ea02e35178904abf7e9807a0bfb9"
+    },
+    {
+      "name": "inventory-incomplete",
+      "expected": "REFUSE",
+      "reason": "Departure complete inventory/uncertainty",
+      "input_sha256": "fbf9f8e1e1e652ecf9b097418ad3095ec105ebe53434b73e296a54cad8b76963"
+    },
+    {
+      "name": "operator-confirmation-forged",
+      "expected": "REFUSE",
+      "reason": "Departure simulation scene identity",
+      "input_sha256": "cc8b2457d3b53cf4d907a2f1e8cd611b9b9a6b8fa724e0625853434f06c0bca0"
+    },
+    {
+      "name": "departure-unknown-version",
+      "expected": "REFUSE",
+      "reason": "Departure version/scope",
+      "input_sha256": "8a43dcab744e6e914cc5fe9ebb4b7f0c98799a23f29c373e8e22782186f9cca2"
+    },
+    {
+      "name": "departure-boolean-version",
+      "expected": "REFUSE",
+      "reason": "Departure version/scope",
+      "input_sha256": "d9c9bc41e1e01b8d651c10d736c11af5f1cc5655c48f74ec5c21b5f26b50d7e5"
+    },
+    {
+      "name": "departure-full-scope-claim",
+      "expected": "REFUSE",
+      "reason": "Departure version/scope",
+      "input_sha256": "483493123843be931ac080ce0e9d9f2af0189409b02f2555bdac9a9a44016933"
+    },
+    {
+      "name": "departure-extra-field",
+      "expected": "REFUSE",
+      "reason": "Departure fields",
+      "input_sha256": "28970645ac37b9412112b07089450fa6c29da06849280171fd62a66b00014ef1"
+    },
+    {
+      "name": "manifest-downgrade",
+      "expected": "REFUSE",
+      "reason": "Manifest binding",
+      "input_sha256": "a7efd48713abed0c1ba3fc49e493829875d01d9cc8b7d3cfe04efe2508c33748"
+    },
+    {
+      "name": "missing-owner",
+      "expected": "REFUSE",
+      "reason": "Native evidence fields",
+      "input_sha256": "168d821890fef19427377687330b67cbe8679240f7e596ce4ae4b32443308b7a"
+    },
+    {
+      "name": "extra-native-claim",
+      "expected": "REFUSE",
+      "reason": "Native evidence fields",
+      "input_sha256": "bd6bacff06da14012eeb25e8f4aeae84b5541d6079e882356898a1fb63b141f6"
+    },
+    {
+      "name": "forged-complete-order",
+      "expected": "REFUSE",
+      "reason": "Unimplemented proof claim",
+      "input_sha256": "4b430a564dd490f768250f895b0a0e0a05ed4bb0457e0c5c91473949210eed13"
+    },
+    {
+      "name": "export-allow",
+      "expected": "REFUSE",
+      "reason": "Incomplete report cannot allow export",
+      "input_sha256": "f09e8db817b5891243f4ddd8c4975dcefb172edd7dce04a415ec85415677ef1e"
+    },
+    {
+      "name": "stale-attempt",
+      "expected": "REFUSE",
+      "reason": "Native owner/attempt",
+      "input_sha256": "2e27d354618c3d888cface2633601741ee2f44c434c9a10e33d4c823f0559085"
+    }
+  ]
+}

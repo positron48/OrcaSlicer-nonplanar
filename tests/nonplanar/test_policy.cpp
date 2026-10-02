@@ -2848,7 +2848,10 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         job=advance_guarded_job(report_print,*job.task,GuardedJobPhase::Serializing);REQUIRE(job.task);
         const auto binding=bind_guarded_candidate(report_print,*job.task,candidate);INFO(binding.reason);REQUIRE(binding.task);
         const auto report=verify_guarded_candidate_report(binding,material_options);INFO(report.reason);REQUIRE(report.snapshot);
-        REQUIRE(report.snapshot->rates);REQUIRE(report.snapshot->material);REQUIRE(report.snapshot->rates->moves.size()==2218);
+        REQUIRE(report.snapshot->rates);REQUIRE(report.snapshot->material);
+        // Native Orca body segmentation differs across platforms. Replay must
+        // include this complete actual journal, not a macOS-specific row count.
+        REQUIRE(report.snapshot->rates->moves.size()==new_ledger.records.size());
         REQUIRE_FALSE(report.snapshot->export_allowed);REQUIRE(report.snapshot->overall_status==nptop_verify::RateStatus::Unknown);
         test::save_job_report(dir/"native-job-report.json",report);
         REQUIRE(accept_guarded_candidate_report(report_print,report.snapshot));REQUIRE(guarded_job_status(report_print).phase==GuardedJobPhase::Unknown);
@@ -3295,20 +3298,30 @@ GuardedNativeHatchLimits native_job_hatch_limits()
     GuardedNativeHatchLimits limits;limits.passes.material.max_cells=8191;limits.passes.material.timeout=std::chrono::seconds(5);
     limits.passes.material.maximum_interval_width=Volume(.01);limits.hatches.timeout=std::chrono::seconds(5);limits.hatches.volumes.timeout=std::chrono::seconds(5);return limits;
 }
-LinearCandidateResult native_job_candidate(std::shared_ptr<const MaterialSequenceSnapshot> journal)
+SimulationScene native_job_scene()
 {
-    const auto motion=prepare_material_motion({"",std::move(journal)});INFO(motion.reason);REQUIRE(motion.snapshot);
     SimulationScene scene{1,41,7,ProfileOrigin::Synthetic,false,{{0,0,0},Length(.2),Length(.5)}, {},
         {{-1,-1,-.1},{40,40,10}},{{-5,-5,-5},{45,45,20}}, {},true,Length(30),Length(0)};
     uint64_t id=1;for(auto part:{HeadPart::NozzleBody,HeadPart::Heater,HeadPart::Sock,HeadPart::Duct,HeadPart::Sensor,HeadPart::Mount})
         scene.head.push_back({id++,part,{{-.05,-.05,.5},{.05,.05,.8}},false,false});
-    const ClearancePolicy geometry{Length(.01),NumericBudget(0,0,0,2e-6),Length(0),Length(0),Length(0)};
-    const auto source=prepare_simulation_motion(scene,motion,geometry);INFO(source.reason);REQUIRE(source.snapshot);
+    return scene;
+}
+LinearCandidateResult native_job_candidate(const SimulationMotionSourceResult &source)
+{
+    REQUIRE(source.snapshot);const auto &scene=source.snapshot->scene;
     const LinearMotionPolicy kinematics{1,91,1,ProfileOrigin::Synthetic,false,LinearPlannerModel::FullStop,LinearKinematics::CoreXY,
         scene.nozzle_domain,{200,200,5},{1000,1000,50},{200,200,5},{1000,1000,50},Length(1.75),FlowCompensation(1),
         Speed(40),Acceleration(400),Length(5),12,2,200};
     const auto plan=plan_linear_motion(source,kinematics);INFO(plan.reason);REQUIRE(plan.snapshot);
     const auto bytes=serialize_linear_candidate(plan,{92,1,Acceleration(100)});INFO(bytes.reason);REQUIRE(bytes.snapshot);return bytes;
+}
+LinearCandidateResult native_job_candidate(std::shared_ptr<const MaterialSequenceSnapshot> journal)
+{
+    const auto motion=prepare_material_motion({"",std::move(journal)});INFO(motion.reason);REQUIRE(motion.snapshot);
+    const auto scene=native_job_scene();
+    const ClearancePolicy geometry{Length(.01),NumericBudget(0,0,0,2e-6),Length(0),Length(0),Length(0)};
+    const auto source=prepare_simulation_motion(scene,motion,geometry);INFO(source.reason);REQUIRE(source.snapshot);
+    return native_job_candidate(source);
 }
 }
 TEST_CASE("B13 native body factory owns actual job inputs before callbacks", "[Nonplanar][B13][JobNative]")
@@ -3435,4 +3448,112 @@ TEST_CASE("B13 complete native body cap and final bytes retain one current owned
     INFO("native job lineage records=" << report.snapshot->rates->moves.size() << " bytes=" << bytes.snapshot->bytes.size() << " work=" << report.evaluations);
     REQUIRE(accept_guarded_candidate_report(fixture.print,report.snapshot));REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Unknown);
     REQUIRE_THROWS_WITH(fixture.print.process(),Catch::Matchers::ContainsSubstring("not implemented"));
+}
+
+namespace {
+struct NativeDepartureFixture : NativeJobFixture {
+    GuardedJobResult job;
+    GuardedNativeHatchResult hatches;
+    FirstCapMaterialResult before;
+    SimulationCapDepartureResult departure;
+    LinearCandidateResult bytes;
+    NativeDepartureFixture()
+    {
+        job=begin();const auto body=analyze_guarded_native_body(*job.task,native_job_body_request(),native_job_body_limits());
+        INFO(body.reason);REQUIRE(body.snapshot);job=advance_guarded_job(print,*job.task,GuardedJobPhase::Planning);REQUIRE(job.task);
+        const auto request=native_job_hatch_request(*body.snapshot);
+        hatches=plan_guarded_native_hatches(*job.task,body.snapshot,request.first,request.second,native_job_hatch_limits());INFO(hatches.reason);REQUIRE(hatches.snapshot);
+        const auto &roi=request.first.footprint;FirstHatchLayerLimits limits;
+        limits.beads.timeout=limits.beads.packets.timeout=limits.volumes.timeout=std::chrono::seconds(5);limits.volumes.max_cells=65535;
+        limits.beads.maximum_gap_error=Length(.0001);limits.beads.packets.maximum_width_error=Length(.002);limits.beads.packets.maximum_volume_error=Volume(.0001);
+        const auto cap=plan_first_cap({"",hatches.snapshot->native->hatches},{WidthXY(.4),0,false,Volume(.001)},
+            {{roi.min_x,roi.min_y,4.0},{roi.max_x,roi.max_y,4.7}},limits);INFO(cap.reason);REQUIRE(cap.snapshot);
+        before=reconstruct_first_cap_material(cap);INFO(before.reason);REQUIRE(before.snapshot);REQUIRE(before.snapshot->runs.size()>4);
+        const auto &run=*before.snapshot->runs[4].material;const auto &rows=run.source->sequence->records;
+        const auto &a=rows[run.first_record].motion.start,&b=rows[run.last_record].motion.end;const bool x=run.axis==MaterialRunAxis::X;
+        const double cx=(a.x()+b.x())/2,cy=(a.y()+b.y())/2;
+        const RectangleXY cell{cx-(x ? .05 : .2),cy-(x ? .2 : .05),cx+(x ? .05 : .2),cy+(x ? .2 : .05)};
+        const double plane=std::min(a.z()+(b.z()-a.z())*.47,a.z()+(b.z()-a.z())*.53)-.022;
+        MaterialCoverageLimits support;support.timeout=std::chrono::seconds(5);support.max_cells=65535;
+        const auto next=assess_first_cap_next_pass(before,1,cell,plane,support);INFO(next.reason);REQUIRE(next.snapshot);
+        NextCapBeadLimits bead_limits;bead_limits.timeout=bead_limits.packets.timeout=std::chrono::seconds(5);
+        const auto bead=plan_next_cap_bead(next,x ? HatchDirection::AlongX : HatchDirection::AlongY,WidthXY(.28),bead_limits);INFO(bead.reason);REQUIRE(bead.snapshot);
+        const auto motion=prepare_material_motion({"",before.snapshot->material->sequence});REQUIRE(motion.snapshot);REQUIRE(motion.snapshot->full_upper_z_mm);
+        const auto &end=bead.snapshot->path_end;
+        SimulationCapDepartureLimits route_limits;route_limits.timeout=std::chrono::seconds(5);
+        departure=plan_simulation_cap_departure(before,bead,native_job_scene(),
+            {Length(.01),NumericBudget(0,0,0,2e-6),Length(0),Length(0),Length(0)},
+            {{end.x()+1,end.y(),end.z()},motion.snapshot->full_upper_z_mm->upper+.1,Speed(10),Acceleration(100)},route_limits);
+        INFO(departure.reason << " work=" << departure.evaluations);REQUIRE(departure.snapshot);
+        SimulationMotionSourceResult source;source.snapshot=departure.snapshot->route->planned;bytes=native_job_candidate(source);
+        job=advance_guarded_job(print,*job.task,GuardedJobPhase::Serializing);REQUIRE(job.task);
+    }
+    FirstCapMaterialResult laid() const {return {"",departure.snapshot->material};}
+    GuardedNativePlanResult capture(const GuardedJobLimits &limits={}) const
+    {return capture_guarded_native_plan(*job.task,hatches.snapshot,laid(),bytes,limits,departure.snapshot);}
+};
+}
+TEST_CASE("B13 native departure binds the exact bead material complete route and final candidate to its current job", "[Nonplanar][B13][JobNativeDeparture]")
+{
+    NativeDepartureFixture fixture;const auto &departure=*fixture.departure.snapshot;
+    for(const auto &leg:departure.route->legs)test::independent_travel_material_partition(*leg->material);
+    REQUIRE_FALSE(capture_guarded_native_plan(*fixture.job.task,fixture.hatches.snapshot,fixture.laid(),fixture.bytes).snapshot);
+    const auto lineage=fixture.capture();INFO(lineage.reason);REQUIRE(lineage.snapshot);
+    REQUIRE(lineage.snapshot->departure==fixture.departure.snapshot);REQUIRE(lineage.snapshot->assembly==departure.material);
+    REQUIRE(lineage.snapshot->candidate==fixture.bytes.snapshot);REQUIRE(fixture.bytes.snapshot->plan->source==departure.route->planned);
+    REQUIRE(sha256_bytes(lineage.snapshot->departure_json)==lineage.snapshot->departure_sha256);
+    const auto identity=nlohmann::json::parse(lineage.snapshot->canonical_json);REQUIRE(identity["schema"]==2);
+    REQUIRE(identity["departure_lineage"]==lineage.snapshot->departure_sha256);
+    const auto bound=bind_guarded_candidate(fixture.print,*fixture.job.task,fixture.bytes,{},lineage.snapshot);INFO(bound.reason);REQUIRE(bound.snapshot);
+    const auto manifest=nlohmann::json::parse(bound.snapshot->manifest_json);REQUIRE(manifest["schema"]==guarded_departure_binding_version);
+    REQUIRE(manifest["scope"]=="owned_native_body_cap_departure_candidate_lineage_only");
+    const auto report=verify_guarded_candidate_report(bound,{93,1,5e-9,.0001,1e-9,.02,0});INFO(report.reason);REQUIRE(report.snapshot);
+    REQUIRE(report.snapshot->rates);REQUIRE(report.snapshot->material);REQUIRE(report.snapshot->checks.size()==17);
+    REQUIRE_FALSE(report.snapshot->export_allowed);REQUIRE(report.snapshot->overall_status==nptop_verify::RateStatus::Unknown);
+    REQUIRE(std::count_if(report.snapshot->checks.begin(),report.snapshot->checks.end(),[](const auto &c){return c.status==nptop_verify::RateStatus::Pass && c.execution==GuardedCheckExecution::Run;})==4);
+    REQUIRE(std::count_if(report.snapshot->checks.begin(),report.snapshot->checks.end(),[](const auto &c){return c.status==nptop_verify::RateStatus::Unknown && c.execution==GuardedCheckExecution::NotRun;})==13);
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(directory)/"native-departure-report.json",report);
+    REQUIRE(accept_guarded_candidate_report(fixture.print,report.snapshot));REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Unknown);
+    REQUIRE_THROWS_WITH(fixture.print.process(),Catch::Matchers::ContainsSubstring("not implemented"));
+}
+TEST_CASE("B13 native departure rejects equal content from a different material motion or job owner", "[Nonplanar][B13][JobNativeDeparture]")
+{
+    NativeDepartureFixture fixture;const auto &d=*fixture.departure.snapshot;const auto valid=fixture.capture();INFO(valid.reason);REQUIRE(valid.snapshot);
+    const auto other=append_next_cap_material(fixture.before,{{"",d.bead}});INFO(other.reason);REQUIRE(other.snapshot);
+    REQUIRE(other.snapshot!=d.material);REQUIRE(other.snapshot->material->sequence->fingerprint()==d.material->material->sequence->fingerprint());
+    const auto wrong_material=capture_guarded_native_plan(*fixture.job.task,fixture.hatches.snapshot,other,fixture.bytes,{},fixture.departure.snapshot);
+    REQUIRE_FALSE(wrong_material.snapshot);REQUIRE(wrong_material.reason=="NATIVE_JOB_DEPARTURE_MATERIAL_OWNER");
+    const auto copied_bytes=native_job_candidate(d.route->planned->material->ledger);REQUIRE(copied_bytes.snapshot->sha256==fixture.bytes.snapshot->sha256);
+    const auto wrong_motion=capture_guarded_native_plan(*fixture.job.task,fixture.hatches.snapshot,fixture.laid(),copied_bytes,{},fixture.departure.snapshot);
+    REQUIRE_FALSE(wrong_motion.snapshot);REQUIRE(wrong_motion.reason=="NATIVE_JOB_DEPARTURE_MOTION_OWNER");
+    NativeJobFixture foreign;auto job=foreign.begin();job=advance_guarded_job(foreign.print,*job.task,GuardedJobPhase::Planning);REQUIRE(job.task);
+    job=advance_guarded_job(foreign.print,*job.task,GuardedJobPhase::Serializing);REQUIRE(job.task);
+    REQUIRE_FALSE(capture_guarded_native_plan(*job.task,fixture.hatches.snapshot,fixture.laid(),fixture.bytes,{},fixture.departure.snapshot).snapshot);
+    REQUIRE_FALSE(bind_guarded_candidate(foreign.print,*job.task,fixture.bytes,{},valid.snapshot).snapshot);REQUIRE(fixture.job.task->is_current());
+    const auto old=fixture.job;fixture.job=fixture.begin();REQUIRE_FALSE(old.task->is_current());
+    REQUIRE_FALSE(capture_guarded_native_plan(*old.task,fixture.hatches.snapshot,fixture.laid(),fixture.bytes,{},fixture.departure.snapshot).snapshot);
+    REQUIRE_FALSE(fixture.capture().snapshot);
+}
+TEST_CASE("B13 native departure captures callers and refuses cancellation deadline rounding and late publication", "[Nonplanar][B13][JobNativeDeparture]")
+{
+    NativeDepartureFixture fixture;
+    auto material=fixture.laid();auto bytes=fixture.bytes;auto departure=fixture.departure.snapshot;
+    const auto original=departure;GuardedJobLimits limits;
+    limits.cancelled=[&]{material={};bytes={};departure.reset();limits.timeout=std::chrono::milliseconds(0);return false;};
+    const auto owned=capture_guarded_native_plan(*fixture.job.task,fixture.hatches.snapshot,material,bytes,limits,departure);INFO(owned.reason);REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->departure==original);REQUIRE(owned.snapshot->candidate==fixture.bytes.snapshot);
+    for(int mode=0;mode<6;++mode){
+        auto refused=GuardedJobLimits{};
+        if(mode==0)refused.timeout=std::chrono::milliseconds(0);
+        if(mode==1)refused.cancelled=[] {return true;};
+        if(mode==2){refused.timeout=std::chrono::milliseconds(1);refused.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if(mode==3)refused.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+        if(mode==4)refused.cancelled=[]()->bool {throw 3;};
+        if(mode==5)refused.cancelled=[]()->bool {throw std::runtime_error("");};
+        const auto result=fixture.capture(refused);if(mode==3)REQUIRE(std::fesetround(FE_TONEAREST)==0);
+        INFO(mode << ' ' << result.reason);REQUIRE_FALSE(result.snapshot);REQUIRE_FALSE(result.reason.empty());
+    }
+    size_t calls=0;limits={};limits.cancelled=[&]{++calls;return false;};REQUIRE(fixture.capture(limits).snapshot);
+    const size_t last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};
+    const auto late=fixture.capture(limits);REQUIRE_FALSE(late.snapshot);REQUIRE(late.reason=="NATIVE_JOB_CANCELLED");REQUIRE(calls==last);
 }

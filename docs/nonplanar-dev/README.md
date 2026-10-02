@@ -15,6 +15,24 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B13-native-departure.md` and ADR-0081 now bind the exact protected laid bead,
+complete departure/origin map and final candidate to the current native job/
+attempt. Equal-content material/motion owners and unbound extra routes refuse.
+Exact departure identity, native plan v2 and optional manifest v3 preserve the
+old formats. Focus17/947083 and independent report6/44 pass; the final 425-test
+CTest and six strict OFF/ZAA pairs are recorded in the frozen stage evidence.
+All18 previous B09 native outputs plus the old native-lineage report are exact.
+The new candidate has identical rows/bytes but distinct derived-body dependency
+hashes across focused/final runs; both owner graphs validate separately and full
+source provenance remains unqualified.
+The inherited Linux 35503607 run failed a fixed macOS row count (2257 actual vs
+2218 literal); the test now requires its complete actual journal and Linux also
+checks the new departure report. New-source Linux/Windows/GUI remain unverified.
+Thirteen mandatory full-job domains remain UNKNOWN/NOT_RUN; export BLOCK and
+full B01–B15 stays active. Next complete fixed-width cap filling/seam/contact/
+access and independently verify full final-byte head/material/route geometry;
+qualified resources/software/provenance and complete prolog/end/order remain.
+
 `B09-native-departure.md` and ADR-0080 bind one prospective later bead to its exact
 complete parent, recalculated material and continuously proven lift/transfer/
 descent. The separate .28 mm native variant retains all old body/first-cap rows,
@@ -22,8 +40,8 @@ whole targets, head/margins/budgets and has2221 final rows with rate/material re
 full fill/contact/byte geometry remain pending. The .2 mm variant retains its
 independent rounded-section refusal; original wide exit remains FAIL. Focus9/7354,
 CTest422/422 and six fresh strict OFF/ZAA pairs pass. All15 original native files
-are exact. Next bind the protected departure/origin map to the B13 native job/
-attempt without loosening canonical identity. Full B01–B15 stays active; export
+are exact. Its previously pending native job edge is now implemented by
+ADR-0081 above; full scope remains pending. Full B01–B15 stays active; export
 BLOCK and synthetic profiles unconfirmed. See separate author review/evidence.
 
 `B09-annulus-endpoints.md` and ADR-0079 refine the original native exit refusal:

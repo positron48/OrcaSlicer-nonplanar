@@ -1,0 +1,2409 @@
+{
+  "schema": 1,
+  "stage": "B13-native-departure",
+  "recorded_utc": "2026-10-02T20:09:25.013209+00:00",
+  "git_parent": "5a3c64210e58b4fb1937589011822df0f23a51d7",
+  "git_worktree": "SOURCE_BEFORE_CURRENT_COMMIT",
+  "commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B13-native-departure.md",
+  "source_sha256": {
+    ".github/workflows/nonplanar-native.yml": "8876a90712a84b249d9ef504b13b28e4556b566a3ba1bac64a20777720017423",
+    "docs/nonplanar-dev/B13-native-departure-review.md": "4cf7faded87f7129adee73376170ff8b6d12d8a6262cabcb7540947b6d32bbaa",
+    "docs/nonplanar-dev/B13-native-departure.md": "7e6a4f9f8b9f4d020b93722b1ea4e901bc53267f1ca4d9229139c4dc1038bb88",
+    "docs/nonplanar-dev/README.md": "3f13028fe5ae9be490e25a5181b60335b20d5ee15baf6bd93cc386c88323ede6",
+    "docs/nonplanar-dev/adr-0081-native-departure-lineage.md": "c36626fafa2fad70290565db3870385f3999daf3642a20ed0a69883250958305",
+    "docs/nonplanar-dev/gate-b-plan.md": "1c157bd7c06455980452695a23b5aedf25683f886962a504d852b92e27207518",
+    "docs/nonplanar-dev/next-tasks.md": "9e48b6facdb00c1d750ae0454e07136c39b86c44957b4c54e0d21e0dca07c8a6",
+    "docs/nonplanar-dev/status.json": "3c8b86d80254f8b08e41e9672c71be04bdadab5455b679cc362db26716a51628",
+    "scripts/nonplanar/job_report_oracle.py": "fb8c520458e20879a2af93eef539a856f39e8f63edf902644a0fb6bbe352c5ab",
+    "src/libslic3r/Nonplanar/JobArtifact.cpp": "1999c44d87bea808648ceb3cea023a756201b64136d3e79c266cc082d2e57c77",
+    "src/libslic3r/Nonplanar/JobArtifact.hpp": "626da9898c69e45868ebabe4f9c6e9bb35d2b98943971631540a5bdf26e1c5ea",
+    "src/libslic3r/Nonplanar/JobNative.cpp": "e5e34646415a41f968c43b08a4c631098801f1d765bd75f938e479f2d00212e1",
+    "src/libslic3r/Nonplanar/JobNative.hpp": "a38642d391450493baa371eb286e5b499d13a6417ef95de13e1648e189798543",
+    "tests/nonplanar/job_report_evidence.hpp": "66701de3ff8cf555bc23dae4d6e43506bc4447b7d3a6bb683f22b99cebe8c6e5",
+    "tests/nonplanar/test_policy.cpp": "5cb2445fbf119ab736ab45534d5cb7044554b50ac06ddef8837d9991ac87b119"
+  },
+  "dependency_sha256": {
+    "CMakeLists.txt": "0c8a47cf7771482c17d1643f992bc3fd3faf05f0999cedf78c890a9aad465c21",
+    "deps/Boost/Boost.cmake": "7f6d2cfb4e5e7efc2af2f2147d65b29ccaefabc2348e23d0064efbc5dc4743e9",
+    "deps_src/admesh/stl.h": "105c3c2180dd64ec073b059ce0ae4a360db5414c4af09c4b70ee2dab3c102600",
+    "deps_src/nlohmann/json.hpp": "33e4d4e3c750a8ab990f1f637c6a1b35411534d7873a507ca1c36d7d40751e4b",
+    "docs/nonplanar-dev/B09-annulus-endpoint-review.md": "5b4494b640434f2bb5734a036993b6d7068d2ea56866f9d08662bce23812789c",
+    "docs/nonplanar-dev/B09-annulus-endpoints.md": "978b6ac87de3bd9abcf3207320aa098597b2b69ae45375b7d44de1e04398e025",
+    "docs/nonplanar-dev/B09-lifted-travel.md": "320e5aa8d34cd46ae26e8f3295f7536b9410e33b09e1c6c9efc0491dbb45d224",
+    "docs/nonplanar-dev/B09-native-departure-review.md": "bddd2f7d0ac21df231023b44d84a2d7d7fae9d850817e27ce79f8265886bb5f8",
+    "docs/nonplanar-dev/B09-native-departure.md": "2b7bac505b984c0ef7f60eb6663fda3b2b1fce30d09cff3215f5eaf2d6fd868e",
+    "docs/nonplanar-dev/B13-final-report-review.md": "70549142ed3aa5531806fd099d1d811aa6327d076f3d82a3c315abef81432af7",
+    "docs/nonplanar-dev/B13-final-report.md": "747696e2cf4a70af87870ab783ba3e41818b35c5d3b57aca2ca8c968356cb94b",
+    "docs/nonplanar-dev/B13-job-context-review.md": "ab9b97d38056ee4e832926f6ab07a069ce6aa2061e748f2ff9269ae7aa9215d3",
+    "docs/nonplanar-dev/B13-job-context.md": "6dcdb2570a8e3fc8b76d339e44c51f494fb75ea0187013482c0a638b2ca9740b",
+    "docs/nonplanar-dev/B13-native-lineage-review.md": "e1467d44b0b9aef8dcd0442a49d66a2d83e3161650f8a3fb511a92c59f504419",
+    "docs/nonplanar-dev/B13-native-lineage.md": "b6aa567e32258810f7ced117c31cb354f32ea3c4d94da25923b52ded78951e47",
+    "docs/nonplanar-dev/adr-0055-material-runs.md": "92b97432333ee4c2e7ed4db304534b1be3027d4cc4b632481d7ed12d8065026c",
+    "docs/nonplanar-dev/adr-0066-actual-normal-spacing.md": "19c12803d5f51eb83bda627874bb2d37f3d53b17a95fce0ac839496d5a94b02d",
+    "docs/nonplanar-dev/adr-0067-lifted-travel.md": "ff5bc6d59a1488f23aac2df26200b793bfb2cbc5fc50b381c5a12b2e71bc106c",
+    "docs/nonplanar-dev/adr-0071-final-material-replay.md": "d566566c8f9cd0436b4859eef8d0862190f8ac1c04038616fa8670433c023fc1",
+    "docs/nonplanar-dev/adr-0072-final-material-solids.md": "8c0b3f446428d0c52e3b64d7d1279f430b68eaf1971a73e29f6171e6fc98b549",
+    "docs/nonplanar-dev/adr-0073-final-joined-material.md": "bbd7beefb650e5f5685bf3d08118647e28c3cf3e6152eda85165dc853cf4a9d5",
+    "docs/nonplanar-dev/adr-0074-final-run-support.md": "b19b3a964b954d904b87f30d7c48ddd3ac723cf038e1a470704bb40528c0b479",
+    "docs/nonplanar-dev/adr-0075-exact-nominal-run-cuts.md": "64a631fdece203e7207c0ceb0571fd469250eedb1f60128d8d80aae71a9092a5",
+    "docs/nonplanar-dev/adr-0076-owned-job-context-candidate-binding.md": "00a7820eb3d31a759c2bd1e9e31db69feef306f5e14e87d0d2fc1ff51244c804",
+    "docs/nonplanar-dev/adr-0077-blocked-final-replay-report.md": "ac3644232ef3cef7b4a6dd7acb6362a30f0373fa77dbb64ef138b4e65234d4da",
+    "docs/nonplanar-dev/adr-0078-owned-native-plan-lineage.md": "329e538d98914aaa6d6307ec0ed258435a0673dbd364ff9cb2d09e062c3ba129",
+    "docs/nonplanar-dev/adr-0079-annulus-endpoint-witness.md": "11b39c3804749b2f7d2eaa9e003e8764a3cdac3f3c43518390fd64036915012a",
+    "docs/nonplanar-dev/adr-0080-native-cap-departure.md": "85093c5a6b1b03beae3b0de6bb3efb7764954a59dc8eff841947911f1c08f83f",
+    "docs/nonplanar/AGENTS.md": "ec378252b03ff207f33e65b33e4d717e2eebdb353315b0d6f927734c3f6c8ee9",
+    "docs/nonplanar/DATA_CONTRACTS.md": "62313f895d91008932ec28578a79a447d6631b77af522d412f8c51bedd2d18f2",
+    "docs/nonplanar/SAFETY_AND_VERIFICATION.md": "188c96260dab33d782aaa0acf1d1860a63b400cc38446e1f277fec8a861128d0",
+    "docs/nonplanar/SPEC.md": "16a78a238630e77a3c52f9f69206dfb7156fdba6a2cbd63ead925decad79501d",
+    "scripts/nonplanar/capture_baselines.py": "389ff65d64436ffc29c84e0a3cc5b671bbf7e8d1e1e11432d433b603fdc2afc7",
+    "scripts/nonplanar/compare_baselines.py": "73e84ca13f46bc22fe14deaa02a97490bfc2a019f3547e648aa497cb591b2f18",
+    "scripts/nonplanar/ctest_gate.py": "e69603262ae59cd0a4594732b5c2c32e127425987b4bc4db91b06471fb30152c",
+    "scripts/nonplanar/job_artifact_oracle.py": "5ba2c91650dee5151f42ee5bb7486c36818da1199b21b29d1dbb0af9851f57a8",
+    "scripts/nonplanar/job_context_oracle.py": "c6df629bbd4f6a34a7f2b70d29411083a6399b66b0a129577092db190bec0a86",
+    "scripts/nonplanar/run_logged.py": "e8c75cb2f3fc0a6ae709bbe52cdfc380877defeb329af37d162bde2c4d269242",
+    "scripts/nonplanar/test_ctest_gate.py": "13e4e783dc20a2d3f7deea5944d63ee7f845f263ef2d83976453cc029f6463d8",
+    "scripts/nonplanar/validate_joined_material_cli.py": "82546e5966af2632372ce025b5f6cb2f1b64b0a9019854b105d1dfc88f581685",
+    "scripts/nonplanar/validate_material_audit_cli.py": "6cd7998fc03ecba797e1d97894914ff26598a8c8c4a1ad8d3f111bbf83136e5c",
+    "scripts/nonplanar/validate_material_cover_cli.py": "06e63ba97f0ee5fd5eabdcc46db78b010a777e7c48e922a350593665df401b9c",
+    "scripts/nonplanar/validate_nominal_run_cli.py": "f1d5a8d21e8184ebab4162b66879e0668f7a738205d6031df7f6e1ca5fdde1f1",
+    "scripts/nonplanar/validate_rate_audit_cli.py": "ed63b41bd6062d0adb7d0bb517073d7571f4941b91616f9daef3535e0af61708",
+    "scripts/nonplanar/validate_run_support_cli.py": "f2d842ac0793d494b3e4278bff65e75ae65443ec77e842a290ec05eeaa2464b3",
+    "src/CMakeLists.txt": "c6485ea1b87c02927d6b3c50ed63112ca67f80d381dded9277af789f51fa5eb3",
+    "src/libslic3r/CMakeLists.txt": "5cfc33a24ad6cc470263a7669f0e2cf3d2ccc34a43556746230458fd5acfa3ab",
+    "src/libslic3r/GCodeWriter.cpp": "8abfe1b65d7bcc3260e369b938761fdeb834a8f0ca26b7a9634d3f627f9ef288",
+    "src/libslic3r/GCodeWriter.hpp": "08ae73ba7a98549f91c0bec65c71950a7b4725e0ccd32c88c3418dd36f68f29c",
+    "src/libslic3r/Nonplanar/Canonical.hpp": "2dc5581d8e95a64fd9848835f1f0127678c910ef1f050fa4cffd894c8c0aa39b",
+    "src/libslic3r/Nonplanar/Collision.cpp": "7d6c32c7f247df80b0ccbe1b6e6952c3c99b0ce4071058ae73086997b25245f3",
+    "src/libslic3r/Nonplanar/Collision.hpp": "ffd6c0584e33a1df024384d87ae0ec98d6630d631f0bbf4c21d6a1d13ae88f0f",
+    "src/libslic3r/Nonplanar/Contracts.cpp": "95fdcb573526d65e6b7d28a9d7046571c5d7ed3c65f5c4e42082ea11989daf0b",
+    "src/libslic3r/Nonplanar/Contracts.hpp": "743a1bee26714390baa2a33883272049b039faafc6356dc988d3a29a5cca123a",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp": "6dbec080d1f0d61d13aeb470b6f5741909543326360dd2341f9fcf8eb62ce66b",
+    "src/libslic3r/Nonplanar/DepositionModel.hpp": "25ac0d653a46f32c781d6b60c14559876b5ee96d2a988161ec75ddb5b47eaebb",
+    "src/libslic3r/Nonplanar/GCodeAdapter.cpp": "91e09cfe95f98e5a54227c8655d5dbb3cd818001d6e94c41731f363cf1b2c3fe",
+    "src/libslic3r/Nonplanar/GCodeAdapter.hpp": "6178c6bf888d52f435c034d4bb06220140a2d8dc1a131692ef3f5dc5f8a21933",
+    "src/libslic3r/Nonplanar/Interval.hpp": "3ededa7187b1db3a1c4c141b337a495f6e2aceabd9a334e09db3c609767e875e",
+    "src/libslic3r/Nonplanar/Job.cpp": "0c9dd261ece22aa56b9b03c12a3b9f7e3eee3caffc337c94455f434c8a3cfcb1",
+    "src/libslic3r/Nonplanar/Job.hpp": "548b792ec81ae7a36d2dafdde1872a7880fe150fb7dfe65cf49f7cfbe751d9dc",
+    "src/libslic3r/Nonplanar/MotionPlan.cpp": "dcfba130c0799630817395ecd0d0455a30b19fd8b262c35d1577abd51e82cd8f",
+    "src/libslic3r/Nonplanar/MotionPlan.hpp": "072fce92110166e6c3532d4ebaa08e8dc233c44d566d8f3472a9ea4f19190e35",
+    "src/libslic3r/Nonplanar/PlanarBody.cpp": "9183e2dd45b9eb1569ef3b2c5e3adce13b1fdca1cc958423db4a54ec5c95381c",
+    "src/libslic3r/Nonplanar/PlanarBody.hpp": "827f495030d06eac82f0bfce9fdd1f64025b5b82039b0fc5d4ece261cf39b6d1",
+    "src/libslic3r/Nonplanar/Policy.cpp": "273180e5f080bb496df2df8a3217d95e5e6258380fb55590e417f47627ae12ef",
+    "src/libslic3r/Nonplanar/Policy.hpp": "628b8d4958bdcabb14234dcd58b2c3c1eb90d21d7daf0cd41ac12f7330b3f135",
+    "src/libslic3r/Nonplanar/ProfileScene.cpp": "d288e3c6b662464f94edf53bca13b8273f0b39b3248fc58290021a47b9a1a320",
+    "src/libslic3r/Nonplanar/ProfileScene.hpp": "5d8bcfe4b2fc191ef71bb31bb5ebc0f5d3da16d9dbd45b7ccdb41574fc42824f",
+    "src/libslic3r/Nonplanar/StlImport.cpp": "4cd196babb5a7f63b4b4bb19429b023acd341be0190c39169ef663bf2cb1ad9d",
+    "src/libslic3r/Nonplanar/StlImport.hpp": "48ee14df185fe7ca1b1af12c2e41b193c6f3bf90d72fe89fb48c205601b46330",
+    "src/libslic3r/Nonplanar/VolumePartition.cpp": "4d23f185615f6312b64dd562a9e59ed800e37db4eaa9e2943d6b82c7d2bf23ab",
+    "src/libslic3r/Nonplanar/VolumePartitionExact.cpp": "b9f5d9795c5edfc48776d2abaeb40ea10e3ebb46cd515c8d9051d1e5e7b1b31d",
+    "src/libslic3r/Print.cpp": "cd760474b813de0e79e0d0efc84411c8fe3b7e81401adb58b93393a5cac1b0eb",
+    "src/libslic3r/Print.hpp": "a944ec5998cda29be5a2dac2836ab5fbe39d8ff34bb994222798ab8f2b8b9bbe",
+    "src/libslic3r/PrintApply.cpp": "d4c2bbd70ba835f046eda6fd34d40af70dbb4dadc22a6d1df12468c8e66f92c2",
+    "src/libslic3r/PrintConfig.cpp": "b4d0263cc14c0cff98ac769cc4c90eb3789b93f3450219b4ebcf9dc4a66f0d1f",
+    "src/nonplanar_verify/CMakeLists.txt": "fff063fd9efcecaf6518549598c53a32bd009d55907d974a796f9ecf3dad4b19",
+    "src/nonplanar_verify/Exact.hpp": "0ba2011d45898c625fde56844e3241d5ee4e30e458668d5d1105a65a8a4780e2",
+    "src/nonplanar_verify/FullStopReplay.hpp": "4ac3f2304d95bd33a73437c4554ecae97ab32f0f8cab9b06176fc69d4b29df8b",
+    "src/nonplanar_verify/LinearMaterial.cpp": "2919827045ac37cf6a781306b5c4e97247b83d2e727b15ce4a197342123843dc",
+    "src/nonplanar_verify/LinearMaterial.hpp": "2ff7437c80ca8c20a7d23c5c3d17498477bcd8e54ba937763507af15c384e2a2",
+    "src/nonplanar_verify/LinearRates.cpp": "ceae9713b0f92edb7a1214563c8ed317482e31e93af48acb7d87935d76f329b1",
+    "src/nonplanar_verify/LinearRates.hpp": "082a33b08a6f48d411fdeeca566c3bb29d010d568ad5a6ca0ba7f2a89de33814",
+    "src/nonplanar_verify/MaterialJson.hpp": "93a78d291470c5fd2b4c31096bc2550db1fcea25a5ead2667a4b44b212040e24",
+    "src/nonplanar_verify/Replay.hpp": "0dd0313962ed9fcb84f39191380556869b955b144d2bccc12fdcb73477af3ba1",
+    "src/nonplanar_verify/audit.cpp": "270f4efae129ca75e5e77463cab7949f324f7155d0a9d64ad756b182f09d558a",
+    "tests/fff_print/CMakeLists.txt": "ac6672c4e2368cfae1c11851f483b0428b5768e5af478b5c36fe817824e9fddf",
+    "tests/nonplanar/CMakeLists.txt": "ee0644c5d2ea838b5bec3506cc7839ea8b98544463c5fe0f747c730343806e9d",
+    "tests/nonplanar/final_material_oracle.hpp": "8107588728c823a32876d3a47d941a284440219c035e44499f2961d835abdf39",
+    "tests/nonplanar/full_stop_oracle.hpp": "e31870a9d6b3a931f30db3109e13d290907923331ae775efcde8c77c3eef8f3e",
+    "tests/nonplanar/material_join_oracle.hpp": "cdfc18ff7425d4281445629c13138c36e994e2f19d94c28c4b99bac5c5786686",
+    "tests/nonplanar/test_deposition_model.cpp": "6ae27fc51e1c6c95273f36919a94639cba14b6e7fba386457ca0613e640089c4",
+    "tests/nonplanar/test_final_material.cpp": "179990150b374b934f9ff8e1583609d9c14a8fe18193bd462964a69229639c4e",
+    "tests/nonplanar/test_profile_scene.cpp": "e8adcf0102440ddadb4aa5714be02099cfeef5ba2501dc1c7bdcc6c89d529901",
+    "tests/nonplanar/test_serialization.cpp": "480ea401e385f86a7b8f5c6f99569edcb33170d55cfbe544c278f2695f3ebcef"
+  },
+  "binary_sha256": {
+    "build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer": "0e856ab680f2897c9c5d942d8fcaf451247ab6fcc801a2e144cd4a0fa14abd89",
+    "build/arm64/tests/nonplanar/Release/nonplanar_tests.app/Contents/MacOS/nonplanar_tests": "daa4975301a85cbb245c871ce4cad0a9363f96e82027bf316d2a610e6a7b43da",
+    "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests": "92633bfe90a2087be771fd417c68476774620a2607dd38052ef7c57ad45f835e",
+    "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit": "df19609aaf4d0c2154e89593ece6290de54d5c7df018a8baef1d36369368f04a"
+  },
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)\nTarget: arm64-apple-darwin25.5.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+  "suites": {
+    "focus2": {
+      "cases": 17,
+      "assertions": 947104,
+      "failures": 0,
+      "skipped": 0
+    },
+    "focus1": {
+      "cases": 3,
+      "assertions": 946608,
+      "failures": 0,
+      "skipped": 0
+    },
+    "focus-final": {
+      "cases": 17,
+      "assertions": 947083,
+      "failures": 0,
+      "skipped": 0
+    }
+  },
+  "final_build": "build-final.txt.json",
+  "final_focus": "focus-final.xml",
+  "ctest_final": {
+    "tests": 425,
+    "failures": 0,
+    "skipped": 0,
+    "elapsed_seconds": 99.76,
+    "evidence": "ctest-final2/results.xml",
+    "selection": "EXACT_ORIGINAL_NONPLANAR_FFF_DISCOVERY_INDICES_PLUS_THREE_DEPARTURE_LINEAGE_CASES"
+  },
+  "OFF_ZAA_final": [
+    {
+      "fixture": "flat_block-off",
+      "motion_commands": 1977,
+      "sloped_extrusions": 0,
+      "resolved_settings": "ADDED_NPTOP_OFF_DEFAULT_ONLY",
+      "differential": "PASS",
+      "safety_verification": "NOT_RUN"
+    },
+    {
+      "fixture": "flat_block-zaa",
+      "motion_commands": 1977,
+      "sloped_extrusions": 0,
+      "resolved_settings": "ADDED_NPTOP_OFF_DEFAULT_ONLY",
+      "differential": "PASS",
+      "safety_verification": "NOT_RUN"
+    },
+    {
+      "fixture": "wedge_5deg-off",
+      "motion_commands": 5322,
+      "sloped_extrusions": 0,
+      "resolved_settings": "ADDED_NPTOP_OFF_DEFAULT_ONLY",
+      "differential": "PASS",
+      "safety_verification": "NOT_RUN"
+    },
+    {
+      "fixture": "wedge_5deg-zaa",
+      "motion_commands": 7255,
+      "sloped_extrusions": 1586,
+      "resolved_settings": "ADDED_NPTOP_OFF_DEFAULT_ONLY",
+      "differential": "PASS",
+      "safety_verification": "NOT_RUN"
+    },
+    {
+      "fixture": "shallow_sphere-off",
+      "motion_commands": 5708,
+      "sloped_extrusions": 0,
+      "resolved_settings": "ADDED_NPTOP_OFF_DEFAULT_ONLY",
+      "differential": "PASS",
+      "safety_verification": "NOT_RUN"
+    },
+    {
+      "fixture": "shallow_sphere-zaa",
+      "motion_commands": 11289,
+      "sloped_extrusions": 4230,
+      "resolved_settings": "ADDED_NPTOP_OFF_DEFAULT_ONLY",
+      "differential": "PASS",
+      "safety_verification": "NOT_RUN"
+    }
+  ],
+  "runtime_contracts": {
+    "departure_identity": 1,
+    "native_plan": 2,
+    "candidate_manifest": 3,
+    "old_native_opaque_and_production_formats": "UNCHANGED"
+  },
+  "invariant": "CURRENT_NATIVE_JOB_ATTEMPT_COMPLETE_BODY_HATCH_CAP_EXACT_LAID_DEPARTURE_OWNER_EXACT_MOTION_INPUT_ALL_ROUTED_ROWS_CONTEXT_ONLY_LIMIT_REDUCTIONS_FINAL_BYTES_CANONICAL_EDGES",
+  "qualified_scope": "BOUNDED_NATIVE_DEPENDENCY_LINEAGE_AND_DECLARED_RATE_MATERIAL_REPLAY_ONLY_NO_COMPLETE_CAP_CONTACT_WHOLE_ROUTE_BYTE_GEOMETRY_JOB_EXPORT_OR_PHYSICAL_QUALIFICATION",
+  "native": {
+    "original_files": {
+      "native-cover-lower.json": {
+        "parent": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+        "current": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c"
+      },
+      "native-cover-nominal.json": {
+        "parent": "0430ad4f3faed0986f26554db960131c907e1c381b51b1ce85081fb158b3b892",
+        "current": "0430ad4f3faed0986f26554db960131c907e1c381b51b1ce85081fb158b3b892"
+      },
+      "native-departure-material.json": {
+        "parent": "a7e843267d23199428d4ef2aedf47f1e95520b9dd975262b38ee927aba7b7dc7",
+        "current": "a7e843267d23199428d4ef2aedf47f1e95520b9dd975262b38ee927aba7b7dc7"
+      },
+      "native-departure.candidate.txt": {
+        "parent": "163f355dce48633d4fb6ce8ca7df9b265ed6212b6d3fa50d438c9fdd6ae6166f",
+        "current": "163f355dce48633d4fb6ce8ca7df9b265ed6212b6d3fa50d438c9fdd6ae6166f"
+      },
+      "native-departure.json": {
+        "parent": "c06eabd5c7aea3d709bfc01626e217d48ee1284a01af9c389ca373957c5ccdad",
+        "current": "c06eabd5c7aea3d709bfc01626e217d48ee1284a01af9c389ca373957c5ccdad"
+      },
+      "native-exit-witness.json": {
+        "parent": "9c9c832880fdad875d35e049599030a482cf97fb758561ede77b6f17b24897f8",
+        "current": "9c9c832880fdad875d35e049599030a482cf97fb758561ede77b6f17b24897f8"
+      },
+      "native-full-stop.bytes.json": {
+        "parent": "75f5c9d90bc3c0abd90cf6b22eaebc2c19441dabf08ea19098f5910da0f6d9b1",
+        "current": "75f5c9d90bc3c0abd90cf6b22eaebc2c19441dabf08ea19098f5910da0f6d9b1"
+      },
+      "native-full-stop.candidate.txt": {
+        "parent": "d31bc1ef4ec3c4c1342d0ec2ecd89818749acf52a33ce77a1f149d32f32220a8",
+        "current": "d31bc1ef4ec3c4c1342d0ec2ecd89818749acf52a33ce77a1f149d32f32220a8"
+      },
+      "native-job-report.json": {
+        "parent": "1724915b58107cd20fea73ac6dee522c096024ba7a6e29333e4565c7ed88cc19",
+        "current": "1724915b58107cd20fea73ac6dee522c096024ba7a6e29333e4565c7ed88cc19"
+      },
+      "native-joined-front-query.json": {
+        "parent": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+        "current": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c"
+      },
+      "native-joined-interior-query.json": {
+        "parent": "2a193ca1b287afe8b565b2afc037beb9b2b940c975d163f062949901568aa704",
+        "current": "2a193ca1b287afe8b565b2afc037beb9b2b940c975d163f062949901568aa704"
+      },
+      "native-joined-policy.json": {
+        "parent": "5691cdc53ac2af9b7a800973ce048da7da46056694058e7ac3775d58fbbad74b",
+        "current": "5691cdc53ac2af9b7a800973ce048da7da46056694058e7ac3775d58fbbad74b"
+      },
+      "native-material.json": {
+        "parent": "807fdac6e2a3cbfb31240a74d568a0ff595b947236ae926a7e72118cd867d018",
+        "current": "807fdac6e2a3cbfb31240a74d568a0ff595b947236ae926a7e72118cd867d018"
+      },
+      "native-nominal-run-query.json": {
+        "parent": "d3d5acbdab11d8828c48f1970e07105678d49044e386d6e2416a39c0a3991941",
+        "current": "d3d5acbdab11d8828c48f1970e07105678d49044e386d6e2416a39c0a3991941"
+      },
+      "native-partition-meshes.json": {
+        "parent": "f1f6d1e508fe5672678d16f9a433abce11c1c4518c028bbaf787f8be8e773efd",
+        "current": "f1f6d1e508fe5672678d16f9a433abce11c1c4518c028bbaf787f8be8e773efd"
+      },
+      "native-provenance.json": {
+        "parent": "b219d67cab4ad31259590ff27b04d695ab9dc46179998878e946e9305a7d6085",
+        "current": "b219d67cab4ad31259590ff27b04d695ab9dc46179998878e946e9305a7d6085"
+      },
+      "native-rate-policy.json": {
+        "parent": "aef455163766e2364711a8fce6f0d158495c709a9910344880a3a27c8101d45b",
+        "current": "aef455163766e2364711a8fce6f0d158495c709a9910344880a3a27c8101d45b"
+      },
+      "native-support-query.json": {
+        "parent": "0d9d0ce57de54432b41b29a7b378675f33f387c4e886976ba38e6cfe42e186ff",
+        "current": "0d9d0ce57de54432b41b29a7b378675f33f387c4e886976ba38e6cfe42e186ff"
+      },
+      "native-lineage-report.json": {
+        "parent": "793d024566f4f6caa9979c0cbece004b2b33e692b7b32222ae69fbf459b5f651",
+        "current": "793d024566f4f6caa9979c0cbece004b2b33e692b7b32222ae69fbf459b5f651"
+      }
+    },
+    "new_departure": {
+      "journals": {
+        "body": 2034,
+        "before": 2197,
+        "assembled": 2202,
+        "routed": 2205,
+        "planned": 2205
+      },
+      "candidate_bytes": 128014,
+      "candidate_sha256": "b8eb15681127c1a8db57ce0aa257326763f16832b82fdafd13ed091c4bd98ef8",
+      "departure_sha256": "4140e147cf9d1a548b0f51ec19e80128e65153fc48b94185a330d95fdab13b3a",
+      "native_plan_sha256": "6d7ddfc89007dd05f09f6297ccbc62d0fd9c3222c8f20e71f54da8e33e4945ed",
+      "manifest_sha256": "75e8b43d2c4f1e00e96f2cdce20fc73410d45f4242ea463a6b6e5370c77106d2",
+      "report_sha256": "755fe4b3d8b4a836a944c55d46aa1aa240f05ae173b0bce6c4e970bf68cfcf8d",
+      "legs": [
+        [
+          2202,
+          14822
+        ],
+        [
+          2203,
+          14532
+        ],
+        [
+          2204,
+          14532
+        ]
+      ],
+      "mandatory": 17,
+      "pass_run": 4,
+      "unknown_not_run": 13,
+      "export": "BLOCK"
+    },
+    "new_dependency_identity": {
+      "status": "DIFFERENT_DERIVED_BODY_IDENTITY_UNQUALIFIED_NO_REUSE_NO_RUNTIME_NORMALIZATION",
+      "focus_source_fingerprint": "c0f03b2d4a0387d555397516cc6d7a75666f9a56ea5bfcb9b4e59354e5d6d196",
+      "final_source_fingerprint": "804976ab25df39d1bfa5bb8c091b2eedb0983b0699797ea278db0acef18bc7b7",
+      "focus_report_sha256": "07983a3959c569fcaec0f4be2cf0391d598e984829f25b9fa67fedc2317d69fd",
+      "final_report_sha256": "755fe4b3d8b4a836a944c55d46aa1aa240f05ae173b0bce6c4e970bf68cfcf8d",
+      "all_actual_rows_and_candidate_bytes": "EXACT",
+      "job_request_hatch_geometry_scene_policy_origin_map": "EXACT",
+      "derived_body_fingerprint_cause": "NOT_QUALIFIED_THIS_STAGE"
+    },
+    "original_case_assertions": 1148462,
+    "original_case_seconds": 10.7846,
+    "new_positive_assertions": 946528,
+    "new_positive_seconds": 1.33909
+  },
+  "independent_oracles": {
+    "CPP": "113_BIT_WHOLE_LEAF_HEAD_BEAD_EQUATIONS_ALL_PAIR_COMPLETE_DISJOINT_PARTITIONS",
+    "Python": {
+      "status": "PASS",
+      "positives": 6,
+      "refusals": 44,
+      "scope": "IDENTITY_ORDER_REQUEST_ONLY_NO_CLEARANCE_OR_FILE_AUTHENTICITY_OR_EXPORT",
+      "cases": [
+        {
+          "name": "candidate-report",
+          "expected": "PASS",
+          "reason": null,
+          "input_sha256": "17d56af751b37ae0ec51d2271ce288e3b3fb430b01178e5af6c1f91f8d1df29e"
+        },
+        {
+          "name": "candidate-report-invalid-material",
+          "expected": "PASS",
+          "reason": null,
+          "input_sha256": "d8b29f67161ab282700b54b080efde08f3c491fc1ab2855be44cc25e2ad8c62a"
+        },
+        {
+          "name": "candidate-report-failed-material",
+          "expected": "PASS",
+          "reason": null,
+          "input_sha256": "61cd21d056d29f3b050801017bf64f767833657a117f8a71c6dc7f91557c909d"
+        },
+        {
+          "name": "native-lineage-report",
+          "expected": "PASS",
+          "reason": null,
+          "input_sha256": "6fe97d318e49823d740116b68ca24d5ac7d67532be14c4379bef384fe6a3d812"
+        },
+        {
+          "name": "native-departure-report",
+          "expected": "PASS",
+          "reason": null,
+          "input_sha256": "fb2f45b192c51b933c08cf7243a5a4de7bb1235c8563376fac4c89afbe147942"
+        },
+        {
+          "name": "native-departure-final-independent-graph",
+          "expected": "PASS",
+          "reason": null,
+          "input_sha256": "bbf59f46dd4385d71ed0cda6ab46ea157b0c5ed6dd42e64870b95337c71b4e81"
+        },
+        {
+          "name": "origin-map-missing",
+          "expected": "REFUSE",
+          "reason": "Departure exact origin map",
+          "input_sha256": "ddea88990241616df2ea6ddba6e4ca09eb3302faebe72db554b9bd30eeda1f62"
+        },
+        {
+          "name": "origin-map-foreign-parent",
+          "expected": "REFUSE",
+          "reason": "Departure exact origin map",
+          "input_sha256": "d933aa6eee4286ecff0aef33c4aa60639a592922ad5dd1ad722fcac2e88039ce"
+        },
+        {
+          "name": "origin-map-boolean",
+          "expected": "REFUSE",
+          "reason": "Departure exact origin map",
+          "input_sha256": "50847630223e49e9406475633d934b9dcb100c7f87b1f5bce6de3374e32d2ce6"
+        },
+        {
+          "name": "leg-missing",
+          "expected": "REFUSE",
+          "reason": "Departure leg obligations",
+          "input_sha256": "0040e54873d5ab35c57b2d9ba105a16a7b9fb0f8d842a15cd5ea256a54b14288"
+        },
+        {
+          "name": "leg-reordered",
+          "expected": "REFUSE",
+          "reason": "Departure leg obligations",
+          "input_sha256": "c2ad6a464b486769e81bdba5673b209355c2688ae994f20926225436d90ae88a"
+        },
+        {
+          "name": "leg-boolean-cells",
+          "expected": "REFUSE",
+          "reason": "Departure leg obligations",
+          "input_sha256": "c6025496f4b1695d29ec7861cf47d945dd59d5993fb4dcf7a8bd25a0e7538cca"
+        },
+        {
+          "name": "leg-unbounded",
+          "expected": "REFUSE",
+          "reason": "Departure leg obligations",
+          "input_sha256": "c1a6b15fe5d6e7620c976ed710f72f581c6a12d82b7b1ac4fb121d1e0f980497"
+        },
+        {
+          "name": "request-wrong-destination",
+          "expected": "REFUSE",
+          "reason": "Departure exact Travel poses IDs order and payload",
+          "input_sha256": "4564626cdabf36ee973197c380b6211df7d80338835d476575255469ea094f61"
+        },
+        {
+          "name": "request-wrong-lift",
+          "expected": "REFUSE",
+          "reason": "Departure exact Travel poses IDs order and payload",
+          "input_sha256": "b0dad3a708ac4d95fc631abcb3e6dfd7ed644e4324f38f9d0bc42cfebd38e785"
+        },
+        {
+          "name": "request-negative-speed",
+          "expected": "REFUSE",
+          "reason": "Departure height/motion domain",
+          "input_sha256": "7edb65b845e804acf4dbe5b366b1c4938a4a08cbb58b753932dcec191550cce4"
+        },
+        {
+          "name": "routed-missing-descent",
+          "expected": "REFUSE",
+          "reason": "Departure complete route length",
+          "input_sha256": "e93cb01d43ac2d30b75069170fd4d685a2efe29f6ab2f9bfb14a4319c0ada593"
+        },
+        {
+          "name": "routed-foreign-order",
+          "expected": "REFUSE",
+          "reason": "Departure exact Travel poses IDs order and payload",
+          "input_sha256": "bc9937b8e797ce6ddcacd8810a8985da812ef25501312d33dd6bf634521e2d2e"
+        },
+        {
+          "name": "routed-reused-event-id",
+          "expected": "REFUSE",
+          "reason": "Departure exact Travel poses IDs order and payload",
+          "input_sha256": "caf154160bb6608dd7b267165f07707d769b1ac04d0ebac7d04dc71470a16064"
+        },
+        {
+          "name": "routed-wrong-pose",
+          "expected": "REFUSE",
+          "reason": "Departure exact Travel poses IDs order and payload",
+          "input_sha256": "1cb46c98eb7a4b2246fb5a5c6502758bbeb67cae656e4c590ef9b86aaa804e3a"
+        },
+        {
+          "name": "routed-phantom-deposition",
+          "expected": "REFUSE",
+          "reason": "Departure exact Travel poses IDs order and payload",
+          "input_sha256": "4643fe761b337c87c7067e8852fd332ae60cbd7a12e5b3f7a4aa186680f68cb8"
+        },
+        {
+          "name": "routed-changed-old-row",
+          "expected": "REFUSE",
+          "reason": "Departure preserves every laid row",
+          "input_sha256": "aaeea8c96f9e5c1559762ed6d7585c1ede8eeddd9bc514ab14a1b5b057943092"
+        },
+        {
+          "name": "laid-changed-old-row",
+          "expected": "REFUSE",
+          "reason": "Departure preserves complete parent before prospective bead",
+          "input_sha256": "9a42c60ebf26e413cb42884a495414a2979a845d6d4bd55a6b7b5a7ac411e03d"
+        },
+        {
+          "name": "before-body-prefix",
+          "expected": "REFUSE",
+          "reason": "Departure complete original body/cap",
+          "input_sha256": "c77f786d1d7802222c13bcedd2387170e059cae31b52f663b4e35ff088cb0e0b"
+        },
+        {
+          "name": "before-source",
+          "expected": "REFUSE",
+          "reason": "Departure source context",
+          "input_sha256": "ab33b6ee6127df8d4a0c108d8ce191e66721e3c0fa5028d9e90fdc995c225a26"
+        },
+        {
+          "name": "laid-reduced-error",
+          "expected": "REFUSE",
+          "reason": "Departure preserves model/losses/error budget",
+          "input_sha256": "3adc943f4cbb8eeb9ff209a102db1e3b9ec0fb5bdd40a3918ec009ad27e130c4"
+        },
+        {
+          "name": "routed-reduced-error",
+          "expected": "REFUSE",
+          "reason": "Departure routed context",
+          "input_sha256": "62fd17e1353ce03117b2245a31ff8f04429c8f334cd81cd3dffd4c067351b103"
+        },
+        {
+          "name": "planned-extra-row",
+          "expected": "REFUSE",
+          "reason": "Native planned context",
+          "input_sha256": "643dcc00a88097764cbdfdcfdc64e88b29ad8fcd5e05bab743a782bdd20dade4"
+        },
+        {
+          "name": "planned-speed-increase",
+          "expected": "REFUSE",
+          "reason": "Native motion limit reduction",
+          "input_sha256": "ba15ebe9e0b2373f6e8274ffd72455ae5e4ff7119c6e85cf70a16916f94a6834"
+        },
+        {
+          "name": "planned-pose-change",
+          "expected": "REFUSE",
+          "reason": "Native planner changed geometry/order/material",
+          "input_sha256": "feb43a62005ac0a3e495fe03bdda47d38dcceba640e7943eb9e75bdb2ac553d1"
+        },
+        {
+          "name": "clearance-negative",
+          "expected": "REFUSE",
+          "reason": "Departure clearance policy",
+          "input_sha256": "f143a40ab400d49299b18dc52ffbde0cc4fb85287509674e922e8abcfb82544f"
+        },
+        {
+          "name": "clearance-nonfinite",
+          "expected": "REFUSE",
+          "reason": "Departure finite quantity",
+          "input_sha256": "47fb9f8bd9ed48ac27c444900634df6934ddc90dce74636c4b1a498e7ebb3f45"
+        },
+        {
+          "name": "clearance-component-missing",
+          "expected": "REFUSE",
+          "reason": "Departure clearance policy",
+          "input_sha256": "a126d9ae01cb34dd64aa70a65015801903ccb1ee9067f656f8ec2d9522d8fc9e"
+        },
+        {
+          "name": "head-missing-role",
+          "expected": "REFUSE",
+          "reason": "Departure complete head",
+          "input_sha256": "ab34126924e8abf1e7500927002d5681110e6745c53c08d449f37bb3ff623e61"
+        },
+        {
+          "name": "head-reused-id",
+          "expected": "REFUSE",
+          "reason": "Departure head identity/coverage",
+          "input_sha256": "d5e739063977f9cb3224f38a9ba620ef9759b732c988eccfadaf324de443105c"
+        },
+        {
+          "name": "head-unknown-role",
+          "expected": "REFUSE",
+          "reason": "Departure head identity/coverage",
+          "input_sha256": "b9091364ae03ee66e982728b8036ed8a28d3ea0bfea42a43078f947274341bc2"
+        },
+        {
+          "name": "head-inverted-box",
+          "expected": "REFUSE",
+          "reason": "Departure box order",
+          "input_sha256": "91378d0434004058dac46330ce5312dd14a0228525fe94f4751ae32d61af3644"
+        },
+        {
+          "name": "annulus-confused-diameter",
+          "expected": "REFUSE",
+          "reason": "Departure opening/outer radius",
+          "input_sha256": "45057818730e3dca44231b800b413ef38b13ea02e35178904abf7e9807a0bfb9"
+        },
+        {
+          "name": "inventory-incomplete",
+          "expected": "REFUSE",
+          "reason": "Departure complete inventory/uncertainty",
+          "input_sha256": "fbf9f8e1e1e652ecf9b097418ad3095ec105ebe53434b73e296a54cad8b76963"
+        },
+        {
+          "name": "operator-confirmation-forged",
+          "expected": "REFUSE",
+          "reason": "Departure simulation scene identity",
+          "input_sha256": "cc8b2457d3b53cf4d907a2f1e8cd611b9b9a6b8fa724e0625853434f06c0bca0"
+        },
+        {
+          "name": "departure-unknown-version",
+          "expected": "REFUSE",
+          "reason": "Departure version/scope",
+          "input_sha256": "8a43dcab744e6e914cc5fe9ebb4b7f0c98799a23f29c373e8e22782186f9cca2"
+        },
+        {
+          "name": "departure-boolean-version",
+          "expected": "REFUSE",
+          "reason": "Departure version/scope",
+          "input_sha256": "d9c9bc41e1e01b8d651c10d736c11af5f1cc5655c48f74ec5c21b5f26b50d7e5"
+        },
+        {
+          "name": "departure-full-scope-claim",
+          "expected": "REFUSE",
+          "reason": "Departure version/scope",
+          "input_sha256": "483493123843be931ac080ce0e9d9f2af0189409b02f2555bdac9a9a44016933"
+        },
+        {
+          "name": "departure-extra-field",
+          "expected": "REFUSE",
+          "reason": "Departure fields",
+          "input_sha256": "28970645ac37b9412112b07089450fa6c29da06849280171fd62a66b00014ef1"
+        },
+        {
+          "name": "manifest-downgrade",
+          "expected": "REFUSE",
+          "reason": "Manifest binding",
+          "input_sha256": "a7efd48713abed0c1ba3fc49e493829875d01d9cc8b7d3cfe04efe2508c33748"
+        },
+        {
+          "name": "missing-owner",
+          "expected": "REFUSE",
+          "reason": "Native evidence fields",
+          "input_sha256": "168d821890fef19427377687330b67cbe8679240f7e596ce4ae4b32443308b7a"
+        },
+        {
+          "name": "extra-native-claim",
+          "expected": "REFUSE",
+          "reason": "Native evidence fields",
+          "input_sha256": "bd6bacff06da14012eeb25e8f4aeae84b5541d6079e882356898a1fb63b141f6"
+        },
+        {
+          "name": "forged-complete-order",
+          "expected": "REFUSE",
+          "reason": "Unimplemented proof claim",
+          "input_sha256": "4b430a564dd490f768250f895b0a0e0a05ed4bb0457e0c5c91473949210eed13"
+        },
+        {
+          "name": "export-allow",
+          "expected": "REFUSE",
+          "reason": "Incomplete report cannot allow export",
+          "input_sha256": "f09e8db817b5891243f4ddd8c4975dcefb172edd7dce04a415ec85415677ef1e"
+        },
+        {
+          "name": "stale-attempt",
+          "expected": "REFUSE",
+          "reason": "Native owner/attempt",
+          "input_sha256": "2e27d354618c3d888cface2633601741ee2f44c434c9a10e33d4c823f0559085"
+        }
+      ]
+    },
+    "identity": {
+      "status": "PASS_EXACT_ORIGINAL_OUTPUT_AND_NEW_ROW_BYTE_COMPARISON_ONLY",
+      "new_candidate_dependency_identity": {
+        "status": "DIFFERENT_DERIVED_BODY_IDENTITY_UNQUALIFIED_NO_REUSE_NO_RUNTIME_NORMALIZATION",
+        "focus_source_fingerprint": "c0f03b2d4a0387d555397516cc6d7a75666f9a56ea5bfcb9b4e59354e5d6d196",
+        "final_source_fingerprint": "804976ab25df39d1bfa5bb8c091b2eedb0983b0699797ea278db0acef18bc7b7",
+        "focus_report_sha256": "07983a3959c569fcaec0f4be2cf0391d598e984829f25b9fa67fedc2317d69fd",
+        "final_report_sha256": "755fe4b3d8b4a836a944c55d46aa1aa240f05ae173b0bce6c4e970bf68cfcf8d",
+        "all_actual_rows_and_candidate_bytes": "EXACT",
+        "job_request_hatch_geometry_scene_policy_origin_map": "EXACT",
+        "derived_body_fingerprint_cause": "NOT_QUALIFIED_THIS_STAGE"
+      },
+      "original_files": {
+        "native-cover-lower.json": {
+          "parent": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+          "current": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c"
+        },
+        "native-cover-nominal.json": {
+          "parent": "0430ad4f3faed0986f26554db960131c907e1c381b51b1ce85081fb158b3b892",
+          "current": "0430ad4f3faed0986f26554db960131c907e1c381b51b1ce85081fb158b3b892"
+        },
+        "native-departure-material.json": {
+          "parent": "a7e843267d23199428d4ef2aedf47f1e95520b9dd975262b38ee927aba7b7dc7",
+          "current": "a7e843267d23199428d4ef2aedf47f1e95520b9dd975262b38ee927aba7b7dc7"
+        },
+        "native-departure.candidate.txt": {
+          "parent": "163f355dce48633d4fb6ce8ca7df9b265ed6212b6d3fa50d438c9fdd6ae6166f",
+          "current": "163f355dce48633d4fb6ce8ca7df9b265ed6212b6d3fa50d438c9fdd6ae6166f"
+        },
+        "native-departure.json": {
+          "parent": "c06eabd5c7aea3d709bfc01626e217d48ee1284a01af9c389ca373957c5ccdad",
+          "current": "c06eabd5c7aea3d709bfc01626e217d48ee1284a01af9c389ca373957c5ccdad"
+        },
+        "native-exit-witness.json": {
+          "parent": "9c9c832880fdad875d35e049599030a482cf97fb758561ede77b6f17b24897f8",
+          "current": "9c9c832880fdad875d35e049599030a482cf97fb758561ede77b6f17b24897f8"
+        },
+        "native-full-stop.bytes.json": {
+          "parent": "75f5c9d90bc3c0abd90cf6b22eaebc2c19441dabf08ea19098f5910da0f6d9b1",
+          "current": "75f5c9d90bc3c0abd90cf6b22eaebc2c19441dabf08ea19098f5910da0f6d9b1"
+        },
+        "native-full-stop.candidate.txt": {
+          "parent": "d31bc1ef4ec3c4c1342d0ec2ecd89818749acf52a33ce77a1f149d32f32220a8",
+          "current": "d31bc1ef4ec3c4c1342d0ec2ecd89818749acf52a33ce77a1f149d32f32220a8"
+        },
+        "native-job-report.json": {
+          "parent": "1724915b58107cd20fea73ac6dee522c096024ba7a6e29333e4565c7ed88cc19",
+          "current": "1724915b58107cd20fea73ac6dee522c096024ba7a6e29333e4565c7ed88cc19"
+        },
+        "native-joined-front-query.json": {
+          "parent": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+          "current": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c"
+        },
+        "native-joined-interior-query.json": {
+          "parent": "2a193ca1b287afe8b565b2afc037beb9b2b940c975d163f062949901568aa704",
+          "current": "2a193ca1b287afe8b565b2afc037beb9b2b940c975d163f062949901568aa704"
+        },
+        "native-joined-policy.json": {
+          "parent": "5691cdc53ac2af9b7a800973ce048da7da46056694058e7ac3775d58fbbad74b",
+          "current": "5691cdc53ac2af9b7a800973ce048da7da46056694058e7ac3775d58fbbad74b"
+        },
+        "native-material.json": {
+          "parent": "807fdac6e2a3cbfb31240a74d568a0ff595b947236ae926a7e72118cd867d018",
+          "current": "807fdac6e2a3cbfb31240a74d568a0ff595b947236ae926a7e72118cd867d018"
+        },
+        "native-nominal-run-query.json": {
+          "parent": "d3d5acbdab11d8828c48f1970e07105678d49044e386d6e2416a39c0a3991941",
+          "current": "d3d5acbdab11d8828c48f1970e07105678d49044e386d6e2416a39c0a3991941"
+        },
+        "native-partition-meshes.json": {
+          "parent": "f1f6d1e508fe5672678d16f9a433abce11c1c4518c028bbaf787f8be8e773efd",
+          "current": "f1f6d1e508fe5672678d16f9a433abce11c1c4518c028bbaf787f8be8e773efd"
+        },
+        "native-provenance.json": {
+          "parent": "b219d67cab4ad31259590ff27b04d695ab9dc46179998878e946e9305a7d6085",
+          "current": "b219d67cab4ad31259590ff27b04d695ab9dc46179998878e946e9305a7d6085"
+        },
+        "native-rate-policy.json": {
+          "parent": "aef455163766e2364711a8fce6f0d158495c709a9910344880a3a27c8101d45b",
+          "current": "aef455163766e2364711a8fce6f0d158495c709a9910344880a3a27c8101d45b"
+        },
+        "native-support-query.json": {
+          "parent": "0d9d0ce57de54432b41b29a7b378675f33f387c4e886976ba38e6cfe42e186ff",
+          "current": "0d9d0ce57de54432b41b29a7b378675f33f387c4e886976ba38e6cfe42e186ff"
+        },
+        "native-lineage-report.json": {
+          "parent": "793d024566f4f6caa9979c0cbece004b2b33e692b7b32222ae69fbf459b5f651",
+          "current": "793d024566f4f6caa9979c0cbece004b2b33e692b7b32222ae69fbf459b5f651"
+        }
+      },
+      "differences": [],
+      "native_departure": {
+        "journals": {
+          "body": 2034,
+          "before": 2197,
+          "assembled": 2202,
+          "routed": 2205,
+          "planned": 2205
+        },
+        "candidate_bytes": 128014,
+        "candidate_sha256": "b8eb15681127c1a8db57ce0aa257326763f16832b82fdafd13ed091c4bd98ef8",
+        "departure_sha256": "4140e147cf9d1a548b0f51ec19e80128e65153fc48b94185a330d95fdab13b3a",
+        "native_plan_sha256": "6d7ddfc89007dd05f09f6297ccbc62d0fd9c3222c8f20e71f54da8e33e4945ed",
+        "manifest_sha256": "75e8b43d2c4f1e00e96f2cdce20fc73410d45f4242ea463a6b6e5370c77106d2",
+        "report_sha256": "755fe4b3d8b4a836a944c55d46aa1aa240f05ae173b0bce6c4e970bf68cfcf8d",
+        "legs": [
+          [
+            2202,
+            14822
+          ],
+          [
+            2203,
+            14532
+          ],
+          [
+            2204,
+            14532
+          ]
+        ],
+        "mandatory": 17,
+        "pass_run": 4,
+        "unknown_not_run": 13,
+        "export": "BLOCK"
+      }
+    },
+    "final_bytes": "EXISTING_INDEPENDENT_RATE_POSE_E_MATERIAL_COMPONENT_REPLAY_HEAD_CONTACT_GEOMETRY_NOT_RUN",
+    "job_context": "PASS",
+    "candidate_artifact": "PASS"
+  },
+  "strict_flags": "JobNative.cpp and JobArtifact.cpp no PCH; -fno-fast-math -ffp-contract=off; MSVC registration unchanged NOT_RUN",
+  "software_label": "CONFIGURED_PARENT9A3ED1CA_EXACT_CURRENT_SOURCE_DEPENDENCY_BINARY_HASHES_NO_QUALIFIED_RESOLVER",
+  "review": "SEPARATE_AUTHOR_CRITICAL_AUDIT_INDEPENDENT_PENDING",
+  "guarded_export": "BLOCK",
+  "full_B01_B15": "IN_PROGRESS",
+  "mandatory_report": {
+    "checks": 17,
+    "pass_run": 4,
+    "unknown_not_run": 13
+  },
+  "CLI_100": "NOT_RUN_THIS_STAGE_UNCHANGED_INDEPENDENT_VERIFIER_SOURCE_FORMATS_PARENT_RESULTS_SEPARATE",
+  "Linux": {
+    "new_source": "PENDING_AFTER_PUSH",
+    "inherited": {
+      "observed_utc": "2026-10-02T19:59:03.168126+00:00",
+      "scope": "INHERITED_COMMITS_ONLY_CURRENT_SOURCE_NOT_PUSHED",
+      "runs": [
+        {
+          "id": 37054538237,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "5a3c64210e58b4fb1937589011822df0f23a51d7",
+          "status": "in_progress",
+          "conclusion": null,
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37054538237",
+          "created_at": "2026-10-02T19:30:19Z",
+          "updated_at": "2026-10-02T19:45:37Z"
+        },
+        {
+          "id": 37046178720,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "e856e9fc8dea29c3c5461d98e7da1ace1d5b41f5",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37046178720",
+          "created_at": "2026-10-02T18:15:13Z",
+          "updated_at": "2026-10-02T19:30:20Z"
+        },
+        {
+          "id": 37041821423,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "35503607de05765e7760c6be3a7b21f9d162b3d8",
+          "status": "completed",
+          "conclusion": "failure",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37041821423",
+          "created_at": "2026-10-02T17:36:11Z",
+          "updated_at": "2026-10-02T19:45:33Z"
+        },
+        {
+          "id": 37033342985,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "9a3ed1cacf7652652949b303efc1e49586645259",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37033342985",
+          "created_at": "2026-10-02T16:21:12Z",
+          "updated_at": "2026-10-02T17:36:12Z"
+        },
+        {
+          "id": 37024804853,
+          "name": "Auto-close duplicate issues",
+          "head_sha": "c2350792c4ec86249d7ff6ba07e8cac4188276d8",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37024804853",
+          "created_at": "2026-10-02T15:08:04Z",
+          "updated_at": "2026-10-02T15:08:28Z"
+        },
+        {
+          "id": 37024547642,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "c2350792c4ec86249d7ff6ba07e8cac4188276d8",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37024547642",
+          "created_at": "2026-10-02T15:05:55Z",
+          "updated_at": "2026-10-02T17:38:21Z"
+        },
+        {
+          "id": 37018008138,
+          "name": "Shellcheck",
+          "head_sha": "04a8e410673443c063ebd4e285c6997916f63232",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37018008138",
+          "created_at": "2026-10-02T14:10:26Z",
+          "updated_at": "2026-10-02T14:10:53Z"
+        },
+        {
+          "id": 37015086874,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "04a8e410673443c063ebd4e285c6997916f63232",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37015086874",
+          "created_at": "2026-10-02T13:45:10Z",
+          "updated_at": "2026-10-02T15:50:41Z"
+        },
+        {
+          "id": 37009118009,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "db7dee0bfdc3ef0e0e0a701aeed874a76e89e7c9",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37009118009",
+          "created_at": "2026-10-02T12:50:17Z",
+          "updated_at": "2026-10-02T13:45:11Z"
+        },
+        {
+          "id": 37002217744,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "9c785290e10bcf6cbca616e0ef253b5a95bd9420",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37002217744",
+          "created_at": "2026-10-02T11:39:36Z",
+          "updated_at": "2026-10-02T13:48:08Z"
+        },
+        {
+          "id": 36997248959,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "41b03282f487b1e7b510c60bf39f8350ff3ff507",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/36997248959",
+          "created_at": "2026-10-02T10:45:37Z",
+          "updated_at": "2026-10-02T11:39:37Z"
+        },
+        {
+          "id": 36992762074,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "380967ddbf3e73b6cf47af50d433705d971420c7",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/36992762074",
+          "created_at": "2026-10-02T09:57:35Z",
+          "updated_at": "2026-10-02T12:14:27Z"
+        },
+        {
+          "id": 36982202676,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "6b0fc1f97393c1d93dea23e11c70f548cfc58379",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/36982202676",
+          "created_at": "2026-10-02T08:06:47Z",
+          "updated_at": "2026-10-02T10:23:55Z"
+        },
+        {
+          "id": 36973396044,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "69c4b339b82f467b89e3afce21232590e0dd0019",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/36973396044",
+          "created_at": "2026-10-02T06:24:28Z",
+          "updated_at": "2026-10-02T08:17:37Z"
+        },
+        {
+          "id": 36968335656,
+          "name": "Nonplanar native Linux evidence",
+          "head_sha": "900cc58a9ccfd3a9be4578ce4bdf01a798bd2808",
+          "status": "completed",
+          "conclusion": "success",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/36968335656",
+          "created_at": "2026-10-02T05:18:21Z",
+          "updated_at": "2026-10-02T07:09:33Z"
+        }
+      ]
+    },
+    "failure": {
+      "observed_utc": "2026-10-02T19:59:28.814805+00:00",
+      "inherited_head": "35503607de05765e7760c6be3a7b21f9d162b3d8",
+      "jobs": [
+        {
+          "id": 110954350136,
+          "run_id": 37041821423,
+          "workflow_name": "Nonplanar native Linux evidence",
+          "head_branch": "feature/nonplanar-bootstrap",
+          "run_url": "https://api.github.com/repos/positron48/OrcaSlicer-nonplanar/actions/runs/37041821423",
+          "run_attempt": 1,
+          "node_id": "CR_kwDOUvnGKs8AAAAZ1WUGOA",
+          "head_sha": "35503607de05765e7760c6be3a7b21f9d162b3d8",
+          "url": "https://api.github.com/repos/positron48/OrcaSlicer-nonplanar/actions/jobs/110954350136",
+          "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37041821423/job/110954350136",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-10-02T17:38:21Z",
+          "started_at": "2026-10-02T17:38:24Z",
+          "completed_at": "2026-10-02T19:45:33Z",
+          "name": "linux",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 1,
+              "started_at": "2026-10-02T17:38:25Z",
+              "completed_at": "2026-10-02T17:38:26Z"
+            },
+            {
+              "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 2,
+              "started_at": "2026-10-02T17:38:26Z",
+              "completed_at": "2026-10-02T17:43:24Z"
+            },
+            {
+              "name": "Pinned source and normative package",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 3,
+              "started_at": "2026-10-02T17:43:24Z",
+              "completed_at": "2026-10-02T17:43:25Z"
+            },
+            {
+              "name": "System dependencies on disposable runner",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 4,
+              "started_at": "2026-10-02T17:43:25Z",
+              "completed_at": "2026-10-02T17:44:10Z"
+            },
+            {
+              "name": "Identify exact dependency source and runner environment",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 5,
+              "started_at": "2026-10-02T17:44:10Z",
+              "completed_at": "2026-10-02T17:44:11Z"
+            },
+            {
+              "name": "Restore exact installed dependencies",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 6,
+              "started_at": "2026-10-02T17:44:11Z",
+              "completed_at": "2026-10-02T17:44:11Z"
+            },
+            {
+              "name": "Build pinned dependency sources",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 7,
+              "started_at": "2026-10-02T17:44:11Z",
+              "completed_at": "2026-10-02T18:42:16Z"
+            },
+            {
+              "name": "Preserve completed dependency installation",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 8,
+              "started_at": "2026-10-02T18:42:16Z",
+              "completed_at": "2026-10-02T18:42:19Z"
+            },
+            {
+              "name": "Record dependency reuse separately from a fresh build",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 9,
+              "started_at": "2026-10-02T18:42:19Z",
+              "completed_at": "2026-10-02T18:42:19Z"
+            },
+            {
+              "name": "Build native tests before the application",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 10,
+              "started_at": "2026-10-02T18:42:19Z",
+              "completed_at": "2026-10-02T19:43:30Z"
+            },
+            {
+              "name": "Execute nonempty selected native suites",
+              "status": "completed",
+              "conclusion": "failure",
+              "number": 11,
+              "started_at": "2026-10-02T19:43:30Z",
+              "completed_at": "2026-10-02T19:45:31Z"
+            },
+            {
+              "name": "Independently check native job and candidate identities",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 12,
+              "started_at": "2026-10-02T19:45:31Z",
+              "completed_at": "2026-10-02T19:45:31Z"
+            },
+            {
+              "name": "Expose native failure diagnostics in check annotations",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 13,
+              "started_at": "2026-10-02T19:45:31Z",
+              "completed_at": "2026-10-02T19:45:31Z"
+            },
+            {
+              "name": "Exercise native STL audit command",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 14,
+              "started_at": "2026-10-02T19:45:31Z",
+              "completed_at": "2026-10-02T19:45:31Z"
+            },
+            {
+              "name": "Exercise independent native final-byte rate audit",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 15,
+              "started_at": "2026-10-02T19:45:31Z",
+              "completed_at": "2026-10-02T19:45:31Z"
+            },
+            {
+              "name": "Exercise independent final-byte material reconstruction",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 16,
+              "started_at": "2026-10-02T19:45:31Z",
+              "completed_at": "2026-10-02T19:45:31Z"
+            },
+            {
+              "name": "Exercise independent actual-prefix material region coverage",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 17,
+              "started_at": "2026-10-02T19:45:31Z",
+              "completed_at": "2026-10-02T19:45:31Z"
+            },
+            {
+              "name": "Exercise independent actual-prefix joined lower envelope",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 18,
+              "started_at": "2026-10-02T19:45:31Z",
+              "completed_at": "2026-10-02T19:45:31Z"
+            },
+            {
+              "name": "Exercise independent nominal material at exact packet cuts",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 19,
+              "started_at": "2026-10-02T19:45:31Z",
+              "completed_at": "2026-10-02T19:45:31Z"
+            },
+            {
+              "name": "Exercise independent complete-run support and actual gap bands",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 20,
+              "started_at": "2026-10-02T19:45:31Z",
+              "completed_at": "2026-10-02T19:45:31Z"
+            },
+            {
+              "name": "Build native application after test verification",
+              "status": "completed",
+              "conclusion": "skipped",
+              "number": 21,
+              "started_at": "2026-10-02T19:45:31Z",
+              "completed_at": "2026-10-02T19:45:31Z"
+            },
+            {
+              "name": "Preserve observed results even on failure",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 22,
+              "started_at": "2026-10-02T19:45:31Z",
+              "completed_at": "2026-10-02T19:45:32Z"
+            },
+            {
+              "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 44,
+              "started_at": "2026-10-02T19:45:32Z",
+              "completed_at": "2026-10-02T19:45:32Z"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success",
+              "number": 45,
+              "started_at": "2026-10-02T19:45:32Z",
+              "completed_at": "2026-10-02T19:45:32Z"
+            }
+          ],
+          "check_run_url": "https://api.github.com/repos/positron48/OrcaSlicer-nonplanar/check-runs/110954350136",
+          "labels": [
+            "ubuntu-24.04"
+          ],
+          "runner_id": 1000007824,
+          "runner_name": "GitHub Actions 1000007824",
+          "runner_group_id": 0,
+          "runner_group_name": "GitHub Actions",
+          "annotations": [
+            {
+              "path": ".github",
+              "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/35503607de05765e7760c6be3a7b21f9d162b3d8/.github",
+              "start_line": 2,
+              "start_column": null,
+              "end_line": 2,
+              "end_column": null,
+              "annotation_level": "warning",
+              "title": "",
+              "message": "Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/",
+              "raw_details": ""
+            },
+            {
+              "path": ".github",
+              "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/35503607de05765e7760c6be3a7b21f9d162b3d8/.github",
+              "start_line": 8,
+              "start_column": null,
+              "end_line": 8,
+              "end_column": null,
+              "annotation_level": "failure",
+              "title": "Nonplanar native tests",
+              "message": "B07 native first footprint derives bounded amounts inside an actual flat bead core\n\nFilters: \"B07 native first footprint derives bounded amounts inside an actual flat bead core\"\nRandomness seeded to: 1404959459\nnative final support status=0 reason=WHOLE_ACTUAL_RUN_FOOTPRINT_NOMINAL_GAP_BANDS_AND_DECLARED_LOWER_ANCHORS work=902178 cells=104\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nfff_print_tests is a Catch2 v3.11.0 host application.\nRun with -? for options\n\n-------------------------------------------------------------------------------\nB07 native first footprint derives bounded amounts inside an actual flat bead\ncore\n-------------------------------------------------------------------------------\n/home/runner/work/OrcaSlicer-nonplanar/OrcaSlicer-nonplanar/tests/nonplanar/test_policy.cpp:2112\n...............................................................................\n\n/home/runner/work/OrcaSlicer-nonplanar/OrcaSlicer-nonplanar/tests/nonplanar/test_policy.cpp:2851: FAILED:\n  REQUIRE( report.snapshot->rates->moves.size()==2218 )\nwith expansion:\n  2257 (0x8d1) == 2218 (0x8aa)\nwith messages:\n  DECLARED_NATIVE_BODY_MATERIAL_ONLY\n  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY\n  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY\n  native footprint packets=61 roof leaves=1 work=1935 expected amount=0.\n  123078726658044413\n  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY\n  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY\n  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY\n  native remaining gain >= 0.0688508719117390672 covered=[0.121222584158338378,\n  0.121222584158343222] missing=[0.130765407432446357,0.130765407432458486]\n  cells=3 work=12735\n  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY\n  native complete first layer paths=2 amount=[0",
+              "raw_details": ""
+            },
+            {
+              "path": ".github",
+              "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/35503607de05765e7760c6be3a7b21f9d162b3d8/.github",
+              "start_line": 7,
+              "start_column": null,
+              "end_line": 7,
+              "end_column": null,
+              "annotation_level": "failure",
+              "title": "Nonplanar native tests",
+              "message": "CTest gate failed: CTest failed with exit code 8",
+              "raw_details": ""
+            },
+            {
+              "path": ".github",
+              "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/35503607de05765e7760c6be3a7b21f9d162b3d8/.github",
+              "start_line": 10,
+              "start_column": null,
+              "end_line": 10,
+              "end_column": null,
+              "annotation_level": "failure",
+              "title": "",
+              "message": "Process completed with exit code 2.",
+              "raw_details": ""
+            }
+          ]
+        }
+      ]
+    },
+    "fix": "OLD_LITERAL_MACOS_REPORT_COUNT2218_FAILED_ACTUAL_LINUX2257_NOW_EXACT_ACTUAL_JOURNAL_SIZE_PER_EVENT_CHECKS_UNCHANGED"
+  },
+  "Windows": "NOT_RUN",
+  "GUI": "NOT_RUN_FULL_PIPELINE",
+  "physical": "NOT_RUN_STANDARD_U1_HEAD_NOZZLE0_4_UNCONFIRMED_NO_PRESET_PRINTER_OR_CLOUD_EDITS",
+  "historical": "Initial final provenance helper incorrectly required equal full new reports across runs. Every actual row/candidate byte and job/request/geometry/scene/policy/map matches, derived body/dependent identity differs and remains unqualified. Both exact graphs validate separately, no runtime normalization/reuse. Failed helper retained and excluded from final claims. Inherited Linux35503607 count assertion failure retained, corrected actual-journal assertion not yet Linux-verified.",
+  "archive_command": [
+    "python3",
+    "build/nonplanar-evidence/B13-native-departure/archive.py"
+  ],
+  "commands": [
+    {
+      "evidence": "authored-diff-check.txt.json",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:07:35.468327+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.057
+    },
+    {
+      "evidence": "baseline-capture-final.txt.json",
+      "command": [
+        "python3",
+        "scripts/nonplanar/capture_baselines.py",
+        "--label",
+        "B13-native-departure-final-baselines"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:57:53.309568+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 1.789
+    },
+    {
+      "evidence": "baseline-compare-final.txt.json",
+      "command": [
+        "python3",
+        "scripts/nonplanar/compare_baselines.py",
+        "tests/nonplanar/data/stock-v2.4.2",
+        "build/nonplanar-evidence/B13-native-departure-final-baselines",
+        "--allow-nptop-off-default"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:59:02.251006+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.221
+    },
+    {
+      "evidence": "build-final.txt.json",
+      "command": [
+        "cmake",
+        "--build",
+        "build/arm64",
+        "--config",
+        "Release",
+        "--target",
+        "nonplanar_tests",
+        "fff_print_tests",
+        "nonplanar_rate_audit",
+        "OrcaSlicer",
+        "-j3"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:00:13.287092+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 20.39
+    },
+    {
+      "evidence": "build1.txt.json",
+      "command": [
+        "cmake",
+        "--build",
+        "build/arm64",
+        "--config",
+        "Release",
+        "--target",
+        "nonplanar_tests",
+        "fff_print_tests",
+        "nonplanar_rate_audit",
+        "OrcaSlicer",
+        "-j3"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:42:24.963529+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 25.869
+    },
+    {
+      "evidence": "build2.txt.json",
+      "command": [
+        "cmake",
+        "--build",
+        "build/arm64",
+        "--config",
+        "Release",
+        "--target",
+        "nonplanar_tests",
+        "fff_print_tests",
+        "nonplanar_rate_audit",
+        "OrcaSlicer",
+        "-j3"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:48:02.767692+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 21.111
+    },
+    {
+      "evidence": "compiler.txt.json",
+      "command": [
+        "clang++",
+        "--version"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:56:12.094219+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.012
+    },
+    {
+      "evidence": "ctest-final.txt.json",
+      "command": [
+        "python3",
+        "scripts/nonplanar/ctest_gate.py",
+        "--build-dir",
+        "build/arm64",
+        "--output-dir",
+        "build/nonplanar-evidence/B13-native-departure/ctest-final",
+        "--target-executable",
+        "nonplanar_tests",
+        "--target-executable",
+        "fff_print_tests"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:55:57.952819+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 99.868
+    },
+    {
+      "evidence": "ctest-final2.txt.json",
+      "command": [
+        "python3",
+        "scripts/nonplanar/ctest_gate.py",
+        "--build-dir",
+        "build/arm64",
+        "--output-dir",
+        "build/nonplanar-evidence/B13-native-departure/ctest-final2",
+        "--target-executable",
+        "nonplanar_tests",
+        "--target-executable",
+        "fff_print_tests"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:01:41.891431+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 99.76
+    },
+    {
+      "evidence": "focus-final.txt.json",
+      "command": [
+        "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+        "[JobNativeDeparture],[JobNative],[JobReport],[JobArtifact]",
+        "--reporter",
+        "junit",
+        "--out",
+        "build/nonplanar-evidence/B13-native-departure/focus-final.xml"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:01:43.040606+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 4.136
+    },
+    {
+      "evidence": "focus1.txt.json",
+      "command": [
+        "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+        "[JobNativeDeparture]",
+        "--reporter",
+        "console",
+        "--reporter",
+        "JUnit::out=build/nonplanar-evidence/B13-native-departure/focus1.xml"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:44:31.178584+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 2.229
+    },
+    {
+      "evidence": "focus2.txt.json",
+      "command": [
+        "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+        "[JobNativeDeparture],[JobNative],[JobReport],[JobArtifact]",
+        "--reporter",
+        "junit",
+        "--out",
+        "build/nonplanar-evidence/B13-native-departure/focus2.xml"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:51:39.611457+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 4.014
+    },
+    {
+      "evidence": "job-artifact-final.txt.json",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_artifact_oracle.py",
+        "--input",
+        "build/nonplanar-evidence/B13-native-departure/final-job-evidence/bound-candidate.json"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:07:34.917459+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.034
+    },
+    {
+      "evidence": "job-context-final.txt.json",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_context_oracle.py",
+        "--input",
+        "build/nonplanar-evidence/B13-native-departure/final-job-evidence/native-job.json"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:07:34.806279+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.039
+    },
+    {
+      "evidence": "oracle-ctest.txt.json",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_report_oracle.py",
+        "--input",
+        "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/native-departure-report.json"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:57:54.447519+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.171
+    },
+    {
+      "evidence": "oracle-final.txt.json",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_report_oracle.py",
+        "--input",
+        "build/nonplanar-evidence/B13-native-departure/final-job-evidence/native-departure-report.json"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:04:02.692138+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.162
+    },
+    {
+      "evidence": "oracle-mutations-final.txt.json",
+      "command": [
+        "python3",
+        "build/nonplanar-evidence/B13-native-departure/oracle-mutations-final.py"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:05:40.261179+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 5.014
+    },
+    {
+      "evidence": "oracle-mutations.txt.json",
+      "command": [
+        "python3",
+        "build/nonplanar-evidence/B13-native-departure/oracle-mutations.py"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:55:42.600261+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 4.741
+    },
+    {
+      "evidence": "oracle-old-native.txt.json",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_report_oracle.py",
+        "--input",
+        "build/nonplanar-evidence/B13-native-departure/focus-evidence/native-lineage-report.json"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:52:18.237319+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.137
+    },
+    {
+      "evidence": "oracle-original-native.txt.json",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_report_oracle.py",
+        "--input",
+        "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-job-report.json"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:57:54.670161+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.039
+    },
+    {
+      "evidence": "oracle-positive.txt.json",
+      "command": [
+        "python3",
+        "scripts/nonplanar/job_report_oracle.py",
+        "--input",
+        "build/nonplanar-evidence/B13-native-departure/focus-evidence/native-departure-report.json"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:52:18.237319+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.18
+    },
+    {
+      "evidence": "package-final.txt.json",
+      "command": [
+        "python3",
+        "docs/nonplanar/scripts/validate_package.py"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:07:35.024530+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.052
+    },
+    {
+      "evidence": "package.txt.json",
+      "command": [
+        "python3",
+        "docs/nonplanar/scripts/validate_package.py"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:56:46.240878+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.069
+    },
+    {
+      "evidence": "provenance-compare.txt.json",
+      "command": [
+        "python3",
+        "build/nonplanar-evidence/B13-native-departure/check_provenance.py"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:58:27.719132+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.072
+    },
+    {
+      "evidence": "provenance-final.txt.json",
+      "command": [
+        "python3",
+        "build/nonplanar-evidence/B13-native-departure/check_provenance_final.py"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:04:02.558258+00:00",
+      "status": "COMPLETED",
+      "exit_code": 1,
+      "elapsed_seconds": 0.081
+    },
+    {
+      "evidence": "provenance-final2.txt.json",
+      "command": [
+        "python3",
+        "build/nonplanar-evidence/B13-native-departure/check_provenance_final2.py"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:05:40.138676+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.07
+    },
+    {
+      "evidence": "source-audit-final.txt.json",
+      "command": [
+        "python3",
+        "docs/nonplanar/scripts/audit_orca_checkout.py",
+        "--repo",
+        "."
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:07:35.150121+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.264
+    },
+    {
+      "evidence": "source-audit.txt.json",
+      "command": [
+        "python3",
+        "docs/nonplanar/scripts/audit_orca_checkout.py",
+        "--repo",
+        "."
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:56:46.386042+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.288
+    },
+    {
+      "evidence": "strict-job.txt.json",
+      "command": [
+        "ninja",
+        "-C",
+        "build/arm64",
+        "-f",
+        "build-Release.ninja",
+        "-t",
+        "commands",
+        "src/libslic3r/CMakeFiles/libslic3r.dir/Release/Nonplanar/JobNative.cpp.o",
+        "src/libslic3r/CMakeFiles/libslic3r.dir/Release/Nonplanar/JobArtifact.cpp.o"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T19:56:12.093634+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.015
+    },
+    {
+      "evidence": "baselines-final/flat_block-off/run.log.json",
+      "command": [
+        "env",
+        "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/tmp/",
+        "sandbox-exec",
+        "-f",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/offline.sb",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+        "--datadir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/data",
+        "--debug",
+        "2",
+        "--load-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-off.json",
+        "--load-filaments",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+        "--arrange",
+        "1",
+        "--orient",
+        "0",
+        "--outputdir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/output",
+        "--export-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/resolved.json",
+        "--slice",
+        "0",
+        "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off",
+      "started_utc": "2026-10-02T19:57:53.434298+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.922
+    },
+    {
+      "evidence": "baselines-final/flat_block-zaa/run.log.json",
+      "command": [
+        "env",
+        "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/tmp/",
+        "sandbox-exec",
+        "-f",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/offline.sb",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+        "--datadir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/data",
+        "--debug",
+        "2",
+        "--load-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-zaa.json",
+        "--load-filaments",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+        "--arrange",
+        "1",
+        "--orient",
+        "0",
+        "--outputdir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/output",
+        "--export-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/resolved.json",
+        "--slice",
+        "0",
+        "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa",
+      "started_utc": "2026-10-02T19:57:54.392694+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.082
+    },
+    {
+      "evidence": "baselines-final/shallow_sphere-off/run.log.json",
+      "command": [
+        "env",
+        "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/tmp/",
+        "sandbox-exec",
+        "-f",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/offline.sb",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+        "--datadir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/data",
+        "--debug",
+        "2",
+        "--load-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-off.json",
+        "--load-filaments",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+        "--arrange",
+        "1",
+        "--orient",
+        "0",
+        "--outputdir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/output",
+        "--export-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/resolved.json",
+        "--slice",
+        "0",
+        "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/shallow_sphere.stl"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off",
+      "started_utc": "2026-10-02T19:57:54.798795+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.119
+    },
+    {
+      "evidence": "baselines-final/shallow_sphere-zaa/run.log.json",
+      "command": [
+        "env",
+        "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/tmp/",
+        "sandbox-exec",
+        "-f",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/offline.sb",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+        "--datadir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/data",
+        "--debug",
+        "2",
+        "--load-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-zaa.json",
+        "--load-filaments",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+        "--arrange",
+        "1",
+        "--orient",
+        "0",
+        "--outputdir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/output",
+        "--export-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/resolved.json",
+        "--slice",
+        "0",
+        "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/shallow_sphere.stl"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa",
+      "started_utc": "2026-10-02T19:57:54.955204+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.131
+    },
+    {
+      "evidence": "baselines-final/wedge_5deg-off/run.log.json",
+      "command": [
+        "env",
+        "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/tmp/",
+        "sandbox-exec",
+        "-f",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/offline.sb",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+        "--datadir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/data",
+        "--debug",
+        "2",
+        "--load-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-off.json",
+        "--load-filaments",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+        "--arrange",
+        "1",
+        "--orient",
+        "0",
+        "--outputdir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/output",
+        "--export-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/resolved.json",
+        "--slice",
+        "0",
+        "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/wedge_5deg.stl"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off",
+      "started_utc": "2026-10-02T19:57:54.514007+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.1
+    },
+    {
+      "evidence": "baselines-final/wedge_5deg-zaa/run.log.json",
+      "command": [
+        "env",
+        "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/tmp/",
+        "sandbox-exec",
+        "-f",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/offline.sb",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+        "--datadir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/data",
+        "--debug",
+        "2",
+        "--load-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-zaa.json",
+        "--load-filaments",
+        "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+        "--arrange",
+        "1",
+        "--orient",
+        "0",
+        "--outputdir",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/output",
+        "--export-settings",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/resolved.json",
+        "--slice",
+        "0",
+        "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/wedge_5deg.stl"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa",
+      "started_utc": "2026-10-02T19:57:54.655937+00:00",
+      "status": "COMPLETED",
+      "exit_code": 0,
+      "elapsed_seconds": 0.102
+    }
+  ],
+  "nonzero_commands": [
+    {
+      "evidence": "provenance-final.txt.json",
+      "command": [
+        "python3",
+        "build/nonplanar-evidence/B13-native-departure/check_provenance_final.py"
+      ],
+      "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+      "started_utc": "2026-10-02T20:04:02.558258+00:00",
+      "status": "COMPLETED",
+      "exit_code": 1,
+      "elapsed_seconds": 0.081
+    }
+  ],
+  "excluded_commands_from_final_claim": [
+    "provenance-final.txt.json"
+  ],
+  "raw_sha256": {
+    "build/nonplanar-evidence/B13-native-departure/archive.py": "2cf14b996bc4a317b3b091091846972346a597a6831867b355c52d3de4b926df",
+    "build/nonplanar-evidence/B13-native-departure/authored-diff-check.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B13-native-departure/authored-diff-check.txt.json": "ef2a0cbb47069ccba78f478a8c65dadff1666267f3fa64a1464477f7f8bdd2e1",
+    "build/nonplanar-evidence/B13-native-departure/baseline-capture-final.txt": "7df939f6b6dd7e939d41bda5f87647c73fb57b9d50508fb30d89b86f8692ddde",
+    "build/nonplanar-evidence/B13-native-departure/baseline-capture-final.txt.json": "4bceb771ccdd6ea0f5772d6f4e64758dbaa1cf92e6f87648ecbad2d920a50c94",
+    "build/nonplanar-evidence/B13-native-departure/baseline-compare-final.txt": "14bdf3eb82fad8b4210bed868b9124996e150788e839c30f3c35e33189b88fe0",
+    "build/nonplanar-evidence/B13-native-departure/baseline-compare-final.txt.json": "9bae8ea4fac3663008f7191fbc483aaedfc2a5ac39595bd45f47b1efe44eeec7",
+    "build/nonplanar-evidence/B13-native-departure/build-final.txt": "daaa0c514fde5f3e0d7b2885de2e5171abf6406ef288e252c17941121791c66f",
+    "build/nonplanar-evidence/B13-native-departure/build-final.txt.json": "dc32c1acd33166583d0cd77b3006486bba50c2bd8439a32f342038dc8ad2969a",
+    "build/nonplanar-evidence/B13-native-departure/build1.txt": "8e00fb34213e0fe24b850d32684723a678da70ead17231a85a91bf0dbe8f6dcd",
+    "build/nonplanar-evidence/B13-native-departure/build1.txt.json": "eb54efcfea300b70eb164077c1e6b1b97c9ecb3a7a29496d2aeb90f3569685a6",
+    "build/nonplanar-evidence/B13-native-departure/build2.txt": "34ce32eb35c40d7822012d66bf332b25c9a060c8668be2f8fe134f0aef26ebab",
+    "build/nonplanar-evidence/B13-native-departure/build2.txt.json": "4c497e28549678eb5b59faa2f9e84db6676dcd4c9c7be2566f619dca3e1465c6",
+    "build/nonplanar-evidence/B13-native-departure/check_provenance.py": "ddaf96e80925e020acca959150d78764a80f5a88f80fe3de69cc93283d3c5b4a",
+    "build/nonplanar-evidence/B13-native-departure/check_provenance_final.py": "eff80945bd02372ce13450a3856f9308712fd36372d0f66ebf8b26be95ef03f8",
+    "build/nonplanar-evidence/B13-native-departure/check_provenance_final2.py": "8d1b73560e90a142b0885d5f98ca410676d1ba32d204d2fb9d358d2ca60e5a42",
+    "build/nonplanar-evidence/B13-native-departure/ci-inherited.json": "b3e131df6ba8e71db93f10161fc61e8d5e07080879e444f1c7f7606896524dc7",
+    "build/nonplanar-evidence/B13-native-departure/ci-parent-failure.json": "7082d7fccf04a2858d104f9d0c7a10f84daa9b453ac02e020a53e7c30be7d935",
+    "build/nonplanar-evidence/B13-native-departure/compiler.txt": "ea3037e0630fa16798079372fdc24f6542d021dadda4915cc979799682d78295",
+    "build/nonplanar-evidence/B13-native-departure/compiler.txt.json": "3427bf896efd750502b2c4f1e071d763ab6136c4294938739707370c0a3b2c53",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final/discovery.json": "5a40fe23ca2dcb79f058b22ad01d34a1cb4242f8c848fa7c64997d4e2fccd250",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final/results.xml": "ff4f7ef9b4d1986b65e3aa56bf247747b19e6f68a0b775955e75fd7965c18509",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final.txt": "586da24e9f4885fb894e1c611c6b1471c354e78385c3e78c0cc42a9e9fc1ba1e",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final.txt.json": "7193838c9c656786927f9472813f7f7c8f7ece5165e69a86fe9c3ee8122d7401",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final2/discovery.json": "561fe405e9a826f2c7e2ac90fd173bdec3dcbd9888d70cd846246df3693d01cd",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final2/results.xml": "6fb8ff868da05234656b45f2f443c595eafde41f942bf84d82e3379bdbfc63d3",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final2.txt": "e9c7798e83f85c41b76ac2f511f3b32e90d98eac1861f59e925e10deb9a23cc4",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final2.txt.json": "f59db8f45c5a647713f1d3d1958f01956183693a8921e3dfe410d0e5982b11aa",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/bound-candidate.json": "f710a5c808cdfe56c4f740f0d3cae8b1435ea4efa9dd3db3e29d5eb93c53687c",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/candidate-report-failed-material.json": "e66f47369ab24477700636e1965946719053fa21330e80c1147e829a14349d37",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/candidate-report-invalid-material.json": "8975be63c63412b6fcdb89baa4f84a633433775753f1c131e349aea1c5e91df5",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/candidate-report.json": "b11a1bcb2c3705d42c2e895581034a18218fb865231a1eebd05c46560ee4a519",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/native-departure-report.json": "991b6e528f86f916d0504b1ffc70be1ab16646220ab6e582e0ab97fd5cea455f",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/native-job.json": "532c8e5eed56340b88a85f85c9ead07f210dd581c8925471e6583fd4fc41bc48",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/native-lineage-report.json": "793d024566f4f6caa9979c0cbece004b2b33e692b7b32222ae69fbf459b5f651",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-cover-lower.json": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-cover-nominal.json": "0430ad4f3faed0986f26554db960131c907e1c381b51b1ce85081fb158b3b892",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-departure-material.json": "a7e843267d23199428d4ef2aedf47f1e95520b9dd975262b38ee927aba7b7dc7",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-departure.candidate.txt": "163f355dce48633d4fb6ce8ca7df9b265ed6212b6d3fa50d438c9fdd6ae6166f",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-departure.json": "c06eabd5c7aea3d709bfc01626e217d48ee1284a01af9c389ca373957c5ccdad",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-exit-witness.json": "9c9c832880fdad875d35e049599030a482cf97fb758561ede77b6f17b24897f8",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-full-stop.bytes.json": "75f5c9d90bc3c0abd90cf6b22eaebc2c19441dabf08ea19098f5910da0f6d9b1",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-full-stop.candidate.txt": "d31bc1ef4ec3c4c1342d0ec2ecd89818749acf52a33ce77a1f149d32f32220a8",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-job-report.json": "1724915b58107cd20fea73ac6dee522c096024ba7a6e29333e4565c7ed88cc19",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-joined-front-query.json": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-joined-interior-query.json": "2a193ca1b287afe8b565b2afc037beb9b2b940c975d163f062949901568aa704",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-joined-policy.json": "5691cdc53ac2af9b7a800973ce048da7da46056694058e7ac3775d58fbbad74b",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-material.json": "807fdac6e2a3cbfb31240a74d568a0ff595b947236ae926a7e72118cd867d018",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-nominal-run-query.json": "d3d5acbdab11d8828c48f1970e07105678d49044e386d6e2416a39c0a3991941",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-partition-meshes.json": "f1f6d1e508fe5672678d16f9a433abce11c1c4518c028bbaf787f8be8e773efd",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-provenance.json": "b219d67cab4ad31259590ff27b04d695ab9dc46179998878e946e9305a7d6085",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-rate-policy.json": "aef455163766e2364711a8fce6f0d158495c709a9910344880a3a27c8101d45b",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-support-query.json": "0d9d0ce57de54432b41b29a7b378675f33f387c4e886976ba38e6cfe42e186ff",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/bound-candidate.json": "f710a5c808cdfe56c4f740f0d3cae8b1435ea4efa9dd3db3e29d5eb93c53687c",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/candidate-report-failed-material.json": "e66f47369ab24477700636e1965946719053fa21330e80c1147e829a14349d37",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/candidate-report-invalid-material.json": "8975be63c63412b6fcdb89baa4f84a633433775753f1c131e349aea1c5e91df5",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/candidate-report.json": "b11a1bcb2c3705d42c2e895581034a18218fb865231a1eebd05c46560ee4a519",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/native-departure-report.json": "11a494d3444e5c1cbdf393c6746516726531184d197c46fabbdcca2a1d32163e",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/native-job.json": "532c8e5eed56340b88a85f85c9ead07f210dd581c8925471e6583fd4fc41bc48",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/native-lineage-report.json": "793d024566f4f6caa9979c0cbece004b2b33e692b7b32222ae69fbf459b5f651",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-cover-lower.json": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-cover-nominal.json": "0430ad4f3faed0986f26554db960131c907e1c381b51b1ce85081fb158b3b892",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-departure-material.json": "a7e843267d23199428d4ef2aedf47f1e95520b9dd975262b38ee927aba7b7dc7",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-departure.candidate.txt": "163f355dce48633d4fb6ce8ca7df9b265ed6212b6d3fa50d438c9fdd6ae6166f",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-departure.json": "c06eabd5c7aea3d709bfc01626e217d48ee1284a01af9c389ca373957c5ccdad",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-exit-witness.json": "9c9c832880fdad875d35e049599030a482cf97fb758561ede77b6f17b24897f8",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-full-stop.bytes.json": "75f5c9d90bc3c0abd90cf6b22eaebc2c19441dabf08ea19098f5910da0f6d9b1",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-full-stop.candidate.txt": "d31bc1ef4ec3c4c1342d0ec2ecd89818749acf52a33ce77a1f149d32f32220a8",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-job-report.json": "1724915b58107cd20fea73ac6dee522c096024ba7a6e29333e4565c7ed88cc19",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-joined-front-query.json": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-joined-interior-query.json": "2a193ca1b287afe8b565b2afc037beb9b2b940c975d163f062949901568aa704",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-joined-policy.json": "5691cdc53ac2af9b7a800973ce048da7da46056694058e7ac3775d58fbbad74b",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-material.json": "807fdac6e2a3cbfb31240a74d568a0ff595b947236ae926a7e72118cd867d018",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-nominal-run-query.json": "d3d5acbdab11d8828c48f1970e07105678d49044e386d6e2416a39c0a3991941",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-partition-meshes.json": "f1f6d1e508fe5672678d16f9a433abce11c1c4518c028bbaf787f8be8e773efd",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-provenance.json": "b219d67cab4ad31259590ff27b04d695ab9dc46179998878e946e9305a7d6085",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-rate-policy.json": "aef455163766e2364711a8fce6f0d158495c709a9910344880a3a27c8101d45b",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-support-query.json": "0d9d0ce57de54432b41b29a7b378675f33f387c4e886976ba38e6cfe42e186ff",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/bound-candidate.json": "f710a5c808cdfe56c4f740f0d3cae8b1435ea4efa9dd3db3e29d5eb93c53687c",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/candidate-report-failed-material.json": "e66f47369ab24477700636e1965946719053fa21330e80c1147e829a14349d37",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/candidate-report-invalid-material.json": "8975be63c63412b6fcdb89baa4f84a633433775753f1c131e349aea1c5e91df5",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/candidate-report.json": "b11a1bcb2c3705d42c2e895581034a18218fb865231a1eebd05c46560ee4a519",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/native-departure-report.json": "991b6e528f86f916d0504b1ffc70be1ab16646220ab6e582e0ab97fd5cea455f",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/native-lineage-report.json": "f4d00a474597b8aafaa5051dc9d264fde472452a402296b35220d6556071b041",
+    "build/nonplanar-evidence/B13-native-departure/focus-final-differences.json": "43ab99efc4900ff434ec7a4c4979388b4687c91558162caaec3f903a1b4de168",
+    "build/nonplanar-evidence/B13-native-departure/focus-final.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B13-native-departure/focus-final.txt.json": "93e4ab688e04384de5c477f28895aebd666d9609d544d117e0283be14648aeea",
+    "build/nonplanar-evidence/B13-native-departure/focus-final.xml": "dbaed8181507c40025bebd7d7cef89553294361389465dad4a97130457c63672",
+    "build/nonplanar-evidence/B13-native-departure/focus1.txt": "2b5eaad1da9d7d9162d060da53bdd652624f0e6cad2d535e134443fce7e3181d",
+    "build/nonplanar-evidence/B13-native-departure/focus1.txt.json": "aa1f1b3a56f8691bd5bc7eee61c5202977e9130d635c52eaa90467d2d3dcbc4f",
+    "build/nonplanar-evidence/B13-native-departure/focus1.xml": "15385a1103c764eaab868a45a10dc016e3fd56428148e10926c130d4b9c933b2",
+    "build/nonplanar-evidence/B13-native-departure/focus2.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B13-native-departure/focus2.txt.json": "2c0551b3fd11d22702e3eaca0bc34c0fa82697bfa3ad90c5fabbfeb0005d21f0",
+    "build/nonplanar-evidence/B13-native-departure/focus2.xml": "c346241995f49602719e921140787be00379c5b90293e2d70061ea6297a90299",
+    "build/nonplanar-evidence/B13-native-departure/job-artifact-final.txt": "52f704fa98998216a4bd19eae298be18e75235b16e37eda7c5095dc9d19484a9",
+    "build/nonplanar-evidence/B13-native-departure/job-artifact-final.txt.json": "2f113cf60db80f8a713358a33c332a7d9644118f58797633be1efc8b20270dcc",
+    "build/nonplanar-evidence/B13-native-departure/job-context-final.txt": "eb6aa012d775cf0fe73ed8eee9e7b7f1653f0dc22a15e45ca3f9b2a46a39e503",
+    "build/nonplanar-evidence/B13-native-departure/job-context-final.txt.json": "b6e588181caf7b98425bd028c17075e48bcb3c6156576cc7e0560cc3dc5c2e56",
+    "build/nonplanar-evidence/B13-native-departure/oracle-ctest.txt": "ced8a3d1576a6316976723c986ed7ea146e141301c5fbe8704ec33e36e928b57",
+    "build/nonplanar-evidence/B13-native-departure/oracle-ctest.txt.json": "95b94cd1313f773d16e238482b49a9f478015543106ae319b27edb5ef5214505",
+    "build/nonplanar-evidence/B13-native-departure/oracle-final.txt": "ced8a3d1576a6316976723c986ed7ea146e141301c5fbe8704ec33e36e928b57",
+    "build/nonplanar-evidence/B13-native-departure/oracle-final.txt.json": "6faf863345ec647303e1850dfa9c62956ea98eac6229c1761a165b42b3d1541b",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations-final.json": "a6ba6d36692ac4877dca3c839452c5d48999b15f648d2a9392d7445356f988aa",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations-final.py": "7d768e0fb1782cce4bd7a57eb5dc77c6a96a1bde6f1df4285972a5f5f8d276f6",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations-final.txt": "fb8e61c99d043dad4edd430efc524567e24a0673ef0551edcc5784e49c739979",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations-final.txt.json": "29aee91e985caa6661dadb1ebc86d224a3a5c9cc83f5c2a345aa8aafcc9857c6",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations.json": "1461b9aefbf30b24bb674bb038f9770c763d49e5eb31a4fa43af2115fced5512",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations.py": "1ed246a75dd95fe4e40ec390b82acfba2f9bd987ab9c9bf8255c3f9d59216e19",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations.txt": "72c869b748281e5182b542eea2bf02e011ecf294a475355a82768196301bfb4b",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations.txt.json": "f1b216413d8bb036559a34b1309d3d8a852da97a4148b274f45c7df66494492a",
+    "build/nonplanar-evidence/B13-native-departure/oracle-old-native.txt": "b914acf961e3cc72b5604d8bd2155f440f8d4c7d182b043b82a25400d5b81ecd",
+    "build/nonplanar-evidence/B13-native-departure/oracle-old-native.txt.json": "3fd76dea7fd2ae06d32d4e686dc87edfbcce3d9ed88c6ac41cb9d9ee2f38497b",
+    "build/nonplanar-evidence/B13-native-departure/oracle-original-native.txt": "2f519a3362ac21bac7a7236a318faebe98bf1b1bfbb8dbb0b534e8c1961ed423",
+    "build/nonplanar-evidence/B13-native-departure/oracle-original-native.txt.json": "9c63545ac911341618ce47fecd2564918eb53ef4967ca64de5f80812692e6952",
+    "build/nonplanar-evidence/B13-native-departure/oracle-positive.txt": "ced8a3d1576a6316976723c986ed7ea146e141301c5fbe8704ec33e36e928b57",
+    "build/nonplanar-evidence/B13-native-departure/oracle-positive.txt.json": "656b4f4f9715dbfcf11482cd9f03a47551084097fc4c63c44d52be7ee73d099e",
+    "build/nonplanar-evidence/B13-native-departure/package-final.txt": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "build/nonplanar-evidence/B13-native-departure/package-final.txt.json": "9bdfdde41db6edbb1468b96c54c016e17b2880c6d19c06f5b10812c87598f8a0",
+    "build/nonplanar-evidence/B13-native-departure/package.txt": "522246cdcc35f5d32b1a1b4c092218907c8c3b082851616bae5c0e7f4819b3a5",
+    "build/nonplanar-evidence/B13-native-departure/package.txt.json": "8babdb88c9657a4a2dabbd84d8a704c8a33cc0c4bfa219242e87997683728cc6",
+    "build/nonplanar-evidence/B13-native-departure/provenance-compare.txt": "828cd1420df1692b84e36bbd6078ae1aac54204c132ad7efc448cd0befd853e4",
+    "build/nonplanar-evidence/B13-native-departure/provenance-compare.txt.json": "b6e83188cd865c04eb48fa4447b278b2ddd06b64cbbde50f8d8061e9d565074b",
+    "build/nonplanar-evidence/B13-native-departure/provenance-comparison.json": "828cd1420df1692b84e36bbd6078ae1aac54204c132ad7efc448cd0befd853e4",
+    "build/nonplanar-evidence/B13-native-departure/provenance-final.txt": "bf1509ee0acf69efaa485f94ebf2ac929a1baa7498814b367102a0156bf967ae",
+    "build/nonplanar-evidence/B13-native-departure/provenance-final.txt.json": "31fcc502f25e68b2f2944966ecfdacbd4b5d58c557e4db651af5695cc7c0fc89",
+    "build/nonplanar-evidence/B13-native-departure/provenance-final2.json": "5092e9b73ff6ee91e3ab35e939b85b1c42c2cc9665166591cde7df2bd63ad730",
+    "build/nonplanar-evidence/B13-native-departure/provenance-final2.txt": "5092e9b73ff6ee91e3ab35e939b85b1c42c2cc9665166591cde7df2bd63ad730",
+    "build/nonplanar-evidence/B13-native-departure/provenance-final2.txt.json": "74e6ace83536bd0add02387e570a9d53434fb2015a834cc0602cc1345ea68a7a",
+    "build/nonplanar-evidence/B13-native-departure/source-audit-final.txt": "9f77797577c5a61474db40eccaadea1b41027c2003672c0281cdf03c8b77af65",
+    "build/nonplanar-evidence/B13-native-departure/source-audit-final.txt.json": "70a76822e969acbd2facb85650ff25d905934488cab1cdf33036d06b0980caf3",
+    "build/nonplanar-evidence/B13-native-departure/source-audit.txt": "5d6243bd935e3a5ff21badfee1f85cee3a4431ced786b05912b3e6232b11dbdc",
+    "build/nonplanar-evidence/B13-native-departure/source-audit.txt.json": "7ebb62e5da0007178e18060a44e44437f726e58698992705f1badb76892622dc",
+    "build/nonplanar-evidence/B13-native-departure/strict-job.txt": "cd4d31190b48520767fb2353ef7bfbbb2fac29b0a866721e5c9cccd3d82ed29e",
+    "build/nonplanar-evidence/B13-native-departure/strict-job.txt.json": "10f994b65b982ac7c175df8da547b07bc4822526d22cbdc46aaf026a6460dc0b",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/output/plate_1.gcode": "946bb13d86296f298942e17a787058b14b480a0972f93d5a4bd7815cb72fab6a",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/run.log.json": "163836589c944d7c894b172194256f078d73ddf897e927cbe1fe74a338f4b6f8",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/output/plate_1.gcode": "c6cecb480ba219e3d750aaf630677f8685ffb7a1c25df05fae5ebe640d2ce13d",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/run.log.json": "8676f2b964f7c2349fbfdd5fcfc42dc7a2e6d631f04fcb7e188867aa9cac106f",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/manifest.json": "0abf089605dfaa09634413988e03727f004ad78beb0333733d84c309d88ae250",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/offline.sb": "c82cb642cef35cfc3b378612f1b84e039411061f20a732eb08cb9e35c39c9e3f",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/output/plate_1.gcode": "ef0823596be6cea57084bf58b489772988ab832d9c89653a97a374ed644cbdf2",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/run.log.json": "46abecd889be68b4d6d3c5dc7b9e5ca9bd8efb68073565477309c7849ed0d62b",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/output/plate_1.gcode": "c8f685019db8544c7f7ae9f05161c039eac1694bea24903c8ba1549917614360",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/run.log.json": "59ec3a62527cce57ff252d02be2915b82afc57e1aee909c6d9b9b157388ed468",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/output/plate_1.gcode": "ee9c34c5d863875403d5689779e804add16afca8622a6bd0d4fca4e1b9d55063",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/run.log.json": "dba1ea603f417ab96bd219a8e1cf09d19812842b78cb82fd652e6543be5e7e11",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/output/plate_1.gcode": "2006b4dd18a6c7b402df91fbad740dea596354f73dfcba9ff8bd79c577c5cb69",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/run.log.json": "05418789dc69a4cf2af7cbc7946757f30e8691cdefdf19fee12e72321ac15dfe"
+  },
+  "raw_to_archive": {
+    "build/nonplanar-evidence/B13-native-departure/archive.py": "docs/nonplanar-dev/evidence/B13-native-departure/archive.py",
+    "build/nonplanar-evidence/B13-native-departure/authored-diff-check.txt": "docs/nonplanar-dev/evidence/B13-native-departure/authored-diff-check.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/authored-diff-check.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/authored-diff-check.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/baseline-capture-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/baseline-capture-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/baseline-capture-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/baseline-capture-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/baseline-compare-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/baseline-compare-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/baseline-compare-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/baseline-compare-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/build-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/build-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/build-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/build-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/build1.txt": "docs/nonplanar-dev/evidence/B13-native-departure/build1.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/build1.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/build1.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/build2.txt": "docs/nonplanar-dev/evidence/B13-native-departure/build2.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/build2.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/build2.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/check_provenance.py": "docs/nonplanar-dev/evidence/B13-native-departure/check_provenance.py",
+    "build/nonplanar-evidence/B13-native-departure/check_provenance_final.py": "docs/nonplanar-dev/evidence/B13-native-departure/check_provenance_final.py",
+    "build/nonplanar-evidence/B13-native-departure/check_provenance_final2.py": "docs/nonplanar-dev/evidence/B13-native-departure/check_provenance_final2.py",
+    "build/nonplanar-evidence/B13-native-departure/ci-inherited.json": "docs/nonplanar-dev/evidence/B13-native-departure/ci-inherited.json",
+    "build/nonplanar-evidence/B13-native-departure/ci-parent-failure.json": "docs/nonplanar-dev/evidence/B13-native-departure/ci-parent-failure.json",
+    "build/nonplanar-evidence/B13-native-departure/compiler.txt": "docs/nonplanar-dev/evidence/B13-native-departure/compiler.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/compiler.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/compiler.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final/discovery.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final/discovery.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final/results.xml": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final/results.xml.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final2/discovery.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final2/discovery.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final2/results.xml": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final2/results.xml.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final2.txt": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final2.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-final2.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final2.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/bound-candidate.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/bound-candidate.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/candidate-report-failed-material.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/candidate-report-failed-material.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/candidate-report-invalid-material.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/candidate-report-invalid-material.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/candidate-report.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/candidate-report.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/native-departure-report.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/native-departure-report.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/native-job.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/native-job.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-job-evidence/native-lineage-report.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/native-lineage-report.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-cover-lower.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-cover-lower.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-cover-nominal.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-cover-nominal.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-departure-material.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-departure-material.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-departure.candidate.txt": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-departure.candidate.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-departure.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-departure.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-exit-witness.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-exit-witness.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-full-stop.bytes.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-full-stop.bytes.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-full-stop.candidate.txt": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-full-stop.candidate.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-job-report.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-job-report.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-joined-front-query.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-joined-front-query.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-joined-interior-query.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-joined-interior-query.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-joined-policy.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-joined-policy.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-material.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-material.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-nominal-run-query.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-nominal-run-query.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-partition-meshes.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-partition-meshes.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-provenance.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-provenance.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-rate-policy.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-rate-policy.json",
+    "build/nonplanar-evidence/B13-native-departure/ctest-native-evidence/native-support-query.json": "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-support-query.json",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/bound-candidate.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/bound-candidate.json",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/candidate-report-failed-material.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/candidate-report-failed-material.json",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/candidate-report-invalid-material.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/candidate-report-invalid-material.json",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/candidate-report.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/candidate-report.json",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/native-departure-report.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/native-departure-report.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/native-job.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/native-job.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/final-job-evidence/native-lineage-report.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/native-lineage-report.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-cover-lower.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-cover-lower.json",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-cover-nominal.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-cover-nominal.json",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-departure-material.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-departure-material.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-departure.candidate.txt": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-departure.candidate.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-departure.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-departure.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-exit-witness.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-exit-witness.json",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-full-stop.bytes.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-full-stop.bytes.json",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-full-stop.candidate.txt": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-full-stop.candidate.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-job-report.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-job-report.json",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-joined-front-query.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-joined-front-query.json",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-joined-interior-query.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-joined-interior-query.json",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-joined-policy.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-joined-policy.json",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-material.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-material.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-nominal-run-query.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-nominal-run-query.json",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-partition-meshes.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-partition-meshes.json",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-provenance.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-provenance.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-rate-policy.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-rate-policy.json",
+    "build/nonplanar-evidence/B13-native-departure/final-native-evidence/native-support-query.json": "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-support-query.json",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/bound-candidate.json": "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/bound-candidate.json",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/candidate-report-failed-material.json": "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/candidate-report-failed-material.json",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/candidate-report-invalid-material.json": "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/candidate-report-invalid-material.json",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/candidate-report.json": "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/candidate-report.json",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/native-departure-report.json": "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/native-departure-report.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/focus-evidence/native-lineage-report.json": "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/native-lineage-report.json.gz",
+    "build/nonplanar-evidence/B13-native-departure/focus-final-differences.json": "docs/nonplanar-dev/evidence/B13-native-departure/focus-final-differences.json",
+    "build/nonplanar-evidence/B13-native-departure/focus-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/focus-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/focus-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/focus-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/focus-final.xml": "docs/nonplanar-dev/evidence/B13-native-departure/focus-final.xml",
+    "build/nonplanar-evidence/B13-native-departure/focus1.txt": "docs/nonplanar-dev/evidence/B13-native-departure/focus1.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/focus1.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/focus1.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/focus1.xml": "docs/nonplanar-dev/evidence/B13-native-departure/focus1.xml",
+    "build/nonplanar-evidence/B13-native-departure/focus2.txt": "docs/nonplanar-dev/evidence/B13-native-departure/focus2.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/focus2.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/focus2.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/focus2.xml": "docs/nonplanar-dev/evidence/B13-native-departure/focus2.xml",
+    "build/nonplanar-evidence/B13-native-departure/job-artifact-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/job-artifact-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/job-artifact-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/job-artifact-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/job-context-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/job-context-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/job-context-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/job-context-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/oracle-ctest.txt": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-ctest.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/oracle-ctest.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-ctest.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/oracle-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/oracle-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations-final.json": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations-final.json",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations-final.py": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations-final.py",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations.json": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations.json",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations.py": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations.py",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations.txt": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/oracle-mutations.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/oracle-old-native.txt": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-old-native.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/oracle-old-native.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-old-native.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/oracle-original-native.txt": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-original-native.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/oracle-original-native.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-original-native.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/oracle-positive.txt": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-positive.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/oracle-positive.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/oracle-positive.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/package-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/package-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/package-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/package-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/package.txt": "docs/nonplanar-dev/evidence/B13-native-departure/package.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/package.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/package.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/provenance-compare.txt": "docs/nonplanar-dev/evidence/B13-native-departure/provenance-compare.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/provenance-compare.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/provenance-compare.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/provenance-comparison.json": "docs/nonplanar-dev/evidence/B13-native-departure/provenance-comparison.json",
+    "build/nonplanar-evidence/B13-native-departure/provenance-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/provenance-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/provenance-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/provenance-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/provenance-final2.json": "docs/nonplanar-dev/evidence/B13-native-departure/provenance-final2.json",
+    "build/nonplanar-evidence/B13-native-departure/provenance-final2.txt": "docs/nonplanar-dev/evidence/B13-native-departure/provenance-final2.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/provenance-final2.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/provenance-final2.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/source-audit-final.txt": "docs/nonplanar-dev/evidence/B13-native-departure/source-audit-final.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/source-audit-final.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/source-audit-final.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/source-audit.txt": "docs/nonplanar-dev/evidence/B13-native-departure/source-audit.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/source-audit.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/source-audit.txt.json",
+    "build/nonplanar-evidence/B13-native-departure/strict-job.txt": "docs/nonplanar-dev/evidence/B13-native-departure/strict-job.txt.gz",
+    "build/nonplanar-evidence/B13-native-departure/strict-job.txt.json": "docs/nonplanar-dev/evidence/B13-native-departure/strict-job.txt.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/00000.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-off/00000.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/output/plate_1.gcode": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-off/output/plate_1.gcode.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/resolved.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-off/resolved.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/run.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-off/run.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-off/run.log.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-off/run.log.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/00000.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-zaa/00000.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/output/plate_1.gcode": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-zaa/output/plate_1.gcode.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/resolved.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-zaa/resolved.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/run.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-zaa/run.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/flat_block-zaa/run.log.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-zaa/run.log.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/manifest.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/manifest.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/offline.sb": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/offline.sb",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/00000.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-off/00000.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/output/plate_1.gcode": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-off/output/plate_1.gcode.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/resolved.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-off/resolved.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/run.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-off/run.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-off/run.log.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-off/run.log.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/00000.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-zaa/00000.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/output/plate_1.gcode": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-zaa/output/plate_1.gcode.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/resolved.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-zaa/resolved.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/run.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-zaa/run.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/shallow_sphere-zaa/run.log.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-zaa/run.log.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/00000.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-off/00000.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/output/plate_1.gcode": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-off/output/plate_1.gcode.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/resolved.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-off/resolved.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/run.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-off/run.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-off/run.log.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-off/run.log.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/00000.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-zaa/00000.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/output/plate_1.gcode": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-zaa/output/plate_1.gcode.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/resolved.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-zaa/resolved.json",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/run.log": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-zaa/run.log.gz",
+    "build/nonplanar-evidence/B13-native-departure-final-baselines/wedge_5deg-zaa/run.log.json": "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-zaa/run.log.json"
+  },
+  "transport": "GZIP_LOG_TXT_GCODE_AND_LARGE_FILES_EXACT_RAW_BYTES_NO_FORCE_ADD_NO_WHITESPACE_TRIMMING",
+  "archive_sha256": {
+    "docs/nonplanar-dev/evidence/B13-native-departure/archive.py": "2cf14b996bc4a317b3b091091846972346a597a6831867b355c52d3de4b926df",
+    "docs/nonplanar-dev/evidence/B13-native-departure/authored-diff-check.txt.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "docs/nonplanar-dev/evidence/B13-native-departure/authored-diff-check.txt.json": "ef2a0cbb47069ccba78f478a8c65dadff1666267f3fa64a1464477f7f8bdd2e1",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baseline-capture-final.txt.gz": "d7a04371c25a468cb4986582a4ba1a98ee2972b8663880f7fd2e934a84dfc8eb",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baseline-capture-final.txt.json": "4bceb771ccdd6ea0f5772d6f4e64758dbaa1cf92e6f87648ecbad2d920a50c94",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baseline-compare-final.txt.gz": "5f8d4a3a468274a95ba574d5930b479c19f4ec049025a70c0657542bf171ca0c",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baseline-compare-final.txt.json": "9bae8ea4fac3663008f7191fbc483aaedfc2a5ac39595bd45f47b1efe44eeec7",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-off/00000.log.gz": "6b609ba509c32503269eb68dda6f61b5eda1449b87e4464e6d91ece3d4647dd6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-off/output/plate_1.gcode.gz": "e5b673e8c095e19758e5fcfadbd7c4edf5d2e16f52bd2029289ffe07f4a3417d",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-off/run.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-off/run.log.json": "163836589c944d7c894b172194256f078d73ddf897e927cbe1fe74a338f4b6f8",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-zaa/00000.log.gz": "6b609ba509c32503269eb68dda6f61b5eda1449b87e4464e6d91ece3d4647dd6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-zaa/output/plate_1.gcode.gz": "828377e997830e6abff72e945dd0b657384ed1350894a5aa6621ec537bfbee84",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-zaa/run.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/flat_block-zaa/run.log.json": "8676f2b964f7c2349fbfdd5fcfc42dc7a2e6d631f04fcb7e188867aa9cac106f",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/manifest.json": "0abf089605dfaa09634413988e03727f004ad78beb0333733d84c309d88ae250",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/offline.sb": "c82cb642cef35cfc3b378612f1b84e039411061f20a732eb08cb9e35c39c9e3f",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-off/00000.log.gz": "6b609ba509c32503269eb68dda6f61b5eda1449b87e4464e6d91ece3d4647dd6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-off/output/plate_1.gcode.gz": "ed5012631d89fd8963ee81c0a795349d4d88da6c807b3b667b73f43cb8088cf0",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-off/run.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-off/run.log.json": "46abecd889be68b4d6d3c5dc7b9e5ca9bd8efb68073565477309c7849ed0d62b",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-zaa/00000.log.gz": "6b609ba509c32503269eb68dda6f61b5eda1449b87e4464e6d91ece3d4647dd6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-zaa/output/plate_1.gcode.gz": "78d53bd3fb55129a7c698de6e86a66fd66819ad54a5f35c7aa9e1286118ad4d4",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-zaa/run.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/shallow_sphere-zaa/run.log.json": "59ec3a62527cce57ff252d02be2915b82afc57e1aee909c6d9b9b157388ed468",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-off/00000.log.gz": "6b609ba509c32503269eb68dda6f61b5eda1449b87e4464e6d91ece3d4647dd6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-off/output/plate_1.gcode.gz": "c885dc2d7141ed39c443e8fcb29caea8352348e510fa235eb0a7e742191e0533",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-off/run.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-off/run.log.json": "dba1ea603f417ab96bd219a8e1cf09d19812842b78cb82fd652e6543be5e7e11",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-zaa/00000.log.gz": "6b609ba509c32503269eb68dda6f61b5eda1449b87e4464e6d91ece3d4647dd6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-zaa/output/plate_1.gcode.gz": "ad5a01154baf4fcd142f54d46fedc3e57093518372ce26d48946a050a83890e8",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-zaa/run.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "docs/nonplanar-dev/evidence/B13-native-departure/baselines-final/wedge_5deg-zaa/run.log.json": "05418789dc69a4cf2af7cbc7946757f30e8691cdefdf19fee12e72321ac15dfe",
+    "docs/nonplanar-dev/evidence/B13-native-departure/build-final.txt.gz": "96c1f0277cbc0626d4cd6ea8150dbf5d1956db00552b3d2c52fe24533906f26a",
+    "docs/nonplanar-dev/evidence/B13-native-departure/build-final.txt.json": "dc32c1acd33166583d0cd77b3006486bba50c2bd8439a32f342038dc8ad2969a",
+    "docs/nonplanar-dev/evidence/B13-native-departure/build1.txt.gz": "2826a6fb6a07f6d36acecdbfcb0998be13c3245d4a736b19f9d14608ac81c827",
+    "docs/nonplanar-dev/evidence/B13-native-departure/build1.txt.json": "eb54efcfea300b70eb164077c1e6b1b97c9ecb3a7a29496d2aeb90f3569685a6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/build2.txt.gz": "86a2092dadf74b6cca0c423e00702af59ea036b77e4e026851d498efa0a3f094",
+    "docs/nonplanar-dev/evidence/B13-native-departure/build2.txt.json": "4c497e28549678eb5b59faa2f9e84db6676dcd4c9c7be2566f619dca3e1465c6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/check_provenance.py": "ddaf96e80925e020acca959150d78764a80f5a88f80fe3de69cc93283d3c5b4a",
+    "docs/nonplanar-dev/evidence/B13-native-departure/check_provenance_final.py": "eff80945bd02372ce13450a3856f9308712fd36372d0f66ebf8b26be95ef03f8",
+    "docs/nonplanar-dev/evidence/B13-native-departure/check_provenance_final2.py": "8d1b73560e90a142b0885d5f98ca410676d1ba32d204d2fb9d358d2ca60e5a42",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ci-inherited.json": "b3e131df6ba8e71db93f10161fc61e8d5e07080879e444f1c7f7606896524dc7",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ci-parent-failure.json": "7082d7fccf04a2858d104f9d0c7a10f84daa9b453ac02e020a53e7c30be7d935",
+    "docs/nonplanar-dev/evidence/B13-native-departure/commands.json": "6618bc17a14c35a674563355add4739b6eb19bfa8fd750cd46cc0983bf976968",
+    "docs/nonplanar-dev/evidence/B13-native-departure/compiler.txt.gz": "2b777defc9ff8a1f3542fa0fd4b0ae2515e801c356d86af29036f49054909fe1",
+    "docs/nonplanar-dev/evidence/B13-native-departure/compiler.txt.json": "3427bf896efd750502b2c4f1e071d763ab6136c4294938739707370c0a3b2c53",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final/discovery.json.gz": "8eaae42b02574fa01d5f7f488b8bdb9c67ff5ec9e9e829814499eea1777a4615",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final/results.xml.gz": "456ef3e8a978a00636d8fa58419e7f88fd0610fe1eb3bf89f7bc39350ff187e7",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final.txt.gz": "6f9b54db05d6cb8b24ba02e124dc18f6485907f6553a69ecfd18e0b45238c4d1",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final.txt.json": "7193838c9c656786927f9472813f7f7c8f7ece5165e69a86fe9c3ee8122d7401",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final2/discovery.json.gz": "589b0e33597564bc6b7a28194c74e8c928f6639e0b8d0671d751518a61906fe5",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final2/results.xml.gz": "99c9ff761091da0d8f3e0ecd3762142efef36a0977c4b846d0504d4b77021338",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final2.txt.gz": "5ced3cd64c73743de873e07554d4b2e2367354eaffbacb73e2e5fa01a2091ce7",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-final2.txt.json": "f59db8f45c5a647713f1d3d1958f01956183693a8921e3dfe410d0e5982b11aa",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/bound-candidate.json": "f710a5c808cdfe56c4f740f0d3cae8b1435ea4efa9dd3db3e29d5eb93c53687c",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/candidate-report-failed-material.json": "e66f47369ab24477700636e1965946719053fa21330e80c1147e829a14349d37",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/candidate-report-invalid-material.json": "8975be63c63412b6fcdb89baa4f84a633433775753f1c131e349aea1c5e91df5",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/candidate-report.json": "b11a1bcb2c3705d42c2e895581034a18218fb865231a1eebd05c46560ee4a519",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/native-departure-report.json.gz": "dfb044ba4fe65f419dd0e3e91c544504d62a809b737c909a3b00ac99034cbde1",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/native-job.json.gz": "82eaee3f40567e61443b1bf204e76ebbe64f5ad163c20b6cb435b3dc8b84c8af",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-job-evidence/native-lineage-report.json.gz": "7c214c21cdb61b0416f36cb1ae2b1262a04b13aeef1b71b1b6b6e6bf9b53fb10",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-cover-lower.json": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-cover-nominal.json": "0430ad4f3faed0986f26554db960131c907e1c381b51b1ce85081fb158b3b892",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-departure-material.json.gz": "d477e5227be44f075fa0985445817f36be512a35de1aebfea532d07b173061f7",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-departure.candidate.txt.gz": "d4890d0c26872315be28261fe44b1934537f39241c27815ca48fba6df8530a9a",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-departure.json.gz": "33533d2748651adfeb7fb7570e4ffa39b7c8ac6a10fa4b2c852754fc481ba14a",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-exit-witness.json": "9c9c832880fdad875d35e049599030a482cf97fb758561ede77b6f17b24897f8",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-full-stop.bytes.json": "75f5c9d90bc3c0abd90cf6b22eaebc2c19441dabf08ea19098f5910da0f6d9b1",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-full-stop.candidate.txt.gz": "36d36e6c0d2c4aa1cda60794f18155c32abef740b043efeea072d3bcc17544f2",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-job-report.json": "1724915b58107cd20fea73ac6dee522c096024ba7a6e29333e4565c7ed88cc19",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-joined-front-query.json": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-joined-interior-query.json": "2a193ca1b287afe8b565b2afc037beb9b2b940c975d163f062949901568aa704",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-joined-policy.json": "5691cdc53ac2af9b7a800973ce048da7da46056694058e7ac3775d58fbbad74b",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-material.json.gz": "8c8e18e3abf7a5e659260e2b2eaf9439ea0b9bcf05911949d97b9f908e75ab2f",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-nominal-run-query.json": "d3d5acbdab11d8828c48f1970e07105678d49044e386d6e2416a39c0a3991941",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-partition-meshes.json": "f1f6d1e508fe5672678d16f9a433abce11c1c4518c028bbaf787f8be8e773efd",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-provenance.json.gz": "48704f557489dd047c19a245a5faa4c2042e93503a72043e26c560c7c077daaf",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-rate-policy.json": "aef455163766e2364711a8fce6f0d158495c709a9910344880a3a27c8101d45b",
+    "docs/nonplanar-dev/evidence/B13-native-departure/ctest-native-evidence/native-support-query.json": "0d9d0ce57de54432b41b29a7b378675f33f387c4e886976ba38e6cfe42e186ff",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/bound-candidate.json": "f710a5c808cdfe56c4f740f0d3cae8b1435ea4efa9dd3db3e29d5eb93c53687c",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/candidate-report-failed-material.json": "e66f47369ab24477700636e1965946719053fa21330e80c1147e829a14349d37",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/candidate-report-invalid-material.json": "8975be63c63412b6fcdb89baa4f84a633433775753f1c131e349aea1c5e91df5",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/candidate-report.json": "b11a1bcb2c3705d42c2e895581034a18218fb865231a1eebd05c46560ee4a519",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/native-departure-report.json.gz": "a02aac4a59f15f0727d497fab7a5de045cf165783db403c47006ea86ace3bac8",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/native-job.json.gz": "82eaee3f40567e61443b1bf204e76ebbe64f5ad163c20b6cb435b3dc8b84c8af",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-job-evidence/native-lineage-report.json.gz": "7c214c21cdb61b0416f36cb1ae2b1262a04b13aeef1b71b1b6b6e6bf9b53fb10",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-cover-lower.json": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-cover-nominal.json": "0430ad4f3faed0986f26554db960131c907e1c381b51b1ce85081fb158b3b892",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-departure-material.json.gz": "d477e5227be44f075fa0985445817f36be512a35de1aebfea532d07b173061f7",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-departure.candidate.txt.gz": "d4890d0c26872315be28261fe44b1934537f39241c27815ca48fba6df8530a9a",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-departure.json.gz": "33533d2748651adfeb7fb7570e4ffa39b7c8ac6a10fa4b2c852754fc481ba14a",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-exit-witness.json": "9c9c832880fdad875d35e049599030a482cf97fb758561ede77b6f17b24897f8",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-full-stop.bytes.json": "75f5c9d90bc3c0abd90cf6b22eaebc2c19441dabf08ea19098f5910da0f6d9b1",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-full-stop.candidate.txt.gz": "36d36e6c0d2c4aa1cda60794f18155c32abef740b043efeea072d3bcc17544f2",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-job-report.json": "1724915b58107cd20fea73ac6dee522c096024ba7a6e29333e4565c7ed88cc19",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-joined-front-query.json": "27eb4e9d0343f2a389c8e5c41d05d7f3658120092d437d345d67c75689b6e98c",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-joined-interior-query.json": "2a193ca1b287afe8b565b2afc037beb9b2b940c975d163f062949901568aa704",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-joined-policy.json": "5691cdc53ac2af9b7a800973ce048da7da46056694058e7ac3775d58fbbad74b",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-material.json.gz": "8c8e18e3abf7a5e659260e2b2eaf9439ea0b9bcf05911949d97b9f908e75ab2f",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-nominal-run-query.json": "d3d5acbdab11d8828c48f1970e07105678d49044e386d6e2416a39c0a3991941",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-partition-meshes.json": "f1f6d1e508fe5672678d16f9a433abce11c1c4518c028bbaf787f8be8e773efd",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-provenance.json.gz": "48704f557489dd047c19a245a5faa4c2042e93503a72043e26c560c7c077daaf",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-rate-policy.json": "aef455163766e2364711a8fce6f0d158495c709a9910344880a3a27c8101d45b",
+    "docs/nonplanar-dev/evidence/B13-native-departure/final-native-evidence/native-support-query.json": "0d9d0ce57de54432b41b29a7b378675f33f387c4e886976ba38e6cfe42e186ff",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/bound-candidate.json": "f710a5c808cdfe56c4f740f0d3cae8b1435ea4efa9dd3db3e29d5eb93c53687c",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/candidate-report-failed-material.json": "e66f47369ab24477700636e1965946719053fa21330e80c1147e829a14349d37",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/candidate-report-invalid-material.json": "8975be63c63412b6fcdb89baa4f84a633433775753f1c131e349aea1c5e91df5",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/candidate-report.json": "b11a1bcb2c3705d42c2e895581034a18218fb865231a1eebd05c46560ee4a519",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/native-departure-report.json.gz": "dfb044ba4fe65f419dd0e3e91c544504d62a809b737c909a3b00ac99034cbde1",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus-evidence/native-lineage-report.json.gz": "9f6591c0706a0a33529df62c44cbf9736bad28c617ebeee9a6f842ae8183ea9d",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus-final-differences.json": "43ab99efc4900ff434ec7a4c4979388b4687c91558162caaec3f903a1b4de168",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus-final.txt.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus-final.txt.json": "93e4ab688e04384de5c477f28895aebd666d9609d544d117e0283be14648aeea",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus-final.xml": "dbaed8181507c40025bebd7d7cef89553294361389465dad4a97130457c63672",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus1.txt.gz": "56a851940a6af526b8d098ec88ec28ccc89de1e001d5581f75f2452050f56dfb",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus1.txt.json": "aa1f1b3a56f8691bd5bc7eee61c5202977e9130d635c52eaa90467d2d3dcbc4f",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus1.xml": "15385a1103c764eaab868a45a10dc016e3fd56428148e10926c130d4b9c933b2",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus2.txt.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus2.txt.json": "2c0551b3fd11d22702e3eaca0bc34c0fa82697bfa3ad90c5fabbfeb0005d21f0",
+    "docs/nonplanar-dev/evidence/B13-native-departure/focus2.xml": "c346241995f49602719e921140787be00379c5b90293e2d70061ea6297a90299",
+    "docs/nonplanar-dev/evidence/B13-native-departure/job-artifact-final.txt.gz": "2cfac556b07f384eba1a6591f637aff83e3104dafe91b6463b73ff2d549f1789",
+    "docs/nonplanar-dev/evidence/B13-native-departure/job-artifact-final.txt.json": "2f113cf60db80f8a713358a33c332a7d9644118f58797633be1efc8b20270dcc",
+    "docs/nonplanar-dev/evidence/B13-native-departure/job-context-final.txt.gz": "feb6398139393d19b68ade2596cdb4441f3d0090b8b24620086b1edc31d1acf6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/job-context-final.txt.json": "b6e588181caf7b98425bd028c17075e48bcb3c6156576cc7e0560cc3dc5c2e56",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-ctest.txt.gz": "077c5485e5b24a2ec61bc2b28d4d52fce5bf9bc0d84620320d2fc0da5529fec5",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-ctest.txt.json": "95b94cd1313f773d16e238482b49a9f478015543106ae319b27edb5ef5214505",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-final.txt.gz": "077c5485e5b24a2ec61bc2b28d4d52fce5bf9bc0d84620320d2fc0da5529fec5",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-final.txt.json": "6faf863345ec647303e1850dfa9c62956ea98eac6229c1761a165b42b3d1541b",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations-final.json": "a6ba6d36692ac4877dca3c839452c5d48999b15f648d2a9392d7445356f988aa",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations-final.py": "7d768e0fb1782cce4bd7a57eb5dc77c6a96a1bde6f1df4285972a5f5f8d276f6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations-final.txt.gz": "4dbc89330938195b7af744c446be14ef1ffbefbeef6277ab7818af08cb76a3cf",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations-final.txt.json": "29aee91e985caa6661dadb1ebc86d224a3a5c9cc83f5c2a345aa8aafcc9857c6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations.json": "1461b9aefbf30b24bb674bb038f9770c763d49e5eb31a4fa43af2115fced5512",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations.py": "1ed246a75dd95fe4e40ec390b82acfba2f9bd987ab9c9bf8255c3f9d59216e19",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations.txt.gz": "dd4a9da73bc73677135fd9f2999e434f8e6d085786a3ba172ef262e15f40b927",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-mutations.txt.json": "f1b216413d8bb036559a34b1309d3d8a852da97a4148b274f45c7df66494492a",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-old-native.txt.gz": "0f378c86bd646730c899b977e66c4beede69773656574587f4d0e86bc06a6e44",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-old-native.txt.json": "3fd76dea7fd2ae06d32d4e686dc87edfbcce3d9ed88c6ac41cb9d9ee2f38497b",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-original-native.txt.gz": "6e7691873bf329dd8441e9e46bfe72190333d045e515deb76398d15858b29ec9",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-original-native.txt.json": "9c63545ac911341618ce47fecd2564918eb53ef4967ca64de5f80812692e6952",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-positive.txt.gz": "077c5485e5b24a2ec61bc2b28d4d52fce5bf9bc0d84620320d2fc0da5529fec5",
+    "docs/nonplanar-dev/evidence/B13-native-departure/oracle-positive.txt.json": "656b4f4f9715dbfcf11482cd9f03a47551084097fc4c63c44d52be7ee73d099e",
+    "docs/nonplanar-dev/evidence/B13-native-departure/package-final.txt.gz": "7a8833b552c2ed1512fc599268182cb36aaffee282fa2e34067d25ab04bc29ef",
+    "docs/nonplanar-dev/evidence/B13-native-departure/package-final.txt.json": "9bdfdde41db6edbb1468b96c54c016e17b2880c6d19c06f5b10812c87598f8a0",
+    "docs/nonplanar-dev/evidence/B13-native-departure/package.txt.gz": "7a8833b552c2ed1512fc599268182cb36aaffee282fa2e34067d25ab04bc29ef",
+    "docs/nonplanar-dev/evidence/B13-native-departure/package.txt.json": "8babdb88c9657a4a2dabbd84d8a704c8a33cc0c4bfa219242e87997683728cc6",
+    "docs/nonplanar-dev/evidence/B13-native-departure/provenance-compare.txt.gz": "469c9effc9cd76083e7e872b9ceca85af95f3ce12cca14c457c37296024253cc",
+    "docs/nonplanar-dev/evidence/B13-native-departure/provenance-compare.txt.json": "b6e83188cd865c04eb48fa4447b278b2ddd06b64cbbde50f8d8061e9d565074b",
+    "docs/nonplanar-dev/evidence/B13-native-departure/provenance-comparison.json": "828cd1420df1692b84e36bbd6078ae1aac54204c132ad7efc448cd0befd853e4",
+    "docs/nonplanar-dev/evidence/B13-native-departure/provenance-final.txt.gz": "47aecf5e1be3b8905cc987f5cb8f7f14cdeeb75bc6f499d5e5ff99d3b3b6f84d",
+    "docs/nonplanar-dev/evidence/B13-native-departure/provenance-final.txt.json": "31fcc502f25e68b2f2944966ecfdacbd4b5d58c557e4db651af5695cc7c0fc89",
+    "docs/nonplanar-dev/evidence/B13-native-departure/provenance-final2.json": "5092e9b73ff6ee91e3ab35e939b85b1c42c2cc9665166591cde7df2bd63ad730",
+    "docs/nonplanar-dev/evidence/B13-native-departure/provenance-final2.txt.gz": "8a447134635b403650b15fa95e413e569fcdf0af469fa0e1a59138ad7a8de8c1",
+    "docs/nonplanar-dev/evidence/B13-native-departure/provenance-final2.txt.json": "74e6ace83536bd0add02387e570a9d53434fb2015a834cc0602cc1345ea68a7a",
+    "docs/nonplanar-dev/evidence/B13-native-departure/source-audit-final.txt.gz": "9976f9c7d08098d74562457e4487167026f0da6dd80d232858871ffc6164fbe4",
+    "docs/nonplanar-dev/evidence/B13-native-departure/source-audit-final.txt.json": "70a76822e969acbd2facb85650ff25d905934488cab1cdf33036d06b0980caf3",
+    "docs/nonplanar-dev/evidence/B13-native-departure/source-audit.txt.gz": "da4bd18d6034058f6bdde9177c6a9cf6e51ae944936854b597c52c9f2cbc793a",
+    "docs/nonplanar-dev/evidence/B13-native-departure/source-audit.txt.json": "7ebb62e5da0007178e18060a44e44437f726e58698992705f1badb76892622dc",
+    "docs/nonplanar-dev/evidence/B13-native-departure/strict-job.txt.gz": "ed2b4a865871e44f366880cd91531ee236c10930af837e0ab3c7db65295ca8e7",
+    "docs/nonplanar-dev/evidence/B13-native-departure/strict-job.txt.json": "10f994b65b982ac7c175df8da547b07bc4822526d22cbdc46aaf026a6460dc0b"
+  }
+}

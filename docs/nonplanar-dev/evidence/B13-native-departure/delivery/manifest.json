@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "stage": "B13-native-departure",
+  "source_manifest_sha256": "f62470cc455d540fc97309ca2a4526c9d70e879f047a41758c3d56641ea5f3b6",
+  "scope": "APPEND_ONLY_DELIVERY_HASH_AND_GIT_MEMBERSHIP_CHECK_NO_NEW_TEST_CLAIM",
+  "extra_sha256": {
+    "docs/nonplanar-dev/evidence/B13-native-departure/delivery/archive-execution.txt.gz": "a99de2f7a7b635be67054a4194ba8d82a7353321d74f0aa55b771acd06dece9d",
+    "docs/nonplanar-dev/evidence/B13-native-departure/delivery/archive-execution.txt.json": "903185360a61079b4a82d51d82a1ced5d2dc5e5ffd8a97ce85c02b7e57b4fbf3",
+    "docs/nonplanar-dev/evidence/B13-native-departure/delivery/environment.json": "b7c6c8161bbd51ea4addd4187ca8bdd61802951f4772204ae37ee959a5de1185",
+    "docs/nonplanar-dev/evidence/B13-native-departure/delivery/verify.py": "453aeea8c21dbc876a304b825a48a30e0f366bda224c7d224885479843e2e248"
+  },
+  "precommit_verification": [
+    "python3",
+    "docs/nonplanar-dev/evidence/B13-native-departure/delivery/verify.py",
+    "--revision",
+    "index"
+  ],
+  "postcommit_verification": [
+    "python3",
+    "docs/nonplanar-dev/evidence/B13-native-departure/delivery/verify.py"
+  ]
+}

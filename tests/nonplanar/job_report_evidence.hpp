@@ -27,6 +27,10 @@ inline void save_job_report(const boost::filesystem::path &path,const GuardedCan
             record["native"][name]={{"context",sequence.canonical_context()},{"records",rows},{"sha256",sequence.fingerprint()}};
         };
         journal("assembled",*native.assembly->material->sequence);journal("planned",ledger);journal("body",*body.body->material);
+        if(native.departure){
+            record["native"]["departure_canonical"]=native.departure_json;record["native"]["departure_sha256"]=native.departure_sha256;
+            journal("before",*native.departure->before->material->sequence);journal("routed",*native.departure->route->planned->material->ledger);
+        }
     }
     REQUIRE_FALSE(boost::filesystem::exists(path));boost::nowide::ofstream file(path.string());REQUIRE(file.good());
     file<<record.dump(2)<<'\n';file.close();REQUIRE(file.good());

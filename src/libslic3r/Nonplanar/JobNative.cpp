@@ -104,6 +104,37 @@ void body_config_binding(const GuardedJobSnapshot &job,const PlanarBodySnapshot 
         guarded_slicing_config(job.settings->regions.front().config).fingerprint()==
         guarded_slicing_config(body.guarded_settings->regions.front().config).fingerprint(),"NATIVE_JOB_EFFECTIVE_REGION_CONFIG");
 }
+// Exact owned inputs to the protected simulation departure, not a persisted
+// clearance certificate or qualification of opaque job resources. Large arrays
+// remain bounded by their producer and the canonical writer; poll while encoding.
+std::string departure_identity(const SimulationCapDepartureSnapshot &departure,NativeGuard &guard)
+{
+    detail::CanonicalConfigWriter w;const auto &route=*departure.route;const auto &source=*route.planned;const auto &scene=source.scene;
+    const auto position=[&](auto p){w.value(Vec3d(p.x(),p.y(),p.z()));};
+    const auto box=[&](auto b){w.append("[");position(b.min);w.append(",");position(b.max);w.append("]");};
+    w.append("{\"before_journal\":");w.value(departure.before->material->sequence->fingerprint());
+    w.append(",\"clearance\":[");bool first=true;const auto &p=source.policy;
+    for(double v:{p.required.value(),p.numeric.import_mm,p.numeric.chord_mm,p.numeric.distance_mm,p.numeric.conversion_mm,
+        p.tool_measurement.value(),p.positioning.value(),p.material.value(),p.scene_geometry.value()}){if(!first)w.append(",");first=false;w.value(v);}
+    w.append("],\"laid_journal\":");w.value(departure.material->material->sequence->fingerprint());
+    w.append(",\"legs\":[");first=true;for(const auto &leg:route.legs){guard.poll();if(!first)w.append(",");first=false;
+        w.append("[");w.append(std::to_string(leg->material->event_index));w.append(",");w.append(std::to_string(leg->material->cells));w.append("]");}
+    w.append("],\"request\":[");position(departure.request.destination);
+    for(double v:{departure.request.lift_z_mm,departure.request.travel_speed.value(),departure.request.travel_acceleration.value()}){w.append(",");w.value(v);}
+    w.append("],\"routed_journal\":");w.value(source.material->ledger->fingerprint());
+    w.append(",\"scene\":{\"coverage\":[");box(scene.nozzle_domain);w.append(",");box(scene.scene_domain);w.append(",");
+    w.value(scene.unmodelled_parts_min_local_z.value());w.append(",");w.value(scene.obstacle_inventory_complete);w.append(",");w.value(scene.uncertainty.value());
+    w.append("],\"head\":[");first=true;for(const auto &part:scene.head){guard.poll();if(!first)w.append(",");first=false;
+        w.append("[");w.append(std::to_string(part.id));w.append(",");w.value(int(part.part));w.append(",");box(part.outer);
+        w.append(",");w.value(part.moving);w.append(",");w.value(part.all_configurations_enclosed);w.append("]");}
+    w.append("],\"identity\":[");w.append(std::to_string(scene.version));w.append(",");w.append(std::to_string(scene.profile_id));
+    w.append(",");w.append(std::to_string(scene.revision));w.append(",");w.value(int(scene.origin));w.append(",");w.value(scene.operator_confirmed_claim);
+    w.append("],\"obstacles\":[");first=true;for(const auto &obstacle:scene.obstacles){guard.poll();if(!first)w.append(",");first=false;box(obstacle);}
+    w.append("],\"tip\":[");position(scene.tip.center);w.append(",");w.value(scene.tip.opening_radius.value());w.append(",");w.value(scene.tip.outer_radius.value());
+    w.append("]},\"schema\":1,\"scope\":\"owned_simulation_cap_departure_lineage_only\",\"source_records\":[");
+    for(size_t i=0;i<route.source_records.size();++i){if(i%128==0)guard.poll();if(i)w.append(",");w.append(std::to_string(route.source_records[i]));}
+    w.append("]}");return w.take();
+}
 }
 GuardedNativeBodyResult analyze_guarded_native_body(const GuardedJobTask &requested_task,const GuardedNativeBodyRequest &requested,
     const GuardedNativeBodyLimits &requested_limits)
@@ -168,7 +199,8 @@ GuardedNativeHatchResult plan_guarded_native_hatches(const GuardedJobTask &reque
     catch(...){result.snapshot.reset();result.reason="NATIVE_JOB_UNKNOWN_EXCEPTION";}return result;
 }
 GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &requested_task,std::shared_ptr<const GuardedNativeHatchSnapshot> hatches,
-    const FirstCapMaterialResult &requested_assembly,const LinearCandidateResult &requested_candidate,const GuardedJobLimits &requested_limits)
+    const FirstCapMaterialResult &requested_assembly,const LinearCandidateResult &requested_candidate,const GuardedJobLimits &requested_limits,
+    std::shared_ptr<const SimulationCapDepartureSnapshot> departure)
 {
     GuardedNativePlanResult result;const auto started=std::chrono::steady_clock::now();
     try {
@@ -184,7 +216,12 @@ GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &reques
             assembly->body->completed_records==body->records.size() && assembly->body->current_progress==0,"NATIVE_JOB_COMPLETE_BODY_REQUIRED");
         require(assembly->material->completed_records==assembly->material->sequence->records.size() && assembly->material->current_progress==0,"NATIVE_JOB_COMPLETE_ASSEMBLY_REQUIRED");
         require(candidate && plan && candidate->plan==plan && sha256_bytes(candidate->bytes)==candidate->sha256,"NATIVE_JOB_CANDIDATE_PARENT");
-        const auto &original=*assembly->material->sequence;const auto &source=*plan->source->material->ledger;const auto &planned=*plan->planned->material->ledger;
+        if(departure){
+            require(departure->material==assembly && departure->before->source==assembly->source,"NATIVE_JOB_DEPARTURE_MATERIAL_OWNER");
+            require(plan->source==departure->route->planned,"NATIVE_JOB_DEPARTURE_MOTION_OWNER");
+        }
+        const auto &original=departure ? *departure->route->planned->material->ledger : *assembly->material->sequence;
+        const auto &source=*plan->source->material->ledger;const auto &planned=*plan->planned->material->ledger;
         require(original.fingerprint()==source.fingerprint(),"NATIVE_JOB_MOTION_INPUT_JOURNAL");guard.poll();
         require(original.canonical_context()==planned.canonical_context() && original.records.size()==planned.records.size(),"NATIVE_JOB_MOTION_OUTPUT_CONTEXT");
         auto rows=original.records;
@@ -193,11 +230,14 @@ GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &reques
             rows[i].motion.speed_limit=limited.speed_limit;rows[i].motion.acceleration_limit=limited.acceleration_limit;}
         const MaterialSequenceSnapshot expected{original.revision,original.source_fingerprint,original.model,std::move(rows),original.geometry};
         require(expected.fingerprint()==planned.fingerprint(),"NATIVE_JOB_MOTION_OUTPUT_JOURNAL");guard.poll();
-        const Json document={{"schema",1},{"scope","owned_native_body_cap_linear_candidate_lineage_only"},{"job_fingerprint",task.snapshot->fingerprint},
-            {"attempt",task.attempt},{"hatch_lineage",hatches->sha256},{"assembled_journal",original.fingerprint()},
+        Json document={{"schema",departure ? 2 : 1},{"scope",departure ? "owned_native_body_cap_departure_linear_candidate_lineage_only" : "owned_native_body_cap_linear_candidate_lineage_only"},{"job_fingerprint",task.snapshot->fingerprint},
+            {"attempt",task.attempt},{"hatch_lineage",hatches->sha256},{"assembled_journal",assembly->material->sequence->fingerprint()},
             {"planned_journal",planned.fingerprint()},{"candidate_sha256",candidate->sha256}};
+        std::string exit_json,exit_hash;
+        if(departure){exit_json=departure_identity(*departure,guard);exit_hash=sha256_bytes(exit_json);document["departure_lineage"]=exit_hash;}
         auto json=document.dump();auto hash=sha256_bytes(json);guard.poll();
-        result.snapshot=std::shared_ptr<const GuardedNativePlanSnapshot>(new GuardedNativePlanSnapshot(hatches,assembly,candidate,std::move(json),std::move(hash)));
+        result.snapshot=std::shared_ptr<const GuardedNativePlanSnapshot>(new GuardedNativePlanSnapshot(hatches,assembly,candidate,std::move(json),std::move(hash),
+            std::move(departure),std::move(exit_json),std::move(exit_hash)));
         guard.poll();result.reason="OWNED_NATIVE_PLAN_LINEAGE_FULL_JOB_QUALIFICATION_PENDING";
     }catch(const std::exception &e){result.snapshot.reset();result.reason=*e.what() ? e.what() : "NATIVE_JOB_EXCEPTION_WITHOUT_REASON";}
     catch(...){result.snapshot.reset();result.reason="NATIVE_JOB_UNKNOWN_EXCEPTION";}return result;

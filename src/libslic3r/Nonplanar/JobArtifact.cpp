@@ -36,7 +36,8 @@ GuardedCandidateBindingResult bind_guarded_candidate(Print &print,const GuardedJ
         writer.append(",\"job_fingerprint\":");writer.value(task.snapshot->fingerprint);writer.append(",\"job_id\":");writer.append(std::to_string(task.snapshot->job_id));
         writer.append(",\"material_journal\":");writer.value(journal);writer.append(",\"motion_policy\":");writer.value(plan->policy_fingerprint);
         if(native){writer.append(",\"native_lineage\":");writer.value(native->sha256);}
-        writer.append(native ? ",\"schema\":2,\"scope\":\"owned_native_body_cap_candidate_lineage_only\",\"serializer_policy\":" :
+        writer.append(native && native->departure ? ",\"schema\":3,\"scope\":\"owned_native_body_cap_departure_candidate_lineage_only\",\"serializer_policy\":" :
+            native ? ",\"schema\":2,\"scope\":\"owned_native_body_cap_candidate_lineage_only\",\"serializer_policy\":" :
             ",\"schema\":1,\"scope\":\"job_context_candidate_byte_identity_only\",\"serializer_policy\":");writer.value(candidate->policy_fingerprint);
         writer.append(",\"source_fingerprint\":");writer.value(ledger.source_fingerprint);writer.append(",\"source_revision\":");writer.append(std::to_string(ledger.revision));writer.append("}");
         auto json=writer.take();auto hash=sha256_bytes(json);stop();
@@ -88,8 +89,10 @@ void check_candidate_manifest(const GuardedCandidateBindingSnapshot &binding)
     if(binding.native)expected.insert("native_lineage");
     std::set<std::string> keys;require(manifest.is_object(),"JOB_REPORT_MANIFEST_OBJECT");for(auto i=manifest.begin();i!=manifest.end();++i)keys.insert(i.key());require(keys==expected,"JOB_REPORT_MANIFEST_REGISTRY");
     const auto integer=[&](const char *key,uint64_t value){require(manifest.at(key).is_number_unsigned() && manifest.at(key).get<uint64_t>()==value,"JOB_REPORT_MANIFEST_INTEGER_BINDING");};
-    integer("schema",binding.native ? 2 : guarded_candidate_binding_version);integer("attempt",binding.attempt);integer("job_id",job.job_id);integer("candidate_size",candidate.bytes.size());integer("source_revision",ledger.revision);
-    require(manifest.at("scope")==(binding.native ? "owned_native_body_cap_candidate_lineage_only" : "job_context_candidate_byte_identity_only"),"JOB_REPORT_MANIFEST_SCOPE");
+    integer("schema",binding.native && binding.native->departure ? guarded_departure_binding_version : binding.native ? 2 : guarded_candidate_binding_version);
+    integer("attempt",binding.attempt);integer("job_id",job.job_id);integer("candidate_size",candidate.bytes.size());integer("source_revision",ledger.revision);
+    require(manifest.at("scope")== (binding.native && binding.native->departure ? "owned_native_body_cap_departure_candidate_lineage_only" :
+        binding.native ? "owned_native_body_cap_candidate_lineage_only" : "job_context_candidate_byte_identity_only"),"JOB_REPORT_MANIFEST_SCOPE");
     if(binding.native){const auto &native=*binding.native;
         require(native.candidate==binding.candidate && native.hatches->body->job==binding.job && native.hatches->body->attempt==binding.attempt &&
             sha256_bytes(native.canonical_json)==native.sha256 && manifest_hash(manifest.at("native_lineage"))==native.sha256,"JOB_REPORT_NATIVE_LINEAGE");}
@@ -153,7 +156,8 @@ GuardedCandidateReportResult verify_guarded_candidate_report(const GuardedCandid
         const Json validation={{"schema_version","0.1.0-draft"},{"document_example",false},{"job_id",std::to_string(binding->job->job_id)},
             {"job_revision",binding->job->input_revision},{"overall_status",report_status(overall)},{"export_decision",allowed ? "ALLOW" : "BLOCK"},
             {"gcode_sha256",candidate.sha256},{"mandatory_check_ids",guarded_mandatory_checks()},{"checks",entries},
-            {"assumptions",{"Declared simulation identity-transform full-stop rates/material only.",binding->native ?
+            {"assumptions",{"Declared simulation identity-transform full-stop rates/material only.",binding->native && binding->native->departure ?
+                "Protected native body/cap/selected-bead/simulation-departure/linear-candidate lineage checked; full cap/contact/order/final-byte geometry and resource qualification pending." : binding->native ?
                 "Protected bounded native body/cap/linear-candidate lineage checked; full source/target, measured resources, machine preconditions and geometry/support/volume/route qualification pending." :
                 "No qualified source-to-plan, measured resources, machine preconditions or full geometry/support/volume/route proofs."}}};
         charge(1);Json replay={{"records",rates.snapshot ? rates.snapshot->moves.size() : 0},{"evaluations",result.evaluations},

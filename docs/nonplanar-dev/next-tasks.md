@@ -7,6 +7,24 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B13-native-departure.md` and ADR-0081 now bind the exact protected laid bead,
+complete departure/origin map and final candidate to the current native job/
+attempt. Equal-content material/motion owners and unbound extra routes refuse.
+Exact departure identity, native plan v2 and optional manifest v3 preserve the
+old formats. Focus17/947083 and independent report6/44 pass; the final 425-test
+CTest and six strict OFF/ZAA pairs are recorded in the frozen stage evidence.
+All18 previous B09 native outputs plus the old native-lineage report are exact.
+The new candidate has identical rows/bytes but distinct derived-body dependency
+hashes across focused/final runs; both owner graphs validate separately and full
+source provenance remains unqualified.
+The inherited Linux 35503607 run failed a fixed macOS row count (2257 actual vs
+2218 literal); the test now requires its complete actual journal and Linux also
+checks the new departure report. New-source Linux/Windows/GUI remain unverified.
+Thirteen mandatory full-job domains remain UNKNOWN/NOT_RUN; export BLOCK and
+full B01–B15 stays active. Next complete fixed-width cap filling/seam/contact/
+access and independently verify full final-byte head/material/route geometry;
+qualified resources/software/provenance and complete prolog/end/order remain.
+
 `B09-native-departure.md` and ADR-0080 now own one prospective later bead, its
 exact complete body/first-cap parent and proven whole-head/actual-prefix three-leg
 departure under shared original limits. The separate .28 mm variant retains
@@ -14,9 +32,8 @@ targets and has2221 final rows /129046 bytes with rate/material replay; full
 fill/contact/byte geometry remain pending. The .2 mm replay refuses its rounded
 section at the unchanged2% dose error. Original wide exit stays FAIL; all15 old
 native files are exact. Focus9/7354, CTest422/422 and six strict OFF/ZAA pairs pass.
-Next bind this protected departure/material/origin-map edge to the native job/
-attempt and final bytes, keeping canonical body/parent identity strict; current
-B13 cannot admit extra route rows. Full fixed-width cap fill/seam, print contact,
+ADR-0081 above now binds this protected departure/material/origin-map edge to
+the native job/attempt and final bytes with canonical body/parent identity strict. Full fixed-width cap fill/seam, print contact,
 height/order/all original motions and independent whole-byte geometry remain
 required; full B01–B15 active and export BLOCK.
 

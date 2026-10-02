@@ -1,0 +1,276 @@
+{
+  "observed_utc": "2026-10-02T19:59:28.814805+00:00",
+  "inherited_head": "35503607de05765e7760c6be3a7b21f9d162b3d8",
+  "jobs": [
+    {
+      "id": 110954350136,
+      "run_id": 37041821423,
+      "workflow_name": "Nonplanar native Linux evidence",
+      "head_branch": "feature/nonplanar-bootstrap",
+      "run_url": "https://api.github.com/repos/positron48/OrcaSlicer-nonplanar/actions/runs/37041821423",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUvnGKs8AAAAZ1WUGOA",
+      "head_sha": "35503607de05765e7760c6be3a7b21f9d162b3d8",
+      "url": "https://api.github.com/repos/positron48/OrcaSlicer-nonplanar/actions/jobs/110954350136",
+      "html_url": "https://github.com/positron48/OrcaSlicer-nonplanar/actions/runs/37041821423/job/110954350136",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-10-02T17:38:21Z",
+      "started_at": "2026-10-02T17:38:24Z",
+      "completed_at": "2026-10-02T19:45:33Z",
+      "name": "linux",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-02T17:38:25Z",
+          "completed_at": "2026-10-02T17:38:26Z"
+        },
+        {
+          "name": "Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-02T17:38:26Z",
+          "completed_at": "2026-10-02T17:43:24Z"
+        },
+        {
+          "name": "Pinned source and normative package",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-02T17:43:24Z",
+          "completed_at": "2026-10-02T17:43:25Z"
+        },
+        {
+          "name": "System dependencies on disposable runner",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-02T17:43:25Z",
+          "completed_at": "2026-10-02T17:44:10Z"
+        },
+        {
+          "name": "Identify exact dependency source and runner environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-02T17:44:10Z",
+          "completed_at": "2026-10-02T17:44:11Z"
+        },
+        {
+          "name": "Restore exact installed dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-02T17:44:11Z",
+          "completed_at": "2026-10-02T17:44:11Z"
+        },
+        {
+          "name": "Build pinned dependency sources",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-02T17:44:11Z",
+          "completed_at": "2026-10-02T18:42:16Z"
+        },
+        {
+          "name": "Preserve completed dependency installation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-02T18:42:16Z",
+          "completed_at": "2026-10-02T18:42:19Z"
+        },
+        {
+          "name": "Record dependency reuse separately from a fresh build",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-02T18:42:19Z",
+          "completed_at": "2026-10-02T18:42:19Z"
+        },
+        {
+          "name": "Build native tests before the application",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-02T18:42:19Z",
+          "completed_at": "2026-10-02T19:43:30Z"
+        },
+        {
+          "name": "Execute nonempty selected native suites",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 11,
+          "started_at": "2026-10-02T19:43:30Z",
+          "completed_at": "2026-10-02T19:45:31Z"
+        },
+        {
+          "name": "Independently check native job and candidate identities",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 12,
+          "started_at": "2026-10-02T19:45:31Z",
+          "completed_at": "2026-10-02T19:45:31Z"
+        },
+        {
+          "name": "Expose native failure diagnostics in check annotations",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-02T19:45:31Z",
+          "completed_at": "2026-10-02T19:45:31Z"
+        },
+        {
+          "name": "Exercise native STL audit command",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-10-02T19:45:31Z",
+          "completed_at": "2026-10-02T19:45:31Z"
+        },
+        {
+          "name": "Exercise independent native final-byte rate audit",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-02T19:45:31Z",
+          "completed_at": "2026-10-02T19:45:31Z"
+        },
+        {
+          "name": "Exercise independent final-byte material reconstruction",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 16,
+          "started_at": "2026-10-02T19:45:31Z",
+          "completed_at": "2026-10-02T19:45:31Z"
+        },
+        {
+          "name": "Exercise independent actual-prefix material region coverage",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 17,
+          "started_at": "2026-10-02T19:45:31Z",
+          "completed_at": "2026-10-02T19:45:31Z"
+        },
+        {
+          "name": "Exercise independent actual-prefix joined lower envelope",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18,
+          "started_at": "2026-10-02T19:45:31Z",
+          "completed_at": "2026-10-02T19:45:31Z"
+        },
+        {
+          "name": "Exercise independent nominal material at exact packet cuts",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 19,
+          "started_at": "2026-10-02T19:45:31Z",
+          "completed_at": "2026-10-02T19:45:31Z"
+        },
+        {
+          "name": "Exercise independent complete-run support and actual gap bands",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 20,
+          "started_at": "2026-10-02T19:45:31Z",
+          "completed_at": "2026-10-02T19:45:31Z"
+        },
+        {
+          "name": "Build native application after test verification",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21,
+          "started_at": "2026-10-02T19:45:31Z",
+          "completed_at": "2026-10-02T19:45:31Z"
+        },
+        {
+          "name": "Preserve observed results even on failure",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22,
+          "started_at": "2026-10-02T19:45:31Z",
+          "completed_at": "2026-10-02T19:45:32Z"
+        },
+        {
+          "name": "Post Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44,
+          "started_at": "2026-10-02T19:45:32Z",
+          "completed_at": "2026-10-02T19:45:32Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45,
+          "started_at": "2026-10-02T19:45:32Z",
+          "completed_at": "2026-10-02T19:45:32Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/positron48/OrcaSlicer-nonplanar/check-runs/110954350136",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000007824,
+      "runner_name": "GitHub Actions 1000007824",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions",
+      "annotations": [
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/35503607de05765e7760c6be3a7b21f9d162b3d8/.github",
+          "start_line": 2,
+          "start_column": null,
+          "end_line": 2,
+          "end_column": null,
+          "annotation_level": "warning",
+          "title": "",
+          "message": "Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/35503607de05765e7760c6be3a7b21f9d162b3d8/.github",
+          "start_line": 8,
+          "start_column": null,
+          "end_line": 8,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "Nonplanar native tests",
+          "message": "B07 native first footprint derives bounded amounts inside an actual flat bead core\n\nFilters: \"B07 native first footprint derives bounded amounts inside an actual flat bead core\"\nRandomness seeded to: 1404959459\nnative final support status=0 reason=WHOLE_ACTUAL_RUN_FOOTPRINT_NOMINAL_GAP_BANDS_AND_DECLARED_LOWER_ANCHORS work=902178 cells=104\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nfff_print_tests is a Catch2 v3.11.0 host application.\nRun with -? for options\n\n-------------------------------------------------------------------------------\nB07 native first footprint derives bounded amounts inside an actual flat bead\ncore\n-------------------------------------------------------------------------------\n/home/runner/work/OrcaSlicer-nonplanar/OrcaSlicer-nonplanar/tests/nonplanar/test_policy.cpp:2112\n...............................................................................\n\n/home/runner/work/OrcaSlicer-nonplanar/OrcaSlicer-nonplanar/tests/nonplanar/test_policy.cpp:2851: FAILED:\n  REQUIRE( report.snapshot->rates->moves.size()==2218 )\nwith expansion:\n  2257 (0x8d1) == 2218 (0x8aa)\nwith messages:\n  DECLARED_NATIVE_BODY_MATERIAL_ONLY\n  SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY\n  BOUNDED_FIRST_FINITE_FOOTPRINT_NOMINAL_GAP_AND_AMOUNTS_ONLY\n  native footprint packets=61 roof leaves=1 work=1935 expected amount=0.\n  123078726658044413\n  BOUNDED_CLIPPED_NOMINAL_UNION_AND_MULTIPLICITY_EXCESS_ONLY\n  BOUNDED_NOMINAL_TARGET_DEFICIT_AND_Z_SPILL_ONLY\n  BOUNDED_DISJOINT_REMAINING_FIRST_HATCH_WITH_POSITIVE_NOMINAL_FILL_GAIN_ONLY\n  native remaining gain >= 0.0688508719117390672 covered=[0.121222584158338378,\n  0.121222584158343222] missing=[0.130765407432446357,0.130765407432458486]\n  cells=3 work=12735\n  BOUNDED_COMPLETE_FIRST_HATCH_CANDIDATE_WITH_MEASURED_UNION_FILL_ONLY\n  native complete first layer paths=2 amount=[0",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/35503607de05765e7760c6be3a7b21f9d162b3d8/.github",
+          "start_line": 7,
+          "start_column": null,
+          "end_line": 7,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "Nonplanar native tests",
+          "message": "CTest gate failed: CTest failed with exit code 8",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/positron48/OrcaSlicer-nonplanar/blob/35503607de05765e7760c6be3a7b21f9d162b3d8/.github",
+          "start_line": 10,
+          "start_column": null,
+          "end_line": 10,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "Process completed with exit code 2.",
+          "raw_details": ""
+        }
+      ]
+    }
+  ]
+}

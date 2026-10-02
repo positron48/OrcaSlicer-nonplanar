@@ -4,6 +4,7 @@
 
 namespace Slic3r::nptop {
 inline constexpr unsigned guarded_candidate_binding_version=1;
+inline constexpr unsigned guarded_departure_binding_version=3;
 struct GuardedNativePlanSnapshot;
 struct GuardedCandidateBindingResult;
 struct GuardedCandidateBindingSnapshot {

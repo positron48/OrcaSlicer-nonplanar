@@ -58,21 +58,121 @@ def sha(text):
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 
+def departure_lineage(native, plan, journals):
+    """Identity/order/request relation only; no clearance or whole-job approval."""
+    text, digest = native['departure_canonical'], native['departure_sha256']
+    require(type(digest) is str and re.fullmatch('[a-f0-9]{64}', digest), 'Departure digest')
+    require(sha(text) == digest == plan['departure_lineage'] and canonical(parse(text)) == text, 'Departure identity')
+    departure = parse(text)
+    require(set(departure) == {'schema', 'scope', 'before_journal', 'laid_journal', 'routed_journal',
+                              'clearance', 'scene', 'request', 'legs', 'source_records'}, 'Departure fields')
+    require(type(departure['schema']) is int and departure['schema'] == 1 and
+            departure['scope'] == 'owned_simulation_cap_departure_lineage_only', 'Departure version/scope')
+
+    def number(value):
+        require(type(value) is str and re.fullmatch('[a-f0-9]{16}', value), 'Departure binary64')
+        result = struct.unpack('>d', bytes.fromhex(value))[0]
+        require(math.isfinite(result), 'Departure finite quantity')
+        return result
+
+    def position(value):
+        require(type(value) is list and len(value) == 3, 'Departure position')
+        return [number(v) for v in value]
+
+    def box(value):
+        require(type(value) is list and len(value) == 2, 'Departure box')
+        lo, hi = (position(v) for v in value)
+        require(all(a <= b for a, b in zip(lo, hi)), 'Departure box order')
+
+    for field, name in [('before_journal', 'before'), ('laid_journal', 'assembled'), ('routed_journal', 'routed')]:
+        require(departure[field] == native[name]['sha256'].encode().hex(), 'Departure journal edge')
+    before_context, before = journals['before']
+    laid_context, laid = journals['assembled']
+    routed_context, routed = journals['routed']
+    require(before[:len(journals['body'][1])] == journals['body'][1] and len(before) > len(journals['body'][1]), 'Departure complete original body/cap')
+    require(laid[:len(before)] == before and len(laid) > len(before), 'Departure preserves complete parent before prospective bead')
+    require(routed[:len(laid)] == laid, 'Departure preserves every laid row')
+    require(all(before_context[k] == laid_context[k] == routed_context[k] for k in ['source', 'revision', 'schema']), 'Departure source context')
+    require(before_context['model'][:5] == laid_context['model'][:5] and
+            number(laid_context['model'][5]) >= number(before_context['model'][5]), 'Departure preserves model/losses/error budget')
+    require({k: v for k, v in laid_context.items() if k != 'record_count'} ==
+            {k: v for k, v in routed_context.items() if k != 'record_count'}, 'Departure routed context')
+    request = departure['request']
+    require(type(request) is list and len(request) == 4, 'Departure request')
+    target = position(request[0]);height, speed, acceleration = (number(v) for v in request[1:])
+    start = laid[-1]['motion'][4];start_values = position(start)
+    require(height >= max(start_values[2], target[2]) and speed > 0 and acceleration > 0, 'Departure height/motion domain')
+    points = [start]
+    for p in [[start[0], start[1], request[1]], [request[0][0], request[0][1], request[1]], request[0]]:
+        if position(points[-1]) != position(p):
+            points.append(p)
+    if len(points) == 1:
+        points.append(request[0])  # original instant Travel is still an obligation
+    legs = len(points)-1
+    require(1 <= legs <= 3 and len(routed) == len(laid)+legs, 'Departure complete route length')
+    require(departure['source_records'] == list(range(len(laid)))+[len(laid)]*legs and
+            all(type(v) is int for v in departure['source_records']), 'Departure exact origin map')
+    maximum = max(row['motion'][0] for row in laid)
+    for i, (a, b) in enumerate(zip(points, points[1:])):
+        expected = {'bead': None, 'geometry': None,
+                    'motion': [maximum+1+i, len(laid)+i, 0, a, b, request[2], request[3], [0], -1]}
+        require(routed[len(laid)+i] == expected, 'Departure exact Travel poses IDs order and payload')
+    require(type(departure['legs']) is list and len(departure['legs']) == legs and
+            all(type(v) is list and len(v) == 2 and type(v[0]) is int and v[0] == len(laid)+i and
+                type(v[1]) is int and 0 <= v[1] <= 1000000 for i, v in enumerate(departure['legs'])), 'Departure leg obligations')
+    require(type(departure['clearance']) is list and len(departure['clearance']) == 9 and
+            all(number(v) >= 0 for v in departure['clearance']), 'Departure clearance policy')
+    scene = departure['scene']
+    require(set(scene) == {'coverage', 'head', 'identity', 'obstacles', 'tip'}, 'Departure whole scene fields')
+    identity = scene['identity']
+    require(type(identity) is list and len(identity) == 5 and all(type(v) is int for v in identity[:4]) and
+            identity[0] == 1 and identity[1] > 0 and identity[2] > 0 and identity[3] == 0 and identity[4] is False, 'Departure simulation scene identity')
+    coverage = scene['coverage']
+    require(type(coverage) is list and len(coverage) == 5 and coverage[3] is True and
+            number(coverage[2]) >= 0 and number(coverage[4]) >= 0, 'Departure complete inventory/uncertainty')
+    box(coverage[0]);box(coverage[1])
+    require(type(scene['head']) is list and 6 <= len(scene['head']) <= 64, 'Departure complete head')
+    ids, roles = set(), set()
+    for part in scene['head']:
+        require(type(part) is list and len(part) == 5 and type(part[0]) is int and part[0] > 0 and part[0] not in ids and
+                type(part[1]) is int and 0 <= part[1] < 6 and type(part[3]) is bool and type(part[4]) is bool and
+                (not part[3] or part[4]), 'Departure head identity/coverage')
+        ids.add(part[0]);roles.add(part[1]);box(part[2])
+    require(roles == set(range(6)), 'Departure all head roles')
+    require(type(scene['obstacles']) is list and len(scene['obstacles']) <= 10000, 'Departure bounded obstacle inventory')
+    for obstacle in scene['obstacles']:
+        box(obstacle)
+    tip = scene['tip']
+    require(type(tip) is list and len(tip) == 3, 'Departure complete annulus')
+    position(tip[0]);require(0 < number(tip[1]) < number(tip[2]), 'Departure opening/outer radius')
+    return routed_context, routed
+
+
 def native_lineage(record, job):
     """Exact dependency identity only; no geometry or material math approval."""
     native = record['native']
+    has_departure = 'departure_canonical' in native
+    native_fields = {'canonical', 'sha256', 'hatch_canonical', 'hatch_sha256', 'body_canonical', 'body_sha256',
+                     'body', 'assembled', 'planned'}
+    if has_departure:
+        native_fields |= {'departure_canonical', 'departure_sha256', 'before', 'routed'}
+    require(set(native) == native_fields, 'Native evidence fields')
     for prefix in ['', 'hatch_', 'body_']:
         text, digest = native[prefix + 'canonical'], native[prefix + 'sha256']
         require(type(digest) is str and re.fullmatch('[a-f0-9]{64}', digest), 'Native digest')
         require(sha(text) == digest and canonical(parse(text)) == text, 'Native canonical identity')
     plan, hatch, body = (parse(native[key]) for key in ['canonical', 'hatch_canonical', 'body_canonical'])
-    require(set(plan) == {'schema', 'scope', 'job_fingerprint', 'attempt', 'hatch_lineage',
-                          'assembled_journal', 'planned_journal', 'candidate_sha256'}, 'Native plan fields')
+    fields = {'schema', 'scope', 'job_fingerprint', 'attempt', 'hatch_lineage', 'assembled_journal', 'planned_journal', 'candidate_sha256'}
+    if has_departure:
+        fields.add('departure_lineage')
+    require(set(plan) == fields, 'Native plan fields')
     require(set(hatch) == {'schema', 'scope', 'body_lineage', 'request', 'geometry'}, 'Native hatch fields')
     require(set(body) == {'schema', 'scope', 'job_fingerprint', 'attempt', 'source_sha256',
                           'slicing_input', 'request', 'body', 'body_material', 'body_journal'}, 'Native body fields')
-    for document, scope in [(plan, 'owned_native_body_cap_linear_candidate_lineage_only'),
-                            (hatch, 'owned_native_affine_hatch_dependency_lineage_only'),
+    require(type(plan['schema']) is int and plan['schema'] == (2 if has_departure else 1) and
+            plan['scope'] == ('owned_native_body_cap_departure_linear_candidate_lineage_only' if has_departure else
+                              'owned_native_body_cap_linear_candidate_lineage_only'), 'Native plan version/scope')
+    for document, scope in [(hatch, 'owned_native_affine_hatch_dependency_lineage_only'),
                             (body, 'owned_native_body_dependency_lineage_only')]:
         require(type(document['schema']) is int and document['schema'] == 1 and document['scope'] == scope, 'Native version/scope')
     for document in [plan, body]:
@@ -84,7 +184,7 @@ def native_lineage(record, job):
                 for resource in job['resources']), 'Native original source bytes')
     require(plan['candidate_sha256'] == record['candidate_sha256'] and plan['planned_journal'] == record['material_journal'], 'Native candidate/journal')
     journals = {}
-    for name in ['assembled', 'planned', 'body']:
+    for name in ['assembled', 'planned', 'body'] + (['before', 'routed'] if has_departure else []):
         journal = native[name]
         require(set(journal) == {'context', 'records', 'sha256'}, 'Native journal fields')
         context = parse(journal['context'])
@@ -104,6 +204,8 @@ def native_lineage(record, job):
             native['planned']['sha256'] == plan['planned_journal'], 'Native ledger dependency')
     require(journals['body'][0]['source'] == body['body'].encode().hex(), 'Native body geometry journal binding')
     original_context, original = journals['assembled']
+    if has_departure:
+        original_context, original = departure_lineage(native, plan, journals)
     planned_context, planned = journals['planned']
     require(original_context == planned_context and len(original) == len(planned), 'Native planned context')
     require(original[:len(journals['body'][1])] == journals['body'][1] and
@@ -152,8 +254,10 @@ def verify(record):
         'source_revision': record['source_revision'],
     }
     if 'native' in record:
-        manifest['schema'] = 2
-        manifest['scope'] = 'owned_native_body_cap_candidate_lineage_only'
+        has_departure = 'departure_canonical' in record['native']
+        manifest['schema'] = 3 if has_departure else 2
+        manifest['scope'] = ('owned_native_body_cap_departure_candidate_lineage_only' if has_departure else
+                             'owned_native_body_cap_candidate_lineage_only')
         manifest['native_lineage'] = encode(native_lineage(record, job))
     require(parse(record['manifest']) == manifest and canonical(manifest) == record['manifest'], 'Manifest binding')
     require(sha(record['manifest']) == record['manifest_sha256'] == document['manifest_sha256'], 'Manifest SHA mismatch')
