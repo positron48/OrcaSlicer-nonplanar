@@ -1,0 +1,1628 @@
+Filters: [LinearMotionPlan]
+Randomness seeded to: 3437133839
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B10 complete motion plan owns limits and refuses invalid profiles stale
+publication or resource exhaustion
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:632
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:273: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0xa8b18c1f8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:273: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0xa8ac2ced0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:389: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0xa8ac2cf00
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:392: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa8ad2c400
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:635: PASSED:
+  REQUIRE_FALSE( plan_linear_motion({},policy).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:644: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:644: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:644: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:644: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:644: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:644: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:644: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:644: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:644: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:644: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:644: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,bad).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:646: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,section).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:654: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:654: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:654: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:654: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:654: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:654: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:654: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,policy,limits).snapshot )
+with expansion:
+  !0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:658: PASSED:
+  REQUIRE( owned.snapshot )
+with expansion:
+  0xa8b0f9200
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:659: PASSED:
+  REQUIRE( owned.snapshot->source==source.snapshot )
+with expansion:
+  0xa8ad2c400 == 0xa8ad2c400
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:659: PASSED:
+  REQUIRE( owned.snapshot->policy.fingerprint()==policy.fingerprint() )
+with expansion:
+  "a3c2a19fbeac12d3fa29f3bdd0f885231529d34a82e942da3bb0d7ad701f71f7"
+  ==
+  "a3c2a19fbeac12d3fa29f3bdd0f885231529d34a82e942da3bb0d7ad701f71f7"
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:660: PASSED:
+  REQUIRE( plan_linear_motion(source,policy,limits).snapshot )
+with expansion:
+  0xa8b0f9380
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:661: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(source,policy,limits).snapshot )
+with expansion:
+  !0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:663: PASSED:
+  REQUIRE_FALSE( rounded.snapshot )
+with expansion:
+  !0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+-------------------------------------------------------------------------------
+B10 pressure rows and instant travel retain separate full stop schedules
+without phantom deposit
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:582
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:273: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0xa8b18c158
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:273: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0xa8ac2cf90
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:389: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0xa8ac2cf00
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:392: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa8ad2c400
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:591: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0xa8ac2cf90
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:592: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0xa8ad2c600
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:593: PASSED:
+  REQUIRE( plan.snapshot )
+with expansion:
+  0xa8b0f9200
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:594: PASSED:
+  REQUIRE( plan.snapshot->steps.size()==rows.size() )
+with expansion:
+  7 == 7
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:595: PASSED:
+  REQUIRE( plan.snapshot->steps[1].coordinate==LinearStepCoordinate::Filament )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:595: PASSED:
+  REQUIRE( plan.snapshot->steps[1].filament_mm.lower==-.8 )
+with expansion:
+  -0.80000000000000004
+  ==
+  -0.80000000000000004
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:596: PASSED:
+  REQUIRE( plan.snapshot->steps[3].coordinate==LinearStepCoordinate::Filament )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:596: PASSED:
+  REQUIRE( plan.snapshot->steps[3].filament_mm.upper==.8 )
+with expansion:
+  0.80000000000000004 == 0.80000000000000004
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:597: PASSED:
+  REQUIRE( plan.snapshot->steps[4].coordinate==LinearStepCoordinate::Dwell )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:598: PASSED:
+  REQUIRE( plan.snapshot->steps[4].duration_s.lower>=1/policy.max_events_per_second )
+with expansion:
+  0.005 >= 0.005
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:599: PASSED:
+  REQUIRE( plan.snapshot->planned->material->ledger->canonical_record(i)==material.snapshot->ledger->canonical_record(i) )
+with expansion:
+  "{"bead":null,"geometry":null,"motion":[50,1,0,["4000000000000000",
+  "0000000000000000","4000000000000000"],["4000000000000000",
+  "0000000000000000","4000000000000000"],"4024000000000000","4059000000000000",
+  [2,"3fe999999999999a",0,1],-1]}"
+  ==
+  "{"bead":null,"geometry":null,"motion":[50,1,0,["4000000000000000",
+  "0000000000000000","4000000000000000"],["4000000000000000",
+  "0000000000000000","4000000000000000"],"4024000000000000","4059000000000000",
+  [2,"3fe999999999999a",0,1],-1]}"
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:599: PASSED:
+  REQUIRE( plan.snapshot->planned->material->ledger->canonical_record(i)==material.snapshot->ledger->canonical_record(i) )
+with expansion:
+  "{"bead":null,"geometry":null,"motion":[60,3,0,["0000000000000000",
+  "0000000000000000","4003333333333333"],["0000000000000000",
+  "0000000000000000","4003333333333333"],"4024000000000000","4059000000000000",
+  [2,"3fe999999999999a",1,0],-1]}"
+  ==
+  "{"bead":null,"geometry":null,"motion":[60,3,0,["0000000000000000",
+  "0000000000000000","4003333333333333"],["0000000000000000",
+  "0000000000000000","4003333333333333"],"4024000000000000","4059000000000000",
+  [2,"3fe999999999999a",1,0],-1]}"
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:599: PASSED:
+  REQUIRE( plan.snapshot->planned->material->ledger->canonical_record(i)==material.snapshot->ledger->canonical_record(i) )
+with expansion:
+  "{"bead":null,"geometry":null,"motion":[70,4,0,["0000000000000000",
+  "0000000000000000","4003333333333333"],["0000000000000000",
+  "0000000000000000","4003333333333333"],"4024000000000000","4059000000000000",
+  [0],-1]}"
+  ==
+  "{"bead":null,"geometry":null,"motion":[70,4,0,["0000000000000000",
+  "0000000000000000","4003333333333333"],["0000000000000000",
+  "0000000000000000","4003333333333333"],"4024000000000000","4059000000000000",
+  [0],-1]}"
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:600: PASSED:
+  REQUIRE( original.snapshot )
+with expansion:
+  0xa8b0f9380
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:601: PASSED:
+  REQUIRE( plan.snapshot->nominal_volume_mm3.lower==original.snapshot->nominal_volume_mm3.lower )
+with expansion:
+  0.28566370614359166 == 0.28566370614359166
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:602: PASSED:
+  REQUIRE( plan.snapshot->nominal_volume_mm3.upper==original.snapshot->nominal_volume_mm3.upper )
+with expansion:
+  0.28566370614359188 == 0.28566370614359188
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:603: PASSED:
+  REQUIRE_FALSE( plan_linear_motion(prepared,exceeded).snapshot )
+with expansion:
+  !0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+-------------------------------------------------------------------------------
+B10 CoreXY diagonals short segments and volume flow each constrain the complete
+plan
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:605
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:273: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0xa8b18c0b8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:273: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0xa8ac2cfc0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:389: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0xa8ac2cf00
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:392: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa8ad2c400
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:609: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0xa8ac2cfc0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:610: PASSED:
+  REQUIRE( source.snapshot )
+with expansion:
+  0xa8ad2c600
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:611: PASSED:
+  REQUIRE( core.snapshot )
+with expansion:
+  0xa8b0f9200
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:613: PASSED:
+  REQUIRE( xyz.snapshot )
+with expansion:
+  0xa8b0f9380
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:615: PASSED:
+  REQUIRE( Q(core.snapshot->steps[1].peak_speed_mm_s)*(dx+dy)/length<=Q(1) )
+with expansion:
+  1 <= 1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:616: PASSED:
+  REQUIRE( xyz.snapshot->steps[1].peak_speed_mm_s>core.snapshot->steps[1].peak_speed_mm_s*1.99 )
+with expansion:
+  1.41421356237309248 > 1.40714249456122742
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:617: PASSED:
+  REQUIRE( cartesian.fingerprint()!=policy.fingerprint() )
+with expansion:
+  "a03684fe8db3a00f3eef4334fcb8abd831b7645578bd1ff30a8e9e472f896464"
+  !=
+  "a3c2a19fbeac12d3fa29f3bdd0f885231529d34a82e942da3bb0d7ad701f71f7"
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:619: PASSED:
+  REQUIRE( short_material.snapshot )
+with expansion:
+  0xa8ac2d0e0
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:620: PASSED:
+  REQUIRE( short_source.snapshot )
+with expansion:
+  0xa8ad2cc00
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:621: PASSED:
+  REQUIRE( short_plan.snapshot )
+with expansion:
+  0xa8b0f9500
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:622: PASSED:
+  REQUIRE( short_step.peak_speed_mm_s<.021 )
+with expansion:
+  0.02000000000004219 < 0.021
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:623: PASSED:
+  REQUIRE( short_step.duration_s.lower>=1/policy.max_events_per_second )
+with expansion:
+  0.00540000000000084 >= 0.005
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:624: PASSED:
+  REQUIRE( slowed.snapshot )
+with expansion:
+  0xa8b0f9680
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:625: PASSED:
+  REQUIRE( slowed.snapshot->steps[0].peak_speed_mm_s<core.snapshot->steps[0].peak_speed_mm_s/1000 )
+with expansion:
+  0.00015655247267399 < 0.00111803398874989
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:626: PASSED:
+  REQUIRE( wider.snapshot )
+with expansion:
+  0xa8b0f9800
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:627: PASSED:
+  REQUIRE( regular.snapshot )
+with expansion:
+  0xa8b0f9980
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:629: PASSED:
+  REQUIRE( Q(wider.snapshot->steps[0].filament_mm.lower)<=expected )
+with expansion:
+  0.0454648 <= 0.0454648
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:629: PASSED:
+  REQUIRE( expected<=Q(wider.snapshot->steps[0].filament_mm.upper) )
+with expansion:
+  0.0454648 <= 0.0454648
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:630: PASSED:
+  REQUIRE( wider.snapshot->deposition_filament_mm.upper<regular.snapshot->deposition_filament_mm.lower*.77 )
+with expansion:
+  0.09092958178940665 < 0.09144917939963153
+
+-------------------------------------------------------------------------------
+B10 full journal limits XYZ E flow acceleration and event rate without changing
+deposited volume
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:528
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:530: PASSED:
+with message:
+  linear_motion_plan_version==1
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:531: PASSED:
+with message:
+  !(std::is_aggregate<LinearMotionPlanSnapshot>::value)
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:273: PASSED:
+  REQUIRE( ledger.snapshot )
+with expansion:
+  0xa8b18c3d8
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:273: PASSED:
+  REQUIRE( prepared.snapshot )
+with expansion:
+  0xa8ac2cf30
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:389: PASSED:
+  REQUIRE( material.snapshot )
+with expansion:
+  0xa8ac2cf00
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:392: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa8ad2c400
+with message:
+  OWNED_SIMULATION_HEAD_SCENE_MATERIAL_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:533: PASSED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0xa8b0f9200
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:535: PASSED:
+  REQUIRE( plan.steps.size()==old.records.size() )
+with expansion:
+  4 == 4
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:535: PASSED:
+  REQUIRE( plan.source==source.snapshot )
+with expansion:
+  0xa8ad2c400 == 0xa8ad2c400
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:536: PASSED:
+  REQUIRE( plan.policy_fingerprint==policy.fingerprint() )
+with expansion:
+  "a3c2a19fbeac12d3fa29f3bdd0f885231529d34a82e942da3bb0d7ad701f71f7"
+  ==
+  "a3c2a19fbeac12d3fa29f3bdd0f885231529d34a82e942da3bb0d7ad701f71f7"
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:536: PASSED:
+  REQUIRE( ledger.fingerprint()!=old.fingerprint() )
+with expansion:
+  "558c9d9034157d769d8a321c7c97c96b4d5f13dec29b40b13e916fb58433d5b1"
+  !=
+  "125255dbd3d53616d2c7b3ac1b02d6e2dcad5300f2c81e770833ed304375e607"
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:541: PASSED:
+  REQUIRE( b.event_id==a.event_id )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:541: PASSED:
+  REQUIRE( b.sequence_index==a.sequence_index )
+with expansion:
+  0 == 0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.x()==a.start.x() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.y()==a.start.y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.z()==a.start.z() )
+with expansion:
+  1.0 == 1.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.x()==a.end.x() )
+with expansion:
+  2.0 == 2.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.y()==a.end.y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.z()==a.end.z() )
+with expansion:
+  2.0 == 2.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:544: PASSED:
+  REQUIRE( b.nominal_layer_label==a.nominal_layer_label )
+with expansion:
+  -1 == -1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:544: PASSED:
+  REQUIRE( b.speed_limit.value()<=a.speed_limit.value() )
+with expansion:
+  1.11803398874989268 <= 10.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:545: PASSED:
+  REQUIRE( b.acceleration_limit.value()<=a.acceleration_limit.value() )
+with expansion:
+  44.72135954999571794 <= 100.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:548: PASSED:
+  REQUIRE( Q(step.distance_mm.lower)<=length )
+with expansion:
+  2.23607 <= 2.23607
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:548: PASSED:
+  REQUIRE( length<=Q(step.distance_mm.upper) )
+with expansion:
+  2.23607 <= 2.23607
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  1 <= 200
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  40 <= 1000
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0 <= 150
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  0 <= 800
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0.5 <= 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  20 <= 20
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  1 <= 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  40 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  1 <= 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  40 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  0.5 <= 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  20 <= 20
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:560: PASSED:
+  REQUIRE( std::holds_alternative<Deposition>(b.payload) )
+with expansion:
+  true
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:560: PASSED:
+  REQUIRE( std::get<Deposition>(b.payload).volume.value()==deposition->volume.value() )
+with expansion:
+  0.14283185307179588 == 0.14283185307179588
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:562: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*Q(deposition->volume.value())/length<=Q(policy.max_volume_mm3_s) )
+with expansion:
+  0.0714159 <= 4
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:563: PASSED:
+  REQUIRE( Q(deposition->volume.value())/length<=Q(policy.max_extrude_cross_section_mm2) )
+with expansion:
+  0.0638763 <= 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:565: PASSED:
+  REQUIRE( Q(step.filament_mm.lower)<=e )
+with expansion:
+  0.0593826 <= 0.0593826
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:565: PASSED:
+  REQUIRE( e<=Q(step.filament_mm.upper) )
+with expansion:
+  0.0593826 <= 0.0593826
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:566: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*e/length<=Q(policy.filament_speed.value()) )
+with expansion:
+  0.0296913 <= 5
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:567: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*e/length<=Q(policy.filament_acceleration.value()) )
+with expansion:
+  1.18765 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:569: PASSED:
+  REQUIRE( v*v<=acc*length )
+with expansion:
+  1.25 <= 100
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:570: PASSED:
+  REQUIRE( Q(step.duration_s.lower)<=duration )
+with expansion:
+  2.025 <= 2.025
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:570: PASSED:
+  REQUIRE( duration<=Q(step.duration_s.upper) )
+with expansion:
+  2.025 <= 2.025
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:571: PASSED:
+  REQUIRE( duration>=Q(1)/Q(policy.max_events_per_second) )
+with expansion:
+  2.025 >= 0.005
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:541: PASSED:
+  REQUIRE( b.event_id==a.event_id )
+with expansion:
+  20 == 20
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:541: PASSED:
+  REQUIRE( b.sequence_index==a.sequence_index )
+with expansion:
+  1 == 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.x()==a.start.x() )
+with expansion:
+  2.0 == 2.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.y()==a.start.y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.z()==a.start.z() )
+with expansion:
+  2.0 == 2.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.x()==a.end.x() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.y()==a.end.y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.z()==a.end.z() )
+with expansion:
+  2.39999999999999991 == 2.39999999999999991
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:544: PASSED:
+  REQUIRE( b.nominal_layer_label==a.nominal_layer_label )
+with expansion:
+  -1 == -1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:544: PASSED:
+  REQUIRE( b.speed_limit.value()<=a.speed_limit.value() )
+with expansion:
+  1.01980390271855503 <= 10.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:545: PASSED:
+  REQUIRE( b.acceleration_limit.value()<=a.acceleration_limit.value() )
+with expansion:
+  50.9901951359277632 <= 100.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:548: PASSED:
+  REQUIRE( Q(step.distance_mm.lower)<=length )
+with expansion:
+  2.03961 <= 2.03961
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:548: PASSED:
+  REQUIRE( length<=Q(step.distance_mm.upper) )
+with expansion:
+  2.03961 <= 2.03961
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  1 <= 200
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  50 <= 1000
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0 <= 150
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  0 <= 800
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0.2 <= 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  10 <= 20
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  1 <= 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  50 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  1 <= 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  50 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  0.2 <= 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  10 <= 20
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:564: PASSED:
+  REQUIRE( std::holds_alternative<Travel>(b.payload) )
+with expansion:
+  true
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:565: PASSED:
+  REQUIRE( Q(step.filament_mm.lower)<=e )
+with expansion:
+  0 <= 0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:565: PASSED:
+  REQUIRE( e<=Q(step.filament_mm.upper) )
+with expansion:
+  0 <= 0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:566: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*e/length<=Q(policy.filament_speed.value()) )
+with expansion:
+  0 <= 5
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:567: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*e/length<=Q(policy.filament_acceleration.value()) )
+with expansion:
+  0 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:569: PASSED:
+  REQUIRE( v*v<=acc*length )
+with expansion:
+  1.04 <= 104
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:570: PASSED:
+  REQUIRE( Q(step.duration_s.lower)<=duration )
+with expansion:
+  2.02 <= 2.02
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:570: PASSED:
+  REQUIRE( duration<=Q(step.duration_s.upper) )
+with expansion:
+  2.02 <= 2.02
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:571: PASSED:
+  REQUIRE( duration>=Q(1)/Q(policy.max_events_per_second) )
+with expansion:
+  2.02 >= 0.005
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:541: PASSED:
+  REQUIRE( b.event_id==a.event_id )
+with expansion:
+  30 == 30
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:541: PASSED:
+  REQUIRE( b.sequence_index==a.sequence_index )
+with expansion:
+  2 == 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.x()==a.start.x() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.y()==a.start.y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.z()==a.start.z() )
+with expansion:
+  2.39999999999999991 == 2.39999999999999991
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.x()==a.end.x() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.y()==a.end.y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.z()==a.end.z() )
+with expansion:
+  3.79999999999999982 == 3.79999999999999982
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:544: PASSED:
+  REQUIRE( b.nominal_layer_label==a.nominal_layer_label )
+with expansion:
+  -1 == -1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:544: PASSED:
+  REQUIRE( b.speed_limit.value()<=a.speed_limit.value() )
+with expansion:
+  1.99999999999999756 <= 10.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:545: PASSED:
+  REQUIRE( b.acceleration_limit.value()<=a.acceleration_limit.value() )
+with expansion:
+  19.99999999999997158 <= 100.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:548: PASSED:
+  REQUIRE( Q(step.distance_mm.lower)<=length )
+with expansion:
+  1.4 <= 1.4
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:548: PASSED:
+  REQUIRE( length<=Q(step.distance_mm.upper) )
+with expansion:
+  1.4 <= 1.4
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0 <= 200
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  0 <= 1000
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0 <= 150
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  0 <= 800
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  2 <= 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  20 <= 20
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  0 <= 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  0 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  0 <= 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  0 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  2 <= 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  20 <= 20
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:564: PASSED:
+  REQUIRE( std::holds_alternative<Travel>(b.payload) )
+with expansion:
+  true
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:565: PASSED:
+  REQUIRE( Q(step.filament_mm.lower)<=e )
+with expansion:
+  0 <= 0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:565: PASSED:
+  REQUIRE( e<=Q(step.filament_mm.upper) )
+with expansion:
+  0 <= 0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:566: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*e/length<=Q(policy.filament_speed.value()) )
+with expansion:
+  0 <= 5
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:567: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*e/length<=Q(policy.filament_acceleration.value()) )
+with expansion:
+  0 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:569: PASSED:
+  REQUIRE( v*v<=acc*length )
+with expansion:
+  4 <= 28
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:570: PASSED:
+  REQUIRE( Q(step.duration_s.lower)<=duration )
+with expansion:
+  0.8 <= 0.8
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:570: PASSED:
+  REQUIRE( duration<=Q(step.duration_s.upper) )
+with expansion:
+  0.8 <= 0.8
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:571: PASSED:
+  REQUIRE( duration>=Q(1)/Q(policy.max_events_per_second) )
+with expansion:
+  0.8 >= 0.005
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:541: PASSED:
+  REQUIRE( b.event_id==a.event_id )
+with expansion:
+  40 == 40
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:541: PASSED:
+  REQUIRE( b.sequence_index==a.sequence_index )
+with expansion:
+  3 == 3
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.x()==a.start.x() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.y()==a.start.y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:542: PASSED:
+  REQUIRE( b.start.z()==a.start.z() )
+with expansion:
+  3.79999999999999982 == 3.79999999999999982
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.x()==a.end.x() )
+with expansion:
+  2.0 == 2.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.y()==a.end.y() )
+with expansion:
+  0.0 == 0.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:543: PASSED:
+  REQUIRE( b.end.z()==a.end.z() )
+with expansion:
+  3.79999999999999982 == 3.79999999999999982
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:544: PASSED:
+  REQUIRE( b.nominal_layer_label==a.nominal_layer_label )
+with expansion:
+  -1 == -1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:544: PASSED:
+  REQUIRE( b.speed_limit.value()<=a.speed_limit.value() )
+with expansion:
+  0.99999999999999833 <= 10.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:545: PASSED:
+  REQUIRE( b.acceleration_limit.value()<=a.acceleration_limit.value() )
+with expansion:
+  49.99999999999991473 <= 100.0
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:548: PASSED:
+  REQUIRE( Q(step.distance_mm.lower)<=length )
+with expansion:
+  2 <= 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:548: PASSED:
+  REQUIRE( length<=Q(step.distance_mm.upper) )
+with expansion:
+  2 <= 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  1 <= 200
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  50 <= 1000
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0 <= 150
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  0 <= 800
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:550: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]) )
+with expansion:
+  0 <= 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:551: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]) )
+with expansion:
+  0 <= 20
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  1 <= 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  50 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  1 <= 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  50 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:555: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]) )
+with expansion:
+  0 <= 2
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:556: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]) )
+with expansion:
+  0 <= 20
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:560: PASSED:
+  REQUIRE( std::holds_alternative<Deposition>(b.payload) )
+with expansion:
+  true
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:560: PASSED:
+  REQUIRE( std::get<Deposition>(b.payload).volume.value()==deposition->volume.value() )
+with expansion:
+  0.14283185307179588 == 0.14283185307179588
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:562: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*Q(deposition->volume.value())/length<=Q(policy.max_volume_mm3_s) )
+with expansion:
+  0.0714159 <= 4
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:563: PASSED:
+  REQUIRE( Q(deposition->volume.value())/length<=Q(policy.max_extrude_cross_section_mm2) )
+with expansion:
+  0.0714159 <= 1
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:565: PASSED:
+  REQUIRE( Q(step.filament_mm.lower)<=e )
+with expansion:
+  0.0593826 <= 0.0593826
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:565: PASSED:
+  REQUIRE( e<=Q(step.filament_mm.upper) )
+with expansion:
+  0.0593826 <= 0.0593826
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:566: PASSED:
+  REQUIRE( Q(step.peak_speed_mm_s)*e/length<=Q(policy.filament_speed.value()) )
+with expansion:
+  0.0296913 <= 5
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:567: PASSED:
+  REQUIRE( Q(step.acceleration_mm_s2)*e/length<=Q(policy.filament_acceleration.value()) )
+with expansion:
+  1.48456 <= 50
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:569: PASSED:
+  REQUIRE( v*v<=acc*length )
+with expansion:
+  1 <= 100
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:570: PASSED:
+  REQUIRE( Q(step.duration_s.lower)<=duration )
+with expansion:
+  2.02 <= 2.02
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:570: PASSED:
+  REQUIRE( duration<=Q(step.duration_s.upper) )
+with expansion:
+  2.02 <= 2.02
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:571: PASSED:
+  REQUIRE( duration>=Q(1)/Q(policy.max_events_per_second) )
+with expansion:
+  2.02 >= 0.005
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:573: PASSED:
+  REQUIRE( Q(plan.nominal_volume_mm3.lower)<=volume )
+with expansion:
+  0.285664 <= 0.285664
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:573: PASSED:
+  REQUIRE( volume<=Q(plan.nominal_volume_mm3.upper) )
+with expansion:
+  0.285664 <= 0.285664
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:574: PASSED:
+  REQUIRE( Q(plan.deposition_filament_mm.lower)<=filament )
+with expansion:
+  0.118765 <= 0.118765
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:574: PASSED:
+  REQUIRE( filament<=Q(plan.deposition_filament_mm.upper) )
+with expansion:
+  0.118765 <= 0.118765
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:575: PASSED:
+  REQUIRE( Q(plan.duration_s.lower)<=time )
+with expansion:
+  6.865 <= 6.865
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:575: PASSED:
+  REQUIRE( time<=Q(plan.duration_s.upper) )
+with expansion:
+  6.865 <= 6.865
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:576: PASSED:
+  REQUIRE( compensated.snapshot )
+with expansion:
+  0xa8b0f9380
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:577: PASSED:
+  REQUIRE( compensated.snapshot->nominal_volume_mm3.lower==plan.nominal_volume_mm3.lower )
+with expansion:
+  0.28566370614359166 == 0.28566370614359166
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:578: PASSED:
+  REQUIRE( compensated.snapshot->nominal_volume_mm3.upper==plan.nominal_volume_mm3.upper )
+with expansion:
+  0.28566370614359188 == 0.28566370614359188
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:579: PASSED:
+  REQUIRE( compensated.snapshot->deposition_filament_mm.lower>plan.deposition_filament_mm.upper*1.19 )
+with expansion:
+  0.14251820166176341 > 0.14133054998124922
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_profile_scene.cpp:580: PASSED:
+  REQUIRE( flow.fingerprint()!=policy.fingerprint() )
+with expansion:
+  "20426a669ec7bff365587b8b24e7061f54b4730def9f2bbb773aae600bf853da"
+  !=
+  "a3c2a19fbeac12d3fa29f3bdd0f885231529d34a82e942da3bb0d7ad701f71f7"
+with message:
+  COMPLETE_FULL_STOP_LINEAR_SIMULATION_MOTION_LIMITS_ONLY
+
+===============================================================================
+All tests passed (238 assertions in 4 test cases)
+

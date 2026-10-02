@@ -7,6 +7,15 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B10-motion-plan.md` supplies a protected complete-journal linear limiter for all
+XYZ/Cartesian-CoreXY drives/E/Q/acceleration/pressure/event rates, preserving dose
+and poses. Bind this exact changed source to B11: enforce per-event full stops,
+acceleration and instant-Travel dwell, then independently replay final bytes in
+B12. Ordinary blended G1 cannot reuse this certificate. Actual firmware/transform
+and flow qualification remain separate; never increase firmware safety limits.
+The B09 complete native exit is still UNKNOWN and contact/access/cap work below
+remains required for the full job.
+
 1. Complete B01 compatibility and whole-job provenance, then B02 original STL
    and actual GUI/native plate binding. `B01-inputs.md` now retains exact source
    meshes/configs/transforms before normalization and invalidates the guarded

@@ -6,6 +6,7 @@
 #include <libslic3r/Nonplanar/PlanarBody.hpp>
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
 #include <libslic3r/Nonplanar/ProfileScene.hpp>
+#include <libslic3r/Nonplanar/MotionPlan.hpp>
 #include <libslic3r/ClipperUtils.hpp>
 #include <libslic3r/Nonplanar/StlFile.hpp>
 #include <libslic3r/Format/STL.hpp>
@@ -2652,6 +2653,28 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE(full_source.snapshot->scene.head[0].outer.min.z()==.5);
     INFO("native complete head cells=" << full_motion.snapshot->material->cells << " work=" << full_motion.evaluations <<
         " blocked material row=" << low_head.material_check->witness->material_record << " event=" << first_later);
+    const LinearMotionPolicy kinematics{1,91,1,ProfileOrigin::Synthetic,false,LinearPlannerModel::FullStop,LinearKinematics::CoreXY,
+        full_source.snapshot->scene.nozzle_domain,{200,200,5},{1000,1000,50},{200,200,5},{1000,1000,50},Length(1.75),FlowCompensation(1),
+        Speed(40),Acceleration(400),Length(5),12,2,200};
+    LinearMotionPlanLimits kinematic_limits;kinematic_limits.timeout=std::chrono::seconds(5);kinematic_limits.max_evaluations=2000000;
+    const auto timed=plan_linear_motion(full_source,kinematics,kinematic_limits);INFO(timed.reason);REQUIRE(timed.snapshot);
+    REQUIRE(timed.snapshot->steps.size()==new_ledger.records.size());REQUIRE(timed.snapshot->source==full_source.snapshot);
+    long double commanded_volume=0;
+    for(size_t i=0;i<new_ledger.records.size();++i) {
+        const auto &old_event=new_ledger.records[i].motion;const auto &limited=timed.snapshot->planned->material->ledger->records[i].motion;
+        REQUIRE(limited.event_id==old_event.event_id);REQUIRE(limited.sequence_index==i);
+        REQUIRE(limited.speed_limit.value()<=old_event.speed_limit.value());REQUIRE(limited.acceleration_limit.value()<=old_event.acceleration_limit.value());
+        if(const auto *deposit=std::get_if<Deposition>(&old_event.payload)) commanded_volume+=deposit->volume.value();
+    }
+    REQUIRE(timed.snapshot->nominal_volume_mm3.lower<=commanded_volume);REQUIRE(commanded_volume<=timed.snapshot->nominal_volume_mm3.upper);
+    auto expected_rows=new_ledger.records;
+    for(size_t i=0;i<expected_rows.size();++i) {
+        expected_rows[i].motion.speed_limit=timed.snapshot->planned->material->ledger->records[i].motion.speed_limit;
+        expected_rows[i].motion.acceleration_limit=timed.snapshot->planned->material->ledger->records[i].motion.acceleration_limit;
+    }
+    const auto expected_limited=prepare_material_motion(capture_material_sequence(expected_rows,new_ledger.model,new_ledger.revision,new_ledger.source_fingerprint));REQUIRE(expected_limited.snapshot);
+    for(size_t i=0;i<expected_rows.size();++i) REQUIRE(timed.snapshot->planned->material->ledger->canonical_record(i)==expected_limited.snapshot->ledger->canonical_record(i));
+    INFO("native full motion records=" << timed.snapshot->steps.size() << " work=" << timed.evaluations << " duration upper=" << timed.snapshot->duration_s.upper);
     // Plan a declared exit after the actual later bead. Preserve every original
     // body/cap/later row; the complete U1-sized synthetic tip remains at Z=0.
     auto exit_rows=new_ledger.records;uint64_t exit_id=0;

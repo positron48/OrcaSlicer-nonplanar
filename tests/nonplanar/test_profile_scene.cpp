@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <libslic3r/Nonplanar/ProfileScene.hpp>
+#include <libslic3r/Nonplanar/MotionPlan.hpp>
 #include <cfenv>
 #include <thread>
 #include <limits>
@@ -514,4 +515,150 @@ TEST_CASE("B09 lifted travel owns callbacks and refuses invalid routes or shared
     REQUIRE(plan_simulation_lifted_travel(source,1,3,limits).reason=="CANCELLED");
     limits={};limits.cancelled=[] {std::fesetround(FE_UPWARD);return false;};
     const auto rounding=plan_simulation_lifted_travel(source,1,3,limits);std::fesetround(FE_TONEAREST);REQUIRE_FALSE(rounding.snapshot);
+}
+
+namespace {
+LinearMotionPolicy motion_limits()
+{
+    return {1,77,1,ProfileOrigin::Synthetic,false,LinearPlannerModel::FullStop,LinearKinematics::CoreXY,
+        {{-10,-10,0},{10,10,10}},{200,150,2},{1000,800,20},{1,1,2},{50,50,20},Length(1.75),FlowCompensation(1),
+        Speed(5),Acceleration(50),Length(2),4,1,200};
+}
+}
+TEST_CASE("B10 full journal limits XYZ E flow acceleration and event rate without changing deposited volume", "[Nonplanar][B10][LinearMotionPlan]")
+{
+    STATIC_REQUIRE(linear_motion_plan_version==1);
+    STATIC_REQUIRE_FALSE(std::is_aggregate<LinearMotionPlanSnapshot>::value);
+    const auto source=lift_source();const auto policy=motion_limits();
+    const auto result=plan_linear_motion(source,policy);INFO(result.reason);REQUIRE(result.snapshot);
+    const auto &plan=*result.snapshot;const auto &old=*source.snapshot->material->ledger;const auto &ledger=*plan.planned->material->ledger;
+    REQUIRE(plan.steps.size()==old.records.size());REQUIRE(plan.source==source.snapshot);
+    REQUIRE(plan.policy_fingerprint==policy.fingerprint());REQUIRE(ledger.fingerprint()!=old.fingerprint());
+    using Q=boost::multiprecision::cpp_bin_float_quad;const Q pi=acos(Q(-1)),area=pi*Q(1.75)*Q(1.75)/4;
+    Q volume=0,filament=0,time=0;
+    for (size_t i=0;i<plan.steps.size();++i) {
+        const auto &step=plan.steps[i];const auto &a=old.records[i].motion;const auto &b=ledger.records[i].motion;
+        REQUIRE(b.event_id==a.event_id);REQUIRE(b.sequence_index==a.sequence_index);
+        REQUIRE(b.start.x()==a.start.x());REQUIRE(b.start.y()==a.start.y());REQUIRE(b.start.z()==a.start.z());
+        REQUIRE(b.end.x()==a.end.x());REQUIRE(b.end.y()==a.end.y());REQUIRE(b.end.z()==a.end.z());
+        REQUIRE(b.nominal_layer_label==a.nominal_layer_label);REQUIRE(b.speed_limit.value()<=a.speed_limit.value());
+        REQUIRE(b.acceleration_limit.value()<=a.acceleration_limit.value());
+        const std::array<Q,3> delta{Q(a.end.x())-Q(a.start.x()),Q(a.end.y())-Q(a.start.y()),Q(a.end.z())-Q(a.start.z())};
+        const Q length=sqrt(delta[0]*delta[0]+delta[1]*delta[1]+delta[2]*delta[2]);
+        REQUIRE(Q(step.distance_mm.lower)<=length);REQUIRE(length<=Q(step.distance_mm.upper));
+        for (size_t axis=0;axis<3;++axis) {
+            REQUIRE(Q(step.peak_speed_mm_s)*abs(delta[axis])/length<=Q(policy.axis_speed_mm_s[axis]));
+            REQUIRE(Q(step.acceleration_mm_s2)*abs(delta[axis])/length<=Q(policy.axis_acceleration_mm_s2[axis]));
+        }
+        const std::array<Q,3> drive{delta[0]+delta[1],delta[0]-delta[1],delta[2]};
+        for(size_t axis=0;axis<3;++axis) {
+            REQUIRE(Q(step.peak_speed_mm_s)*abs(drive[axis])/length<=Q(policy.drive_speed_mm_s[axis]));
+            REQUIRE(Q(step.acceleration_mm_s2)*abs(drive[axis])/length<=Q(policy.drive_acceleration_mm_s2[axis]));
+        }
+        Q e=0;
+        if (const auto *deposition=std::get_if<Deposition>(&a.payload)) {
+            REQUIRE(std::holds_alternative<Deposition>(b.payload));REQUIRE(std::get<Deposition>(b.payload).volume.value()==deposition->volume.value());
+            e=Q(deposition->volume.value())/area;volume+=Q(deposition->volume.value());filament+=e;
+            REQUIRE(Q(step.peak_speed_mm_s)*Q(deposition->volume.value())/length<=Q(policy.max_volume_mm3_s));
+            REQUIRE(Q(deposition->volume.value())/length<=Q(policy.max_extrude_cross_section_mm2));
+        } else REQUIRE(std::holds_alternative<Travel>(b.payload));
+        REQUIRE(Q(step.filament_mm.lower)<=e);REQUIRE(e<=Q(step.filament_mm.upper));
+        REQUIRE(Q(step.peak_speed_mm_s)*e/length<=Q(policy.filament_speed.value()));
+        REQUIRE(Q(step.acceleration_mm_s2)*e/length<=Q(policy.filament_acceleration.value()));
+        const Q v=step.peak_speed_mm_s,acc=step.acceleration_mm_s2;
+        REQUIRE(v*v<=acc*length);const Q duration=length/v+v/acc;
+        REQUIRE(Q(step.duration_s.lower)<=duration);REQUIRE(duration<=Q(step.duration_s.upper));
+        REQUIRE(duration>=Q(1)/Q(policy.max_events_per_second));time+=duration;
+    }
+    REQUIRE(Q(plan.nominal_volume_mm3.lower)<=volume);REQUIRE(volume<=Q(plan.nominal_volume_mm3.upper));
+    REQUIRE(Q(plan.deposition_filament_mm.lower)<=filament);REQUIRE(filament<=Q(plan.deposition_filament_mm.upper));
+    REQUIRE(Q(plan.duration_s.lower)<=time);REQUIRE(time<=Q(plan.duration_s.upper));
+    auto flow=policy;flow.flow=FlowCompensation(1.2);const auto compensated=plan_linear_motion(source,flow);REQUIRE(compensated.snapshot);
+    REQUIRE(compensated.snapshot->nominal_volume_mm3.lower==plan.nominal_volume_mm3.lower);
+    REQUIRE(compensated.snapshot->nominal_volume_mm3.upper==plan.nominal_volume_mm3.upper);
+    REQUIRE(compensated.snapshot->deposition_filament_mm.lower>plan.deposition_filament_mm.upper*1.19);
+    REQUIRE(flow.fingerprint()!=policy.fingerprint());
+}
+TEST_CASE("B10 pressure rows and instant travel retain separate full stop schedules without phantom deposit", "[Nonplanar][B10][LinearMotionPlan]")
+{
+    const auto source=lift_source();const auto &old=*source.snapshot->material->ledger;auto rows=old.records;
+    rows.insert(rows.begin()+1,{{50,1,0,rows[0].motion.end,rows[0].motion.end,Speed(10),Acceleration(100),
+        Retraction{FilamentLength(.8),RetractionState::Ready,RetractionState::Retracted}},{}});
+    rows.insert(rows.begin()+3,{{60,3,0,rows[2].motion.end,rows[2].motion.end,Speed(10),Acceleration(100),
+        Retraction{FilamentLength(.8),RetractionState::Retracted,RetractionState::Ready}},{}});
+    rows.insert(rows.begin()+4,{{70,4,0,rows[3].motion.end,rows[3].motion.end,Speed(10),Acceleration(100),Travel{}},{}});
+    for(size_t i=0;i<rows.size();++i) rows[i].motion.sequence_index=i;
+    const auto material=prepare_material_motion(capture_material_sequence(rows,old.model,old.revision,old.source_fingerprint));REQUIRE(material.snapshot);
+    const auto prepared=prepare_simulation_motion(source.snapshot->scene,material,source.snapshot->policy);REQUIRE(prepared.snapshot);
+    const auto policy=motion_limits();const auto plan=plan_linear_motion(prepared,policy);INFO(plan.reason);REQUIRE(plan.snapshot);
+    REQUIRE(plan.snapshot->steps.size()==rows.size());
+    REQUIRE(plan.snapshot->steps[1].coordinate==LinearStepCoordinate::Filament);REQUIRE(plan.snapshot->steps[1].filament_mm.lower==-.8);
+    REQUIRE(plan.snapshot->steps[3].coordinate==LinearStepCoordinate::Filament);REQUIRE(plan.snapshot->steps[3].filament_mm.upper==.8);
+    REQUIRE(plan.snapshot->steps[4].coordinate==LinearStepCoordinate::Dwell);
+    REQUIRE(plan.snapshot->steps[4].duration_s.lower>=1/policy.max_events_per_second);
+    for(size_t i : {size_t(1),size_t(3),size_t(4)}) REQUIRE(plan.snapshot->planned->material->ledger->canonical_record(i)==material.snapshot->ledger->canonical_record(i));
+    const auto original=plan_linear_motion(source,policy);REQUIRE(original.snapshot);
+    REQUIRE(plan.snapshot->nominal_volume_mm3.lower==original.snapshot->nominal_volume_mm3.lower);
+    REQUIRE(plan.snapshot->nominal_volume_mm3.upper==original.snapshot->nominal_volume_mm3.upper);
+    auto exceeded=policy;exceeded.max_retraction=Length(.7);REQUIRE_FALSE(plan_linear_motion(prepared,exceeded).snapshot);
+}
+TEST_CASE("B10 CoreXY diagonals short segments and volume flow each constrain the complete plan", "[Nonplanar][B10][LinearMotionPlan]")
+{
+    const auto original=lift_source();const auto &old=*original.snapshot->material->ledger;auto rows=old.records;
+    rows[1].motion.end={2.1,.1,2};rows[2].motion.start=rows[1].motion.end;
+    const auto material=prepare_material_motion(capture_material_sequence(rows,old.model,old.revision,old.source_fingerprint));REQUIRE(material.snapshot);
+    const auto source=prepare_simulation_motion(original.snapshot->scene,material,original.snapshot->policy);REQUIRE(source.snapshot);
+    const auto policy=motion_limits();const auto core=plan_linear_motion(source,policy);REQUIRE(core.snapshot);
+    auto cartesian=policy;cartesian.kinematics=LinearKinematics::Cartesian;
+    const auto xyz=plan_linear_motion(source,cartesian);REQUIRE(xyz.snapshot);
+    using Q=boost::multiprecision::cpp_bin_float_quad;const Q dx=Q(2.1)-Q(2),dy=Q(.1),length=sqrt(dx*dx+dy*dy);
+    REQUIRE(Q(core.snapshot->steps[1].peak_speed_mm_s)*(dx+dy)/length<=Q(1));
+    REQUIRE(xyz.snapshot->steps[1].peak_speed_mm_s>core.snapshot->steps[1].peak_speed_mm_s*1.99);
+    REQUIRE(cartesian.fingerprint()!=policy.fingerprint());
+    rows[1].motion.end={2.0001,0,2};rows[2].motion.start=rows[1].motion.end;
+    const auto short_material=prepare_material_motion(capture_material_sequence(rows,old.model,old.revision,old.source_fingerprint));REQUIRE(short_material.snapshot);
+    const auto short_source=prepare_simulation_motion(original.snapshot->scene,short_material,original.snapshot->policy);REQUIRE(short_source.snapshot);
+    const auto short_plan=plan_linear_motion(short_source,policy);REQUIRE(short_plan.snapshot);
+    const auto &short_step=short_plan.snapshot->steps[1];REQUIRE(short_step.peak_speed_mm_s<.021);
+    REQUIRE(short_step.duration_s.lower>=1/policy.max_events_per_second);
+    auto low_flow=policy;low_flow.max_volume_mm3_s=.00001;const auto slowed=plan_linear_motion(original,low_flow);REQUIRE(slowed.snapshot);
+    REQUIRE(slowed.snapshot->steps[0].peak_speed_mm_s<core.snapshot->steps[0].peak_speed_mm_s/1000);
+    auto diameter=policy;diameter.filament_diameter=Length(2);const auto wider=plan_linear_motion(original,diameter);REQUIRE(wider.snapshot);
+    const auto regular=plan_linear_motion(original,policy);REQUIRE(regular.snapshot);
+    const Q expected=Q(std::get<Deposition>(old.records[0].motion.payload).volume.value())/acos(Q(-1));
+    REQUIRE(Q(wider.snapshot->steps[0].filament_mm.lower)<=expected);REQUIRE(expected<=Q(wider.snapshot->steps[0].filament_mm.upper));
+    REQUIRE(wider.snapshot->deposition_filament_mm.upper<regular.snapshot->deposition_filament_mm.lower*.77);
+}
+TEST_CASE("B10 complete motion plan owns limits and refuses invalid profiles stale publication or resource exhaustion", "[Nonplanar][B10][LinearMotionPlan]")
+{
+    const auto source=lift_source();const auto policy=motion_limits();
+    REQUIRE_FALSE(plan_linear_motion({},policy).snapshot);
+    for(int mode=0;mode<11;++mode) {
+        auto bad=policy;
+        if(mode==0)bad.version=2;if(mode==1)bad.profile_id=0;if(mode==2)bad.revision=0;
+        if(mode==3)bad.operator_confirmed_claim=true;if(mode==4)bad.origin=ProfileOrigin::OperatorMeasured;
+        if(mode==5)bad.model=LinearPlannerModel::FirmwareLookahead;if(mode==6)bad.axis_speed_mm_s[2]=0;
+        if(mode==7)bad.max_events_per_second=std::numeric_limits<double>::quiet_NaN();
+        if(mode==8)bad.commanded_domain.max={1,1,1};
+        if(mode==9)bad.drive_speed_mm_s[0]=0;if(mode==10)bad.kinematics=static_cast<LinearKinematics>(99);
+        REQUIRE_FALSE(plan_linear_motion(source,bad).snapshot);
+    }
+    auto section=policy;section.max_extrude_cross_section_mm2=.0001;REQUIRE_FALSE(plan_linear_motion(source,section).snapshot);
+    for(int mode=0;mode<7;++mode) {
+        LinearMotionPlanLimits limits;
+        if(mode==0)limits.max_records=1;if(mode==1)limits.max_evaluations=1;
+        if(mode==2)limits.cancelled=[] {return true;};if(mode==3)limits.is_current=[](uint64_t) {return false;};
+        if(mode==4)limits.is_scene_current=[](uint64_t,uint64_t) {return false;};
+        if(mode==5)limits.is_policy_current=[](uint64_t,uint64_t) {return false;};
+        if(mode==6){limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        REQUIRE_FALSE(plan_linear_motion(source,policy,limits).snapshot);
+    }
+    auto mutable_source=source;auto mutable_policy=policy;LinearMotionPlanLimits limits;
+    limits.cancelled=[&] {mutable_source={};mutable_policy.max_events_per_second=0;limits.max_records=0;return false;};
+    const auto owned=plan_linear_motion(mutable_source,mutable_policy,limits);INFO(owned.reason);REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->source==source.snapshot);REQUIRE(owned.snapshot->policy.fingerprint()==policy.fingerprint());
+    limits={};size_t calls=0;limits.cancelled=[&] {++calls;return false;};REQUIRE(plan_linear_motion(source,policy,limits).snapshot);
+    const size_t last=calls;calls=0;limits.cancelled=[&] {return ++calls==last;};REQUIRE_FALSE(plan_linear_motion(source,policy,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+    const auto rounded=plan_linear_motion(source,policy,limits);std::fesetround(FE_TONEAREST);REQUIRE_FALSE(rounded.snapshot);
 }

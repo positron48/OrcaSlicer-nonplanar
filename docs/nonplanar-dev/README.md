@@ -15,6 +15,16 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B10-motion-plan.md` and ADR-0068 now limit every complete journal row for XYZ,
+Cartesian/CoreXY drives, E, commanded-equivalent Q/cross-section, acceleration,
+retraction length and event rate without changing poses/dose/order. Full stops
+and instant-Travel dwell are explicit consumer obligations; firmware lookahead
+refuses. Four analytical cases / 238 assertions and all 2218 native records
+pass. Final material 122/48037, body 14/134452, CTest 367/367 and six fresh strict
+OFF/ZAA comparisons pass. Native B09 exit remains UNKNOWN. Exporter enforcement,
+independent final-byte replay, actual firmware/flow/contact/job qualification
+and independent review remain pending.
+
 `B09-lifted-travel.md` and ADR-0067 now replace one original Travel with owned
 continuously checked lift/transfer/descent. Every other material/pressure record
 and its order remain; all legs share original work/cell/pair/deadline budgets.

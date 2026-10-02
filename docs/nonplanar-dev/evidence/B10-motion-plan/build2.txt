@@ -1,0 +1,843 @@
+[1/663] Linking CXX static library src/libslic3r/Release/liblibslic3r_cgal.a
+[2/663] Checking source files encodings for target libslic3r
+[3/663] Building CXX object deps_src/imgui/CMakeFiles/imgui.dir/Release/imgui_stdlib.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_stdlib.cpp:11:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiListClipper' [-Wnontrivial-memcall]
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: note: explicitly cast the pointer to silence this warning
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+      |                                                                                   (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawListSplitter' [-Wnontrivial-memcall]
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: note: explicitly cast the pointer to silence this warning
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+      |                                           (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawList' [-Wnontrivial-memcall]
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: note: explicitly cast the pointer to silence this warning
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+      |                                                                  (void*)
+3 warnings generated.
+[4/663] Building CXX object deps_src/imgui/CMakeFiles/imgui.dir/Release/imgui_tables.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:191:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiListClipper' [-Wnontrivial-memcall]
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: note: explicitly cast the pointer to silence this warning
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+      |                                                                                   (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawListSplitter' [-Wnontrivial-memcall]
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: note: explicitly cast the pointer to silence this warning
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+      |                                           (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawList' [-Wnontrivial-memcall]
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: note: explicitly cast the pointer to silence this warning
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+      |                                                                  (void*)
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:197:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1036:54: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiInputTextState' [-Wnontrivial-memcall]
+ 1036 |     ImGuiInputTextState()                   { memset(this, 0, sizeof(*this)); }
+      |                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1036:54: note: explicitly cast the pointer to silence this warning
+ 1036 |     ImGuiInputTextState()                   { memset(this, 0, sizeof(*this)); }
+      |                                                      ^
+      |                                                      (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1202:34: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiOldColumns' [-Wnontrivial-memcall]
+ 1202 |     ImGuiOldColumns()   { memset(this, 0, sizeof(*this)); }
+      |                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1202:34: note: explicitly cast the pointer to silence this warning
+ 1202 |     ImGuiOldColumns()   { memset(this, 0, sizeof(*this)); }
+      |                                  ^
+      |                                  (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2199:42: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiTable' [-Wnontrivial-memcall]
+ 2199 |     IMGUI_API ImGuiTable()      { memset(this, 0, sizeof(*this)); LastFrameActive = -1; }
+      |                                          ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2199:42: note: explicitly cast the pointer to silence this warning
+ 2199 |     IMGUI_API ImGuiTable()      { memset(this, 0, sizeof(*this)); LastFrameActive = -1; }
+      |                                          ^
+      |                                          (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2226:45: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiTableTempData' [-Wnontrivial-memcall]
+ 2226 |     IMGUI_API ImGuiTableTempData() { memset(this, 0, sizeof(*this)); LastTimeActive = -1.0f; }
+      |                                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2226:45: note: explicitly cast the pointer to silence this warning
+ 2226 |     IMGUI_API ImGuiTableTempData() { memset(this, 0, sizeof(*this)); LastTimeActive = -1.0f; }
+      |                                             ^
+      |                                             (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:2453:35: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImDrawChannel' [-Wnontrivial-memcall]
+ 2453 |                     memcpy(dst_tmp++, channel, sizeof(ImDrawChannel));
+      |                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:2453:35: note: explicitly cast the pointer to silence this warning
+ 2453 |                     memcpy(dst_tmp++, channel, sizeof(ImDrawChannel));
+      |                                   ^
+      |                            (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:2459:31: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImDrawChannel' [-Wnontrivial-memcall]
+ 2459 |                 memcpy(dst_tmp++, &splitter->_Channels[table->Bg2DrawChannelUnfrozen], sizeof(ImDrawChannel));
+      |                               ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:2459:31: note: explicitly cast the pointer to silence this warning
+ 2459 |                 memcpy(dst_tmp++, &splitter->_Channels[table->Bg2DrawChannelUnfrozen], sizeof(ImDrawChannel));
+      |                               ^
+      |                        (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:2468:27: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImDrawChannel' [-Wnontrivial-memcall]
+ 2468 |             memcpy(dst_tmp++, channel, sizeof(ImDrawChannel));
+      |                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:2468:27: note: explicitly cast the pointer to silence this warning
+ 2468 |             memcpy(dst_tmp++, channel, sizeof(ImDrawChannel));
+      |                           ^
+      |                    (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:2472:41: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImDrawChannel' [-Wnontrivial-memcall]
+ 2472 |         memcpy(splitter->_Channels.Data + LEADING_DRAW_CHANNELS, g.DrawChannelsTempMergeBuffer.Data, (splitter->_Count - LEADING_DRAW_CHANNELS) * sizeof(ImDrawChannel));
+      |                                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:2472:41: note: explicitly cast the pointer to silence this warning
+ 2472 |         memcpy(splitter->_Channels.Data + LEADING_DRAW_CHANNELS, g.DrawChannelsTempMergeBuffer.Data, (splitter->_Count - LEADING_DRAW_CHANNELS) * sizeof(ImDrawChannel));
+      |                                         ^
+      |                (void*)
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:191:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImGuiTable' [-Wnontrivial-memcall]
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1720:88: note: in instantiation of member function 'ImVector<ImGuiTable>::reserve' requested here
+ 1720 |     inline void         resize(int new_size)                { if (new_size > Capacity) reserve(_grow_capacity(new_size)); Size = new_size; }
+      |                                                                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:621:101: note: in instantiation of member function 'ImVector<ImGuiTable>::resize' requested here
+  621 |     T*          Add()                               { int idx = FreeIdx; if (idx == Buf.Size) { Buf.resize(Buf.Size + 1); FreeIdx++; } else { FreeIdx = *(int*)&Buf[idx]; } IM_PLACEMENT_NEW(&Buf[idx]) T(); return &Buf[idx]; }
+      |                                                                                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:618:156: note: in instantiation of member function 'ImPool<ImGuiTable>::Add' requested here
+  618 |     T*          GetOrAddByKey(ImGuiID key)          { int* p_idx = Map.GetIntRef(key, -1); if (*p_idx != -1) return &Buf[*p_idx]; *p_idx = FreeIdx; return Add(); }
+      |                                                                                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:339:34: note: in instantiation of member function 'ImPool<ImGuiTable>::GetOrAddByKey' requested here
+  339 |     ImGuiTable* table = g.Tables.GetOrAddByKey(id);
+      |                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: note: explicitly cast the pointer to silence this warning
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+      |                                                                                                                                                                                      (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1721:189: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImGuiTableTempData' [-Wnontrivial-memcall]
+ 1721 |     inline void         resize(int new_size, const T& v)    { if (new_size > Capacity) reserve(_grow_capacity(new_size)); if (new_size > Size) for (int n = Size; n < new_size; n++) memcpy(&Data[n], &v, sizeof(v)); Size = new_size; }
+      |                                                                                                                                                                                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:350:31: note: in instantiation of member function 'ImVector<ImGuiTableTempData>::resize' requested here
+  350 |         g.TablesTempDataStack.resize(g.CurrentTableStackIdx + 1, ImGuiTableTempData());
+      |                               ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1721:189: note: explicitly cast the pointer to silence this warning
+ 1721 |     inline void         resize(int new_size, const T& v)    { if (new_size > Capacity) reserve(_grow_capacity(new_size)); if (new_size > Size) for (int n = Size; n < new_size; n++) memcpy(&Data[n], &v, sizeof(v)); Size = new_size; }
+      |                                                                                                                                                                                             ^
+      |                                                                                                                                                                                             (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImGuiTableTempData' [-Wnontrivial-memcall]
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1721:88: note: in instantiation of member function 'ImVector<ImGuiTableTempData>::reserve' requested here
+ 1721 |     inline void         resize(int new_size, const T& v)    { if (new_size > Capacity) reserve(_grow_capacity(new_size)); if (new_size > Size) for (int n = Size; n < new_size; n++) memcpy(&Data[n], &v, sizeof(v)); Size = new_size; }
+      |                                                                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:350:31: note: in instantiation of member function 'ImVector<ImGuiTableTempData>::resize' requested here
+  350 |         g.TablesTempDataStack.resize(g.CurrentTableStackIdx + 1, ImGuiTableTempData());
+      |                               ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: note: explicitly cast the pointer to silence this warning
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+      |                                                                                                                                                                                      (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImDrawChannel' [-Wnontrivial-memcall]
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1720:88: note: in instantiation of member function 'ImVector<ImDrawChannel>::reserve' requested here
+ 1720 |     inline void         resize(int new_size)                { if (new_size > Capacity) reserve(_grow_capacity(new_size)); Size = new_size; }
+      |                                                                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:2403:39: note: in instantiation of member function 'ImVector<ImDrawChannel>::resize' requested here
+ 2403 |         g.DrawChannelsTempMergeBuffer.resize(splitter->_Count - LEADING_DRAW_CHANNELS); // Use shared temporary storage so the allocation gets amortized
+      |                                       ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: note: explicitly cast the pointer to silence this warning
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+      |                                                                                                                                                                                      (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1726:127: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImGuiOldColumns' [-Wnontrivial-memcall]
+ 1726 |     inline void         push_back(const T& v)               { if (Size == Capacity) reserve(_grow_capacity(Size + 1)); memcpy(&Data[Size], &v, sizeof(v)); Size++; }
+      |                                                                                                                               ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:3781:28: note: in instantiation of member function 'ImVector<ImGuiOldColumns>::push_back' requested here
+ 3781 |     window->ColumnsStorage.push_back(ImGuiOldColumns());
+      |                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1726:127: note: explicitly cast the pointer to silence this warning
+ 1726 |     inline void         push_back(const T& v)               { if (Size == Capacity) reserve(_grow_capacity(Size + 1)); memcpy(&Data[Size], &v, sizeof(v)); Size++; }
+      |                                                                                                                               ^
+      |                                                                                                                               (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImGuiOldColumns' [-Wnontrivial-memcall]
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1726:85: note: in instantiation of member function 'ImVector<ImGuiOldColumns>::reserve' requested here
+ 1726 |     inline void         push_back(const T& v)               { if (Size == Capacity) reserve(_grow_capacity(Size + 1)); memcpy(&Data[Size], &v, sizeof(v)); Size++; }
+      |                                                                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_tables.cpp:3781:28: note: in instantiation of member function 'ImVector<ImGuiOldColumns>::push_back' requested here
+ 3781 |     window->ColumnsStorage.push_back(ImGuiOldColumns());
+      |                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: note: explicitly cast the pointer to silence this warning
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+      |                                                                                                                                                                                      (void*)
+17 warnings generated.
+[5/663] Building CXX object deps_src/imgui/CMakeFiles/imgui.dir/Release/imgui_demo.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_demo.cpp:79:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiListClipper' [-Wnontrivial-memcall]
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: note: explicitly cast the pointer to silence this warning
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+      |                                                                                   (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawListSplitter' [-Wnontrivial-memcall]
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: note: explicitly cast the pointer to silence this warning
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+      |                                           (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawList' [-Wnontrivial-memcall]
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: note: explicitly cast the pointer to silence this warning
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+      |                                                                  (void*)
+3 warnings generated.
+[6/663] Building C object deps_src/md4c/src/CMakeFiles/md4c.dir/Release/md4c.c.o
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/md4c/src/md4c.c:148:9: warning: 'OFF_MAX' macro redefined [-Wmacro-redefined]
+  148 | #define OFF_MAX     (sizeof(OFF) == 8 ? UINT64_MAX : UINT32_MAX)
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/limits.h:140:9: note: previous definition is here
+  140 | #define OFF_MAX         LLONG_MAX       /* max value for an off_t */
+      |         ^
+1 warning generated.
+[7/663] Building CXX object deps_src/imgui/CMakeFiles/imgui.dir/Release/imgui.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.cpp:771:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiListClipper' [-Wnontrivial-memcall]
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: note: explicitly cast the pointer to silence this warning
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+      |                                                                                   (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawListSplitter' [-Wnontrivial-memcall]
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: note: explicitly cast the pointer to silence this warning
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+      |                                           (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawList' [-Wnontrivial-memcall]
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: note: explicitly cast the pointer to silence this warning
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+      |                                                                  (void*)
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.cpp:777:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1036:54: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiInputTextState' [-Wnontrivial-memcall]
+ 1036 |     ImGuiInputTextState()                   { memset(this, 0, sizeof(*this)); }
+      |                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1036:54: note: explicitly cast the pointer to silence this warning
+ 1036 |     ImGuiInputTextState()                   { memset(this, 0, sizeof(*this)); }
+      |                                                      ^
+      |                                                      (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1202:34: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiOldColumns' [-Wnontrivial-memcall]
+ 1202 |     ImGuiOldColumns()   { memset(this, 0, sizeof(*this)); }
+      |                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1202:34: note: explicitly cast the pointer to silence this warning
+ 1202 |     ImGuiOldColumns()   { memset(this, 0, sizeof(*this)); }
+      |                                  ^
+      |                                  (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2199:42: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiTable' [-Wnontrivial-memcall]
+ 2199 |     IMGUI_API ImGuiTable()      { memset(this, 0, sizeof(*this)); LastFrameActive = -1; }
+      |                                          ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2199:42: note: explicitly cast the pointer to silence this warning
+ 2199 |     IMGUI_API ImGuiTable()      { memset(this, 0, sizeof(*this)); LastFrameActive = -1; }
+      |                                          ^
+      |                                          (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2226:45: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiTableTempData' [-Wnontrivial-memcall]
+ 2226 |     IMGUI_API ImGuiTableTempData() { memset(this, 0, sizeof(*this)); LastTimeActive = -1.0f; }
+      |                                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2226:45: note: explicitly cast the pointer to silence this warning
+ 2226 |     IMGUI_API ImGuiTableTempData() { memset(this, 0, sizeof(*this)); LastTimeActive = -1.0f; }
+      |                                             ^
+      |                                             (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.cpp:1059:12: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiIO' [-Wnontrivial-memcall]
+ 1059 |     memset(this, 0, sizeof(*this));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.cpp:1059:12: note: explicitly cast the pointer to silence this warning
+ 1059 |     memset(this, 0, sizeof(*this));
+      |            ^
+      |            (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.cpp:2274:12: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiListClipper' [-Wnontrivial-memcall]
+ 2274 |     memset(this, 0, sizeof(*this));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.cpp:2274:12: note: explicitly cast the pointer to silence this warning
+ 2274 |     memset(this, 0, sizeof(*this));
+      |            ^
+      |            (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.cpp:2898:12: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiWindow' [-Wnontrivial-memcall]
+ 2898 |     memset(this, 0, sizeof(*this));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.cpp:2898:12: note: explicitly cast the pointer to silence this warning
+ 2898 |     memset(this, 0, sizeof(*this));
+      |            ^
+      |            (void*)
+10 warnings generated.
+[8/663] Building CXX object deps_src/imgui/CMakeFiles/imgui.dir/Release/imgui_widgets.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:35:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiListClipper' [-Wnontrivial-memcall]
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: note: explicitly cast the pointer to silence this warning
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+      |                                                                                   (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawListSplitter' [-Wnontrivial-memcall]
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: note: explicitly cast the pointer to silence this warning
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+      |                                           (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawList' [-Wnontrivial-memcall]
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: note: explicitly cast the pointer to silence this warning
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+      |                                                                  (void*)
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:41:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1036:54: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiInputTextState' [-Wnontrivial-memcall]
+ 1036 |     ImGuiInputTextState()                   { memset(this, 0, sizeof(*this)); }
+      |                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1036:54: note: explicitly cast the pointer to silence this warning
+ 1036 |     ImGuiInputTextState()                   { memset(this, 0, sizeof(*this)); }
+      |                                                      ^
+      |                                                      (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1202:34: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiOldColumns' [-Wnontrivial-memcall]
+ 1202 |     ImGuiOldColumns()   { memset(this, 0, sizeof(*this)); }
+      |                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1202:34: note: explicitly cast the pointer to silence this warning
+ 1202 |     ImGuiOldColumns()   { memset(this, 0, sizeof(*this)); }
+      |                                  ^
+      |                                  (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2199:42: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiTable' [-Wnontrivial-memcall]
+ 2199 |     IMGUI_API ImGuiTable()      { memset(this, 0, sizeof(*this)); LastFrameActive = -1; }
+      |                                          ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2199:42: note: explicitly cast the pointer to silence this warning
+ 2199 |     IMGUI_API ImGuiTable()      { memset(this, 0, sizeof(*this)); LastFrameActive = -1; }
+      |                                          ^
+      |                                          (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2226:45: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiTableTempData' [-Wnontrivial-memcall]
+ 2226 |     IMGUI_API ImGuiTableTempData() { memset(this, 0, sizeof(*this)); LastTimeActive = -1.0f; }
+      |                                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2226:45: note: explicitly cast the pointer to silence this warning
+ 2226 |     IMGUI_API ImGuiTableTempData() { memset(this, 0, sizeof(*this)); LastTimeActive = -1.0f; }
+      |                                             ^
+      |                                             (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:287:55: warning: format string is not a string literal (potentially insecure) [-Wformat-security]
+  287 |         ImGui::TextColored(ImVec4(1.0, 0.0, 0.0, 1.0),label);
+      |                                                       ^~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:287:55: note: treat the string as an argument to avoid this
+  287 |         ImGui::TextColored(ImVec4(1.0, 0.0, 0.0, 1.0),label);
+      |                                                       ^
+      |                                                       "%s", 
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:289:55: warning: format string is not a string literal (potentially insecure) [-Wformat-security]
+  289 |         ImGui::TextColored(ImVec4(0.0, 0.6, 0.2, 1.0),label);
+      |                                                       ^~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:289:55: note: treat the string as an argument to avoid this
+  289 |         ImGui::TextColored(ImVec4(0.0, 0.6, 0.2, 1.0),label);
+      |                                                       ^
+      |                                                       "%s", 
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:291:55: warning: format string is not a string literal (potentially insecure) [-Wformat-security]
+  291 |         ImGui::TextColored(ImVec4(0.0, 0.0, 1.0, 1.0),label);
+      |                                                       ^~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:291:55: note: treat the string as an argument to avoid this
+  291 |         ImGui::TextColored(ImVec4(0.0, 0.0, 1.0, 1.0),label);
+      |                                                       ^
+      |                                                       "%s", 
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:293:21: warning: format string is not a string literal (potentially insecure) [-Wformat-security]
+  293 |         ImGui::Text(label);
+      |                     ^~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:293:21: note: treat the string as an argument to avoid this
+  293 |         ImGui::Text(label);
+      |                     ^
+      |                     "%s", 
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:8230:12: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiTabBar' [-Wnontrivial-memcall]
+ 8230 |     memset(this, 0, sizeof(*this));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:8230:12: note: explicitly cast the pointer to silence this warning
+ 8230 |     memset(this, 0, sizeof(*this));
+      |            ^
+      |            (void*)
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:35:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImGuiTabBar' [-Wnontrivial-memcall]
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1720:88: note: in instantiation of member function 'ImVector<ImGuiTabBar>::reserve' requested here
+ 1720 |     inline void         resize(int new_size)                { if (new_size > Capacity) reserve(_grow_capacity(new_size)); Size = new_size; }
+      |                                                                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:621:101: note: in instantiation of member function 'ImVector<ImGuiTabBar>::resize' requested here
+  621 |     T*          Add()                               { int idx = FreeIdx; if (idx == Buf.Size) { Buf.resize(Buf.Size + 1); FreeIdx++; } else { FreeIdx = *(int*)&Buf[idx]; } IM_PLACEMENT_NEW(&Buf[idx]) T(); return &Buf[idx]; }
+      |                                                                                                     ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:618:156: note: in instantiation of member function 'ImPool<ImGuiTabBar>::Add' requested here
+  618 |     T*          GetOrAddByKey(ImGuiID key)          { int* p_idx = Map.GetIntRef(key, -1); if (*p_idx != -1) return &Buf[*p_idx]; *p_idx = FreeIdx; return Add(); }
+      |                                                                                                                                                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_widgets.cpp:8280:38: note: in instantiation of member function 'ImPool<ImGuiTabBar>::GetOrAddByKey' requested here
+ 8280 |     ImGuiTabBar* tab_bar = g.TabBars.GetOrAddByKey(id);
+      |                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: note: explicitly cast the pointer to silence this warning
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+      |                                                                                                                                                                                      (void*)
+13 warnings generated.
+[9/663] Building CXX object deps_src/imgui/CMakeFiles/imgui.dir/Release/imgui_draw.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:29:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiListClipper' [-Wnontrivial-memcall]
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2189:83: note: explicitly cast the pointer to silence this warning
+ 2189 |     inline ImGuiListClipper(int items_count, float items_height = -1.0f) { memset(this, 0, sizeof(*this)); ItemsCount = -1; Begin(items_count, items_height); } // [removed in 1.79]
+      |                                                                                   ^
+      |                                                                                   (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawListSplitter' [-Wnontrivial-memcall]
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2328:43: note: explicitly cast the pointer to silence this warning
+ 2328 |     inline ImDrawListSplitter()  { memset(this, 0, sizeof(*this)); }
+      |                                           ^
+      |                                           (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawList' [-Wnontrivial-memcall]
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:2399:66: note: explicitly cast the pointer to silence this warning
+ 2399 |     ImDrawList(const ImDrawListSharedData* shared_data) { memset(this, 0, sizeof(*this)); _Data = shared_data; }
+      |                                                                  ^
+      |                                                                  (void*)
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:36:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1036:54: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiInputTextState' [-Wnontrivial-memcall]
+ 1036 |     ImGuiInputTextState()                   { memset(this, 0, sizeof(*this)); }
+      |                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1036:54: note: explicitly cast the pointer to silence this warning
+ 1036 |     ImGuiInputTextState()                   { memset(this, 0, sizeof(*this)); }
+      |                                                      ^
+      |                                                      (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1202:34: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiOldColumns' [-Wnontrivial-memcall]
+ 1202 |     ImGuiOldColumns()   { memset(this, 0, sizeof(*this)); }
+      |                                  ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:1202:34: note: explicitly cast the pointer to silence this warning
+ 1202 |     ImGuiOldColumns()   { memset(this, 0, sizeof(*this)); }
+      |                                  ^
+      |                                  (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2199:42: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiTable' [-Wnontrivial-memcall]
+ 2199 |     IMGUI_API ImGuiTable()      { memset(this, 0, sizeof(*this)); LastFrameActive = -1; }
+      |                                          ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2199:42: note: explicitly cast the pointer to silence this warning
+ 2199 |     IMGUI_API ImGuiTable()      { memset(this, 0, sizeof(*this)); LastFrameActive = -1; }
+      |                                          ^
+      |                                          (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2226:45: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImGuiTableTempData' [-Wnontrivial-memcall]
+ 2226 |     IMGUI_API ImGuiTableTempData() { memset(this, 0, sizeof(*this)); LastTimeActive = -1.0f; }
+      |                                             ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_internal.h:2226:45: note: explicitly cast the pointer to silence this warning
+ 2226 |     IMGUI_API ImGuiTableTempData() { memset(this, 0, sizeof(*this)); LastTimeActive = -1.0f; }
+      |                                             ^
+      |                                             (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1669:20: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawChannel' [-Wnontrivial-memcall]
+ 1669 |             memset(&_Channels[i], 0, sizeof(_Channels[i]));  // Current channel is a copy of CmdBuffer/IdxBuffer, don't destruct again
+      |                    ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1669:20: note: explicitly cast the pointer to silence this warning
+ 1669 |             memset(&_Channels[i], 0, sizeof(_Channels[i]));  // Current channel is a copy of CmdBuffer/IdxBuffer, don't destruct again
+      |                    ^
+      |                    (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1693:12: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImDrawChannel' [-Wnontrivial-memcall]
+ 1693 |     memset(&_Channels[0], 0, sizeof(ImDrawChannel));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1693:12: note: explicitly cast the pointer to silence this warning
+ 1693 |     memset(&_Channels[0], 0, sizeof(ImDrawChannel));
+      |            ^
+      |            (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1786:12: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImVector<ImDrawCmd>' [-Wnontrivial-memcall]
+ 1786 |     memcpy(&_Channels.Data[_Current]._CmdBuffer, &draw_list->CmdBuffer, sizeof(draw_list->CmdBuffer));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1786:12: note: explicitly cast the pointer to silence this warning
+ 1786 |     memcpy(&_Channels.Data[_Current]._CmdBuffer, &draw_list->CmdBuffer, sizeof(draw_list->CmdBuffer));
+      |            ^
+      |            (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1787:12: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImVector<ImDrawIdx>' (aka 'ImVector<unsigned short>') [-Wnontrivial-memcall]
+ 1787 |     memcpy(&_Channels.Data[_Current]._IdxBuffer, &draw_list->IdxBuffer, sizeof(draw_list->IdxBuffer));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1787:12: note: explicitly cast the pointer to silence this warning
+ 1787 |     memcpy(&_Channels.Data[_Current]._IdxBuffer, &draw_list->IdxBuffer, sizeof(draw_list->IdxBuffer));
+      |            ^
+      |            (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1789:12: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImVector<ImDrawCmd>' [-Wnontrivial-memcall]
+ 1789 |     memcpy(&draw_list->CmdBuffer, &_Channels.Data[idx]._CmdBuffer, sizeof(draw_list->CmdBuffer));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1789:12: note: explicitly cast the pointer to silence this warning
+ 1789 |     memcpy(&draw_list->CmdBuffer, &_Channels.Data[idx]._CmdBuffer, sizeof(draw_list->CmdBuffer));
+      |            ^
+      |            (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1790:12: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImVector<ImDrawIdx>' (aka 'ImVector<unsigned short>') [-Wnontrivial-memcall]
+ 1790 |     memcpy(&draw_list->IdxBuffer, &_Channels.Data[idx]._IdxBuffer, sizeof(draw_list->IdxBuffer));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1790:12: note: explicitly cast the pointer to silence this warning
+ 1790 |     memcpy(&draw_list->IdxBuffer, &_Channels.Data[idx]._IdxBuffer, sizeof(draw_list->IdxBuffer));
+      |            ^
+      |            (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1964:12: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImFontAtlas' [-Wnontrivial-memcall]
+ 1964 |     memset(this, 0, sizeof(*this));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1964:12: note: explicitly cast the pointer to silence this warning
+ 1964 |     memset(this, 0, sizeof(*this));
+      |            ^
+      |            (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:2347:26: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImFontBuildSrcData' [-Wnontrivial-memcall]
+ 2347 |     memset(src_tmp_array.Data, 0, (size_t)src_tmp_array.size_in_bytes());
+      |                          ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:2347:26: note: explicitly cast the pointer to silence this warning
+ 2347 |     memset(src_tmp_array.Data, 0, (size_t)src_tmp_array.size_in_bytes());
+      |                          ^
+      |            (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:2348:26: warning: first argument in call to 'memset' is a pointer to non-trivially copyable type 'ImFontBuildDstData' [-Wnontrivial-memcall]
+ 2348 |     memset(dst_tmp_array.Data, 0, (size_t)dst_tmp_array.size_in_bytes());
+      |                          ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:2348:26: note: explicitly cast the pointer to silence this warning
+ 2348 |     memset(dst_tmp_array.Data, 0, (size_t)dst_tmp_array.size_in_bytes());
+      |                          ^
+      |            (void*)
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:29:
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImDrawChannel' [-Wnontrivial-memcall]
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:1685:19: note: in instantiation of member function 'ImVector<ImDrawChannel>::reserve' requested here
+ 1685 |         _Channels.reserve(channels_count); // Avoid over reserving since this is likely to stay stable
+      |                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: note: explicitly cast the pointer to silence this warning
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+      |                                                                                                                                                                                      (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImFontBuildSrcData' [-Wnontrivial-memcall]
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1720:88: note: in instantiation of member function 'ImVector<ImFontBuildSrcData>::reserve' requested here
+ 1720 |     inline void         resize(int new_size)                { if (new_size > Capacity) reserve(_grow_capacity(new_size)); Size = new_size; }
+      |                                                                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:2345:19: note: in instantiation of member function 'ImVector<ImFontBuildSrcData>::resize' requested here
+ 2345 |     src_tmp_array.resize(atlas->ConfigData.Size);
+      |                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: note: explicitly cast the pointer to silence this warning
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+      |                                                                                                                                                                                      (void*)
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: warning: first argument in call to 'memcpy' is a pointer to non-trivially copyable type 'ImFontBuildDstData' [-Wnontrivial-memcall]
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1720:88: note: in instantiation of member function 'ImVector<ImFontBuildDstData>::reserve' requested here
+ 1720 |     inline void         resize(int new_size)                { if (new_size > Capacity) reserve(_grow_capacity(new_size)); Size = new_size; }
+      |                                                                                        ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui_draw.cpp:2346:19: note: in instantiation of member function 'ImVector<ImFontBuildDstData>::resize' requested here
+ 2346 |     dst_tmp_array.resize(atlas->Fonts.Size);
+      |                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps_src/imgui/imgui.h:1723:182: note: explicitly cast the pointer to silence this warning
+ 1723 |     inline void         reserve(int new_capacity)           { if (new_capacity <= Capacity) return; T* new_data = (T*)IM_ALLOC((size_t)new_capacity * sizeof(T)); if (Data) { memcpy(new_data, Data, (size_t)Size * sizeof(T)); IM_FREE(Data); } Data = new_data; Capacity = new_capacity; }
+      |                                                                                                                                                                                      ^
+      |                                                                                                                                                                                      (void*)
+19 warnings generated.
+[10/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Nonplanar/MotionPlan.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/MotionPlan.cpp:1:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/MotionPlan.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/ProfileScene.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Collision.hpp:3:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Contracts.hpp:3:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Point.hpp:4:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../libslic3r.h:11:
+In file included from /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/memory:946:
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:81: warning: destructor called on non-final 'Slic3r::Polyline' that has virtual functions but non-virtual destructor [-Wdelete-non-abstract-non-virtual-dtor]
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator_traits.h:308:9: note: in instantiation of member function 'std::allocator<Slic3r::Polyline>::destroy' requested here
+  308 |     __a.destroy(__p);
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:314:21: note: in instantiation of function template specialization 'std::allocator_traits<std::allocator<Slic3r::Polyline>>::destroy<Slic3r::Polyline, 0>' requested here
+  314 |     __alloc_traits::destroy(__alloc_, std::__to_address(--__end_));
+      |                     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:178:5: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::__destruct_at_end' requested here
+  178 |     __destruct_at_end(__new_last, false_type());
+      |     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:120:80: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::__destruct_at_end' requested here
+  120 |   _LIBCPP_CONSTEXPR_SINCE_CXX20 _LIBCPP_HIDE_FROM_ABI void clear() _NOEXCEPT { __destruct_at_end(__begin_); }
+      |                                                                                ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__split_buffer:340:3: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::clear' requested here
+  340 |   clear();
+      |   ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:1100:49: note: in instantiation of member function 'std::__split_buffer<Slic3r::Polyline, std::allocator<Slic3r::Polyline> &>::~__split_buffer' requested here
+ 1100 |     __split_buffer<value_type, allocator_type&> __v(__n, size(), this->__alloc_);
+      |                                                 ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Polyline.hpp:199:9: note: in instantiation of member function 'std::vector<Slic3r::Polyline>::reserve' requested here
+  199 |     out.reserve(paths.size());
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:87: note: qualify call to silence this warning
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                       ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:81: warning: destructor called on non-final 'Slic3r::ThickPolyline' that has virtual functions but non-virtual destructor [-Wdelete-non-abstract-non-virtual-dtor]
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator_traits.h:308:9: note: in instantiation of member function 'std::allocator<Slic3r::ThickPolyline>::destroy' requested here
+  308 |     __a.destroy(__p);
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:763:23: note: in instantiation of function template specialization 'std::allocator_traits<std::allocator<Slic3r::ThickPolyline>>::destroy<Slic3r::ThickPolyline, 0>' requested here
+  763 |       __alloc_traits::destroy(this->__alloc_, std::__to_address(--__soon_to_be_end));
+      |                       ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:543:5: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::__base_destruct_at_end' requested here
+  543 |     __base_destruct_at_end(this->__begin_);
+      |     ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:251:16: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::clear' requested here
+  251 |         __vec_.clear();
+      |                ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:262:67: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::__destroy_vector::operator()' requested here
+  262 |   _LIBCPP_CONSTEXPR_SINCE_CXX20 _LIBCPP_HIDE_FROM_ABI ~vector() { __destroy_vector (*this)(); }
+      |                                                                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Polyline.hpp:281:20: note: in instantiation of member function 'std::vector<Slic3r::ThickPolyline>::~vector' requested here
+  281 |     ThickPolylines out;
+      |                    ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator.h:156:87: note: qualify call to silence this warning
+  156 |   _LIBCPP_DEPRECATED_IN_CXX17 _LIBCPP_HIDE_FROM_ABI void destroy(pointer __p) { __p->~_Tp(); }
+      |                                                                                       ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/MotionPlan.cpp:1:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/MotionPlan.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/ProfileScene.hpp:2:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Collision.hpp:3:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/Contracts.hpp:3:
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Point.hpp:12:
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/oneapi/tbb/scalable_allocator.h:254:31: warning: destructor called on non-final 'Slic3r::Polygon' that has virtual functions but non-virtual destructor [-Wdelete-non-abstract-non-virtual-dtor]
+  254 |     void destroy(pointer p) { p->~value_type(); }
+      |                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/allocator_traits.h:308:9: note: in instantiation of member function 'tbb::detail::d1::scalable_allocator<Slic3r::Polygon>::destroy' requested here
+  308 |     __a.destroy(__p);
+      |         ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/destroy.h:50:31: note: in instantiation of function template specialization 'std::allocator_traits<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::destroy<Slic3r::Polygon, 0>' requested here
+   50 |     allocator_traits<_Alloc>::destroy(__alloc, std::addressof(*__first));
+      |                               ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:523:10: note: in instantiation of function template specialization 'std::__allocator_destroy<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, std::reverse_iterator<Slic3r::Polygon *>, std::reverse_iterator<Slic3r::Polygon *>>' requested here
+  523 |     std::__allocator_destroy(__alloc_, std::reverse_iterator<_Iter>(__last_), std::reverse_iterator<_Iter>(__first_));
+      |          ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__utility/exception_guard.h:136:10: note: in instantiation of member function 'std::__exception_guard_exceptions<std::_AllocatorDestroyRangeReverse<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, Slic3r::Polygon *>>::~__exception_guard_exceptions' requested here
+  136 |   return __exception_guard<_Rollback>(std::move(__rollback));
+      |          ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/uninitialized_algorithms.h:582:33: note: in instantiation of function template specialization 'std::__uninitialized_allocator_copy_impl<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, const Slic3r::Polygon *, const Slic3r::Polygon *, Slic3r::Polygon *>' requested here
+  582 |   auto __result          = std::__uninitialized_allocator_copy_impl(
+      |                                 ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:945:22: note: in instantiation of function template specialization 'std::__uninitialized_allocator_copy<tbb::detail::d1::scalable_allocator<Slic3r::Polygon>, std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>, Slic3r::Polygon *>' requested here
+  945 |   __tx.__pos_ = std::__uninitialized_allocator_copy(this->__alloc_, std::move(__first), std::move(__last), __tx.__pos_);
+      |                      ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:1338:11: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::__construct_at_end<std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>>' requested here
+ 1338 |           __construct_at_end(__m, __last, __n - __dx);
+      |           ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__vector/vector.h:515:12: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::__insert_with_size<std::__wrap_iter<const Slic3r::Polygon *>, std::__wrap_iter<const Slic3r::Polygon *>>' requested here
+  515 |     return __insert_with_size(__position, __first, __last, std::distance(__first, __last));
+      |            ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Nonplanar/../Polygon.hpp:148:71: note: in instantiation of function template specialization 'std::vector<Slic3r::Polygon, tbb::detail::d1::scalable_allocator<Slic3r::Polygon>>::insert<std::__wrap_iter<const Slic3r::Polygon *>, 0>' requested here
+  148 | inline void polygons_append(Polygons &dst, const Polygons &src) { dst.insert(dst.end(), src.begin(), src.end()); }
+      |                                                                       ^
+/Users/antonfilatov/www/my/orca-nonplanar/deps/build/arm64/OrcaSlicer_dep/usr/local/include/oneapi/tbb/scalable_allocator.h:254:35: note: qualify call to silence this warning
+  254 |     void destroy(pointer p) { p->~value_type(); }
+      |                                   ^
+3 warnings generated.
+[11/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Geometry/Circle.cpp.o
+[12/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Geometry/ConvexHull.cpp.o
+[13/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Geometry/MedialAxis.cpp.o
+[14/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/GCodeWriter.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/GCodeWriter.cpp:1:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/GCodeWriter.hpp:152:19: warning: private field 'm_travel_acceleration' is not used [-Wunused-private-field]
+  152 |     unsigned int  m_travel_acceleration;
+      |                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/GCodeWriter.hpp:153:19: warning: private field 'm_travel_jerk' is not used [-Wunused-private-field]
+  153 |     unsigned int  m_travel_jerk;
+      |                   ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/GCodeWriter.hpp:157:21: warning: private field 'm_last_additional_fan_speed' is not used [-Wunused-private-field]
+  157 |     unsigned int    m_last_additional_fan_speed;
+      |                     ^
+3 warnings generated.
+[15/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/GCode/WipeTower2.cpp.o
+[16/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Geometry/VoronoiOffset.cpp.o
+[17/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Geometry/Voronoi.cpp.o
+[18/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/GCode/WipeTower.cpp.o
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/GCode/WipeTower.cpp:4057:42: warning: explicitly assigning value of variable of type 'ToolChangeResult' to itself [-Wself-assign-overloaded]
+ 4057 |                         finish_block_tcr = finish_block_tcr;
+      |                         ~~~~~~~~~~~~~~~~ ^ ~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/GCode/WipeTower.cpp:4282:28: warning: lambda capture 'this' is not used [-Wunused-lambda-capture]
+ 4282 |     auto get_closet_idx = [this, &writer](Polylines &pls) -> std::pair<int,int> {
+      |                            ^~~~~
+2 warnings generated.
+[19/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Geometry/VoronoiUtils.cpp.o
+[20/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/GCode/ToolOrdering.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/GCode/ToolOrdering.cpp:2:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Print.hpp:923:25: warning: 'export_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  923 |     int                 export_cached_data(const std::string& dir_path, bool with_space=false);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PrintBase.hpp:428:29: note: overridden virtual function is here
+  428 |     virtual int             export_cached_data(const std::string& dir_path, bool with_space=false) { return 0;}
+      |                             ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/GCode/ToolOrdering.cpp:2:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Print.hpp:924:25: warning: 'load_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  924 |     int                 load_cached_data(const std::string& directory);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PrintBase.hpp:429:28: note: overridden virtual function is here
+  429 |     virtual int            load_cached_data(const std::string& directory) { return 0;}
+      |                            ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/GCode/ToolOrdering.cpp:1487:86: warning: for loop has empty body [-Wempty-body]
+ 1487 |             || custom_gcode_it->type == CustomGCode::ToolChange); ++ custom_gcode_it);
+      |                                                                                      ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/GCode/ToolOrdering.cpp:1487:86: note: put the semicolon on a separate line to silence this warning
+3 warnings generated.
+[21/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/libslic3r.cpp.o
+[22/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Geometry.cpp.o
+[23/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/LocalesUtils.cpp.o
+[24/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Line.cpp.o
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Line.cpp:34:22: warning: implicit conversion from 'type' (aka 'long long') to 'Scalar' (aka 'double') changes value from 9223372036854775807 to 9223372036854775808 [-Wimplicit-const-int-float-conversion]
+   34 |         result.y() > std::numeric_limits<coord_t>::max() || result.y() < std::numeric_limits<coord_t>::lowest()) {
+      |                    ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Line.cpp:33:22: warning: implicit conversion from 'type' (aka 'long long') to 'Scalar' (aka 'double') changes value from 9223372036854775807 to 9223372036854775808 [-Wimplicit-const-int-float-conversion]
+   33 |     if (result.x() > std::numeric_limits<coord_t>::max() || result.x() < std::numeric_limits<coord_t>::lowest() ||
+      |                    ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+2 warnings generated.
+[25/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Geometry/VoronoiUtilsCgal.cpp.o
+[26/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/MinimumSpanningTree.cpp.o
+[27/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/miniz_extension.cpp.o
+[28/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/MinAreaBoundingBox.cpp.o
+[29/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Layer.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Layer.cpp:3:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Print.hpp:923:25: warning: 'export_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  923 |     int                 export_cached_data(const std::string& dir_path, bool with_space=false);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PrintBase.hpp:428:29: note: overridden virtual function is here
+  428 |     virtual int             export_cached_data(const std::string& dir_path, bool with_space=false) { return 0;}
+      |                             ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Layer.cpp:3:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Print.hpp:924:25: warning: 'load_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  924 |     int                 load_cached_data(const std::string& directory);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PrintBase.hpp:429:28: note: overridden virtual function is here
+  429 |     virtual int            load_cached_data(const std::string& directory) { return 0;}
+      |                            ^
+2 warnings generated.
+[30/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/MutablePolygon.cpp.o
+[31/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/MultiPoint.cpp.o
+[32/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/LayerRegion.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/LayerRegion.cpp:7:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Print.hpp:923:25: warning: 'export_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  923 |     int                 export_cached_data(const std::string& dir_path, bool with_space=false);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PrintBase.hpp:428:29: note: overridden virtual function is here
+  428 |     virtual int             export_cached_data(const std::string& dir_path, bool with_space=false) { return 0;}
+      |                             ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/LayerRegion.cpp:7:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Print.hpp:924:25: warning: 'load_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  924 |     int                 load_cached_data(const std::string& directory);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PrintBase.hpp:429:28: note: overridden virtual function is here
+  429 |     virtual int            load_cached_data(const std::string& directory) { return 0;}
+      |                            ^
+2 warnings generated.
+[33/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/ModelArrange.cpp.o
+[34/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Measure.cpp.o
+[35/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/ObjColorUtils.cpp.o
+[36/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/ObjectID.cpp.o
+[37/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/NSVGUtils.cpp.o
+[38/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/pchheader.cpp.o
+[39/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/NormalUtils.cpp.o
+[40/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/ParameterUtils.cpp.o
+[41/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Platform.cpp.o
+[42/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/MultiMaterialSegmentation.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/MultiMaterialSegmentation.cpp:5:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Print.hpp:923:25: warning: 'export_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  923 |     int                 export_cached_data(const std::string& dir_path, bool with_space=false);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PrintBase.hpp:428:29: note: overridden virtual function is here
+  428 |     virtual int             export_cached_data(const std::string& dir_path, bool with_space=false) { return 0;}
+      |                             ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/MultiMaterialSegmentation.cpp:5:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Print.hpp:924:25: warning: 'load_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  924 |     int                 load_cached_data(const std::string& directory);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PrintBase.hpp:429:28: note: overridden virtual function is here
+  429 |     virtual int            load_cached_data(const std::string& directory) { return 0;}
+      |                            ^
+2 warnings generated.
+[43/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/PNGReadWrite.cpp.o
+[44/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Model.cpp.o
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Model.cpp:802:39: warning: lambda capture 'max_extruders' is not used [-Wunused-lambda-capture]
+  802 |             auto copy_volume = [o, v, max_extruders, &counter, &extruder_counter](ModelVolume *new_v) {
+      |                                     ~~^~~~~~~~~~~~~
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Model.cpp:802:65: warning: lambda capture 'extruder_counter' is not used [-Wunused-lambda-capture]
+  802 |             auto copy_volume = [o, v, max_extruders, &counter, &extruder_counter](ModelVolume *new_v) {
+      |                                                              ~~~^~~~~~~~~~~~~~~~
+2 warnings generated.
+[45/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Point.cpp.o
+[46/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Orient.cpp.o
+[47/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/PolygonTrimmer.cpp.o
+[48/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Polygon.cpp.o
+[49/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Polyline.cpp.o
+[50/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/PrincipalComponents2D.cpp.o
+[51/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/MaterialType.cpp.o
+[52/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/PerimeterGenerator.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PerimeterGenerator.cpp:21:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Print.hpp:923:25: warning: 'export_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  923 |     int                 export_cached_data(const std::string& dir_path, bool with_space=false);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PrintBase.hpp:428:29: note: overridden virtual function is here
+  428 |     virtual int             export_cached_data(const std::string& dir_path, bool with_space=false) { return 0;}
+      |                             ^
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PerimeterGenerator.cpp:21:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Print.hpp:924:25: warning: 'load_cached_data' overrides a member function but is not marked 'override' [-Winconsistent-missing-override]
+  924 |     int                 load_cached_data(const std::string& directory);
+      |                         ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/PrintBase.hpp:429:28: note: overridden virtual function is here
+  429 |     virtual int            load_cached_data(const std::string& directory) { return 0;}
+      |                            ^
+2 warnings generated.
+[53/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/PrintBase.cpp.o
+[54/663] Building CXX object src/libslic3r/CMakeFiles/libslic3r.dir/Release/Preset.cpp.o
+In file included from /Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Preset.cpp:5:
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Preset.hpp:812:5: warning: explicitly defaulted copy constructor is implicitly deleted [-Wdefaulted-function-deleted]
+  812 |     PresetCollection(const PresetCollection &other) = default;
+      |     ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Preset.hpp:932:35: note: copy constructor of 'PresetCollection' is implicitly deleted because field 'm_mutex' has a deleted copy constructor
+  932 |     std::recursive_mutex          m_mutex;
+      |                                   ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/mutex:228:3: note: 'recursive_mutex' has been explicitly marked deleted here
+  228 |   recursive_mutex(const recursive_mutex&)            = delete;
+      |   ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Preset.hpp:812:55: note: replace 'default' with 'delete'
+  812 |     PresetCollection(const PresetCollection &other) = default;
+      |                                                       ^~~~~~~
+      |                                                       delete
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Preset.hpp:954:5: warning: explicitly defaulted copy constructor is implicitly deleted [-Wdefaulted-function-deleted]
+  954 |     PrinterPresetCollection(const PrinterPresetCollection &other) = default;
+      |     ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Preset.hpp:940:33: note: copy constructor of 'PrinterPresetCollection' is implicitly deleted because base class 'PresetCollection' has a deleted copy constructor
+  940 | class PrinterPresetCollection : public PresetCollection
+      |                                 ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Preset.hpp:812:5: note: explicitly defaulted function was implicitly deleted here
+  812 |     PresetCollection(const PresetCollection &other) = default;
+      |     ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Preset.hpp:932:35: note: copy constructor of 'PresetCollection' is implicitly deleted because field 'm_mutex' has a deleted copy constructor
+  932 |     std::recursive_mutex          m_mutex;
+      |                                   ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/mutex:228:3: note: 'recursive_mutex' has been explicitly marked deleted here
+  228 |   recursive_mutex(const recursive_mutex&)            = delete;
+      |   ^
+/Users/antonfilatov/www/my/orca-nonplanar/src/libslic3r/Preset.hpp:954:69: note: replace 'default' with 'delete'
+  954 |     PrinterPresetCollection(const PrinterPresetCollection &other) = default;
+      |                                                                     ^~~~~~~
+      |                                                                     delete
+2 warnings generated.
+ninja: build stopped: interrupted by user.
