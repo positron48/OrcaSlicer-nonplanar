@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 151, in <module>
+    main()
+    ~~~~^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 147, in main
+    print(json.dumps(verify(parse(args.input.read_text()))))
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 104, in verify
+    require(validation['job_id'] == str(record['job_id']) and validation['job_revision'] == record['job_revision'], 'Report job binding')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 28, in require
+    raise ValueError(reason)
+ValueError: Report job binding

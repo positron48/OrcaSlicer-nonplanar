@@ -82,11 +82,16 @@ jobs:
         id: native_tests
         run: |
           clang++ --version > build/nonplanar-evidence/linux/compiler.txt
-          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/tests.log -- env NPTOP_JOB_EVIDENCE_DIR=${{ github.workspace }}/build/nonplanar-evidence/linux/job-fixtures python3 scripts/nonplanar/ctest_gate.py --build-dir build --output-dir build/nonplanar-evidence/linux/ctest --target-executable nonplanar_tests --target-executable fff_print_tests
+          mkdir -p build/nonplanar-evidence/linux/candidate-fixtures
+          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/tests.log -- env NPTOP_JOB_EVIDENCE_DIR=${{ github.workspace }}/build/nonplanar-evidence/linux/job-fixtures NPTOP_CANDIDATE_EVIDENCE_DIR=${{ github.workspace }}/build/nonplanar-evidence/linux/candidate-fixtures python3 scripts/nonplanar/ctest_gate.py --build-dir build --output-dir build/nonplanar-evidence/linux/ctest --target-executable nonplanar_tests --target-executable fff_print_tests
       - name: Independently check native job and candidate identities
         run: |
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/job-context-oracle.log -- python3 scripts/nonplanar/job_context_oracle.py --input build/nonplanar-evidence/linux/job-fixtures/native-job.json
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/job-artifact-oracle.log -- python3 scripts/nonplanar/job_artifact_oracle.py --input build/nonplanar-evidence/linux/job-fixtures/bound-candidate.json
+          for name in candidate-report candidate-report-invalid-material candidate-report-failed-material; do
+            python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/$name-oracle.log -- python3 scripts/nonplanar/job_report_oracle.py --input build/nonplanar-evidence/linux/job-fixtures/$name.json
+          done
+          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/native-report-oracle.log -- python3 scripts/nonplanar/job_report_oracle.py --input build/nonplanar-evidence/linux/candidate-fixtures/native-job-report.json
       - name: Expose native failure diagnostics in check annotations
         if: failure() && steps.native_tests.outcome == 'failure'
         run: python3 scripts/nonplanar/publish_ci_failure.py --evidence-dir build/nonplanar-evidence/linux

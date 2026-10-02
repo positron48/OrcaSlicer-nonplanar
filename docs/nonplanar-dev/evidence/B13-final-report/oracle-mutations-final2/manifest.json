@@ -1,0 +1,236 @@
+{
+  "status": "PASS",
+  "positives": 4,
+  "refusals": 34,
+  "scope": "REPORT_IDENTITY_FIXED_REGISTRY_ONLY_NOT_GEOMETRY_AUTHENTICITY_OR_EXPORT",
+  "cases": [
+    {
+      "name": "positive",
+      "exit_code": 0,
+      "expected": "PASS",
+      "record": "oracle-mutations-final2/positive.json"
+    },
+    {
+      "name": "unknown-material",
+      "exit_code": 0,
+      "expected": "PASS",
+      "record": "oracle-mutations-final2/unknown-material.json"
+    },
+    {
+      "name": "failed-material",
+      "exit_code": 0,
+      "expected": "PASS",
+      "record": "oracle-mutations-final2/failed-material.json"
+    },
+    {
+      "name": "native",
+      "exit_code": 0,
+      "expected": "PASS",
+      "record": "oracle-mutations-final2/native.json"
+    },
+    {
+      "name": "registry-missing",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/registry-missing.json"
+    },
+    {
+      "name": "registry-duplicate",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/registry-duplicate.json"
+    },
+    {
+      "name": "registry-unknown",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/registry-unknown.json"
+    },
+    {
+      "name": "checks-missing",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/checks-missing.json"
+    },
+    {
+      "name": "checks-duplicate",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/checks-duplicate.json"
+    },
+    {
+      "name": "checks-unknown",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/checks-unknown.json"
+    },
+    {
+      "name": "mandatory-false",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/mandatory-false.json"
+    },
+    {
+      "name": "skipped-pass",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/skipped-pass.json"
+    },
+    {
+      "name": "not-run-pass",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/not-run-pass.json"
+    },
+    {
+      "name": "unimplemented-pass",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/unimplemented-pass.json"
+    },
+    {
+      "name": "missing-reason",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/missing-reason.json"
+    },
+    {
+      "name": "allow",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/allow.json"
+    },
+    {
+      "name": "overall-pass",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/overall-pass.json"
+    },
+    {
+      "name": "example",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/example.json"
+    },
+    {
+      "name": "job-id",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/job-id.json"
+    },
+    {
+      "name": "revision",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/revision.json"
+    },
+    {
+      "name": "attempt",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/attempt.json"
+    },
+    {
+      "name": "job-fingerprint",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/job-fingerprint.json"
+    },
+    {
+      "name": "manifest-fingerprint",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/manifest-fingerprint.json"
+    },
+    {
+      "name": "records",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/records.json"
+    },
+    {
+      "name": "evaluations",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/evaluations.json"
+    },
+    {
+      "name": "registry-version",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/registry-version.json"
+    },
+    {
+      "name": "schema",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/schema.json"
+    },
+    {
+      "name": "scope",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/scope.json"
+    },
+    {
+      "name": "unknown-field",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/unknown-field.json"
+    },
+    {
+      "name": "replay-material-status",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/replay-material-status.json"
+    },
+    {
+      "name": "replay-journal-status",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/replay-journal-status.json"
+    },
+    {
+      "name": "candidate-byte",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/candidate-byte.json"
+    },
+    {
+      "name": "manifest-rehashed",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/manifest-rehashed.json"
+    },
+    {
+      "name": "duplicate-json",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/duplicate-json.json"
+    },
+    {
+      "name": "nonfinite-json",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/nonfinite-json.json"
+    },
+    {
+      "name": "overflow-json",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/overflow-json.json"
+    },
+    {
+      "name": "boolean-revision",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/boolean-revision.json"
+    },
+    {
+      "name": "report-hash",
+      "exit_code": 1,
+      "expected": "REFUSE",
+      "record": "oracle-mutations-final2/report-hash.json"
+    }
+  ]
+}

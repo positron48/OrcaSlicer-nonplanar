@@ -15,6 +15,18 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-02
 
+`B13-final-report.md` and ADR-0077 add protected actual manifest/final-byte
+rate/material replay reports with a fixed 17-check mandatory registry. Four
+declared component checks pass; thirteen missing full-job domains stay
+UNKNOWN/NOT_RUN and block export. Seven new cases join 16/534 focused assertions;
+CTest414/414, independent report oracles (4 positives/34 refusals), original CLI100
+and six fresh strict OFF/ZAA pairs pass. The full 2218-record native candidate
+executes the report path and ends Unknown/BLOCK. Raw provenance traces localize
+the earlier hash difference to derived body vertex IDs 16/17 with matching
+oriented faces after explicit diagnostic remap; strict identity refusals remain.
+Qualified complete checks/provenance, Verified/publication/routes and full
+B01–B15 remain pending. See the separate author review and evidence manifest.
+
 `B13-job-context.md` and ADR-0076 add owned pre-apply/executed native inputs,
 settings/plate and exact opaque resources; private attempt/phase tokens with
 atomic revocation; and exact final-byte/initial-pose/policy/journal manifest

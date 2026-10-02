@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 151, in <module>
+    main()
+    ~~~~^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 147, in main
+    print(json.dumps(verify(parse(args.input.read_text()))))
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 127, in verify
+    require(indexed['independent_replay']['status'] == indexed['final_material']['status'] and
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            indexed['independent_replay']['execution'] == indexed['final_material']['execution'], 'Journal execution')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 28, in require
+    raise ValueError(reason)
+ValueError: Journal execution

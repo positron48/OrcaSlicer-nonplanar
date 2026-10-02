@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 136, in <module>
+    main()
+    ~~~~^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 132, in main
+    print(json.dumps(verify(parse(args.input.read_text()))))
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 59, in verify
+    require(type(document['schema']) is int and document['schema'] == 1 and
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            type(document['registry_version']) is int and document['registry_version'] == 1, 'Report versions')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 26, in require
+    raise ValueError(reason)
+ValueError: Report versions

@@ -7,6 +7,18 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B13-final-report.md` now supplies protected actual manifest/rate/material replay
+and all seventeen mandatory IDs. Seven new report cases pass; combined16/534,
+CTest414/414, four positive/34 refused independent report fixtures, original
+CLI100 and six fresh OFF/ZAA pairs pass. The complete native2218-record report
+has work145632 and remains UNKNOWN/BLOCK with thirteen missing domains. Bind
+actual complete geometry/support/route/volume/filter/compatibility/resource/
+precondition/software proofs to the native job; only then implement Verified
+and atomic publication/recovery/copied-byte admission across every route.
+The old provenance difference is localized to derived body vertex IDs16/17 and
+corresponding oriented face rows, without runtime identity normalization or
+cross-platform qualification. No report hash or component PASS permits export.
+
 `B13-job-context.md` now supplies immutable native/plate/settings/resources,
 private current-attempt working phases and atomic worker cancellation, with exact
 candidate/initial-pose/policy/journal manifest binding. Public identities omit

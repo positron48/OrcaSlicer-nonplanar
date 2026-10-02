@@ -15,6 +15,8 @@
 #include <libslic3r/Nonplanar/StlImport.hpp>
 #include <cfenv>
 #include <thread>
+#include <future>
+#include "job_report_evidence.hpp"
 
 using namespace Slic3r::nptop;
 using Catch::Approx;
@@ -514,4 +516,111 @@ TEST_CASE("B13 candidate manifest refuses wrong phases old jobs foreign owners c
     GuardedJobLimits limits;size_t calls=0;limits.cancelled=[&]{++calls;return false;};const auto counted=bind_guarded_candidate(print,*fresh.task,candidate,limits);REQUIRE(counted.snapshot);const auto last=calls;
     auto job=serializing_job(print);calls=0;limits.cancelled=[&]{return ++calls==last;};const auto late=bind_guarded_candidate(print,*job.task,candidate,limits);REQUIRE_FALSE(late.snapshot);REQUIRE_FALSE(late.task);REQUIRE_FALSE(guarded_job_status(print).snapshot);
     job=serializing_job(print);calls=0;limits.cancelled=[&]{if(++calls==last)print.set_plate_origin(Slic3r::Vec3d(.1,0,0));return false;};const auto stale=bind_guarded_candidate(print,*job.task,candidate,limits);REQUIRE_FALSE(stale.snapshot);REQUIRE_FALSE(stale.task);REQUIRE_FALSE(guarded_job_status(print).snapshot);
+}
+
+namespace {
+GuardedCandidateBindingResult report_binding(Slic3r::Print &print)
+{
+    const auto job=serializing_job(print);
+    const auto candidate=serialize_linear_candidate(full_stop_plan(),LinearCandidatePolicy{3,1,Acceleration(100)});REQUIRE(candidate.snapshot);
+    const auto binding=bind_guarded_candidate(print,*job.task,candidate);INFO(binding.reason);REQUIRE(binding.snapshot);REQUIRE(binding.task);return binding;
+}
+void report_model(Slic3r::Model &model,Slic3r::Print &print)
+{
+    auto *object=model.add_object();object->add_volume(Slic3r::make_cube(8,8,4));object->add_instance()->set_offset(Slic3r::Vec3d(20,20,0));print.apply(model,job_config());
+}
+const LinearMaterialOptions report_options{93,1,1e-7,.0001,1e-9};
+}
+TEST_CASE("B13 actual final replay report retains the complete mandatory registry and blocks missing proofs", "[Nonplanar][B13][JobReport]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<GuardedCandidateReportSnapshot>::value);
+    Slic3r::Model model;Slic3r::Print print;report_model(model,print);const auto binding=report_binding(print);
+    const auto result=verify_guarded_candidate_report(binding,report_options);INFO(result.reason);REQUIRE(result.snapshot);const auto &report=*result.snapshot;
+    REQUIRE(report.binding==binding.snapshot);REQUIRE(report.task==binding.task);REQUIRE(report.rates);REQUIRE(report.material);
+    REQUIRE(report.rates->bytes==binding.snapshot->candidate->bytes);REQUIRE(report.material->rates->bytes==report.rates->bytes);
+    REQUIRE(report.checks.size()==17);REQUIRE(guarded_mandatory_checks().size()==17);
+    size_t passed=0;for(size_t i=0;i<report.checks.size();++i){const auto &check=report.checks[i];REQUIRE(check.id==guarded_mandatory_checks()[i]);
+        if(check.status==nptop_verify::RateStatus::Pass){++passed;REQUIRE(check.execution==GuardedCheckExecution::Run);}else{REQUIRE(check.status==nptop_verify::RateStatus::Unknown);REQUIRE(check.execution==GuardedCheckExecution::NotRun);}}
+    REQUIRE(passed==4);REQUIRE(report.overall_status==nptop_verify::RateStatus::Unknown);REQUIRE_FALSE(report.export_allowed);
+    const auto json=nlohmann::json::parse(report.canonical_json);REQUIRE(json.at("validation").at("document_example")==false);
+    REQUIRE(json.at("validation").at("mandatory_check_ids")==guarded_mandatory_checks());REQUIRE(json.at("validation").at("export_decision")=="BLOCK");
+    REQUIRE(json.at("manifest_sha256")==binding.snapshot->manifest_sha256);REQUIRE(sha256_bytes(report.canonical_json)==report.sha256);
+    REQUIRE(result.evaluations>report.rates->evaluations);
+    if(const char *output=std::getenv("NPTOP_JOB_EVIDENCE_DIR")){
+        const auto dir=boost::filesystem::path(output);boost::filesystem::create_directories(dir);
+        test::save_job_report(dir/"candidate-report.json",result);
+    }
+    REQUIRE(accept_guarded_candidate_report(print,result.snapshot));REQUIRE_FALSE(binding.task->is_current());
+    REQUIRE(guarded_job_status(print).phase==GuardedJobPhase::Unknown);REQUIRE_FALSE(accept_guarded_candidate_report(print,result.snapshot));
+    REQUIRE_THROWS(print.process());
+}
+TEST_CASE("B13 report capture owns wrappers policies and limits before callbacks", "[Nonplanar][B13][JobReport]")
+{
+    Slic3r::Model model;Slic3r::Print print;report_model(model,print);auto binding=report_binding(print);const auto original=binding.snapshot;auto options=report_options;
+    LinearCandidateLimits limits;limits.cancelled=[&]{binding={};options.policy_id=0;limits.max_evaluations=0;return false;};
+    const auto report=verify_guarded_candidate_report(binding,options,limits);INFO(report.reason);REQUIRE(report.snapshot);REQUIRE(report.snapshot->binding==original);REQUIRE(report.snapshot->material);
+    REQUIRE(report.snapshot->material->policy.policy_id==93);REQUIRE(accept_guarded_candidate_report(print,report.snapshot));
+    const auto retained=report.snapshot->sha256;REQUIRE(report_binding(print).snapshot);REQUIRE_FALSE(accept_guarded_candidate_report(print,report.snapshot));REQUIRE(report.snapshot->sha256==retained);
+}
+TEST_CASE("B13 report admission rejects foreign old repeated and final changed native states", "[Nonplanar][B13][JobReport]")
+{
+    Slic3r::Model model;Slic3r::Print print;report_model(model,print);
+    auto binding=report_binding(print);auto report=verify_guarded_candidate_report(binding,report_options);REQUIRE(report.snapshot);
+    const auto fresh=report_binding(print);REQUIRE_FALSE(accept_guarded_candidate_report(print,report.snapshot));REQUIRE(fresh.task->is_current());
+    Slic3r::Model other_model;Slic3r::Print other;report_model(other_model,other);const auto other_binding=report_binding(other);
+    report=verify_guarded_candidate_report(fresh,report_options);REQUIRE(report.snapshot);REQUIRE_FALSE(accept_guarded_candidate_report(other,report.snapshot));REQUIRE(other_binding.task->is_current());
+    print.set_plate_origin(Slic3r::Vec3d(.1,0,0));REQUIRE_FALSE(accept_guarded_candidate_report(print,report.snapshot));REQUIRE_FALSE(fresh.task->is_current());
+    for(int mode=0;mode<2;++mode){binding=report_binding(print);report=verify_guarded_candidate_report(binding,report_options);REQUIRE(report.snapshot);GuardedJobLimits limits;
+        limits.cancelled=[&]{if(mode==1)print.set_plate_origin(Slic3r::Vec3d(.2,0,0));return mode==0;};REQUIRE_FALSE(accept_guarded_candidate_report(print,report.snapshot,limits));}
+}
+TEST_CASE("B13 report worker refuses exhausted cancelled stale deadline and final numeric environments", "[Nonplanar][B13][JobReport]")
+{
+    Slic3r::Model model;Slic3r::Print print;report_model(model,print);const auto binding=report_binding(print);
+    for(int mode=0;mode<11;++mode){LinearCandidateLimits limits;
+        if(mode==0)limits.max_evaluations=1;if(mode==1)limits.cancelled=[] {return true;};if(mode==2)limits.timeout=std::chrono::milliseconds(0);
+        if(mode==3)limits.timeout=std::chrono::milliseconds(1),limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+        if(mode==4)limits.is_current=[](uint64_t){return false;};if(mode==5)limits.is_scene_current=[](uint64_t,uint64_t){return false;};
+        if(mode==6)limits.cancelled=[] {std::fesetround(FE_UPWARD);return false;};
+        if(mode==7)limits.is_policy_current=[](uint64_t,uint64_t){return false;};
+        if(mode==8)limits.timeout=std::chrono::milliseconds(1001);
+        if(mode==9)limits.cancelled=[]()->bool{throw std::runtime_error("transient callback refusal");};
+        if(mode==10)limits.cancelled=[]()->bool{throw 17;};
+        const auto refused=verify_guarded_candidate_report(binding,report_options,limits);std::fesetround(FE_TONEAREST);INFO(mode << " " << refused.reason);REQUIRE_FALSE(refused.snapshot);
+    }
+    LinearCandidateLimits limits;size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(verify_guarded_candidate_report(binding,report_options,limits).snapshot);const auto last=calls;
+    calls=0;limits.cancelled=[&]{return ++calls==last;};REQUIRE_FALSE(verify_guarded_candidate_report(binding,report_options,limits).snapshot);
+    calls=0;limits.cancelled=[&]{if(++calls==last)std::fesetround(FE_UPWARD);return false;};const auto numeric=verify_guarded_candidate_report(binding,report_options,limits);std::fesetround(FE_TONEAREST);REQUIRE_FALSE(numeric.snapshot);
+    calls=0;limits.cancelled=[&]{return ++calls==last/2;};REQUIRE_FALSE(verify_guarded_candidate_report(binding,report_options,limits).snapshot);
+    calls=0;limits.cancelled=[&]{if(++calls==last/2)throw std::runtime_error("");return false;};const auto empty_error=verify_guarded_candidate_report(binding,report_options,limits);
+    REQUIRE_FALSE(empty_error.snapshot);REQUIRE(empty_error.reason=="JOB_REPORT_EXCEPTION_WITHOUT_REASON");
+    limits={};const auto complete=verify_guarded_candidate_report(binding,report_options);REQUIRE(complete.snapshot);
+    limits.max_evaluations=complete.evaluations-1;REQUIRE_FALSE(verify_guarded_candidate_report(binding,report_options,limits).snapshot);
+}
+TEST_CASE("B13 invalid material verification remains an executed unknown mandatory result", "[Nonplanar][B13][JobReport]")
+{
+    Slic3r::Model model;Slic3r::Print print;report_model(model,print);const auto binding=report_binding(print);auto options=report_options;options.policy_id=0;
+    const auto result=verify_guarded_candidate_report(binding,options);INFO(result.reason);REQUIRE(result.snapshot);REQUIRE(result.snapshot->rates);REQUIRE_FALSE(result.snapshot->material);
+    if(const char *output=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(output)/"candidate-report-invalid-material.json",result);
+    for(const auto &check:result.snapshot->checks)if(check.id=="final_material" || check.id=="independent_replay"){
+        REQUIRE(check.status==nptop_verify::RateStatus::Unknown);REQUIRE(check.execution==GuardedCheckExecution::Run);REQUIRE_FALSE(check.reason.empty());}
+    REQUIRE_FALSE(result.snapshot->export_allowed);REQUIRE(accept_guarded_candidate_report(print,result.snapshot));REQUIRE(guarded_job_status(print).phase==GuardedJobPhase::Unknown);
+}
+TEST_CASE("B13 actual material dose failure produces a failed mandatory report and host phase", "[Nonplanar][B13][JobReport]")
+{
+    Slic3r::Model model;Slic3r::Print print;report_model(model,print);const auto binding=report_binding(print);auto options=report_options;options.max_nominal_delta_mm3=1e-20;
+    const auto result=verify_guarded_candidate_report(binding,options);INFO(result.reason);REQUIRE(result.snapshot);REQUIRE(result.snapshot->rates);REQUIRE_FALSE(result.snapshot->material);
+    REQUIRE(result.snapshot->overall_status==nptop_verify::RateStatus::Fail);REQUIRE_FALSE(result.snapshot->export_allowed);
+    for(const auto &check:result.snapshot->checks)if(check.id=="final_material" || check.id=="independent_replay"){
+        REQUIRE(check.status==nptop_verify::RateStatus::Fail);REQUIRE(check.execution==GuardedCheckExecution::Run);REQUIRE(check.reason=="FINAL_MATERIAL_NOMINAL_DOSE_DELTA");}
+    if(const char *output=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(output)/"candidate-report-failed-material.json",result);
+    REQUIRE(accept_guarded_candidate_report(print,result.snapshot));REQUIRE(guarded_job_status(print).phase==GuardedJobPhase::Failed);REQUIRE_FALSE(binding.task->is_current());REQUIRE_THROWS(print.process());
+}
+TEST_CASE("B13 report background worker cancels on replacement without reading native Print", "[Nonplanar][B13][JobReport]")
+{
+    Slic3r::Model model;Slic3r::Print print;report_model(model,print);const auto binding=report_binding(print);
+    std::promise<void> ready;auto signal=ready.get_future();bool first=true;GuardedCandidateReportResult result;LinearCandidateLimits limits;
+    limits.cancelled=[&]{if(first){first=false;ready.set_value();const auto end=std::chrono::steady_clock::now()+std::chrono::seconds(1);
+        while(binding.task->is_current() && std::chrono::steady_clock::now()<end)std::this_thread::yield();}return false;};
+    std::thread worker([&]{result=verify_guarded_candidate_report(binding,report_options,limits);});const auto status=signal.wait_for(std::chrono::seconds(1));
+    const auto newer=report_binding(print);worker.join();REQUIRE(status==std::future_status::ready);REQUIRE(newer.task->is_current());REQUIRE_FALSE(result.snapshot);REQUIRE_FALSE(binding.task->is_current());
 }

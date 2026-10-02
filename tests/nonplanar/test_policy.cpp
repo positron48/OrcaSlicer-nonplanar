@@ -12,6 +12,7 @@
 #include <nonplanar_verify/FullStopReplay.hpp>
 #include "full_stop_oracle.hpp"
 #include "final_material_oracle.hpp"
+#include "job_report_evidence.hpp"
 #include <nonplanar_verify/MaterialJson.hpp>
 #include <libslic3r/ClipperUtils.hpp>
 #include <libslic3r/Nonplanar/StlFile.hpp>
@@ -2814,6 +2815,43 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
             query_file<<query.dump(2)<<'\n';query_file.close();REQUIRE(query_file.good());
         }
         boost::nowide::ofstream sidecar((dir/"native-full-stop.bytes.json").string());REQUIRE(sidecar.good());sidecar<<metadata.dump(2)<<'\n';sidecar.close();REQUIRE(sidecar.good());
+        // Test-only exact ancestry, including both native Print states. This
+        // diagnoses identity differences without relaxing their comparison.
+        const auto &captured_body=*body.snapshot;
+        const nlohmann::json ancestry={{"body",captured_body.canonical_json()},{"guarded",captured_body.guarded_settings->canonical_json()},
+            {"executed_full",captured_body.executed_full_config.canonical_json()},{"executed_print",captured_body.executed_print_config.canonical_json()},
+            {"executed_object",captured_body.executed_object_config.canonical_json()},{"input",captured_body.partition->placement->native_input->canonical_json},
+            {"body_material",material.snapshot->canonical_context()},{"partition",captured_body.partition->canonical_json()},
+            {"final_source_fingerprint",new_ledger.source_fingerprint}};
+        boost::nowide::ofstream provenance((dir/"native-provenance.json").string());REQUIRE(provenance.good());provenance<<ancestry.dump(2)<<'\n';provenance.close();REQUIRE(provenance.good());
+        nlohmann::json meshes=nlohmann::json::object();
+        for(const auto &[name,mesh]:std::vector<std::pair<const char*,const TriangleMesh*>>{{"body",captured_body.partition->body.get()},
+            {"cap",captured_body.partition->cap.get()},{"reservation",captured_body.partition->reservation.get()},{"original",captured_body.partition->original.get()}}){
+            auto &trace=meshes[name];trace={{"vertices",nlohmann::json::array()},{"indices",nlohmann::json::array()},{"properties",nlohmann::json::array()}};
+            for(const auto &v:mesh->its.vertices)trace["vertices"].push_back({v[0],v[1],v[2]});
+            for(const auto &v:mesh->its.indices)trace["indices"].push_back({v[0],v[1],v[2]});
+            for(const auto &v:mesh->its.properties)trace["properties"].push_back({int(v.type),v.area});
+        }
+        boost::nowide::ofstream mesh_trace((dir/"native-partition-meshes.json").string());REQUIRE(mesh_trace.good());mesh_trace<<meshes.dump(2)<<'\n';mesh_trace.close();REQUIRE(mesh_trace.good());
+        // Bind/replay this actual native candidate in a new owned host attempt.
+        // Its opaque resources and source-to-plan relation remain unqualified.
+        const auto &source=*captured_body.partition->placement->native_input;
+        Model report_model;const auto &source_file=source.objects.front().volumes.front().source_file;
+        REQUIRE(load_stl(source_file.c_str(),&report_model));report_model.objects.front()->add_instance()->set_offset(Vec3d(20,20,0));
+        REQUIRE(capture_native_input(report_model,config)->fingerprint==source.fingerprint);
+        Print report_print;report_print.is_BBL_printer()=false;report_print.apply(report_model,config);
+        std::vector<JobResource> resources;for(int i=1;i<=7;++i)resources.push_back({JobResourceKind(i),"simulation-"+std::to_string(i),"explicit unconfirmed resource"});
+        resources.push_back({JobResourceKind::SourceFile,source_file,captured_body.partition->placement->centered->source->bytes});
+        auto job=begin_guarded_job(report_print,87,resources);INFO(job.reason);REQUIRE(job.task);
+        job=advance_guarded_job(report_print,*job.task,GuardedJobPhase::Planning);REQUIRE(job.task);
+        job=advance_guarded_job(report_print,*job.task,GuardedJobPhase::Serializing);REQUIRE(job.task);
+        const auto binding=bind_guarded_candidate(report_print,*job.task,candidate);INFO(binding.reason);REQUIRE(binding.task);
+        const auto report=verify_guarded_candidate_report(binding,material_options);INFO(report.reason);REQUIRE(report.snapshot);
+        REQUIRE(report.snapshot->rates);REQUIRE(report.snapshot->material);REQUIRE(report.snapshot->rates->moves.size()==2218);
+        REQUIRE_FALSE(report.snapshot->export_allowed);REQUIRE(report.snapshot->overall_status==nptop_verify::RateStatus::Unknown);
+        test::save_job_report(dir/"native-job-report.json",report);
+        REQUIRE(accept_guarded_candidate_report(report_print,report.snapshot));REQUIRE(guarded_job_status(report_print).phase==GuardedJobPhase::Unknown);
+        REQUIRE_THROWS(report_print.process());
     }
     INFO("native final candidate records=" << parsed.size() << " bytes=" << bytes.bytes.size() << " work=" << candidate.evaluations << " sha256=" << bytes.sha256);
     // Plan a declared exit after the actual later bead. Preserve every original

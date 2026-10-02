@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 136, in <module>
+    main()
+    ~~~~^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 132, in main
+    print(json.dumps(verify(parse(args.input.read_text()))))
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 79, in verify
+    require(document['job_fingerprint'] == record['job_fingerprint'] and
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            document['attempt'] == record['attempt'], 'Report attempt binding')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/antonfilatov/www/my/orca-nonplanar/scripts/nonplanar/job_report_oracle.py", line 26, in require
+    raise ValueError(reason)
+ValueError: Report attempt binding
