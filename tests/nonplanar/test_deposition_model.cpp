@@ -3685,3 +3685,52 @@ TEST_CASE("B08 material motion owns inputs and refuses incomplete numeric or wor
     auto uncertain=policy;uncertain.numeric=NumericBudget(.05,0,0,.01);
     REQUIRE(verify_material_motion(source,0,tools,uncertain).status==ClearanceStatus::Unknown);
 }
+
+TEST_CASE("B09 short rounded bead blocks the inner annulus at a travel endpoint", "[Nonplanar][B09][MaterialMotion][AnnulusEndpoint]")
+{
+    // Exact first packet of the native later bead; keep its declared Upper
+    // growth, reconciled coordinate error and .4 mm opening / 1 mm butt.
+    auto row=bead(1,0,{19.943001903806472,19.005581,4.603097614316123},
+        {19.957251427854857,19.005581,4.603988209569147},.38,.19634970470937851,.19724029996240233);
+    std::get<Deposition>(row.motion.payload).volume=Volume(.0009471792920385334);
+    row.bead->width_mm={.379333004364272,.380670454413189};
+    auto params=model();params.numerical_coordinate_error=Length(.004362192334027579);
+    const PhysicalPosition terminal{20.056998096193528,19.005581,4.610222376340314};
+    const ClearancePolicy policy{Length(.01),NumericBudget(0,0,0,0),Length(0),Length(0),Length(0)};
+    using Q=boost::multiprecision::cpp_bin_float_quad;
+    for (int orientation : {0,1,2,3}) for (int direction : {0,1,2}) {
+        const auto rotate=[&](PhysicalPosition p) {
+            double x=p.x()-20,y=p.y()-19;
+            for (int i=0;i<orientation;++i) {const double before=x;x=-y;y=before;}
+            return PhysicalPosition{20+x,19+y,p.z()};
+        };
+        auto turned=row;turned.motion.start=rotate(row.motion.start);turned.motion.end=rotate(row.motion.end);
+        const ToolPosition centre=orientation==3 ? ToolPosition{.03,-.02,.04} : ToolPosition{0,0,0};
+        const ToolComponent tip{91,FiniteTip{centre,Length(.2),Length(.5)}};
+        const auto pose=rotate(terminal);
+        const PhysicalPosition low{pose.x()-centre.x(),pose.y()-centre.y(),pose.z()-centre.z()};
+        const PhysicalPosition high{low.x(),low.y(),low.z()+1};
+        const auto start=direction==1 ? high : low,end=direction==0 ? high : low;
+        std::vector<MaterialRecord> rows{turned,
+            {{2,1,0,turned.motion.end,start,Speed(10),Acceleration(100),Travel{}},{}},
+            {{3,2,0,start,end,Speed(10),Acceleration(100),Travel{}},{}}};
+        const auto source=prepare_material_motion({"",captured(rows,params)});REQUIRE(source.snapshot);
+        const auto blocked=verify_material_motion(source,2,{tip},policy);INFO(orientation << ' ' << direction << ' ' << blocked.reason);
+        REQUIRE(blocked.status==ClearanceStatus::Fail);REQUIRE(blocked.witness);REQUIRE_FALSE(blocked.snapshot);
+        REQUIRE(blocked.witness->component_index==0);REQUIRE(blocked.witness->material_record==0);
+        const auto &w=*blocked.witness;
+        if (direction==0) REQUIRE(w.parameter==0);
+        if (direction==1) REQUIRE(w.parameter==1);
+        test::independent_annulus_upper_witness(blocked);
+        MaterialMotionLimits limited;limited.max_evaluations=blocked.evaluations-1;
+        const auto exhausted=verify_material_motion(source,2,{tip},policy,limited);
+        REQUIRE(exhausted.status==ClearanceStatus::Unknown);REQUIRE_FALSE(exhausted.snapshot);REQUIRE_FALSE(exhausted.witness);
+        REQUIRE(exhausted.reason=="MATERIAL_MOTION_WORK_LIMIT");
+        // Same material and margin, with the entire travel above its Upper.
+        rows[1].motion.end=high;rows[2].motion.start=high;rows[2].motion.end={high.x(),high.y(),high.z()+1};
+        const auto safe_source=prepare_material_motion({"",captured(rows,params)});REQUIRE(safe_source.snapshot);
+        const auto clear=verify_material_motion(safe_source,2,{tip},policy);INFO(clear.reason);
+        REQUIRE(clear.snapshot);REQUIRE(clear.status==ClearanceStatus::Pass);
+        REQUIRE(Q(high.z())-Q(policy.required.value())>Q(safe_source.snapshot->full_upper_z_mm->upper));
+    }
+}

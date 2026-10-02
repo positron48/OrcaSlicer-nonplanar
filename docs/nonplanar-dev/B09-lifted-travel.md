@@ -83,3 +83,9 @@ Full B13 software/resource provenance, independent review, current-source Linux
 and Windows remain separate. Package helpers only validate original documents.
 
 Implementation commit: `git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B09-lifted-travel.md`.
+
+2026-10-02 continuation: `B09-annulus-endpoints.md` / ADR-0079 now refute the
+original native lift with a strict declared Upper witness at t=0, confirmed by
+independent point equations. The earlier UNKNOWN observations above remain
+historical evidence; the refusal is stronger, without changing geometry, margins,
+limits, ledger or contact rules. Full native route qualification remains pending.

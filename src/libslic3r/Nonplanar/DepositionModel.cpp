@@ -426,27 +426,54 @@ MaterialMotionResult verify_material_motion(const MaterialMotionSourceResult &re
                 const auto membership=piece_interval(row,ledger->model,project(row,p[0],p[1],p[2]),row_index==index ? time : Interval(1),Representation::Upper);
                 if (membership==MaterialMembership::Outside) {leaves.push_back({component,row_index,cell.time,cell.box,false});continue;}
                 const double t=cell.time.lower+(cell.time.upper-cell.time.lower)/2;
-                std::vector<ToolPosition> probes{{cell.box.min.x()+(cell.box.max.x()-cell.box.min.x())/2,
-                    cell.box.min.y()+(cell.box.max.y()-cell.box.min.y())/2,cell.box.min.z()+(cell.box.max.z()-cell.box.min.z())/2}};
-                if (tip) {
-                    const double r=(tip->opening_radius.value()+tip->outer_radius.value())/2;
-                    for (auto offset : {std::array<double,2>{r,0},{-r,0},{0,r},{0,-r}})
-                        probes.push_back({tip->center.x()+offset[0],tip->center.y()+offset[1],tip->center.z()});
-                }
-                for (auto probe : probes) {
-                    work();
-                    if (probe.x()<cell.box.min.x() || probe.x()>cell.box.max.x() || probe.y()<cell.box.min.y() || probe.y()>cell.box.max.y() ||
-                        probe.z()<cell.box.min.z() || probe.z()>cell.box.max.z()) continue;
-                    const ToolBox point{probe,probe};
+                // Points only refute. Probe original endpoints before a narrow
+                // clearance boundary can exhaust subdivision elsewhere. A short
+                // bead can touch the inner annulus while all cardinal probes miss.
+                const std::array<double,3> times{cell.time.lower,t,cell.time.upper};
+                const size_t probe_times=cell.depth==0 ? times.size() : 1;
+                for (size_t sample=0;sample<probe_times;++sample) {
+                    const double probe_time=cell.depth==0 ? times[sample] : t;
+                    std::vector<ToolPosition> probes{{cell.box.min.x()+(cell.box.max.x()-cell.box.min.x())/2,
+                        cell.box.min.y()+(cell.box.max.y()-cell.box.min.y())/2,cell.box.min.z()+(cell.box.max.z()-cell.box.min.z())/2}};
                     if (tip) {
-                        const auto r=radius2(*tip,point);
-                        if (r.lo<=square(Interval(tip->opening_radius.value())).hi || r.hi>=square(Interval(tip->outer_radius.value())).lo) continue;
+                        const double r=(tip->opening_radius.value()+tip->outer_radius.value())/2;
+                        for (auto offset : {std::array<double,2>{r,0},{-r,0},{0,r},{0,-r}})
+                            probes.push_back({tip->center.x()+offset[0],tip->center.y()+offset[1],tip->center.z()});
+                        if (cell.depth==0) {
+                            const double dx=row.motion.end.x()-row.motion.start.x(),dy=row.motion.end.y()-row.motion.start.y(),length=std::hypot(dx,dy);
+                            const double ux=dx/length,uy=dy/length;
+                            const double nx=event.start.x()+probe_time*(event.end.x()-event.start.x())+tip->center.x();
+                            const double ny=event.start.y()+probe_time*(event.end.y()-event.start.y())+tip->center.y();
+                            // Heuristic candidate near the hole, never a bound or
+                            // contact exception. Strict interval tests below must
+                            // prove both annulus membership and Upper intersection.
+                            const double inner=tip->opening_radius.value()+(tip->outer_radius.value()-tip->opening_radius.value())/1024;
+                            for (double along : {0.,.5,1.}) {
+                                work();
+                                const double x=row.motion.start.x()+along*dx-nx,y=row.motion.start.y()+along*dy-ny;
+                                const double a=x*ux+y*uy;
+                                if (std::abs(a)>=inner) continue;
+                                const double b=std::sqrt(std::max(0.,inner*inner-a*a));
+                                for (double side : {-b,b})
+                                    probes.push_back({tip->center.x()+a*ux-side*uy,tip->center.y()+a*uy+side*ux,tip->center.z()});
+                            }
+                        }
                     }
-                    const auto q=physical(Interval(t),point,uncertainty.hi);
-                    if (piece(row,ledger->model,project(row,q[0],q[1],q[2]),row_index==index ? t : 1,Representation::Upper)==MaterialMembership::Inside) {
-                        stop(limits,ledger->revision,started);
-                        result.status=ClearanceStatus::Fail;result.reason="MATERIAL_MOTION_UPPER_INTERSECTION";
-                        result.witness=MaterialMotionWitness{component,row_index,t,probe};return result;
+                    for (auto probe : probes) {
+                        work();
+                        if (probe.x()<cell.box.min.x() || probe.x()>cell.box.max.x() || probe.y()<cell.box.min.y() || probe.y()>cell.box.max.y() ||
+                            probe.z()<cell.box.min.z() || probe.z()>cell.box.max.z()) continue;
+                        const ToolBox point{probe,probe};
+                        if (tip) {
+                            const auto r=radius2(*tip,point);
+                            if (r.lo<=square(Interval(tip->opening_radius.value())).hi || r.hi>=square(Interval(tip->outer_radius.value())).lo) continue;
+                        }
+                        const auto q=physical(Interval(probe_time),point,uncertainty.hi);
+                        if (piece(row,ledger->model,project(row,q[0],q[1],q[2]),row_index==index ? probe_time : 1,Representation::Upper)==MaterialMembership::Inside) {
+                            stop(limits,ledger->revision,started);
+                            result.status=ClearanceStatus::Fail;result.reason="MATERIAL_MOTION_UPPER_INTERSECTION";
+                            result.witness=MaterialMotionWitness{component,row_index,probe_time,probe};return result;
+                        }
                     }
                 }
                 if (cell.depth>=limits.max_depth) reject("MATERIAL_MOTION_UNCERTAIN_BOUNDARY");

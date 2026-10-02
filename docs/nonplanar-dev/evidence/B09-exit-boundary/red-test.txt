@@ -1,0 +1,24 @@
+Filters: [AnnulusEndpoint]
+Randomness seeded to: 1226227505
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+nonplanar_tests is a Catch2 v3.11.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+B09 short rounded bead blocks the inner annulus at a travel endpoint
+-------------------------------------------------------------------------------
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3689
+...............................................................................
+
+/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3711: FAILED:
+  REQUIRE( blocked.status==ClearanceStatus::Fail )
+with expansion:
+  2 == 1
+with message:
+  0 MATERIAL_MOTION_UNCERTAIN_BOUNDARY
+
+===============================================================================
+test cases: 1 | 1 failed
+assertions: 3 | 2 passed | 1 failed
+

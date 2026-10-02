@@ -7,6 +7,17 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B09-annulus-endpoints.md` and ADR-0079 refine the original native exit refusal:
+strict interval point checks now find a declared Upper intersection at its
+original starting pose (inner butt / first later packet / t=0), independently
+confirmed in113-bit and70-digit arithmetic. Complete continuous PASS/margins/
+prefix/head/budgets remain. New rotated/offset endpoint negatives and high-route
+positives pass; focus7/1002, CTest420/420 and six fresh strict OFF/ZAA pairs pass.
+All14 original native candidate/provenance files and both candidate byte strings
+remain exact. Full native contact/end/access must be replanned; all B01–B15 stay
+IN_PROGRESS and export BLOCK. Earlier exit-UNKNOWN observations below are
+historical and are superseded by this stronger FAIL witness.
+
 `B13-native-lineage.md` and ADR-0078 now execute an owned original-byte/native
 placement/partition/body/material -> affine hatches -> selected cap assembly ->
 linear plan -> final bytes chain. Exact parent and complete original body/journal

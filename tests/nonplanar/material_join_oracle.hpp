@@ -4,6 +4,45 @@
 #include <boost/multiprecision/cpp_bin_float.hpp>
 
 namespace Slic3r::nptop::test {
+// Independent 113-bit point refutation, never a continuous PASS certificate or
+// measured physical-material assertion. No planner interval/query code is used.
+inline void independent_annulus_upper_witness(const MaterialMotionResult &result)
+{
+    using Q=boost::multiprecision::cpp_bin_float_quad;
+    REQUIRE(result.status==ClearanceStatus::Fail);REQUIRE(result.source);REQUIRE(result.witness);
+    const auto &w=*result.witness;const auto &ledger=*result.source->ledger;
+    REQUIRE(w.parameter>=0);REQUIRE(w.parameter<=1);REQUIRE(w.material_record<=result.event_index);
+    const auto &tip=std::get<FiniteTip>(result.tools.at(w.component_index).geometry);
+    const Q tx=Q(w.local_point.x())-tip.center.x(),ty=Q(w.local_point.y())-tip.center.y();
+    REQUIRE(w.local_point.z()==tip.center.z());
+    REQUIRE(tx*tx+ty*ty>Q(tip.opening_radius.value())*tip.opening_radius.value());
+    REQUIRE(tx*tx+ty*ty<Q(tip.outer_radius.value())*tip.outer_radius.value());
+    const auto &event=ledger.records.at(result.event_index).motion;
+    const Q x=Q(event.start.x())+Q(w.parameter)*(Q(event.end.x())-event.start.x())+w.local_point.x();
+    const Q y=Q(event.start.y())+Q(w.parameter)*(Q(event.end.y())-event.start.y())+w.local_point.y();
+    const Q z=Q(event.start.z())+Q(w.parameter)*(Q(event.end.z())-event.start.z())+w.local_point.z();
+    const auto &row=ledger.records.at(w.material_record);REQUIRE(row.bead);
+    const auto &m=row.motion;const auto &b=*row.bead;
+    const Q dx=Q(m.end.x())-m.start.x(),dy=Q(m.end.y())-m.start.y(),l2=dx*dx+dy*dy,l=sqrt(l2);
+    const Q t=(dx*(x-m.start.x())+dy*(y-m.start.y()))/l2,n=abs((dx*(y-m.start.y())-dy*(x-m.start.x()))/l);
+    const Q progress=w.material_record<result.event_index ? Q(1) : Q(w.parameter);
+    const Q xy=Q(ledger.model.outer_xy_growth.value())+ledger.model.numerical_coordinate_error.value();
+    const Q ze=Q(ledger.model.outer_z_growth.value())+ledger.model.numerical_coordinate_error.value();
+    REQUIRE(progress>0);REQUIRE(t>-xy/l);REQUIRE(t<progress+xy/l);
+    const Q local=std::max(Q(0),std::min(progress,t)),dh=Q(b.gap_end_mm)-b.gap_begin_mm,dz=Q(m.end.z())-m.start.z();
+    const Q h=Q(b.gap_begin_mm)+dh*local,top=Q(m.start.z())+dz*local;
+    const Q hmin=std::min(Q(b.gap_begin_mm),Q(b.gap_begin_mm)+dh*progress),shift=std::min(xy/l,progress);
+    const Q a=Q(std::get<Deposition>(m.payload).volume.value())/l;
+    if (b.kind==BeadSectionKind::RoundedRectangle) {
+        const Q pi=acos(Q(-1)),core=a/(2*h)-pi*h/8+(a/(hmin*hmin)+pi/4)*abs(dh)/2*shift;
+        const Q radius=h/2+xy+ze+(abs(dz-dh/2)+abs(dh)/2)*shift;
+        const Q transverse=std::max(n-core,Q(0)),vertical=z-(top-h/2);
+        REQUIRE(core>=0);REQUIRE(radius>0);REQUIRE(transverse*transverse+vertical*vertical<radius*radius);
+    } else {
+        const Q half=a/(2*h)+xy+a/(hmin*hmin)*abs(dh)*shift/2;
+        REQUIRE(n<half);REQUIRE(z<top+ze+abs(dz)*shift);REQUIRE(z>top-h-ze-abs(dz-dh)*shift);
+    }
+}
 // Independent whole-box oracle. Bound every affine centre and normal over the
 // box, then use the smallest local eroded stadium core/radius. Derivative losses
 // retain the full actual-prefix height domain, including the finite-butt shift.

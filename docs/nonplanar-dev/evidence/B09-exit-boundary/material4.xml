@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="1002" hostname="tbd" time="0.011" timestamp="2026-10-02T18:01:22Z">
+    <properties>
+      <property name="random-seed" value="2981630896"/>
+      <property name="filters" value="[MaterialMotion],[LiftedTravel]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B09 short rounded bead blocks the inner annulus at a travel endpoint" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B09 lifted travel owns callbacks and refuses invalid routes or shared resource exhaustion" time="0.004" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B08 material motion rejects an interior collision and excludes future and opening material" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B09 lifted travel preserves original deposits and checks all three legs against the actual prefix" time="0.001" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B09 an interior exit or descent collision blocks lifted travel despite clear leg endpoints" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B08 material motion checks complete rigid tools with a coupled current front" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B08 material motion owns inputs and refuses incomplete numeric or work proofs" time="0.005" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

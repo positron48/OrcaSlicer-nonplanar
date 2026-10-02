@@ -64,3 +64,9 @@ required. The full native wedge's exit is UNKNOWN at its original required margi
 despite a proposed transfer height above its complete Upper ceiling. Keep that
 refusal; do not shorten the ledger, raise the synthetic tip, suppress a component
 or loosen the margin. B01-B15 stays IN_PROGRESS and guarded export stays BLOCK.
+
+2026-10-02 continuation: `B09-annulus-endpoints.md` / ADR-0079 now refute the
+original native lift with a strict declared Upper witness at t=0, confirmed by
+independent point equations. The earlier UNKNOWN observations above remain
+historical evidence; the refusal is stronger, without changing geometry, margins,
+limits, ledger or contact rules. Full native route qualification remains pending.

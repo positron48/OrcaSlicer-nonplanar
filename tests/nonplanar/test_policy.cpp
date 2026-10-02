@@ -2869,16 +2869,29 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE(exit_height>exit_start.z());REQUIRE(exit_height<full_source.snapshot->scene.nozzle_domain.max.z());
     INFO("native exit start Z=" << exit_start.z() << " complete Upper ceiling=" << exit_material.snapshot->full_upper_z_mm->upper << " proposed Z=" << exit_height);
     const auto exit_route=plan_simulation_lifted_travel(exit_source,exit_index,exit_height,exit_limits);INFO(exit_route.reason << " cells=" << exit_route.cells << " work=" << exit_route.evaluations);
-    REQUIRE_FALSE(exit_route.snapshot);REQUIRE(exit_route.status==ClearanceStatus::Unknown);
+    REQUIRE_FALSE(exit_route.snapshot);REQUIRE(exit_route.status==ClearanceStatus::Fail);
     REQUIRE(exit_route.blocked_leg==0);REQUIRE(exit_route.motion_check);REQUIRE(exit_route.motion_check->material_check);
     const auto &exit_material_check=*exit_route.motion_check->material_check;INFO(exit_material_check.reason);
-    REQUIRE(exit_material_check.reason=="MATERIAL_MOTION_UNCERTAIN_BOUNDARY");
-    // A high horizontal ceiling does not qualify the full exit. Keep its
-    // original required margin and incomplete boundary proof; never publish.
+    REQUIRE(exit_material_check.reason=="MATERIAL_MOTION_UPPER_INTERSECTION");REQUIRE(exit_material_check.witness);
+    REQUIRE(exit_material_check.witness->component_index==0);REQUIRE(exit_material_check.witness->material_record==first_later);
+    REQUIRE(exit_material_check.witness->parameter==0);test::independent_annulus_upper_witness(exit_material_check);
+    // The original starting pose intersects declared Upper at the inner butt.
+    // A higher transfer ceiling cannot repair this exit; never publish it.
     const auto &exit_ledger=*exit_material_check.source->ledger;
     REQUIRE(exit_ledger.records.size()==new_ledger.records.size()+3);
     for (size_t i=0;i<new_ledger.records.size();++i) REQUIRE(exit_ledger.canonical_record(i)==new_ledger.canonical_record(i));
     REQUIRE(exit_route.source==exit_source.snapshot);REQUIRE(exit_material_check.tools.size()==7);
+    if (const char *directory=std::getenv("NPTOP_CANDIDATE_EVIDENCE_DIR")) {
+        const auto &w=*exit_material_check.witness;const auto &tip=std::get<FiniteTip>(exit_material_check.tools[w.component_index].geometry);
+        const auto path=boost::filesystem::path(directory)/"native-exit-witness.json";REQUIRE_FALSE(boost::filesystem::exists(path));
+        const nlohmann::json trace={{"version",1},{"scope","declared_upper_point_refutation_only"},{"status","FAIL"},{"reason",exit_material_check.reason},
+            {"ledger_fingerprint",exit_ledger.fingerprint()},{"context",exit_ledger.canonical_context()},
+            {"motion",exit_ledger.canonical_record(exit_material_check.event_index)},{"material",exit_ledger.canonical_record(w.material_record)},
+            {"event_index",exit_material_check.event_index},{"component_index",w.component_index},{"material_record",w.material_record},{"parameter",w.parameter},
+            {"local_point",{w.local_point.x(),w.local_point.y(),w.local_point.z()}},
+            {"tip_center",{tip.center.x(),tip.center.y(),tip.center.z()}},{"opening_radius",tip.opening_radius.value()},{"outer_radius",tip.outer_radius.value()}};
+        boost::nowide::ofstream output(path.string());REQUIRE(output.good());output<<trace.dump(2)<<'\n';output.close();REQUIRE(output.good());
+    }
     const double lx=(la.x()+lb.x())/2,ly=(la.y()+lb.y())/2,lower_plane=(la.z()+lb.z())/2-.025;
     const RectangleXY third_region=rx ? RectangleXY{lx-.025,ly-.01,lx+.025,ly+.01} : RectangleXY{lx-.01,ly-.025,lx+.01,ly+.025};
     const auto third=assess_first_cap_next_pass(added,2,third_region,lower_plane,next_limits);INFO(third.reason);REQUIRE(third.snapshot);
