@@ -58,6 +58,9 @@ struct LinearDepositionGeometryResult;
 struct LinearFormingContactResult;
 struct LinearFormingContactModel;
 struct LinearFormingContactLimits;
+struct LinearSupportedDepositionPolicy;
+struct LinearSupportedDepositionLimits;
+struct LinearSupportedDepositionResult;
 struct LinearMaterialSnapshot {
  const std::shared_ptr<const LinearRateSnapshot> rates;
  const std::vector<MaterialDeclaration> declarations;
@@ -82,6 +85,8 @@ private:
  friend LinearTravelResult verify_linear_travel_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearTravelLimits&);
  friend LinearDepositionGeometryResult verify_linear_deposition_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearTravelLimits&);
  friend LinearFormingContactResult verify_linear_forming_contact_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,const LinearTravelScene&,const LinearFormingContactModel&,const LinearFormingContactLimits&);
+ friend LinearSupportedDepositionResult verify_linear_supported_deposition(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,
+  const LinearTravelScene&,const LinearFormingContactModel&,const LinearSupportedDepositionPolicy&,const LinearSupportedDepositionLimits&);
 };
 struct LinearMaterialResult {
  RateStatus status=RateStatus::Unknown;std::string reason;std::optional<size_t> record;
@@ -203,12 +208,17 @@ struct LinearRunSupportSnapshot {
  const std::shared_ptr<const JoinedMaterialSnapshot> source,support;
  const size_t run_index;const LinearRunSupportPolicy policy;
  const double query_error_mm;const std::vector<LinearRunSupportLeaf> leaves;
+ // Present only inside a complete supported-forming proof. These anchors/gap
+ // bands concern the underlying prefix before that whole forming block.
+ const std::optional<size_t> forming_block_first;
  const size_t evaluations,cells;
 private:
  LinearRunSupportSnapshot(std::shared_ptr<const JoinedMaterialSnapshot> s,std::shared_ptr<const JoinedMaterialSnapshot> old,size_t index,
-  LinearRunSupportPolicy p,double error,std::vector<LinearRunSupportLeaf> parts,size_t work,size_t count)
-  :source(std::move(s)),support(std::move(old)),run_index(index),policy(p),query_error_mm(error),leaves(std::move(parts)),evaluations(work),cells(count){}
+  LinearRunSupportPolicy p,double error,std::vector<LinearRunSupportLeaf> parts,size_t work,size_t count,std::optional<size_t> block={})
+  :source(std::move(s)),support(std::move(old)),run_index(index),policy(p),query_error_mm(error),leaves(std::move(parts)),forming_block_first(block),evaluations(work),cells(count){}
  friend LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot>,size_t,const LinearRunSupportPolicy&,const LinearRunSupportLimits&);
+ friend LinearSupportedDepositionResult verify_linear_supported_deposition(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,
+  const LinearTravelScene&,const LinearFormingContactModel&,const LinearSupportedDepositionPolicy&,const LinearSupportedDepositionLimits&);
 };
 struct LinearRunSupportWitness {size_t target_record;RateBounds progress,transverse;MaterialRegion region;};
 struct LinearRunSupportResult {
@@ -322,4 +332,37 @@ struct LinearFormingContactResult {
 // No travel/support/physical/job/export qualification is implied.
 LinearFormingContactResult verify_linear_forming_contact_geometry(std::shared_ptr<const LinearMaterialSnapshot>,size_t first_record,size_t record_count,
  const LinearTravelScene&,const LinearFormingContactModel&,const LinearFormingContactLimits &limits={});
+struct LinearSupportRunRequest {size_t first_record,last_record;LinearRunSupportPolicy policy;};
+struct LinearSupportedDepositionPolicy {
+ uint64_t version=1,policy_id=0,revision=0;JoinedMaterialPolicy join;
+ std::vector<LinearSupportRunRequest> runs;
+};
+struct LinearSupportedDepositionLimits:LinearFormingContactLimits {
+ std::function<bool(uint64_t,uint64_t)> is_join_current,is_support_current,is_supported_current;
+};
+struct LinearSupportedDepositionResult;
+struct LinearSupportedDepositionSnapshot {
+ const std::shared_ptr<const LinearFormingContactSnapshot> geometry;
+ const std::shared_ptr<const JoinedMaterialSnapshot> target;
+ const LinearSupportedDepositionPolicy policy;
+ const std::vector<std::shared_ptr<const LinearRunSupportSnapshot>> support;
+ const size_t evaluations,cells;
+private:
+ LinearSupportedDepositionSnapshot(std::shared_ptr<const LinearFormingContactSnapshot> g,std::shared_ptr<const JoinedMaterialSnapshot> t,
+  LinearSupportedDepositionPolicy p,std::vector<std::shared_ptr<const LinearRunSupportSnapshot>> s,size_t work,size_t n)
+  :geometry(std::move(g)),target(std::move(t)),policy(std::move(p)),support(std::move(s)),evaluations(work),cells(n){}
+ friend LinearSupportedDepositionResult verify_linear_supported_deposition(std::shared_ptr<const LinearMaterialSnapshot>,size_t,size_t,
+  const LinearTravelScene&,const LinearFormingContactModel&,const LinearSupportedDepositionPolicy&,const LinearSupportedDepositionLimits&);
+};
+struct LinearSupportedDepositionResult {
+ RateStatus status=RateStatus::Unknown;std::string reason;std::shared_ptr<const LinearSupportedDepositionSnapshot> snapshot;
+ std::optional<LinearTravelWitness> geometry_witness;std::optional<LinearRunSupportWitness> support_witness;
+ std::optional<size_t> failed_run;size_t evaluations=0,cells=0;
+};
+// A complete Deposit block needs both head/contact clearance and every actual
+// run's pre-block underlying Nominal gap/Lower-anchor proof from the SAME owner.
+// All components share one root deadline/work/cell budget; no partial combined
+// proof, foreign component certificate, future support or export permission.
+LinearSupportedDepositionResult verify_linear_supported_deposition(std::shared_ptr<const LinearMaterialSnapshot>,size_t first_record,size_t record_count,
+ const LinearTravelScene&,const LinearFormingContactModel&,const LinearSupportedDepositionPolicy&,const LinearSupportedDepositionLimits &limits={});
 }

@@ -1,0 +1,101 @@
+{
+  "status": "PASS329_EXACT_PRIOR_REPORTS_THREE_CLASSIFIED_DEADLINE_COUNTERS_NEW105_AND_NATIVE",
+  "counts": {
+    "rate": 10,
+    "material": 10,
+    "cover": 18,
+    "joined": 21,
+    "nominal": 21,
+    "support": 20,
+    "travel": 40,
+    "deposition": 21,
+    "contact": 81,
+    "polyline": 90
+  },
+  "exact_outputs": {
+    "rate": 10,
+    "material": 10,
+    "cover": 18,
+    "joined": 21,
+    "nominal": 18,
+    "support": 20,
+    "travel": 40,
+    "deposition": 21,
+    "contact": 81,
+    "polyline": 90
+  },
+  "new_cases": 105,
+  "deadline_counter_differences": {
+    "pause/stdout.json": {
+      "parent_sha256": "c09932d03eea41c06de9830b6aed06801bf33e40720b6d6546152f04d7e0a89b",
+      "current_sha256": "c0f04c80d8da49e2f114f413e49665611e3c9b09fe295c736d5fe16d29ed6ca1",
+      "changed_fields": {
+        "cells": [
+          64492,
+          62088
+        ],
+        "work": [
+          1303201,
+          1256487
+        ]
+      },
+      "status": "UNCHANGED_UNKNOWN_ABSOLUTE_1S_DEADLINE_WORK_CELL_COUNTS_ONLY"
+    },
+    "turn/stdout.json": {
+      "parent_sha256": "aa27e755e711d4eecfab82d83f10dc6c0927bde7fa603a8b2b572aebb6a8b376",
+      "current_sha256": "ba8ccef68176ec95c57b34e764873a6c38b882167cd2c045d80d45e0515cf9e4",
+      "changed_fields": {
+        "cells": [
+          44578,
+          44989
+        ],
+        "work": [
+          1060834,
+          1070786
+        ]
+      },
+      "status": "UNCHANGED_UNKNOWN_ABSOLUTE_1S_DEADLINE_WORK_CELL_COUNTS_ONLY"
+    },
+    "pressure/stdout.json": {
+      "parent_sha256": "cc0d62325cee0cc036d70b6b8cb5f2ecc1b701743573692ed882331f51c8f85f",
+      "current_sha256": "8d824b8aa2eaeed194ba7cf201d2116c47c3ffdbda1aacf6169a5e22bc4b3963",
+      "changed_fields": {
+        "cells": [
+          64497,
+          63931
+        ],
+        "work": [
+          1303324,
+          1292350
+        ]
+      },
+      "status": "UNCHANGED_UNKNOWN_ABSOLUTE_1S_DEADLINE_WORK_CELL_COUNTS_ONLY"
+    }
+  },
+  "native_supported": {
+    "cells": 48,
+    "component": "final_byte_supported_deposition",
+    "component_status": "PASS",
+    "export_allowed": false,
+    "failed_run": null,
+    "geometry_cells": 28,
+    "geometry_leaves": 28,
+    "geometry_witness": null,
+    "job_status": "UNKNOWN",
+    "mandatory_checks_pending": [
+      "measured_contact",
+      "complete_cap_fill_seams",
+      "dose_profile_qualification",
+      "full_job_provenance",
+      "firmware_transform",
+      "machine_state"
+    ],
+    "reason": "WHOLE_FINAL_DEPOSIT_BLOCK_HEAD_CONTACT_AND_EVERY_UNDERLYING_NOMINAL_GAP_LOWER_ANCHOR",
+    "schema_version": 1,
+    "scope": "complete_declared_forming_block_head_contact_and_pre_block_underlying_gap_lower_anchor_only",
+    "support_runs": 1,
+    "support_witness": null,
+    "underlying_completed_records": 2198,
+    "work": 598131
+  }
+}

@@ -2,6 +2,7 @@
 #include "MaterialJson.hpp"
 #include "TravelJson.hpp"
 #include "FormingContactJson.hpp"
+#include "SupportedDepositionJson.hpp"
 #include <type_traits>
 #include <algorithm>
 #include <nlohmann/json.hpp>
@@ -116,6 +117,39 @@ template<class Result,class Verify> int audit_geometry(char **argv,bool depositi
         {"obstacle",w.obstacle ? nlohmann::json(*w.obstacle) : nlohmann::json(nullptr)}};}
     std::cout<<report.dump(2)<<'\n';if(!std::cout)return 74;return result.status==RateStatus::Pass ? 0 : result.status==RateStatus::Fail ? 2 : 3;
 }
+int audit_supported_deposition(char **argv)
+{
+    using namespace nptop_verify;LinearSupportedDepositionResult result;
+    const auto deadline=std::chrono::steady_clock::now()+std::chrono::milliseconds(1000);
+    LinearSupportedDepositionLimits limits;limits.cancelled=[&]{return std::chrono::steady_clock::now()>=deadline;};
+    try {
+        std::array<double,3> initial;const auto policy=parse_policy(read_bounded(argv[2],65536),initial);
+        const auto declaration=parse_material_document(read_bounded(argv[3],32*1024*1024));const auto query=parse_travel_document(read_bounded(argv[4],2*1024*1024));
+        const auto contact=parse_forming_contact_document(read_bounded(argv[5],65536));
+        const auto supported=parse_supported_deposition_document(read_bounded(argv[6],2*1024*1024));
+        const auto rates=verify_linear_rates(read_bounded(argv[7],32*1024*1024),initial,policy,limits);
+        result.status=rates.status;result.reason=rates.reason;result.evaluations=rates.evaluations;
+        if(rates.snapshot){const auto material=reconstruct_linear_material(rates.snapshot,declaration.second,declaration.first,limits);
+            result.status=material.status;result.reason=material.reason;result.evaluations=material.evaluations;
+            if(material.snapshot)result=verify_linear_supported_deposition(material.snapshot,query.first_record,query.record_count,query.scene,contact,supported,limits);
+        }
+        if(!result.snapshot && result.status==RateStatus::Pass){result.status=RateStatus::Unknown;result.reason="MISSING_SUPPORTED_DEPOSITION_PROOF";}
+    }catch(const std::exception &){result.status=RateStatus::Unknown;result.snapshot.reset();result.geometry_witness.reset();result.support_witness.reset();result.reason="BOUNDED_SUPPORTED_DEPOSITION_INPUT_ERROR";}
+    const char *status=result.status==RateStatus::Pass ? "PASS" : result.status==RateStatus::Fail ? "FAIL" : "UNKNOWN";
+    nlohmann::json report={{"schema_version",1},{"component","final_byte_supported_deposition"},{"component_status",status},{"job_status","UNKNOWN"},{"export_allowed",false},
+        {"scope","complete_declared_forming_block_head_contact_and_pre_block_underlying_gap_lower_anchor_only"},{"reason",result.reason},{"work",result.evaluations},{"cells",result.cells},
+        {"support_runs",result.snapshot ? result.snapshot->support.size() : 0},{"geometry_witness",nullptr},{"support_witness",nullptr},
+        {"failed_run",result.failed_run ? nlohmann::json(*result.failed_run) : nlohmann::json(nullptr)},
+        {"mandatory_checks_pending",{"measured_contact","complete_cap_fill_seams","dose_profile_qualification","full_job_provenance","firmware_transform","machine_state"}}};
+    if(result.snapshot){report["geometry_cells"]=result.snapshot->geometry->cells;report["geometry_leaves"]=result.snapshot->geometry->leaves.size();
+        report["underlying_completed_records"]=result.snapshot->geometry->first_record;}
+    if(result.geometry_witness){const auto &w=*result.geometry_witness;report["geometry_witness"]={{"record",w.record},{"component",w.component},{"progress",{w.progress.lower,w.progress.upper}},
+        {"point_min",w.point.min},{"point_max",w.point.max},{"material_event",w.material_event ? nlohmann::json(*w.material_event) : nlohmann::json(nullptr)},
+        {"obstacle",w.obstacle ? nlohmann::json(*w.obstacle) : nlohmann::json(nullptr)}};}
+    if(result.support_witness){const auto &w=*result.support_witness;report["support_witness"]={{"target_record",w.target_record},{"progress",{w.progress.lower,w.progress.upper}},
+        {"transverse",{w.transverse.lower,w.transverse.upper}},{"region_min",w.region.min},{"region_max",w.region.max}};}
+    std::cout<<report.dump(2)<<'\n';if(!std::cout)return 74;return result.status==RateStatus::Pass ? 0 : result.status==RateStatus::Fail ? 2 : 3;
+}
 int audit_run_support(char **argv)
 {
     using namespace nptop_verify;LinearRateResult rates;LinearMaterialResult material;LinearMaterialPrefixResult prefix;JoinedMaterialResult joined;LinearRunSupportResult support;
@@ -153,6 +187,7 @@ int main(int argc,char **argv)
     if(argc==6 && std::string(argv[1])=="--linear-travel-geometry-only")return audit_geometry<nptop_verify::LinearTravelResult>(argv,false,nptop_verify::verify_linear_travel_geometry);
     if(argc==6 && std::string(argv[1])=="--linear-deposition-geometry-only")return audit_geometry<nptop_verify::LinearDepositionGeometryResult>(argv,true,nptop_verify::verify_linear_deposition_geometry);
     if(argc==7 && std::string(argv[1])=="--linear-forming-contact-geometry-only")return audit_geometry<nptop_verify::LinearFormingContactResult>(argv,true,nptop_verify::verify_linear_forming_contact_geometry);
+    if(argc==8 && std::string(argv[1])=="--linear-supported-deposition-only")return audit_supported_deposition(argv);
     if(argc==7 && std::string(argv[1])=="--linear-run-support-only")return audit_run_support(argv);
     const bool nominal_run_mode=argc==7 && std::string(argv[1])=="--linear-material-nominal-run-cover-only";
     const bool joined_mode=nominal_run_mode || (argc==7 && std::string(argv[1])=="--linear-material-joined-cover-only");
@@ -165,6 +200,7 @@ int main(int argc,char **argv)
                     "       nonplanar_rate_audit --linear-material-joined-cover-only POLICY.json MATERIAL.json JOIN.json QUERY.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-material-nominal-run-cover-only POLICY.json MATERIAL.json JOIN.json QUERY.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-run-support-only POLICY.json MATERIAL.json JOIN.json SUPPORT_QUERY.json CANDIDATE.txt\n"
+                    "       nonplanar_rate_audit --linear-supported-deposition-only POLICY.json MATERIAL.json GEOMETRY_QUERY.json CONTACT.json SUPPORT.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-travel-geometry-only POLICY.json MATERIAL.json TRAVEL_QUERY.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-deposition-geometry-only POLICY.json MATERIAL.json QUERY.json CANDIDATE.txt\n"
                     "       nonplanar_rate_audit --linear-forming-contact-geometry-only POLICY.json MATERIAL.json QUERY.json CONTACT.json CANDIDATE.txt\n"

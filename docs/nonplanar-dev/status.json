@@ -26,7 +26,7 @@
     "B09": "OWNED_EXACT_PROSPECTIVE_BEAD_PARENT_MATERIAL_COMPLETE_SIMULATION_DEPARTURE_AND_NATIVE_JOB_EDGE_PASS_ORIGINAL_WIDE_EXIT_FAIL_RETAINED_FULL_FIXED_WIDTH_FILL_CONTACT_HEIGHT_ORDER_BYTE_GEOMETRY_PENDING",
     "B10": "OWNED_COMPLETE_JOURNAL_LINEAR_XYZ_CARTESIAN_COREXY_DRIVE_E_Q_CROSS_SECTION_ACCELERATION_PRESSURE_EVENT_RATE_FULL_STOP_PASS_EXPORT_ENFORCEMENT_FIRMWARE_TRANSFORM_FLOW_CONTACT_JOB_PENDING",
     "B11": "OWNED_COMPLETE_LINEAR_NATIVE_FINAL_BYTES_HASH_POLICY_EVENT_MAP_EXPLICIT_XYZ_E_PRESSURE_DWELL_FULL_STOP_ANALYTICAL_AND_NATIVE_PASS_AUDITED_FILTERS_FULL_PROLOG_JOB_EXPORT_PENDING",
-    "B12": "INDEPENDENT_FINAL_BYTE_RATES_DOSE_SECTIONS_PREFIX_SOLIDS_RUN_SUPPORT_GAP_BANDS_ANCHORS_COMPLETE_TRAVEL_MAXIMAL_RIGID_DEPOSIT_AND_DECLARED_RECENT_FORMING_RUN_WORKING_FACE_AGE_WIDTH_GAP_GRADIENT_TOP_DOMAIN_WHOLE_PARTITIONS_PASS_ORIGINAL_MARGINS_LIMITS_OLD_NEIGHBOR_CONTOUR_REFUSALS_RETAINED_QUALIFIED_SUPPORT_CONTACT_TURNS_SEAMS_FILL_TRANSFORM_JOB_PENDING",
+    "B12": "INDEPENDENT_FINAL_BYTE_RATES_MATERIAL_COMPLETE_TRAVEL_DEPOSIT_POLYLINE_CONTACT_AND_WHOLE_BLOCK_UNDERLYING_NOMINAL_GAPS_JOINED_LOWER_ANCHORS_SAME_OWNER_SHARED_BUDGETS_PASS_ORIGINAL_LIMITS_REFUSALS_RETAINED_QUALIFIED_CONTACT_SEAMS_FILL_TRANSFORM_FULL_JOB_PENDING",
     "B13": "OWNED_NATIVE_BODY_HATCH_CAP_PROTECTED_DEPARTURE_ROUTE_ATTEMPT_CANDIDATE_MANIFEST_AND_FINAL_BYTE_REPLAY_FIXED17_PASS_THIRTEEN_FULL_JOB_DOMAINS_UNKNOWN_NOT_RUN_EXPORT_BLOCK_QUALIFIED_PROVENANCE_VERIFIED_PUBLICATION_ALL_ROUTES_PENDING",
     "B14": "NOT_IMPLEMENTED_FULL_SCOPE",
     "B15": "NOT_IMPLEMENTED_FULL_SCOPE"
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 440,
-    "final_ctest_executed": 440,
+    "final_ctest_discovered": 449,
+    "final_ctest_executed": 449,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -1997,6 +1997,124 @@
     "review_status": "SEPARATE_AUTHOR_AUDIT_INDEPENDENT_PENDING",
     "physical": "NOT_RUN_STANDARD_U1_HEAD_NOZZLE0_4_KNOWN_GEOMETRY_UNCONFIRMED",
     "qualified_contact_old_support_neighbors_seams_full_fill_full_job": "PENDING",
+    "full_B01_B15": "IN_PROGRESS",
+    "guarded_export": "BLOCK"
+  },
+  "B12_supported_deposition_evidence": {
+    "status": "BOUNDED_COMPLETE_DECLARED_FORMING_BLOCK_GEOMETRY_AND_PRE_BLOCK_UNDERLYING_SUPPORT_IMPLEMENTED_FULL_SCOPE_PENDING",
+    "document": "B12-supported-deposition.md",
+    "review": "B12-supported-deposition-review.md",
+    "adr": "adr-0086-complete-supported-deposition-proof.md",
+    "manifest": "evidence/B12-supported-deposition/source-manifest.json",
+    "diagnostic_support_version": 1,
+    "diagnostic_fields": {
+      "root": 5,
+      "join": 6,
+      "run": 3,
+      "support_policy": 10
+    },
+    "production_and_previous_formats": "UNCHANGED",
+    "new_cases": 5,
+    "focused_cases": 30,
+    "focused_assertions": 2433417,
+    "ctest": 449,
+    "ctest_failures": 0,
+    "ctest_skips": 0,
+    "gate_wall_seconds": 108.456,
+    "original_CLI_cases": 332,
+    "new_CLI_cases": 105,
+    "prior_CLI_outputs_exact": 329,
+    "prior_CLI_deadline_counter_differences": {
+      "pause/stdout.json": {
+        "parent_sha256": "c09932d03eea41c06de9830b6aed06801bf33e40720b6d6546152f04d7e0a89b",
+        "current_sha256": "c0f04c80d8da49e2f114f413e49665611e3c9b09fe295c736d5fe16d29ed6ca1",
+        "changed_fields": {
+          "cells": [
+            64492,
+            62088
+          ],
+          "work": [
+            1303201,
+            1256487
+          ]
+        },
+        "status": "UNCHANGED_UNKNOWN_ABSOLUTE_1S_DEADLINE_WORK_CELL_COUNTS_ONLY"
+      },
+      "turn/stdout.json": {
+        "parent_sha256": "aa27e755e711d4eecfab82d83f10dc6c0927bde7fa603a8b2b572aebb6a8b376",
+        "current_sha256": "ba8ccef68176ec95c57b34e764873a6c38b882167cd2c045d80d45e0515cf9e4",
+        "changed_fields": {
+          "cells": [
+            44578,
+            44989
+          ],
+          "work": [
+            1060834,
+            1070786
+          ]
+        },
+        "status": "UNCHANGED_UNKNOWN_ABSOLUTE_1S_DEADLINE_WORK_CELL_COUNTS_ONLY"
+      },
+      "pressure/stdout.json": {
+        "parent_sha256": "cc0d62325cee0cc036d70b6b8cb5f2ecc1b701743573692ed882331f51c8f85f",
+        "current_sha256": "8d824b8aa2eaeed194ba7cf201d2116c47c3ffdbda1aacf6169a5e22bc4b3963",
+        "changed_fields": {
+          "cells": [
+            64497,
+            63931
+          ],
+          "work": [
+            1303324,
+            1292350
+          ]
+        },
+        "status": "UNCHANGED_UNKNOWN_ABSOLUTE_1S_DEADLINE_WORK_CELL_COUNTS_ONLY"
+      }
+    },
+    "native": {
+      "candidate_sha256": "b8eb15681127c1a8db57ce0aa257326763f16832b82fdafd13ed091c4bd98ef8",
+      "bytes": 128014,
+      "records": 2205,
+      "first_record": 2198,
+      "record_count": 4,
+      "geometry_cells": 28,
+      "support_cells": 20,
+      "cells": 48,
+      "support_runs": 1,
+      "support_leaves": 4,
+      "API_work": 637876,
+      "CLI_work": 598131,
+      "CLI_wall_seconds": 0.534,
+      "absolute_root_ms": 1000,
+      "query_error_mm": 0.01931086009160401
+    },
+    "actual_final_source": "EXACT_BYTE_OWNER_AND_PRE_BLOCK_PREFIX_TARGET_COMPLETE_BOUNDARY_ALL_ACTUAL_MAXIMAL_RUNS_REQUESTS_POLICIES_MARGINS_AND_LIMITS",
+    "freshness": "SOURCE_RATE_MATERIAL_SCENE_CONTACT_JOIN_COMPOSITE_ACTIVE_AND_COMPLETED_SUPPORT_POLICIES_ROOT_LATCH_CUMULATIVE_WORK_CELLS_ABSOLUTE_DEADLINE_LATE_WITNESS_RESET_FENV",
+    "standalone_support": "ORIGINAL_PRE_RUN_MEANING_NULL_FORMING_SCOPE_EXACT20_CLI_REPORTS_AND_CORNER_TOO_SMALL_GAP_FAIL_RETAINED",
+    "independent_reference": "FINAL_TEXT113_BIT_COMPONENT_GEOMETRY_AND_COMPLETE_RAY_PARTITIONS_PLUS_OWNER_PREFIX_COMPLETE_RUN_POLICY_AND_CELL_GLUE_NO_PRODUCT_QUERY_REUSE",
+    "original_outputs": {
+      "native_exact": 12,
+      "native_drift": 7,
+      "diagnosis": "EXACT_DERIVED_BODY_VERTEX16_17_SWAP_ORIENTED_FACE_REMAP_DEPENDENT_LEAVES_ONLY_SOURCE_TO_PLAN_UNQUALIFIED_NO_NORMALIZATION",
+      "old_travel_exact": 4,
+      "old_rigid_deposit_exact": 4,
+      "old_v1_contact_exact": 6,
+      "old_v2_contact_exact": 7
+    },
+    "OFF_ZAA": "SIX_FRESH_STRICT_PAIRS_PASS_ORIGINAL_IDS_TIMESTAMP_ONLY_OFF_DEFAULT_ALLOWANCE",
+    "retained_failures": "TEST_FIRST_LINKER_CORNER_RED_RISING_CROSS_ANCHOR_MATRIX_EXPECTATION_STRICT_SOURCE_IDENTITY_AND_THREE_NOMINAL_DEADLINE_COUNTERS_CLASSIFIED_NO_MARGIN_LIMIT_RELAXATION",
+    "native_full_contour": "ORIGINAL108_RECORDS_FAIL2094_EVENT2077_AFTER_UNPROVED2093_831696_CLI_WORK_RETAINED",
+    "mandatory_report": {
+      "checks": 17,
+      "pass_run": 4,
+      "unknown_not_run": 13
+    },
+    "Linux": "NEW_SOURCE_PENDING_AFTER_PUSH_PARENT_C0D010EA_37080853045_IN_PROGRESS_AT_005843_UTC",
+    "Windows": "NOT_RUN",
+    "GUI": "NOT_RUN_FULL_PIPELINE",
+    "physical": "NOT_RUN_STANDARD_U1_HEAD_NOZZLE0_4_UNCONFIRMED",
+    "review_status": "SEPARATE_AUTHOR_AUDIT_INDEPENDENT_PENDING",
+    "remaining": "QUALIFIED_CONTACT_OLD_SUPPORT_ADJACENT_SEAM_FULL_FILL_UNION_VOLUME_ALL_MOTIONS_ORDER_SOURCE_RESOURCES_SOFTWARE_TRANSFORMS_DELIVERY_PUBLICATION_B14_B15",
     "full_B01_B15": "IN_PROGRESS",
     "guarded_export": "BLOCK"
   }

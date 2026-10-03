@@ -198,4 +198,29 @@ inline void check_polyline_contact_witness(const nptop_verify::LinearMaterialSna
   return current-(arc[record-first]+source_upper*sqrt(bx*bx+by*by))>H(model.wake_length_mm)+H("1e-20");};
  check_deposition_witness(m,s,w,old);
 }
+inline void check_supported_deposition(const nptop_verify::LinearSupportedDepositionSnapshot &proof)
+{
+ using H=FinalMaterialHigh;const auto &g=*proof.geometry;const auto steps=replay_material_steps(*g.source);const H guard("1e-28");
+ check_final_forming_contact(g);REQUIRE(proof.target->source->source==g.source);
+ REQUIRE(proof.target->source->completed_records==g.first_record+g.record_count);REQUIRE(proof.target->source->current_progress==0);
+ REQUIRE(proof.policy.runs.size()==proof.support.size());size_t next=g.first_record,cells=g.cells;
+ for(size_t i=0;i<proof.support.size();++i){const auto &support=*proof.support[i];REQUIRE(support.source==proof.target);
+  REQUIRE(support.forming_block_first==g.first_record);REQUIRE(support.support->source==g.prefix);REQUIRE(support.support->source->source==g.source);REQUIRE(support.support->source->completed_records==g.first_record);
+  const auto &run=proof.target->runs[support.run_index];const auto &request=proof.policy.runs[i];
+  REQUIRE(run.first_record==next);REQUIRE(request.first_record==run.first_record);REQUIRE(request.last_record==run.last_record);
+  const auto &actual=support.policy;const auto &declared=request.policy;
+  REQUIRE(actual.policy_id==declared.policy_id);REQUIRE(actual.revision==declared.revision);REQUIRE(actual.version==declared.version);
+  REQUIRE(actual.cross_slope==declared.cross_slope);REQUIRE(actual.vertical_min==declared.vertical_min);REQUIRE(actual.vertical_max==declared.vertical_max);
+  REQUIRE(actual.normal_min==declared.normal_min);REQUIRE(actual.normal_max==declared.normal_max);
+  REQUIRE(run.last_record<g.first_record+g.record_count);const auto &first=steps[run.first_record];
+  const H dx=first.end[0]-first.start[0],dy=first.end[1]-first.start[1];
+  for(size_t record=run.first_record;record<=run.last_record;++record){const auto &step=steps[record];const H x=step.end[0]-step.start[0],y=step.end[1]-step.start[1];
+   REQUIRE(abs(dx*y-dy*x)<=guard);REQUIRE(dx*x+dy*y>0);if(record>run.first_record)REQUIRE(steps[record-1].end==step.start);
+  }
+  if(i){const auto &prior=steps[run.first_record-1];const H x=prior.end[0]-prior.start[0],y=prior.end[1]-prior.start[1];
+   REQUIRE((abs(dx*y-dy*x)>guard || dx*x+dy*y<=0 || g.source->declarations[run.first_record-1].section->kind!=g.source->declarations[run.first_record].section->kind));}
+  check_complete_run_support(support);next=run.last_record+1;cells+=support.cells;
+ }
+ REQUIRE(next==g.first_record+g.record_count);REQUIRE(proof.cells==cells);REQUIRE(proof.evaluations>=g.evaluations);
+}
 }

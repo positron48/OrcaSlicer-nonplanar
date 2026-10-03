@@ -7,6 +7,28 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B12-supported-deposition.md` and ADR-0086 now compose whole maximal final-byte
+Deposit block contact/head geometry with every actual run's underlying Nominal
+vertical/normal gap and joined Lower anchors. Both proofs own the same final-byte
+material and exact pre-block prefix, with one root work/cell/deadline budget.
+The explicit child scope keeps standalone pre-run support unchanged; corner and
+late completed-policy regressions are retained. Native2198–2201 PASSs at48 cells
+(28 geometry +20 support),637876 APIwork and598131 CLIwork/0.534 s at the original1s
+root. Focus30/2433417, CTest449/449, CLI332+105 and six strict OFF/ZAA pairs pass.
+329 prior CLI reports are byte-exact; three original nominal timeout reports
+retain UNKNOWN/CANCELLED and differ only in observed work/cell counters.
+Prior Travel4/Deposit4/v1-contact6/v2-contact7 inputs/proofs remain exact. Native
+12/19 original files are exact; the other7 retain explicit derived-body vertex
+16/17/dependent-hash differences and separate unqualified owners. Fixed17 remains
+4 PASS/RUN +13 UNKNOWN/NOT_RUN; full B01–B15 active, export BLOCK. Next qualified
+old-support/adjacent contact, seams/full fixed-width fill, all whole-job motions/
+order/source/resources/software/transforms/delivery/publication and B14/B15.
+Linux new source awaits its own run; parentc0d010ea is in progress at00:58:43 UTC.
+Windows/full GUI/physical and independent review remain pending. Standard U1
+head/.4 nozzle known; firmware/material-brand questions do not gate software.
+
+Earlier component records (historical scope):
+
 `B12-forming-polyline.md` and ADR-0085 add explicit version2 contact with
 per-packet cumulative arc age and signed turn bounds. Whole-cell disk/strip and
 forbidden-old-prefix proofs retain every original margin. The full native108-
@@ -22,8 +44,6 @@ full B01–B15 active, export BLOCK. Next qualified old-support/adjacent contact
 seams/full fixed-width fill and all whole-job geometry/order/provenance/publication.
 Linux new source/Windows/full GUI/physical and independent review remain pending.
 Standard U1 head/.4 nozzle known; firmware/material brand do not gate software.
-
-Earlier component records (historical scope):
 
 `B12-forming-contact.md` and ADR-0084 now check a declared synthetic working-face
 model for complete forward collinear final-decimal Deposit runs. Recent-material

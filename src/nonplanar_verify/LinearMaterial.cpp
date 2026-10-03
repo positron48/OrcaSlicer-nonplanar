@@ -495,9 +495,9 @@ struct SupportRay {
 };
 bool support_boundary(const std::string &reason)
 {return reason=="FINAL_MATERIAL_COVER_DEPTH_LIMIT" || reason=="FINAL_MATERIAL_COVER_UNSPLITTABLE_BOUNDARY" || reason=="FINAL_JOINED_COVER_DEPTH_LIMIT" || reason=="FINAL_JOINED_COVER_UNSPLITTABLE_BOUNDARY";}
-}
-LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot> source,size_t run_index,
- const LinearRunSupportPolicy &requested,const LinearRunSupportLimits &requested_limits)
+template<class Publish> LinearRunSupportResult verify_run_support_before(std::shared_ptr<const JoinedMaterialSnapshot> source,size_t run_index,
+ const LinearRunSupportPolicy &requested,const LinearRunSupportLimits &requested_limits,const MaterialReplayData *exact_data,
+ std::shared_ptr<const LinearMaterialPrefixSnapshot> before,Publish publish)
 {
  const auto policy=requested;const auto limits=requested_limits;LinearRunSupportResult result;
  try {
@@ -521,10 +521,12 @@ LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMat
   const Q error=4*binary(material.policy.numerical_coordinate_error_mm);if(3*square(error)>square(binary(.05)))unknown("FINAL_SUPPORT_SPATIAL_ERROR_BUDGET");
   const double stored_error=enclose(error,false,[&]{work();}).upper;
   auto old_limits=joined_limits(source->policy,guarded);old_limits.initial_evaluations=result.evaluations;
-  const auto before=linear_material_at(prefix.source,run.first_record,0,old_limits);result.evaluations=before.evaluations;work.stop();if(!before.snapshot)unknown(before.reason.c_str());
+  if(before){if(before->source!=prefix.source || before->current_progress!=0 || before->completed_records>run.first_record)unknown("INVALID_FINAL_SUPPORT_PREFIX_OWNER");}
+  else {const auto prepared=linear_material_at(prefix.source,run.first_record,0,old_limits);result.evaluations=prepared.evaluations;work.stop();
+   if(!prepared.snapshot)unknown(prepared.reason.c_str());before=prepared.snapshot;}
   guarded.initial_evaluations=result.evaluations;
-  const auto old=reconstruct_joined_linear_material(before.snapshot,source->policy,guarded);result.evaluations=old.evaluations;work.stop();if(!old.snapshot)unknown(old.reason.c_str());
-  const auto &data=*material.exact;SolidQuery nominal{*before.snapshot,data,MaterialRepresentation::Nominal,work},target{prefix,data,MaterialRepresentation::Nominal,work};
+  const auto old=reconstruct_joined_linear_material(before,source->policy,guarded);result.evaluations=old.evaluations;work.stop();if(!old.snapshot)unknown(old.reason.c_str());
+  const auto &data=*exact_data;SolidQuery nominal{*before,data,MaterialRepresentation::Nominal,work},target{prefix,data,MaterialRepresentation::Nominal,work};
   JoinedQuery lower{*old.snapshot,data,work};std::vector<LinearRunSupportLeaf> leaves;
   struct Node{double lo,hi,near,far;unsigned depth;};
   for(const auto &piece:prefix.pieces){work();if(piece.record<run.first_record || piece.record>run.last_record)continue;
@@ -572,9 +574,17 @@ LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMat
     auto a=node,b=node;a.depth=b.depth=node.depth+1;if(along){a.hi=middle;b.lo=middle;}else{a.far=middle;b.near=middle;}pending.push_back(a);pending.push_back(b);
    }
   }
-  work.stop();result.snapshot=std::shared_ptr<const LinearRunSupportSnapshot>(new LinearRunSupportSnapshot(source,old.snapshot,run_index,policy,stored_error,std::move(leaves),result.evaluations,result.cells));work.stop();
+  work.stop();result.snapshot=publish(source,old.snapshot,run_index,policy,stored_error,std::move(leaves),result.evaluations,result.cells);work.stop();
   result.status=RateStatus::Pass;result.reason="WHOLE_ACTUAL_RUN_FOOTPRINT_NOMINAL_GAP_BANDS_AND_DECLARED_LOWER_ANCHORS";
  }catch(const std::exception &e){result.status=RateStatus::Unknown;result.snapshot.reset();result.witness.reset();result.reason=e.what();}return result;
+}
+}
+LinearRunSupportResult verify_linear_run_support(std::shared_ptr<const JoinedMaterialSnapshot> source,size_t run_index,
+ const LinearRunSupportPolicy &policy,const LinearRunSupportLimits &limits)
+{
+ return verify_run_support_before(source,run_index,policy,limits,source ? source->source->source->exact.get() : nullptr,nullptr,
+  [](auto target,auto old,size_t index,auto p,double error,auto leaves,size_t work,size_t cells){
+   return std::shared_ptr<const LinearRunSupportSnapshot>(new LinearRunSupportSnapshot(target,old,index,p,error,std::move(leaves),work,cells));});
 }
 namespace {
 void valid_travel_scene(const LinearTravelScene &s)
@@ -871,5 +881,87 @@ LinearFormingContactResult verify_linear_forming_contact_geometry(std::shared_pt
  verify_linear_motion_geometry(source,source ? source->exact : nullptr,first,count,true,scene,limits,result,
   [&](auto s,auto p,size_t a,size_t n,auto head,auto leaves){result.snapshot=std::shared_ptr<const LinearFormingContactSnapshot>(new LinearFormingContactSnapshot(s,p,a,n,std::move(head),contact,std::move(leaves),result.evaluations,result.cells));},
   &contact,limits.is_contact_current);return result;
+}
+LinearSupportedDepositionResult verify_linear_supported_deposition(std::shared_ptr<const LinearMaterialSnapshot> source,size_t first,size_t count,
+ const LinearTravelScene &requested_scene,const LinearFormingContactModel &requested_contact,
+ const LinearSupportedDepositionPolicy &requested_policy,const LinearSupportedDepositionLimits &requested_limits)
+{
+ LinearSupportedDepositionResult result;const auto started=std::chrono::steady_clock::now();
+ try {
+  if(!source || !count || first>=source->declarations.size() || count>source->declarations.size()-first ||
+   requested_policy.runs.empty() || requested_policy.runs.size()>count || requested_scene.head.size()>64 || requested_scene.obstacles.size()>10000)
+   unknown("INVALID_SUPPORTED_DEPOSITION_SOURCE_OR_SIZE");
+  const auto policy=requested_policy;const auto contact=requested_contact;const auto scene=requested_scene;const auto limits=requested_limits;
+  if(policy.version!=1 || !policy.policy_id || !policy.revision)unknown("UNSUPPORTED_SUPPORTED_DEPOSITION_POLICY");
+  result.evaluations=std::max(source->evaluations,limits.initial_evaluations);
+  std::exception_ptr stopped;size_t completed_support=0;std::optional<size_t> active_support;
+  auto guarded=static_cast<const LinearMaterialLimits &>(limits);
+  guarded.cancelled=[&]{
+   if(stopped)std::rethrow_exception(stopped);
+   try {
+    if(limits.cancelled && limits.cancelled())unknown("SUPPORTED_DEPOSITION_CANCELLED");
+    if(limits.is_supported_current && !limits.is_supported_current(policy.policy_id,policy.revision))unknown("STALE_SUPPORTED_DEPOSITION_POLICY");
+    if(limits.is_scene_current && !limits.is_scene_current(scene.profile_id,scene.revision))unknown("STALE_FINAL_TRAVEL_SCENE");
+    if(limits.is_contact_current && !limits.is_contact_current(contact.model_id,contact.revision))unknown("STALE_FINAL_FORMING_CONTACT_MODEL");
+    if(limits.is_join_current && !limits.is_join_current(policy.join.policy_id,policy.join.revision))unknown("STALE_FINAL_JOIN_POLICY");
+    if(limits.is_support_current){
+     for(size_t i=0;i<completed_support;++i){const auto &p=policy.runs[i].policy;
+      if(!limits.is_support_current(p.policy_id,p.revision))unknown("STALE_FINAL_SUPPORT_POLICY");}
+     if(active_support){const auto &p=policy.runs[*active_support].policy;
+      if(!limits.is_support_current(p.policy_id,p.revision))unknown("STALE_FINAL_SUPPORT_POLICY");}
+    }
+    if(std::chrono::steady_clock::now()-started>=limits.timeout)unknown("SUPPORTED_DEPOSITION_DEADLINE");
+   }catch(...){stopped=std::current_exception();throw;}return false;
+  };
+  Work work{*source->rates,source->policy,guarded,result.evaluations};work.admission();work();
+  LinearFormingContactLimits geometry_limits=limits;static_cast<LinearMaterialLimits&>(geometry_limits)=guarded;
+  geometry_limits.initial_evaluations=result.evaluations;
+  const auto geometry=verify_linear_forming_contact_geometry(source,first,count,scene,contact,geometry_limits);
+  result.evaluations=geometry.evaluations;result.cells=geometry.cells;work.stop();
+  if(!geometry.snapshot){result.geometry_witness=geometry.witness;throw Refusal(geometry.status,geometry.reason.c_str());}
+  guarded.initial_evaluations=result.evaluations;
+  const auto complete=linear_material_at(source,first+count,0,guarded);result.evaluations=complete.evaluations;work.stop();
+  if(!complete.snapshot)throw Refusal(complete.status,complete.reason.c_str());
+  JoinedMaterialLimits joined_limits;static_cast<LinearMaterialLimits&>(joined_limits)=guarded;joined_limits.is_join_current=limits.is_join_current;
+  joined_limits.initial_evaluations=result.evaluations;
+  const auto target=reconstruct_joined_linear_material(complete.snapshot,policy.join,joined_limits);result.evaluations=target.evaluations;work.stop();
+  if(!target.snapshot)throw Refusal(target.status,target.reason.c_str());
+  std::vector<size_t> selected;size_t next=first;
+  for(size_t i=0;i<target.snapshot->runs.size();++i){work();const auto &run=target.snapshot->runs[i];if(run.last_record<first)continue;
+   if(run.first_record!=next || run.last_record>=first+count)unknown("SUPPORTED_DEPOSITION_INCOMPLETE_ACTUAL_RUNS");
+   selected.push_back(i);next=run.last_record+1;
+  }
+  if(next!=first+count || selected.size()!=policy.runs.size())unknown("SUPPORTED_DEPOSITION_RUN_REQUEST_MISMATCH");
+  for(size_t i=0;i<selected.size();++i){work();const auto &run=target.snapshot->runs[selected[i]];const auto &request=policy.runs[i];
+   if(run.first_record!=request.first_record || run.last_record!=request.last_record)unknown("SUPPORTED_DEPOSITION_RUN_REQUEST_MISMATCH");
+  }
+  std::vector<std::shared_ptr<const LinearRunSupportSnapshot>> support;
+  const auto check_support_policies=[&]{for(const auto &request:policy.runs){work();
+   if(limits.is_support_current && !limits.is_support_current(request.policy.policy_id,request.policy.revision))unknown("STALE_FINAL_SUPPORT_POLICY");
+  }};
+  check_support_policies();
+  for(size_t i=0;i<selected.size();++i){work();if(result.cells>=limits.max_cells)unknown("SUPPORTED_DEPOSITION_CELL_LIMIT");
+   LinearRunSupportLimits support_limits;static_cast<LinearMaterialLimits&>(support_limits)=guarded;
+   support_limits.initial_evaluations=result.evaluations;support_limits.max_cells=limits.max_cells-result.cells;support_limits.max_depth=limits.max_depth;
+   support_limits.is_join_current=limits.is_join_current;support_limits.is_support_current=limits.is_support_current;
+   active_support=i;const auto checked=verify_run_support_before(target.snapshot,selected[i],policy.runs[i].policy,support_limits,
+    source->exact.get(),geometry.snapshot->prefix,[first](auto target,auto old,size_t index,auto p,double error,auto leaves,size_t work,size_t cells){
+     return std::shared_ptr<const LinearRunSupportSnapshot>(new LinearRunSupportSnapshot(target,old,index,p,error,std::move(leaves),work,cells,first));});
+   result.evaluations=checked.evaluations;result.cells+=checked.cells;work.stop();
+   if(!checked.snapshot){result.failed_run=i;result.support_witness=checked.witness;throw Refusal(checked.status,checked.reason.c_str());}
+   completed_support=i+1;active_support.reset();support.push_back(checked.snapshot);
+  }
+  // Earlier component PASS is not a combined certificate. Recheck every used
+  // support policy, all root dependencies and fenv around the sole factory.
+  check_support_policies();work.stop();
+  result.snapshot=std::shared_ptr<const LinearSupportedDepositionSnapshot>(new LinearSupportedDepositionSnapshot(
+   geometry.snapshot,target.snapshot,policy,std::move(support),result.evaluations,result.cells));work.stop();
+  result.status=RateStatus::Pass;result.reason="WHOLE_FINAL_DEPOSIT_BLOCK_HEAD_CONTACT_AND_EVERY_UNDERLYING_NOMINAL_GAP_LOWER_ANCHOR";
+ }catch(const Refusal &e){result.status=e.status;result.reason=e.what();result.snapshot.reset();
+  if(e.status!=RateStatus::Fail){result.geometry_witness.reset();result.support_witness.reset();}}
+ catch(const std::exception &e){result.status=RateStatus::Unknown;result.reason=*e.what() ? e.what() : "SUPPORTED_DEPOSITION_EXCEPTION_WITHOUT_REASON";
+  result.snapshot.reset();result.geometry_witness.reset();result.support_witness.reset();}
+ catch(...){result.status=RateStatus::Unknown;result.reason="SUPPORTED_DEPOSITION_UNKNOWN_EXCEPTION";result.snapshot.reset();result.geometry_witness.reset();result.support_witness.reset();}
+ return result;
 }
 }

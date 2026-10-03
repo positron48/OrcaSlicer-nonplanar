@@ -18,6 +18,7 @@
 #include <nonplanar_verify/MaterialJson.hpp>
 #include <nonplanar_verify/TravelJson.hpp>
 #include <nonplanar_verify/FormingContactJson.hpp>
+#include <nonplanar_verify/SupportedDepositionJson.hpp>
 #include <libslic3r/ClipperUtils.hpp>
 #include <libslic3r/Nonplanar/StlFile.hpp>
 #include <libslic3r/Format/STL.hpp>
@@ -3730,5 +3731,45 @@ TEST_CASE("B12 final polyline contact checks the entire native contour and refus
             {"unproved_cell",{{"record",u.record},{"component",u.component},{"progress",{u.progress.lower,u.progress.upper}},
                 {"local_min",u.local.min},{"local_max",u.local.max},{"world_min",u.world.min},{"world_max",u.world.max}}},
             {"witness",{{"record",w.record},{"component",w.component},{"progress",{w.progress.lower,w.progress.upper}},{"min",w.point.min},{"max",w.point.max},{"material_event",*w.material_event}}}});
+    }
+}
+TEST_CASE("B12 native whole deposit block combines final head contact and actual underlying support", "[Nonplanar][B12][FinalByteSupportedDepositionNative]")
+{
+    using namespace nptop_verify;NativeDepartureFixture fixture;const auto &d=*fixture.departure.snapshot;
+    const auto material=verify_linear_candidate_material(fixture.bytes,{93,1,5e-9,.0001,1e-9,.02,0});REQUIRE(material.snapshot);
+    const auto scene=final_geometry_scene(*d.route->planned);LinearFormingContactModel contact;
+    contact.version=2;contact.min_turn_cosine=0;contact.model_id=102;contact.revision=1;contact.profile_id=scene.profile_id;contact.profile_revision=scene.revision;
+    contact.material_model_id=material.snapshot->policy.model_id;contact.working_radius_mm=.5;contact.wake_length_mm=1.035;
+    contact.max_top_above_tip_mm=.095;contact.gap_min_mm=.1;contact.gap_max_mm=.4;contact.width_min_mm=.1;contact.width_max_mm=.55;contact.max_path_gradient=.063;
+    size_t first=d.before->material->sequence->records.size();const auto &rows=material.snapshot->declarations;
+    while(first<rows.size() && rows[first].kind!=MaterialEventKind::Deposit)++first;const size_t count=d.bead->pieces.size();
+    LinearSupportedDepositionPolicy policy;policy.policy_id=112;policy.revision=1;policy.join.policy_id=31;policy.join.revision=1;
+    LinearRunSupportPolicy support;support.policy_id=113;support.revision=1;support.vertical_min=support.normal_min=.14;support.vertical_max=support.normal_max=.26;
+    policy.runs.push_back({first,first+count-1,support});
+    const auto result=verify_linear_supported_deposition(material.snapshot,first,count,scene,contact,policy);
+    INFO(result.reason<<" work="<<result.evaluations<<" cells="<<result.cells);REQUIRE(result.snapshot);REQUIRE(result.status==RateStatus::Pass);
+    nptop_test::check_supported_deposition(*result.snapshot);REQUIRE(result.snapshot->support.size()==1);
+    REQUIRE(result.snapshot->support.front()->forming_block_first==first);REQUIRE(result.snapshot->support.front()->support->source->completed_records==first);
+    LinearFormingContactResult geometry;geometry.snapshot=result.snapshot->geometry;geometry.status=RateStatus::Pass;
+    geometry.evaluations=geometry.snapshot->evaluations;geometry.cells=geometry.snapshot->cells;
+    save_final_geometry("native-final-supported-deposition",*material.snapshot,first,count,scene,geometry);
+    if(const char *directory=std::getenv("NPTOP_CANDIDATE_EVIDENCE_DIR")){
+        const auto dir=boost::filesystem::path(directory);const auto save=[&](const std::string &name,const nlohmann::json &j){
+            const auto path=dir/name;REQUIRE_FALSE(boost::filesystem::exists(path));boost::nowide::ofstream f(path.string(),std::ios::binary);REQUIRE(f.good());f<<j.dump(2)<<'\n';f.close();REQUIRE(f.good());};
+        save("native-final-supported-deposition.support.json",supported_deposition_document(policy));
+        nlohmann::json proofs=nlohmann::json::array();const auto region=[](const MaterialRegion &r){return nlohmann::json{{"min",r.min},{"max",r.max}};};
+        for(const auto &s:result.snapshot->support){nlohmann::json leaves=nlohmann::json::array();
+            for(const auto &l:s->leaves){nlohmann::json lower=nlohmann::json::array(),nominal=nlohmann::json::array();
+                for(const auto &a:l.lower_anchor->leaves)lower.push_back({{"run_index",a.run_index},{"region",region(a.region)}});
+                for(const auto &a:l.nominal_terminal->leaves)nominal.push_back({{"run_index",a.run_index},{"region",region(a.region)}});
+                leaves.push_back({{"target_record",l.target_record},{"progress",{l.progress.lower,l.progress.upper}},{"transverse",{l.transverse.lower,l.transverse.upper}},
+                    {"vertical_near",region(l.vertical_near)},{"vertical_terminal",region(l.vertical_terminal)},
+                    {"normal_near",region(l.normal_near)},{"normal_terminal",region(l.normal_terminal)},{"lower_anchor",lower},{"nominal_terminal",nominal}});
+            }
+            const auto &run=s->source->runs[s->run_index];proofs.push_back({{"first_record",run.first_record},{"last_record",run.last_record},
+                {"underlying_completed_records",s->support->source->completed_records},{"query_error_mm",s->query_error_mm},{"cells",s->cells},{"leaves",leaves}});
+        }
+        save("native-final-supported-deposition.support-proof.json",{{"schema_version",1},{"component_status","PASS"},{"job_status","UNKNOWN"},{"export_allowed",false},
+            {"first_record",first},{"record_count",count},{"work",result.evaluations},{"cells",result.cells},{"support",proofs}});
     }
 }

@@ -1,0 +1,179 @@
+{
+  "cells": 0,
+  "component": "final_byte_deposition_geometry",
+  "component_status": "UNKNOWN",
+  "export_allowed": false,
+  "job_status": "UNKNOWN",
+  "leaves": 0,
+  "mandatory_checks_pending": [
+    "deposition_contact",
+    "complete_cap_routes",
+    "head_material_qualification",
+    "job_patch_integrity",
+    "firmware_transform",
+    "machine_state"
+  ],
+  "query": {
+    "first_record": 0,
+    "record_count": 3,
+    "scene": {
+      "clearance_mm": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "head": [
+        {
+          "all_configurations_enclosed": false,
+          "id": 1,
+          "max": [
+            0.05,
+            0.05,
+            0.8
+          ],
+          "min": [
+            -0.05,
+            -0.05,
+            0.5
+          ],
+          "moving": false,
+          "role": 0
+        },
+        {
+          "all_configurations_enclosed": false,
+          "id": 2,
+          "max": [
+            0.05,
+            0.05,
+            0.8
+          ],
+          "min": [
+            -0.05,
+            -0.05,
+            0.5
+          ],
+          "moving": false,
+          "role": 1
+        },
+        {
+          "all_configurations_enclosed": false,
+          "id": 3,
+          "max": [
+            0.05,
+            0.05,
+            0.8
+          ],
+          "min": [
+            -0.05,
+            -0.05,
+            0.5
+          ],
+          "moving": false,
+          "role": 2
+        },
+        {
+          "all_configurations_enclosed": false,
+          "id": 4,
+          "max": [
+            0.05,
+            0.05,
+            0.8
+          ],
+          "min": [
+            -0.05,
+            -0.05,
+            0.5
+          ],
+          "moving": false,
+          "role": 3
+        },
+        {
+          "all_configurations_enclosed": false,
+          "id": 5,
+          "max": [
+            0.05,
+            0.05,
+            0.8
+          ],
+          "min": [
+            -0.05,
+            -0.05,
+            0.5
+          ],
+          "moving": false,
+          "role": 4
+        },
+        {
+          "all_configurations_enclosed": false,
+          "id": 6,
+          "max": [
+            0.05,
+            0.05,
+            0.8
+          ],
+          "min": [
+            -0.05,
+            -0.05,
+            0.5
+          ],
+          "moving": false,
+          "role": 5
+        }
+      ],
+      "nozzle_domain": {
+        "max": [
+          100.0,
+          100.0,
+          100.0
+        ],
+        "min": [
+          -100.0,
+          -100.0,
+          -100.0
+        ]
+      },
+      "obstacle_inventory_complete": true,
+      "obstacles": [],
+      "operator_confirmed_claim": false,
+      "profile_id": 51,
+      "revision": 1,
+      "scene_domain": {
+        "max": [
+          100.0,
+          100.0,
+          100.0
+        ],
+        "min": [
+          -100.0,
+          -100.0,
+          -100.0
+        ]
+      },
+      "synthetic": true,
+      "tip": {
+        "center": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "opening_radius_mm": 0.2,
+        "outer_radius_mm": 0.5
+      },
+      "uncertainty_mm": 0.0,
+      "unmodelled_parts_min_local_z_mm": 5.0,
+      "version": 1
+    },
+    "version": 1
+  },
+  "reason": "FINAL_DEPOSITION_INCOMPLETE_CONTIGUOUS_BLOCK",
+  "schema_version": 1,
+  "scope": "complete_declared_deposit_block_rigid_head_static_growing_actual_upper_only",
+  "witness": null,
+  "work": 140
+}

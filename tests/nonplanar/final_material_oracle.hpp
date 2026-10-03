@@ -100,7 +100,9 @@ inline void check_nominal_empty(const nptop_verify::LinearMaterialPrefixSnapshot
 inline void check_complete_run_support(const nptop_verify::LinearRunSupportSnapshot &cover)
 {
  using H=FinalMaterialHigh;using namespace nptop_verify;const auto &prefix=*cover.source->source;const auto &m=*prefix.source;const auto steps=replay_material_steps(m);
- const auto &run=cover.source->runs[cover.run_index];REQUIRE(cover.support->source->completed_records==run.first_record);REQUIRE(cover.support->source->current_progress==0);
+ const auto &run=cover.source->runs[cover.run_index];REQUIRE(cover.support->source->current_progress==0);
+ if(cover.forming_block_first){REQUIRE(*cover.forming_block_first<=run.first_record);REQUIRE(cover.support->source->completed_records==*cover.forming_block_first);}
+ else REQUIRE(cover.support->source->completed_records==run.first_record);
  const H cross(cover.policy.cross_slope),error=4*H(m.policy.numerical_coordinate_error_mm);REQUIRE(H(cover.query_error_mm)>=error);REQUIRE(3*error*error<=H(.05)*H(.05));
  for(size_t record=run.first_record;record<=run.last_record;++record){
   const auto &s=steps[record];const H dx=s.end[0]-s.start[0],dy=s.end[1]-s.start[1],dz=s.end[2]-s.start[2],length=sqrt(dx*dx+dy*dy),ux=dx/length,uy=dy/length,parallel=dz/length;

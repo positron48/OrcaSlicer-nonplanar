@@ -2,6 +2,7 @@
 #include <nonplanar_verify/LinearMaterial.hpp>
 #include <nonplanar_verify/TravelJson.hpp>
 #include <nonplanar_verify/FormingContactJson.hpp>
+#include <nonplanar_verify/SupportedDepositionJson.hpp>
 #include <boost/multiprecision/cpp_bin_float.hpp>
 #include <cfenv>
 #include <iomanip>
@@ -875,4 +876,101 @@ TEST_CASE("B12 polyline contact version bounds and publication are explicit and 
  const auto accepted=verify_linear_forming_contact_geometry(obtuse.snapshot,0,2,scene,turning);INFO(accepted.reason);REQUIRE(accepted.snapshot);
  nptop_test::check_final_forming_contact(*accepted.snapshot);
  turning.min_turn_cosine=-.4;REQUIRE(verify_linear_forming_contact_geometry(obtuse.snapshot,0,2,scene,turning).status==RateStatus::Unknown);
+}
+namespace {
+LinearSupportedDepositionPolicy supported_policy(size_t first=2)
+{LinearSupportedDepositionPolicy p;p.policy_id=111;p.revision=1;p.join=join_policy();p.runs.push_back({first,first,support_policy()});return p;}
+LinearMaterialResult supported_polyline_material()
+{
+ std::array<double,3> previous{0,0,0};std::vector<MaterialDeclaration> rows;
+ std::ostringstream bytes;bytes.imbue(std::locale::classic());bytes<<"G90\nM83\nM400\nM204 S4\n"<<std::fixed<<std::setprecision(9);
+ const auto append=[&](std::array<double,3> end,double e){bytes<<"G1 X"<<end[0]<<" Y"<<end[1]<<" Z"<<end[2];if(e)bytes<<" E"<<e;bytes<<" F30\nM400\n";
+  const double volume=(High(e)*acos(High(-1))*High("1.75")*High("1.75")/4/High(rate_policy().flow)).convert_to<double>();
+  rows.push_back({uint64_t(rows.size()+1),rows.size(),e ? MaterialEventKind::Deposit : MaterialEventKind::Travel,previous,end,volume,0,
+   e ? std::optional<MaterialSection>(MaterialSection{MaterialSectionKind::Rectangle,.2,.2}) : std::nullopt});previous=end;};
+ append({3,0,0},.4);append({.5,0,.2},0);append({1.5,0,.2},.04);append({1.5,.3,.2},.012);append({1.5,.3,.3},0);
+ const auto rates=verify_linear_rates(bytes.str(),{0,0,0},rate_policy());REQUIRE(rates.snapshot);return reconstruct_linear_material(rates.snapshot,rows,material_policy());
+}
+}
+TEST_CASE("B12 complete supported deposition owns geometry and underlying support for final bytes", "[Nonplanar][B12][FinalByteSupportedDeposition]")
+{
+ STATIC_REQUIRE_FALSE(std::is_aggregate<LinearSupportedDepositionSnapshot>::value);
+ for(bool diagonal:{false,true})for(bool reverse:{false,true}){
+  const auto joined=support_fixture(0,diagonal,reverse);const auto source=joined->source->source;const auto scene=travel_scene();
+  const auto result=verify_linear_supported_deposition(source,2,1,scene,forming_model(*source,scene),supported_policy());INFO(result.reason);
+  REQUIRE(result.snapshot);REQUIRE(result.status==RateStatus::Pass);REQUIRE_FALSE(result.geometry_witness);REQUIRE_FALSE(result.support_witness);
+  const auto &proof=*result.snapshot;REQUIRE(proof.geometry->source==source);REQUIRE(proof.target->source->source==source);REQUIRE(proof.support.size()==1);
+  REQUIRE(proof.support.front()->source==proof.target);REQUIRE(proof.support.front()->support->source->completed_records==2);
+  REQUIRE(proof.evaluations>=proof.geometry->evaluations);REQUIRE(proof.cells==proof.geometry->cells+proof.support.front()->cells);
+  nptop_test::check_supported_deposition(proof);
+ }
+ const auto material=supported_polyline_material();REQUIRE(material.snapshot);const auto scene=travel_scene();auto policy=supported_policy();
+ policy.runs.front().policy.cross_slope=0;policy.runs.push_back({3,3,policy.runs.front().policy});
+ const auto contact=polyline_model(*material.snapshot,scene);
+ REQUIRE(verify_linear_forming_contact_geometry(material.snapshot,2,2,scene,contact).snapshot);
+ const auto prefix=linear_material_at(material.snapshot,4,0);REQUIRE(prefix.snapshot);const auto runs=reconstruct_joined_linear_material(prefix.snapshot,policy.join);REQUIRE(runs.snapshot);
+ const auto naive=verify_linear_run_support(runs.snapshot,2,policy.runs.back().policy);REQUIRE(naive.status==RateStatus::Fail);REQUIRE(naive.reason=="FINAL_RUN_VERTICAL_GAP_TOO_SMALL");
+ const auto complete=verify_linear_supported_deposition(material.snapshot,2,2,scene,contact,policy);INFO(complete.reason);REQUIRE(complete.snapshot);
+ REQUIRE(complete.snapshot->support.size()==2);for(const auto &s:complete.snapshot->support){REQUIRE(s->support->source->completed_records==2);nptop_test::check_complete_run_support(*s);}
+ nptop_test::check_supported_deposition(*complete.snapshot);
+}
+TEST_CASE("B12 supported deposition cannot promote unsupported motion or hide head collision", "[Nonplanar][B12][FinalByteSupportedDeposition]")
+{
+ for(int mode:{1,2,3,4}){const auto joined=support_fixture(mode);const auto source=joined->source->source;const auto scene=travel_scene();
+  const auto geometry=verify_linear_forming_contact_geometry(source,2,1,scene,forming_model(*source,scene));REQUIRE(geometry.snapshot);
+  const auto result=verify_linear_supported_deposition(source,2,1,scene,forming_model(*source,scene),supported_policy());INFO(result.reason);
+  REQUIRE(result.status==RateStatus::Fail);REQUIRE_FALSE(result.snapshot);REQUIRE(result.support_witness);REQUIRE_FALSE(result.geometry_witness);
+  REQUIRE(result.failed_run==0);REQUIRE(result.support_witness->target_record==2);
+ }
+ const auto source=support_fixture()->source->source;auto scene=travel_scene();scene.obstacles.push_back({{1.49,-.01,.20},{1.51,.01,.22}});
+ const auto hit=verify_linear_supported_deposition(source,2,1,scene,forming_model(*source,scene),supported_policy());REQUIRE(hit.status==RateStatus::Fail);
+ REQUIRE_FALSE(hit.snapshot);REQUIRE(hit.geometry_witness);REQUIRE_FALSE(hit.support_witness);REQUIRE(hit.geometry_witness->obstacle==0);
+}
+TEST_CASE("B12 supported deposition shares root budgets and revokes every component at publication", "[Nonplanar][B12][FinalByteSupportedDeposition]")
+{
+ const auto source=support_fixture()->source->source;const auto scene=travel_scene();const auto contact=forming_model(*source,scene);const auto policy=supported_policy();
+ for(int mode=0;mode<15;++mode){auto p=policy;LinearSupportedDepositionLimits limits;
+  if(mode==0)p.runs.clear();if(mode==1)p.runs.front().first_record=1;if(mode==2)p.runs.front().last_record=3;
+  if(mode==3)p.runs.push_back(p.runs.front());if(mode==4)p.version=2;if(mode==5)p.policy_id=0;
+  if(mode==6)limits.is_supported_current=[](uint64_t,uint64_t){return false;};if(mode==7)limits.is_support_current=[](uint64_t,uint64_t){return false;};
+  if(mode==8)limits.is_join_current=[](uint64_t,uint64_t){return false;};if(mode==9)limits.is_scene_current=[](uint64_t,uint64_t){return false;};
+  if(mode==10)limits.is_contact_current=[](uint64_t,uint64_t){return false;};if(mode==11)limits.max_cells=8;
+  if(mode==12)limits.max_evaluations=source->evaluations+100;if(mode==13)limits.timeout=std::chrono::milliseconds(0);
+  if(mode==14)limits.cancelled=[] {throw 7;return false;};
+  const auto r=verify_linear_supported_deposition(source,2,1,scene,contact,p,limits);REQUIRE(r.status==RateStatus::Unknown);REQUIRE_FALSE(r.snapshot);REQUIRE_FALSE(r.geometry_witness);REQUIRE_FALSE(r.support_witness);
+ }
+ auto caller=policy;LinearSupportedDepositionLimits limits;limits.cancelled=[&]{caller.runs.clear();return false;};
+ const auto captured=verify_linear_supported_deposition(source,2,1,scene,contact,caller,limits);REQUIRE(captured.snapshot);REQUIRE(captured.snapshot->policy.runs.size()==1);
+ limits={};size_t calls=0;limits.cancelled=[&]{++calls;return false;};const auto positive=verify_linear_supported_deposition(source,2,1,scene,contact,policy,limits);REQUIRE(positive.snapshot);
+ const auto last=calls;
+ for(int mode=0;mode<3;++mode){calls=0;bool support_current=true;limits.is_support_current=[&](uint64_t,uint64_t){return support_current;};
+  limits.cancelled=[&]{if(++calls!=last)return false;if(mode==1){std::fesetround(FE_UPWARD);return false;}if(mode==2){support_current=false;return false;}return true;};
+  const auto late=verify_linear_supported_deposition(source,2,1,scene,contact,policy,limits);std::fesetround(FE_TONEAREST);
+  REQUIRE(late.status==RateStatus::Unknown);REQUIRE_FALSE(late.snapshot);REQUIRE_FALSE(late.geometry_witness);REQUIRE_FALSE(late.support_witness);
+ }
+ const auto missing=support_fixture(1)->source->source;limits={};calls=0;limits.cancelled=[&]{++calls;return false;};
+ const auto negative=verify_linear_supported_deposition(missing,2,1,scene,contact,policy,limits);REQUIRE(negative.support_witness);const auto negative_last=calls;
+ calls=0;limits.cancelled=[&]{return ++calls==negative_last;};const auto late_negative=verify_linear_supported_deposition(missing,2,1,scene,contact,policy,limits);
+ REQUIRE(late_negative.status==RateStatus::Unknown);REQUIRE_FALSE(late_negative.snapshot);REQUIRE_FALSE(late_negative.support_witness);REQUIRE_FALSE(late_negative.geometry_witness);
+ const auto multi=supported_polyline_material();REQUIRE(multi.snapshot);auto two=policy;two.runs.front().policy.cross_slope=0;
+ two.runs.push_back({3,3,two.runs.front().policy});two.runs.back().policy.policy_id=42;bool first_current=true;size_t second_checks=0;limits={};
+ limits.is_support_current=[&](uint64_t id,uint64_t){if(id==42 && ++second_checks==2)first_current=false;return id!=41 || first_current;};
+ const auto stale_first=verify_linear_supported_deposition(multi.snapshot,2,2,scene,polyline_model(*multi.snapshot,scene),two,limits);
+ REQUIRE(stale_first.status==RateStatus::Unknown);REQUIRE_FALSE(stale_first.snapshot);REQUIRE_FALSE(stale_first.support_witness);REQUIRE_FALSE(stale_first.geometry_witness);
+}
+TEST_CASE("B12 supported deposition diagnostic schema rejects ambiguous or incomplete obligations", "[Nonplanar][B12][FinalByteSupportedDeposition]")
+{
+ const auto j=supported_deposition_document(supported_policy());REQUIRE(supported_deposition_document(parse_supported_deposition_document(j.dump()))==j);
+ for(const auto &path:std::vector<std::string>{"","/join","/runs/0","/runs/0/policy"}){
+  const auto &object=path.empty() ? j : j.at(nlohmann::json::json_pointer(path));
+  for(const auto &item:object.items()){auto missing=j;nlohmann::json::json_pointer p(path);
+   (path.empty() ? missing : missing.at(p)).erase(item.key());REQUIRE_THROWS(parse_supported_deposition_document(missing.dump()));
+   auto duplicate=j.dump();const auto object_text=object.dump();const auto at=duplicate.find(object_text);REQUIRE(at!=std::string::npos);
+   duplicate.insert(at+object_text.size()-1,",\""+item.key()+"\":"+item.value().dump());REQUIRE_THROWS(parse_supported_deposition_document(duplicate));
+  }
+ }
+ for(const auto &path:{"/version","/policy_id","/runs/0/first_record","/runs/0/policy/cross_slope","/runs/0/policy/vertical_min"}){
+  auto boolean=j;boolean[nlohmann::json::json_pointer(path)]=true;REQUIRE_THROWS(parse_supported_deposition_document(boolean.dump()));}
+ auto extra=j;extra["allow_old_material"]=true;REQUIRE_THROWS(parse_supported_deposition_document(extra.dump()));
+ auto empty=j;empty["runs"]=nlohmann::json::array();REQUIRE_THROWS(parse_supported_deposition_document(empty.dump()));
 }
