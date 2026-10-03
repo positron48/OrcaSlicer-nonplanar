@@ -25,6 +25,9 @@ inline void save_job_report(const boost::filesystem::path &path,const GuardedCan
         for(const auto &r:binding.job->resources)if(r.kind!=JobResourceKind::SourceFile && r.kind!=JobResourceKind::Software)
             record["native_inputs"].push_back({{"kind",int(r.kind)},{"name",r.name},{"bytes",r.bytes},{"sha256",r.sha256}});
     }
+    for(const auto &r:binding.job->resources)if(r.kind==JobResourceKind::SourceFile && r.name=="native-analysis-request-v1"){
+        record["analysis_request_canonical"]=r.bytes;record["analysis_request_sha256"]=r.sha256;
+    }
     if(binding.native){const auto &native=*binding.native;const auto &hatches=*native.hatches;const auto &body=*hatches.body;
         record["native"]={{"canonical",native.canonical_json},{"sha256",native.sha256},
             {"hatch_canonical",hatches.canonical_json},{"hatch_sha256",hatches.sha256},{"body_canonical",body.canonical_json},{"body_sha256",body.sha256}};

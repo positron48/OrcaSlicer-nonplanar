@@ -5,6 +5,7 @@
 #include <libslic3r/Nonplanar/InputSnapshot.hpp>
 #include <libslic3r/Nonplanar/Job.hpp>
 #include <libslic3r/Nonplanar/NativeJobInputs.hpp>
+#include <libslic3r/Nonplanar/NativeAnalysis.hpp>
 #include <libslic3r/Nonplanar/JobNative.hpp>
 #include <libslic3r/Nonplanar/PlanarBody.hpp>
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
@@ -3968,4 +3969,86 @@ TEST_CASE("B12 native whole deposit block combines final head contact and actual
         save("native-final-supported-deposition.support-proof.json",{{"schema_version",1},{"component_status","PASS"},{"job_status","UNKNOWN"},{"export_allowed",false},
             {"first_record",first},{"record_count",count},{"work",result.evaluations},{"cells",result.cells},{"support",proofs}});
     }
+}
+
+namespace {
+std::pair<NativeAnalysisRequest,NativeAnalysisLimits> native_analysis_request(NativeJobFixture &fixture)
+{
+    // Obtain a real selectable roof domain from the existing native analysis.
+    // The common controller then starts its own new attempt, retaining no
+    // body/hatch/planner proof from this earlier selection operation.
+    const auto job=fixture.begin();const auto body=analyze_guarded_native_body(*job.task,native_job_body_request(),native_job_body_limits());
+    INFO(body.reason);REQUIRE(body.snapshot);const auto hatch=native_job_hatch_request(*body.snapshot);
+    const auto &roi=hatch.first.footprint;
+    NativeAnalysisRequest request{fixture.inputs,true,native_job_body_request().reservation,hatch.first,hatch.second,
+        {WidthXY(.4),0,false,Volume(.001)},{{roi.min_x,roi.min_y,4.0},{roi.max_x,roi.max_y,4.7}}};
+    NativeAnalysisLimits limits;limits.body=native_job_body_limits();limits.hatches=native_job_hatch_limits();
+    limits.cap.beads.timeout=limits.cap.beads.packets.timeout=limits.cap.volumes.timeout=std::chrono::seconds(5);
+    limits.cap.beads.maximum_gap_error=Length(.0001);limits.cap.beads.packets.maximum_width_error=Length(.002);
+    limits.cap.beads.packets.maximum_volume_error=Volume(.0001);limits.cap.volumes.max_cells=65535;
+    return {std::move(request),std::move(limits)};
+}
+}
+TEST_CASE("B14 common native analysis executes captured body cap bytes and replay under one current job", "[Nonplanar][B14][NativeAnalysis]")
+{
+    static_assert(!std::is_aggregate_v<NativeAnalysisRequestSnapshot>);static_assert(!std::is_aggregate_v<NativeAnalysisSnapshot>);
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);const auto input=capture_native_analysis_request(options.first);
+    const auto original=input->sha256;std::vector<NativeAnalysisStage> stages;
+    options.second.progress=[&](NativeAnalysisStage stage){stages.push_back(stage);options.first.reservation.clear();options.first.inputs.replay.policy_id=0;};
+    const auto result=run_native_analysis(fixture.print,101,input,fixture.resources,options.second);INFO(result.reason << " stage=" << int(result.stage));REQUIRE(result.snapshot);
+    REQUIRE(stages==std::vector<NativeAnalysisStage>{NativeAnalysisStage::Capture,NativeAnalysisStage::Body,NativeAnalysisStage::Hatches,
+        NativeAnalysisStage::Cap,NativeAnalysisStage::Material,NativeAnalysisStage::Motion,NativeAnalysisStage::Serialize,
+        NativeAnalysisStage::Lineage,NativeAnalysisStage::Replay,NativeAnalysisStage::Admission});
+    REQUIRE(input->sha256==original);REQUIRE(input->values.reservation.its.indices.size()>0);REQUIRE(input->values.inputs.replay.policy_id==93);
+    const auto &report=*result.snapshot->report;REQUIRE(result.snapshot->request==input);REQUIRE(report.binding->native==result.snapshot->plan);
+    REQUIRE(report.binding->job==result.job);REQUIRE(report.rates);REQUIRE(report.material);REQUIRE_FALSE(report.export_allowed);
+    REQUIRE(report.rates->moves.size()==result.snapshot->plan->candidate->events.size());REQUIRE(report.rates->moves.size()>1000);
+    REQUIRE(report.checks.size()==17);REQUIRE(report.overall_status==nptop_verify::RateStatus::Unknown);
+    REQUIRE(std::count_if(report.checks.begin(),report.checks.end(),[](const auto &c){return c.status==nptop_verify::RateStatus::Pass && c.execution==GuardedCheckExecution::Run;})==4);
+    const auto context=std::find_if(result.job->resources.begin(),result.job->resources.end(),[](const auto &r){return r.name=="native-analysis-request-v1";});
+    REQUIRE(context!=result.job->resources.end());REQUIRE(context->bytes==input->canonical_json);REQUIRE(context->sha256==input->sha256);
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(directory)/"native-controller-report.json",
+        {result.reason,result.snapshot->report,result.snapshot->replay_evaluations});
+    REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Unknown);REQUIRE_FALSE(report.task->is_current());REQUIRE_THROWS(fixture.print.process());
+}
+TEST_CASE("B14 common analysis cancellation exceptions and newer attempts cannot publish partial work", "[Nonplanar][B14][NativeAnalysis]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);const auto input=capture_native_analysis_request(options.first);
+    for(int step=0;step<10;++step){auto limits=options.second;bool cancelled=false;limits.cancelled=[&]{return cancelled;};
+        limits.progress=[&](NativeAnalysisStage stage){cancelled=int(stage)==step;};
+        const auto result=run_native_analysis(fixture.print,102,input,fixture.resources,limits);INFO(step << ' ' << result.reason);
+        REQUIRE_FALSE(result.snapshot);REQUIRE(result.stage==NativeAnalysisStage(step));REQUIRE(result.reason=="NATIVE_ANALYSIS_CANCELLED");
+        REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Unknown);
+    }
+    for(int mode=0;mode<2;++mode){auto limits=options.second;
+        limits.progress=[mode](NativeAnalysisStage stage){if(stage==NativeAnalysisStage::Cap){if(mode==0)throw 7;throw std::runtime_error("");}};
+        const auto result=run_native_analysis(fixture.print,103,input,fixture.resources,limits);REQUIRE_FALSE(result.snapshot);REQUIRE_FALSE(result.reason.empty());
+    }
+    auto limits=options.second;GuardedJobResult replacement;
+    limits.progress=[&](NativeAnalysisStage stage){if(stage==NativeAnalysisStage::Material)replacement=fixture.begin();};
+    const auto stale=run_native_analysis(fixture.print,104,input,fixture.resources,limits);REQUIRE_FALSE(stale.snapshot);REQUIRE(stale.reason=="STALE_NATIVE_ANALYSIS_TASK");
+    REQUIRE(replacement.task->is_current());REQUIRE(guarded_job_status(fixture.print).snapshot==replacement.snapshot);
+    const auto missing=run_native_analysis(fixture.print,104,{},fixture.resources);REQUIRE_FALSE(missing.snapshot);REQUIRE(missing.reason=="MISSING_NATIVE_ANALYSIS_REQUEST");REQUIRE_FALSE(replacement.task->is_current());
+}
+TEST_CASE("B14 complete request identity owns all planning choices and shares the original deadline", "[Nonplanar][B14][NativeAnalysis]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);const auto input=capture_native_analysis_request(options.first);
+    for(int field=0;field<7;++field){auto request=options.first;
+        if(field==0)request.reservation.its.vertices[0].x()=std::nextafter(request.reservation.its.vertices[0].x(),100.f);
+        if(field==1)request.passes.policy.total_volume_error=Volume(std::nextafter(.01,1.));
+        if(field==2)request.hatches.width=WidthXY(std::nextafter(.4,1.));
+        if(field==3)request.contour.seam_corner=1;
+        if(field==4)request.fill_region.max={request.fill_region.max.x(),request.fill_region.max.y(),std::nextafter(4.7,5.)};
+        if(field==5)request.millimeters_declared=false;
+        if(field==6)request.inputs.motion.flow=FlowCompensation(std::nextafter(1.,2.));
+        REQUIRE(capture_native_analysis_request(request)->sha256!=input->sha256);
+    }
+    auto invalid=options.first;invalid.passes.support_plane_z_mm=std::numeric_limits<double>::infinity();REQUIRE_THROWS(capture_native_analysis_request(invalid));
+    invalid=options.first;invalid.reservation.its.vertices.resize(15001);REQUIRE_THROWS(capture_native_analysis_request(invalid));
+    for(int count:{0,30001}){auto limits=options.second;limits.timeout=std::chrono::milliseconds(count);
+        const auto result=run_native_analysis(fixture.print,105,input,fixture.resources,limits);REQUIRE_FALSE(result.snapshot);REQUIRE(result.reason=="NATIVE_ANALYSIS_TIMEOUT_DOMAIN");}
+    auto limits=options.second;limits.timeout=std::chrono::milliseconds(100);
+    limits.progress=[](NativeAnalysisStage stage){if(stage==NativeAnalysisStage::Capture)std::this_thread::sleep_for(std::chrono::milliseconds(101));};
+    const auto result=run_native_analysis(fixture.print,105,input,fixture.resources,limits);REQUIRE_FALSE(result.snapshot);
+    REQUIRE(result.reason=="NATIVE_ANALYSIS_DEADLINE");
 }

@@ -4,6 +4,20 @@ Active objective: implement the entire B01–B15 scope. A bounded primitive or a
 green unit suite is evidence for its own contract, not completion of a B task.
 The normative backlog, SPEC and acceptance matrix remain unchanged.
 
+`B14-native-controller.md` and ADR-0090 add the common native execution backend
+from privately owned request through body/hatches/first cap/material/motion,
+serialization, protected lineage and independent final-byte replay. All ten
+stages share a cooperative root deadline; cancellation, stale replacement and
+input mutation cannot publish partial results. Focus 3 / 112, CTest 461 / 461,
+twelve final identity oracles and six strict OFF/ZAA pairs pass. Fifty of 51
+parent candidate files remain exact; final supported 2205-record bytes remain.
+Controller candidate is 2197 records; fixed17 stays 4 PASS/RUN + 13 UNKNOWN/NOT_RUN,
+export BLOCK, full B01–B15 active. Next: actual native request/diagnostic transport,
+main CLI invocation and an isolated GUI worker. Full cap fill/later passes,
+qualified contact/seams/order/source/software/physical and publication remain
+open. New Linux head awaits CI; Windows/full GUI/physical and independent review
+remain pending. Standard U1 head/.4 nozzle known; software proceeds independently.
+
 `B13-native-inputs.md` and ADR-0089 bind actual body material, complete declared
 head/scene, clearance, linear motion, serializer and replay inputs into owned
 native jobs. Six role resources are generated from copied typed values; opaque
