@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "git_parent": "6f2e7309a31f1d1c4cf639d631398a283ee50936",
+  "branch": "feature/nonplanar-bootstrap",
+  "commit": "SELF",
+  "commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B11-rounded-rates.md",
+  "configured_author": {
+    "name": "Filatov Anton",
+    "email": "positron48@gmail.com"
+  },
+  "patch_files": [
+    "scripts/nonplanar/native_later_oracle.py",
+    "scripts/nonplanar/rounded_rates_oracle.py",
+    "src/libslic3r/Nonplanar/GCodeAdapter.cpp",
+    "tests/nonplanar/test_policy.cpp",
+    "tests/nonplanar/test_serialization.cpp",
+    "docs/nonplanar-dev/B11-rounded-rates.md",
+    "docs/nonplanar-dev/B11-rounded-rates-review.md",
+    "docs/nonplanar-dev/adr-0098-native-decimal-rate-retuning.md",
+    "docs/nonplanar-dev/README.md",
+    "docs/nonplanar-dev/next-tasks.md",
+    "docs/nonplanar-dev/gate-b-plan.md",
+    "docs/nonplanar-dev/status.json"
+  ],
+  "scope": "ACTUAL_NATIVE_DECIMAL_RATE_RETUNING_ORIGINAL_XYZ_E_ORDER_LIMITS",
+  "full_B01_B15": "IN_PROGRESS",
+  "export": "BLOCK"
+}

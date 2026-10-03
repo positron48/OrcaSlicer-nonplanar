@@ -4,6 +4,21 @@ Active objective: implement the entire B01–B15 scope. A bounded primitive or a
 green unit suite is evidence for its own contract, not completion of a B task.
 The normative backlog, SPEC and acceptance matrix remain unchanged.
 
+`B11-rounded-rates.md` and ADR-0098 correct native full-stop serialization
+against its actual decimal XYZ/E. Only M204/F ceilings decrease; geometry,
+extrusion, order and original limits remain. Original100 later analysis passes
+with M20485.530744; historical85.530745 still fails Z50 in the independent native
+auditor. Nine focused cases/2480 assertions, CTest486/486, eighteen independent
+oracles, thirteen real CLI cases and six strict OFF/ZAA pairs pass. Original
+2098-record default SHA and parent candidate geometry/E remain exact;41/51 parent
+files stay exact, nine change only work accounting and one software identity.
+Fixed17 remains4 PASS/RUN +13 UNKNOWN/NOT_RUN, export BLOCK and full B01-B15
+active. Complete filled caps/contact/seams/head/routes/order/whole-job/source/
+software/physical/publication remain open. New Linux/Windows/GUI/physical and
+independent review pending; standard U1 head/.4 nozzle known.
+
+Earlier milestones below retain the scope at their delivery.
+
 `B14-later-controller.md` and ADR-0097 integrate captured ordered local later
 paths into the common controller, protected native lineage and actual final-byte
 replay. Nonempty request2/native plan3/manifest4 are additive; empty legacy bytes
@@ -19,7 +34,6 @@ caps, qualified contact/seams/head/connectors/order/whole-job/source/software/
 physical/publication. Full B01-B15 remains active. New Linux/Windows/GUI/physical
 and independent review pending; standard U1 head/.4 nozzle known.
 
-Earlier milestones below retain the scope at their delivery.
 
 `B07-later-sequence.md` and ADR-0096 add an owned ordered later-path program.
 Each path recomputes support, normal spacing, finite-width roof and dose on the

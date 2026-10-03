@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 #include <libslic3r/Nonplanar/GCodeAdapter.hpp>
+#include <libslic3r/GCodeWriter.hpp>
 #include <libslic3r/Nonplanar/JobArtifact.hpp>
 #include <libslic3r/Print.hpp>
 #include <libslic3r/Model.hpp>
@@ -311,6 +312,96 @@ std::string rate_bytes()
 {
     return "G90\nM83\nM400\nM204 S4\nG1 X3 Y4 Z0 E.2 F300\nM400\nG1 E-.8 F120\nM400\nG1 X3 Y4 Z.05 F60\nM400\nG1 E.8 F120\nM400\nG4 P10\nM400\n";
 }
+}
+TEST_CASE("B11 rounded XYZ retunes native acceleration under the original axis limits", "[Nonplanar][B11][RoundedCandidateRates]")
+{
+    for(bool corexy : {false,true}) for(double sign : {-1.,1.}) {
+        CAPTURE(corexy,sign);
+        const PhysicalPosition a{sign*20,sign*19.175581,4.606660011746894};
+        const PhysicalPosition b{sign*20,sign*19.275581,4.606660011746894};
+        const PhysicalPosition c{sign*19.96,sign*19.005581,4.803325006235843};
+        const MaterialModel model{1,Length(0),Length(0),Length(0),Length(0),Length(0)};
+        const std::vector<MaterialRecord> rows{
+            {{1,0,0,a,b,Speed(30),Acceleration(100),Travel{},1},{}},
+            {{2,1,0,b,c,Speed(30),Acceleration(100),Travel{},0},{}}};
+        const auto material=prepare_material_motion(capture_material_sequence(rows,model,7,std::string(64,'a')));
+        INFO(material.reason);REQUIRE(material.snapshot);
+        SimulationScene scene{1,1,1,ProfileOrigin::Synthetic,false,{{0,0,0},Length(.2),Length(.5)},{},
+            {{-40,-40,1},{40,40,8}},{{-50,-50,-1},{50,50,20}},{{{0,0,.1},{10,10,.2}}},true,Length(20),Length(0)};
+        uint64_t id=1;for(auto part : {HeadPart::NozzleBody,HeadPart::Heater,HeadPart::Sock,HeadPart::Duct,HeadPart::Sensor,HeadPart::Mount})
+            scene.head.push_back({id++,part,{{-.4,-.4,.4},{.4,.4,1}},false,false});
+        const ClearancePolicy geometry{Length(.005),NumericBudget(0,0,0,.002),Length(0),Length(0),Length(0)};
+        const auto source=prepare_simulation_motion(scene,material,geometry);INFO(source.reason);REQUIRE(source.snapshot);
+        const LinearMotionPolicy rates{1,2,1,ProfileOrigin::Synthetic,false,LinearPlannerModel::FullStop,
+            corexy ? LinearKinematics::CoreXY : LinearKinematics::Cartesian,scene.nozzle_domain,
+            {200,200,5},{1000,1000,50},{200,200,5},{1000,1000,50},Length(1.75),FlowCompensation(1),
+            Speed(10),Acceleration(100),Length(2),20,1,100};
+        const auto plan=plan_linear_motion(source,rates);INFO(plan.reason);REQUIRE(plan.snapshot);
+        const LinearCandidatePolicy policy{3,1,Acceleration(100)};
+        const auto candidate=serialize_linear_candidate(plan,policy);INFO(candidate.reason);REQUIRE(candidate.snapshot);
+        const auto verified=verify_linear_candidate_rates(candidate);INFO(verified.reason);
+        REQUIRE(verified.status==nptop_verify::RateStatus::Pass);REQUIRE(verified.snapshot);
+        const auto replay=nptop_verify::replay_full_stop(candidate.snapshot->bytes,{candidate.snapshot->initial_position.x(),candidate.snapshot->initial_position.y(),candidate.snapshot->initial_position.z()});
+        nptop_test::check_full_stop_rates(replay,rates,corexy);
+        REQUIRE(replay.size()==rows.size());REQUIRE(replay[1].end[0]==sign*19.96);
+        REQUIRE(replay[1].end[1]==sign*19.005581);REQUIRE(replay[1].end[2]==4.803325);
+        REQUIRE(replay[1].e==0);REQUIRE(replay[1].acceleration<85.530745);
+        REQUIRE(replay[1].acceleration<=plan.snapshot->steps[1].acceleration_mm_s2);
+        auto unsafe=candidate.snapshot->bytes;const auto at=unsafe.find("M204 S");const auto end=unsafe.find('\n',at);
+        REQUIRE(at!=std::string::npos);unsafe.replace(at,end-at,"M204 S85.530745");
+        auto exact=rate_policy();
+        exact.position_min={-50,-50,-1};exact.position_max={50,50,20};exact.axis_speed=rates.axis_speed_mm_s;
+        exact.axis_acceleration=rates.axis_acceleration_mm_s2;exact.drive_speed=rates.drive_speed_mm_s;
+        exact.drive_acceleration=rates.drive_acceleration_mm_s2;exact.initial_acceleration=100;
+        exact.kinematics=corexy ? nptop_verify::RateKinematics::CoreXY : nptop_verify::RateKinematics::Cartesian;
+        const auto negative=nptop_verify::verify_linear_rates(unsafe,{candidate.snapshot->initial_position.x(),candidate.snapshot->initial_position.y(),candidate.snapshot->initial_position.z()},exact);
+        REQUIRE(negative.status==nptop_verify::RateStatus::Fail);REQUIRE(negative.reason=="AXIS_ACCELERATION_LIMIT");
+        REQUIRE(negative.record==1);REQUIRE_FALSE(negative.snapshot);
+    }
+}
+TEST_CASE("B11 rounded XYZ and E retune axis drive filament and Q without changing nominal material", "[Nonplanar][B11][RoundedCandidateRates]")
+{
+    const auto fixture=full_stop_plan();
+    const auto &original=*fixture.snapshot->source;
+    const auto &ledger=*original.material->ledger;
+    for(int mode=0;mode<6;++mode) {
+        CAPTURE(mode);auto rates=fixture.snapshot->policy;
+        if(mode==0)rates.filament_speed=Speed(.01);
+        if(mode==1)rates.filament_acceleration=Acceleration(.01);
+        if(mode==2)rates.max_volume_mm3_s=.01;
+        if(mode==3)rates.axis_speed_mm_s[2]=.01;
+        if(mode==4)rates.drive_speed_mm_s[2]=.01;
+        if(mode==5)rates.drive_acceleration_mm_s2[2]=.01;
+        auto row=ledger.records.front();
+        if(mode>=3)row.motion.end=PhysicalPosition(row.motion.end.x(),row.motion.end.y(),3.053616);
+        const auto material=prepare_material_motion(capture_material_sequence({row},ledger.model,ledger.revision,ledger.source_fingerprint));
+        INFO(material.reason);REQUIRE(material.snapshot);
+        const auto source=prepare_simulation_motion(original.scene,material,original.policy);REQUIRE(source.snapshot);
+        const auto plan=plan_linear_motion(source,rates);INFO(plan.reason);REQUIRE(plan.snapshot);
+        LinearCandidatePolicy policy{3,1,Acceleration(100)};
+        if(mode<3)policy.e_digits=2;else policy.xyz_digits=3;
+        const auto candidate=serialize_linear_candidate(plan,policy);INFO(candidate.reason);REQUIRE(candidate.snapshot);
+        const auto verified=verify_linear_candidate_rates(candidate);INFO(verified.reason);
+        REQUIRE(verified.status==nptop_verify::RateStatus::Pass);REQUIRE(verified.snapshot);
+        const auto &move=verified.snapshot->moves.front();REQUIRE(move.e>0);if(mode<3)REQUIRE(move.e==.12);
+        REQUIRE(candidate.snapshot->plan->source->material==material.snapshot);
+        REQUIRE(candidate.snapshot->plan->planned->material->ledger->records.front().motion.end.z()==row.motion.end.z());
+        // Restore the old command ceilings while retaining the exact new XYZ/E.
+        auto unsafe=candidate.snapshot->bytes;
+        const auto command=[](const char *prefix,char axis,double v){Slic3r::GCodeFormatter f;f.emit_string(prefix);f.emit_axis(axis,std::floor(std::nextafter(v*1e6,0.))/1e6,6);auto text=f.string();text.pop_back();return text;};
+        if(mode==1 || mode==5) {const auto at=unsafe.find("M204 S"),end=unsafe.find('\n',at);unsafe.replace(at,end-at,command("M204",'S',plan.snapshot->steps.front().acceleration_mm_s2));}
+        else {const auto at=unsafe.find('F'),end=unsafe.find('\n',at);unsafe.replace(at,end-at,command("",'F',plan.snapshot->steps.front().peak_speed_mm_s*60).substr(1));}
+        const auto negative=nptop_verify::verify_linear_rates(unsafe,verified.snapshot->initial_position,verified.snapshot->policy);
+        INFO(negative.reason);REQUIRE(negative.status==nptop_verify::RateStatus::Fail);REQUIRE_FALSE(negative.snapshot);
+        const std::array<const char *,6> reasons{"FILAMENT_SPEED_LIMIT","FILAMENT_ACCELERATION_LIMIT","VOLUME_RATE_LIMIT","AXIS_SPEED_LIMIT","DRIVE_SPEED_LIMIT","DRIVE_ACCELERATION_LIMIT"};
+        REQUIRE(negative.reason==reasons[mode]);
+        LinearCandidateLimits limits;limits.max_evaluations=candidate.evaluations-1;
+        REQUIRE(serialize_linear_candidate(plan,policy,limits).reason=="CANDIDATE_WORK_LIMIT");
+        limits.max_evaluations=candidate.evaluations;REQUIRE(serialize_linear_candidate(plan,policy,limits).snapshot);
+        // Rate retuning cannot repair excessive actual cross-section or dose.
+        auto cross_section=verified.snapshot->policy;cross_section.max_cross_section=.09;
+        REQUIRE(nptop_verify::verify_linear_rates(candidate.snapshot->bytes,verified.snapshot->initial_position,cross_section).reason=="EXTRUDE_CROSS_SECTION_LIMIT");
+    }
 }
 TEST_CASE("B12 independent exact final byte limits certify rates dose and ideal full stop timing without phantom pressure material", "[Nonplanar][B12][FinalByteRates]")
 {

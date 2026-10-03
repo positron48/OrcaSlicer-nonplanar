@@ -9,9 +9,9 @@ from native_analysis_json_oracle import verify_document, verify_diagnostic
 from native_worker_oracle import verify as verify_worker
 
 
-def verify(record, document, diagnostic):
+def verify(record, document, diagnostic, initial_acceleration=40):
     verify_report(record)
-    verify_document(document, record, initial_acceleration=40)
+    verify_document(document, record, initial_acceleration=initial_acceleration)
     verify_diagnostic(diagnostic, record)
     native = record['native']
     later = parse(native['later_canonical'])
@@ -38,11 +38,9 @@ def main():
     count = verify(default, document, reference)
     verify_worker(read('native-later-worker-input.json'), read('native-later-worker-diagnostic.json'),
                   reference, default, initial_acceleration=40)
-    negative = read('native-later-rate-refusal-report.json')
-    verify_report(negative)
-    require(parse(negative['canonical'])['replay']['rate_status'] == 'FAIL' and
-            parse(negative['canonical'])['replay']['rate_reason'] == 'AXIS_ACCELERATION_LIMIT' and
-            negative['records'] == 0, 'Original acceleration final-byte refusal retained')
+    original = verify(read('native-later-original-policy-report.json'),
+                      read('native-later-original-policy-request.json'),
+                      read('native-later-original-policy-diagnostic.json'), initial_acceleration=100)
     refused = 0
     for mode in range(8):
         changed, transport, output = copy.deepcopy(record), copy.deepcopy(document), copy.deepcopy(diagnostic)
@@ -71,7 +69,8 @@ def main():
         else:
             raise ValueError('Changed later request/prefix/movement accepted')
     print(canonical({'status': 'PASS', 'mutation_refusals': refused, 'fine_records': fine,
-                     'default_records': count, 'scope': 'OWNED_LATER_REQUEST_PREFIX_ORDER_AND_ACTUAL_FINAL_DECIMAL_BYTE_REPLAY_ONLY',
+                     'default_records': count, 'original_policy_records': original,
+                     'scope': 'OWNED_LATER_REQUEST_PREFIX_ORDER_AND_ACTUAL_FINAL_DECIMAL_BYTE_REPLAY_ONLY',
                      'job_status': 'UNKNOWN', 'export': 'BLOCK'}))
 
 

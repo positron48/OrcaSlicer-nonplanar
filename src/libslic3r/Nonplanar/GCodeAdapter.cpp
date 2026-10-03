@@ -2,6 +2,7 @@
 #include "../GCodeWriter.hpp"
 #include "StlImport.hpp"
 #include "Canonical.hpp"
+#include "Interval.hpp"
 #include <cfenv>
 #include <set>
 
@@ -81,31 +82,89 @@ LinearCandidateResult serialize_linear_candidate(const LinearMotionPlanResult &r
             require(!limits.is_policy_current || (limits.is_policy_current(plan->policy.profile_id,plan->policy.revision) &&
                 limits.is_policy_current(policy.profile_id,policy.revision)),"STALE_CANDIDATE_POLICY");
             require(std::fegetround()==FE_TONEAREST,"UNSUPPORTED_CANDIDATE_ROUNDING");
+            detail::require_interval_environment();
             require(std::chrono::steady_clock::now()-started<limits.timeout,"CANDIDATE_DEADLINE");
         };
         result.evaluations=plan->evaluations;
         const auto work=[&] {require(++result.evaluations<=limits.max_evaluations,"CANDIDATE_WORK_LIMIT");stop();};work();
         const auto &rows=plan->planned->material->ledger->records;
         require(!rows.empty() && rows.size()==plan->steps.size() && rows.size()<=limits.max_records,"CANDIDATE_RECORD_LIMIT");
-        double acceleration=policy.initial_acceleration.value();
-        for (const auto &step : plan->steps) {work();if (step.coordinate!=LinearStepCoordinate::Dwell) acceleration=std::min(acceleration,step.acceleration_mm_s2);}
         const auto lower=[&](double value,unsigned digits) {
             const double scale=GCodeFormatter::pow_10[digits];
             return std::floor(std::nextafter(value*scale,0.))/scale;
         };
-        acceleration=lower(acceleration,policy.acceleration_digits);
-        require(std::isfinite(acceleration) && acceleration>0,"CANDIDATE_ACCELERATION_COLLAPSES");
         const auto quantize=[&](double value) {return GCodeFormatter::quantize(value,policy.xyz_digits);};
         const auto &first=rows.front().motion.start;
         require(std::max({std::abs(first.x()),std::abs(first.y()),std::abs(first.z())})<=10000,"CANDIDATE_XYZ_DOMAIN");
         const PhysicalPosition initial{quantize(first.x()),quantize(first.y()),quantize(first.z())};
         const double coordinate_error=std::nextafter(std::sqrt(3.)*(GCodeFormatter::pow_10_inv[policy.xyz_digits]/2 + 16*std::numeric_limits<double>::epsilon()*10000),std::numeric_limits<double>::infinity());
         plan->planned->policy.numeric.require_conversion(coordinate_error);
+        using detail::Interval;
+        const auto absolute=[](Interval v) {return Interval(v.lo<=0 && v.hi>=0 ? 0 : std::min(std::abs(v.lo),std::abs(v.hi)),std::max(std::abs(v.lo),std::abs(v.hi)));};
+        // emit_axis writes the integer lattice round(v*10^digits). Bound that
+        // decimal, not the binary quantize result. The first pose is the actual
+        // binary initial position; subsequent poses are commanded decimals.
+        const auto units=[](double v,unsigned digits) {return std::round(v*GCodeFormatter::pow_10[digits]);};
+        const auto decimal=[](double n,unsigned digits) {return Interval(n)/Interval(GCodeFormatter::pow_10[digits]);};
+        const auto &rates=plan->policy;
+        const auto area=Interval(3.141592653589793,3.1415926535897936)*detail::square(Interval(rates.filament_diameter.value())/Interval(2));
+        const auto limit=[](double maximum,double ratio,double &value) {
+            if(ratio>0 && (Interval(value)*Interval(ratio)).hi>maximum)
+                value=std::min(value,(Interval(maximum)/Interval(ratio)).lo);
+        };
+        struct Command {double extrusion,feed;};
+        std::vector<Command> commands;commands.reserve(rows.size());
+        std::array<double,3> previous{};bool binary_start=true;double pressure_debt=0;
+        const std::array<double,3> initial_xyz{initial.x(),initial.y(),initial.z()};
+        double acceleration=policy.initial_acceleration.value();
+        for(size_t i=0;i<rows.size();++i) {
+            work();const auto &event=rows[i].motion;const auto &step=plan->steps[i];double extrusion=0;
+            require(std::max({std::abs(event.end.x()),std::abs(event.end.y()),std::abs(event.end.z())})<=10000,"CANDIDATE_XYZ_DOMAIN");
+            if(step.coordinate==LinearStepCoordinate::Dwell) {commands.push_back({0,0});continue;}
+            acceleration=std::min(acceleration,step.acceleration_mm_s2);
+            if(const auto *deposit=std::get_if<Deposition>(&event.payload)) {
+                require(pressure_debt==0,"DEPOSITION_WHILE_RETRACTED");
+                extrusion=filament_feed(deposit->volume,rates.filament_diameter,rates.flow).value();
+            } else if(const auto *pressure=std::get_if<Retraction>(&event.payload)) {
+                if(pressure->after==RetractionState::Retracted) {require(pressure_debt==0,"NESTED_CANDIDATE_RETRACTION");pressure_debt=pressure->amount.value();extrusion=-pressure_debt;}
+                else {require(pressure_debt==pressure->amount.value(),"UNBALANCED_CANDIDATE_PRESSURE");extrusion=pressure_debt;pressure_debt=0;}
+            }
+            if(extrusion!=0)require(std::isfinite(extrusion) && std::abs(extrusion)<=10000 && units(extrusion,policy.e_digits)!=0,"CANDIDATE_E_COLLAPSES_OR_OUTSIDE_DOMAIN");
+            const auto filament=absolute(decimal(units(extrusion,policy.e_digits),policy.e_digits));
+            std::array<Interval,3> delta{Interval(0),Interval(0),Interval(0)};
+            if(step.coordinate==LinearStepCoordinate::XYZ) {
+                const std::array<double,3> end{units(event.end.x(),policy.xyz_digits),units(event.end.y(),policy.xyz_digits),units(event.end.z(),policy.xyz_digits)};
+                require(quantize(event.start.x())!=quantize(event.end.x()) || quantize(event.start.y())!=quantize(event.end.y()) ||
+                        quantize(event.start.z())!=quantize(event.end.z()),"CANDIDATE_XYZ_COLLAPSES");
+                for(size_t axis=0;axis<3;++axis)delta[axis]=binary_start ? decimal(end[axis],policy.xyz_digits)-Interval(initial_xyz[axis]) : decimal(end[axis]-previous[axis],policy.xyz_digits);
+                previous=end;binary_start=false;
+            }
+            const auto distance=step.coordinate==LinearStepCoordinate::Filament ? filament : detail::root(detail::square(delta[0])+detail::square(delta[1])+detail::square(delta[2]));
+            require(distance.lo>0,"CANDIDATE_UNCERTAIN_ROUNDED_LENGTH");
+            double speed=step.peak_speed_mm_s;
+            if(step.coordinate==LinearStepCoordinate::XYZ) {
+                const std::array<Interval,3> drive=rates.kinematics==LinearKinematics::CoreXY ? std::array<Interval,3>{delta[0]+delta[1],delta[0]-delta[1],delta[2]} : delta;
+                for(size_t axis=0;axis<3;++axis) {
+                    work();const double axis_ratio=(absolute(delta[axis])/distance).hi,drive_ratio=(absolute(drive[axis])/distance).hi;
+                    limit(rates.axis_speed_mm_s[axis],axis_ratio,speed);limit(rates.axis_acceleration_mm_s2[axis],axis_ratio,acceleration);
+                    limit(rates.drive_speed_mm_s[axis],drive_ratio,speed);limit(rates.drive_acceleration_mm_s2[axis],drive_ratio,acceleration);
+                }
+            }
+            const double e_ratio=(filament/distance).hi;
+            limit(rates.filament_speed.value(),e_ratio,speed);limit(rates.filament_acceleration.value(),e_ratio,acceleration);
+            if(extrusion>0 && step.coordinate==LinearStepCoordinate::XYZ)limit(rates.max_volume_mm3_s,(filament*area/distance).hi,speed);
+            speed=std::min(speed,(distance*Interval(rates.max_events_per_second)).lo);
+            const double feed=lower((Interval(speed)*Interval(60)).lo,policy.feed_digits);
+            require(std::isfinite(feed) && feed>0 && feed<100000,"CANDIDATE_FEED_COLLAPSES_OR_OUTSIDE_DOMAIN");
+            commands.push_back({extrusion,feed});
+        }
+        acceleration=lower(acceleration,policy.acceleration_digits);
+        require(std::isfinite(acceleration) && acceleration>0,"CANDIDATE_ACCELERATION_COLLAPSES");
         std::string bytes;
         const auto append=[&](const std::string &part) {work();require(part.size()<=limits.max_bytes-bytes.size(),"CANDIDATE_BYTE_LIMIT");bytes+=part;};
         append("G90\nM83\nM400\n");
         GCodeFormatter accel;accel.emit_string("M204");accel.emit_axis('S',acceleration,policy.acceleration_digits);append(accel.string());
-        std::vector<CandidateEventBytes> ranges;double pressure_debt=0;
+        std::vector<CandidateEventBytes> ranges;
         for (size_t i=0;i<rows.size();++i) {
             work();const auto begin=bytes.size();const auto &event=rows[i].motion;const auto &step=plan->steps[i];
             require(std::max({std::abs(event.end.x()),std::abs(event.end.y()),std::abs(event.end.z())})<=10000,"CANDIDATE_XYZ_DOMAIN");
@@ -116,27 +175,14 @@ LinearCandidateResult serialize_linear_candidate(const LinearMotionPlanResult &r
                 require(std::isfinite(milliseconds) && milliseconds>0 && milliseconds<=1000000,"CANDIDATE_DWELL_DOMAIN");
                 GCodeFormatter dwell;dwell.emit_string("G4");dwell.emit_axis('P',milliseconds,policy.dwell_digits);append(dwell.string());
             } else {
-                const double feed=lower(step.peak_speed_mm_s*60,policy.feed_digits);
-                require(std::isfinite(feed) && feed>0 && feed<100000,"CANDIDATE_FEED_COLLAPSES_OR_OUTSIDE_DOMAIN");
-                GCodeG1Formatter move;double extrusion=0;
+                GCodeG1Formatter move;const double extrusion=commands[i].extrusion;
                 if (step.coordinate==LinearStepCoordinate::XYZ) {
-                    require(quantize(event.start.x())!=quantize(event.end.x()) || quantize(event.start.y())!=quantize(event.end.y()) ||
-                            quantize(event.start.z())!=quantize(event.end.z()),"CANDIDATE_XYZ_COLLAPSES");
                     move.emit_axis('X',event.end.x(),policy.xyz_digits);move.emit_axis('Y',event.end.y(),policy.xyz_digits);move.emit_axis('Z',event.end.z(),policy.xyz_digits);
-                    if (const auto *deposit=std::get_if<Deposition>(&event.payload)) {
-                        require(pressure_debt==0,"DEPOSITION_WHILE_RETRACTED");
-                        extrusion=filament_feed(deposit->volume,plan->policy.filament_diameter,plan->policy.flow).value();
-                    }
-                } else {
-                    const auto &pressure=std::get<Retraction>(event.payload);
-                    if (pressure.after==RetractionState::Retracted) {require(pressure_debt==0,"NESTED_CANDIDATE_RETRACTION");pressure_debt=pressure.amount.value();extrusion=-pressure_debt;}
-                    else {require(pressure_debt==pressure.amount.value(),"UNBALANCED_CANDIDATE_PRESSURE");extrusion=pressure_debt;pressure_debt=0;}
                 }
                 if (extrusion!=0) {
-                    require(std::isfinite(extrusion) && std::abs(extrusion)<=10000 && GCodeFormatter::quantize(extrusion,policy.e_digits)!=0,"CANDIDATE_E_COLLAPSES_OR_OUTSIDE_DOMAIN");
                     move.emit_axis('E',extrusion,policy.e_digits);
                 }
-                move.emit_axis('F',feed,policy.feed_digits);append(move.string());
+                move.emit_axis('F',commands[i].feed,policy.feed_digits);append(move.string());
             }
             append("M400\n");ranges.push_back({begin,bytes.size()});
         }

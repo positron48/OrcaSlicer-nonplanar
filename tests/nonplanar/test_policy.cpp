@@ -4535,14 +4535,21 @@ std::pair<NativeAnalysisRequest,NativeAnalysisLimits> native_later_options(Nativ
 TEST_CASE("B14 common analysis carries captured ordered later paths through native lineage and final bytes", "[Nonplanar][B14][NativeAnalysisLater]")
 {
     NativeJobFixture fixture("affine-wedge-1-in-8000.stl");auto options=native_later_options(fixture);
-    // Execution reduction below the declared Z limit. Keep the original 100
-    // declaration as a final-byte refusal: geometry quantization is observable.
+    // Original execution policy now survives actual decimal-coordinate rate
+    // retuning. The historical unsafe M204 remains an independent negative.
     auto high_acceleration=options.first;high_acceleration.inputs.serializer.initial_acceleration=Acceleration(100);
-    const auto rate_refusal=run_native_analysis(fixture.print,101,capture_native_analysis_request(high_acceleration),fixture.resources,options.second);
-    REQUIRE(rate_refusal.snapshot);REQUIRE_FALSE(rate_refusal.snapshot->report->rates);
-    REQUIRE(nlohmann::json::parse(rate_refusal.snapshot->report->canonical_json).at("replay").at("rate_reason")=="AXIS_ACCELERATION_LIMIT");
-    REQUIRE_FALSE(rate_refusal.snapshot->report->export_allowed);
-    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(directory)/"native-later-rate-refusal-report.json",{rate_refusal.reason,rate_refusal.snapshot->report,rate_refusal.snapshot->replay_evaluations});
+    const auto original_input=capture_native_analysis_request(high_acceleration);
+    const auto original=run_native_analysis(fixture.print,101,original_input,fixture.resources,options.second);
+    REQUIRE(original.snapshot);REQUIRE(original.snapshot->report->rates);
+    REQUIRE(original.snapshot->plan->candidate->acceleration_mm_s2<85.530745);
+    REQUIRE_FALSE(original.snapshot->report->export_allowed);
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR")){
+        const auto dir=boost::filesystem::path(directory);
+        test::save_job_report(dir/"native-later-original-policy-report.json",{original.reason,original.snapshot->report,original.snapshot->replay_evaluations});
+        const auto save=[&](const char *name,const std::string &bytes){const auto path=dir/name;REQUIRE_FALSE(boost::filesystem::exists(path));boost::nowide::ofstream f(path.string(),std::ios::binary);REQUIRE(f.good());f<<bytes;f.close();REQUIRE(f.good());};
+        save("native-later-original-policy-request.json",native_analysis_document(*original_input));
+        save("native-later-original-policy-diagnostic.json",native_analysis_diagnostic(original));
+    }
     const auto input=capture_native_analysis_request(options.first);
     REQUIRE(nlohmann::json::parse(input->canonical_json).at("schema")==2);
     const auto document=native_analysis_document(*input);REQUIRE(nlohmann::json::parse(document).at("schema")==2);
