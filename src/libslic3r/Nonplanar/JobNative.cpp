@@ -261,6 +261,7 @@ GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &reques
         require(assembly->body->sequence==body && assembly->body_records==body->records.size() &&
             assembly->body->completed_records==body->records.size() && assembly->body->current_progress==0,"NATIVE_JOB_COMPLETE_BODY_REQUIRED");
         require(assembly->material->completed_records==assembly->material->sequence->records.size() && assembly->material->current_progress==0,"NATIVE_JOB_COMPLETE_ASSEMBLY_REQUIRED");
+        require(assembly->source->infill_extent==FirstCapInfillExtent::OriginalOwners,"NATIVE_JOB_DENSIFIED_INFILL_PROGRAM_UNBOUND");
         require(!(corners && departure),"NATIVE_JOB_CORNER_DEPARTURE_COMBINATION_UNSUPPORTED");
         require(!(later && departure),"NATIVE_JOB_LATER_DEPARTURE_COMBINATION_UNSUPPORTED");
         require(later || departure || assembly->later_paths.empty(),"NATIVE_JOB_LATER_PROGRAM_REQUIRED");

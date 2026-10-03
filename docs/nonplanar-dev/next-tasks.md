@@ -7,6 +7,24 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B07-infill-density.md` and ADR-0102 add a prospective retained fixed-width
+infill factory with explicit stored XY pitch, measured gain/spill/repetition and
+original actual-body roof/dose. First-cap6 marks new owners; native binding and
+legacy replans refuse them pending captured program ownership. Three new cases,
+focus3/341, CTest502/502,22 independent checks,17 actual CLI cases and6 strict
+OFF/ZAA pairs pass. Four analytical examples retain six owners and append three;
+small gain [.00294,.00351] mm3 costs .36081 mm3 added dose and substantial overlap.
+Actual missing material remains about .139 mm3; the actual dense native example
+refuses insufficient gain. The steeper coarse work-limit refusal is retained.
+Four independent rational flat unions and ten mutations pass; sloped unions have
+accounting checks only. Fifty of53 parent candidates remain exact; two private
+version-only changes and one software report, additive witness, unselected2098
+SHA unchanged. Fixed17 stays4 PASS/RUN +13 UNKNOWN/NOT_RUN, export BLOCK, full B
+IN_PROGRESS. Next captured density/controller/child/byte lineage, then full fill,
+seams/layers/head/contact/routes/order/whole-job/source/software/physical/
+publication. New platform/GUI/physical and independent review pending. Standard
+U1 head/.4 nozzle known; software independent of firmware/material brands.
+
 `B14-corner-controller.md` and ADR-0101 bind optional captured corner repair
 through the common controller, protected native material/lineage, child/direct
 execution and final-byte replay. Request3/native plan4/manifest5 are additive;

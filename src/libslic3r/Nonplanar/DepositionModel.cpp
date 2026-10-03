@@ -3847,6 +3847,104 @@ FirstCapResult plan_first_cap(const AffineHatchResult &requested,const FirstCont
     catch (const std::exception &e) {return {"FIRST_CAP_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
 }
 
+FirstCapInfillReplanResult replan_first_cap_infill(const FirstCapResult &requested,const FirstCapInfillReplanPolicy &requested_policy,
+    const FirstHatchLayerLimits &requested_limits)
+{
+    const auto before=requested.snapshot;const auto policy=requested_policy;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if(!before || !before->source || !before->fill || !before->complete_fill || before->paths.size()<5 ||
+            !valid_first_hatch_layer_limits(limits) || !std::isfinite(policy.maximum_pitch.value()) || policy.maximum_pitch.value()<=0 ||
+            !std::isfinite(policy.minimum_covered_gain.value()) || policy.minimum_covered_gain.value()<=0 ||
+            !std::isfinite(policy.maximum_outside_target.value()) || policy.maximum_outside_target.value()<0 ||
+            !std::isfinite(policy.maximum_repeated_increase.value()) || policy.maximum_repeated_increase.value()<0)
+            reject("INVALID_FIRST_CAP_INFILL_REPLAN");
+        if(before->infill_extent!=FirstCapInfillExtent::OriginalOwners)reject("FIRST_CAP_INFILL_ALREADY_REPLANNED");
+        if(before->hatch_extent!=FirstCapHatchExtent::ContourCentres || before->contour_extent!=FirstCapContourExtent::ClosedLoopCentres)
+            reject("FIRST_CAP_INFILL_EXTENT_COMBINATION_UNSUPPORTED");
+        const auto source=before->source;const auto sequence=source->source->source->sequence;
+        const auto poll=[&]{stop(limits,sequence->revision,started);stop(limits.beads,sequence->revision,started);
+            stop(limits.beads.packets,sequence->revision,started);stop(limits.volumes,sequence->revision,started);};
+        size_t work=0,packets=0,roofs=0,bead_work=0;
+        const auto charge=[&](size_t n=1){if(n>limits.max_evaluations-work)reject("FIRST_CAP_INFILL_WORK_LIMIT");work+=n;poll();};
+        const bool x=source->passes.front().direction==HatchDirection::AlongX;
+        const auto along=[&](PhysicalPosition p){return x ? p.x() : p.y();};
+        const auto across=[&](PhysicalPosition p){return x ? p.y() : p.x();};
+        const auto &first=*before->paths[4];const double lo=along(first.path_start),hi=along(first.path_end);
+        std::vector<double> centres;
+        for(size_t i=0;i<before->paths.size();++i){charge();const auto &p=*before->paths[i];
+            if(p.source!=source || p.roof_domain!=FirstHatchRoofDomain::FiniteWidth ||
+                p.maximum_gap_error_mm>limits.beads.maximum_gap_error.value() || p.maximum_width_error_mm>limits.beads.packets.maximum_width_error.value())
+                reject("FIRST_CAP_INFILL_RETAINED_PROOF_LIMIT");
+            if(p.pieces.size()>limits.beads.packets.max_segments-packets || p.roof_segments>limits.beads.max_roof_segments-roofs)
+                reject("FIRST_CAP_INFILL_RETAINED_PROOF_LIMIT");
+            packets+=p.pieces.size();roofs+=p.roof_segments;charge(p.pieces.size());
+            for(const auto &piece:p.pieces)if(piece.nominal_width.value()!=before->policy.width.value())reject("FIRST_CAP_INFILL_VARIABLE_WIDTH_UNSUPPORTED");
+            if(i>=4 && (along(p.path_start)!=lo || along(p.path_end)!=hi || across(p.path_start)!=across(p.path_end)))
+                reject("FIRST_CAP_INFILL_REQUIRES_COMMON_AXIS_EXTENT");
+            if(across(p.path_start)==across(p.path_end))centres.push_back(across(p.path_start));
+        }
+        if(before->paths.size()>limits.max_paths || lo>=hi)reject("FIRST_CAP_INFILL_PATH_LIMIT");
+        std::sort(centres.begin(),centres.end(),[&](double a,double b){charge();return a<b;});
+        centres.erase(std::unique(centres.begin(),centres.end()),centres.end());
+        struct Centre {double value,error;};std::vector<Centre> extra;
+        for(size_t i=1;i<centres.size();++i){const Exact gap=Exact(centres[i])-Exact(centres[i-1]);size_t count=1;
+            while(Exact(count)*Exact(policy.maximum_pitch.value())<gap){charge();
+                if(extra.size()+before->paths.size()+count>limits.max_paths)reject("FIRST_CAP_INFILL_PATH_LIMIT");++count;}
+            double previous=centres[i-1];
+            for(size_t k=1;k<count;++k){charge();const auto p=stored_exact(Exact(centres[i-1])+gap*Exact(k)/Exact(count));
+                if(p.first<=centres[i-1] || p.first>=centres[i] || (!extra.empty() && p.first<=extra.back().value))
+                    reject("FIRST_CAP_INFILL_COORDINATE_RESOLUTION");
+                if(Exact(p.first)-Exact(previous)>Exact(policy.maximum_pitch.value()))reject("FIRST_CAP_INFILL_PITCH_ROUNDING");
+                extra.push_back({p.first,p.second});previous=p.first;}
+            if(Exact(centres[i])-Exact(previous)>Exact(policy.maximum_pitch.value()))reject("FIRST_CAP_INFILL_PITCH_ROUNDING");
+        }
+        if(extra.empty())reject("FIRST_CAP_INFILL_NO_ADDED_OWNER");
+        const auto allowance=Interval(limits.beads.packets.maximum_volume_error.value())-Interval(before->global_volume_error_mm3);
+        if(allowance.lo<=0)reject("FIRST_CAP_INFILL_RETAINED_AMOUNT_BUDGET");
+        auto paths=before->paths;const auto &surface=source->source->surfaces.front().cell;const auto &roi=surface.footprint;
+        const auto point=[&](double a,double b){const double px=x ? a : b,py=x ? b : a;
+            const Exact z=Exact(surface.z00)+(Exact(surface.z10)-Exact(surface.z00))*(Exact(px)-Exact(roi.min_x))/(Exact(roi.max_x)-Exact(roi.min_x))+
+                (Exact(surface.z01)-Exact(surface.z00))*(Exact(py)-Exact(roi.min_y))/(Exact(roi.max_y)-Exact(roi.min_y));
+            const auto stored=stored_exact(z);return std::pair<PhysicalPosition,double>{{px,py,stored.first},stored.second};};
+        for(const auto &centre:extra){charge(2*sequence->records.size());
+            if(bead_work>=limits.beads.max_evaluations || roofs>=limits.beads.max_roof_segments || packets>=limits.beads.packets.max_segments)
+                reject("FIRST_CAP_INFILL_BEAD_WORK_LIMIT");
+            const auto a=point(lo,centre.value),b=point(hi,centre.value);
+            const double error=(Interval(centre.error)*Interval(2)+Interval(a.second)+Interval(b.second)).hi;
+            const AffineHatchLine line{a.first,b.first,b.first,a.first,before->policy.width,roi,{0,0},
+                bounds(exact_interval(Exact(hi)-Exact(lo))),error};
+            auto remaining=limits.beads;remaining.max_evaluations=std::min(remaining.max_evaluations-bead_work,limits.max_evaluations-work);
+            remaining.max_roof_segments-=roofs;remaining.packets.max_segments-=packets;
+            remaining.packets.maximum_volume_error=Volume((allowance/Interval(double(extra.size()))/Interval(2)).lo);
+            const auto elapsed=std::chrono::ceil<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+            remaining.timeout-=elapsed;remaining.packets.timeout-=elapsed;remaining.cancelled=[&]{poll();return false;};remaining.is_current={};
+            remaining.packets.cancelled=remaining.cancelled;remaining.packets.is_current={};
+            const auto bead=FirstHatchBeadSnapshot::plan({"",source},{},remaining,FirstHatchRoofDomain::FiniteWidth,&line,error);
+            if(!bead.snapshot)throw Rejection(bead.reason);charge(bead.snapshot->evaluations);
+            bead_work+=bead.snapshot->evaluations;roofs+=bead.snapshot->roof_segments;packets+=bead.snapshot->pieces.size();paths.push_back(bead.snapshot);
+        }
+        const auto measured=measure_first_candidate(source,paths,before->fill->occupied->domain,limits,started,work);
+        const auto gain=interval(measured.fill->covered_target_mm3)-interval(before->fill->covered_target_mm3);
+        const auto missing=interval(before->fill->missing_target_mm3)-interval(measured.fill->missing_target_mm3);
+        const auto amount=interval(measured.complete->individual_volume_mm3)-interval(before->complete_fill->individual_volume_mm3);
+        const auto repeated=detail::maximum(Interval(0),interval(measured.complete->repeated_volume_mm3)-interval(before->complete_fill->repeated_volume_mm3));
+        if(gain.lo<policy.minimum_covered_gain.value() || missing.lo<policy.minimum_covered_gain.value())reject("FIRST_CAP_INFILL_INSUFFICIENT_GAIN");
+        if(amount.lo<=0 || repeated.hi>policy.maximum_repeated_increase.value())reject("FIRST_CAP_INFILL_REPEATED_INCREASE_LIMIT");
+        if(measured.complete->outside_target_mm3.upper>std::min(policy.maximum_outside_target.value(),before->policy.maximum_outside_target.value()))
+            reject("FIRST_CAP_INFILL_OUTSIDE_TARGET_LIMIT");
+        poll();auto after=std::shared_ptr<const FirstCapSnapshot>(new FirstCapSnapshot(source,before->policy,std::move(paths),before->replaced_boundary_lines,
+            measured.fill,measured.complete,measured.target,measured.delivered,measured.error,measured.numeric,measured.roofs,measured.cells,work,
+            before->hatch_extent,before->contour_extent,FirstCapInfillExtent::DensifiedOwners));
+        auto snapshot=std::shared_ptr<const FirstCapInfillReplanSnapshot>(new FirstCapInfillReplanSnapshot(before,after,policy,
+            bounds(gain),bounds(missing),bounds(amount),bounds(repeated),measured.cells,work));poll();
+        return {"BOUNDED_PROSPECTIVE_RETAINED_INFILL_DENSIFICATION_ONLY",std::move(snapshot)};
+    }catch(const Rejection &e){return {e.what(),{}};}
+    catch(const std::exception &e){return {"FIRST_CAP_INFILL_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
+    catch(...){return {"FIRST_CAP_INFILL_CALLBACK_FAILURE",{}};}
+}
+
 FirstCapCornerReplanResult replan_first_cap_corners(const FirstCapResult &requested,const FirstCapCornerReplanPolicy &requested_policy,
     const FirstHatchLayerLimits &requested_limits)
 {
@@ -3858,6 +3956,7 @@ FirstCapCornerReplanResult replan_first_cap_corners(const FirstCapResult &reques
             !valid_first_hatch_layer_limits(limits) || policy.minimum_covered_gain.value()<=0 ||
             policy.maximum_outside_target.value()<0 || policy.maximum_repeated_increase.value()<0)
             reject("INVALID_FIRST_CAP_CORNER_REPLAN");
+        if (before->infill_extent!=FirstCapInfillExtent::OriginalOwners) reject("FIRST_CAP_DENSIFIED_INFILL_UNSUPPORTED_BY_CORNER_REPLAN");
         if (before->contour_extent!=FirstCapContourExtent::ClosedLoopCentres) reject("FIRST_CAP_CORNERS_ALREADY_REPLANNED");
         const auto source=before->source;const auto sequence=source->source->source->sequence;
         const auto poll=[&] {
@@ -3908,6 +4007,7 @@ FirstCapReplanResult replan_first_cap_ends(const FirstCapResult &requested,const
         detail::require_interval_environment();
         if (!before || !before->source || !before->source->source || !before->fill || !valid_first_hatch_layer_limits(limits) ||
             policy.minimum_covered_gain.value()<=0 || policy.maximum_outside_target.value()<0) reject("INVALID_FIRST_CAP_REPLAN_INPUT");
+        if (before->infill_extent!=FirstCapInfillExtent::OriginalOwners) reject("FIRST_CAP_DENSIFIED_INFILL_UNSUPPORTED_BY_END_REPLAN");
         if (before->contour_extent!=FirstCapContourExtent::ClosedLoopCentres) reject("FIRST_CAP_CORNER_EXTENT_UNSUPPORTED_BY_END_REPLAN");
         if (before->hatch_extent!=FirstCapHatchExtent::ContourCentres) reject("FIRST_CAP_EXTENT_ALREADY_REPLANNED");
         const auto source=before->source;const auto sequence=source->source->source->sequence;
@@ -3963,6 +4063,7 @@ FirstCapWidthReplanResult replan_first_cap_width(const FirstCapResult &requested
         if (!before || !before->source || !before->source->source || !before->fill || before->paths.size()<5 ||
             !valid_first_hatch_layer_limits(limits) || width.value()<=0 || policy.minimum_repeated_reduction.value()<=0 ||
             policy.maximum_covered_loss.value()<0 || policy.maximum_outside_target.value()<0) reject("INVALID_FIRST_CAP_WIDTH_REPLAN");
+        if (before->infill_extent!=FirstCapInfillExtent::OriginalOwners) reject("FIRST_CAP_DENSIFIED_INFILL_UNSUPPORTED_BY_WIDTH_REPLAN");
         if (before->contour_extent!=FirstCapContourExtent::ClosedLoopCentres) reject("FIRST_CAP_CORNER_EXTENT_UNSUPPORTED_BY_WIDTH_REPLAN");
         const auto source=before->source;const auto sequence=source->source->source->sequence;
         const auto poll=[&] {

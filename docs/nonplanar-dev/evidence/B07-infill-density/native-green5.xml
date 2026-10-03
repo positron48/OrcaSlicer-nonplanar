@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="10" hostname="tbd" time="0.360" timestamp="2026-10-03T17:19:38Z">
+    <properties>
+      <property name="random-seed" value="1888397378"/>
+      <property name="filters" value="[FirstCapInfillNative]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B07 actual native infill replacement cannot enter a job without captured program ownership" time="0.000" status="run">
+      <failure message="dense.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( dense.snapshot )
+with expansion:
+  0
+OWNED_NATIVE_BODY_LINEAGE_ONLY
+OWNED_NATIVE_AFFINE_HATCH_LINEAGE_ONLY
+BOUNDED_FIRST_CONTOUR_AND_INTERIOR_HATCH_CANDIDATE_WITH_MEASURED_JOINT_FILL_ONLY
+FIRST_CAP_INFILL_INSUFFICIENT_GAIN
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:4954
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

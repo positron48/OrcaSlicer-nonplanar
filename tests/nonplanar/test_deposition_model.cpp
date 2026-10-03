@@ -2910,7 +2910,7 @@ std::pair<CapAmount,CapAmount> independent_flat_union(const std::vector<Material
 
 TEST_CASE("B07 first cap end replan preserves contours and replaces the whole prospective ledger", "[Nonplanar][B07][FirstCapEndReplan]")
 {
-    STATIC_REQUIRE(first_cap_contract_version==5);
+    STATIC_REQUIRE(first_cap_contract_version==6);
     STATIC_REQUIRE(first_cap_replan_contract_version==1);
     STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapReplanSnapshot>::value);
     const SceneBox box{{1,-.8,.7},{3,.8,1.84}};
@@ -3095,7 +3095,7 @@ TEST_CASE("B07 affine triple multiplicity encloses the independently integrated 
 
 TEST_CASE("B07 central cap width replan preserves geometry contour and extended ends", "[Nonplanar][B07][FirstCapWidthReplan]")
 {
-    STATIC_REQUIRE(first_cap_contract_version==5);
+    STATIC_REQUIRE(first_cap_contract_version==6);
     STATIC_REQUIRE(first_cap_width_replan_contract_version==1);
     STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapWidthReplanSnapshot>::value);
     using Q=CapAmount;
@@ -4210,4 +4210,109 @@ TEST_CASE("B07 ordered later planner owns requests and shares global work cells 
     limits={};size_t calls=0;limits.cancelled=[&]{++calls;return false;};const auto completed=plan_next_cap_sequence(before,requests,limits);REQUIRE(completed.snapshot);
     const auto last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};
     const auto cancelled=plan_next_cap_sequence(before,requests,limits);REQUIRE_FALSE(cancelled.snapshot);REQUIRE(cancelled.reason=="CANCELLED");REQUIRE(calls==last);
+}
+
+namespace {
+FirstHatchLayerLimits infill_replan_limits();
+FirstCapResult sparse_first_cap(HatchDirection direction,bool sloped=false,double rise=.0004)
+{
+    const bool x=direction==HatchDirection::AlongX;
+    const auto body=captured({bead(1,0,{0,0,1},x ? PhysicalPosition{10,0,1} : PhysicalPosition{0,10,1},2,.4,.4,BeadSectionKind::Rectangle)});
+    const auto state=material_at(body,1,0);
+    const AffinePassPolicy policy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const RectangleXY roi=x ? RectangleXY{1,-.8,3,.8} : RectangleXY{-.8,1,.8,3};
+    const auto stack=plan_affine_pass_stack(state.lower,{roi,1.8,sloped && x ? 1.8+rise : 1.8,sloped && !x ? 1.8+rise : 1.8},.9,policy);REQUIRE(stack.snapshot);
+    const auto hatches=plan_affine_hatches(stack,{WidthXY(.45),Length(.4),Length(.05),direction});REQUIRE(hatches.snapshot);
+    return plan_first_cap(hatches,{WidthXY(.45),0,false,Volume(.001)},{{roi.min_x,roi.min_y,.7},{roi.max_x,roi.max_y,1.84}},infill_replan_limits());
+}
+FirstHatchLayerLimits infill_replan_limits()
+{
+    FirstHatchLayerLimits l;l.volumes.max_cells=65535;
+    l.timeout=l.beads.timeout=l.beads.packets.timeout=l.volumes.timeout=std::chrono::seconds(5);return l;
+}
+}
+TEST_CASE("B07 prospective infill densification retains every packet and reduces whole target deficit", "[Nonplanar][B07][FirstCapInfillReplan]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapInfillReplanSnapshot>::value);
+    const FirstCapInfillReplanPolicy policy{Length(.18),Volume(.001),Volume(.001),Volume(2)};
+    const auto limits=infill_replan_limits();using Q=CapAmount;nlohmann::json witnesses=nlohmann::json::array();
+    const auto range=[](ScalarBounds v){return nlohmann::json::array({v.lower,v.upper});};
+    const auto view=[&](const FirstCapSnapshot &cap){nlohmann::json paths=nlohmann::json::array();
+        for(const auto &path:cap.paths){nlohmann::json packets=nlohmann::json::array();
+            for(const auto &p:path->pieces)packets.push_back({{"start",{p.start.x(),p.start.y(),p.start.z()}},{"end",{p.end.x(),p.end.y(),p.end.z()}},
+                {"volume",p.volume.value()},{"nominal_width",p.nominal_width.value()},{"width",range(p.section.width_mm)},
+                {"gap",{p.section.gap_begin_mm,p.section.gap_end_mm}},{"kind",int(p.section.kind)}});paths.push_back(packets);}
+        return nlohmann::json{{"paths",paths},{"individual",range(cap.complete_fill->individual_volume_mm3)},
+            {"union",range(cap.complete_fill->union_volume_mm3)},{"repeated",range(cap.complete_fill->repeated_volume_mm3)},
+            {"target",range(cap.fill->target_volume_mm3)},{"covered",range(cap.fill->covered_target_mm3)},
+            {"missing",range(cap.fill->missing_target_mm3)},{"spill",range(cap.complete_fill->outside_target_mm3)}};};
+    for(auto direction:{HatchDirection::AlongX,HatchDirection::AlongY})for(bool sloped:{false,true}){
+        INFO("axis="<<int(direction)<<" sloped="<<sloped);const auto before=sparse_first_cap(direction,sloped);INFO(before.reason);REQUIRE(before.snapshot);
+        const auto result=replan_first_cap_infill(before,policy,limits);INFO(result.reason);REQUIRE(result.snapshot);
+        const auto &r=*result.snapshot;const auto &after=*r.after;
+        REQUIRE(r.before==before.snapshot);REQUIRE(after.source==r.before->source);REQUIRE(after.fill->target==r.before->fill->target);
+        REQUIRE(after.infill_extent==FirstCapInfillExtent::DensifiedOwners);REQUIRE(after.paths.size()>r.before->paths.size());
+        REQUIRE(after.hatch_extent==r.before->hatch_extent);REQUIRE(after.contour_extent==r.before->contour_extent);
+        for(size_t i=0;i<r.before->paths.size();++i)REQUIRE(after.paths[i]==r.before->paths[i]);
+        REQUIRE(r.covered_gain_mm3.lower>=.001);REQUIRE(r.missing_reduction_mm3.lower>=.001);
+        REQUIRE(r.commanded_increase_mm3.lower>0);REQUIRE(r.repeated_increase_mm3.upper<=2);
+        REQUIRE(after.complete_fill->outside_target_mm3.upper<=.001);REQUIRE(after.global_volume_error_mm3<=limits.beads.packets.maximum_volume_error.value());
+        REQUIRE(r.evaluations<=limits.max_evaluations);REQUIRE(r.cells<=limits.max_cells);
+        Q old_sum=0,sum=0;
+        for(size_t i=0;i<after.paths.size();++i){const auto &path=*after.paths[i];
+            for(const auto &p:path.pieces){sum+=p.volume.value();if(i<r.before->paths.size())old_sum+=p.volume.value();
+                REQUIRE(p.nominal_width.value()==.45);}
+        }
+        REQUIRE(Q(r.commanded_increase_mm3.lower)<=sum-old_sum);REQUIRE(Q(r.commanded_increase_mm3.upper)>=sum-old_sum);
+        const auto material=reconstruct_first_cap_material({"",r.after});INFO(material.reason);REQUIRE(material.snapshot);
+        REQUIRE(material.snapshot->source==r.after);REQUIRE(material.snapshot->body==r.before->source->source->source);
+        if(!sloped){const auto integral=independent_flat_union(after.fill->occupied->source->sequence->records);
+            REQUIRE(Q(after.complete_fill->union_volume_mm3.lower)<=integral.second);REQUIRE(Q(after.complete_fill->union_volume_mm3.upper)>=integral.first);}
+        REQUIRE_FALSE(replan_first_cap_infill({"",r.after},policy,limits).snapshot);
+        REQUIRE_FALSE(replan_first_cap_ends({"",r.after},{},limits).snapshot);
+        REQUIRE_FALSE(replan_first_cap_width({"",r.after},WidthXY(.4),{},limits).snapshot);
+        REQUIRE_FALSE(replan_first_cap_corners({"",r.after},{Volume(.001),Volume(.001),Volume(2)},limits).snapshot);
+        witnesses.push_back({{"axis",direction==HatchDirection::AlongX ? 0 : 1},{"sloped",sloped},{"before",view(*r.before)},{"after",view(after)},
+            {"policy",{policy.maximum_pitch.value(),policy.minimum_covered_gain.value(),policy.maximum_outside_target.value(),policy.maximum_repeated_increase.value()}},
+            {"gain",range(r.covered_gain_mm3)},{"missing_reduction",range(r.missing_reduction_mm3)},
+            {"commanded_increase",range(r.commanded_increase_mm3)},{"repeated_increase",range(r.repeated_increase_mm3)},
+            {"cells",r.cells},{"work",r.evaluations}});
+    }
+    if(const char *directory=std::getenv("NPTOP_CANDIDATE_EVIDENCE_DIR")){
+        const auto path=boost::filesystem::path(directory)/"infill-replan.json";REQUIRE_FALSE(boost::filesystem::exists(path));
+        const nlohmann::json document={{"schema",first_cap_infill_replan_contract_version},{"first_cap_contract",first_cap_contract_version},
+            {"scope","PROSPECTIVE_RETAINED_INFILL_ONLY_NOT_CLOSED_SEAM_COMPLETE_CAP_OR_NATIVE_JOB"},{"export","BLOCK"},{"cases",witnesses}};
+        boost::nowide::ofstream file(path.string());REQUIRE(file.good());file<<document.dump(2)<<'\n';file.close();REQUIRE(file.good());
+    }
+}
+TEST_CASE("B07 infill replacement owns the recipe and refuses gain overlap resources stale and late publication", "[Nonplanar][B07][FirstCapInfillReplan]")
+{
+    auto before=sparse_first_cap(HatchDirection::AlongX);REQUIRE(before.snapshot);const auto source=before.snapshot;
+    FirstCapInfillReplanPolicy policy{Length(.18),Volume(.001),Volume(.001),Volume(2)};auto limits=infill_replan_limits();
+    limits.cancelled=[&]{before={};policy.maximum_pitch=Length(0);limits.max_paths=0;return false;};
+    const auto owned=replan_first_cap_infill(before,policy,limits);INFO(owned.reason);REQUIRE(owned.snapshot);REQUIRE(owned.snapshot->before==source);
+    before.snapshot=source;policy={Length(.18),Volume(.001),Volume(.001),Volume(2)};limits=infill_replan_limits();
+    REQUIRE_FALSE(replan_first_cap_infill({},policy,limits).snapshot);
+    auto exact_capacity=limits;exact_capacity.max_paths=owned.snapshot->after->paths.size();
+    const auto exact=replan_first_cap_infill(before,policy,exact_capacity);INFO(exact.reason);REQUIRE(exact.snapshot);
+    REQUIRE(exact.snapshot->after->paths.size()==exact_capacity.max_paths);
+    const auto steep=sparse_first_cap(HatchDirection::AlongX,true,.04);REQUIRE_FALSE(steep.snapshot);
+    REQUIRE(steep.reason.find("MATERIAL_UNION_WORK_LIMIT")!=std::string::npos);
+    REQUIRE_THROWS_AS(Volume(-1),std::invalid_argument);
+    REQUIRE_THROWS_AS(Length(std::numeric_limits<double>::quiet_NaN()),std::invalid_argument);
+    for(int mode=0;mode<13;++mode){auto selected=policy;auto bounded=limits;
+        if(mode==0)selected.maximum_pitch=Length(1);if(mode==1)selected.maximum_pitch=Length(0);
+        if(mode==2)selected.minimum_covered_gain=Volume(2);if(mode==3)selected.maximum_repeated_increase=Volume(0);
+        if(mode==4)bounded.max_paths=source->paths.size();if(mode==5)bounded.max_evaluations=1;
+        if(mode==6)bounded.max_cells=1;if(mode==7)bounded.beads.packets.max_segments=1;
+        if(mode==8)bounded.cancelled=[] {return true;};if(mode==9)bounded.is_current=[](uint64_t){return false;};
+        if(mode==10){bounded.timeout=std::chrono::milliseconds(1);bounded.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if(mode==11)bounded.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+        if(mode==12)bounded.cancelled=[]()->bool {throw 7;};
+        const auto refused=replan_first_cap_infill(before,selected,bounded);if(mode==11)REQUIRE(std::fesetround(FE_TONEAREST)==0);
+        INFO(mode<<' '<<refused.reason);REQUIRE_FALSE(refused.snapshot);
+    }
+    size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(replan_first_cap_infill(before,policy,limits).snapshot);
+    const auto last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};const auto refused=replan_first_cap_infill(before,policy,limits);
+    REQUIRE_FALSE(refused.snapshot);REQUIRE(refused.reason=="CANCELLED");REQUIRE(calls==last);
 }

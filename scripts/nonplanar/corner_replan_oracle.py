@@ -35,7 +35,7 @@ def difference(bounds, new, old):
 
 
 def verify(document):
-    require(document['schema'] == 1 and document['first_cap_contract'] == 5, 'Contract')
+    require(document['schema'] == 1 and document['first_cap_contract'] in (5, 6), 'Contract')
     require(document['export'] == 'BLOCK', 'No export')
     require(document['scope'] == 'PROSPECTIVE_CORNER_MATERIAL_ONLY_NOT_CLOSED_SEAM_OR_COMPLETE_CAP', 'Scope')
     axis = document['axis']

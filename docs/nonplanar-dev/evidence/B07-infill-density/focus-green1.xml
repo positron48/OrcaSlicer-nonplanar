@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="1" failures="1" skipped="0" tests="131" hostname="tbd" time="0.831" timestamp="2026-10-03T17:04:44Z">
+    <properties>
+      <property name="random-seed" value="68408280"/>
+      <property name="filters" value="[FirstCapInfillReplan]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 infill replacement owns the recipe and refuses gain overlap resources stale and late publication" time="0.000" status="run">
+      <error message="{Unknown expression after the reported line}">
+FAILED:
+  {Unknown expression after the reported line}
+invalid nonnegative measure
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:4280
+      </error>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 prospective infill densification retains every packet and reduces whole target deficit" time="0.000" status="run">
+      <failure message="before.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0
+MATERIAL_UNION_CELL_LIMIT paths=6 packets=34 cells=4095 work=84037 union_width=0.001703
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:4234
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

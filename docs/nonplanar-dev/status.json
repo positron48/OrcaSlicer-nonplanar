@@ -21,7 +21,7 @@
     "B04": "OWNED_EXACT_PARTITION_STABLE_DERIVED_VERTEX_ORIENTED_FACE_INDICES_NATIVE_BODY_MATERIAL_AND_INTERIOR_DENSE_COVERAGE_PASS_SEAM_WIDER_NATIVE_DOMAIN_JOB_WORKER_PENDING",
     "B05": "OWNED_NATIVE_BODY_AND_ORDERED_ACTUAL_LATER_CAP_PREFIX_FRONTS_WHOLE_RUN_EVENT_UNION_PASS_FULL_CONTACT_CCD_JOB_REPLAY_PENDING",
     "B06": "ACTUAL_PREFIX_VERTICAL_SUPPORT_AND_MANDATORY_WHOLE_AFFINE_NORMAL_RAY_BAND_PASS_GENERAL_STEPPED_CURVED_SHOULDER_SEAM_CONTACT_FULL_SCOPE_PENDING",
-    "B07": "CAPTURED_PROSPECTIVE_RETAINED_CORNER_MATERIAL_AND_ORDERED_LOCAL_LATER_PROGRAM_FINAL_REPLAY_PASS_FULL_FILLED_CAP_CONTACT_SEAM_HEAD_ROUTE_ORDER_PENDING",
+    "B07": "PROSPECTIVE_RETAINED_FIXED_WIDTH_INFILL_FACTORY_AND_CAPTURED_CORNER_LOCAL_LATER_REPLAY_PASS_DENSITY_CONTROLLER_FULL_FILL_SEAM_CONTACT_HEAD_ROUTE_ORDER_PENDING",
     "B08": "OWNED_COMPLETE_DECLARED_SIMULATION_HEAD_STATIC_SCENE_AND_ORIGINAL_OLD_COUPLED_CURRENT_UPPER_CONTINUOUS_MOTION_PASS_QUALIFIED_HEAD_CONTACT_JOB_REPLAY_PENDING",
     "B09": "OWNED_EXACT_PROSPECTIVE_BEAD_PARENT_MATERIAL_COMPLETE_SIMULATION_DEPARTURE_AND_NATIVE_JOB_EDGE_PASS_ORIGINAL_WIDE_EXIT_FAIL_RETAINED_FULL_FIXED_WIDTH_FILL_CONTACT_HEIGHT_ORDER_BYTE_GEOMETRY_PENDING",
     "B10": "OWNED_ORIGINAL_LINEAR_AND_ACTUAL_NATIVE_DECIMAL_XYZ_CARTESIAN_COREXY_DRIVE_E_Q_ACCELERATION_SPEED_EVENT_RATES_PASS_FULL_FIRMWARE_TRANSFORM_FLOW_CONTACT_JOB_PENDING",
@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_AND_LOCAL_ACTUAL_AFFINE_NORMAL_RAYS_ROUNDED_SHOULDER_NEGATIVE_GENERAL_CURVED_PENDING",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 460,
+    "new_native_cases": 463,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 499,
-    "final_ctest_executed": 499,
+    "final_ctest_discovered": 502,
+    "final_ctest_executed": 502,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -1327,7 +1327,8 @@
     "B11_rounded_rates": "FOCUS_9_2480_CTEST_486_ORACLES_18_CLI_13_OFF_ZAA_6_PASS_ORIGINAL_UNSAFE_BYTES_FAIL",
     "B07_complete_fill": "FIVE_CASES_433_ASSERTIONS_CTEST491_ORACLES19_CLI13_OFF_ZAA6_PASS_ACTUAL_DEFICIT_REPETITION_RETAINED",
     "B07_corner_replan": "TWO_CASES_581_ASSERTIONS_CTEST493_ORACLES20_CLI13_OFF_ZAA6_PASS_NATIVE173_TO197_PACKETS_REAL_DEFICIT_RETAINED",
-    "B14_corner_controller": "SIX_NEW_CASES_FOCUS7_9113_CTEST499_ORACLES21_CLI17_OFF_ZAA6_PASS_ACTUAL_CORNER_MATERIAL_OWNER_RECIPE_AND_SHARED_CAP_BUDGETS"
+    "B14_corner_controller": "SIX_NEW_CASES_FOCUS7_9113_CTEST499_ORACLES21_CLI17_OFF_ZAA6_PASS_ACTUAL_CORNER_MATERIAL_OWNER_RECIPE_AND_SHARED_CAP_BUDGETS",
+    "B07_infill_density": "THREE_NEW_CASES_FOCUS3_341_CTEST502_ORACLES22_CLI17_OFF_ZAA6_PASS_PROSPECTIVE_FACTORY_NATIVE_DENSE_GAIN_REFUSAL_FULL_SCOPE_PENDING"
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
@@ -1450,7 +1451,8 @@
     "B11_rounded_rates": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B11-rounded-rates.md",
     "B07_complete_fill": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-complete-fill.md",
     "B07_corner_replan": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-first-cap-corner-replan.md",
-    "B14_corner_controller": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B14-corner-controller.md"
+    "B14_corner_controller": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B14-corner-controller.md",
+    "B07_infill_density": "SELF: git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-infill-density.md"
   },
   "A05_evidence": "docs/nonplanar-dev/evidence/A05/source-manifest.json",
   "A06_evidence": "docs/nonplanar-dev/evidence/A06/source-manifest.json",
@@ -3171,6 +3173,76 @@
     "scope": "RESTRICTED_SIMULATION_CORNER_MATERIAL_AND_OPTIONAL_LOCAL_LATER_PREFIXES_NOT_FULL_GEOMETRY",
     "review_status": "AUTHOR_CRITICAL_REVIEW_INDEPENDENT_PENDING",
     "remaining": "FULL_FILLED_LAYERS_SEAMS_CONTACT_MEASURED_HEAD_CONNECTORS_ORDER_WHOLE_JOB_SOURCE_SOFTWARE_PHYSICAL_ATOMIC_PUBLICATION",
+    "export": "BLOCK",
+    "full_B01_B15": "IN_PROGRESS"
+  },
+  "B07_infill_density_evidence": {
+    "status": "PASS_BOUNDED_PROSPECTIVE_RETAINED_INFILL_FACTORY_ONLY",
+    "document": "B07-infill-density.md",
+    "adr": "adr-0102-prospective-retained-infill-density.md",
+    "review": "B07-infill-density-review.md",
+    "manifest": "evidence/B07-infill-density/source-manifest.json",
+    "new_cases": 3,
+    "focus": {
+      "cases": 3,
+      "assertions": 341,
+      "analytical_assertions": 327,
+      "native_assertions": 14
+    },
+    "ctest": {
+      "tests": 502,
+      "failures": 0,
+      "skipped": 0,
+      "gate_seconds": 185.052,
+      "executables": {
+        "nonplanar_tests": 251,
+        "fff_print_tests": 251
+      },
+      "labels": {
+        "Nonplanar": 463,
+        "other": 39
+      }
+    },
+    "identity_oracle_commands": 22,
+    "CLI_cases": 17,
+    "OFF_ZAA": "SIX_FRESH_STRICT_STOCK_PAIRS_PASS",
+    "parent_provenance": {
+      "total": 53,
+      "exact": 50,
+      "software_bound_report": 1,
+      "private_version_only": 2,
+      "added_candidates": 1
+    },
+    "versions": {
+      "first_cap": 6,
+      "infill_replan": 1,
+      "request_native_plan_manifest": "UNCHANGED"
+    },
+    "policy": [
+      0.18,
+      0.001,
+      0.001,
+      2
+    ],
+    "oracle": {
+      "status": "PASS",
+      "cases": 4,
+      "packet_observations": 60,
+      "flat_union_integrals": 4,
+      "mutation_refusals": 10,
+      "sloped_union": "ACCOUNTING_ONLY",
+      "native_binding": "NOT_IMPLEMENTED",
+      "export": "BLOCK"
+    },
+    "native_dense": "FIRST_CAP_INFILL_INSUFFICIENT_GAIN_RETAINED",
+    "steep_coarse": "MATERIAL_UNION_WORK_LIMIT_RETAINED",
+    "default_unselected_candidate": {
+      "records": 2098,
+      "sha256": "c330363d909d5907a52b151a7ca499d1ce72681cc0185edd6f9c312bef12686b"
+    },
+    "scope": "PROSPECTIVE_ANALYTICAL_RETAINED_MATERIAL_NOT_CAPTURED_DENSITY_NATIVE_LINEAGE",
+    "review_status": "AUTHOR_CRITICAL_REVIEW_INDEPENDENT_PENDING",
+    "remaining": "CAPTURED_DENSITY_CONTROLLER_BYTE_LINEAGE_FULL_FILL_SEAMS_LAYERS_CONTACT_HEAD_CONNECTORS_ORDER_WHOLE_JOB_SOURCE_SOFTWARE_PHYSICAL_PUBLICATION",
     "export": "BLOCK",
     "full_B01_B15": "IN_PROGRESS"
   }

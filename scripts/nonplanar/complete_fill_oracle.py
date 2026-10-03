@@ -18,7 +18,7 @@ def exact(value):
 
 
 def verify(document):
-    require(document['schema'] == 1 and document['first_cap_contract'] in (4, 5), 'Complete fill contract')
+    require(document['schema'] == 1 and document['first_cap_contract'] in (4, 5, 6), 'Complete fill contract')
     require(document['export'] == 'BLOCK', 'No export permission')
     require(document['exterior_parts'] == 0, 'Original native cap has no exterior domain')
     low, high = [[exact(v) for v in point] for point in document['domain']]

@@ -4937,3 +4937,22 @@ TEST_CASE("B14 cap creation and corner repair consume one shared work and cell b
         REQUIRE(diagnostic.at("report").is_null());REQUIRE(diagnostic.at("replay").empty());REQUIRE(diagnostic.at("export_allowed")==false);
     }
 }
+
+TEST_CASE("B07 actual dense native cap refuses additional owners without measured coverage gain", "[Nonplanar][B07][FirstCapInfillNative]")
+{
+    NativeJobFixture fixture;auto job=fixture.begin();
+    const auto body=analyze_guarded_native_body(*job.task,native_job_body_request(),native_job_body_limits());INFO(body.reason);REQUIRE(body.snapshot);
+    const auto request=native_job_hatch_request(*body.snapshot);
+    job=advance_guarded_job(fixture.print,*job.task,GuardedJobPhase::Planning);REQUIRE(job.task);
+    const auto hatches=plan_guarded_native_hatches(*job.task,body.snapshot,request.first,request.second,native_job_hatch_limits());INFO(hatches.reason);REQUIRE(hatches.snapshot);
+    const auto &roi=request.first.footprint;
+    FirstHatchLayerLimits limits;limits.beads.timeout=limits.beads.packets.timeout=limits.volumes.timeout=std::chrono::seconds(5);
+    limits.beads.maximum_gap_error=Length(.0001);limits.beads.packets.maximum_width_error=Length(.002);limits.beads.packets.maximum_volume_error=Volume(.0001);
+    limits.volumes.max_cells=65535;
+    const auto before=plan_first_cap({"",hatches.snapshot->native->hatches},{WidthXY(.4),0,false,Volume(.001)},
+        {{roi.min_x,roi.min_y,4.0},{roi.max_x,roi.max_y,4.7}},limits);INFO(before.reason);REQUIRE(before.snapshot);
+    const auto dense=replan_first_cap_infill(before,{Length(.05),Volume(.001),Volume(.001),Volume(.1)},limits);
+    REQUIRE_FALSE(dense.snapshot);REQUIRE(dense.reason=="FIRST_CAP_INFILL_INSUFFICIENT_GAIN");
+    REQUIRE(before.snapshot->infill_extent==FirstCapInfillExtent::OriginalOwners);
+    REQUIRE(job.task->is_current());REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Planning);
+}

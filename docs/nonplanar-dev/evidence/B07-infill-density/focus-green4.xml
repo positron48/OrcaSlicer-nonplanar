@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="146" hostname="tbd" time="1.690" timestamp="2026-10-03T17:17:10Z">
+    <properties>
+      <property name="random-seed" value="1009665406"/>
+      <property name="filters" value="[FirstCapInfillReplan]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 prospective infill densification retains every packet and reduces whole target deficit" time="0.000" status="run">
+      <failure message="before.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0
+MATERIAL_UNION_WORK_LIMIT paths=6 packets=6 cells=7188 work=200000 union_width=0.000255
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:4238
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 infill replacement owns the recipe and refuses gain overlap resources stale and late publication" time="0.873" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>
