@@ -1,0 +1,159 @@
+[
+  {
+    "name": "build-input",
+    "command": [
+      "python3",
+      "scripts/nonplanar/build_inputs_oracle.py",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/compiled-build-inputs.json",
+      "--job-report",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-lineage-report.json",
+      "--job-report",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-departure-report.json",
+      "--job-report",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-controller-report.json",
+      "--job-report",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-cli-reference-report.json",
+      "--job-report",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-worker-reference-report.json",
+      "--job-report",
+      "build/nonplanar-evidence/B07-later-sequence/final-candidates2/native-job-report.json",
+      "--job-report",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-source-reference-report.json"
+    ]
+  },
+  {
+    "name": "job-context",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_context_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-job.json"
+    ]
+  },
+  {
+    "name": "job-artifact",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_artifact_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/bound-candidate.json"
+    ]
+  },
+  {
+    "name": "native-report",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B07-later-sequence/final-candidates2/native-job-report.json"
+    ]
+  },
+  {
+    "name": "controller",
+    "command": [
+      "python3",
+      "scripts/nonplanar/native_controller_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-controller-report.json"
+    ]
+  },
+  {
+    "name": "json-final",
+    "command": [
+      "python3",
+      "scripts/nonplanar/native_analysis_json_oracle.py",
+      "--fixtures",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2"
+    ]
+  },
+  {
+    "name": "worker-final",
+    "command": [
+      "python3",
+      "scripts/nonplanar/native_worker_oracle.py",
+      "--fixtures",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2"
+    ]
+  },
+  {
+    "name": "candidate-report",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/candidate-report.json"
+    ]
+  },
+  {
+    "name": "candidate-report-invalid-material",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/candidate-report-invalid-material.json"
+    ]
+  },
+  {
+    "name": "candidate-report-failed-material",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/candidate-report-failed-material.json"
+    ]
+  },
+  {
+    "name": "native-lineage-report",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-lineage-report.json"
+    ]
+  },
+  {
+    "name": "native-departure-report",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-departure-report.json"
+    ]
+  },
+  {
+    "name": "native-lineage-report-inputs",
+    "command": [
+      "python3",
+      "scripts/nonplanar/native_job_inputs_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-lineage-report.json"
+    ]
+  },
+  {
+    "name": "native-departure-report-inputs",
+    "command": [
+      "python3",
+      "scripts/nonplanar/native_job_inputs_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2/native-departure-report.json"
+    ]
+  },
+  {
+    "name": "view",
+    "command": [
+      "python3",
+      "scripts/nonplanar/native_view_oracle.py",
+      "--fixtures",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2"
+    ]
+  },
+  {
+    "name": "native-source",
+    "command": [
+      "python3",
+      "scripts/nonplanar/native_source_oracle.py",
+      "--fixtures",
+      "build/nonplanar-evidence/B07-later-sequence/final-jobs2"
+    ]
+  }
+]

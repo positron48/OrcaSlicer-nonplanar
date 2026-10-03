@@ -3821,3 +3821,173 @@ TEST_CASE("B09 cap departure refuses stale parents incomplete resource budgets a
     const auto refused=plan_simulation_cap_departure(f.before,f.bead,f.scene,departure_policy,f.request,limits);
     REQUIRE_FALSE(refused.snapshot);REQUIRE(refused.reason=="CANCELLED");REQUIRE(calls==last);
 }
+
+TEST_CASE("B07 ordered later planner recomputes actual prefixes and follows original alternating directions", "[Nonplanar][B07][NextCapSequence]")
+{
+    using Q=boost::multiprecision::cpp_bin_float_quad;
+    const auto partition=[](const MaterialRunUnionSnapshot &proof){
+        Q measure=0;const bool solid=proof.domain.min.z()<proof.domain.max.z();
+        for(size_t i=0;i<proof.leaves.size();++i){const auto &a=proof.leaves[i].domain;
+            REQUIRE(a.min.x()>=proof.domain.min.x());REQUIRE(a.max.x()<=proof.domain.max.x());
+            REQUIRE(a.min.y()>=proof.domain.min.y());REQUIRE(a.max.y()<=proof.domain.max.y());
+            REQUIRE(a.min.z()>=proof.domain.min.z());REQUIRE(a.max.z()<=proof.domain.max.z());
+            REQUIRE(a.min.x()<a.max.x());REQUIRE(a.min.y()<a.max.y());
+            Q volume=(Q(a.max.x())-a.min.x())*(Q(a.max.y())-a.min.y());
+            if(solid){REQUIRE(a.min.z()<a.max.z());volume*=Q(a.max.z())-a.min.z();}
+            measure+=volume;
+            for(size_t j=0;j<i;++j){const auto &b=proof.leaves[j].domain;
+                REQUIRE((a.max.x()<=b.min.x() || b.max.x()<=a.min.x() || a.max.y()<=b.min.y() || b.max.y()<=a.min.y() ||
+                    (solid && (a.max.z()<=b.min.z() || b.max.z()<=a.min.z()))));
+            }
+        }
+        Q expected=(Q(proof.domain.max.x())-proof.domain.min.x())*(Q(proof.domain.max.y())-proof.domain.min.y());
+        if(solid)expected*=Q(proof.domain.max.z())-proof.domain.min.z();
+        REQUIRE(abs(measure-expected)<Q("1e-28"));
+    };
+    for(auto first : {HatchDirection::AlongX,HatchDirection::AlongY})for(bool sloped : {false,true}){
+        auto hatches=first_cap_fixture(first);
+        if(sloped){const auto &base=*hatches.snapshot->source;auto target=base.final_surface;
+            if(first==HatchDirection::AlongX)target.z10+=.004;else target.z01+=.004;
+            const auto stack=plan_affine_pass_stack({base.source},target,base.support_plane_z_mm,base.policy);REQUIRE(stack.snapshot);
+            hatches=plan_affine_hatches(stack,hatches.snapshot->policy);REQUIRE(hatches.snapshot);
+        }
+        const auto cap=plan_first_cap(hatches,{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
+        const auto before=reconstruct_first_cap_material(cap);REQUIRE(before.snapshot);
+        const auto &stack=*cap.snapshot->source->source;
+        const bool x=first==HatchDirection::AlongX;
+        const RectangleXY second=x ? RectangleXY{1.77,-.3,2.23,.3} : RectangleXY{1.6,-.23,2.4,.23};
+        const RectangleXY third=x ? RectangleXY{1.9,-.23,2.1,.23} : RectangleXY{1.77,-.1,2.23,.1};
+        // A declared local plane is only a candidate: the planner must prove
+        // its whole footprint in actual Lower material after each predecessor.
+        const auto plane=[](const AffineCapCell &cell,const RectangleXY &r){Q low=10;
+            const auto &d=cell.footprint;
+            for(double xx : {r.min_x,r.max_x})for(double yy : {r.min_y,r.max_y})
+                low=std::min(low,Q(cell.z00)+(Q(cell.z10)-cell.z00)*(Q(xx)-d.min_x)/(Q(d.max_x)-d.min_x)+
+                    (Q(cell.z01)-cell.z00)*(Q(yy)-d.min_y)/(Q(d.max_y)-d.min_y));
+            return double(low-Q(.02));
+        };
+        const std::vector<NextCapPathRequest> requests{{1,second,plane(stack.surfaces[0].cell,second)},
+            {2,third,plane(stack.surfaces[1].cell,third)}};
+        const auto result=plan_next_cap_sequence(before,requests);INFO(result.reason << " path=" << result.path_index << " stage=" << int(result.stage) << " cells=" << result.cells << " work=" << result.evaluations << " direction=" << int(first) << " sloped=" << sloped);REQUIRE(result.snapshot);
+        const auto &plan=*result.snapshot;REQUIRE(plan.before==before.snapshot);REQUIRE(plan.paths.size()==2);REQUIRE(plan.after->later_paths.size()==2);
+        REQUIRE(plan.paths[0]->source->source==before.snapshot);REQUIRE(plan.paths[1]->source->source!=before.snapshot);
+        REQUIRE(plan.paths[1]->source->source->later_paths.size()==1);REQUIRE(plan.paths[1]->source->source->later_paths[0]==plan.paths[0]);
+        const auto &old=*before.snapshot->material->sequence,&ledger=*plan.after->material->sequence;
+        for(size_t i=0;i<old.records.size();++i)REQUIRE(old.canonical_record(i)==ledger.canonical_record(i));
+        for(size_t i=0;i<plan.paths.size();++i){const auto &path=*plan.paths[i];const auto direction=cap.snapshot->source->passes[requests[i].pass_index].direction;
+            REQUIRE((path.path_start.y()==path.path_end.y())==(direction==HatchDirection::AlongX));
+            if(sloped && i==1)REQUIRE(path.path_start.z()!=path.path_end.z());
+            REQUIRE(path.normal_spacing);REQUIRE(path.source->pass_index==requests[i].pass_index);
+            const auto &support=*path.source->support;
+            if(support.run)test::independent_run_box(*support.run->source,support.domain);
+            if(support.run_union){partition(*support.run_union);for(const auto &leaf:support.run_union->leaves){
+                if(leaf.run_index)test::independent_run_box(*support.run_union->runs[*leaf.run_index],leaf.domain);
+                else {REQUIRE(leaf.event_index);test::independent_lower_box(*support.run_union->source,*leaf.event_index,leaf.domain);}
+            }}
+            for(const auto &part:path.normal_spacing->leaves){
+                if(part.terminal_runs){partition(*part.terminal_runs);for(const auto &leaf:part.terminal_runs->leaves){
+                    REQUIRE(leaf.run_index);test::independent_run_box(*part.terminal_runs->runs[*leaf.run_index],leaf.domain,false);
+                }}
+            }
+
+            Q dose=0;
+            for(const auto &piece:path.pieces){REQUIRE(piece.nominal_width.value()==.45);dose+=Q(piece.volume.value());}
+            REQUIRE(Q(path.deposited_volume_mm3.lower)<=dose);REQUIRE(Q(path.deposited_volume_mm3.upper)>=dose);
+        }
+        REQUIRE(plan.after->material->completed_records==ledger.records.size());REQUIRE(plan.after->material->current_progress==0);
+    }
+}
+
+TEST_CASE("B07 union enclosure pruning never accepts a rounded shoulder from its bounding box", "[Nonplanar][B07][UnionEnclosurePruning]")
+{
+    const auto ledger=captured({bead(1,0,{0,0,1},{4,0,1},.4,.2,.2)});
+    const auto state=material_at(ledger,1,0);const auto run=reconstruct_material_run(state.nominal,0,0);REQUIRE(run.snapshot);
+    const SceneBox inside{{.2,-.08,.95},{3.8,.08,.95}},corner{{.2,.18,.998},{3.8,.19,.998}};
+    const auto lower=cover_material_runs_lower({run},state.lower,inside);REQUIRE(lower.snapshot);
+    test::independent_run_box(*run.snapshot,inside);
+    const auto &outer=run.snapshot->nominal_bounds;
+    REQUIRE(corner.min.x()>=outer.min.x());REQUIRE(corner.max.x()<=outer.max.x());
+    REQUIRE(corner.min.y()>=outer.min.y());REQUIRE(corner.max.y()<=outer.max.y());
+    REQUIRE(corner.min.z()>=outer.min.z());REQUIRE(corner.max.z()<=outer.max.z());
+    using Q=boost::multiprecision::cpp_bin_float_quad;
+    const Q h=Q(.2),core=Q(std::get<Deposition>(ledger->records[0].motion.payload).volume.value())/(4*h)-acos(Q(-1))*h/8;
+    const Q transverse=Q(corner.min.y())-core,vertical=Q(corner.min.z())-(Q(1)-h/2);
+    REQUIRE(transverse*transverse+vertical*vertical>h*h/4);
+    REQUIRE_FALSE(cover_material_runs_nominal({run},corner).snapshot);
+    REQUIRE_FALSE(cover_material_runs_lower({run},state.lower,corner).snapshot);
+}
+
+
+TEST_CASE("B07 ordered later planner never uses duplicate future or incomplete material as support", "[Nonplanar][B07][NextCapSequence]")
+{
+    const auto cap=plan_first_cap(first_cap_fixture(HatchDirection::AlongX),{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
+    const auto before=reconstruct_first_cap_material(cap);REQUIRE(before.snapshot);
+    const double plane=cap.snapshot->source->source->surfaces[0].cell.z00-.02;
+    const NextCapPathRequest first{1,{1.77,-.3,2.23,.3},plane};
+    const auto duplicate=plan_next_cap_sequence(before,{first,first});INFO(duplicate.reason);
+    REQUIRE_FALSE(duplicate.snapshot);REQUIRE(duplicate.path_index==1);REQUIRE(duplicate.stage==NextCapSequenceStage::Support);
+    const auto fingerprint=before.snapshot->material->fingerprint();
+    for(int mode=0;mode<7;++mode){CAPTURE(mode);auto requests=std::vector<NextCapPathRequest>{first};
+        if(mode==0)requests.clear();
+        if(mode==1)requests[0].pass_index=0;
+        if(mode==2)requests[0].pass_index=2;
+        if(mode==3)requests[0].footprint.min_x=0;
+        if(mode==4)requests[0].support_plane_z_mm=std::numeric_limits<double>::quiet_NaN();
+        if(mode==5)requests.push_back({0,first.footprint,plane});
+        if(mode==6)requests[0].footprint.max_y=requests[0].footprint.min_y;
+        const auto refused=plan_next_cap_sequence(before,requests);REQUIRE_FALSE(refused.snapshot);
+        REQUIRE(before.snapshot->material->fingerprint()==fingerprint);
+    }
+    REQUIRE_FALSE(plan_next_cap_sequence({}, {first}).snapshot);
+    const auto partial=reconstruct_first_cap_material(cap,0,0);REQUIRE(partial.snapshot);
+    REQUIRE(plan_next_cap_sequence(partial,{first}).reason=="NEXT_CAP_SEQUENCE_INCOMPLETE_BEFORE_PREFIX");
+    for(auto direction : {HatchDirection::AlongX,HatchDirection::AlongY}){
+        const auto original=plan_first_cap(first_cap_fixture(direction,true),{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(original.snapshot);
+        const auto material=reconstruct_first_cap_material(original);REQUIRE(material.snapshot);
+        const RectangleXY region=direction==HatchDirection::AlongX ? RectangleXY{1.77,-.3,2.23,.3} : RectangleXY{1.6,-.23,2.4,.23};
+        const auto &cell=original.snapshot->source->source->surfaces[0].cell;const auto &r=cell.footprint;
+        const double low=cell.z00+(cell.z10-cell.z00)*(region.min_x-r.min_x)/(r.max_x-r.min_x)+
+            (cell.z01-cell.z00)*(region.min_y-r.min_y)/(r.max_y-r.min_y)-.02;
+        const auto steep=plan_next_cap_sequence(material,{{1,region,low}});INFO(steep.reason);
+        REQUIRE_FALSE(steep.snapshot);REQUIRE(steep.path_index==0);REQUIRE(steep.stage==NextCapSequenceStage::Bead);
+        REQUIRE(steep.reason.find("NEXT_CAP_ROOF_DEPTH_LIMIT")==0);
+    }
+}
+
+TEST_CASE("B07 ordered later planner owns requests and shares global work cells deadline and publication cancellation", "[Nonplanar][B07][NextCapSequence]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<NextCapSequenceSnapshot>::value);
+    const auto cap=plan_first_cap(first_cap_fixture(HatchDirection::AlongX),{WidthXY(.45),0,false,Volume(.001)},{{1,-.8,.7},{3,.8,1.84}});REQUIRE(cap.snapshot);
+    auto before=reconstruct_first_cap_material(cap);REQUIRE(before.snapshot);const auto source=before.snapshot;
+    const auto &stack=*cap.snapshot->source->source;
+    std::vector<NextCapPathRequest> requests{{1,{1.77,-.3,2.23,.3},stack.surfaces[0].cell.z00-.02},
+        {2,{1.9,-.23,2.1,.23},stack.surfaces[1].cell.z00-.02}};
+    const auto original=requests;NextCapSequenceLimits limits;std::vector<std::pair<size_t,NextCapSequenceStage>> stages;
+    limits.progress=[&](size_t path,NextCapSequenceStage stage){stages.emplace_back(path,stage);before={};requests.clear();limits={};};
+    const auto owned=plan_next_cap_sequence(before,requests,limits);INFO(owned.reason);REQUIRE(owned.snapshot);
+    REQUIRE(owned.snapshot->before==source);REQUIRE(owned.snapshot->requests.size()==2);REQUIRE(stages.size()==6);
+    for(size_t i=0;i<stages.size();++i){REQUIRE(stages[i].first==i/3);REQUIRE(stages[i].second==NextCapSequenceStage(i%3));}
+    before={"",source};requests=original;
+    for(int mode=0;mode<14;++mode){CAPTURE(mode);limits={};
+        if(mode==0)limits.max_paths=1;
+        if(mode==1)limits.max_evaluations=owned.evaluations-1;
+        if(mode==2)limits.max_cells=owned.cells-1;
+        if(mode==3)limits.max_records=source->material->sequence->records.size();
+        if(mode==4)limits.cancelled=[] {return true;};
+        if(mode==5)limits.is_current=[](uint64_t) {return false;};
+        if(mode==6){limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if(mode==7)limits.progress=[](size_t,NextCapSequenceStage){throw 7;};
+        if(mode==8)limits.support.cancelled=[] {return true;};
+        if(mode==9)limits.support.is_current=[](uint64_t) {return false;};
+        if(mode==10)limits.beads.cancelled=[] {throw std::runtime_error("callback");return false;};
+        if(mode==11)limits.beads.packets.timeout=std::chrono::milliseconds(0);
+        if(mode==12)limits.progress=[](size_t,NextCapSequenceStage){std::fesetround(FE_DOWNWARD);};
+        if(mode==13)limits.beads.packets.cancelled=[] {return true;};
+        const auto refused=plan_next_cap_sequence(before,requests,limits);
+        if(mode==12)REQUIRE(std::fesetround(FE_TONEAREST)==0);
+        INFO(refused.reason);REQUIRE_FALSE(refused.snapshot);
+    }
+    limits={};size_t calls=0;limits.cancelled=[&]{++calls;return false;};const auto completed=plan_next_cap_sequence(before,requests,limits);REQUIRE(completed.snapshot);
+    const auto last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};
+    const auto cancelled=plan_next_cap_sequence(before,requests,limits);REQUIRE_FALSE(cancelled.snapshot);REQUIRE(cancelled.reason=="CANCELLED");REQUIRE(calls==last);
+}

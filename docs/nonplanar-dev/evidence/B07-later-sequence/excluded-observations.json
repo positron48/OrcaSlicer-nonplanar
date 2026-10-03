@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "observations": [
+    {
+      "evidence": "focus2.txt.json",
+      "reason": "STALE_TEST_BINARY_AFTER_FAILED_TEST2_BUILD_NOT_VALIDATION_OF_EXPANDED_TESTS"
+    },
+    {
+      "evidence": "ctest-final.txt.json",
+      "reason": "EVIDENCE_DIRECTORIES_NOT_PRECREATED_FILE_WRITE_FAILURES_NO_GEOMETRY_EXPECTATION_CHANGED",
+      "replacement": "ctest-final2.txt.json"
+    },
+    {
+      "evidence": "oracles.txt.json",
+      "reason": "WRAPPER_REFERENCED_INCOMPLETE_FAILED_CTEST_FIXTURE_DIRECTORY",
+      "replacement": "oracles2.txt.json"
+    },
+    {
+      "evidence": "focus-final.xml",
+      "reason": "NEW_TEST_ASSUMED_PLANE_INSTEAD_OF_OUTWARD_TERMINAL_VOLUME_CORRECTED_TO_FULL_DISJOINT_MEASURE"
+    },
+    {
+      "evidence": "focus-final3.xml",
+      "reason": "NEW_SLOPED_CANDIDATE_USED_WHOLE_ROI_CORNER_PLANE_INSTEAD_OF_LOCAL_DECLARED_PLANE"
+    },
+    {
+      "evidence": "focus-final4.xml",
+      "reason": "UNCHANGED_ORIGINAL_STEEPER_TRANSVERSE_ROOF_ERROR_REFUSAL_RETAINED_IN_FINAL_NEGATIVE_TEST"
+    }
+  ],
+  "final_focus": "focus-final5.xml",
+  "original_fixtures_golden_policy_limits": "UNCHANGED",
+  "original_steeper_source": "UNCHANGED_AND_REFUSED",
+  "new_shallow_positive": "SEPARATE_0_004_MM_RISE_SOURCE",
+  "GUI": "NOT_RUN_CORE_CHANGE_PRIOR_GUI_OBSERVATIONS_HISTORICAL",
+  "physical": "NOT_RUN_STANDARD_U1_HEAD_NOZZLE0_4_KNOWN"
+}

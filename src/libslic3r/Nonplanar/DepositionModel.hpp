@@ -1052,6 +1052,42 @@ struct NextCapMaterialLimits : FirstCapMaterialLimits {size_t max_paths=4096;};
 FirstCapMaterialResult append_next_cap_material(const FirstCapMaterialResult &,const std::vector<NextCapBeadResult> &,
     std::optional<size_t> completed_appended_records={},double current_progress=0,const NextCapMaterialLimits &limits={});
 
+struct NextCapPathRequest {size_t pass_index;RectangleXY footprint;double support_plane_z_mm;};
+enum class NextCapSequenceStage {Support,Bead,Append};
+struct NextCapSequenceLimits : NextCapMaterialLimits {
+    size_t max_cells=65535;
+    MaterialCoverageLimits support;
+    NextCapBeadLimits beads;
+    std::function<void(size_t,NextCapSequenceStage)> progress;
+};
+struct NextCapSequenceResult;
+struct NextCapSequenceSnapshot {
+    const std::shared_ptr<const FirstCapMaterialSnapshot> before,after;
+    const std::vector<NextCapPathRequest> requests;
+    const std::vector<std::shared_ptr<const NextCapBeadSnapshot>> paths;
+private:
+    NextCapSequenceSnapshot(std::shared_ptr<const FirstCapMaterialSnapshot> original,
+        std::shared_ptr<const FirstCapMaterialSnapshot> material,std::vector<NextCapPathRequest> input,
+        std::vector<std::shared_ptr<const NextCapBeadSnapshot>> planned)
+        :before(std::move(original)),after(std::move(material)),requests(std::move(input)),paths(std::move(planned)){}
+    friend NextCapSequenceResult plan_next_cap_sequence(const FirstCapMaterialResult &,
+        const std::vector<NextCapPathRequest> &,const NextCapSequenceLimits &);
+};
+struct NextCapSequenceResult {
+    std::string reason;
+    std::shared_ptr<const NextCapSequenceSnapshot> snapshot;
+    size_t path_index=0,evaluations=0,cells=0;
+    NextCapSequenceStage stage=NextCapSequenceStage::Support;
+};
+// Recompute each requested later path on the exact prefix produced by its
+// predecessor. Width/direction come from the original owned hatch pass; no
+// caller width change or future support. One root bounds all support/normal/
+// roof/packet/append work. On any failure no partial material is published.
+// Requests are local footprints, not proof of full filled layers/cap, contact,
+// connector travel, job lineage or export. Those obligations remain separate.
+NextCapSequenceResult plan_next_cap_sequence(const FirstCapMaterialResult &,
+    const std::vector<NextCapPathRequest> &,const NextCapSequenceLimits &limits={});
+
 inline constexpr unsigned first_cap_replan_contract_version=1;
 struct FirstCapReplanPolicy {Volume minimum_covered_gain{.001},maximum_outside_target{.001};};
 struct FirstCapReplanSnapshot {

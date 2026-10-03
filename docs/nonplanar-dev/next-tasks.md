@@ -7,6 +7,20 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B07-later-sequence.md` and ADR-0096 add an owned ordered later-path program.
+Each path recomputes support, normal spacing, finite-width roof and dose on the
+actual prefix produced by its predecessor, preserving original width/directions.
+Sound rejection-only union pruning avoids impossible transverse single-run work;
+original inequalities, losses and budgets remain. Four new cases/3265 assertions,
+CTest 479/479, sixteen independent oracles, ten actual CLI cases and six strict
+stock OFF/ZAA pairs pass. Fifty of 51 parent candidates stay exact, default2098
+SHA unchanged; fixed17 stays 4 PASS/RUN +13 UNKNOWN/NOT_RUN and export BLOCK.
+Flat/shallow positives include actual nonzero-Z movement; original steeper
+transverse refusal remains. This local factory is not yet in the common native
+controller/job/replay. Next: full cap construction and later controller/lineage/
+byte integration, qualified contact/seams/head/travel/order/fill. Full B01-B15
+active; new Linux/Windows/GUI/physical and independent review remain pending.
+
 `B14-source-worker.md` and ADR-0095 move analysis Print.apply from the GUI host
 into the supervised child. The host owns captured source and a revocable display
 attempt; protocol2 host_view is additive to legacy1 and cannot authorize export.

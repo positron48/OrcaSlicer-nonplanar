@@ -4183,7 +4183,15 @@ MaterialRunUnionResult MaterialRunUnionSnapshot::cover(const std::vector<Materia
                 if (node.box.max.x()<outer.min.x() || node.box.min.x()>outer.max.x() || node.box.max.y()<outer.min.y() || node.box.min.y()>outer.max.y() ||
                     node.box.max.z()<outer.min.z() || node.box.min.z()>outer.max.z()) continue;
                 possible_runs.push_back(i);
-                if (cover_run_box(*runs[i],node.box,limits.max_depth-node.depth,charge,visit,representation)) {
+                // An intersecting run need not enclose this whole union cell.
+                // Its longitudinal solver cannot resolve transverse missing
+                // material. Keep it for union subdivision, but reject this
+                // impossible single-run proposal by its outward enclosure.
+                const auto candidate=representation==MaterialRepresentation::Lower ? expand_run_box(*runs[i],node.box) : node.box;
+                const bool enclosed=candidate.min.x()>=outer.min.x() && candidate.max.x()<=outer.max.x() &&
+                    candidate.min.y()>=outer.min.y() && candidate.max.y()<=outer.max.y() &&
+                    candidate.min.z()>=outer.min.z() && candidate.max.z()<=outer.max.z();
+                if (enclosed && cover_run_box(*runs[i],node.box,limits.max_depth-node.depth,charge,visit,representation)) {
                     leaves.push_back({node.box,i,{}});covered=true;break;
                 }
             }
@@ -4993,6 +5001,73 @@ NextCapBeadResult plan_next_cap_bead(const FirstCapNextPassResult &requested,Hat
         return {"BOUNDED_LATER_FINITE_FOOTPRINT_ACTUAL_NORMAL_SPACING_ROOF_AND_CONSTANT_FLUX_DOSE_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) {return {e.what(),{}};}
     catch (const std::exception &e) {return {"NEXT_CAP_BEAD_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
+}
+
+
+NextCapSequenceResult plan_next_cap_sequence(const FirstCapMaterialResult &requested,
+    const std::vector<NextCapPathRequest> &requested_paths,const NextCapSequenceLimits &requested_limits)
+{
+    const auto before=requested.snapshot;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();NextCapSequenceResult result;
+    try {
+        detail::require_interval_environment();
+        if(!before || !limits.max_paths || limits.max_paths>4096 || requested_paths.empty() ||
+            requested_paths.size()>limits.max_paths || before->later_paths.size()>limits.max_paths-requested_paths.size() ||
+            !limits.max_records || limits.max_records>200000 || !limits.max_evaluations || limits.max_evaluations>2000000 ||
+            !limits.max_cells || limits.max_cells>65535 || !valid_timeout(limits.timeout)) reject("INVALID_NEXT_CAP_SEQUENCE");
+        const auto cursor=before->material;
+        if(cursor->completed_records!=cursor->sequence->records.size() || cursor->current_progress!=0)
+            reject("NEXT_CAP_SEQUENCE_INCOMPLETE_BEFORE_PREFIX");
+        // Freeze the bounded caller list before callbacks can edit or replace it.
+        const auto requests=requested_paths;const auto &hatches=*before->source->source;
+        size_t pass=before->later_paths.empty() ? 0 : before->later_paths.back()->source->pass_index;
+        for(const auto &path:requests){
+            if(!path.pass_index || path.pass_index>=hatches.passes.size() || path.pass_index<pass || path.pass_index>pass+1)
+                reject("NEXT_CAP_SEQUENCE_PASS_ORDER");pass=path.pass_index;
+        }
+        const auto poll=[&]{stop(limits,cursor->sequence->revision,started);};
+        const auto charge=[&](size_t work,size_t cells=0){
+            poll();if(work>limits.max_evaluations-result.evaluations) reject("NEXT_CAP_SEQUENCE_WORK_LIMIT");
+            if(cells>limits.max_cells-result.cells) reject("NEXT_CAP_SEQUENCE_CELL_LIMIT");
+            result.evaluations+=work;result.cells+=cells;
+        };
+        const auto remaining=[&](auto options){
+            poll();if(result.evaluations>=limits.max_evaluations) reject("NEXT_CAP_SEQUENCE_WORK_LIMIT");
+            options.max_evaluations=std::min(options.max_evaluations,limits.max_evaluations-result.evaluations);
+            const auto left=limits.timeout-std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+            if(!valid_timeout(left) || !valid_timeout(options.timeout)) reject("MATERIAL_DEADLINE");
+            options.timeout=std::min(options.timeout,left);
+            const auto cancel=options.cancelled;const auto current=options.is_current;
+            options.cancelled=[&,cancel]{poll();return cancel && cancel();};
+            options.is_current=[&,current](uint64_t revision){poll();return !current || current(revision);};return options;
+        };
+        const auto stage=[&](NextCapSequenceStage next){result.stage=next;poll();
+            if(limits.progress)limits.progress(result.path_index,next);poll();};
+        charge(requests.size());FirstCapMaterialResult material{"",before};
+        std::vector<std::shared_ptr<const NextCapBeadSnapshot>> paths;paths.reserve(requests.size());
+        for(const auto &path:requests){
+            stage(NextCapSequenceStage::Support);
+            if(result.cells>=limits.max_cells) reject("NEXT_CAP_SEQUENCE_CELL_LIMIT");
+            auto support_limits=remaining(limits.support);support_limits.max_cells=std::min(support_limits.max_cells,limits.max_cells-result.cells);
+            const auto support=assess_first_cap_next_pass(material,path.pass_index,path.footprint,path.support_plane_z_mm,support_limits);
+            charge(support.evaluations,support.cells);if(!support.snapshot) throw Rejection(support.reason);
+            stage(NextCapSequenceStage::Bead);
+            if(result.cells>=limits.max_cells) reject("NEXT_CAP_SEQUENCE_CELL_LIMIT");
+            auto bead_limits=remaining(limits.beads);bead_limits.max_roof_cells=std::min(bead_limits.max_roof_cells,limits.max_cells-result.cells);
+            bead_limits.packets.timeout=std::min(bead_limits.packets.timeout,bead_limits.timeout);
+            const auto bead=plan_next_cap_bead(support,hatches.passes[path.pass_index].direction,hatches.policy.width,bead_limits);
+            if(!bead.snapshot) throw Rejection(bead.reason);charge(bead.snapshot->evaluations,bead.snapshot->cells);
+            stage(NextCapSequenceStage::Append);
+            auto append_limits=remaining(static_cast<const NextCapMaterialLimits &>(limits));
+            const auto appended=append_next_cap_material(material,{bead},{},0,append_limits);charge(appended.evaluations);
+            if(!appended.snapshot) throw Rejection(appended.reason);
+            material=appended;paths.push_back(bead.snapshot);++result.path_index;
+        }
+        poll();result.snapshot=std::shared_ptr<const NextCapSequenceSnapshot>(new NextCapSequenceSnapshot(before,material.snapshot,requests,std::move(paths)));
+        poll();result.reason="ORDERED_LATER_PATHS_RECOMPUTED_ON_ACTUAL_PREFIX_FIXED_WIDTH_ORIGINAL_DIRECTIONS_ONLY";
+    } catch(const Rejection &e){result.snapshot.reset();result.reason=e.what();}
+    catch(...){result.snapshot.reset();result.reason="NEXT_CAP_SEQUENCE_EXCEPTION";}
+    return result;
 }
 
 }
