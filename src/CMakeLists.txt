@@ -13,6 +13,7 @@ find_package(libnoise REQUIRED)
 
 add_subdirectory(libslic3r)
 add_subdirectory(nonplanar_import)
+add_subdirectory(nonplanar_analysis)
 add_subdirectory(nonplanar_verify)
 
 if (SLIC3R_GUI)

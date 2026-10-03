@@ -39,16 +39,30 @@ Json scene_document(const SimulationScene &s,const ClearancePolicy &p)
     return nptop_verify::travel_document({0,1,v}).at("scene");
 }
 }
+nlohmann::json native_mesh_document(const indexed_triangle_set &mesh)
+{
+    Json vertices=Json::array(),faces=Json::array(),properties=Json::array();
+    for(const auto &v:mesh.vertices)vertices.push_back(xyz(v));
+    for(const auto &f:mesh.indices){for(int i=0;i<3;++i)require(f[i]>=0 && size_t(f[i])<vertices.size(),"NATIVE_ANALYSIS_JSON_FACE_INDEX");
+        faces.push_back({uint64_t(f.x()),uint64_t(f.y()),uint64_t(f.z())});}
+    for(const auto &p:mesh.properties){require(p.type>=eNormal && p.type<eMaxNumFaceTypes && std::isfinite(p.area),"NATIVE_ANALYSIS_JSON_FACE_PROPERTY");properties.push_back({unsigned(p.type),p.area});}
+    return {{"vertices_f32_mm",vertices},{"faces",faces},{"properties",properties}};
+}
+indexed_triangle_set parse_native_mesh_document(const nlohmann::json &mesh,size_t max_faces)
+{
+    registry(mesh,{"vertices_f32_mm","faces","properties"});const auto &vertices=mesh.at("vertices_f32_mm"),&faces=mesh.at("faces"),&properties=mesh.at("properties");
+    require(max_faces<=200000 && vertices.is_array() && vertices.size()<=3*max_faces && faces.is_array() && faces.size()<=max_faces && properties.is_array() && properties.size()<=faces.size(),"NATIVE_ANALYSIS_JSON_MESH_SIZE");indexed_triangle_set its;
+    for(const auto &row:vertices){const auto v=point(row);for(double x:v)require(std::abs(x)<=10000 && double(float(x))==x,"NATIVE_ANALYSIS_JSON_EXACT_FLOAT32");its.vertices.emplace_back(float(v[0]),float(v[1]),float(v[2]));}
+    for(const auto &row:faces){array(row,3);std::array<int,3> f{};for(size_t i=0;i<3;++i){auto n=integer(row[i]);require(n<vertices.size(),"NATIVE_ANALYSIS_JSON_FACE_INDEX");f[i]=int(n);}its.indices.emplace_back(f[0],f[1],f[2]);}
+    for(const auto &row:properties){array(row,2);its.properties.push_back({EnumFaceTypes(integer(row[0],eMaxNumFaceTypes-1)),number(row[1])});}
+    return its;
+}
 std::string native_analysis_document(const NativeAnalysisRequestSnapshot &input)
 {
-    const auto &r=input.values;Json vertices=Json::array(),faces=Json::array(),properties=Json::array();
-    for(const auto &v:r.reservation.its.vertices)vertices.push_back(xyz(v));
-    for(const auto &f:r.reservation.its.indices){for(int i=0;i<3;++i)require(f[i]>=0 && size_t(f[i])<vertices.size(),"NATIVE_ANALYSIS_JSON_FACE_INDEX");
-        faces.push_back({uint64_t(f.x()),uint64_t(f.y()),uint64_t(f.z())});}
-    for(const auto &p:r.reservation.its.properties){require(p.type>=eNormal && p.type<eMaxNumFaceTypes && std::isfinite(p.area),"NATIVE_ANALYSIS_JSON_FACE_PROPERTY");properties.push_back({unsigned(p.type),p.area});}
+    const auto &r=input.values;
     const auto &b=r.inputs.body;const auto &m=r.inputs.motion;const auto &s=r.inputs.serializer;const auto &p=r.passes.policy;const auto &replay=r.inputs.replay;
     require(unsigned(m.origin)<=1 && unsigned(m.model)<=1 && unsigned(m.kinematics)<=1,"NATIVE_ANALYSIS_JSON_MOTION_ENUM");
-    Json value={{"schema",1},{"millimeters_declared",r.millimeters_declared},{"reservation",{{"vertices_f32_mm",vertices},{"faces",faces},{"properties",properties}}},
+    Json value={{"schema",1},{"millimeters_declared",r.millimeters_declared},{"reservation",native_mesh_document(r.reservation.its)},
         {"body",{{"plate_origin_mm",xyz(b.plate_origin)},{"model",{b.model.model_id,b.model.outer_xy_growth.value(),b.model.outer_z_growth.value(),b.model.inner_xy_loss.value(),b.model.inner_z_loss.value(),b.model.numerical_coordinate_error.value()}},
             {"material_ids",{b.material.nominal.value(),b.material.upper.value(),b.material.lower.value()}},{"reference_ids",{b.support_reference_id,b.contact_reference_id}},
             {"rates",{b.deposition_speed.value(),b.travel_speed.value(),b.acceleration.value()}}}},
@@ -78,11 +92,7 @@ std::shared_ptr<const NativeAnalysisRequestSnapshot> parse_native_analysis_docum
     });
     registry(j,{"schema","millimeters_declared","reservation","body","scene","motion","serializer","replay","passes","hatches","contour","fill_region_mm"});
     require(integer(j.at("schema"))==1,"NATIVE_ANALYSIS_JSON_VERSION");
-    const auto &mesh=j.at("reservation");registry(mesh,{"vertices_f32_mm","faces","properties"});const auto &vertices=mesh.at("vertices_f32_mm"),&faces=mesh.at("faces"),&properties=mesh.at("properties");
-    require(vertices.is_array() && vertices.size()<=15000 && faces.is_array() && faces.size()<=5000 && properties.is_array() && properties.size()<=faces.size(),"NATIVE_ANALYSIS_JSON_MESH_SIZE");indexed_triangle_set its;
-    for(const auto &row:vertices){const auto v=point(row);for(double x:v)require(std::abs(x)<=10000 && double(float(x))==x,"NATIVE_ANALYSIS_JSON_EXACT_FLOAT32");its.vertices.emplace_back(float(v[0]),float(v[1]),float(v[2]));}
-    for(const auto &row:faces){array(row,3);std::array<int,3> f{};for(size_t i=0;i<3;++i){auto n=integer(row[i]);require(n<vertices.size(),"NATIVE_ANALYSIS_JSON_FACE_INDEX");f[i]=int(n);}its.indices.emplace_back(f[0],f[1],f[2]);}
-    for(const auto &row:properties){array(row,2);its.properties.push_back({EnumFaceTypes(integer(row[0],eMaxNumFaceTypes-1)),number(row[1])});}
+    auto its=parse_native_mesh_document(j.at("reservation"));
     const auto &b=j.at("body");registry(b,{"plate_origin_mm","model","material_ids","reference_ids","rates"});
     const auto &model=b.at("model"),&ids=b.at("material_ids"),&references=b.at("reference_ids"),&rates=b.at("rates");array(model,6);array(ids,3);array(references,2);array(rates,3);
     BodyMaterialParameters body{physical(b.at("plate_origin_mm")),{integer(model[0]),Length(number(model[1])),Length(number(model[2])),Length(number(model[3])),Length(number(model[4])),Length(number(model[5]))},

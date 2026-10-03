@@ -15,6 +15,19 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-03
 
+`B14-native-worker.md` and ADR-0092 add isolated native analysis from exact
+owned host model/config/request inputs. Actual worker/direct/CLI movements match
+at 2098 records; cancellation, stale callbacks, hangs/failures and protocol/RSS
+refusals are covered. Focus 10/9117, CTest 468/468, 14 independent oracles, ten
+real CLI cases and six strict OFF/ZAA pairs pass. Fifty of 51 parent files remain
+exact; only the software-bound report changes. Fixed17 stays 4 PASS/RUN +13
+UNKNOWN/NOT_RUN, export BLOCK; full B01–B15 remains active. RSS is supervised,
+not hard macOS containment; referenced volume material IDs refuse within the
+pinned Print domain. Next: minimal native GUI, serialized adoption/cancel/replay,
+trusted runtime packaging and isolated launch policy. Full cap/later passes,
+qualified contact/seams/whole job, source/software/physical and publication remain
+pending. Linux new-head/Windows/full GUI/physical and independent review pending.
+
 `B14-native-cli.md` and ADR-0091 invoke the shared backend from real main Orca
 CLI through --nptop-analyze, with bounded exact editing JSON and movement-level
 report/replay diagnostics. Progress/cancel and no mixed export action are tested;

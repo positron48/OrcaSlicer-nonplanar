@@ -22,6 +22,8 @@ add_executable(${_TEST_NAME}_tests
 	../nonplanar/test_policy.cpp
 	)
 target_link_libraries(${_TEST_NAME}_tests test_common libslic3r nonplanar_final_rates Catch2::Catch2WithMain)
+target_compile_definitions(${_TEST_NAME}_tests PRIVATE NPTOP_ANALYSIS_WORKER_PATH="$<TARGET_FILE:nonplanar_analysis_worker>" NPTOP_ANALYSIS_PROBE_PATH="$<TARGET_FILE:nonplanar_worker_probe>")
+add_dependencies(${_TEST_NAME}_tests nonplanar_analysis_worker nonplanar_worker_probe)
 set_property(TARGET ${_TEST_NAME}_tests PROPERTY FOLDER "tests")
 
 orcaslicer_copy_test_dlls()

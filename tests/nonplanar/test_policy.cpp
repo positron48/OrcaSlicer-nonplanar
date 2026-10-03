@@ -7,6 +7,7 @@
 #include <libslic3r/Nonplanar/NativeJobInputs.hpp>
 #include <libslic3r/Nonplanar/NativeAnalysis.hpp>
 #include <libslic3r/Nonplanar/NativeAnalysisJson.hpp>
+#include <libslic3r/Nonplanar/NativeAnalysisWorker.hpp>
 #include <libslic3r/Preset.hpp>
 #include <libslic3r/Nonplanar/JobNative.hpp>
 #include <libslic3r/Nonplanar/PlanarBody.hpp>
@@ -4136,4 +4137,133 @@ TEST_CASE("B14 native editing transport rejects malformed ambiguous oversized an
     REQUIRE_THROWS(parse_native_analysis_document(std::string(10,'[')+"0"+std::string(10,']')));
     REQUIRE_THROWS(parse_native_analysis_document("{\"schema\":NaN}"));
     REQUIRE_THROWS(parse_native_analysis_document("{}"));
+}
+
+namespace {
+std::shared_ptr<const NativeAnalysisWorkerInput> native_worker_input(NativeJobFixture &fixture,
+    std::shared_ptr<const NativeAnalysisRequestSnapshot> request)
+{
+    auto files=fixture.resources;files.push_back({JobResourceKind::SourceFile,"native-analysis-request-v1",request->canonical_json});
+    const auto job=begin_guarded_job(fixture.print,101,files,{},JobSoftwareMode::CompiledInputs,&request->values.inputs);
+    INFO(job.reason);REQUIRE(job.task);return capture_native_analysis_worker_input(job.task,std::move(request));
+}
+void save_worker_evidence(const char *name,const std::string &bytes)
+{
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR")){
+        const auto path=boost::filesystem::path(directory)/name;REQUIRE_FALSE(boost::filesystem::exists(path));
+        boost::nowide::ofstream f(path.string(),std::ios::binary);REQUIRE(f.good());f<<bytes;f.close();REQUIRE(f.good());
+    }
+}
+}
+TEST_CASE("B14 isolated native worker reconstructs owned inputs and actual final byte movements", "[Nonplanar][B14][NativeAnalysisWorker]")
+{
+    static_assert(!std::is_aggregate_v<NativeAnalysisWorkerInput>);
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);const auto request=capture_native_analysis_request(options.first);
+    // Source paths are identities, never instructions to reread the model.
+    fixture.model.objects.front()->volumes.front()->source.input_file="/unavailable/owned-worker-source.stl";
+    fixture.resources.front().name="/unavailable/owned-worker-source.stl";
+    fixture.config.set_key_value("printhost_apikey",new ConfigOptionString("private-worker-key"));fixture.print.apply(fixture.model,fixture.config);
+    const auto input=native_worker_input(fixture,request);const auto before=input->sha256;
+    std::vector<NativeAnalysisStage> stages;NativeAnalysisWorkerOptions limits;
+    limits.progress=[&](NativeAnalysisStage stage){stages.push_back(stage);options.first.reservation.clear();options.first.inputs.scene.head.clear();};
+    save_worker_evidence("native-worker-input.json",input->bytes);
+    const auto result=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,input,limits);INFO(result.reason);REQUIRE_FALSE(result.diagnostic.empty());
+    REQUIRE(result.reason=="WORKER_BLOCKED_DIAGNOSTIC_COMPLETE");REQUIRE(result.progress_stages==10);
+    REQUIRE(stages.size()==10);for(size_t i=0;i<10;++i)REQUIRE(unsigned(stages[i])==i);
+    REQUIRE(result.peak_rss_bytes>0);REQUIRE(result.peak_rss_bytes<=limits.max_peak_rss_bytes);REQUIRE(input->sha256==before);
+    REQUIRE(input->task->is_current());REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Analyzing);
+    REQUIRE(input->bytes.find("private-worker-key")==std::string::npos);
+    REQUIRE(input->bytes.find("707269766174652d776f726b65722d6b6579")==std::string::npos);
+    const auto diagnostic=nlohmann::json::parse(result.diagnostic);REQUIRE(diagnostic.at("completed")==true);
+    REQUIRE(diagnostic.at("report").at("validation").at("export_decision")=="BLOCK");REQUIRE_FALSE(diagnostic.contains("candidate_bytes"));
+    save_worker_evidence("native-worker-diagnostic.json",result.diagnostic);
+    // Direct native execution uses the same owned source/request and defaults.
+    const auto direct=run_native_analysis(fixture.print,101,request,fixture.resources);INFO(direct.reason);REQUIRE(direct.snapshot);
+    const auto reference=nlohmann::json::parse(native_analysis_diagnostic(direct));
+    REQUIRE(diagnostic.at("replay")==reference.at("replay"));
+    REQUIRE(diagnostic.at("manifest").at("candidate_sha256")==reference.at("manifest").at("candidate_sha256"));
+    REQUIRE(diagnostic.at("replay").size()==2098);REQUIRE_FALSE(input->task->is_current());
+    save_worker_evidence("native-worker-reference-diagnostic.json",reference.dump());
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(directory)/"native-worker-reference-report.json",
+        {direct.reason,direct.snapshot->report,direct.snapshot->replay_evaluations});
+}
+TEST_CASE("B14 native worker cancels real body work and rejects edits replacement and callback failures", "[Nonplanar][B14][NativeAnalysisWorker]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);const auto request=capture_native_analysis_request(options.first);
+    for(int mode=0;mode<6;++mode){fixture.config.set_key_value("layer_height",new ConfigOptionFloat(.2));fixture.print.apply(fixture.model,fixture.config);const auto input=native_worker_input(fixture,request);NativeAnalysisWorkerOptions limits;bool cancel=false;
+        limits.cancelled=[&]{return cancel;};
+        limits.progress=[&](NativeAnalysisStage stage){if(stage!=(mode==5 ? NativeAnalysisStage::Admission : NativeAnalysisStage::Body))return;
+            if(mode==0 || mode==5)cancel=true;
+            if(mode==1){fixture.config.set_key_value("layer_height",new ConfigOptionFloat(.21));fixture.print.apply(fixture.model,fixture.config);}
+            if(mode==2)(void)native_worker_input(fixture,request);
+            if(mode==3)throw std::runtime_error("WORKER_PRIVATE_CALLBACK_SECRET");
+            if(mode==4)throw 7;};
+        const auto result=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,input,limits);INFO(mode << ' ' << result.reason);
+        REQUIRE(result.diagnostic.empty());REQUIRE(result.progress_stages==(mode==5 ? 10 : 2));
+        REQUIRE(result.reason==(mode==0 || mode==5 ? "WORKER_CANCELLED" : mode<=2 ? "WORKER_STALE_HOST_TASK" : "WORKER_PROTOCOL_OR_CALLBACK_FAILURE"));
+    }
+    const auto input=native_worker_input(fixture,request);NativeAnalysisWorkerOptions limits;limits.max_peak_rss_bytes=1;
+    const auto memory=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,input,limits);INFO(memory.reason);REQUIRE(memory.diagnostic.empty());
+    REQUIRE((memory.reason=="WORKER_MEMORY_BUDGET" || memory.reason=="WORKER_PROCESS_FAILED"));
+    for(int millis:{0,30001}){limits={};limits.timeout=std::chrono::milliseconds(millis);
+        REQUIRE(run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,input,limits).reason=="WORKER_INVALID_LIMITS");}
+}
+TEST_CASE("B14 native worker rejects missing bindings malformed source and unqualified units", "[Nonplanar][B14][NativeAnalysisWorker]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);const auto request=capture_native_analysis_request(options.first);
+    const auto unbound=fixture.begin();REQUIRE_THROWS(capture_native_analysis_worker_input(unbound.task,request));
+    const auto input=native_worker_input(fixture,request);const auto original=nlohmann::json::parse(input->bytes);
+    for(int field=0;field<8;++field){auto j=original;
+        if(field==0)j["schema"]=2;
+        if(field==1)j["software_sha256"]="wrong";
+        if(field==2)j["source"]["objects"][0]["instances"][0][0][0]="3ff0000000000001";
+        if(field==3)j["meshes"][0][0]["mesh"]["vertices_f32_mm"][0][0]=.1;
+        if(field==4)j["source"]["config"]["options"][0][1]=999;
+        if(field==5)j["request_sha256"]="wrong";
+        if(field==6)j["source"]["objects"][0]["volumes"][0]["annotations"][0]="wrong";
+        if(field==7)j["meshes"][0][0]["annotations"][0][1]={true};
+        INFO(field);REQUIRE_THROWS(execute_native_analysis_worker(j.dump(),{}));
+    }
+    auto referenced=original;referenced["source"]["objects"][0]["volumes"][0]["material_id"]="7265666572656e6365";
+    REQUIRE_THROWS_WITH(execute_native_analysis_worker(referenced.dump(),{}),"WORKER_REFERENCED_MATERIAL_REFUSED");
+    REQUIRE_THROWS(execute_native_analysis_worker("{\"schema\":1,"+input->bytes.substr(1),{}));
+    REQUIRE_THROWS(execute_native_analysis_worker(std::string(native_analysis_worker_byte_limit+1,' '),{}));
+    options.first.millimeters_declared=false;const auto units=capture_native_analysis_request(options.first);
+    const auto refused=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,native_worker_input(fixture,units));INFO(refused.reason);
+    REQUIRE(refused.reason=="WORKER_ANALYSIS_REFUSED");const auto diagnostic=nlohmann::json::parse(refused.diagnostic);
+    REQUIRE(diagnostic.at("completed")==false);REQUIRE(diagnostic.at("replay").empty());REQUIRE(diagnostic.at("report").is_null());
+    REQUIRE(diagnostic.at("export_allowed")==false);save_worker_evidence("native-worker-units-refusal.json",refused.diagnostic);
+}
+TEST_CASE("B14 native worker preserves nonzero plate matrices overrides and annotations before refusal", "[Nonplanar][B14][NativeAnalysisWorker]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);
+    fixture.model.curr_plate_index=2;fixture.print.set_plate_index(2);
+    fixture.model.objects.front()->origin_translation=Vec3d(-0.,std::numeric_limits<double>::denorm_min(),0);
+    auto *material=fixture.model.add_material("test-material");material->attributes["owner"]="snapshot";
+    fixture.model.objects.front()->config.set_key_value("wall_loops",new ConfigOptionInt(2));
+    auto &volume=*fixture.model.objects.front()->volumes.front();auto transform=volume.get_matrix();transform.matrix()(0,3)=std::nextafter(0.,1.);volume.set_transformation(transform);
+    TriangleSelector::TriangleSplittingData annotation;annotation.used_states={false,true};volume.seam_facets.set_data(std::move(annotation));
+    fixture.model.plates_custom_gcodes[2].mode=CustomGCode::SingleExtruder;
+    fixture.print.apply(fixture.model,fixture.config);options.first.millimeters_declared=false;
+    const auto result=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,native_worker_input(fixture,capture_native_analysis_request(options.first)));
+    INFO(result.reason);REQUIRE(result.reason=="WORKER_ANALYSIS_REFUSED");REQUIRE(result.progress_stages==2);
+    REQUIRE(nlohmann::json::parse(result.diagnostic).at("export_allowed")==false);
+}
+TEST_CASE("B14 native analysis supervisor terminates hangs and refuses failed or malformed children", "[Nonplanar][B14][NativeAnalysisWorker]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);const auto input=native_worker_input(fixture,capture_native_analysis_request(options.first));
+    struct Probes {boost::filesystem::path root=boost::filesystem::temp_directory_path()/boost::filesystem::unique_path("nptop-analysis-probes-%%%%-%%%%-%%%%");
+        Probes(){boost::filesystem::create_directory(root);boost::filesystem::permissions(root,boost::filesystem::owner_all);}
+        ~Probes(){boost::system::error_code ec;boost::filesystem::remove_all(root,ec);}} probes;
+    for(const char *name:{"hang","failure","terminated","malformed","oversize"}){
+        const auto path=probes.root/(std::string(name)+boost::filesystem::path(NPTOP_ANALYSIS_PROBE_PATH).extension().string());
+        boost::filesystem::copy_file(NPTOP_ANALYSIS_PROBE_PATH,path);boost::filesystem::permissions(path,boost::filesystem::owner_all);
+        NativeAnalysisWorkerOptions limits;limits.timeout=std::chrono::milliseconds(100);
+        const auto started=std::chrono::steady_clock::now();const auto result=run_native_analysis_worker(path.string(),input,limits);INFO(name << ' ' << result.reason);
+        REQUIRE(result.diagnostic.empty());REQUIRE(std::chrono::steady_clock::now()-started<std::chrono::seconds(3));
+        if(std::string(name)=="hang")REQUIRE(result.reason=="WORKER_DEADLINE");
+    }
+    NativeAnalysisWorkerOptions limits;limits.cancelled=[] {return true;};
+    REQUIRE(run_native_analysis_worker("missing executable",input,limits).reason=="WORKER_CANCELLED");
+    REQUIRE(input->task->is_current());
 }

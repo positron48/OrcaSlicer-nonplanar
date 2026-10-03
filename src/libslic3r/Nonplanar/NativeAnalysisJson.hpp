@@ -1,7 +1,11 @@
 #pragma once
 #include "NativeAnalysis.hpp"
+#include <nlohmann/json_fwd.hpp>
 
 namespace Slic3r::nptop {
+// Shared exact bounded mesh transport, preserving all original array order.
+nlohmann::json native_mesh_document(const indexed_triangle_set &);
+indexed_triangle_set parse_native_mesh_document(const nlohmann::json &, size_t max_faces=5000);
 // Versioned editing transport, not a project replacement or proof credential.
 // Strict registry/types, duplicate-key/depth/byte limits and exact float32
 // reservation coordinates. All numerical checks remain in the native factories.
