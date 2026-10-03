@@ -170,6 +170,12 @@ echo -n "[9/9] Generating Linux app..."
         exit 1
     fi
     cp -fl "${ORIGINAL_BINARY_LOCATION}" "$BIN_DIR/@SLIC3R_APP_CMD@"
+    ANALYSIS_WORKER_LOCATION="$(dirname "${ORIGINAL_BINARY_LOCATION}")/nonplanar_analysis_worker"
+    if [ ! -x "${ANALYSIS_WORKER_LOCATION}" ]; then
+        echo "Error: bundled native analysis worker not found; build OrcaSlicer first" >&2
+        exit 1
+    fi
+    cp -fl "${ANALYSIS_WORKER_LOCATION}" "$BIN_DIR/nonplanar_analysis_worker"
 
     if [ "$BUNDLE_DESKTOP_STACK" = "1" ]; then
         GSTREAMER_PLUGIN_SOURCE_DIR="$(find_pkg_config_dir pluginsdir gstreamer-1.0 || true)"

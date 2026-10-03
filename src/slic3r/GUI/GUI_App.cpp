@@ -3349,6 +3349,15 @@ void GUI_App::copy_network_if_available()
 
 bool GUI_App::on_init_network(bool try_backup)
 {
+    // The isolated lab must not start cloud/printer agents or ask the OS
+    // credential broker for the regular installation's account. Socket denial
+    // and a separate data_dir alone do not isolate the system keychain.
+    if (const char *lab = std::getenv("SLIC3R_NPTOP_LAB"); lab && std::string(lab) == "1") {
+        if (!m_device_manager) m_device_manager = new Slic3r::DeviceManager();
+        if (!m_user_manager) m_user_manager = new Slic3r::UserManager();
+        BOOST_LOG_TRIVIAL(info) << "Nonplanar Top Lab: networking agents disabled";
+        return false;
+    }
     // Clean up stale ".old" files left by install_plugin() when it had to rename an in-use
     // DLL aside (see the rename-aside path in install_plugin). This runs before the plug-in
     // is (re)loaded - at startup nothing is mapped yet, and on a hot reload the previous

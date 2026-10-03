@@ -8,6 +8,7 @@
 #include <libslic3r/Nonplanar/NativeAnalysis.hpp>
 #include <libslic3r/Nonplanar/NativeAnalysisJson.hpp>
 #include <libslic3r/Nonplanar/NativeAnalysisWorker.hpp>
+#include <libslic3r/Nonplanar/NativeAnalysisView.hpp>
 #include <libslic3r/Preset.hpp>
 #include <libslic3r/Nonplanar/JobNative.hpp>
 #include <libslic3r/Nonplanar/PlanarBody.hpp>
@@ -4266,4 +4267,54 @@ TEST_CASE("B14 native analysis supervisor terminates hangs and refuses failed or
     NativeAnalysisWorkerOptions limits;limits.cancelled=[] {return true;};
     REQUIRE(run_native_analysis_worker("missing executable",input,limits).reason=="WORKER_CANCELLED");
     REQUIRE(input->task->is_current());
+}
+
+TEST_CASE("B14 native view adopts actual worker replay only once and remains Unknown", "[Nonplanar][B14][NativeAnalysisView]")
+{
+    NativeJobFixture fixture;const auto options=native_analysis_request(fixture);
+    const auto request=capture_native_analysis_request(options.first);const auto bytes=native_analysis_document(*request);
+    const auto input=capture_native_analysis_view_input(fixture.model,fixture.config,0,Vec3d::Zero(),"safe_hybrid",bytes);
+    const auto worker=native_worker_input(fixture,input->request);
+    const auto result=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,worker);INFO(result.reason);
+    REQUIRE(result.reason=="WORKER_BLOCKED_DIAGNOSTIC_COMPLETE");
+    const auto current=capture_native_analysis_view_input(fixture.model,fixture.config,0,Vec3d::Zero(),"safe_hybrid",bytes);
+    const auto displayed=finish_native_analysis_view(fixture.print,*worker->task,*input,current.get(),1,1,false,result);
+    REQUIRE(displayed.diagnostic==result.diagnostic);REQUIRE_FALSE(worker->task->is_current());
+    REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Unknown);
+    const auto diagnostic=nlohmann::json::parse(displayed.diagnostic);
+    REQUIRE(diagnostic.at("replay").size()==2098);REQUIRE(diagnostic.at("export_allowed")==false);
+    REQUIRE(diagnostic.at("report").at("validation").at("export_decision")=="BLOCK");
+    save_worker_evidence("native-view-display-diagnostic.json",displayed.diagnostic);
+    const auto repeated=finish_native_analysis_view(fixture.print,*worker->task,*input,current.get(),1,1,false,result);
+    REQUIRE(repeated.reason=="VIEW_STALE_INPUTS");REQUIRE(repeated.diagnostic.empty());
+}
+TEST_CASE("B14 native view rejects actual GUI input edits ABA cancellation and replaced owners", "[Nonplanar][B14][NativeAnalysisView]")
+{
+    for(int mutation=0;mutation<12;++mutation){
+        INFO(mutation);NativeJobFixture fixture;const auto options=native_analysis_request(fixture);
+        const auto request=capture_native_analysis_request(options.first);auto bytes=native_analysis_document(*request);
+        auto mode=std::string("safe_hybrid");Vec3d origin=Vec3d::Zero();uint64_t revision=1;
+        const auto input=capture_native_analysis_view_input(fixture.model,fixture.config,0,origin,mode,bytes);
+        const auto worker=native_worker_input(fixture,input->request);
+        // Actual valid child output, then an edit before serialized adoption.
+        const auto result=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,worker);INFO(result.reason);
+        REQUIRE_FALSE(result.diagnostic.empty());
+        if(mutation==0){auto *volume=fixture.model.objects.front()->volumes.front();auto mesh=volume->mesh();auto &v=mesh.its.vertices.front();v.x()=std::nextafter(v.x(),std::numeric_limits<float>::infinity());volume->set_mesh(std::move(mesh));}
+        if(mutation==1)fixture.model.objects.front()->instances.front()->set_offset(Vec3d(20,20,std::nextafter(0.,1.)));
+        if(mutation==2)fixture.config.set_key_value("layer_height",new ConfigOptionFloat(std::nextafter(.2,1.)));
+        if(mutation==3)fixture.model.objects.front()->config.set_key_value("wall_loops",new ConfigOptionInt(1));
+        if(mutation==4)origin.z()=-0.;
+        if(mutation==5)bytes+=' ';
+        if(mutation==6)mode="strict_nonplanar";
+        if(mutation==7)fixture.config.set_key_value("nptop_mode",new ConfigOptionString("off"));
+        if(mutation==8)++revision; // edit followed by exact undo: epoch still differs
+        if(mutation==9)(void)native_worker_input(fixture,input->request);
+        if(mutation==10)fixture.print.set_plate_origin(Vec3d(1,0,0));
+        const auto current=capture_native_analysis_view_input(fixture.model,fixture.config,0,origin,mode,bytes);
+        const auto displayed=finish_native_analysis_view(fixture.print,*worker->task,*input,current.get(),1,revision,mutation==11,result);
+        REQUIRE(displayed.diagnostic.empty());
+        REQUIRE(displayed.reason==(mutation==11 ? "VIEW_CANCELLED" : mutation==10 ? "VIEW_STALE_OWNER" : "VIEW_STALE_INPUTS"));
+        REQUIRE_FALSE(worker->task->is_current());
+        if(mutation==9)REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Analyzing);
+    }
 }

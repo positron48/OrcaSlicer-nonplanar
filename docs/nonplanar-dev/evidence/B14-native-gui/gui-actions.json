@@ -1,0 +1,27 @@
+{
+  "scope": "ACTUAL_CUA_NATIVE_API_FINAL_ISOLATED_GUI_ONLY",
+  "fixture": "gui-fixture1/output/simulation-identity-source.3mf",
+  "bundle": "build/nonplanar-dev/b14-native-gui-delivery/NonplanarTopLab.app",
+  "actions": [
+    "getApp(full isolated bundle path), File menu, Nonplanar analysis",
+    "paste original request JSON through native editor",
+    "Analyze, actual hatches progress observed",
+    "completed public fixed17 report and movement0 observed",
+    "setValue(slider,2097), original last movement and full outward time observed",
+    "setValue(editor,original bytes plus whitespace), report/replay cleared",
+    "Analyze then Cancel, VIEW_CANCELLED, empty report/replay",
+    "Analyze then Close, returned to actual Plater",
+    "File menu enabled analysis, export G-code disabled, queue idle",
+    "Quit own app; process inventory confirms no NonplanarTopLabCore remains"
+  ],
+  "evidence": [
+    "gui-final-running",
+    "gui-final-completed",
+    "gui-final-last",
+    "gui-final-edit",
+    "gui-final-cancel",
+    "gui-final-close",
+    "gui-final-idle-menu"
+  ],
+  "earlier_observations": "Native request file picker loaded JSON. Direct original STL import completed actual analysis. Original AutoForFlush/missing metadata/nonidentity source transform refused. Final import picker AX timeouts sampled idle event loops; clean final launch completed without picker. No Keychain prompt approved, network/printer operations or candidate export."
+}

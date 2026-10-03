@@ -1,0 +1,13 @@
+{
+  "test_only": true,
+  "source": "build/nonplanar-evidence/B14-native-gui/gui-fixture1/output/simulation-manual.3mf",
+  "destination": "build/nonplanar-evidence/B14-native-gui/gui-fixture1/output/simulation-explicit-plate.3mf",
+  "source_sha256": "9855a3adb722877fa58174ac09b729e734678fbc16ea7186bb36e2acf37c7162",
+  "destination_sha256": "5eeb5ef8e1832bbedafc08cfad4918f5474654dcd459650c3b47ce7956af7757",
+  "only_archive_member_changed": "Metadata/model_settings.config",
+  "explicit_plate_metadata": {
+    "enable_filament_dynamic_map": false,
+    "has_filament_switcher": false
+  },
+  "reason": "Existing upstream import carries these values via plate metadata. CLI unsliced project export omitted them; no production fallback or policy weakening."
+}

@@ -109,6 +109,8 @@ set(SLIC3R_GUI_SOURCES
     GUI/DownloadProgressDialog.hpp
     GUI/DragCanvas.cpp
     GUI/DragCanvas.hpp
+    GUI/NativeAnalysisDialog.cpp
+    GUI/NativeAnalysisDialog.hpp
     GUI/EditGCodeDialog.cpp
     GUI/EditGCodeDialog.hpp
     GUI/EncodedFilament.hpp
@@ -843,3 +845,5 @@ endif ()
 
 # Add a definition so that we can tell we are compiling slic3r.
 target_compile_definitions(libslic3r_gui PRIVATE SLIC3R_CURRENTLY_COMPILING_GUI_MODULE)
+
+target_compile_definitions(libslic3r_gui PRIVATE NPTOP_BUNDLED_ANALYSIS_WORKER="nonplanar_analysis_worker${CMAKE_EXECUTABLE_SUFFIX}")

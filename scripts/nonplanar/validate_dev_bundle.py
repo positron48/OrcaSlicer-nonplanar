@@ -20,6 +20,9 @@ assert info['CFBundleIdentifier'].startswith('local.nonplanartoplab.experimental
 assert 'CFBundleDocumentTypes' not in info and 'CFBundleURLTypes' not in info
 core = bundle / 'Contents/MacOS/NonplanarTopLabCore'
 assert manifest['binary_sha256'] == hashlib.sha256(core.read_bytes()).hexdigest()
+worker = bundle / 'Contents/MacOS/nonplanar_analysis_worker'
+assert manifest['native_analysis_ui'] is True and worker.is_file()
+assert manifest['worker_sha256'] == hashlib.sha256(worker.read_bytes()).hexdigest()
 runtime = base / 'runtime'
 policy = runtime / 'offline.sb'
 outside = base / 'forbidden-sandbox-probe.txt'

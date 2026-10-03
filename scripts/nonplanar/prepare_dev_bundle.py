@@ -21,6 +21,9 @@ if args.label:
 destination = base / 'NonplanarTopLab.app'
 if destination.exists():
     raise SystemExit('Refusing to overwrite an existing dev bundle')
+worker = source / 'Contents/MacOS/nonplanar_analysis_worker'
+if not worker.is_file():
+    raise SystemExit('Bundled native analysis worker is missing; build OrcaSlicer first')
 shutil.copytree(source, destination, symlinks=True)
 plist_path = destination / 'Contents/Info.plist'
 with plist_path.open('rb') as stream:
@@ -50,7 +53,7 @@ runtime = bundle.parent / 'runtime'
 if any(a.startswith('--datadir') for a in sys.argv[1:]):
     raise SystemExit('The experimental launcher owns its isolated data directory')
 os.chdir(runtime)
-environment = dict(os.environ, TMPDIR=str(runtime / 'tmp') + '/', XDG_CACHE_HOME=str(runtime / 'cache'))
+environment = dict(os.environ, TMPDIR=str(runtime / 'tmp') + '/', XDG_CACHE_HOME=str(runtime / 'cache'), SLIC3R_NPTOP_LAB='1')
 os.execve('/usr/bin/sandbox-exec', ['sandbox-exec', '-f', str(runtime / 'offline.sb'),
           str(bundle / 'Contents/MacOS/NonplanarTopLabCore'), '--datadir', str(runtime / 'data'),
           *sys.argv[1:]], environment)
@@ -60,6 +63,8 @@ launcher.chmod(0o755)
     'source': str(source), 'destination': str(destination),
     'bundle_identifier': info['CFBundleIdentifier'],
     'binary_sha256': hashlib.sha256((destination / 'Contents/MacOS/NonplanarTopLabCore').read_bytes()).hexdigest(),
+    'worker_sha256': hashlib.sha256(worker.read_bytes()).hexdigest(),
+    'native_analysis_ui': True,
     'runtime': str(runtime), 'policy': str(policy),
     'network': 'DENY', 'write_scope': 'RUNTIME_AND_DEV_NULL_ONLY',
     'document_handlers': False, 'url_handlers': False,

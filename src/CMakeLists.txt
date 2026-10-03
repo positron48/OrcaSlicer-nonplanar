@@ -291,3 +291,31 @@ if (WIN32)
 else ()
     install(TARGETS OrcaSlicer RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif ()
+
+# Bundle only the executable selected by this build, never by imported profiles.
+# Generate the runtime path separately: CMake 3.13 component expressions in a
+# custom target would otherwise add an app dependency and create a build cycle.
+if(TARGET OrcaSlicer_app_gui)
+    set(_nptop_app OrcaSlicer_app_gui)
+else()
+    set(_nptop_app OrcaSlicer)
+endif()
+file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/nonplanar-runtime-$<CONFIG>.cmake" CONTENT
+"file(MAKE_DIRECTORY [==[$<TARGET_FILE_DIR:${_nptop_app}>]==])
+execute_process(COMMAND [==[${CMAKE_COMMAND}]==] -E copy_if_different
+    [==[$<TARGET_FILE:nonplanar_analysis_worker>]==]
+    [==[$<TARGET_FILE_DIR:${_nptop_app}>/$<TARGET_FILE_NAME:nonplanar_analysis_worker>]==]
+    RESULT_VARIABLE copy_result)
+if(NOT copy_result EQUAL 0)
+    message(FATAL_ERROR \"Bundling native analysis worker failed\")
+endif()
+")
+add_custom_target(nonplanar_analysis_runtime
+    COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_BINARY_DIR}/nonplanar-runtime-$<CONFIG>.cmake"
+    DEPENDS nonplanar_analysis_worker VERBATIM)
+add_dependencies(${_nptop_app} nonplanar_analysis_runtime)
+if(WIN32)
+    install(TARGETS nonplanar_analysis_worker RUNTIME DESTINATION ".")
+elseif(NOT APPLE)
+    install(TARGETS nonplanar_analysis_worker RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+endif()

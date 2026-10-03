@@ -2741,6 +2741,11 @@ void MainFrame::init_menubar_as_editor()
 #endif
 
 
+        if (const char *lab = std::getenv("SLIC3R_NPTOP_LAB"); lab && std::string(lab) == "1") {
+            append_menu_item(fileMenu, wxID_ANY, "Nonplanar analysis…", "Analyze current plate in Nonplanar Top Lab",
+                [this](wxCommandEvent &) { if (m_plater) m_plater->show_nonplanar_analysis(); }, "", nullptr,
+                [this] { return m_plater && m_plater->can_show_nonplanar_analysis(); }, this);
+        }
         fileMenu->AppendSeparator();
 
         // BBS

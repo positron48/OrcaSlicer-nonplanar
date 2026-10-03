@@ -418,6 +418,8 @@ public:
     // This would result in quick run of the progress indicator notification
     // from 0 to 100. Use replace_job() instead of queue_job() to cancel all
     // pending jobs.
+    bool can_show_nonplanar_analysis();
+    void show_nonplanar_analysis();
     Worker& get_ui_job_worker();
     const Worker & get_ui_job_worker() const;
 

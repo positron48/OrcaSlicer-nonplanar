@@ -1,4 +1,5 @@
 #include "Plater.hpp"
+#include "NativeAnalysisDialog.hpp"
 #include "libslic3r/Config.hpp"
 #include "libslic3r/Nonplanar/Policy.hpp"
 #include "libslic3r_version.h"
@@ -4657,6 +4658,7 @@ struct Plater::priv
         UPDATE_BACKGROUND_PROCESS_FORCE_EXPORT = 16,
     };
     // returns bit mask of UpdateBackgroundProcessReturnState
+    DynamicPrintConfig resolved_fff_config(PartPlate *plate);
     unsigned int update_background_process(bool force_validation = false, bool postpone_error_messages = false, bool switch_print = true);
     // Restart background processing thread based on a bitmask of UpdateBackgroundProcessReturnState.
     bool restart_background_process(unsigned int state);
@@ -7897,6 +7899,14 @@ void Plater::priv::process_validation_warning(StringObjectException const &warni
 }
 
 
+DynamicPrintConfig Plater::priv::resolved_fff_config(PartPlate *plate)
+{
+    const auto &bundle = wxGetApp().preset_bundle;
+    if (bundle->get_printer_extruder_count() > 1)
+        return bundle->full_config(false, plate->get_real_filament_maps(bundle->project_config));
+    return bundle->full_config(false);
+}
+
 // Update background processing thread from the current config and Model.
 // Returns a bitmask of UpdateBackgroundProcessReturnState.
 unsigned int Plater::priv::update_background_process(bool force_validation, bool postpone_error_messages, bool switch_print)
@@ -7922,16 +7932,9 @@ unsigned int Plater::priv::update_background_process(bool force_validation, bool
 
     background_process.fff_print()->set_check_multi_filaments_compatibility(wxGetApp().app_config->get("enable_high_low_temp_mixed_printing") == "false");
 
-    Print::ApplyStatus invalidated;
-    const auto& preset_bundle = wxGetApp().preset_bundle;
-    if (preset_bundle->get_printer_extruder_count() > 1) {
-        PartPlate* cur_plate = background_process.get_current_plate();
-        std::vector<int> f_maps = cur_plate->get_real_filament_maps(preset_bundle->project_config);
-        invalidated = background_process.apply(this->model, preset_bundle->full_config(false, f_maps));
+    const auto invalidated = background_process.apply(this->model, resolved_fff_config(background_process.get_current_plate()));
+    if (wxGetApp().preset_bundle->get_printer_extruder_count() > 1)
         background_process.fff_print()->set_extruder_filament_info(get_extruder_filament_info());
-    }
-    else
-        invalidated = background_process.apply(this->model, preset_bundle->full_config(false));
 
     if ((invalidated == Print::APPLY_STATUS_CHANGED) || (invalidated == Print::APPLY_STATUS_INVALIDATED))
         // BBS: add only gcode mode
@@ -14462,6 +14465,26 @@ void Plater::update(bool conside_update_flag, bool force_background_processing_u
 }
 
 void Plater::object_list_changed() { p->object_list_changed(); }
+
+bool Plater::can_show_nonplanar_analysis()
+{
+    const char *lab = std::getenv("SLIC3R_NPTOP_LAB");
+    return lab && std::string(lab) == "1" && p->printer_technology == ptFFF &&
+        !p->model.objects.empty() && !only_gcode_mode() && p->m_worker.is_idle();
+}
+
+void Plater::show_nonplanar_analysis()
+{
+    if (!can_show_nonplanar_analysis()) return;
+    p->background_process.stop();
+    p->update_print_volume_state();
+    show_native_analysis_dialog(*this, [this] {
+        auto *plate = p->partplate_list.get_curr_plate();
+        auto config = p->resolved_fff_config(plate);
+        config.apply(*plate->config());
+        return NativeAnalysisHostState{std::move(config), plate->get_index(), plate->get_origin()};
+    });
+}
 
 Worker &Plater::get_ui_job_worker() { return p->m_worker; }
 

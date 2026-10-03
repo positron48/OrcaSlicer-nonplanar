@@ -4,6 +4,21 @@ Active objective: implement the entire B01–B15 scope. A bounded primitive or a
 green unit suite is evidence for its own contract, not completion of a B task.
 The normative backlog, SPEC and acceptance matrix remain unchanged.
 
+`B14-native-gui.md` and ADR-0093 add the native Plater analysis dialog using
+its existing worker queue, exact immutable inputs and serialized display-only
+adoption. Final isolated GUI runs the real child, shows 2098 original movements
+and outward cumulative time, and clears results on edit/cancel/close. Trusted
+worker packaging and no-agent lab startup avoid observed cloud/Keychain entry.
+Focus 12/9270, CTest 470/470, 15 independent oracles, ten actual CLI cases and six
+strict OFF/ZAA pairs pass. Fifty of 51 parent artifacts remain exact. Original
+plate metadata/source-transform refusals remain; explicit synthetic positive
+fixtures do not qualify general 3MF. Fixed17 remains 4 PASS/RUN +13 UNKNOWN/
+NOT_RUN, export BLOCK; full B01–B15 active. Next: hard parent/child containment,
+full import/3MF provenance, surface/body/cap/head/material/witness/roles/time
+seeking, complete cap/later passes and qualified contact/seams/whole-job proofs.
+Linux new-head CI, Windows/Linux GUI runtime, physical tests and independent
+review remain pending. Standard U1 head/.4 nozzle known; software independent.
+
 `B14-native-worker.md` and ADR-0092 add isolated native analysis from exact
 owned host model/config/request inputs. Actual worker/direct/CLI movements match
 at 2098 records; cancellation, stale callbacks, hangs/failures and protocol/RSS
