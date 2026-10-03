@@ -18,7 +18,7 @@
     "B01": "PREFLIGHT_OWNED_NATIVE_PRINT_AND_EXACT_PRE_APPLY_SOURCE_REVISION_PASS_FULL_COMPATIBILITY_JOB_AND_PLATE_BINDING_PENDING",
     "B02": "BOUNDED_IMPORT_AND_OWNED_PRE_APPLY_NATIVE_INPUT_PLACEMENT_PASS_GUI_PLATE_JOB_BINDING_AND_HARD_LIMITS_PENDING",
     "B03": "BOUNDED_NOMINAL_MASKS_FOOTPRINT_AFFINE_CURVATURE_AND_ISOLATED_CLI_PASS_CURVED_SURFACES_TOOL_ROI_AND_PLANNING_PENDING",
-    "B04": "OWNED_EXACT_PARTITION_NATIVE_BODY_MATERIAL_AND_INTERIOR_DENSE_COVERAGE_PASS_SEAM_WIDER_NATIVE_DOMAIN_JOB_WORKER_PENDING",
+    "B04": "OWNED_EXACT_PARTITION_STABLE_DERIVED_VERTEX_ORIENTED_FACE_INDICES_NATIVE_BODY_MATERIAL_AND_INTERIOR_DENSE_COVERAGE_PASS_SEAM_WIDER_NATIVE_DOMAIN_JOB_WORKER_PENDING",
     "B05": "OWNED_NATIVE_BODY_AND_ORDERED_ACTUAL_LATER_CAP_PREFIX_FRONTS_WHOLE_RUN_EVENT_UNION_PASS_FULL_CONTACT_CCD_JOB_REPLAY_PENDING",
     "B06": "ACTUAL_PREFIX_VERTICAL_SUPPORT_AND_MANDATORY_WHOLE_AFFINE_NORMAL_RAY_BAND_PASS_GENERAL_STEPPED_CURVED_SHOULDER_SEAM_CONTACT_FULL_SCOPE_PENDING",
     "B07": "ACTUAL_LATER_BEAD_WITH_MANDATORY_NORMAL_PROOF_ORDERED_JOURNAL_THIRD_SURFACE_PASS_COMPLETE_FILL_SEAM_EXCESS_GENERAL_NORMAL_CONTACT_ORDER_PENDING",
@@ -57,8 +57,8 @@
     "fork_native_fff_no_assertions": "45_PASS_2_FAIL_EXISTING_UPSTREAM_EMPTY_SECTIONS",
     "A05_native_cases": 9,
     "object_label_regression_cases": 1,
-    "final_ctest_discovered": 449,
-    "final_ctest_executed": 449,
+    "final_ctest_discovered": 450,
+    "final_ctest_executed": 450,
     "INT-01": "PASS_A05_SINGLE_NATIVE_SUPPORT_CORE_ONLY",
     "INT-02": "PASS_A05_TERRACE_INTERIORS_ONLY_SEAM_NOT_IMPLEMENTED",
     "INT-03": "PASS_A05_AFFINE_CELL_MUTATIONS_ONLY",
@@ -2115,6 +2115,125 @@
     "physical": "NOT_RUN_STANDARD_U1_HEAD_NOZZLE0_4_UNCONFIRMED",
     "review_status": "SEPARATE_AUTHOR_AUDIT_INDEPENDENT_PENDING",
     "remaining": "QUALIFIED_CONTACT_OLD_SUPPORT_ADJACENT_SEAM_FULL_FILL_UNION_VOLUME_ALL_MOTIONS_ORDER_SOURCE_RESOURCES_SOFTWARE_TRANSFORMS_DELIVERY_PUBLICATION_B14_B15",
+    "full_B01_B15": "IN_PROGRESS",
+    "guarded_export": "BLOCK"
+  },
+  "B04_partition_order_evidence": {
+    "status": "ACTUAL_DERIVED_INDEX_ORDER_FIXED_BOUNDED_IDENTICAL_ORIENTED_TRIANGULATION_FULL_SCOPE_PENDING",
+    "document": "B04-partition-order.md",
+    "review": "B04-partition-order-review.md",
+    "adr": "adr-0087-derived-partition-index-order.md",
+    "manifest": "evidence/B04-partition-order/source-manifest.json",
+    "runtime": "EXACT_XYZ_VERTEX_ORDER_BEFORE_SHARED_FLOAT_CONVERSION_ACTUAL_FACE_REMAP_CYCLIC_WINDING_PRESERVATION_ORIENTED_FACE_ORDER_NO_COORDINATE_REMOVAL_RETRIANGULATION_OR_HASH_NORMALIZATION",
+    "new_cases": 1,
+    "partition_cases": 6,
+    "partition_assertions": 6319,
+    "final_byte_cases": 30,
+    "final_byte_assertions": 2433417,
+    "ctest": 450,
+    "failures": 0,
+    "skips": 0,
+    "gate_wall_seconds": 108.15,
+    "CLI_cases": 437,
+    "analytical_outputs_exact": 434,
+    "timeout_counter_differences": {
+      "pause/stdout.json": {
+        "parent_sha256": "c0f04c80d8da49e2f114f413e49665611e3c9b09fe295c736d5fe16d29ed6ca1",
+        "current_sha256": "c85d3f2c6c377e96844e7f7384b5a7c30144d1879fc4da3af70c3f2b67eba581",
+        "changed_fields": {
+          "cells": [
+            62088,
+            65684
+          ],
+          "work": [
+            1256487,
+            1326376
+          ]
+        },
+        "status": "UNCHANGED_UNKNOWN_ABSOLUTE_1S_DEADLINE_WORK_CELL_COUNTS_ONLY"
+      },
+      "turn/stdout.json": {
+        "parent_sha256": "ba8ccef68176ec95c57b34e764873a6c38b882167cd2c045d80d45e0515cf9e4",
+        "current_sha256": "f9e64a25850eb45059cd0915cfec2594c305698655379b8c17b09ea95e463791",
+        "changed_fields": {
+          "cells": [
+            44989,
+            45937
+          ],
+          "work": [
+            1070786,
+            1093540
+          ]
+        },
+        "status": "UNCHANGED_UNKNOWN_ABSOLUTE_1S_DEADLINE_WORK_CELL_COUNTS_ONLY"
+      },
+      "pressure/stdout.json": {
+        "parent_sha256": "8d824b8aa2eaeed194ba7cf201d2116c47c3ffdbda1aacf6169a5e22bc4b3963",
+        "current_sha256": "b67c6fdc99aa1e6ac874f3915444758dbd3ca6dbe937a379c3cf255beb5a8de4",
+        "changed_fields": {
+          "cells": [
+            63931,
+            64156
+          ],
+          "work": [
+            1292350,
+            1296691
+          ]
+        },
+        "status": "UNCHANGED_UNKNOWN_ABSOLUTE_1S_DEADLINE_WORK_CELL_COUNTS_ONLY"
+      }
+    },
+    "native_files_compared": 51,
+    "native_old_exact": 39,
+    "native_actual_identity_changes": 12,
+    "separate_process_outputs_exact": 33,
+    "all_material_source_fingerprints_exact_between_fresh_processes": true,
+    "geometry_preserved": {
+      "body": [
+        22,
+        40
+      ],
+      "cap": [
+        14,
+        24
+      ],
+      "original": [
+        8,
+        12
+      ],
+      "reservation": [
+        8,
+        12
+      ],
+      "oracle": "ORIENTED_COORDINATE_TRIANGLE_MULTISETS_AND_ORIGINAL_ARRAYS_EXACT_NO_CERTIFICATE_REUSE"
+    },
+    "candidate_sha256": "b8eb15681127c1a8db57ce0aa257326763f16832b82fdafd13ed091c4bd98ef8",
+    "bytes": 128014,
+    "records": 2205,
+    "fresh_body_source_fingerprint": "6c1b28d7a5ab20102811a8fe3516c60f5724096726be7837a6316e025ded02b4",
+    "native_supported": {
+      "cells": 48,
+      "API_work": 637876,
+      "CLI_work": 598131,
+      "CLI_wall_seconds": 0.528,
+      "absolute_root_ms": 1000
+    },
+    "old_geometry_proofs_refusals_and_candidate": "ALL_NON_MATERIAL_COMPONENT_OUTPUTS_BYTE_EXACT_FRESH_OWNERS",
+    "full_native_contour": "UNCHANGED_OLD_NEIGHBOR_FAIL_WITH_EARLIER_UNPROVED_CELL",
+    "OFF_ZAA": "SIX_FRESH_STRICT_PAIRS_PASS",
+    "strict_flags": "EXACT_PARTITION_AND_FINAL_MATERIAL_NO_PCH_FNO_FAST_MATH_FFP_CONTRACT_OFF",
+    "retained_failures": "TEST_ONLY_AMBIGUOUS_NAMESPACE_WRONG_VECTOR_TYPE_BUILD_CORRECTED_EXPECTED_RED_OLD_ORDERING_PROPERTY_RETAINED",
+    "Linux": "NEW_SOURCE_PENDING_AFTER_PUSH_PARENT_D007E4EB_37084615545_PENDING_AT_011944_UTC",
+    "Windows": "NOT_RUN",
+    "GUI": "NOT_RUN_FULL_PIPELINE",
+    "physical": "NOT_RUN_STANDARD_U1_HEAD_NOZZLE0_4_UNCONFIRMED",
+    "review_status": "SEPARATE_AUTHOR_AUDIT_INDEPENDENT_PENDING",
+    "mandatory_report": {
+      "checks": 17,
+      "pass_run": 4,
+      "unknown_not_run": 13
+    },
+    "remaining": "UNIVERSAL_CGAL_TRIANGULATION_CROSS_PLATFORM_FLOAT_SOFTWARE_RESOURCES_SOURCE_TO_PLAN_GUI_PUBLICATION_QUALIFIED_CONTACT_SEAMS_FILL_ALL_JOB_MOTIONS_ORDER_TRANSFORMS_DELIVERY_B14_B15",
     "full_B01_B15": "IN_PROGRESS",
     "guarded_export": "BLOCK"
   }

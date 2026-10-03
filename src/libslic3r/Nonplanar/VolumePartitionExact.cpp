@@ -42,7 +42,14 @@ ConvertedMesh convert(const Mesh &input, ConversionMap &shared, double &error, c
     indexed_triangle_set native;
     std::map<Mesh::Vertex_index,int> indices;
     std::map<Mesh::Vertex_index,size_t> identities;
-    for (const auto index : input.vertices()) {
+    // CGAL descriptor order is not a geometry identity. Construct the actual
+    // derived indexed mesh in exact XYZ order before rounding; never normalize
+    // its fingerprint or borrow a certificate from an equivalent old mesh.
+    std::vector<Mesh::Vertex_index> ordered;
+    for (const auto index : input.vertices()) { stop(); ordered.push_back(index); }
+    const auto less=Kernel().less_xyz_3_object();
+    std::sort(ordered.begin(),ordered.end(),[&](auto a,auto b){ stop(); return less(input.point(a),input.point(b)); });
+    for (const auto index : ordered) {
         stop(); const auto &p=input.point(index);
         auto existing=shared.find(p);
         if (existing==shared.end()) {
@@ -69,12 +76,18 @@ ConvertedMesh convert(const Mesh &input, ConversionMap &shared, double &error, c
             if (count>=3) throw std::runtime_error("NONTRIANGULAR_EXACT_OUTPUT"); vertices[count++]=vertex;
         }
         if (count!=3) throw std::runtime_error("DEGENERATE_EXACT_OUTPUT");
-        native.indices.emplace_back(indices.at(vertices[0]),indices.at(vertices[1]),indices.at(vertices[2]));
+        std::array<int,3> triangle{indices.at(vertices[0]),indices.at(vertices[1]),indices.at(vertices[2])};
+        const auto first=std::min_element(triangle.begin(),triangle.end())-triangle.begin();
+        native.indices.emplace_back(triangle[first],triangle[(first+1)%3],triangle[(first+2)%3]);
         Triangle key{identities.at(vertices[0]),identities.at(vertices[1]),identities.at(vertices[2])}; std::sort(key.begin(),key.end());
         const auto &a=input.point(vertices[0]), &b=input.point(vertices[1]), &c=input.point(vertices[2]);
         const Kernel::Point_3 center((a.x()+b.x()+c.x())/3,(a.y()+b.y()+c.y())/3,(a.z()+b.z()+c.z())/3);
         if (!faces.emplace(key,center).second) throw std::runtime_error("DUPLICATE_EXACT_OUTPUT_FACE");
     }
+    // Cyclic rotation and lexicographic face ordering preserve winding and
+    // every triangle; there is no retriangulation or point/face removal.
+    std::sort(native.indices.begin(),native.indices.end(),[&](const auto &a,const auto &b){
+        stop(); return std::array<int,3>{a[0],a[1],a[2]}<std::array<int,3>{b[0],b[1],b[2]}; });
     return {TriangleMesh(std::move(native)),std::move(faces)};
 }
 }

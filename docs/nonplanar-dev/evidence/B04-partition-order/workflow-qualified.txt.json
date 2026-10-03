@@ -1,0 +1,14 @@
+{
+  "command": [
+    "ruby",
+    "-ryaml",
+    "-e",
+    "YAML.load_file(ARGV[0]); puts \"PASS_WORKFLOW_YAML\"",
+    ".github/workflows/nonplanar-native.yml"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-03T01:15:32.779615+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 0.065
+}

@@ -7,6 +7,25 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B04-partition-order.md` and ADR-0087 fix the actual derived mesh representation:
+exact XYZ vertex order, winding-preserving cyclic face indices and oriented face
+order replace unstable CGAL descriptor iteration. Original/reservation/source
+arrays and every coordinate/triangle/error/volume remain. New hashes refer to
+fresh owners; no normalization or old proof reuse. Separate native processes now
+give all33 component files byte-identical, including material source fingerprints.
+39/51 parent files stay exact;12 actual derived/dependent identities change.
+Original2205-record candidate and all non-material proofs/refusals stay exact.
+Partition6/6319, final-byte30/2433417, CTest450/450, CLI437 and six strict OFF/ZAA
+pairs pass;434 analytical reports are exact and three nominal timeout counters
+retain explicit UNKNOWN/CANCELLED differences. Fixed17 remains4 PASS/RUN +13
+UNKNOWN/NOT_RUN, full B01–B15 active, export BLOCK. Universal triangulation/
+cross-platform float determinism and complete source/resources/software/GUI/job/
+publication remain pending, as do qualified contact/seams/full cap fill and B14/B15.
+Linux new source awaits its own run; parentd007e4eb remains pending at01:19:44 UTC.
+Windows/full GUI/physical and independent review remain pending.
+
+Earlier component records (historical scope):
+
 `B12-supported-deposition.md` and ADR-0086 now compose whole maximal final-byte
 Deposit block contact/head geometry with every actual run's underlying Nominal
 vertical/normal gap and joined Lower anchors. Both proofs own the same final-byte
@@ -26,8 +45,6 @@ order/source/resources/software/transforms/delivery/publication and B14/B15.
 Linux new source awaits its own run; parentc0d010ea is in progress at00:58:43 UTC.
 Windows/full GUI/physical and independent review remain pending. Standard U1
 head/.4 nozzle known; firmware/material-brand questions do not gate software.
-
-Earlier component records (historical scope):
 
 `B12-forming-polyline.md` and ADR-0085 add explicit version2 contact with
 per-packet cumulative arc age and signed turn bounds. Whole-cell disk/strip and

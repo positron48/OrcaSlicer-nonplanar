@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="1" hostname="tbd" time="0.001" timestamp="2026-10-03T01:09:49Z">
+    <properties>
+      <property name="random-seed" value="2908113096"/>
+      <property name="filters" value="[PartitionOrder]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B04 derived exact partition has stable native vertex and oriented face indices" time="0.000" status="run">
+      <failure message="xyz(its.vertices[i-1])&lt;xyz(its.vertices[i])" type="REQUIRE">
+FAILED:
+  REQUIRE( xyz(its.vertices[i-1])&lt;xyz(its.vertices[i]) )
+with expansion:
+  { 14.0f, 7.0f, 2.875f }
+  &lt;
+  { 14.0f, 5.125f, 2.875f }
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_stl_import.cpp:574
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

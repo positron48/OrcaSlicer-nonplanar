@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="6319" hostname="tbd" time="0.027" timestamp="2026-10-03T01:11:04Z">
+    <properties>
+      <property name="random-seed" value="655033970"/>
+      <property name="filters" value="[VolumePartition]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B04 derived exact partition has stable native vertex and oriented face indices" time="0.006" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B04 partition preserves a through hole and handles a stepped reserved interface" time="0.007" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B04 exact interior cap reservation preserves native source walls and affine volume" time="0.002" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B04 partition enforces measured native conversion and inherited error budget" time="0.002" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B04 partition identity matches independent canonical and hash framing" time="0.000" status="run"/>
+    <testcase classname="nonplanar_tests.global" name="B04 cap partition owns callback inputs and rejects unusable geometry or stale work" time="0.009" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,333 @@
+[
+  {
+    "name": "rate-cli-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/validate_rate_audit_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--output-dir",
+      "build/nonplanar-evidence/B04-partition-order/rate-cli-final"
+    ]
+  },
+  {
+    "name": "material-cli-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/validate_material_audit_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--output-dir",
+      "build/nonplanar-evidence/B04-partition-order/material-cli-final"
+    ]
+  },
+  {
+    "name": "cover-cli-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/validate_material_cover_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B04-partition-order/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B04-partition-order/cover-cli-final"
+    ]
+  },
+  {
+    "name": "joined-cli-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/validate_joined_material_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B04-partition-order/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B04-partition-order/joined-cli-final"
+    ]
+  },
+  {
+    "name": "nominal-cli-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/validate_nominal_run_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B04-partition-order/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B04-partition-order/nominal-cli-final"
+    ]
+  },
+  {
+    "name": "support-cli-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/validate_run_support_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B04-partition-order/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B04-partition-order/support-cli-final"
+    ]
+  },
+  {
+    "name": "travel-cli-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/validate_travel_geometry_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B04-partition-order/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B04-partition-order/travel-cli-final"
+    ]
+  },
+  {
+    "name": "deposition-cli-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/validate_deposition_geometry_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B04-partition-order/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B04-partition-order/deposition-cli-final"
+    ]
+  },
+  {
+    "name": "contact-cli-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/validate_forming_contact_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B04-partition-order/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B04-partition-order/contact-cli-final"
+    ]
+  },
+  {
+    "name": "polyline-cli-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/validate_forming_contact_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B04-partition-order/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B04-partition-order/polyline-cli-final",
+      "--model-version",
+      "2"
+    ]
+  },
+  {
+    "name": "supported-cli-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/validate_supported_deposition_cli.py",
+      "--executable",
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--fixture-dir",
+      "build/nonplanar-evidence/B04-partition-order/material-cli-final/positive",
+      "--output-dir",
+      "build/nonplanar-evidence/B04-partition-order/supported-cli-final"
+    ]
+  },
+  {
+    "name": "native-supported-cli-final",
+    "argv": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-supported-deposition-only",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-supported-deposition.rate.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-supported-deposition.material.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-supported-deposition.query.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-supported-deposition.contact.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-supported-deposition.support.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-supported-deposition.candidate.txt"
+    ]
+  },
+  {
+    "name": "native-contact-cli-final",
+    "argv": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-forming-contact-geometry-only",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-forming-contact.rate.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-forming-contact.material.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-forming-contact.query.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-forming-contact.contact.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-forming-contact.candidate.txt"
+    ]
+  },
+  {
+    "name": "native-polyline-cli-final",
+    "argv": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-forming-contact-geometry-only",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-polyline-contact.rate.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-polyline-contact.material.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-polyline-contact.query.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-polyline-contact.contact.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-polyline-contact.candidate.txt"
+    ]
+  },
+  {
+    "name": "native-deposition-cli-final",
+    "argv": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-deposition-geometry-only",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-deposition.rate.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-deposition.material.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-deposition.query.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-deposition.candidate.txt"
+    ]
+  },
+  {
+    "name": "native-travel-cli-final",
+    "argv": [
+      "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+      "--linear-travel-geometry-only",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-travel.rate.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-travel.material.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-travel.query.json",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-final-travel.candidate.txt"
+    ]
+  },
+  {
+    "name": "job-context-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/job_context_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B04-partition-order/final-job-evidence/native-job.json"
+    ]
+  },
+  {
+    "name": "job-artifact-final",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/job_artifact_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B04-partition-order/final-job-evidence/bound-candidate.json"
+    ]
+  },
+  {
+    "name": "native-report-oracle",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B04-partition-order/final-candidate-evidence/native-job-report.json"
+    ]
+  },
+  {
+    "name": "candidate-report-oracle",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B04-partition-order/final-job-evidence/candidate-report.json"
+    ]
+  },
+  {
+    "name": "candidate-report-invalid-material-oracle",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B04-partition-order/final-job-evidence/candidate-report-invalid-material.json"
+    ]
+  },
+  {
+    "name": "candidate-report-failed-material-oracle",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B04-partition-order/final-job-evidence/candidate-report-failed-material.json"
+    ]
+  },
+  {
+    "name": "native-lineage-report-oracle",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B04-partition-order/final-job-evidence/native-lineage-report.json"
+    ]
+  },
+  {
+    "name": "native-departure-report-oracle",
+    "argv": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B04-partition-order/final-job-evidence/native-departure-report.json"
+    ]
+  },
+  {
+    "name": "compiler",
+    "argv": [
+      "clang++",
+      "--version"
+    ]
+  },
+  {
+    "name": "package-final",
+    "argv": [
+      "python3",
+      "docs/nonplanar/scripts/validate_package.py"
+    ]
+  },
+  {
+    "name": "source-audit-final",
+    "argv": [
+      "python3",
+      "docs/nonplanar/scripts/audit_orca_checkout.py",
+      "--repo",
+      "."
+    ]
+  },
+  {
+    "name": "strict-final",
+    "argv": [
+      "ninja",
+      "-C",
+      "build/arm64",
+      "-f",
+      "build-Release.ninja",
+      "-t",
+      "commands",
+      "src/nonplanar_verify/CMakeFiles/nonplanar_final_rates.dir/Release/LinearMaterial.cpp.o"
+    ]
+  },
+  {
+    "name": "workflow-qualified",
+    "argv": [
+      "ruby",
+      "-ryaml",
+      "-e",
+      "YAML.load_file(ARGV[0]); puts \"PASS_WORKFLOW_YAML\"",
+      ".github/workflows/nonplanar-native.yml"
+    ]
+  },
+  {
+    "name": "strict-partition",
+    "argv": [
+      "ninja",
+      "-C",
+      "build/arm64",
+      "-f",
+      "build-Release.ninja",
+      "-t",
+      "commands",
+      "src/libslic3r/CMakeFiles/libslic3r.dir/Release/Nonplanar/VolumePartitionExact.cpp.o"
+    ]
+  }
+]

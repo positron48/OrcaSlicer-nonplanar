@@ -1,0 +1,300 @@
+{
+  "cases": [
+    {
+      "case": "complete-two-packets",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/complete-two-packets/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/complete-two-packets/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/complete-two-packets/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/complete-two-packets/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "reverse",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/reverse/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/reverse/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/reverse/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/reverse/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "varying-gap",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/varying-gap/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/varying-gap/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/varying-gap/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/varying-gap/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "rotated",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/rotated/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/rotated/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/rotated/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/rotated/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "moving-envelope",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/moving-envelope/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/moving-envelope/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/moving-envelope/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/moving-envelope/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "current-annulus",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/current-annulus/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/current-annulus/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/current-annulus/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/current-annulus/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "current-head",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/current-head/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/current-head/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/current-head/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/current-head/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "late-packet",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/late-packet/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/late-packet/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/late-packet/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/late-packet/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "static-head",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/static-head/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/static-head/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/static-head/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/static-head/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "changed-e",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/changed-e/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/changed-e/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/changed-e/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/changed-e/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "partial-block",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/partial-block/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/partial-block/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/partial-block/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/partial-block/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "skip-first",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/skip-first/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/skip-first/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/skip-first/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/skip-first/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "mixed-block",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/mixed-block/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/mixed-block/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/mixed-block/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/mixed-block/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "wrong-role",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/wrong-role/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/wrong-role/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/wrong-role/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/wrong-role/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "forged-contact",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/forged-contact/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/forged-contact/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/forged-contact/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/forged-contact/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "contact-id",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/contact-id/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/contact-id/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/contact-id/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/contact-id/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "confirmation",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/confirmation/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/confirmation/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/confirmation/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/confirmation/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "moving-incomplete",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/moving-incomplete/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/moving-incomplete/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/moving-incomplete/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/moving-incomplete/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "duplicate-key",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/duplicate-key/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/duplicate-key/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/duplicate-key/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/duplicate-key/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "unknown-version",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/unknown-version/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/unknown-version/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/unknown-version/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/unknown-version/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "boolean-count",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-deposition-geometry-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/boolean-count/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/boolean-count/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/boolean-count/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B04-partition-order/deposition-cli-final/boolean-count/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    }
+  ],
+  "status": "PASS",
+  "scope": "RIGID_DEPOSITION_COMPONENT_ONLY_CONTACT_AND_JOB_EXPORT_BLOCKED"
+}

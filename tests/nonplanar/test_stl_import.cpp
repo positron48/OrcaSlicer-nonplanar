@@ -10,6 +10,7 @@
 #include <libslic3r/Nonplanar/MeshPlacement.hpp>
 #include <libslic3r/Nonplanar/InputSnapshot.hpp>
 #include <libslic3r/Nonplanar/VolumePartition.hpp>
+#include <libslic3r/Nonplanar/VolumePartitionExact.hpp>
 #include <libslic3r/Nonplanar/UpperProjection.hpp>
 #include <libslic3r/Model.hpp>
 #include <libslic3r/Triangulation.hpp>
@@ -560,6 +561,43 @@ void partition_rejected(const VolumePartitionResult &result)
     REQUIRE_FALSE(result.snapshot);
 }
 }
+TEST_CASE("B04 derived exact partition has stable native vertex and oriented face indices", "[Nonplanar][B04][VolumePartition][PartitionOrder]")
+{
+    auto original=make_cube(20,10,2);
+    for (auto &v : original.its.vertices) if (v.z()>0) v.z()=2.f+v.x()/16.f;
+    auto reservation=make_cube(8,4,4); reservation.translate(6,3,1);
+    const auto source_before=original.its, reservation_before=reservation.its;
+    const auto baseline=Slic3r::nptop::detail::exact_partition(original,reservation,{},[]{});
+    const auto ordered=[](const TriangleMesh &mesh) {
+        const auto &its=mesh.its;
+        const auto xyz=[](const Vec3f &p){ return std::array<float,3>{p.x(),p.y(),p.z()}; };
+        for(size_t i=1;i<its.vertices.size();++i) REQUIRE(xyz(its.vertices[i-1])<xyz(its.vertices[i]));
+        std::array<int,3> previous{-1,-1,-1};
+        for(const auto &f:its.indices){const std::array<int,3> triangle{f[0],f[1],f[2]};
+            REQUIRE(f[0]<f[1]);REQUIRE(f[0]<f[2]);REQUIRE(previous<triangle);previous=triangle;}
+    };
+    ordered(baseline.body);ordered(baseline.cap);
+    for(int attempt=0;attempt<6;++attempt){
+        auto changed=original, selection=reservation;
+        // Perturb descriptor identities while preserving every oriented source
+        // triangle and its sequence. Cyclic rotation never reverses a face.
+        for(auto *mesh:{&changed,&selection}){
+            const auto count=int(mesh->its.vertices.size());std::reverse(mesh->its.vertices.begin(),mesh->its.vertices.end());
+            for(auto &f:mesh->its.indices){for(int axis=0;axis<3;++axis)f[axis]=count-1-f[axis];
+                const auto before=f;
+                for(int axis=0;axis<3;++axis)f[axis]=before[(axis+attempt%3)%3];}
+        }
+        const auto result=Slic3r::nptop::detail::exact_partition(changed,selection,{},[]{});
+        ordered(result.body);ordered(result.cap);
+        REQUIRE(result.body.its.vertices==baseline.body.its.vertices);REQUIRE(result.body.its.indices==baseline.body.its.indices);
+        REQUIRE(result.cap.its.vertices==baseline.cap.its.vertices);REQUIRE(result.cap.its.indices==baseline.cap.its.indices);
+        REQUIRE(result.body_volume.lower==baseline.body_volume.lower);REQUIRE(result.cap_volume.upper==baseline.cap_volume.upper);
+        REQUIRE(result.coordinate_error_upper_mm==baseline.coordinate_error_upper_mm);REQUIRE(result.shared_interface_triangles==baseline.shared_interface_triangles);
+    }
+    REQUIRE(original.its.vertices==source_before.vertices);REQUIRE(original.its.indices==source_before.indices);
+    REQUIRE(reservation.its.vertices==reservation_before.vertices);REQUIRE(reservation.its.indices==reservation_before.indices);
+}
+
 TEST_CASE("B04 exact interior cap reservation preserves native source walls and affine volume", "[Nonplanar][B04][VolumePartition]")
 {
     auto mesh=make_cube(20,10,2);
