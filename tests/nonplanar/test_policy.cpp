@@ -2128,7 +2128,7 @@ TEST_CASE("B07 native first hatches reconstruct actual laid roof gaps and consum
     limits.is_current=[](uint64_t){return false;};REQUIRE_FALSE(plan_first_hatch_bead({"",native.snapshot->hatches},0,limits).snapshot);
 }
 
-TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan][NativeFirstCapWidthReplan][NativeFirstCapMaterial][NativeNextCapBead][NativeNextCapMaterial][NativeMaterialMotion]")
+TEST_CASE("B07 native first footprint derives bounded amounts inside an actual flat bead core", "[Nonplanar][B07][NativeFirstHatchFootprint][NativeRemainderHatch][NativeFirstHatchLayer][NativeFirstHatchEndReplan][NativeFirstHatchWidthReplan][NativeFirstContour][NativeFirstCap][NativeFirstCapJoin][NativeMaterialRun][NativeCapInterface][NativeMaterialVoid][NativeFirstCapEndReplan][NativeFirstCapWidthReplan][NativeFirstCapCornerReplan][NativeFirstCapMaterial][NativeNextCapBead][NativeNextCapMaterial][NativeMaterialMotion]")
 {
     auto config=planar_body_config();
     config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -2553,7 +2553,44 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         " void cells=" << narrow_voids.cells << " void work=" << narrow_voids.evaluations <<
         " joins cells=" << narrow_joins.cells << " work=" << narrow_joins.evaluations <<
         " interface cells=" << narrow_interface.cells << " work=" << narrow_interface.evaluations);
+    // Prospective corner construction retains the independently exercised old
+    // candidate. Its explicit overlap ceiling is a simulation policy only.
+    const FirstCapCornerReplanPolicy corner_policy{Volume(.001),Volume(.001),Volume(.05)};
+    const auto corners=replan_first_cap_corners(narrow_result,corner_policy,layer_limits);
+    INFO(corners.reason);REQUIRE(corners.snapshot);const auto &corner=*corners.snapshot->after;
+    REQUIRE(corner.source==narrow.source);REQUIRE(corner.fill->target==narrow.fill->target);
+    REQUIRE(corner.contour_extent==FirstCapContourExtent::FiniteBandExtensions);
+    REQUIRE(corner.hatch_extent==narrow.hatch_extent);REQUIRE(corner.paths.size()==narrow.paths.size());
+    REQUIRE(corners.snapshot->covered_gain_mm3.lower>=.001);REQUIRE(corners.snapshot->missing_reduction_mm3.lower>=.001);
+    REQUIRE(corners.snapshot->repeated_increase_mm3.upper<=.05);REQUIRE(corner.complete_fill->outside_target_mm3.upper<=.001);
+    REQUIRE(corner.fill->missing_target_mm3.lower>0);
+    LayerAmount corner_amount=0;size_t corner_packets=0;
+    for(size_t i=0;i<corner.paths.size();++i){
+        const auto &a=*corner.paths[i],&b=*narrow.paths[i];
+        const bool selected=i<4 && (a.path_start.y()==a.path_end.y())==(direction==HatchDirection::AlongX);
+        if(!selected)REQUIRE(corner.paths[i]==narrow.paths[i]);
+        else {
+            REQUIRE(a.pieces.size()>b.pieces.size());
+            auto old=std::find_if(a.pieces.begin(),a.pieces.end(),[&](const auto &p){return p.start.x()==b.pieces.front().start.x() &&
+                p.start.y()==b.pieces.front().start.y() && p.start.z()==b.pieces.front().start.z();});
+            REQUIRE(old!=a.pieces.begin());REQUIRE(old!=a.pieces.end());
+            for(const auto &p:b.pieces){REQUIRE(old!=a.pieces.end());REQUIRE(std::make_tuple(old->start.x(),old->start.y(),old->start.z(),old->end.x(),old->end.y(),old->end.z(),old->volume.value())==
+                std::make_tuple(p.start.x(),p.start.y(),p.start.z(),p.end.x(),p.end.y(),p.end.z(),p.volume.value()));++old;}
+            REQUIRE(old!=a.pieces.end());
+        }
+        for(const auto &p:a.pieces){corner_amount+=p.volume.value();++corner_packets;}
+    }
+    contains(corner.complete_fill->individual_volume_mm3,corner_amount);
+    contains(corners.snapshot->commanded_increase_mm3,corner_amount-narrow_amount);
     FirstCapMaterialLimits assembly_limits;assembly_limits.timeout=std::chrono::seconds(5);
+    const auto corner_material=reconstruct_first_cap_material({"",corners.snapshot->after},{},0,assembly_limits);
+    INFO(corner_material.reason);REQUIRE(corner_material.snapshot);REQUIRE(corner_material.snapshot->source==corners.snapshot->after);
+    REQUIRE(corner_material.snapshot->body==narrow.source->source->source);
+    for(size_t i=0;i<corner_material.snapshot->body_records;++i)
+        REQUIRE(corner_material.snapshot->material->sequence->canonical_record(i)==material.snapshot->material->canonical_record(i));
+    std::cout<<std::setprecision(17)<<"native corner packets="<<corner_packets<<" gain=["<<corners.snapshot->covered_gain_mm3.lower<<','<<corners.snapshot->covered_gain_mm3.upper
+        <<"] repeated increase=["<<corners.snapshot->repeated_increase_mm3.lower<<','<<corners.snapshot->repeated_increase_mm3.upper
+        <<"] missing=["<<corner.fill->missing_target_mm3.lower<<','<<corner.fill->missing_target_mm3.upper<<"] cells="<<corners.snapshot->cells<<" work="<<corners.snapshot->evaluations<<'\n';
     const auto assembled=reconstruct_first_cap_material(narrow_result,{},0,assembly_limits);
     INFO(assembled.reason << " work=" << assembled.evaluations);REQUIRE(assembled.snapshot);
     REQUIRE(assembled.snapshot->body==narrow.source->source->source);
@@ -2813,6 +2850,30 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
             {"missing_mm3",range(cap.fill->missing_target_mm3)},{"local_outside_mm3",range(cap.fill->outside_target_mm3)},
             {"outside_domain_mm3",range(complete.outside_domain_mm3)},{"outside_target_mm3",range(complete.outside_target_mm3)},
             {"exterior_parts",complete.exterior.size()},{"cells",complete.cells},{"work",complete.evaluations}};
+        const auto corner_view=[&](const FirstCapSnapshot &owner){
+            nlohmann::json paths=nlohmann::json::array();
+            for(const auto &path:owner.paths){nlohmann::json packets=nlohmann::json::array();
+                for(const auto &p:path->pieces)packets.push_back({{"start",{p.start.x(),p.start.y(),p.start.z()}},{"end",{p.end.x(),p.end.y(),p.end.z()}},
+                    {"volume",p.volume.value()},{"nominal_width",p.nominal_width.value()},{"width",range(p.section.width_mm)},
+                    {"gap",{p.section.gap_begin_mm,p.section.gap_end_mm}},{"kind",int(p.section.kind)}});
+                paths.push_back(packets);
+            }
+            return nlohmann::json{{"paths",paths},{"individual",range(owner.complete_fill->individual_volume_mm3)},
+                {"union",range(owner.complete_fill->union_volume_mm3)},{"repeated",range(owner.complete_fill->repeated_volume_mm3)},
+                {"target",range(owner.fill->target_volume_mm3)},{"covered",range(owner.fill->covered_target_mm3)},
+                {"missing",range(owner.fill->missing_target_mm3)},{"spill",range(owner.complete_fill->outside_target_mm3)}};
+        };
+        const nlohmann::json corner_document={{"schema",first_cap_corner_replan_contract_version},{"first_cap_contract",first_cap_contract_version},
+            {"scope","PROSPECTIVE_CORNER_MATERIAL_ONLY_NOT_CLOSED_SEAM_OR_COMPLETE_CAP"},{"export","BLOCK"},
+            {"axis",direction==HatchDirection::AlongX ? 0 : 1},{"band",narrow.source->policy.boundary_band.value()},
+            {"numeric",narrow.source->numerical_error_upper_mm},{"roi",{wide.min_x,wide.min_y,wide.max_x,wide.max_y}},
+            {"policy",{corner_policy.minimum_covered_gain.value(),corner_policy.maximum_outside_target.value(),corner_policy.maximum_repeated_increase.value()}},
+            {"before",corner_view(narrow)},{"after",corner_view(corner)},{"gain",range(corners.snapshot->covered_gain_mm3)},
+            {"missing_reduction",range(corners.snapshot->missing_reduction_mm3)},{"commanded_increase",range(corners.snapshot->commanded_increase_mm3)},
+            {"repeated_increase",range(corners.snapshot->repeated_increase_mm3)},{"cells",corners.snapshot->cells},{"work",corners.snapshot->evaluations}};
+        const auto corner_path=dir/"native-corner-replan.json";REQUIRE_FALSE(boost::filesystem::exists(corner_path));
+        boost::nowide::ofstream corner_file(corner_path.string());REQUIRE(corner_file.good());
+        corner_file<<corner_document.dump(2)<<'\n';corner_file.close();REQUIRE(corner_file.good());
         const auto complete_path=dir/"native-complete-fill.json";REQUIRE_FALSE(boost::filesystem::exists(complete_path));
         boost::nowide::ofstream complete_file(complete_path.string());REQUIRE(complete_file.good());
         complete_file<<complete_document.dump(2)<<'\n';complete_file.close();REQUIRE(complete_file.good());

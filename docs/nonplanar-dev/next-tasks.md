@@ -7,6 +7,22 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B07-first-cap-corner-replan.md` and ADR-0100 add four finite end strips to
+two opposite contour owners, retaining all original packets/doses and measuring
+whole nominal coverage/spill/multiplicity against explicit overlap policy.
+First-cap contract5 marks finite extensions; old end/width consumers refuse it.
+Two cases/581 assertions, CTest493/493, twenty independent checks, thirteen
+real CLI cases and six strict OFF/ZAA pairs pass. Native173 becomes197 packets;
+covered gain [.02035370,.02139794], R increase [.03821413,.03894089] mm3 meets
+explicit .05 simulation ceiling; actual M [.07460091,.07522218] remains positive.
+Fifty of52 parent candidates stay exact; one software report and one private
+version change, corner witness additive, default2098 SHA unchanged. Fixed17
+remains4 PASS/RUN +13 UNKNOWN/NOT_RUN, export BLOCK, full B01-B15 active.
+Next bind captured replacement/controller/final-byte lineage and qualify seam
+connectors/remaining fill/full later layers. Head/contact/routes/order/whole-job/
+source/software/physical/publication remain open; new Linux/Windows/GUI/physical
+and independent review pending.
+
 `B07-complete-fill.md` and ADR-0099 retain the original protected local fill
 and bound complete active nominal material outside its XY/Z box with disjoint
 union certificates. First-cap contract4 owns that proof; original spill policies

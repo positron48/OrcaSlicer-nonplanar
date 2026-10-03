@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="1" skipped="0" tests="513" hostname="tbd" time="19.920" timestamp="2026-10-03T15:08:40Z">
+    <properties>
+      <property name="random-seed" value="171153712"/>
+      <property name="filters" value="[FirstCapCornerReplan]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 corner repair retains old packets and measures bounded new finite ends" time="0.000" status="run">
+      <failure message="result.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( result.snapshot )
+with expansion:
+  0
+direction=1 sloped=1
+BOUNDED_WHOLE_FIRST_CAP_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY
+MATERIAL_UNION_WORK_LIMIT end=1 width=0.000111 paths=11 packets=101 cells=49396 work=1999270
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_deposition_model.cpp:3189
+      </failure>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 corner repair owns policy and rejects unbounded overlap work stale and late publication" time="0.312" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

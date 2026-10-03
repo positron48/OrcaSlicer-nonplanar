@@ -104,6 +104,7 @@ jobs:
           done
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/native-report-oracle.log -- python3 scripts/nonplanar/job_report_oracle.py --input build/nonplanar-evidence/linux/candidate-fixtures/native-job-report.json
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/complete-fill-oracle.log -- python3 scripts/nonplanar/complete_fill_oracle.py --input build/nonplanar-evidence/linux/candidate-fixtures/native-complete-fill.json
+          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/corner-replan-oracle.log -- python3 scripts/nonplanar/corner_replan_oracle.py --input build/nonplanar-evidence/linux/candidate-fixtures/native-corner-replan.json
           for name in native-lineage-report native-departure-report; do
             python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/$name-inputs-oracle.log -- python3 scripts/nonplanar/native_job_inputs_oracle.py --input build/nonplanar-evidence/linux/job-fixtures/$name.json
           done

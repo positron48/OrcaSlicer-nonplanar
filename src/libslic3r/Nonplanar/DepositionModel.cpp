@@ -2040,7 +2040,10 @@ UnionAmountsResult union_integral(const std::shared_ptr<const MaterialPrefixSnap
                             for (size_t i : group->second) {
                                 evaluate();const auto p=packet(i);
                                 if (p.lo>=begin && p.hi<=last) lists.back().push_back(i);
-                                else if ((p.hi<=begin || p.lo>=last) && group!=main.front() && group!=main.back()) extended=true;
+                                // Any whole packet outside the two centre cuts
+                                // belongs only to an exterior child, including
+                                // an extended outer contour. No dose is omitted.
+                                else if (p.hi<=begin || p.lo>=last) extended=true;
                                 else {loop=false;break;}
                             }
                             if (!loop || lists.back().empty() || lists.back().size()!=lists.front().size()) {loop=false;break;}
@@ -3331,7 +3334,7 @@ struct FirstCandidateMeasurement {
 };
 FirstCandidateMeasurement measure_first_candidate(const std::shared_ptr<const AffineHatchSnapshot> &hatches,
     const std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> &paths,const SceneBox &box,const FirstHatchLayerLimits &limits,
-    std::chrono::steady_clock::time_point started,size_t &work)
+    std::chrono::steady_clock::time_point started,size_t &work,bool half_union_budget=false)
 {
     const auto stack=hatches->source;const auto cursor=stack->source;const auto sequence=cursor->sequence;
     const auto poll=[&] {
@@ -3391,7 +3394,10 @@ FirstCandidateMeasurement measure_first_candidate(const std::shared_ptr<const Af
     const auto prefix=material_at(ledger.snapshot,rows.size(),0,capture);if (!prefix.nominal.snapshot) throw Rejection(prefix.reason);
     auto volume=limits.volumes;volume.max_cells=std::min(volume.max_cells,limits.max_cells);
     volume.max_evaluations=std::min(volume.max_evaluations,limits.max_evaluations-work);volume.timeout-=elapsed();
-    volume.maximum_interval_width=Volume(limits.volumes.maximum_interval_width.value()/4);
+    // Allocate within the same final precision. Reconciliation independently
+    // computes its remaining width and checks every final interval; the corner
+    // construction does not change precision, work or deadline limits.
+    volume.maximum_interval_width=Volume(limits.volumes.maximum_interval_width.value()/(half_union_budget ? 2 : 4));
     volume.cancelled=[&] {poll();return false;};volume.is_current={};
     const auto occupied=integrate_material_union(prefix.nominal,box,volume);
     if (!occupied.snapshot) throw Rejection(occupied.reason+" paths="+std::to_string(paths.size())+" packets="+std::to_string(packets)+
@@ -3629,7 +3635,7 @@ FirstHatchWidthReplanResult replan_first_hatch_width(const FirstHatchLayerResult
 std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> FirstHatchBeadSnapshot::construct_first_paths(
     const std::shared_ptr<const AffineHatchSnapshot> &source,const FirstContourPolicy &policy,const FirstHatchLayerLimits &limits,
     bool with_infill,std::chrono::steady_clock::time_point started,size_t &work,std::vector<size_t> &replaced,
-    FirstCapHatchExtent extent,const std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> *retained)
+    FirstCapHatchExtent extent,const std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> *retained,bool extend_contours)
 {
     const auto stack=source->source;const auto sequence=stack->source->sequence;
     const auto &surface=stack->surfaces.front().cell;const auto &roi=surface.footprint;
@@ -3644,7 +3650,8 @@ std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> FirstHatchBeadSnapsho
     RectangleXY centres{(Interval(roi.min_x)+inset).hi,(Interval(roi.min_y)+inset).hi,
         (Interval(roi.max_x)-inset).lo,(Interval(roi.max_y)-inset).lo};
     if (retained) {
-        if (!with_infill || extent!=FirstCapHatchExtent::BoundaryBand || retained->size()<5 || !retained->front()) reject("FIRST_CAP_REPLAN_CONTOUR_SOURCE");
+        if (!with_infill || (!extend_contours && extent!=FirstCapHatchExtent::BoundaryBand) || retained->size()<5 || !retained->front())
+            reject("FIRST_CAP_REPLAN_CONTOUR_SOURCE");
         const auto first=retained->front()->path_start;centres={first.x(),first.y(),first.x(),first.y()};
         for (size_t i=0;i<4;++i) {
             charge(1);const auto &p=retained->at(i);
@@ -3671,6 +3678,26 @@ std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> FirstHatchBeadSnapsho
         // Geometry only: a contour edge has no infill strip owner/quota.
         geometry.push_back({std::nullopt,{start.first,end.first,end.first,start.first,policy.width,roi,{0,0},
             bounds(detail::root(length_squared(start.first,end.first))),error},error});
+    }
+    if (extend_contours) {
+        if (!retained) reject("FIRST_CAP_CORNER_MISSING_RETAINED_PATHS");
+        const auto band=Interval(source->policy.boundary_band.value())+Interval(source->numerical_error_upper_mm);
+        for (auto &g:geometry) {
+            charge(1);const auto &a=g.line.start,&b=g.line.end;const bool x=a.y()==b.y();
+            const bool forward=x ? a.x()<b.x() : a.y()<b.y();
+            const double lo=(Interval(x ? roi.min_x : roi.min_y)+band).hi,hi=(Interval(x ? roi.max_x : roi.max_y)-band).lo;
+            if (x!=(source->passes.front().direction==HatchDirection::AlongX)) continue;
+            const auto first=point(x ? (forward ? lo : hi) : a.x(),x ? a.y() : (forward ? lo : hi));
+            const auto last=point(x ? (forward ? hi : lo) : b.x(),x ? b.y() : (forward ? hi : lo));
+            if (lo>=hi || lo>=std::min(x ? a.x() : a.y(),x ? b.x() : b.y()) ||
+                hi<=std::max(x ? a.x() : a.y(),x ? b.x() : b.y())) reject("FIRST_CAP_CORNER_NO_EXTENSION_DOMAIN");
+            g.line.start=first.first;g.line.end=last.first;g.line.reverse_start=last.first;g.line.reverse_end=first.first;
+            g.line.projected_length_mm=bounds(exact_interval(Exact(hi)-Exact(lo)));
+            // Fragments also touch the old corner endpoints; retain their
+            // affine conversion error beside the two new outer endpoints.
+            g.error=(Interval(g.error)+Interval(first.second)+Interval(last.second)).hi;
+            g.line.coordinate_error_upper_mm=g.error;
+        }
     }
     if (with_infill) {
         const bool x=source->passes.front().direction==HatchDirection::AlongX;
@@ -3716,7 +3743,10 @@ std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> FirstHatchBeadSnapsho
             if (p->pieces.size()>limits.beads.packets.max_segments-packets || p->roof_segments>limits.beads.max_roof_segments-roofs)
                 reject("FIRST_CAP_REPLAN_RETAINED_PROOF_LIMIT");
             roofs+=p->roof_segments;packets+=p->pieces.size();
-            if (i<4) {paths.push_back(p);continue;}
+            const bool extended_axis=g.line.start.y()==g.line.end.y();
+            if (extend_contours ? i>=4 || extended_axis!=(source->passes.front().direction==HatchDirection::AlongX) : i<4) {
+                paths.push_back(p);continue;
+            }
         }
         const auto solve=[&](const AffineHatchLine &line) {
             charge(2*sequence->records.size()); // Source hash and active-prefix walks in each first-bead solver.
@@ -3817,6 +3847,58 @@ FirstCapResult plan_first_cap(const AffineHatchResult &requested,const FirstCont
     catch (const std::exception &e) {return {"FIRST_CAP_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
 }
 
+FirstCapCornerReplanResult replan_first_cap_corners(const FirstCapResult &requested,const FirstCapCornerReplanPolicy &requested_policy,
+    const FirstHatchLayerLimits &requested_limits)
+{
+    const auto before=requested.snapshot;const auto policy=requested_policy;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();
+    try {
+        detail::require_interval_environment();
+        if (!before || !before->source || !before->source->source || !before->fill || !before->complete_fill ||
+            !valid_first_hatch_layer_limits(limits) || policy.minimum_covered_gain.value()<=0 ||
+            policy.maximum_outside_target.value()<0 || policy.maximum_repeated_increase.value()<0)
+            reject("INVALID_FIRST_CAP_CORNER_REPLAN");
+        if (before->contour_extent!=FirstCapContourExtent::ClosedLoopCentres) reject("FIRST_CAP_CORNERS_ALREADY_REPLANNED");
+        const auto source=before->source;const auto sequence=source->source->source->sequence;
+        const auto poll=[&] {
+            stop(limits,sequence->revision,started);stop(limits.beads,sequence->revision,started);
+            stop(limits.beads.packets,sequence->revision,started);stop(limits.volumes,sequence->revision,started);
+        };poll();size_t work=0;std::vector<size_t> replaced;
+        auto paths=FirstHatchBeadSnapshot::construct_first_paths(source,before->policy,limits,true,started,work,replaced,
+            before->hatch_extent,&before->paths,true);
+        if (paths.size()!=before->paths.size() || replaced!=before->replaced_boundary_lines) reject("FIRST_CAP_CORNER_OWNER_MISMATCH");
+        const auto &roi=source->source->surfaces.front().cell.footprint;
+        const Exact band=Exact(source->policy.boundary_band.value())+Exact(source->numerical_error_upper_mm);
+        for (const auto &path:paths) for (const auto &p:path->pieces) {
+            if (work>=limits.max_evaluations) reject("FIRST_CAP_CORNER_WORK_LIMIT");++work;poll();
+            const bool x=p.start.y()==p.end.y();const Exact half=Exact(p.section.width_mm.upper)/Exact(2);
+            if (Exact(std::min(p.start.x(),p.end.x()))-(x ? Exact(0) : half)<Exact(roi.min_x)+band ||
+                Exact(std::max(p.start.x(),p.end.x()))+(x ? Exact(0) : half)>Exact(roi.max_x)-band ||
+                Exact(std::min(p.start.y(),p.end.y()))-(x ? half : Exact(0))<Exact(roi.min_y)+band ||
+                Exact(std::max(p.start.y(),p.end.y()))+(x ? half : Exact(0))>Exact(roi.max_y)-band)
+                reject("FIRST_CAP_CORNER_FINITE_WIDTH_BOUNDARY_BAND");
+        }
+        const auto measured=measure_first_candidate(source,paths,before->fill->occupied->domain,limits,started,work,true);
+        const auto gain=interval(measured.fill->covered_target_mm3)-interval(before->fill->covered_target_mm3);
+        const auto missing=interval(before->fill->missing_target_mm3)-interval(measured.fill->missing_target_mm3);
+        const auto amount=interval(measured.complete->individual_volume_mm3)-interval(before->complete_fill->individual_volume_mm3);
+        auto repeated=interval(measured.complete->repeated_volume_mm3)-interval(before->complete_fill->repeated_volume_mm3);
+        if (amount.hi<=0 || repeated.hi<0) reject("FIRST_CAP_CORNER_INCONSISTENT_MATERIAL");
+        repeated=detail::maximum(Interval(0),repeated);
+        if (gain.lo<policy.minimum_covered_gain.value() || missing.lo<policy.minimum_covered_gain.value()) reject("FIRST_CAP_CORNER_INSUFFICIENT_GAIN");
+        if (repeated.hi>policy.maximum_repeated_increase.value()) reject("FIRST_CAP_CORNER_REPEATED_INCREASE_LIMIT");
+        if (measured.complete->outside_target_mm3.upper>std::min(policy.maximum_outside_target.value(),before->policy.maximum_outside_target.value()))
+            reject("FIRST_CAP_CORNER_OUTSIDE_TARGET_LIMIT");
+        poll();auto after=std::shared_ptr<const FirstCapSnapshot>(new FirstCapSnapshot(source,before->policy,std::move(paths),std::move(replaced),
+            measured.fill,measured.complete,measured.target,measured.delivered,measured.error,measured.numeric,measured.roofs,measured.cells,work,
+            before->hatch_extent,FirstCapContourExtent::FiniteBandExtensions));
+        poll();auto snapshot=std::shared_ptr<const FirstCapCornerReplanSnapshot>(new FirstCapCornerReplanSnapshot(before,after,policy,
+            bounds(gain),bounds(missing),bounds(amount),bounds(repeated),measured.cells,work));poll();
+        return {"BOUNDED_PROSPECTIVE_CORNER_END_MATERIAL_FILL_GAIN_AND_OVERLAP_ONLY",std::move(snapshot)};
+    } catch (const Rejection &e) {return {e.what(),{}};}
+    catch (const std::exception &e) {return {"FIRST_CAP_CORNER_REPLAN_NUMERIC_FAILURE: "+std::string(e.what()),{}};}
+}
+
 FirstCapReplanResult replan_first_cap_ends(const FirstCapResult &requested,const FirstCapReplanPolicy &requested_policy,
     const FirstHatchLayerLimits &requested_limits)
 {
@@ -3826,6 +3908,7 @@ FirstCapReplanResult replan_first_cap_ends(const FirstCapResult &requested,const
         detail::require_interval_environment();
         if (!before || !before->source || !before->source->source || !before->fill || !valid_first_hatch_layer_limits(limits) ||
             policy.minimum_covered_gain.value()<=0 || policy.maximum_outside_target.value()<0) reject("INVALID_FIRST_CAP_REPLAN_INPUT");
+        if (before->contour_extent!=FirstCapContourExtent::ClosedLoopCentres) reject("FIRST_CAP_CORNER_EXTENT_UNSUPPORTED_BY_END_REPLAN");
         if (before->hatch_extent!=FirstCapHatchExtent::ContourCentres) reject("FIRST_CAP_EXTENT_ALREADY_REPLANNED");
         const auto source=before->source;const auto sequence=source->source->source->sequence;
         const auto poll=[&] {
@@ -3880,6 +3963,7 @@ FirstCapWidthReplanResult replan_first_cap_width(const FirstCapResult &requested
         if (!before || !before->source || !before->source->source || !before->fill || before->paths.size()<5 ||
             !valid_first_hatch_layer_limits(limits) || width.value()<=0 || policy.minimum_repeated_reduction.value()<=0 ||
             policy.maximum_covered_loss.value()<0 || policy.maximum_outside_target.value()<0) reject("INVALID_FIRST_CAP_WIDTH_REPLAN");
+        if (before->contour_extent!=FirstCapContourExtent::ClosedLoopCentres) reject("FIRST_CAP_CORNER_EXTENT_UNSUPPORTED_BY_WIDTH_REPLAN");
         const auto source=before->source;const auto sequence=source->source->source->sequence;
         const auto poll=[&] {
             stop(limits,sequence->revision,started);stop(limits.beads,sequence->revision,started);
