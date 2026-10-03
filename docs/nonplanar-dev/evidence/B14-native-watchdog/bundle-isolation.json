@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "manifest": {
+    "source": "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app",
+    "destination": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-dev/b14-native-watchdog-delivery/NonplanarTopLab.app",
+    "bundle_identifier": "local.nonplanartoplab.experimental.b14-native-watchdog-delivery",
+    "binary_sha256": "a180efd4b41b30bf3663f51e9d61f9752f3d470d5e2e7b267122e9ce3855c62b",
+    "worker_sha256": "06f210d3c5271bcdf583f8cd99553ae4b9a25364c32927dc70d7e2bc93f37463",
+    "native_analysis_ui": true,
+    "runtime": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-dev/b14-native-watchdog-delivery/runtime",
+    "policy": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-dev/b14-native-watchdog-delivery/runtime/offline.sb",
+    "network": "DENY",
+    "write_scope": "RUNTIME_AND_DEV_NULL_ONLY",
+    "document_handlers": false,
+    "url_handlers": false,
+    "gui_validation": "NOT_RUN"
+  },
+  "sandbox": {
+    "inside_write": true,
+    "outside_write_denied": true,
+    "network_denied": true
+  },
+  "probe_command": [
+    "/usr/bin/sandbox-exec",
+    "-f",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-dev/b14-native-watchdog-delivery/runtime/offline.sb",
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-I",
+    "-B",
+    "-c",
+    "\nimport errno,json,socket,sys\nfrom pathlib import Path\nruntime,outside=map(Path,sys.argv[1:])\ninside=runtime/'allowed-sandbox-probe.txt'\ninside.write_text('isolated runtime write')\ndenied_write=False\ntry:\n    with outside.open('x') as f: f.write('unexpected permission')\nexcept OSError as exc:\n    denied_write=exc.errno in (errno.EPERM,errno.EACCES)\ndenied_network=False\ntry:\n    with socket.socket(socket.AF_INET,socket.SOCK_STREAM) as sock:\n        sock.settimeout(1)\n        sock.connect(('127.0.0.1',9))\nexcept OSError as exc:\n    denied_network=exc.errno in (errno.EPERM,errno.EACCES)\nprint(json.dumps({'inside_write':inside.read_text()=='isolated runtime write',\n                  'outside_write_denied':denied_write,'network_denied':denied_network}))\nraise SystemExit(0 if denied_write and denied_network else 2)\n",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-dev/b14-native-watchdog-delivery/runtime",
+    "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-dev/b14-native-watchdog-delivery/forbidden-sandbox-probe.txt"
+  ],
+  "probe_exit_code": 0,
+  "probe_stderr": "",
+  "datadir_override_exit_code": 1,
+  "datadir_override_stderr": "The experimental launcher owns its isolated data directory\n",
+  "gui": "NOT_RUN"
+}

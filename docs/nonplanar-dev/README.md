@@ -15,6 +15,21 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-03
 
+`B14-native-watchdog.md` and ADR-0094 remove the callback-dependent gap in
+native child supervision. A dedicated monitor terminates the same process on
+root deadline, sampled RSS, report/progress byte bounds or stale atomic task,
+even while a host progress callback blocks. Actual PID observations include
+five refusals plus a healthy callback; production worker/adoption positives pass.
+Focus 13/9320, CTest 471/471, fifteen independent oracles, ten actual CLI cases
+and six strict OFF/ZAA pairs pass. Fifty of 51 parent candidate files stay exact;
+only the software-bound report changes. Fresh isolated bundle probes pass.
+Fixed17 remains 4 PASS/RUN +13 UNKNOWN/NOT_RUN, export BLOCK; full B01-B15 active.
+Host callback/capture/Print.apply/parsing preemption, hard RSS, descendant/crash
+containment and full platform/source/import/3MF/cap/contact/order/publication
+remain pending. Native GUI runtime was not rerun for this change; previous
+minimal synthetic GUI evidence remains separately qualified. Linux new-head CI,
+Windows/physical tests and independent review remain pending.
+
 `B14-native-gui.md` and ADR-0093 add the native Plater analysis dialog using
 its existing worker queue, exact immutable inputs and serialized display-only
 adoption. Final isolated GUI runs the real child, shows 2098 original movements

@@ -4,6 +4,21 @@ Active objective: implement the entire B01–B15 scope. A bounded primitive or a
 green unit suite is evidence for its own contract, not completion of a B task.
 The normative backlog, SPEC and acceptance matrix remain unchanged.
 
+`B14-native-watchdog.md` and ADR-0094 remove the callback-dependent gap in
+native child supervision. A dedicated monitor terminates the same process on
+root deadline, sampled RSS, report/progress byte bounds or stale atomic task,
+even while a host progress callback blocks. Actual PID observations include
+five refusals plus a healthy callback; production worker/adoption positives pass.
+Focus 13/9320, CTest 471/471, fifteen independent oracles, ten actual CLI cases
+and six strict OFF/ZAA pairs pass. Fifty of 51 parent candidate files stay exact;
+only the software-bound report changes. Fresh isolated bundle probes pass.
+Fixed17 remains 4 PASS/RUN +13 UNKNOWN/NOT_RUN, export BLOCK; full B01-B15 active.
+Host callback/capture/Print.apply/parsing preemption, hard RSS, descendant/crash
+containment and full platform/source/import/3MF/cap/contact/order/publication
+remain pending. Native GUI runtime was not rerun for this change; previous
+minimal synthetic GUI evidence remains separately qualified. Linux new-head CI,
+Windows/physical tests and independent review remain pending.
+
 `B14-native-gui.md` and ADR-0093 add the native Plater analysis dialog using
 its existing worker queue, exact immutable inputs and serialized display-only
 adoption. Final isolated GUI runs the real child, shows 2098 original movements
@@ -163,7 +178,7 @@ Standard U1 head/.4 nozzle known; firmware/material brand do not gate software.
 | B11 | Конечный candidate; no double Z/E, no hidden wipe/reset | Protected complete native bytes/hash/policy/event map with explicit XYZ/E/pressure/dwell/full stops; final native 2218 rows | Audited final filters, complete prolog/end motions, native job binding and final geometry/rate/time verification. |
 | B12 | Parser/replay последнего текста, material/limits checks, independent oracles | Independent exact final-byte rates/dose/sections/actual prefixes, whole-region solids/union partitions, synthetic common-run Lower and exact Nominal packet-cut union with analytical/native complete-run gap/Lower anchor proofs; native full support PASS at original budgets, interior PASS/per-event/front refusals retained; independent whole final-decimal Travel block annulus/head/static/actual-prefix Upper geometry and complete partitions (ADR-0082), native three-leg departure PASS at original budgets; maximal whole final-decimal Deposit block rigid head/static/earlier and simultaneous current Upper with complete independent partitions (ADR-0083), native four-packet block PASS at original budgets; explicit polyline version2 per-packet age, signed turns and old-prefix exclusion (ADR-0085); native full contour old-neighbor FAIL independently confirmed; complete maximal supported-deposition composition with explicit pre-block gap/Lower-anchor scope (ADR-0086) | General curved/zigzag/stepped coverage/contact/gaps, union volume and delivered-dose qualification, transforms, complete route/job integrity. |
 | B13 | Нет обхода file/CLI; cancellation/stale, network off, snapshot/hash binding | Owned executed source/placement/partition/native body/material/hatch/selected cap/linear-candidate lineage (optional manifest v2) plus exact protected departure/material/origin-map edge (native plan v2, optional manifest v3; ADR-0081), native/plate/resource attempts; protected actual final-byte rate/material report with fixed 17 mandatory IDs; 13 missing domains stay UNKNOWN/NOT_RUN and block export; native2218-record path and stale/foreign admission exercised | Qualify source-to-plan/resource/software/GUI provenance and all complete mandatory domains; Verified and atomic publication/recovery/copied-byte gate for every route. Actual derived body/cap ordering is now stable for identical triangulations (ADR-0087); universal topology/cross-platform and full provenance remain unqualified. Working phases/component PASS are not certificates. |
-| B14 | Управляемый сквозной путь в Orca, diagnostics и replay по движению | Native diagnostic STL CLI only | Native UI/CLI integrated full pipeline, explained failures, treatment area and final replay preview. |
+| B14 | Управляемый сквозной путь в Orca, diagnostics и replay по движению | Native main CLI and Plater analysis/replay, actual isolated child, callback-independent supervision; fixed17 export BLOCK | Complete native UI/CLI pipeline, import/source/3MF provenance, domain editing/visualization, explained failures, treatment area and final replay preview. |
 | B15 | Измеренный профиль и validated файл; клин/пологий купол; протокол, не автозапуск | Operator record is UNCONFIRMED; physical tests NOT_RUN | Measured installed U1 profile, bed/firmware/material prerequisites, planar reference and observed wedge/dome runs. Operator evidence is mandatory. |
 
 ## Acceptance evidence

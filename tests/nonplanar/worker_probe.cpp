@@ -5,13 +5,43 @@
 #include <cstring>
 #include <thread>
 #include <string>
+#include <memory>
 #ifdef _WIN32
 #include <windows.h>
 #else
 #include <csignal>
+#include <unistd.h>
 #endif
 int main(int argc,char **argv)
 {
+    if (std::strstr(argv[0],"watchdog-")) {
+        const auto path=std::string(argv[0])+".pid";
+        FILE *pid=std::fopen(path.c_str(),"wb");
+        if (!pid) return 74;
+#ifdef _WIN32
+        std::fprintf(pid,"%lu",static_cast<unsigned long>(GetCurrentProcessId()));
+#else
+        std::fprintf(pid,"%lu",static_cast<unsigned long>(getpid()));
+#endif
+        if (std::fclose(pid)!=0) return 74;
+        std::fputc('0',stderr);std::fflush(stderr);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        if (std::strstr(argv[0],"memory")) {
+            auto memory=std::make_unique<char[]>(64*1024*1024);
+            volatile char *pages=memory.get();
+            for (size_t i=0;i<64*1024*1024;i+=4096) pages[i]=1;
+            std::this_thread::sleep_for(std::chrono::seconds(60));
+        } else if (std::strstr(argv[0],"progress")) {
+            for(int i=0;i<11;++i)std::fputc('x',stderr);
+            std::fflush(stderr);
+        } else if (std::strstr(argv[0],"output")) {
+            char block[8192];std::memset(block,'x',sizeof(block));
+            for (int i=0;i<8192;++i) if (std::fwrite(block,1,sizeof(block),stdout)!=sizeof(block)) return 74;
+            std::fflush(stdout);
+        }
+        std::this_thread::sleep_for(std::chrono::seconds(60));
+        return 0;
+    }
     if (std::strstr(argv[0],"hang")) std::this_thread::sleep_for(std::chrono::seconds(60));
     if (std::strstr(argv[0],"failure")) return 23;
     if (std::strstr(argv[0],"terminated")) {

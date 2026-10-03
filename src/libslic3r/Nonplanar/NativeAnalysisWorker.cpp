@@ -6,6 +6,8 @@
 #include <charconv>
 #include <set>
 #include <thread>
+#include <condition_variable>
+#include <mutex>
 #ifdef __APPLE__
 #include <libproc.h>
 #elif defined(_WIN32)
@@ -23,10 +25,6 @@ struct Workspace {
     Workspace(){require(fs::create_directory(path),"WORKER_WORKSPACE");try{fs::permissions(path,fs::owner_all);}catch(...){fs::remove(path);throw;}}
     ~Workspace(){boost::system::error_code ec;fs::remove_all(path,ec);}
 };
-struct Child {
-    process::child value;
-    ~Child(){std::error_code ec;if(value.running(ec))value.terminate(ec);value.wait(ec);}
-};
 uint64_t resident(process::child &child)
 {
 #ifdef __APPLE__
@@ -38,6 +36,68 @@ uint64_t resident(process::child &child)
     while(file>>key){if(key=="VmRSS:"){uint64_t kib=0;std::string unit;if(file>>kib>>unit && unit=="kB" && kib<=UINT64_MAX/1024)return kib*1024;return 0;}std::string rest;std::getline(file,rest);}return 0;
 #endif
 }
+// Only this owner touches the process handle, under one mutex. The monitor
+// never calls host callbacks: UI progress can block without suspending the
+// child's deadline, RSS, output bounds or atomic task invalidation.
+class Child {
+    process::child value;
+    std::mutex mutex;
+    std::condition_variable wake;
+    std::thread monitor;
+    bool stopping=false;
+    const char *failure=nullptr;
+    uint64_t peak=0;
+    void terminate_wait() noexcept
+    {std::error_code ec;if(value.running(ec))value.terminate(ec);value.wait(ec);}
+public:
+    Child(process::child child,std::shared_ptr<const GuardedJobTask> task,
+        std::chrono::steady_clock::time_point deadline,uint64_t cap,fs::path output,fs::path progress)
+        :value(std::move(child))
+    {
+        try {monitor=std::thread([this,task=std::move(task),deadline,cap,output=std::move(output),progress=std::move(progress)] {
+            try {
+                std::unique_lock<std::mutex> lock(mutex);
+                std::chrono::steady_clock::time_point missing_rss{};
+                while(!stopping){
+                    std::error_code ec;
+                    if(!value.running(ec)){if(ec)failure="WORKER_PROCESS_FAILED";return;}
+                    const auto now=std::chrono::steady_clock::now();
+                    if(!task->is_current())failure="WORKER_STALE_HOST_TASK";
+                    else if(now>=deadline)failure="WORKER_DEADLINE";
+                    else {
+                        const auto rss=resident(value);
+                        if(rss){missing_rss={};peak=std::max(peak,rss);if(rss>cap)failure="WORKER_MEMORY_BUDGET";}
+                        else if(value.running(ec)){
+                            // macOS drops task info briefly before waitpid sees
+                            // exit; terminal adoption still requires OS peak RSS.
+                            if(missing_rss==std::chrono::steady_clock::time_point{})missing_rss=now;
+                            if(now-missing_rss>=std::chrono::milliseconds(20))failure="WORKER_MEMORY_OBSERVATION_FAILED";
+                        }
+                        if(!failure && fs::file_size(output)>native_analysis_worker_byte_limit)failure="WORKER_OUTPUT_BYTE_LIMIT";
+                        if(!failure && fs::file_size(progress)>10)failure="WORKER_PROGRESS_BYTE_LIMIT";
+                    }
+                    if(failure){terminate_wait();return;}
+                    wake.wait_for(lock,std::chrono::milliseconds(5),[this]{return stopping;});
+                }
+            } catch(...) {
+                std::lock_guard<std::mutex> lock(mutex);
+                failure="WORKER_PROTOCOL_OR_CALLBACK_FAILURE";terminate_wait();
+            }
+        });}catch(...){terminate_wait();throw;}
+    }
+    ~Child()
+    {
+        {std::lock_guard<std::mutex> lock(mutex);stopping=true;}
+        wake.notify_one();monitor.join();terminate_wait();
+    }
+    bool running(std::error_code &ec){std::lock_guard<std::mutex> lock(mutex);return value.running(ec);}
+    int exit_code(){std::lock_guard<std::mutex> lock(mutex);return value.exit_code();}
+    void check(uint64_t &observed)
+    {
+        std::lock_guard<std::mutex> lock(mutex);observed=std::max(observed,peak);
+        if(failure)require(false,failure);
+    }
+};
 std::string read(const fs::path &path,size_t limit)
 {
     boost::nowide::ifstream file(path.string(),std::ios::binary);require(bool(file),"WORKER_OUTPUT_MISSING");std::string bytes;char block[8192];
@@ -96,30 +156,21 @@ NativeAnalysisWorkerResult run_native_analysis_worker(const std::string &executa
         require(fs::path(executable).is_absolute() && fs::is_regular_file(executable),"WORKER_EXECUTABLE");
         Workspace workspace;const auto source=workspace.path/"input.json",output=workspace.path/"report.json",progress=workspace.path/"progress.txt";
         {boost::nowide::ofstream file(source.string(),std::ios::binary);file.write(input->bytes.data(),std::streamsize(input->bytes.size()));file.close();require(bool(file),"WORKER_INPUT_WRITE");}
-        check();Child child{process::child(executable,std::vector<std::string>{"--resident-cap",std::to_string(options.max_peak_rss_bytes)},process::std_in<source.string(),process::std_out>output.string(),process::std_err>progress.string(),process::start_dir=workspace.path.string())};
+        check();Child child{process::child(executable,std::vector<std::string>{"--resident-cap",std::to_string(options.max_peak_rss_bytes)},process::std_in<source.string(),process::std_out>output.string(),process::std_err>progress.string(),process::start_dir=workspace.path.string()),input->task,started+options.timeout,options.max_peak_rss_bytes,output,progress};
+        const auto supervised_check=[&]{child.check(result.peak_rss_bytes);check();};
         const auto stages=[&]{const auto records=read(progress,10);require(records.size()>=result.progress_stages,"WORKER_PROGRESS_TRUNCATED");
-            for(size_t index=result.progress_stages;index<records.size();++index){check();require(records[index]=='0'+int(index),"WORKER_PROGRESS_SEQUENCE");result.progress_stages=index+1;
-                try{if(options.progress)options.progress(NativeAnalysisStage(index));}catch(...){require(false,"WORKER_PROTOCOL_OR_CALLBACK_FAILURE");}check();}};
+            for(size_t index=result.progress_stages;index<records.size();++index){supervised_check();require(records[index]=='0'+int(index),"WORKER_PROGRESS_SEQUENCE");result.progress_stages=index+1;
+                try{if(options.progress)options.progress(NativeAnalysisStage(index));}catch(...){require(false,"WORKER_PROTOCOL_OR_CALLBACK_FAILURE");}supervised_check();}};
         std::error_code ec;
-        std::chrono::steady_clock::time_point missing_rss{};
-        while(child.value.running(ec)){check();const auto rss=resident(child.value);
-            if(!rss){
-                if(!child.value.running(ec))break;
-                // macOS can drop task info before waitpid observes exit. Allow
-                // a bounded transition window; persistent loss still refuses,
-                // and terminal publication always requires the OS peak report.
-                const auto now=std::chrono::steady_clock::now();if(missing_rss==std::chrono::steady_clock::time_point{})missing_rss=now;
-                require(now-missing_rss<std::chrono::milliseconds(20),"WORKER_MEMORY_OBSERVATION_FAILED");
-            }else{missing_rss={};result.peak_rss_bytes=std::max(result.peak_rss_bytes,rss);require(rss<=options.max_peak_rss_bytes,"WORKER_MEMORY_BUDGET");}
-            require(fs::file_size(output)<=native_analysis_worker_byte_limit,"WORKER_OUTPUT_BYTE_LIMIT");stages();std::this_thread::sleep_for(std::chrono::milliseconds(5));}
-        require(!ec && child.value.exit_code()==0,"WORKER_PROCESS_FAILED");check();stages();
+        while(child.running(ec)){supervised_check();stages();std::this_thread::sleep_for(std::chrono::milliseconds(5));}
+        supervised_check();require(!ec && child.exit_code()==0,"WORKER_PROCESS_FAILED");stages();
         const auto report=parse(read(output,native_analysis_worker_byte_limit));exact_keys(report,{"schema","host_job","input_payload_sha256","input_sha256","request_sha256","software_sha256","diagnostic","peak_rss_bytes"});
         const auto &job=*input->task->snapshot;require(report.at("schema").is_number_unsigned() && report.at("schema")==native_analysis_worker_protocol && report.at("host_job")==Json::array({job.job_id,job.input_revision,input->task->attempt,job.fingerprint}) &&
             report.at("input_payload_sha256")==input->sha256 && report.at("input_sha256")==input->input_fingerprint && report.at("request_sha256")==input->request_sha256 && report.at("software_sha256")==job.software->sha256,"WORKER_REPORT_IDENTITY");
         const auto rss=report.at("peak_rss_bytes").get<std::string>();uint64_t peak=0;const auto parsed=std::from_chars(rss.data(),rss.data()+rss.size(),peak);
         require(rss.size()==20 && parsed.ec==std::errc{} && parsed.ptr==rss.data()+rss.size() && peak && peak<=UINT64_MAX-65536,"WORKER_PEAK_MEMORY");result.peak_rss_bytes=std::max(result.peak_rss_bytes,peak+65536);require(result.peak_rss_bytes<=options.max_peak_rss_bytes,"WORKER_MEMORY_BUDGET");
-        const auto &value=report.at("diagnostic");diagnostic(value,*input);require(!value.at("completed").get<bool>() || (result.progress_stages==10 && value.at("request_sha256")==input->request_sha256),"WORKER_COMPLETED_IDENTITY");check();
-        auto bytes=value.dump();check();result.reason=value.at("completed").get<bool>() ? "WORKER_BLOCKED_DIAGNOSTIC_COMPLETE" : "WORKER_ANALYSIS_REFUSED";result.diagnostic=std::move(bytes);
+        const auto &value=report.at("diagnostic");diagnostic(value,*input);require(!value.at("completed").get<bool>() || (result.progress_stages==10 && value.at("request_sha256")==input->request_sha256),"WORKER_COMPLETED_IDENTITY");supervised_check();
+        auto bytes=value.dump();supervised_check();result.reason=value.at("completed").get<bool>() ? "WORKER_BLOCKED_DIAGNOSTIC_COMPLETE" : "WORKER_ANALYSIS_REFUSED";result.diagnostic=std::move(bytes);
     }catch(const std::exception &e){result.diagnostic.clear();const std::string reason=e.what();result.reason=reason.rfind("WORKER_",0)==0 && reason.size()<=80 ? reason : "WORKER_PROTOCOL_OR_CALLBACK_FAILURE";}
     catch(...){result.diagnostic.clear();result.reason="WORKER_PROTOCOL_OR_CALLBACK_FAILURE";}
     return result;

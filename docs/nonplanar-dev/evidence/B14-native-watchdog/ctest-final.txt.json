@@ -1,0 +1,22 @@
+{
+  "command": [
+    "env",
+    "NPTOP_JOB_EVIDENCE_DIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B14-native-watchdog/final-jobs",
+    "NPTOP_CANDIDATE_EVIDENCE_DIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B14-native-watchdog/final-candidates",
+    "python3",
+    "scripts/nonplanar/ctest_gate.py",
+    "--build-dir",
+    "build/arm64",
+    "--output-dir",
+    "build/nonplanar-evidence/B14-native-watchdog/ctest-final",
+    "--target-executable",
+    "nonplanar_tests",
+    "--target-executable",
+    "fff_print_tests"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-03T09:15:23.991453+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 146.516
+}

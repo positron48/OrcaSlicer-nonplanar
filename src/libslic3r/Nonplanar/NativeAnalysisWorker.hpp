@@ -32,7 +32,9 @@ struct NativeAnalysisWorkerResult {
 // workspace, no shell or profile-selected executable. Child output is display
 // data only: never a native proof snapshot or an export credential. Cancellation,
 // stale host token, timeout, memory/protocol failures expose no partial report.
-// RSS is supervised/observed, not instantaneous hard macOS RSS containment.
+// A dedicated monitor enforces process deadline/RSS/output bounds even while a
+// host progress callback blocks. Callbacks still must return for this API to
+// finish; host capture/parsing and sampled macOS RSS are not hard contained.
 NativeAnalysisWorkerResult run_native_analysis_worker(const std::string &executable,
     std::shared_ptr<const NativeAnalysisWorkerInput>,const NativeAnalysisWorkerOptions &options={});
 // Internal child entry; called only by the bundled executable after OS limits

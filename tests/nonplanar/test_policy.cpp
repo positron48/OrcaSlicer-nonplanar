@@ -46,6 +46,15 @@
 #include <type_traits>
 #include <thread>
 #include <nlohmann/json.hpp>
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#include <windows.h>
+#else
+#include <csignal>
+#include <cerrno>
+#endif
 using namespace Slic3r;
 using namespace Slic3r::nptop;
 
@@ -4267,6 +4276,66 @@ TEST_CASE("B14 native analysis supervisor terminates hangs and refuses failed or
     NativeAnalysisWorkerOptions limits;limits.cancelled=[] {return true;};
     REQUIRE(run_native_analysis_worker("missing executable",input,limits).reason=="WORKER_CANCELLED");
     REQUIRE(input->task->is_current());
+}
+
+TEST_CASE("B14 watchdog stops children during blocked progress callbacks", "[Nonplanar][B14][NativeAnalysisWorker][NativeAnalysisWatchdog]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);
+    struct Probes {
+        boost::filesystem::path root=boost::filesystem::temp_directory_path()/boost::filesystem::unique_path("nptop-watchdog-probes-%%%%-%%%%-%%%%");
+        Probes(){boost::filesystem::create_directory(root);boost::filesystem::permissions(root,boost::filesystem::owner_all);}
+        ~Probes(){boost::system::error_code ec;boost::filesystem::remove_all(root,ec);}
+    } probes;
+    const auto alive=[](unsigned long pid){
+#ifdef _WIN32
+        HANDLE process=OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,FALSE,DWORD(pid));
+        if(!process){REQUIRE(GetLastError()==ERROR_INVALID_PARAMETER);return false;}
+        DWORD code=0;const bool observed=GetExitCodeProcess(process,&code);CloseHandle(process);REQUIRE(observed);return code==STILL_ACTIVE;
+#else
+        const int state=::kill(static_cast<pid_t>(pid),0);if(state==0)return true;REQUIRE(errno==ESRCH);return false;
+#endif
+    };
+    nlohmann::json observations=nlohmann::json::array();
+    for(const char *scenario:{"deadline","memory","output","progress","stale","healthy"}){
+        CAPTURE(scenario);
+        const auto input=native_worker_input(fixture,capture_native_analysis_request(options.first));
+        const auto path=probes.root/(std::string("watchdog-")+scenario+boost::filesystem::path(NPTOP_ANALYSIS_PROBE_PATH).extension().string());
+        boost::filesystem::copy_file(NPTOP_ANALYSIS_PROBE_PATH,path);boost::filesystem::permissions(path,boost::filesystem::owner_all);
+        NativeAnalysisWorkerOptions limits;limits.timeout=std::chrono::seconds(10);
+        if(std::string(scenario)=="deadline")limits.timeout=std::chrono::seconds(3);
+        if(std::string(scenario)=="memory")limits.max_peak_rss_bytes=32*1024*1024;
+        bool cancel=false,observed=false,alive_after=false;unsigned long observed_pid=0;
+        limits.cancelled=[&]{return cancel;};
+        const auto started=std::chrono::steady_clock::now();
+        limits.progress=[&](NativeAnalysisStage stage){
+            REQUIRE(stage==NativeAnalysisStage::Capture);REQUIRE_FALSE(observed);observed=true;
+            boost::nowide::ifstream file(path.string()+".pid");file>>observed_pid;REQUIRE((file.good() || file.eof()));REQUIRE(observed_pid>0);REQUIRE(alive(observed_pid));
+            if(std::string(scenario)=="stale"){
+                fixture.config.set_key_value("layer_height",new ConfigOptionFloat(.21));fixture.print.apply(fixture.model,fixture.config);
+                REQUIRE_FALSE(input->task->is_current());
+            }
+            // The process must already be stopped while this host callback is
+            // still blocked. A refusal after returning cannot satisfy this test.
+            if(std::string(scenario)=="deadline")std::this_thread::sleep_until(started+limits.timeout+std::chrono::milliseconds(300));
+            else std::this_thread::sleep_for(std::chrono::milliseconds(700));
+            alive_after=alive(observed_pid);REQUIRE(alive_after==(std::string(scenario)=="healthy"));
+            if(std::string(scenario)=="healthy")cancel=true;
+        };
+        const auto result=run_native_analysis_worker(path.string(),input,limits);INFO(result.reason);REQUIRE(observed);REQUIRE(result.diagnostic.empty());
+        const std::string expected=std::string(scenario)=="deadline" ? "WORKER_DEADLINE" : std::string(scenario)=="memory" ? "WORKER_MEMORY_BUDGET" :
+            std::string(scenario)=="output" ? "WORKER_OUTPUT_BYTE_LIMIT" : std::string(scenario)=="progress" ? "WORKER_PROGRESS_BYTE_LIMIT" :
+            std::string(scenario)=="stale" ? "WORKER_STALE_HOST_TASK" : "WORKER_CANCELLED";
+        REQUIRE(result.reason==expected);
+        REQUIRE_FALSE(alive(observed_pid));
+        if(std::string(scenario)=="memory")REQUIRE(result.peak_rss_bytes>limits.max_peak_rss_bytes);
+        observations.push_back({{"scenario",scenario},{"pid",observed_pid},{"alive_before_callback",true},
+            {"alive_inside_blocked_callback",alive_after},{"alive_after_return",false},{"reason",result.reason},
+            {"diagnostic_empty",result.diagnostic.empty()},{"timeout_ms",limits.timeout.count()},
+            {"rss_cap_bytes",limits.max_peak_rss_bytes},{"observed_peak_rss_bytes",result.peak_rss_bytes},
+            {"elapsed_ms",std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started).count()}});
+        if(std::string(scenario)=="stale"){fixture.config.set_key_value("layer_height",new ConfigOptionFloat(.2));fixture.print.apply(fixture.model,fixture.config);}
+    }
+    save_worker_evidence("native-watchdog-observations.json",observations.dump());
 }
 
 TEST_CASE("B14 native view adopts actual worker replay only once and remains Unknown", "[Nonplanar][B14][NativeAnalysisView]")
