@@ -1,0 +1,6 @@
+(version 1)
+(allow default)
+(deny network*)
+(deny file-write*)
+(allow file-write* (subpath "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B14-native-cli/cli11/custom-code-refused"))
+(allow file-write* (literal "/dev/null"))

@@ -6,6 +6,8 @@
 #include <libslic3r/Nonplanar/Job.hpp>
 #include <libslic3r/Nonplanar/NativeJobInputs.hpp>
 #include <libslic3r/Nonplanar/NativeAnalysis.hpp>
+#include <libslic3r/Nonplanar/NativeAnalysisJson.hpp>
+#include <libslic3r/Preset.hpp>
 #include <libslic3r/Nonplanar/JobNative.hpp>
 #include <libslic3r/Nonplanar/PlanarBody.hpp>
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
@@ -4007,6 +4009,39 @@ TEST_CASE("B14 common native analysis executes captured body cap bytes and repla
     REQUIRE(std::count_if(report.checks.begin(),report.checks.end(),[](const auto &c){return c.status==nptop_verify::RateStatus::Pass && c.execution==GuardedCheckExecution::Run;})==4);
     const auto context=std::find_if(result.job->resources.begin(),result.job->resources.end(),[](const auto &r){return r.name=="native-analysis-request-v1";});
     REQUIRE(context!=result.job->resources.end());REQUIRE(context->bytes==input->canonical_json);REQUIRE(context->sha256==input->sha256);
+    const auto diagnostic=nlohmann::json::parse(native_analysis_diagnostic(result));
+    REQUIRE(diagnostic.at("completed")==true);REQUIRE(diagnostic.at("export_allowed")==false);
+    REQUIRE(diagnostic.at("report").at("validation").at("export_decision")=="BLOCK");
+    REQUIRE(diagnostic.at("report_sha256")==report.sha256);REQUIRE(diagnostic.at("manifest_sha256")==report.binding->manifest_sha256);
+    REQUIRE(diagnostic.at("replay").size()==report.rates->moves.size());
+    for(size_t i=0;i<report.rates->moves.size();++i){const auto &row=diagnostic.at("replay")[i];const auto &move=report.rates->moves[i];
+        REQUIRE(row.at("index")==i);REQUIRE(row.at("start_mm")==move.start);REQUIRE(row.at("end_mm")==move.end);
+        REQUIRE(row.at("candidate_byte_range")==std::vector<size_t>{result.snapshot->plan->candidate->events[i].begin,result.snapshot->plan->candidate->events[i].end});
+    }
+    REQUIRE(diagnostic.find("candidate_bytes")==diagnostic.end());
+    // The real CLI uses production defaults, without the earlier fixture's
+    // finer packet subdivision. Exercise those defaults as a separate owner.
+    Print default_print;default_print.apply(fixture.model,fixture.config);
+    const auto default_result=run_native_analysis(default_print,101,input,fixture.resources);
+    INFO(default_result.reason);REQUIRE(default_result.snapshot);
+    REQUIRE(default_result.snapshot->request->sha256==input->sha256);
+    REQUIRE(default_result.snapshot->report->rates->moves.size()>1000);
+    REQUIRE_FALSE(default_result.snapshot->report->export_allowed);
+    REQUIRE(guarded_job_status(default_print).phase==GuardedJobPhase::Unknown);
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR")){
+        const auto save=[&](const char *name,const std::string &bytes){boost::nowide::ofstream file((boost::filesystem::path(directory)/name).string());REQUIRE(file.good());file<<bytes<<'\n';file.close();REQUIRE(file.good());};
+        save("native-controller-diagnostic.json",diagnostic.dump(2));save("native-controller-request.json",native_analysis_document(*input));
+        save("native-cli-reference-diagnostic.json",native_analysis_diagnostic(default_result));
+        test::save_job_report(boost::filesystem::path(directory)/"native-cli-reference-report.json",
+            {default_result.reason,default_result.snapshot->report,default_result.snapshot->replay_evaluations});
+        auto config=fixture.config;config.set_deserialize_strict({{"printable_area","0x0,40x0,40x40,0x40"},{"printable_height",30}});
+        // Static default enum vectors may lack the serialization map. Retain
+        // their exact values while using the actual definition's preset names.
+        for(const auto &key:config.keys())if(auto *option=dynamic_cast<ConfigOptionEnumsGeneric*>(config.option(key)))
+            option->keys_map=config.def()->get(key)->enum_keys_map;
+        config.save_to_json((boost::filesystem::path(directory)/"native-cli-config.json").string(),"process","Nonplanar CLI simulation",SLIC3R_VERSION);
+        save("native-cli-option-keys.json",nlohmann::json{{"machine",Preset::printer_options()},{"process",Preset::print_options()},{"filament",Preset::filament_options()}}.dump());
+    }
     if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(directory)/"native-controller-report.json",
         {result.reason,result.snapshot->report,result.snapshot->replay_evaluations});
     REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Unknown);REQUIRE_FALSE(report.task->is_current());REQUIRE_THROWS(fixture.print.process());
@@ -4051,4 +4086,54 @@ TEST_CASE("B14 complete request identity owns all planning choices and shares th
     limits.progress=[](NativeAnalysisStage stage){if(stage==NativeAnalysisStage::Capture)std::this_thread::sleep_for(std::chrono::milliseconds(101));};
     const auto result=run_native_analysis(fixture.print,105,input,fixture.resources,limits);REQUIRE_FALSE(result.snapshot);
     REQUIRE(result.reason=="NATIVE_ANALYSIS_DEADLINE");
+}
+
+TEST_CASE("B14 native editing transport preserves every exact owned input and integer identity", "[Nonplanar][B14][NativeAnalysisJson]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);const auto input=capture_native_analysis_request(options.first);
+    const auto bytes=native_analysis_document(*input);const auto parsed=parse_native_analysis_document(bytes);
+    REQUIRE(parsed->canonical_json==input->canonical_json);REQUIRE(parsed->sha256==input->sha256);
+    REQUIRE(native_analysis_document(*parsed)==bytes);
+    auto request=options.first;request.inputs.scene.profile_id=std::numeric_limits<uint64_t>::max();
+    request.inputs.replay.policy_id=9007199254740993ULL;request.reservation.its.vertices.front().x()=std::nextafter(request.reservation.its.vertices.front().x(),100.f);
+    request.inputs.body.plate_origin={-0.,.1,std::numeric_limits<double>::denorm_min()};
+    const auto edge=capture_native_analysis_request(request);const auto decoded=parse_native_analysis_document(native_analysis_document(*edge));
+    REQUIRE(decoded->canonical_json==edge->canonical_json);REQUIRE(decoded->values.inputs.replay.policy_id==9007199254740993ULL);
+    REQUIRE(decoded->values.inputs.scene.profile_id==std::numeric_limits<uint64_t>::max());
+    REQUIRE(native_analysis_stage_name(NativeAnalysisStage::Replay)==std::string("replay"));
+    REQUIRE(native_analysis_stage_name(NativeAnalysisStage(99))==std::string("unknown"));
+    const auto failed=nlohmann::json::parse(native_analysis_diagnostic({}));REQUIRE_FALSE(failed.at("completed").get<bool>());
+    REQUIRE_FALSE(failed.at("export_allowed").get<bool>());REQUIRE(failed.at("replay").empty());REQUIRE(failed.at("job").is_null());
+}
+TEST_CASE("B14 native editing transport rejects malformed ambiguous oversized and lossy requests", "[Nonplanar][B14][NativeAnalysisJson]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);const auto input=capture_native_analysis_request(options.first);
+    const auto bytes=native_analysis_document(*input);const auto original=nlohmann::json::parse(bytes);
+    for(int field=0;field<19;++field){auto j=original;
+        if(field==0)j["schema"]=2;
+        if(field==1)j["unknown"]=0;
+        if(field==2)j["body"]["unknown"]=0;
+        if(field==3)j["motion"]["ids"][0]=1.0;
+        if(field==4)j["motion"]["ids"][0]=-1;
+        if(field==5)j["scene"]["version"]=uint64_t(1)<<32;
+        if(field==6)j["scene"]["head"][0]["role"]=6;
+        if(field==7)j["reservation"]["vertices_f32_mm"]=std::vector<std::array<double,3>>(15001,{0,0,0});
+        if(field==8)j["reservation"]["faces"]=std::vector<std::array<unsigned,3>>(5001,{0,1,2});
+        if(field==9)j["reservation"]["vertices_f32_mm"][0][0]=.1;
+        if(field==10)j["reservation"]["faces"][0][0]=15000;
+        if(field==11)j["millimeters_declared"]=1;
+        if(field==12)j["motion"]["kinematics"]=2;
+        if(field==13)j["serializer"]["digits"][0]=19;
+        if(field==14)j["passes"]["policy"][0]=200001;
+        if(field==15)j["hatches"][3]=2;
+        if(field==16)j["contour"][1]=4;
+        if(field==17)j["reservation"]["properties"][0][0]=eMaxNumFaceTypes;
+        if(field==18)j["reservation"]["properties"]=std::vector<std::array<unsigned,2>>(5001,{0,0});
+        INFO(field);REQUIRE_THROWS(parse_native_analysis_document(j.dump()));
+    }
+    REQUIRE_THROWS(parse_native_analysis_document("{\"schema\":1,"+bytes.substr(1)));
+    REQUIRE_THROWS(parse_native_analysis_document(std::string(2*1024*1024+1,' ')));
+    REQUIRE_THROWS(parse_native_analysis_document(std::string(10,'[')+"0"+std::string(10,']')));
+    REQUIRE_THROWS(parse_native_analysis_document("{\"schema\":NaN}"));
+    REQUIRE_THROWS(parse_native_analysis_document("{}"));
 }

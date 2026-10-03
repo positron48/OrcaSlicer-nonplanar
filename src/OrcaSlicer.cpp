@@ -24,6 +24,8 @@
 #include <iostream>
 #include <math.h>
 #include <csignal>
+#include <set>
+#include <atomic>
 
 #if defined(__linux__) || defined(__LINUX__)
 #include <condition_variable>
@@ -56,6 +58,8 @@ using namespace nlohmann;
 #include "libslic3r/ModelArrange.hpp"
 #include "libslic3r/Platform.hpp"
 #include "libslic3r/Print.hpp"
+#include "libslic3r/Nonplanar/NativeAnalysisJson.hpp"
+#include "libslic3r/Nonplanar/StlFile.hpp"
 #include "libslic3r/SLAPrint.hpp"
 #include "libslic3r/TriangleMesh.hpp"
 #include "libslic3r/Format/AMF.hpp"
@@ -100,6 +104,54 @@ using namespace nlohmann;
 #endif /* SLIC3R_GUI */
 
 using namespace Slic3r;
+
+namespace {
+std::atomic<bool> native_analysis_interrupted{false};
+static_assert(std::atomic<bool>::is_always_lock_free,"Native CLI signal flag must be lock-free");
+void interrupt_native_analysis(int){native_analysis_interrupted.store(true,std::memory_order_relaxed);}
+struct NativeAnalysisSignals {
+    using Handler=void (*)(int);
+    Handler previous=SIG_ERR;
+    NativeAnalysisSignals(){native_analysis_interrupted.store(false,std::memory_order_relaxed);previous=std::signal(SIGINT,interrupt_native_analysis);}
+    ~NativeAnalysisSignals(){if(previous!=SIG_ERR)std::signal(SIGINT,previous);}
+};
+int analyze_native_request(Model &model,const DynamicPrintConfig &config,const std::string &path)
+{
+    nptop::NativeAnalysisResult result;NativeAnalysisSignals signals;
+    try {
+        nptop::require(signals.previous!=SIG_ERR,"NATIVE_ANALYSIS_SIGNAL_INSTALL_REFUSED");
+        nptop::StlFileOptions io;io.cancelled=[]{return native_analysis_interrupted.load(std::memory_order_relaxed);};
+        // The existing file capture owns bounded opaque bytes and checks file
+        // identity; it does not invoke the STL parser for this JSON document.
+        const auto file=nptop::capture_stl_file(path,true,1,io);
+        nptop::require(bool(file.source),file.reason.c_str());
+        const auto request=nptop::parse_native_analysis_document(file.source->bytes);
+        if(const auto conflict=nptop::input_policy_conflict(model,config)) {
+            result.reason="NATIVE_ANALYSIS_POLICY_REFUSED:"+conflict->key;
+            boost::nowide::cout<<"NPTOP_DIAGNOSTIC "<<nptop::native_analysis_diagnostic(result)<<'\n';
+            return CLI_SLICING_ERROR;
+        }
+        Print print;print.apply(model,config);
+        std::vector<nptop::JobResource> resources{{nptop::JobResourceKind::SourceFile,"native-analysis-json-v1",file.source->bytes}};
+        std::set<std::string> paths;
+        for(const auto *object:model.objects)for(const auto *volume:object->volumes)paths.insert(volume->source.input_file);
+        nptop::require(paths.size()<=247,"NATIVE_ANALYSIS_SOURCE_COUNT");
+        size_t bytes=file.source->bytes.size();
+        for(const auto &source_path:paths){const auto source=nptop::capture_stl_file(source_path,true,1,io);
+            nptop::require(bool(source.source),source.reason.c_str());
+            nptop::require(source.source->bytes.size()<=32*1024*1024-bytes,"NATIVE_ANALYSIS_SOURCE_BYTE_LIMIT");bytes+=source.source->bytes.size();
+            resources.push_back({nptop::JobResourceKind::SourceFile,source_path,source.source->bytes});}
+        nptop::NativeAnalysisLimits limits;limits.cancelled=io.cancelled;
+        limits.progress=[](nptop::NativeAnalysisStage stage){boost::nowide::cerr<<"NPTOP_PROGRESS "<<nptop::native_analysis_stage_name(stage)<<'\n';};
+        result=nptop::run_native_analysis(print,1,request,resources,limits);
+    } catch(const std::exception &) {result.reason="NATIVE_ANALYSIS_INPUT_REFUSED";}
+    catch(...) {result.reason="NATIVE_ANALYSIS_INPUT_EXCEPTION";}
+    boost::nowide::cout<<"NPTOP_DIAGNOSTIC "<<nptop::native_analysis_diagnostic(result)<<'\n';
+    // A produced bounded diagnostic still has mandatory UNKNOWN checks.
+    // It never grants a successful slice or falls through to stock export.
+    return CLI_SLICING_ERROR;
+}
+}
 
 /*typedef struct _error_message{
     int code;
@@ -5580,6 +5632,13 @@ int CLI::run(int argc, char **argv)
                 model.add_default_instances();
                 model.print_info();
             }
+        } else if (opt_key == "nptop_analyze") {
+            if (m_models.size()!=1) {
+                nptop::NativeAnalysisResult refused;refused.reason="NATIVE_ANALYSIS_REQUIRES_ONE_MODEL";
+                boost::nowide::cout<<"NPTOP_DIAGNOSTIC "<<nptop::native_analysis_diagnostic(refused)<<'\n';
+                return CLI_INVALID_PARAMS;
+            }
+            return analyze_native_request(m_models.front(),m_print_config,m_config.opt_string(opt_key));
         } else if (opt_key == "uptodate") {
             //already processed before
         } else if (opt_key == "min_save") {
@@ -7192,6 +7251,12 @@ bool CLI::setup(int argc, char **argv)
             m_actions.emplace_back(opt_key);
         else if (cli_transform_config_def.has(opt_key))
             m_transforms.emplace_back(opt_key);
+    }
+
+    if (std::find(m_actions.begin(),m_actions.end(),"nptop_analyze")!=m_actions.end() &&
+        (m_actions.size()!=1 || std::find(opt_order.begin(),opt_order.end(),"datadir")==opt_order.end() || m_config.opt_string("datadir").empty())) {
+        boost::nowide::cerr<<"Nonplanar analysis requires --datadir and cannot be combined with other actions.\n";
+        return false;
     }
 
     //FIXME Validating at this stage most likely does not make sense, as the config is not fully initialized yet.

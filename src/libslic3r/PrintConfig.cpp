@@ -10596,6 +10596,12 @@ CLIActionsConfigDef::CLIActionsConfigDef()
 {
     ConfigOptionDef* def;
 
+    def = this->add("nptop_analyze", coString);
+    def->label = L("Analyze nonplanar request");
+    def->tooltip = L("Analyze an explicit nonplanar request and emit blocked diagnostics and movement replay.");
+    def->cli_params = "request.json";
+    def->set_default_value(new ConfigOptionString(""));
+
     // Actions:
     /*def = this->add("export_obj", coBool);
     def->label = L("Export OBJ");

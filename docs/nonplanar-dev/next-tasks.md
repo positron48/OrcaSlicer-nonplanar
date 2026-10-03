@@ -7,6 +7,21 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B14-native-cli.md` and ADR-0091 invoke the shared backend from real main Orca
+CLI through --nptop-analyze, with bounded exact editing JSON and movement-level
+report/replay diagnostics. Progress/cancel and no mixed export action are tested;
+10 real CLI scenarios pass in fresh offline datadirs. Focus 5/8972, CTest 463/463,
+13 final independent oracles and six strict OFF/ZAA comparisons pass. Actual CLI
+2098-record candidate matches a separate native owner with production defaults;
+the original finer 2197-record fixture remains. Fifty of 51 parent files and
+supported 2205-record bytes remain exact. Fixed17 stays 4 PASS/RUN +13 UNKNOWN/
+NOT_RUN, export BLOCK; full B01–B15 remains active. Linux real CLI and transport
+oracle are configured in CI, new-head execution pending. Next: isolated native
+GUI worker/minimal UI, hard process/RSS boundaries and full import diagnostics,
+then complete cap/later passes and qualified contact/seams/whole-job verification.
+Native 3MF/publication, Windows/full GUI/physical and independent review remain
+pending. Standard U1 head/.4 nozzle known; software proceeds independently.
+
 `B14-native-controller.md` and ADR-0090 add the common native execution backend
 from privately owned request through body/hatches/first cap/material/motion,
 serialization, protected lineage and independent final-byte replay. All ten

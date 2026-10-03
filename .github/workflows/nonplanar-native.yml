@@ -5,6 +5,7 @@ on:
     branches: [feature/nonplanar-bootstrap]
     paths:
       - '.github/workflows/nonplanar-native.yml'
+      - 'src/OrcaSlicer.cpp'
       - 'src/libslic3r/**'
       - 'deps_src/admesh/**'
       - 'src/nonplanar_verify/**'
@@ -87,7 +88,7 @@ jobs:
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/tests.log -- env NPTOP_JOB_EVIDENCE_DIR=${{ github.workspace }}/build/nonplanar-evidence/linux/job-fixtures NPTOP_CANDIDATE_EVIDENCE_DIR=${{ github.workspace }}/build/nonplanar-evidence/linux/candidate-fixtures python3 scripts/nonplanar/ctest_gate.py --build-dir build --output-dir build/nonplanar-evidence/linux/ctest --target-executable nonplanar_tests --target-executable fff_print_tests
       - name: Independently check native job and candidate identities
         run: |
-          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/build-input-oracle.log -- python3 scripts/nonplanar/build_inputs_oracle.py build/nonplanar-evidence/linux/job-fixtures/compiled-build-inputs.json --job-report build/nonplanar-evidence/linux/job-fixtures/native-lineage-report.json --job-report build/nonplanar-evidence/linux/job-fixtures/native-departure-report.json --job-report build/nonplanar-evidence/linux/candidate-fixtures/native-job-report.json
+          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/build-input-oracle.log -- python3 scripts/nonplanar/build_inputs_oracle.py build/nonplanar-evidence/linux/job-fixtures/compiled-build-inputs.json --job-report build/nonplanar-evidence/linux/job-fixtures/native-lineage-report.json --job-report build/nonplanar-evidence/linux/job-fixtures/native-departure-report.json --job-report build/nonplanar-evidence/linux/job-fixtures/native-controller-report.json --job-report build/nonplanar-evidence/linux/job-fixtures/native-cli-reference-report.json --job-report build/nonplanar-evidence/linux/candidate-fixtures/native-job-report.json
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/job-context-oracle.log -- python3 scripts/nonplanar/job_context_oracle.py --input build/nonplanar-evidence/linux/job-fixtures/native-job.json
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/job-artifact-oracle.log -- python3 scripts/nonplanar/job_artifact_oracle.py --input build/nonplanar-evidence/linux/job-fixtures/bound-candidate.json
           for name in candidate-report candidate-report-invalid-material candidate-report-failed-material native-lineage-report native-departure-report; do
@@ -98,6 +99,7 @@ jobs:
             python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/$name-inputs-oracle.log -- python3 scripts/nonplanar/native_job_inputs_oracle.py --input build/nonplanar-evidence/linux/job-fixtures/$name.json
           done
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/native-controller-oracle.log -- python3 scripts/nonplanar/native_controller_oracle.py --input build/nonplanar-evidence/linux/job-fixtures/native-controller-report.json
+          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/native-analysis-json-oracle.log -- python3 scripts/nonplanar/native_analysis_json_oracle.py --fixtures build/nonplanar-evidence/linux/job-fixtures
       - name: Expose native failure diagnostics in check annotations
         if: failure() && steps.native_tests.outcome == 'failure'
         run: python3 scripts/nonplanar/publish_ci_failure.py --evidence-dir build/nonplanar-evidence/linux
@@ -137,6 +139,8 @@ jobs:
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/native-supported-deposition-cli.log -- build/src/nonplanar_verify/Release/nonplanar_rate_audit --linear-supported-deposition-only build/nonplanar-evidence/linux/candidate-fixtures/native-final-supported-deposition.rate.json build/nonplanar-evidence/linux/candidate-fixtures/native-final-supported-deposition.material.json build/nonplanar-evidence/linux/candidate-fixtures/native-final-supported-deposition.query.json build/nonplanar-evidence/linux/candidate-fixtures/native-final-supported-deposition.contact.json build/nonplanar-evidence/linux/candidate-fixtures/native-final-supported-deposition.support.json build/nonplanar-evidence/linux/candidate-fixtures/native-final-supported-deposition.candidate.txt
       - name: Build native application after test verification
         run: python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/app-build.log -- ./build_linux.sh -srlL -j 2
+      - name: Exercise real native analysis with networking isolated
+        run: sudo unshare --net -- python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/native-analysis-cli.log -- python3 scripts/nonplanar/native_cli_gate.py --binary build/src/Release/orca-slicer --fixtures build/nonplanar-evidence/linux/job-fixtures --evidence-dir build/nonplanar-evidence/linux/native-analysis-cli
       - name: Preserve observed results even on failure
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
