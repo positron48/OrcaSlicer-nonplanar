@@ -7,6 +7,21 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B06-native-hatch-precision.md` and ADR-0103 tighten the combined native parent
+integral before its immutable strip split, under the original consumer/resource
+limits. Two wider native cases/focus2/91, CTest504/504,23 independent checks,
+17 actual CLI cases and6 strict OFF/ZAA pairs pass. Three actual body stadium
+rows with shoulders/overlaps produce4/5 complete strips; independent rational
+closed-slab enclosures lie inside every produced parent/strip interval and12
+mutations reject. The old coarse split and complete-cap roof depth/segment
+refusals remain. Fifty-three of54 parent candidates stay exact; two additive
+witnesses and one software report, unselected2098 bytes unchanged. Fixed17
+stays4 PASS/RUN +13 UNKNOWN/NOT_RUN, export BLOCK and full B IN_PROGRESS.
+Next certified actual roof chord under original budgets, then positive native
+density/captured controller/child/byte ownership and full fill/layers/seams/
+contact/head/routes/order/whole-job/source/software/physical/publication.
+Independent safety review and new-head platform/GUI/physical proof pending.
+
 `B07-infill-density.md` and ADR-0102 add a prospective retained fixed-width
 infill factory with explicit stored XY pitch, measured gain/spill/repetition and
 original actual-body roof/dose. First-cap6 marks new owners; native binding and

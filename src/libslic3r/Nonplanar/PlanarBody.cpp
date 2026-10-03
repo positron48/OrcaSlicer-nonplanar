@@ -525,6 +525,11 @@ NativeAffineHatchResult plan_native_affine_hatches(const BodyMaterialResult &req
                 std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
         };
         auto remaining_pass=pass_limits;
+        // A strip partition reuses the owned roof leaves and cannot refine a
+        // coarse parent certificate. Reserve half of the selected hatch width
+        // for that parent; clipping and outward strip sums retain the rest.
+        remaining_pass.material.maximum_interval_width=Volume(std::min(
+            remaining_pass.material.maximum_interval_width.value(),hatch_limits.volumes.maximum_interval_width.value()/2));
         remaining_pass.material.timeout=std::min(remaining_pass.material.timeout,time_left());
         remaining_pass.material.cancelled=[&] { poll();return false; };remaining_pass.material.is_current={};
         const auto passes=plan_native_affine_pass_stack({"",body},request,remaining_pass);

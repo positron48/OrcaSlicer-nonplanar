@@ -20,7 +20,7 @@
     "B03": "BOUNDED_NOMINAL_MASKS_FOOTPRINT_AFFINE_CURVATURE_AND_ISOLATED_CLI_PASS_CURVED_SURFACES_TOOL_ROI_AND_PLANNING_PENDING",
     "B04": "OWNED_EXACT_PARTITION_STABLE_DERIVED_VERTEX_ORIENTED_FACE_INDICES_NATIVE_BODY_MATERIAL_AND_INTERIOR_DENSE_COVERAGE_PASS_SEAM_WIDER_NATIVE_DOMAIN_JOB_WORKER_PENDING",
     "B05": "OWNED_NATIVE_BODY_AND_ORDERED_ACTUAL_LATER_CAP_PREFIX_FRONTS_WHOLE_RUN_EVENT_UNION_PASS_FULL_CONTACT_CCD_JOB_REPLAY_PENDING",
-    "B06": "ACTUAL_PREFIX_VERTICAL_SUPPORT_AND_MANDATORY_WHOLE_AFFINE_NORMAL_RAY_BAND_PASS_GENERAL_STEPPED_CURVED_SHOULDER_SEAM_CONTACT_FULL_SCOPE_PENDING",
+    "B06": "ACTUAL_PREFIX_SUPPORT_NORMAL_SPACING_AND_NATIVE_PRODUCER_STRIP_PRECISION_PASS_GENERAL_STEPPED_CURVED_ROOF_SEAM_CONTACT_FULL_SCOPE_PENDING",
     "B07": "PROSPECTIVE_RETAINED_FIXED_WIDTH_INFILL_FACTORY_AND_CAPTURED_CORNER_LOCAL_LATER_REPLAY_PASS_DENSITY_CONTROLLER_FULL_FILL_SEAM_CONTACT_HEAD_ROUTE_ORDER_PENDING",
     "B08": "OWNED_COMPLETE_DECLARED_SIMULATION_HEAD_STATIC_SCENE_AND_ORIGINAL_OLD_COUPLED_CURRENT_UPPER_CONTINUOUS_MOTION_PASS_QUALIFIED_HEAD_CONTACT_JOB_REPLAY_PENDING",
     "B09": "OWNED_EXACT_PROSPECTIVE_BEAD_PARENT_MATERIAL_COMPLETE_SIMULATION_DEPARTURE_AND_NATIVE_JOB_EDGE_PASS_ORIGINAL_WIDE_EXIT_FAIL_RETAINED_FULL_FIXED_WIDTH_FILL_CONTACT_HEIGHT_ORDER_BYTE_GEOMETRY_PENDING",
@@ -41,7 +41,7 @@
     "VOL-02": "PASS_PARALLEL_PLANES_AND_LOCAL_ACTUAL_AFFINE_NORMAL_RAYS_ROUNDED_SHOULDER_NEGATIVE_GENERAL_CURVED_PENDING",
     "stock_native_fff": 37,
     "fork_native_fff": 37,
-    "new_native_cases": 463,
+    "new_native_cases": 465,
     "bootstrap_python_tests": 15,
     "original_package_helpers": 25,
     "other_upstream_tests_not_run": 155,
@@ -3243,6 +3243,96 @@
     "scope": "PROSPECTIVE_ANALYTICAL_RETAINED_MATERIAL_NOT_CAPTURED_DENSITY_NATIVE_LINEAGE",
     "review_status": "AUTHOR_CRITICAL_REVIEW_INDEPENDENT_PENDING",
     "remaining": "CAPTURED_DENSITY_CONTROLLER_BYTE_LINEAGE_FULL_FILL_SEAMS_LAYERS_CONTACT_HEAD_CONNECTORS_ORDER_WHOLE_JOB_SOURCE_SOFTWARE_PHYSICAL_PUBLICATION",
+    "export": "BLOCK",
+    "full_B01_B15": "IN_PROGRESS"
+  },
+  "B06_native_hatch_precision_evidence": {
+    "status": "PASS_BOUNDED_NATIVE_PRODUCER_PRECISION_ONLY",
+    "document": "B06-native-hatch-precision.md",
+    "adr": "adr-0103-native-hatch-producer-precision.md",
+    "review": "B06-native-hatch-precision-review.md",
+    "manifest": "evidence/B06-native-hatch-precision/source-manifest.json",
+    "new_cases": 2,
+    "focus": {
+      "cases": 2,
+      "assertions": 91
+    },
+    "ctest": {
+      "tests": 504,
+      "failures": 0,
+      "skipped": 0,
+      "gate_seconds": 194.876,
+      "executables": {
+        "nonplanar_tests": 251,
+        "fff_print_tests": 253
+      },
+      "labels": {
+        "Nonplanar": 465,
+        "other": 39
+      }
+    },
+    "identity_oracle_commands": 23,
+    "CLI_cases": 17,
+    "OFF_ZAA": "SIX_FRESH_STRICT_STOCK_PAIRS_PASS",
+    "parent_provenance": {
+      "total": 54,
+      "exact": 53,
+      "software_bound_report": 1,
+      "private_version_only": 0,
+      "added_candidates": 2
+    },
+    "versions": "UNCHANGED_ALL_PRIVATE_AND_PUBLIC_RECIPES",
+    "precision_mm3": {
+      "original_parent": 0.01,
+      "selected_parent": 0.0005,
+      "consumer": 0.001,
+      "tighter_parent_preserved": 0.0003
+    },
+    "oracle": {
+      "status": "PASS",
+      "cases": [
+        {
+          "interval_mm3": [
+            0.6792053241936957,
+            0.679235074089107
+          ],
+          "closed_slabs": 16402,
+          "native_rows": [
+            1319,
+            1321,
+            1323
+          ],
+          "strips": 4
+        },
+        {
+          "interval_mm3": [
+            1.0525332909192473,
+            1.0525795514617833
+          ],
+          "closed_slabs": 16403,
+          "native_rows": [
+            1319,
+            1321,
+            1323
+          ],
+          "strips": 5
+        }
+      ],
+      "mutation_refusals": 12,
+      "scope": "CONSTANT_NATIVE_ROOF_COMPLETE_STRIP_VOLUME_ONLY",
+      "export": "BLOCK"
+    },
+    "retained_cap_refusals": [
+      "FIRST_HATCH_ROOF_DEPTH_LIMIT",
+      "FIRST_HATCH_ROOF_SEGMENT_LIMIT"
+    ],
+    "default_unselected_candidate": {
+      "records": 2098,
+      "sha256": "c330363d909d5907a52b151a7ca499d1ce72681cc0185edd6f9c312bef12686b"
+    },
+    "scope": "CONSTANT_ACTUAL_NATIVE_ROOF_AND_STRIP_VOLUME_NOT_COMPLETE_CAP_OR_DENSITY",
+    "review_status": "AUTHOR_CRITICAL_REVIEW_INDEPENDENT_PENDING",
+    "remaining": "CERTIFIED_ACTUAL_ROOF_CHORD_POSITIVE_NATIVE_DENSITY_CAPTURED_PROGRAM_FULL_FILL_LAYERS_SEAMS_CONTACT_HEAD_ROUTES_ORDER_WHOLE_JOB_SOURCE_SOFTWARE_PHYSICAL_PUBLICATION",
     "export": "BLOCK",
     "full_B01_B15": "IN_PROGRESS"
   }

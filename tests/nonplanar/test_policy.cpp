@@ -4956,3 +4956,103 @@ TEST_CASE("B07 actual dense native cap refuses additional owners without measure
     REQUIRE(before.snapshot->infill_extent==FirstCapInfillExtent::OriginalOwners);
     REQUIRE(job.task->is_current());REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Planning);
 }
+
+namespace {
+void check_native_hatch_precision(bool transverse)
+{
+    NativeJobFixture fixture("affine-wedge-1-in-8000.stl");auto options=native_analysis_request(fixture);
+    const auto job=fixture.begin();const auto body=analyze_guarded_native_body(*job.task,native_job_body_request(),native_job_body_limits());INFO(body.reason);REQUIRE(body.snapshot);
+    auto request=native_job_hatch_request(*body.snapshot);auto &roi=request.first.footprint;
+    const bool x=request.second.first_direction==HatchDirection::AlongX;
+    const double centre=x ? (roi.min_y+roi.max_y)/2 : (roi.min_x+roi.max_x)/2;
+    if(transverse) {
+        std::vector<double> centres;
+        for(const auto &row:body.snapshot->body->material->records){
+            if(!row.bead || std::abs(row.motion.start.z()-4.2)>1e-8 || row.motion.end.z()!=row.motion.start.z())continue;
+            const double a=x ? row.motion.start.x() : row.motion.start.y(),b=x ? row.motion.end.x() : row.motion.end.y();
+            const double low=x ? row.motion.start.y() : row.motion.start.x(),high=x ? row.motion.end.y() : row.motion.end.x();
+            if(low==high && std::abs(low-centre)<=1.2 && std::min(a,b)<18.8 && std::max(a,b)>21.2 && row.bead->width_mm.lower>.95)centres.push_back(low);
+        }
+        std::sort(centres.begin(),centres.end());centres.erase(std::unique(centres.begin(),centres.end()),centres.end());REQUIRE(centres.size()>=3);
+        if(x){roi.min_y=centres.front()-.25;roi.max_y=centres.back()+.25;}else{roi.min_x=centres.front()-.25;roi.max_x=centres.back()+.25;}
+        request.second.first_direction=x ? HatchDirection::AlongY : HatchDirection::AlongX;
+    }else if(x){roi.min_y=centre-.8;roi.max_y=centre+.8;}else{roi.min_x=centre-.8;roi.max_x=centre+.8;}
+    request.second.maximum_pitch=Length(.39);
+    const auto limits=native_job_hatch_limits();
+    // The old stand-alone certificate is valid at its selected precision. Its
+    // immutable leaves cannot later certify a finer strip partition.
+    const auto coarse=plan_native_affine_pass_stack({"",body.snapshot->body},request.first,limits.passes);INFO(coarse.reason);REQUIRE(coarse.snapshot);
+    const auto &coarse_integral=coarse.snapshot->stack->first_pass;REQUIRE(coarse_integral.nominal_volume_mm3);
+    REQUIRE(coarse_integral.nominal_volume_mm3->upper-coarse_integral.nominal_volume_mm3->lower>limits.hatches.volumes.maximum_interval_width.value());
+    const auto coarse_split=plan_affine_hatches({"",coarse.snapshot->stack},request.second,limits.hatches);
+    REQUIRE_FALSE(coarse_split.snapshot);REQUIRE(coarse_split.reason=="INTEGRAL_STRIP_GLOBAL_PRECISION");
+    const auto planning=advance_guarded_job(fixture.print,*job.task,GuardedJobPhase::Planning);REQUIRE(planning.task);
+    const auto hatches=plan_guarded_native_hatches(*planning.task,body.snapshot,request.first,request.second,limits);INFO(hatches.reason);REQUIRE(hatches.snapshot);
+    const auto &native=*hatches.snapshot->native;const auto &stack=*native.passes->stack;
+    const auto &integral=stack.first_pass;REQUIRE(integral.nominal_volume_mm3);
+    REQUIRE(native.passes->body_material==body.snapshot->body);REQUIRE(native.hatches->source==native.passes->stack);
+    REQUIRE(stack.source->sequence==body.snapshot->body->material);REQUIRE(native.passes->request.footprint.min_x==roi.min_x);
+    REQUIRE(native.passes->request.footprint.max_y==roi.max_y);
+    REQUIRE(integral.maximum_interval_width_mm3<=limits.hatches.volumes.maximum_interval_width.value()/2);
+    REQUIRE(integral.nominal_volume_mm3->upper-integral.nominal_volume_mm3->lower<=integral.maximum_interval_width_mm3);
+    REQUIRE(integral.cells<=limits.passes.material.max_cells);REQUIRE(integral.evaluations<=limits.passes.material.max_evaluations);
+    const auto &first=native.hatches->passes.front();REQUIRE(first.direction==request.second.first_direction);
+    REQUIRE(first.prospective_volume_mm3.upper-first.prospective_volume_mm3.lower<=limits.hatches.volumes.maximum_interval_width.value());
+    REQUIRE(native.hatches->total_prospective_volume_mm3.upper-native.hatches->total_prospective_volume_mm3.lower<=limits.hatches.volumes.maximum_interval_width.value());
+    REQUIRE(first.prospective_volume_mm3.lower<=integral.nominal_volume_mm3->upper);
+    REQUIRE(integral.nominal_volume_mm3->lower<=first.prospective_volume_mm3.upper);
+    const auto before=plan_first_cap({"",hatches.snapshot->native->hatches},options.first.contour,
+        {{roi.min_x,roi.min_y,4.0},{roi.max_x,roi.max_y,4.7}},options.second.cap);
+    REQUIRE_FALSE(before.snapshot);REQUIRE(before.reason==(transverse ? "FIRST_HATCH_ROOF_SEGMENT_LIMIT" : "FIRST_HATCH_ROOF_DEPTH_LIMIT"));
+    if(!transverse) {
+        for(int mode=0;mode<5;++mode){auto bad=limits;
+            if(mode==0)bad.passes.material.max_cells=1;
+            if(mode==1)bad.passes.material.max_evaluations=1;
+            if(mode==2)bad.hatches.volumes.max_cells=1;
+            if(mode==3)bad.hatches.volumes.max_evaluations=1;
+            if(mode==4)bad.hatches.volumes.maximum_interval_width=Volume(.000000001);
+            const auto refused=plan_guarded_native_hatches(*planning.task,body.snapshot,request.first,request.second,bad);
+            INFO(refused.reason);REQUIRE_FALSE(refused.snapshot);REQUIRE_FALSE(refused.reason.empty());
+        }
+        auto tighter=limits;tighter.passes.material.maximum_interval_width=Volume(.0003);
+        const auto tight=plan_guarded_native_hatches(*planning.task,body.snapshot,request.first,request.second,tighter);INFO(tight.reason);REQUIRE(tight.snapshot);
+        REQUIRE(tight.snapshot->native->passes->stack->first_pass.maximum_interval_width_mm3==.0003);
+        auto cancel=limits;cancel.hatches.volumes.cancelled=[] {return true;};
+        REQUIRE_FALSE(plan_guarded_native_hatches(*planning.task,body.snapshot,request.first,request.second,cancel).snapshot);
+        auto stale=limits;stale.hatches.volumes.is_current=[](uint64_t){return false;};
+        REQUIRE_FALSE(plan_guarded_native_hatches(*planning.task,body.snapshot,request.first,request.second,stale).snapshot);
+    }
+    REQUIRE(planning.task->is_current());REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Planning);
+    if(const char *directory=std::getenv("NPTOP_CANDIDATE_EVIDENCE_DIR")){
+        const auto rect=[](const RectangleXY &r){return nlohmann::json{r.min_x,r.min_y,r.max_x,r.max_y};};
+        const auto bound=[](const ScalarBounds &b){return nlohmann::json{b.lower,b.upper};};
+        const auto &sequence=*body.snapshot->body->material;nlohmann::json rows=nlohmann::json::array();
+        for(size_t i=0;i<sequence.records.size();++i)rows.push_back(sequence.canonical_record(i));
+        nlohmann::json strips=nlohmann::json::array();
+        for(const auto &line:first.lines)strips.push_back({{"footprint",rect(line.volume_cell)},{"volume",bound(line.prospective_cell_volume_mm3)}});
+        const auto &cell=integral.first_pass.cell.value();
+        const nlohmann::json witness={{"schema",1},{"scope","ACTUAL_NATIVE_ROOF_STRIP_PRECISION_ONLY"},{"export","BLOCK"},
+            {"transverse",transverse},{"body_axis",x ? 0 : 1},{"hatch_axis",first.direction==HatchDirection::AlongX ? 0 : 1},
+            {"revision",sequence.revision},{"journal",{{"context",sequence.canonical_context()},{"records",rows},{"sha256",sequence.fingerprint()}}},
+            {"footprint",rect(roi)},{"surface",{cell.z00,cell.z10,cell.z01}},{"support_plane",request.first.support_plane_z_mm},
+            {"source_corner_error",native.passes->source_corner_error_upper_mm},
+            {"requested_precision",limits.passes.material.maximum_interval_width.value()},
+            {"consumer_precision",limits.hatches.volumes.maximum_interval_width.value()},
+            {"producer_precision",integral.maximum_interval_width_mm3},{"coarse_volume",bound(*coarse_integral.nominal_volume_mm3)},
+            {"volume",bound(*integral.nominal_volume_mm3)},{"strip_total",bound(first.prospective_volume_mm3)},{"strips",strips},
+            {"cells",integral.cells},{"evaluations",integral.evaluations},{"max_cells",limits.passes.material.max_cells},
+            {"max_evaluations",limits.passes.material.max_evaluations},{"coarse_refusal",coarse_split.reason},{"cap_refusal",before.reason}};
+        const auto dir=boost::filesystem::path(directory);boost::filesystem::create_directories(dir);
+        boost::nowide::ofstream out((dir/(transverse ? "native-hatch-precision-transverse.json" : "native-hatch-precision-parallel.json")).string());
+        REQUIRE(out.good());out<<witness.dump(2)<<'\n';out.close();REQUIRE(out.good());
+    }
+}
+}
+TEST_CASE("B06 native wider body roof is integrated at the selected hatch precision", "[Nonplanar][B06][NativeHatchPrecision]")
+{
+    check_native_hatch_precision(false);
+}
+TEST_CASE("B06 native transverse strips share a refined actual body roof proof", "[Nonplanar][B06][NativeHatchPrecision]")
+{
+    check_native_hatch_precision(true);
+}

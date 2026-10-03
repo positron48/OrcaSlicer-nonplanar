@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="14" hostname="tbd" time="0.419" timestamp="2026-10-03T17:56:14Z">
+    <properties>
+      <property name="random-seed" value="4028752317"/>
+      <property name="filters" value="[FirstCapInfillTransverse]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B07 native transverse infill follows actual stepped roof between body runs" time="0.000" status="run">
+      <failure message="before.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0
+OWNED_NATIVE_AFFINE_HATCH_LINEAGE_ONLY
+FIRST_HATCH_ROOF_SEGMENT_LIMIT
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:5000
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

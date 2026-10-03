@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="13" hostname="tbd" time="0.285" timestamp="2026-10-03T17:50:19Z">
+    <properties>
+      <property name="random-seed" value="193316557"/>
+      <property name="filters" value="[FirstCapInfillInterface]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B07 infill densification uses a wider actual native interface across existing body beads" time="0.000" status="run">
+      <failure message="before.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( before.snapshot )
+with expansion:
+  0
+OWNED_NATIVE_BODY_LINEAGE_ONLY
+OWNED_NATIVE_AFFINE_HATCH_LINEAGE_ONLY
+FIRST_HATCH_ROOF_DEPTH_LIMIT
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:4972
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

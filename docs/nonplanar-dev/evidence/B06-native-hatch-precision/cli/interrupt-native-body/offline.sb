@@ -1,0 +1,6 @@
+(version 1)
+(allow default)
+(deny network*)
+(deny file-write*)
+(allow file-write* (subpath "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B06-native-hatch-precision/cli/interrupt-native-body"))
+(allow file-write* (literal "/dev/null"))
