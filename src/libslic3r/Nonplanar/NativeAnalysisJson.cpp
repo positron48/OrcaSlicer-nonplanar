@@ -80,11 +80,13 @@ std::string native_analysis_document(const NativeAnalysisRequestSnapshot &input)
             {"policy",{p.passes,p.first_gap.minimum.value(),p.first_gap.maximum.value(),p.first_gap.corner_height_error.value(),p.later_vertical_minimum.value(),p.later_vertical_maximum.value(),p.later_normal_minimum.value(),p.later_normal_maximum.value(),p.total_volume_error.value()}}}},
         {"hatches",{r.hatches.width.value(),r.hatches.maximum_pitch.value(),r.hatches.boundary_band.value(),unsigned(r.hatches.first_direction)}},
         {"contour",{r.contour.width.value(),r.contour.seam_corner,r.contour.clockwise,r.contour.maximum_outside_target.value()}},{"fill_region_mm",region(r.fill_region)}};
-    if(!r.later_paths.empty()){
+    if(r.corner_replan || !r.later_paths.empty()){
         value["schema"]=2;value["later_paths"]=Json::array();
         for(const auto &p:r.later_paths)value["later_paths"].push_back({p.pass_index,p.footprint.min_x,p.footprint.min_y,
             p.footprint.max_x,p.footprint.max_y,p.support_plane_z_mm});
     }
+    if(r.corner_replan){const auto &c=*r.corner_replan;value["schema"]=3;
+        value["corner_replan"]={c.minimum_covered_gain.value(),c.maximum_outside_target.value(),c.maximum_repeated_increase.value()};}
     auto text=value.dump();require(text.size()<=2*1024*1024,"NATIVE_ANALYSIS_JSON_BYTE_LIMIT");return text;
 }
 std::shared_ptr<const NativeAnalysisRequestSnapshot> parse_native_analysis_document(const std::string &text)
@@ -95,11 +97,14 @@ std::shared_ptr<const NativeAnalysisRequestSnapshot> parse_native_analysis_docum
         if(event==Json::parse_event_t::key)require(!objects.empty() && objects.back().insert(v.get<std::string>()).second,"NATIVE_ANALYSIS_JSON_DUPLICATE_KEY");
         if(event==Json::parse_event_t::object_end)objects.pop_back();return true;
     });
-    const auto version=integer(j.at("schema"));require(version==1 || version==2,"NATIVE_ANALYSIS_JSON_VERSION");
+    const auto version=integer(j.at("schema"));require(version>=1 && version<=3,"NATIVE_ANALYSIS_JSON_VERSION");
     if(version==1)registry(j,{"schema","millimeters_declared","reservation","body","scene","motion","serializer","replay","passes","hatches","contour","fill_region_mm"});
-    else registry(j,{"schema","millimeters_declared","reservation","body","scene","motion","serializer","replay","passes","hatches","contour","fill_region_mm","later_paths"});
+    else if(version==2)registry(j,{"schema","millimeters_declared","reservation","body","scene","motion","serializer","replay","passes","hatches","contour","fill_region_mm","later_paths"});
+    else registry(j,{"schema","millimeters_declared","reservation","body","scene","motion","serializer","replay","passes","hatches","contour","fill_region_mm","later_paths","corner_replan"});
+    std::optional<FirstCapCornerReplanPolicy> corners;
+    if(version==3){const auto &c=j.at("corner_replan");array(c,3);corners=FirstCapCornerReplanPolicy{Volume(number(c[0])),Volume(number(c[1])),Volume(number(c[2]))};}
     std::vector<NextCapPathRequest> later;
-    if(version==2){const auto &paths=j.at("later_paths");require(paths.is_array() && !paths.empty() && paths.size()<=4096,"NATIVE_ANALYSIS_JSON_LATER_SIZE");
+    if(version>=2){const auto &paths=j.at("later_paths");require(paths.is_array() && (version==3 || !paths.empty()) && paths.size()<=4096,"NATIVE_ANALYSIS_JSON_LATER_SIZE");
         for(const auto &p:paths){array(p,6);later.push_back({size_t(integer(p[0],15)),
             {number(p[1]),number(p[2]),number(p[3]),number(p[4])},number(p[5])});}
     }
@@ -135,7 +140,7 @@ std::shared_ptr<const NativeAnalysisRequestSnapshot> parse_native_analysis_docum
     const auto &h=j.at("hatches"),&co=j.at("contour");array(h,4);array(co,4);
     return capture_native_analysis_request({{body,std::move(scene),clearance,motion,serializer,replay},flag(j.at("millimeters_declared")),TriangleMesh(std::move(its)),passes,
         {WidthXY(number(h[0])),Length(number(h[1])),Length(number(h[2])),HatchDirection(integer(h[3],1))},
-        {WidthXY(number(co[0])),size_t(integer(co[1],3)),flag(co[2]),Volume(number(co[3]))},scene_box(j.at("fill_region_mm")),std::move(later)});
+        {WidthXY(number(co[0])),size_t(integer(co[1],3)),flag(co[2]),Volume(number(co[3]))},scene_box(j.at("fill_region_mm")),std::move(later),std::move(corners)});
 }
 const char *native_analysis_stage_name(NativeAnalysisStage stage)
 {

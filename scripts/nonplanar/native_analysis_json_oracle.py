@@ -21,13 +21,23 @@ def verify_document(document, record, initial_acceleration=100):
     verify_request(record)
     resources = expected_resources(initial_acceleration)
     source = parse(record['analysis_request_canonical'])
+    require(set(document) == {'schema', 'millimeters_declared', 'reservation', 'passes', 'hatches', 'contour',
+                              'fill_region_mm', 'body', 'replay', 'scene', 'motion', 'serializer'} |
+            ({'later_paths'} if source['schema'] >= 2 else set()) |
+            ({'corner_replan'} if source['schema'] == 3 else set()), 'Exact transport registry')
     require(type(document['schema']) is int and document['schema'] == source['schema'] and
             document['millimeters_declared'] == source['millimeters_declared'], 'Version/units')
-    if source['schema'] == 2:
-        require(type(document['later_paths']) is list and 0 < len(document['later_paths']) <= 4096 and
+    if source['schema'] >= 2:
+        require(type(document['later_paths']) is list and (source['schema'] == 3 or len(document['later_paths']) > 0) and len(document['later_paths']) <= 4096 and
                 [[row[0], *[bits(n) for n in row[1:]]] for row in document['later_paths']] == source['later_paths'], 'Exact ordered later paths')
     else:
         require('later_paths' not in document, 'Legacy transport has no later paths')
+    if source['schema'] == 3:
+        require(type(document['corner_replan']) is list and len(document['corner_replan']) == 3 and
+                all(type(n) in (int, float) for n in document['corner_replan']) and
+                [bits(n) for n in document['corner_replan']] == source['corner_replan'], 'Exact optional corner policy')
+    else:
+        require('corner_replan' not in document, 'Legacy transport has no corner repair')
     mesh = document['reservation']
     framed = b'nptop-native-mesh-v1\0' + struct.pack('>Q', len(mesh['vertices_f32_mm']))
     for v in mesh['vertices_f32_mm']:

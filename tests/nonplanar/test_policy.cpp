@@ -4758,7 +4758,7 @@ TEST_CASE("B13 native later binding requires the complete captured program and e
         const FirstCapMaterialResult after{"",later.snapshot->after};const auto bytes=bytes_for(after),first_bytes=bytes_for(before);
         job=advance_guarded_job(fixture.print,*job.task,GuardedJobPhase::Serializing);REQUIRE(job.task);
         const auto bound=capture_guarded_native_plan(*job.task,hatches.snapshot,after,bytes,{}, {},later.snapshot);
-        if(mode){REQUIRE_FALSE(bound.snapshot);REQUIRE(bound.reason==(mode==3 ? "NATIVE_JOB_REQUEST_VERSION" : "NATIVE_JOB_LATER_REQUEST_MISMATCH"));continue;}
+        if(mode){REQUIRE_FALSE(bound.snapshot);REQUIRE(bound.reason==(mode==3 ? "NATIVE_JOB_CORNER_PROGRAM_REQUIRED" : "NATIVE_JOB_LATER_REQUEST_MISMATCH"));continue;}
         INFO(bound.reason);REQUIRE(bound.snapshot);
         const auto omitted=capture_guarded_native_plan(*job.task,hatches.snapshot,before,first_bytes);INFO(omitted.reason);REQUIRE_FALSE(omitted.snapshot);
         REQUIRE(omitted.reason=="NATIVE_JOB_LATER_PROGRAM_REQUIRED");
@@ -4766,5 +4766,174 @@ TEST_CASE("B13 native later binding requires the complete captured program and e
         const auto copied=plan_next_cap_sequence(before,options.first.later_paths);REQUIRE(copied.snapshot);
         REQUIRE(copied.snapshot->after->material->sequence->fingerprint()==later.snapshot->after->material->sequence->fingerprint());
         const auto foreign=capture_guarded_native_plan(*job.task,hatches.snapshot,after,bytes,{}, {},copied.snapshot);REQUIRE_FALSE(foreign.snapshot);REQUIRE(foreign.reason=="NATIVE_JOB_LATER_MATERIAL_OWNER");
+    }
+}
+
+TEST_CASE("B14 captured corner repair selects actual material through controller and final replay", "[Nonplanar][B14][NativeAnalysisCorners]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);
+    const auto legacy=capture_native_analysis_request(options.first);
+    options.first.corner_replan=FirstCapCornerReplanPolicy{Volume(.001),Volume(.001),Volume(.1)};
+    const auto input=capture_native_analysis_request(options.first);
+    REQUIRE(input->sha256!=legacy->sha256);
+    const auto document=native_analysis_document(*input);
+    REQUIRE(nlohmann::json::parse(document).at("schema")==3);
+    REQUIRE(parse_native_analysis_document(document)->sha256==input->sha256);
+    options.second.progress=[&](NativeAnalysisStage stage){if(stage==NativeAnalysisStage::Cap)options.first.corner_replan.reset();};
+    const auto result=run_native_analysis(fixture.print,101,input,fixture.resources,options.second);
+    INFO(result.reason<<" stage="<<int(result.stage));REQUIRE(result.snapshot);
+    const auto &plan=*result.snapshot->plan;REQUIRE(plan.corners);
+    REQUIRE(plan.assembly->source==plan.corners->after);REQUIRE(plan.corners->before->source==plan.hatches->native->hatches);
+    REQUIRE(plan.corners->after->contour_extent==FirstCapContourExtent::FiniteBandExtensions);
+    REQUIRE(plan.corners->covered_gain_mm3.lower>=.001);REQUIRE(plan.corners->repeated_increase_mm3.upper<=.1);
+    REQUIRE(nlohmann::json::parse(plan.canonical_json).at("schema")==4);
+    REQUIRE(nlohmann::json::parse(plan.canonical_json).at("corner_lineage")==plan.corner_sha256);
+    REQUIRE(sha256_bytes(plan.corner_json)==plan.corner_sha256);
+    const auto &ledger=*plan.assembly->material->sequence;
+    REQUIRE(plan.candidate->plan->source->material->ledger->fingerprint()==ledger.fingerprint());
+    REQUIRE(result.snapshot->report->rates);REQUIRE(result.snapshot->report->material);
+    REQUIRE(result.snapshot->report->rates->moves.size()==ledger.records.size());REQUIRE_FALSE(result.snapshot->report->export_allowed);
+    const auto diagnostic=nlohmann::json::parse(native_analysis_diagnostic(result));
+    REQUIRE(diagnostic.at("manifest").at("schema")==5);REQUIRE(diagnostic.at("replay").size()==ledger.records.size());
+    size_t deposits=0;for(size_t i=0;i<ledger.records.size();++i){
+        const auto &row=ledger.records[i];const auto &move=diagnostic.at("replay")[i];
+        for(size_t axis=0;axis<3;++axis){const double end=axis==0 ? row.motion.end.x() : axis==1 ? row.motion.end.y() : row.motion.end.z();
+            REQUIRE(std::abs(move.at("end_mm")[axis].get<double>()-end)<=.000000501);}
+        if(std::holds_alternative<Deposition>(row.motion.payload)){++deposits;REQUIRE(move.at("e_mm").get<double>()>0);}
+    }
+    REQUIRE(deposits>0);REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Unknown);
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR")){
+        const auto dir=boost::filesystem::path(directory);
+        test::save_job_report(dir/"native-corner-controller-report.json",{result.reason,result.snapshot->report,result.snapshot->replay_evaluations});
+        const auto save=[&](const char *name,const std::string &bytes){const auto path=dir/name;REQUIRE_FALSE(boost::filesystem::exists(path));boost::nowide::ofstream f(path.string(),std::ios::binary);REQUIRE(f.good());f<<bytes;f.close();REQUIRE(f.good());};
+        save("native-corner-controller-request.json",document);save("native-corner-controller-diagnostic.json",native_analysis_diagnostic(result));
+    }
+}
+
+TEST_CASE("B14 corner requests own exact policy and reject malformed transport and unqualified material", "[Nonplanar][B14][NativeAnalysisCorners]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);
+    options.first.corner_replan=FirstCapCornerReplanPolicy{Volume(.001),Volume(.001),Volume(.1)};
+    const auto owned=capture_native_analysis_request(options.first);const auto document=nlohmann::json::parse(native_analysis_document(*owned));
+    for(int field=0;field<3;++field){auto edited=options.first;
+        if(field==0)edited.corner_replan->minimum_covered_gain=Volume(std::nextafter(.001,1.));
+        if(field==1)edited.corner_replan->maximum_outside_target=Volume(std::nextafter(.001,1.));
+        if(field==2)edited.corner_replan->maximum_repeated_increase=Volume(std::nextafter(.1,1.));
+        const auto changed=capture_native_analysis_request(edited);REQUIRE(changed->sha256!=owned->sha256);
+        REQUIRE(parse_native_analysis_document(native_analysis_document(*changed))->sha256==changed->sha256);
+    }
+    for(int mode=0;mode<8;++mode){auto changed=document;
+        if(mode==0)changed["schema"]=2;
+        if(mode==1)changed.erase("corner_replan");
+        if(mode==2)changed["corner_replan"]=nullptr;
+        if(mode==3)changed["corner_replan"][0]=true;
+        if(mode==4)changed["corner_replan"][0]=0;
+        if(mode==5)changed["corner_replan"][2]=-.1;
+        if(mode==6)changed["corner_replan"].push_back(0);
+        if(mode==7)changed.erase("later_paths");
+        REQUIRE_THROWS(parse_native_analysis_document(changed.dump()));
+    }
+    for(int mode=0;mode<5;++mode){auto request=options.first;auto limits=options.second;bool cancel=false;
+        if(mode==0)request.corner_replan->maximum_repeated_increase=Volume(0);
+        if(mode==1)request.corner_replan->minimum_covered_gain=Volume(1);
+        if(mode==2){limits.cancelled=[&]{return cancel;};limits.progress=[&](NativeAnalysisStage s){if(s==NativeAnalysisStage::Cap)cancel=true;};}
+        if(mode==3)limits.progress=[&](NativeAnalysisStage s){if(s==NativeAnalysisStage::Cap)fixture.print.set_plate_origin(Vec3d(1,0,0));};
+        if(mode==4)limits.cap.max_evaluations=1;
+        const auto result=run_native_analysis(fixture.print,101,capture_native_analysis_request(request),fixture.resources,limits);
+        INFO(result.reason);REQUIRE_FALSE(result.snapshot);
+        const auto diagnostic=nlohmann::json::parse(native_analysis_diagnostic(result));
+        REQUIRE(diagnostic.at("report").is_null());REQUIRE(diagnostic.at("replay").empty());REQUIRE(diagnostic.at("export_allowed")==false);
+        fixture.print.set_plate_origin(Vec3d::Zero());
+    }
+}
+
+TEST_CASE("B14 schema three corner requests execute in isolated child and match default replay", "[Nonplanar][B14][NativeAnalysisCorners]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);
+    options.first.corner_replan=FirstCapCornerReplanPolicy{Volume(.001),Volume(.001),Volume(.1)};
+    const auto request=capture_native_analysis_request(options.first);const auto worker=native_worker_input(fixture,request);
+    save_worker_evidence("native-corner-worker-input.json",worker->bytes);
+    const auto child=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,worker);INFO(child.reason);
+    REQUIRE(child.reason=="WORKER_BLOCKED_DIAGNOSTIC_COMPLETE");REQUIRE(child.progress_stages==10);
+    const auto direct=run_native_analysis(fixture.print,101,request,fixture.resources);INFO(direct.reason);REQUIRE(direct.snapshot);
+    const auto reference=nlohmann::json::parse(native_analysis_diagnostic(direct)),actual=nlohmann::json::parse(child.diagnostic);
+    REQUIRE(actual.at("replay")==reference.at("replay"));REQUIRE(actual.at("manifest").at("candidate_sha256")==reference.at("manifest").at("candidate_sha256"));
+    REQUIRE(actual.at("manifest").at("schema")==5);REQUIRE(actual.at("export_allowed")==false);
+    save_worker_evidence("native-corner-worker-diagnostic.json",child.diagnostic);save_worker_evidence("native-corner-default-diagnostic.json",reference.dump());
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(directory)/"native-corner-default-report.json",{direct.reason,direct.snapshot->report,direct.snapshot->replay_evaluations});
+}
+
+TEST_CASE("B13 corner binding requires the captured policy recipe and exact protected owner", "[Nonplanar][B13][NativeAnalysisCorners][NativeCornerBinding]")
+{
+    for(int mode=0;mode<5;++mode){CAPTURE(mode);NativeJobFixture fixture;auto options=native_analysis_request(fixture);
+        options.first.corner_replan=FirstCapCornerReplanPolicy{Volume(.001),Volume(.001),Volume(.1)};
+        auto captured=options.first;
+        if(mode==1)captured.corner_replan->maximum_repeated_increase=Volume(std::nextafter(.1,1.));
+        if(mode==2)captured.corner_replan.reset();
+        if(mode==3)captured.contour.seam_corner=1;
+        if(mode==4)captured.fill_region.min=PhysicalPosition{captured.fill_region.min.x(),captured.fill_region.min.y(),3.9};
+        const auto input=capture_native_analysis_request(captured);auto resources=fixture.resources;
+        resources.push_back({JobResourceKind::SourceFile,"native-analysis-request-v1",input->canonical_json});
+        auto job=begin_guarded_job(fixture.print,101,resources,{},JobSoftwareMode::CompiledInputs,&options.first.inputs);REQUIRE(job.task);
+        const auto body=analyze_guarded_native_body(*job.task,native_job_body_request(),native_job_body_limits());REQUIRE(body.snapshot);
+        job=advance_guarded_job(fixture.print,*job.task,GuardedJobPhase::Planning);REQUIRE(job.task);
+        const auto hatches=plan_guarded_native_hatches(*job.task,body.snapshot,options.first.passes,options.first.hatches,options.second.hatches);REQUIRE(hatches.snapshot);
+        const auto cap=plan_first_cap({"",hatches.snapshot->native->hatches},options.first.contour,options.first.fill_region,options.second.cap);REQUIRE(cap.snapshot);
+        const auto corners=replan_first_cap_corners(cap,*options.first.corner_replan,options.second.cap);INFO(corners.reason);REQUIRE(corners.snapshot);
+        const auto after=reconstruct_first_cap_material({"",corners.snapshot->after});REQUIRE(after.snapshot);
+        const auto material=prepare_material_motion({"",after.snapshot->material->sequence});REQUIRE(material.snapshot);
+        const auto source=prepare_simulation_motion(options.first.inputs.scene,material,options.first.inputs.clearance);REQUIRE(source.snapshot);
+        const auto motion=plan_linear_motion(source,options.first.inputs.motion);REQUIRE(motion.snapshot);
+        const auto bytes=serialize_linear_candidate(motion,options.first.inputs.serializer);REQUIRE(bytes.snapshot);
+        job=advance_guarded_job(fixture.print,*job.task,GuardedJobPhase::Serializing);REQUIRE(job.task);
+        const auto bound=capture_guarded_native_plan(*job.task,hatches.snapshot,after,bytes,{}, {},{},corners.snapshot);
+        if(mode){REQUIRE_FALSE(bound.snapshot);REQUIRE(bound.reason==(mode==2 ? "NATIVE_JOB_CORNER_REQUEST_REQUIRED" : "NATIVE_JOB_CORNER_REQUEST_MISMATCH"));continue;}
+        INFO(bound.reason);REQUIRE(bound.snapshot);
+        const auto omitted=capture_guarded_native_plan(*job.task,hatches.snapshot,after,bytes);REQUIRE_FALSE(omitted.snapshot);REQUIRE(omitted.reason=="NATIVE_JOB_CORNER_PROGRAM_REQUIRED");
+        const auto copied=replan_first_cap_corners(cap,*options.first.corner_replan,options.second.cap);REQUIRE(copied.snapshot);
+        REQUIRE(copied.snapshot->after->fill->occupied->source->sequence->fingerprint()==corners.snapshot->after->fill->occupied->source->sequence->fingerprint());
+        const auto foreign=capture_guarded_native_plan(*job.task,hatches.snapshot,after,bytes,{}, {},{},copied.snapshot);
+        REQUIRE_FALSE(foreign.snapshot);REQUIRE(foreign.reason=="NATIVE_JOB_CORNER_MATERIAL_OWNER");
+    }
+}
+
+TEST_CASE("B14 corner material remains the actual first prefix for captured later passes", "[Nonplanar][B14][NativeAnalysisCorners]")
+{
+    NativeJobFixture fixture("affine-wedge-1-in-8000.stl");auto options=native_later_options(fixture);
+    options.first.corner_replan=FirstCapCornerReplanPolicy{Volume(.001),Volume(.001),Volume(.1)};
+    const auto request=capture_native_analysis_request(options.first);
+    const auto result=run_native_analysis(fixture.print,101,request,fixture.resources,options.second);INFO(result.reason);REQUIRE(result.snapshot);
+    const auto &plan=*result.snapshot->plan;REQUIRE(plan.corners);REQUIRE(plan.later);
+    REQUIRE(plan.later->before->source==plan.corners->after);REQUIRE(plan.assembly==plan.later->after);
+    REQUIRE(plan.later->paths.size()==2);REQUIRE(nlohmann::json::parse(plan.canonical_json).at("schema")==4);
+    REQUIRE_FALSE(result.snapshot->report->export_allowed);
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR")){
+        const auto dir=boost::filesystem::path(directory);test::save_job_report(dir/"native-corner-later-report.json",{result.reason,result.snapshot->report,result.snapshot->replay_evaluations});
+        const auto path=dir/"native-corner-later-request.json";REQUIRE_FALSE(boost::filesystem::exists(path));boost::nowide::ofstream f(path.string());REQUIRE(f.good());f<<native_analysis_document(*request);f.close();REQUIRE(f.good());
+        save_worker_evidence("native-corner-later-diagnostic.json",native_analysis_diagnostic(result));
+    }
+}
+
+TEST_CASE("B14 cap creation and corner repair consume one shared work and cell budget", "[Nonplanar][B14][NativeAnalysisCorners][NativeCornerBudget]")
+{
+    NativeJobFixture fixture;auto options=native_analysis_request(fixture);
+    options.first.corner_replan=FirstCapCornerReplanPolicy{Volume(.001),Volume(.001),Volume(.1)};
+    const auto request=capture_native_analysis_request(options.first);
+    const auto reference=run_native_analysis(fixture.print,101,request,fixture.resources,options.second);REQUIRE(reference.snapshot);
+    const auto &repair=*reference.snapshot->plan->corners;
+    const auto work=repair.before->evaluations+repair.evaluations,cells=repair.before->cells+repair.cells;
+    REQUIRE(work<options.second.cap.max_evaluations);REQUIRE(cells<options.second.cap.max_cells);
+    auto exact=options.second;exact.cap.max_evaluations=work+1;exact.cap.max_cells=cells+1;
+    const auto allowed=run_native_analysis(fixture.print,101,request,fixture.resources,exact);INFO(allowed.reason);REQUIRE(allowed.snapshot);
+    REQUIRE(allowed.snapshot->plan->candidate->sha256==reference.snapshot->plan->candidate->sha256);
+    for(bool restrict_work:{true,false}){auto limited=options.second;
+        // Either individual operation fits. Resetting the budget between them
+        // would therefore publish a candidate that this complete stage refuses.
+        if(restrict_work)limited.cap.max_evaluations=std::max(repair.before->evaluations,repair.evaluations)+1;
+        else limited.cap.max_cells=std::max(repair.before->cells,repair.cells)+1;
+        const auto refused=run_native_analysis(fixture.print,101,request,fixture.resources,limited);INFO(refused.reason);
+        REQUIRE_FALSE(refused.snapshot);REQUIRE(refused.stage==NativeAnalysisStage::Cap);
+        const auto diagnostic=nlohmann::json::parse(native_analysis_diagnostic(refused));
+        REQUIRE(diagnostic.at("report").is_null());REQUIRE(diagnostic.at("replay").empty());REQUIRE(diagnostic.at("export_allowed")==false);
     }
 }

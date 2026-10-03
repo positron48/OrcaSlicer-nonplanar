@@ -14,6 +14,7 @@ struct NativeAnalysisRequest {
     FirstContourPolicy contour;
     SceneBox fill_region;
     std::vector<NextCapPathRequest> later_paths={};
+    std::optional<FirstCapCornerReplanPolicy> corner_replan={};
 };
 struct NativeAnalysisRequestSnapshot {
     const NativeAnalysisRequest values;

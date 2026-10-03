@@ -37,6 +37,10 @@ inline void save_job_report(const boost::filesystem::path &path,const GuardedCan
         };
         const auto journal=[&](const char *name,const MaterialSequenceSnapshot &sequence){record["native"][name]=encoded_journal(sequence);};
         journal("assembled",*native.assembly->material->sequence);journal("planned",ledger);journal("body",*body.body->material);
+        if(native.corners){record["native"]["corner_canonical"]=native.corner_json;record["native"]["corner_sha256"]=native.corner_sha256;
+            journal("corner_before",*native.corners->before->fill->occupied->source->sequence);
+            journal("corner_after",*native.corners->after->fill->occupied->source->sequence);
+        }
         if(native.later){record["native"]["later_canonical"]=native.later_json;record["native"]["later_sha256"]=native.later_sha256;
             record["native"]["later_prefixes"]=nlohmann::json::array();
             for(const auto &path:native.later->paths)record["native"]["later_prefixes"].push_back(encoded_journal(*path->source->source->material->sequence));

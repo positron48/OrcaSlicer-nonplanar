@@ -221,18 +221,65 @@ def later_lineage(native, plan, journals, revision):
     return journals['assembled']
 
 
+
+def corner_lineage(native, plan, journals, revision):
+    """Exact retained cap packets and assembly lineage; no geometric approval."""
+    text, digest = native['corner_canonical'], native['corner_sha256']
+    repair = parse(text)
+    require(sha(text) == digest == plan['corner_lineage'] and canonical(repair) == text, 'Corner identity')
+    require(set(repair) == {'schema', 'scope', 'before_journal', 'after_journal', 'contour', 'fill_region',
+                            'policy', 'commanded_increase', 'coverage_gain', 'missing_reduction', 'repeated_increase'} and
+            type(repair['schema']) is int and repair['schema'] == 1 and
+            repair['scope'] == 'owned_prospective_retained_corner_material_lineage_only', 'Corner registry/version/scope')
+    before_context, before = decoded_journal(native['corner_before'], revision)
+    after_context, after = decoded_journal(native['corner_after'], revision)
+    require(repair['before_journal'] == native['corner_before']['sha256'].encode().hex() and
+            repair['after_journal'] == native['corner_after']['sha256'].encode().hex(), 'Corner exact journal edges')
+    require(all(before_context[k] == after_context[k] for k in ['source', 'revision', 'schema']) and
+            before_context['model'][:5] == after_context['model'][:5] and
+            decoded_number(after_context['model'][5]) >= decoded_number(before_context['model'][5]), 'Corner source/margins retained')
+    from collections import Counter
+    signature = lambda row: canonical(dict(row, motion=row['motion'][2:]))
+    old_deposits = Counter(signature(row) for row in before if row['bead'] is not None)
+    new_deposits = Counter(signature(row) for row in after if row['bead'] is not None)
+    require(old_deposits and not (old_deposits-new_deposits) and sum(new_deposits.values()) > sum(old_deposits.values()), 'Corner retains all old doses/sections')
+    assembled = decoded_journal(native['later_prefixes'][0], revision) if 'later_prefixes' in native else journals['assembled']
+    body = journals['body'][1]
+    rows = assembled[1]
+    require(rows[:len(body)] == body, 'Corner complete original body')
+    offset = len(body)
+    if body[-1]['motion'][4] != after[0]['motion'][3]:
+        require(offset < len(rows) and rows[offset]['bead'] is None and rows[offset]['motion'][7] == [0] and
+                rows[offset]['motion'][3] == body[-1]['motion'][4] and rows[offset]['motion'][4] == after[0]['motion'][3], 'Corner explicit new connector')
+        offset += 1
+    require(len(rows) == offset+len(after) and
+            [signature(row) for row in rows[offset:]] == [signature(row) for row in after], 'Exact selected corner material assembly')
+    for key in ('commanded_increase', 'coverage_gain', 'missing_reduction', 'repeated_increase'):
+        bounds = list(map(decoded_number, repair[key]))
+        require(len(bounds) == 2 and 0 <= bounds[0] <= bounds[1], 'Corner outward gain interval')
+    policy = list(map(decoded_number, repair['policy']))
+    require(len(policy) == 3 and policy[0] > 0 and policy[1] >= 0 and policy[2] >= 0 and
+            decoded_number(repair['coverage_gain'][0]) >= policy[0] and
+            decoded_number(repair['missing_reduction'][0]) >= policy[0] and
+            decoded_number(repair['repeated_increase'][1]) <= policy[2], 'Explicit corner gain/overlap policy')
+
+
 def native_lineage(record, job):
     """Exact dependency identity only; no geometry or material math approval."""
     native = record['native']
     has_departure = 'departure_canonical' in native
     has_later = 'later_canonical' in native
+    has_corners = 'corner_canonical' in native
     require(not (has_departure and has_later), 'Unsupported combined program')
+    require(not (has_departure and has_corners), 'Unsupported corner departure program')
     native_fields = {'canonical', 'sha256', 'hatch_canonical', 'hatch_sha256', 'body_canonical', 'body_sha256',
                      'body', 'assembled', 'planned'}
     if has_departure:
         native_fields |= {'departure_canonical', 'departure_sha256', 'before', 'routed'}
     if has_later:
         native_fields |= {'later_canonical', 'later_sha256', 'later_prefixes'}
+    if has_corners:
+        native_fields |= {'corner_canonical', 'corner_sha256', 'corner_before', 'corner_after'}
     require(set(native) == native_fields, 'Native evidence fields')
     for prefix in ['', 'hatch_', 'body_']:
         text, digest = native[prefix + 'canonical'], native[prefix + 'sha256']
@@ -244,12 +291,14 @@ def native_lineage(record, job):
         fields.add('departure_lineage')
     if has_later:
         fields.add('later_lineage')
+    if has_corners:
+        fields.add('corner_lineage')
     require(set(plan) == fields, 'Native plan fields')
     require(set(hatch) == {'schema', 'scope', 'body_lineage', 'request', 'geometry'}, 'Native hatch fields')
     require(set(body) == {'schema', 'scope', 'job_fingerprint', 'attempt', 'source_sha256',
                           'slicing_input', 'request', 'body', 'body_material', 'body_journal'}, 'Native body fields')
-    require(type(plan['schema']) is int and plan['schema'] == (3 if has_later else 2 if has_departure else 1) and
-            plan['scope'] == ('owned_native_body_cap_later_linear_candidate_lineage_only' if has_later else
+    require(type(plan['schema']) is int and plan['schema'] == (4 if has_corners else 3 if has_later else 2 if has_departure else 1) and
+            plan['scope'] == ('owned_native_body_corner_cap_linear_candidate_lineage_only' if has_corners else 'owned_native_body_cap_later_linear_candidate_lineage_only' if has_later else
                               'owned_native_body_cap_departure_linear_candidate_lineage_only' if has_departure else
                               'owned_native_body_cap_linear_candidate_lineage_only'), 'Native plan version/scope')
     for document, scope in [(hatch, 'owned_native_affine_hatch_dependency_lineage_only'),
@@ -269,6 +318,9 @@ def native_lineage(record, job):
     require(native['body']['sha256'] == body['body_journal'] and native['assembled']['sha256'] == plan['assembled_journal'] and
             native['planned']['sha256'] == plan['planned_journal'], 'Native ledger dependency')
     require(journals['body'][0]['source'] == body['body'].encode().hex(), 'Native body geometry journal binding')
+    if has_corners:
+        require(not has_departure, 'Unsupported corner departure')
+        corner_lineage(native, plan, journals, record['job_revision'])
     original_context, original = journals['assembled']
     if has_departure:
         original_context, original = departure_lineage(native, plan, journals)
@@ -324,8 +376,9 @@ def verify(record):
     if 'native' in record:
         has_departure = 'departure_canonical' in record['native']
         has_later = 'later_canonical' in record['native']
-        manifest['schema'] = 4 if has_later else 3 if has_departure else 2
-        manifest['scope'] = ('owned_native_body_cap_later_candidate_lineage_only' if has_later else
+        has_corners = 'corner_canonical' in record['native']
+        manifest['schema'] = 5 if has_corners else 4 if has_later else 3 if has_departure else 2
+        manifest['scope'] = ('owned_native_body_corner_cap_candidate_lineage_only' if has_corners else 'owned_native_body_cap_later_candidate_lineage_only' if has_later else
                              'owned_native_body_cap_departure_candidate_lineage_only' if has_departure else
                              'owned_native_body_cap_candidate_lineage_only')
         manifest['native_lineage'] = encode(native_lineage(record, job))

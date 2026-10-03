@@ -19,7 +19,13 @@ std::shared_ptr<const NativeAnalysisRequestSnapshot> capture_native_analysis_req
     const auto point=[&](auto p){w.value(Vec3d(p.x(),p.y(),p.z()));};
     w.append("{\"contour\":[");number(request.contour.width.value());w.append(",");w.append(std::to_string(request.contour.seam_corner));
     w.append(",");w.value(request.contour.clockwise);w.append(",");number(request.contour.maximum_outside_target.value());
-    w.append("],\"fill_region\":[");point(request.fill_region.min);w.append(",");point(request.fill_region.max);
+    w.append("]");
+    if(request.corner_replan){const auto &c=*request.corner_replan;
+        require(c.minimum_covered_gain.value()>0 && c.maximum_outside_target.value()>=0 && c.maximum_repeated_increase.value()>=0,"NATIVE_ANALYSIS_CORNER_POLICY_DOMAIN");
+        w.append(",\"corner_replan\":[");number(c.minimum_covered_gain.value());w.append(",");number(c.maximum_outside_target.value());
+        w.append(",");number(c.maximum_repeated_increase.value());w.append("]");
+    }
+    w.append(",\"fill_region\":[");point(request.fill_region.min);w.append(",");point(request.fill_region.max);
     w.append("],\"footprint\":[");bool first=true;
     for(double v:{request.passes.footprint.min_x,request.passes.footprint.min_y,request.passes.footprint.max_x,request.passes.footprint.max_y}){if(!first)w.append(",");first=false;number(v);}
     w.append("],\"hatches\":[");first=true;
@@ -28,13 +34,13 @@ std::shared_ptr<const NativeAnalysisRequestSnapshot> capture_native_analysis_req
     w.append("],\"inputs\":[");first=true;
     for(const auto &r:inputs->resources){if(!first)w.append(",");first=false;w.append("[");w.value(int(r.kind));w.append(",");w.value(r.name);w.append(",");w.value(sha256_bytes(r.bytes));w.append("]");}
     w.append("]");
-    if(!request.later_paths.empty()){w.append(",\"later_paths\":");w.append(canonical_next_cap_requests(request.later_paths));}
+    if(request.corner_replan || !request.later_paths.empty()){w.append(",\"later_paths\":");w.append(canonical_next_cap_requests(request.later_paths));}
     w.append(",\"millimeters_declared\":");w.value(request.millimeters_declared);
     w.append(",\"passes\":[");const auto &p=request.passes.policy;w.append(std::to_string(p.passes));
     for(double v:{p.first_gap.minimum.value(),p.first_gap.maximum.value(),p.first_gap.corner_height_error.value(),p.later_vertical_minimum.value(),
         p.later_vertical_maximum.value(),p.later_normal_minimum.value(),p.later_normal_maximum.value(),p.total_volume_error.value()}){w.append(",");number(v);}
     w.append("],\"patch\":");w.append(std::to_string(request.passes.patch));w.append(",\"reservation\":");w.value(native_mesh_fingerprint(request.reservation.its));
-    w.append(request.later_paths.empty() ? ",\"schema\":1,\"support_plane\":" : ",\"schema\":2,\"support_plane\":");number(request.passes.support_plane_z_mm);w.append("}");
+    w.append(request.corner_replan ? ",\"schema\":3,\"support_plane\":" : request.later_paths.empty() ? ",\"schema\":1,\"support_plane\":" : ",\"schema\":2,\"support_plane\":");number(request.passes.support_plane_z_mm);w.append("}");
     auto json=w.take();auto hash=sha256_bytes(json);
     return std::shared_ptr<const NativeAnalysisRequestSnapshot>(new NativeAnalysisRequestSnapshot(request,std::move(json),std::move(hash)));
 }
@@ -101,7 +107,22 @@ NativeAnalysisResult run_native_analysis(Print &print,uint64_t id,std::shared_pt
         advance(GuardedJobPhase::Planning);stage(NativeAnalysisStage::Hatches);auto hatch_limits=limits.hatches;guard.wrap(hatch_limits);
         const auto hatches=plan_guarded_native_hatches(*task,body.snapshot,r.passes,r.hatches,hatch_limits);guard.poll();require(bool(hatches.snapshot),hatches.reason.c_str());
         stage(NativeAnalysisStage::Cap);auto cap_limits=limits.cap;guard.wrap(cap_limits);
-        const auto cap=plan_first_cap({"",hatches.snapshot->native->hatches},r.contour,r.fill_region,cap_limits);guard.poll();require(bool(cap.snapshot),cap.reason.c_str());
+        const auto cap_started=std::chrono::steady_clock::now();
+        auto cap=plan_first_cap({"",hatches.snapshot->native->hatches},r.contour,r.fill_region,cap_limits);guard.poll();require(bool(cap.snapshot),cap.reason.c_str());
+        std::shared_ptr<const FirstCapCornerReplanSnapshot> corners;
+        if(r.corner_replan){
+            require(cap.snapshot->evaluations<cap_limits.max_evaluations && cap.snapshot->cells<cap_limits.max_cells,"NATIVE_ANALYSIS_CAP_REPAIR_BUDGET");
+            auto repair_limits=cap_limits;repair_limits.max_evaluations-=cap.snapshot->evaluations;repair_limits.max_cells-=cap.snapshot->cells;
+            // The original cap and its repair share one work/cell/deadline
+            // budget. Round elapsed time upward so restarting a child cannot
+            // restore a fractional millisecond of the original allowance.
+            const auto elapsed=std::chrono::ceil<std::chrono::milliseconds>(std::chrono::steady_clock::now()-cap_started);
+            repair_limits.timeout-=elapsed;repair_limits.beads.timeout-=elapsed;repair_limits.beads.packets.timeout-=elapsed;repair_limits.volumes.timeout-=elapsed;
+            repair_limits.volumes.max_evaluations=std::min(repair_limits.volumes.max_evaluations,repair_limits.max_evaluations);
+            repair_limits.volumes.max_cells=std::min(repair_limits.volumes.max_cells,repair_limits.max_cells);
+            guard.poll();const auto repaired=replan_first_cap_corners(cap,*r.corner_replan,repair_limits);guard.poll();
+            require(bool(repaired.snapshot),repaired.reason.c_str());corners=repaired.snapshot;cap={"",corners->after};
+        }
         stage(NativeAnalysisStage::Material);auto material_limits=limits.material;guard.wrap(material_limits);
         auto assembly=reconstruct_first_cap_material(cap,{},0,material_limits);guard.poll();require(bool(assembly.snapshot),assembly.reason.c_str());
         std::shared_ptr<const NextCapSequenceSnapshot> later;
@@ -120,7 +141,7 @@ NativeAnalysisResult run_native_analysis(Print &print,uint64_t id,std::shared_pt
         advance(GuardedJobPhase::Serializing);stage(NativeAnalysisStage::Serialize);auto candidate_limits=limits.candidate;guard.wrap(candidate_limits);
         const auto candidate=serialize_linear_candidate(motion,r.inputs.serializer,candidate_limits);guard.poll();require(bool(candidate.snapshot),candidate.reason.c_str());
         stage(NativeAnalysisStage::Lineage);GuardedJobLimits binding_limits;guard.wrap(binding_limits);
-        const auto native=capture_guarded_native_plan(*task,hatches.snapshot,assembly,candidate,binding_limits,{},later);guard.poll();require(bool(native.snapshot),native.reason.c_str());
+        const auto native=capture_guarded_native_plan(*task,hatches.snapshot,assembly,candidate,binding_limits,{},later,corners);guard.poll();require(bool(native.snapshot),native.reason.c_str());
         // The binder advances its token internally. Its own before/after owner
         // checks remain authoritative while the shared guard enforces time/cancel.
         binding_limits={};guard.wrap(binding_limits,false);

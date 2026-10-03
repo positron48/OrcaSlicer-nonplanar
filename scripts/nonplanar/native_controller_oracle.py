@@ -18,14 +18,20 @@ def verify_request(record):
     digest = record['analysis_request_sha256']
     request = parse(text)
     require(canonical(request) == text and sha(text) == digest, 'Owned request canonical/hash')
-    later = 'later_paths' in request
+    corners = 'corner_replan' in request
+    later = bool(request.get('later_paths'))
     require(set(request) == {'schema', 'contour', 'fill_region', 'footprint', 'hatches', 'inputs',
                              'millimeters_declared', 'passes', 'patch', 'reservation', 'support_plane'} |
-            ({'later_paths'} if later else set()) and
-            type(request['schema']) is int and request['schema'] == (2 if later else 1), 'Owned request registry')
+            ({'later_paths'} if later or corners else set()) | ({'corner_replan'} if corners else set()) and
+            type(request['schema']) is int and request['schema'] == (3 if corners else 2 if later else 1), 'Owned request registry')
     if later:
         require(0 < len(request['later_paths']) <= 4096 and
                 request['later_paths'] == parse(record['native']['later_canonical'])['requests'], 'Owned ordered later requests')
+    if corners:
+        repair = parse(record['native']['corner_canonical'])
+        require(request['corner_replan'] == repair['policy'] and request['contour'] == repair['contour'] and
+                request['fill_region'] == repair['fill_region'], 'Exact requested corner policy/recipe')
+        require(later or request['later_paths'] == [], 'No omitted corner later program')
     job = parse(record['job_canonical'])
     row = [0, 'native-analysis-request-v1'.encode().hex(), digest.encode().hex(), len(text.encode())]
     require(job['resources'].count(row) == 1, 'Whole request belongs to the actual job')

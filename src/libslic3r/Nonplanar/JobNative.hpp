@@ -72,27 +72,33 @@ struct GuardedNativePlanSnapshot {
     const std::string departure_json,departure_sha256;
     const std::shared_ptr<const NextCapSequenceSnapshot> later;
     const std::string later_json,later_sha256;
+    const std::shared_ptr<const FirstCapCornerReplanSnapshot> corners;
+    const std::string corner_json,corner_sha256;
     const std::string canonical_json,sha256;
 private:
     GuardedNativePlanSnapshot(std::shared_ptr<const GuardedNativeHatchSnapshot> paths,std::shared_ptr<const FirstCapMaterialSnapshot> material,
         std::shared_ptr<const LinearCandidateSnapshot> bytes,std::string json,std::string hash,
         std::shared_ptr<const SimulationCapDepartureSnapshot> exit={},std::string exit_json={},std::string exit_hash={},
-        std::shared_ptr<const NextCapSequenceSnapshot> sequence={},std::string sequence_json={},std::string sequence_hash={})
+        std::shared_ptr<const NextCapSequenceSnapshot> sequence={},std::string sequence_json={},std::string sequence_hash={},
+        std::shared_ptr<const FirstCapCornerReplanSnapshot> repair={},std::string repair_json={},std::string repair_hash={})
         :hatches(std::move(paths)),assembly(std::move(material)),candidate(std::move(bytes)),departure(std::move(exit)),
           departure_json(std::move(exit_json)),departure_sha256(std::move(exit_hash)),later(std::move(sequence)),
-          later_json(std::move(sequence_json)),later_sha256(std::move(sequence_hash)),canonical_json(std::move(json)),sha256(std::move(hash)){}
+          later_json(std::move(sequence_json)),later_sha256(std::move(sequence_hash)),corners(std::move(repair)),
+          corner_json(std::move(repair_json)),corner_sha256(std::move(repair_hash)),canonical_json(std::move(json)),sha256(std::move(hash)){}
     friend GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &,std::shared_ptr<const GuardedNativeHatchSnapshot>,
         const FirstCapMaterialResult &,const LinearCandidateResult &,const GuardedJobLimits &,std::shared_ptr<const SimulationCapDepartureSnapshot>,
-        std::shared_ptr<const NextCapSequenceSnapshot>);
+        std::shared_ptr<const NextCapSequenceSnapshot>,std::shared_ptr<const FirstCapCornerReplanSnapshot>);
 };
 struct GuardedNativePlanResult {std::string reason;std::shared_ptr<const GuardedNativePlanSnapshot> snapshot;};
 // Serializing worker checks the actual protected cap parent, complete body and
 // selected cap journal, and the motion planner's exact input/output. Only speed
 // and acceleration reductions may differ. An optional protected departure must
 // own this exact laid assembly and the motion planner's exact routed source.
+// Finite corner extensions require the captured policy/recipe and exact repair
+// owner; optional later passes must retain that repaired first-cap prefix.
 // Unbound route edits still refuse. This is bounded dependency lineage, not full
 // source/target/support/contact/whole-route or final-byte geometry qualification.
 GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &,std::shared_ptr<const GuardedNativeHatchSnapshot>,
     const FirstCapMaterialResult &,const LinearCandidateResult &,const GuardedJobLimits &limits={},
-    std::shared_ptr<const SimulationCapDepartureSnapshot> departure={},std::shared_ptr<const NextCapSequenceSnapshot> later={});
+    std::shared_ptr<const SimulationCapDepartureSnapshot> departure={},std::shared_ptr<const NextCapSequenceSnapshot> later={},std::shared_ptr<const FirstCapCornerReplanSnapshot> corners={});
 }

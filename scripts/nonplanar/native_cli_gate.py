@@ -92,6 +92,20 @@ def main():
         bad = copy.deepcopy(later)
         bad['later_paths'].append(bad['later_paths'][-1])
         cases.append(('later-duplicate-refused', bad, config, False, [], False, later_model, later_reference))
+    corner_path = fixtures / 'native-corner-controller-request.json'
+    if corner_path.exists():
+        corner = json.loads(corner_path.read_text())
+        corner_reference = json.loads((fixtures / 'native-corner-default-diagnostic.json').read_text())
+        cases.append(('corner-complete-blocked', corner, config, True, [], False, model, corner_reference))
+        bad = copy.deepcopy(corner)
+        bad['corner_replan'][2] = 0
+        cases.append(('corner-overlap-refused', bad, config, False, [], False))
+        bad = copy.deepcopy(corner)
+        bad['corner_replan'][0] = 1
+        cases.append(('corner-gain-refused', bad, config, False, [], False))
+        bad = copy.deepcopy(corner)
+        del bad['corner_replan']
+        cases.append(('corner-recipe-refused', bad, config, False, [], False))
     manifest = {'schema': 1, 'binary_sha256': hashlib.sha256(binary.read_bytes()).hexdigest(), 'cases': [],
                 'scope': 'REAL_ORCA_NATIVE_ANALYSIS_DIAGNOSTICS_ONLY', 'export': 'BLOCK'}
     for case in cases:

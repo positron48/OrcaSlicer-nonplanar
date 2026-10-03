@@ -222,9 +222,31 @@ GuardedNativeHatchResult plan_guarded_native_hatches(const GuardedJobTask &reque
     }catch(const std::exception &e){result.snapshot.reset();result.reason=*e.what() ? e.what() : "NATIVE_JOB_EXCEPTION_WITHOUT_REASON";}
     catch(...){result.snapshot.reset();result.reason="NATIVE_JOB_UNKNOWN_EXCEPTION";}return result;
 }
+namespace {
+std::string corner_identity(const FirstCapCornerReplanSnapshot &repair,NativeGuard &guard)
+{
+    guard.poll();const auto &before=*repair.before,&after=*repair.after;
+    require(before.contour_extent==FirstCapContourExtent::ClosedLoopCentres && after.contour_extent==FirstCapContourExtent::FiniteBandExtensions &&
+        before.source==after.source && before.fill->target==after.fill->target && before.hatch_extent==after.hatch_extent,"NATIVE_JOB_CORNER_TARGET_OWNER");
+    detail::CanonicalConfigWriter w;const auto range=[&](ScalarBounds b){w.append("[");w.value(b.lower);w.append(",");w.value(b.upper);w.append("]");};
+    w.append("{\"after_journal\":");w.value(after.fill->occupied->source->sequence->fingerprint());
+    w.append(",\"before_journal\":");w.value(before.fill->occupied->source->sequence->fingerprint());
+    w.append(",\"commanded_increase\":");range(repair.commanded_increase_mm3);
+    w.append(",\"contour\":[");w.value(before.policy.width.value());w.append(",");w.append(std::to_string(before.policy.seam_corner));
+    w.append(",");w.value(before.policy.clockwise);w.append(",");w.value(before.policy.maximum_outside_target.value());w.append("]");
+    w.append(",\"coverage_gain\":");range(repair.covered_gain_mm3);
+    w.append(",\"fill_region\":[");const auto &box=before.fill->occupied->domain;
+    w.value(Vec3d(box.min.x(),box.min.y(),box.min.z()));w.append(",");w.value(Vec3d(box.max.x(),box.max.y(),box.max.z()));w.append("]");
+    w.append(",\"missing_reduction\":");range(repair.missing_reduction_mm3);
+    w.append(",\"policy\":[");w.value(repair.policy.minimum_covered_gain.value());w.append(",");w.value(repair.policy.maximum_outside_target.value());
+    w.append(",");w.value(repair.policy.maximum_repeated_increase.value());w.append("]");
+    w.append(",\"repeated_increase\":");range(repair.repeated_increase_mm3);
+    w.append(",\"schema\":1,\"scope\":\"owned_prospective_retained_corner_material_lineage_only\"}");guard.poll();return w.take();
+}
+}
 GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &requested_task,std::shared_ptr<const GuardedNativeHatchSnapshot> hatches,
     const FirstCapMaterialResult &requested_assembly,const LinearCandidateResult &requested_candidate,const GuardedJobLimits &requested_limits,
-    std::shared_ptr<const SimulationCapDepartureSnapshot> departure,std::shared_ptr<const NextCapSequenceSnapshot> later)
+    std::shared_ptr<const SimulationCapDepartureSnapshot> departure,std::shared_ptr<const NextCapSequenceSnapshot> later,std::shared_ptr<const FirstCapCornerReplanSnapshot> corners)
 {
     GuardedNativePlanResult result;const auto started=std::chrono::steady_clock::now();
     try {
@@ -239,23 +261,37 @@ GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &reques
         require(assembly->body->sequence==body && assembly->body_records==body->records.size() &&
             assembly->body->completed_records==body->records.size() && assembly->body->current_progress==0,"NATIVE_JOB_COMPLETE_BODY_REQUIRED");
         require(assembly->material->completed_records==assembly->material->sequence->records.size() && assembly->material->current_progress==0,"NATIVE_JOB_COMPLETE_ASSEMBLY_REQUIRED");
+        require(!(corners && departure),"NATIVE_JOB_CORNER_DEPARTURE_COMBINATION_UNSUPPORTED");
         require(!(later && departure),"NATIVE_JOB_LATER_DEPARTURE_COMBINATION_UNSUPPORTED");
         require(later || departure || assembly->later_paths.empty(),"NATIVE_JOB_LATER_PROGRAM_REQUIRED");
+        require(corners || assembly->source->contour_extent==FirstCapContourExtent::ClosedLoopCentres,"NATIVE_JOB_CORNER_PROGRAM_REQUIRED");
+        if(corners)require(corners->after==assembly->source && corners->before->source==hatches->native->hatches,"NATIVE_JOB_CORNER_MATERIAL_OWNER");
         const auto resource=std::find_if(task.snapshot->resources.begin(),task.snapshot->resources.end(),[](const auto &r){return r.kind==JobResourceKind::SourceFile && r.name=="native-analysis-request-v1";});
         std::optional<Json> request;
         if(resource!=task.snapshot->resources.end()){
             require(resource->bytes.size()<=2*1024*1024,"NATIVE_JOB_LATER_REQUEST_SIZE");size_t nodes=0;
             request=Json::parse(resource->bytes,[&](int depth,Json::parse_event_t,Json &){
                 require(depth<=8,"NATIVE_JOB_LATER_REQUEST_DEPTH");if(++nodes%128==0)guard.poll();return true;});
-            require(request->at("schema").is_number_unsigned() && (request->at("schema")==1 || request->at("schema")==2),"NATIVE_JOB_REQUEST_VERSION");
+            require(request->at("schema").is_number_unsigned() && (request->at("schema")==1 || request->at("schema")==2 || request->at("schema")==3),"NATIVE_JOB_REQUEST_VERSION");
             require(request->at("schema")!=2 || bool(later),"NATIVE_JOB_LATER_PROGRAM_REQUIRED");
+            if(request->at("schema")==3){
+                require(bool(corners),"NATIVE_JOB_CORNER_PROGRAM_REQUIRED");
+                require(request->at("later_paths").is_array() && bool(later)==!request->at("later_paths").empty(),"NATIVE_JOB_LATER_PROGRAM_REQUIRED");
+            }
+        }
+        std::string corner_json,corner_hash;
+        if(corners){
+            require(request && request->at("schema")==3,"NATIVE_JOB_CORNER_REQUEST_REQUIRED");
+            corner_json=corner_identity(*corners,guard);corner_hash=sha256_bytes(corner_json);const auto identity=Json::parse(corner_json);
+            require(request->at("corner_replan")==identity.at("policy") && request->at("contour")==identity.at("contour") &&
+                request->at("fill_region")==identity.at("fill_region"),"NATIVE_JOB_CORNER_REQUEST_MISMATCH");
         }
         std::string later_json,later_hash;
         if(later){
             require(later->after==assembly && later->before->source==assembly->source,"NATIVE_JOB_LATER_MATERIAL_OWNER");
             later_json=later_identity(*later,guard);later_hash=sha256_bytes(later_json);
             require(bool(request),"NATIVE_JOB_LATER_REQUEST_REQUIRED");
-            require(request->at("schema")==2 && request->at("later_paths")==Json::parse(canonical_next_cap_requests(later->requests,[&]{guard.poll();})),"NATIVE_JOB_LATER_REQUEST_MISMATCH");
+            require((request->at("schema")==2 || request->at("schema")==3) && request->at("later_paths")==Json::parse(canonical_next_cap_requests(later->requests,[&]{guard.poll();})),"NATIVE_JOB_LATER_REQUEST_MISMATCH");
         }
         require(candidate && plan && candidate->plan==plan && sha256_bytes(candidate->bytes)==candidate->sha256,"NATIVE_JOB_CANDIDATE_PARENT");
         require(!task.snapshot->native_inputs || task.snapshot->native_inputs->matches_candidate(*candidate,[&]{guard.poll();}),"NATIVE_JOB_PLAN_INPUT_MISMATCH");
@@ -273,15 +309,16 @@ GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &reques
             rows[i].motion.speed_limit=limited.speed_limit;rows[i].motion.acceleration_limit=limited.acceleration_limit;}
         const MaterialSequenceSnapshot expected{original.revision,original.source_fingerprint,original.model,std::move(rows),original.geometry};
         require(expected.fingerprint()==planned.fingerprint(),"NATIVE_JOB_MOTION_OUTPUT_JOURNAL");guard.poll();
-        Json document={{"schema",later ? 3 : departure ? 2 : 1},{"scope",later ? "owned_native_body_cap_later_linear_candidate_lineage_only" : departure ? "owned_native_body_cap_departure_linear_candidate_lineage_only" : "owned_native_body_cap_linear_candidate_lineage_only"},{"job_fingerprint",task.snapshot->fingerprint},
+        Json document={{"schema",corners ? 4 : later ? 3 : departure ? 2 : 1},{"scope",corners ? "owned_native_body_corner_cap_linear_candidate_lineage_only" : later ? "owned_native_body_cap_later_linear_candidate_lineage_only" : departure ? "owned_native_body_cap_departure_linear_candidate_lineage_only" : "owned_native_body_cap_linear_candidate_lineage_only"},{"job_fingerprint",task.snapshot->fingerprint},
             {"attempt",task.attempt},{"hatch_lineage",hatches->sha256},{"assembled_journal",assembly->material->sequence->fingerprint()},
             {"planned_journal",planned.fingerprint()},{"candidate_sha256",candidate->sha256}};
         std::string exit_json,exit_hash;
         if(departure){exit_json=departure_identity(*departure,guard);exit_hash=sha256_bytes(exit_json);document["departure_lineage"]=exit_hash;}
         if(later)document["later_lineage"]=later_hash;
+        if(corners)document["corner_lineage"]=corner_hash;
         auto json=document.dump();auto hash=sha256_bytes(json);guard.poll();
         result.snapshot=std::shared_ptr<const GuardedNativePlanSnapshot>(new GuardedNativePlanSnapshot(hatches,assembly,candidate,std::move(json),std::move(hash),
-            std::move(departure),std::move(exit_json),std::move(exit_hash),std::move(later),std::move(later_json),std::move(later_hash)));
+            std::move(departure),std::move(exit_json),std::move(exit_hash),std::move(later),std::move(later_json),std::move(later_hash),std::move(corners),std::move(corner_json),std::move(corner_hash)));
         guard.poll();result.reason="OWNED_NATIVE_PLAN_LINEAGE_FULL_JOB_QUALIFICATION_PENDING";
     }catch(const std::exception &e){result.snapshot.reset();result.reason=*e.what() ? e.what() : "NATIVE_JOB_EXCEPTION_WITHOUT_REASON";}
     catch(...){result.snapshot.reset();result.reason="NATIVE_JOB_UNKNOWN_EXCEPTION";}return result;

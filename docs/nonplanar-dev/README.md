@@ -15,6 +15,22 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-03
 
+`B14-corner-controller.md` and ADR-0101 bind optional captured corner repair
+through the common controller, protected native material/lineage, child/direct
+execution and final-byte replay. Request3/native plan4/manifest5 are additive;
+legacy request1/2 bytes and ten stages remain. Original cap/repair share budgets.
+Six new cases; focus7/9113 includes the retained later-binding negative.
+CTest499/499,21 independent checks,17 actual CLI cases and6 strict OFF/ZAA
+pairs pass. Fine2224/default2113/later1763 actual movements are replayed;
+private owners, omitted/changed recipes and fifteen independent mutations refuse.
+Fifty-two of53 parent candidate files remain exact; only software binding changes,
+unselected2098 SHA remains exact. Fixed17 stays4 PASS/RUN +13 UNKNOWN/NOT_RUN,
+export BLOCK, full B01-B15 IN_PROGRESS. Next qualify seam connectors/remaining
+fill/full later layers; complete head/contact/routes/order/whole-job/source/
+software/physical/publication remain open. New Linux/Windows/GUI/physical and
+independent safety review pending. Standard U1 head/.4 nozzle known; software
+proceeds independently of firmware/material brand questions.
+
 `B07-first-cap-corner-replan.md` and ADR-0100 add four finite end strips to
 two opposite contour owners, retaining all original packets/doses and measuring
 whole nominal coverage/spill/multiplicity against explicit overlap policy.
