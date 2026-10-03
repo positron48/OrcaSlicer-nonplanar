@@ -15,6 +15,20 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-03
 
+`B13-native-inputs.md` and ADR-0089 bind actual body material, complete declared
+head/scene, clearance, linear motion, serializer and replay inputs into owned
+native jobs. Six role resources are generated from copied typed values; opaque
+overrides and omitted native lineage refuse. One-bit/same-revision edits, caller
+mutation, cancellation, nonfinite/oversized inputs and late/reentrant attempts
+are covered. Focus 5 / 226, CTest 458 / 458, eleven identity oracles and six strict
+OFF/ZAA pairs pass. Fifty of 51 parent files stay exact; only the software-bound
+report changes. Final 2205-record candidate stays byte-exact. Derived ROI/pass/
+hatch/assembly choices and complete source/software/physical qualification remain
+pending, with qualified contact/seams/full fill, whole job/GUI/publication and
+B14/B15. Fixed17 stays 4 PASS/RUN + 13 UNKNOWN/NOT_RUN, full B01–B15 active, export
+BLOCK. New Linux head awaits CI; Windows/full GUI/physical and independent review
+remain pending. Standard U1 head/.4 nozzle known; software proceeds independently.
+
 `B13-build-inputs.md` and ADR-0088 add a private library-owned build input
 inventory and bind its exact bytes into native job software resources. CMake
 hashes 18,285 source/resource/build files every build; unchanged output stays

@@ -12,6 +12,8 @@ enum class JobSoftwareMode { Declared, CompiledInputs };
 struct JobResource {JobResourceKind kind;std::string name,bytes;};
 struct JobResourceSnapshot {const JobResourceKind kind;const std::string name,bytes,sha256;};
 struct GuardedJobResult;
+struct NativeJobInputsRequest;
+struct NativeJobInputsSnapshot;
 // Publishable identity views omit only explicit transport/timestamp/log options.
 // Original snapshots remain exact in memory; do not persist their raw settings.
 struct JobIdentityView {const std::string canonical_json,fingerprint;};
@@ -22,16 +24,18 @@ struct GuardedJobSnapshot {
     const JobIdentityView input_identity,executed_identity,settings_identity;
     const std::vector<JobResourceSnapshot> resources;
     const std::shared_ptr<const CompiledBuildInputs> software;
+    const std::shared_ptr<const NativeJobInputsSnapshot> native_inputs;
     const std::string canonical_json,fingerprint;
 private:
     GuardedJobSnapshot(uint64_t id,uint64_t revision,std::shared_ptr<const NativeInputSnapshot> source,
         std::shared_ptr<const NativeInputSnapshot> executed,std::shared_ptr<const PrintConfigSnapshot> config,
         JobIdentityView source_view,JobIdentityView executed_view,JobIdentityView settings_view,
-        std::vector<JobResourceSnapshot> dependencies,std::shared_ptr<const CompiledBuildInputs> build_inputs,std::string json,std::string hash)
+        std::vector<JobResourceSnapshot> dependencies,std::shared_ptr<const CompiledBuildInputs> build_inputs,
+        std::shared_ptr<const NativeJobInputsSnapshot> policies,std::string json,std::string hash)
         :job_id(id),input_revision(revision),input(std::move(source)),executed_input(std::move(executed)),settings(std::move(config)),
         input_identity(std::move(source_view)),executed_identity(std::move(executed_view)),settings_identity(std::move(settings_view)),
-        resources(std::move(dependencies)),software(std::move(build_inputs)),canonical_json(std::move(json)),fingerprint(std::move(hash)){}
-    friend GuardedJobResult begin_guarded_job(Print &,uint64_t,const std::vector<JobResource> &,const struct GuardedJobLimits &,JobSoftwareMode);
+        resources(std::move(dependencies)),software(std::move(build_inputs)),native_inputs(std::move(policies)),canonical_json(std::move(json)),fingerprint(std::move(hash)){}
+    friend GuardedJobResult begin_guarded_job(Print &,uint64_t,const std::vector<JobResource> &,const struct GuardedJobLimits &,JobSoftwareMode,const NativeJobInputsRequest *);
 };
 // Same exact version-1 omission registry as the publishable job identity.
 // Used only by isolated derived workers; original host snapshots remain exact.
@@ -63,7 +67,11 @@ struct GuardedJobStatus {GuardedJobPhase phase=GuardedJobPhase::Editing;uint64_t
 // CompiledInputs inserts the library-owned inventory. Supplying a Software
 // resource in that mode is an error, never an override. Neither mode qualifies
 // the complete software_identity mandatory check. Declared retains v1 fixtures.
-GuardedJobResult begin_guarded_job(Print &,uint64_t job_id,const std::vector<JobResource> &,const GuardedJobLimits &limits={},JobSoftwareMode software=JobSoftwareMode::Declared);
+// Native inputs require CompiledInputs and source-file resources only; all six
+// typed roles are generated from the owned inputs. Overrides are refused.
+// Derived footprint/contact/order parameters are still separate lineage inputs.
+GuardedJobResult begin_guarded_job(Print &,uint64_t job_id,const std::vector<JobResource> &,const GuardedJobLimits &limits={},
+    JobSoftwareMode software=JobSoftwareMode::Declared,const NativeJobInputsRequest *native_inputs=nullptr);
 // Only the exact current owner/attempt/source/settings/phase can advance.
 // Old callbacks, repeated callbacks and mode/plate/input edits cannot resurrect
 // an attempt. Resource changes must start a new job, including failed captures.
@@ -84,7 +92,7 @@ private:
     std::shared_ptr<const GuardedJobTask> task(std::shared_ptr<const GuardedJobSnapshot>,GuardedJobPhase) const;
     void publish(const GuardedJobTask &);
     bool accepts(const GuardedJobTask &) const;
-    friend GuardedJobResult begin_guarded_job(Print &,uint64_t,const std::vector<JobResource> &,const GuardedJobLimits &,JobSoftwareMode);
+    friend GuardedJobResult begin_guarded_job(Print &,uint64_t,const std::vector<JobResource> &,const GuardedJobLimits &,JobSoftwareMode,const NativeJobInputsRequest *);
     friend GuardedJobResult advance_guarded_job(Print &,const GuardedJobTask &,GuardedJobPhase);
     friend bool stop_guarded_job(Print &,const GuardedJobTask &,GuardedJobPhase);
     friend GuardedJobStatus guarded_job_status(Print &);

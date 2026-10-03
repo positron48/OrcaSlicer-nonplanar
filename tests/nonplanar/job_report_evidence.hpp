@@ -1,6 +1,7 @@
 #pragma once
 #include <libslic3r/Nonplanar/JobArtifact.hpp>
 #include <libslic3r/Nonplanar/JobNative.hpp>
+#include <libslic3r/Nonplanar/NativeJobInputs.hpp>
 #include <nlohmann/json.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/nowide/fstream.hpp>
@@ -19,6 +20,11 @@ inline void save_job_report(const boost::filesystem::path &path,const GuardedCan
         {"initial_position",{candidate.initial_position.x(),candidate.initial_position.y(),candidate.initial_position.z()}},
         {"material_journal",ledger.fingerprint()},{"motion_policy",candidate.plan->policy_fingerprint},{"serializer_policy",candidate.policy_fingerprint},
         {"source_fingerprint",ledger.source_fingerprint},{"source_revision",ledger.revision}};
+    if(binding.job->native_inputs){
+        record["native_inputs"]=nlohmann::json::array();
+        for(const auto &r:binding.job->resources)if(r.kind!=JobResourceKind::SourceFile && r.kind!=JobResourceKind::Software)
+            record["native_inputs"].push_back({{"kind",int(r.kind)},{"name",r.name},{"bytes",r.bytes},{"sha256",r.sha256}});
+    }
     if(binding.native){const auto &native=*binding.native;const auto &hatches=*native.hatches;const auto &body=*hatches.body;
         record["native"]={{"canonical",native.canonical_json},{"sha256",native.sha256},
             {"hatch_canonical",hatches.canonical_json},{"hatch_sha256",hatches.sha256},{"body_canonical",body.canonical_json},{"body_sha256",body.sha256}};

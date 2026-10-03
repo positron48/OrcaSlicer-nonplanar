@@ -4,6 +4,7 @@
 #include <libslic3r/Nonplanar/Policy.hpp>
 #include <libslic3r/Nonplanar/InputSnapshot.hpp>
 #include <libslic3r/Nonplanar/Job.hpp>
+#include <libslic3r/Nonplanar/NativeJobInputs.hpp>
 #include <libslic3r/Nonplanar/JobNative.hpp>
 #include <libslic3r/Nonplanar/PlanarBody.hpp>
 #include <libslic3r/Nonplanar/DepositionModel.hpp>
@@ -3311,11 +3312,13 @@ TEST_CASE("B13 publishable identity excludes transport credentials and retains e
 }
 
 namespace {
+NativeJobInputsRequest native_job_inputs();
 struct NativeJobFixture {
     Model model;
     DynamicPrintConfig config=planar_body_config();
     Print print;
-    std::vector<JobResource> resources=job_resources(JobSoftwareMode::CompiledInputs);
+    std::vector<JobResource> resources;
+    NativeJobInputsRequest inputs=native_job_inputs();
     NativeJobFixture()
     {
         const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/affine-wedge-1-in-16.stl";
@@ -3326,7 +3329,7 @@ struct NativeJobFixture {
         resources.push_back({JobResourceKind::SourceFile,model.objects.front()->volumes.front()->source.input_file,file.source->bytes});
         print.apply(model,config);
     }
-    GuardedJobResult begin(){auto result=begin_guarded_job(print,88,resources,{},JobSoftwareMode::CompiledInputs);INFO(result.reason);REQUIRE(result.task);REQUIRE(result.snapshot->software==compiled_build_inputs());return result;}
+    GuardedJobResult begin(){auto result=begin_guarded_job(print,88,resources,{},JobSoftwareMode::CompiledInputs,&inputs);INFO(result.reason);REQUIRE(result.task);REQUIRE(result.snapshot->software==compiled_build_inputs());return result;}
 };
 GuardedNativeBodyRequest native_job_body_request()
 {
@@ -3374,12 +3377,19 @@ SimulationScene native_job_scene()
         scene.head.push_back({id++,part,{{-.05,-.05,.5},{.05,.05,.8}},false,false});
     return scene;
 }
+NativeJobInputsRequest native_job_inputs()
+{
+    const auto scene=native_job_scene();
+    return {native_job_body_request().material,scene,
+        {Length(.01),NumericBudget(0,0,0,2e-6),Length(0),Length(0),Length(0)},
+        {1,91,1,ProfileOrigin::Synthetic,false,LinearPlannerModel::FullStop,LinearKinematics::CoreXY,
+        scene.nozzle_domain,{200,200,5},{1000,1000,50},{200,200,5},{1000,1000,50},Length(1.75),FlowCompensation(1),
+        Speed(40),Acceleration(400),Length(5),12,2,200},
+        {92,1,Acceleration(100)}, {93,1,5e-9,.0001,1e-9,.02,0}};
+}
 LinearCandidateResult native_job_candidate(const SimulationMotionSourceResult &source)
 {
-    REQUIRE(source.snapshot);const auto &scene=source.snapshot->scene;
-    const LinearMotionPolicy kinematics{1,91,1,ProfileOrigin::Synthetic,false,LinearPlannerModel::FullStop,LinearKinematics::CoreXY,
-        scene.nozzle_domain,{200,200,5},{1000,1000,50},{200,200,5},{1000,1000,50},Length(1.75),FlowCompensation(1),
-        Speed(40),Acceleration(400),Length(5),12,2,200};
+    REQUIRE(source.snapshot);const auto kinematics=native_job_inputs().motion;
     const auto plan=plan_linear_motion(source,kinematics);INFO(plan.reason);REQUIRE(plan.snapshot);
     const auto bytes=serialize_linear_candidate(plan,{92,1,Acceleration(100)});INFO(bytes.reason);REQUIRE(bytes.snapshot);return bytes;
 }
@@ -3414,6 +3424,80 @@ TEST_CASE("B13 native body factory owns actual job inputs before callbacks", "[N
     REQUIRE(capture_print_config(fixture.print)->full_config.option<ConfigOptionString>("nptop_mode")->value=="safe_hybrid");
     fixture.print.model().objects.front()->volumes.front()->set_offset(Vec3d(.1,0,0));
     REQUIRE_FALSE(advance_guarded_job(fixture.print,*job.task,GuardedJobPhase::Planning).task);REQUIRE_FALSE(job.task->is_current());
+}
+TEST_CASE("B13 typed job owns actual inputs and rejects opaque role overrides before callbacks", "[Nonplanar][B13][NativeJobInputs]")
+{
+    static_assert(!std::is_aggregate_v<NativeJobInputsSnapshot>);
+    NativeJobFixture fixture;const auto original=fixture.inputs;auto resources=fixture.resources;bool changed=false;
+    GuardedJobLimits limits;limits.cancelled=[&]{if(!changed){changed=true;fixture.inputs.scene.head.clear();fixture.inputs.replay.policy_id=99;resources.clear();}return false;};
+    const auto job=begin_guarded_job(fixture.print,88,resources,limits,JobSoftwareMode::CompiledInputs,&fixture.inputs);
+    INFO(job.reason);REQUIRE(job.task);REQUIRE(changed);REQUIRE(job.snapshot->native_inputs);
+    REQUIRE(job.snapshot->native_inputs->values.scene.head.size()==6);REQUIRE(job.snapshot->native_inputs->values.replay.policy_id==93);
+    REQUIRE(job.snapshot->resources.size()==8);REQUIRE(job.snapshot->native_inputs->matches_body(original.body));
+    REQUIRE(job.snapshot->native_inputs->matches_replay(original.replay));
+    for(const auto &resource:job.snapshot->native_inputs->resources){
+        const auto found=std::find_if(job.snapshot->resources.begin(),job.snapshot->resources.end(),[&](const auto &r){return r.kind==resource.kind;});
+        REQUIRE(found!=job.snapshot->resources.end());REQUIRE(found->bytes==resource.bytes);REQUIRE(found->sha256==sha256_bytes(resource.bytes));
+        REQUIRE(nlohmann::json::parse(resource.bytes)["schema"]==1);
+    }
+    fixture.inputs=original;size_t calls=0;limits.cancelled=[&]{++calls;return false;};
+    auto forged=fixture.resources;forged.push_back({JobResourceKind::Scene,"forged","{}"});
+    const auto rejected=begin_guarded_job(fixture.print,88,forged,limits,JobSoftwareMode::CompiledInputs,&fixture.inputs);
+    REQUIRE_FALSE(rejected.snapshot);REQUIRE(rejected.reason=="DUPLICATE_NATIVE_JOB_RESOURCE_KIND");REQUIRE(calls==0);REQUIRE_FALSE(job.task->is_current());
+    REQUIRE_FALSE(guarded_job_status(fixture.print).snapshot);
+    const auto declared=begin_guarded_job(fixture.print,88,fixture.resources,{},JobSoftwareMode::Declared,&fixture.inputs);
+    REQUIRE(declared.reason=="NATIVE_JOB_REQUIRES_COMPILED_INPUTS");REQUIRE_FALSE(declared.snapshot);
+}
+TEST_CASE("B13 typed capture hashes every role and refuses nonfinite oversized and late inputs", "[Nonplanar][B13][NativeJobInputs]")
+{
+    NativeJobFixture fixture;const auto original=fixture.inputs;const auto base=fixture.begin();
+    for(int field=0;field<9;++field){fixture.inputs=original;
+        if(field==0)fixture.inputs.body.model.outer_xy_growth=Length(std::nextafter(.01,1.));
+        if(field==1)fixture.inputs.scene.tip.outer_radius=Length(std::nextafter(.5,1.));
+        if(field==2)fixture.inputs.scene.head.front().moving=true;
+        if(field==3)fixture.inputs.scene.obstacles.push_back({{30,30,0},{31,31,1}});
+        if(field==4)fixture.inputs.scene.uncertainty=Length(std::nextafter(0.,1.));
+        if(field==5)fixture.inputs.clearance.numeric.conversion_mm=std::nextafter(2e-6,1.);
+        if(field==6)fixture.inputs.motion.axis_speed_mm_s[0]=std::nextafter(200.,201.);
+        if(field==7)fixture.inputs.serializer.xyz_digits=7;
+        if(field==8)fixture.inputs.replay.relative_dose_error=std::nextafter(.02,1.);
+        const auto changed=fixture.begin();REQUIRE(changed.snapshot->fingerprint!=base.snapshot->fingerprint);
+    }
+    fixture.inputs=original;auto previous=fixture.begin();fixture.inputs.motion.max_events_per_second=std::numeric_limits<double>::infinity();
+    const auto bad=begin_guarded_job(fixture.print,88,fixture.resources,{},JobSoftwareMode::CompiledInputs,&fixture.inputs);
+    REQUIRE_FALSE(bad.snapshot);REQUIRE(bad.reason=="NONFINITE_NATIVE_JOB_INPUT");REQUIRE_FALSE(previous.task->is_current());
+    fixture.inputs=original;fixture.inputs.scene.obstacles.resize(10001,{{0,0,0},{1,1,1}});
+    REQUIRE(begin_guarded_job(fixture.print,88,fixture.resources,{},JobSoftwareMode::CompiledInputs,&fixture.inputs).reason=="NATIVE_JOB_INPUT_SIZE_LIMIT");
+    fixture.inputs=original;GuardedJobLimits limits;size_t calls=0;limits.cancelled=[&]{++calls;return false;};
+    REQUIRE(begin_guarded_job(fixture.print,88,fixture.resources,limits,JobSoftwareMode::CompiledInputs,&fixture.inputs).task);
+    const size_t last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};
+    const auto late=begin_guarded_job(fixture.print,88,fixture.resources,limits,JobSoftwareMode::CompiledInputs,&fixture.inputs);
+    REQUIRE_FALSE(late.snapshot);REQUIRE(late.reason=="JOB_CANCELLED");REQUIRE_FALSE(guarded_job_status(fixture.print).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(2));return false;};
+    REQUIRE(begin_guarded_job(fixture.print,88,fixture.resources,limits,JobSoftwareMode::CompiledInputs,&fixture.inputs).reason=="JOB_CAPTURE_DEADLINE");
+    for(int mode=0;mode<2;++mode){limits={};limits.cancelled=[mode]()->bool{if(mode==0)throw 7;throw std::runtime_error("");};
+        const auto exception=begin_guarded_job(fixture.print,88,fixture.resources,limits,JobSoftwareMode::CompiledInputs,&fixture.inputs);
+        REQUIRE_FALSE(exception.snapshot);REQUIRE_FALSE(exception.reason.empty());REQUIRE_FALSE(guarded_job_status(fixture.print).snapshot);
+    }
+    limits={};GuardedJobResult replacement;bool replaced=false;
+    limits.cancelled=[&]{if(!replaced){replaced=true;replacement=fixture.begin();}return false;};
+    const auto reentrant=begin_guarded_job(fixture.print,88,fixture.resources,limits,JobSoftwareMode::CompiledInputs,&fixture.inputs);
+    REQUIRE_FALSE(reentrant.snapshot);REQUIRE(reentrant.reason=="STALE_JOB_CAPTURE");REQUIRE(replacement.task->is_current());
+    REQUIRE(guarded_job_status(fixture.print).snapshot==replacement.snapshot);
+}
+TEST_CASE("B13 actual body material must equal the typed job input", "[Nonplanar][B13][NativeJobInputs]")
+{
+    NativeJobFixture fixture;const auto job=fixture.begin();
+    for(int field=0;field<5;++field){auto request=native_job_body_request();
+        if(field==0)request.material.model.outer_xy_growth=Length(std::nextafter(.01,1.));
+        if(field==1)request.material.material={NominalMaterialId(4),UpperMaterialId(5),LowerMaterialId(6)};
+        if(field==2)request.material.deposition_speed=Speed(std::nextafter(20.,21.));
+        if(field==3)request.material.acceleration=Acceleration(99);
+        if(field==4)++request.material.support_reference_id;
+        const auto changed=analyze_guarded_native_body(*job.task,request,native_job_body_limits());
+        REQUIRE_FALSE(changed.snapshot);REQUIRE(changed.reason=="NATIVE_JOB_BODY_INPUT_MISMATCH");
+    }
+    const auto body=analyze_guarded_native_body(*job.task,native_job_body_request(),native_job_body_limits());INFO(body.reason);REQUIRE(body.snapshot);
 }
 TEST_CASE("B13 native source units original bytes placement and bounded limits must agree", "[Nonplanar][B13][JobNative]")
 {
@@ -3637,6 +3721,54 @@ TEST_CASE("B13 native departure binds the exact bead material complete route and
     if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(directory)/"native-departure-report.json",report);
     REQUIRE(accept_guarded_candidate_report(fixture.print,report.snapshot));REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Unknown);
     REQUIRE_THROWS_WITH(fixture.print.process(),Catch::Matchers::ContainsSubstring("not implemented"));
+}
+TEST_CASE("B13 actual candidate policies scene and replay must equal the captured typed inputs", "[Nonplanar][B13][NativeJobInputs]")
+{
+    NativeDepartureFixture fixture;const auto original=fixture.inputs;
+    REQUIRE(fixture.job.snapshot->native_inputs->matches_candidate(*fixture.bytes.snapshot,[]{}));
+    for(int field=0;field<7;++field){auto inputs=original;
+        auto ledger=fixture.departure.snapshot->route->planned->material->ledger;
+        if(field==0)inputs.scene.tip.outer_radius=Length(std::nextafter(.5,1.));
+        if(field==1)inputs.scene.head.front().outer.max={.05,.05,std::nextafter(.8,1.)};
+        if(field==2)inputs.scene.scene_domain.max={45,45,std::nextafter(20.,21.)};
+        if(field==3)inputs.clearance.numeric.conversion_mm=3e-6;
+        if(field==4)inputs.motion.flow=FlowCompensation(std::nextafter(1.,2.));
+        if(field==5)inputs.serializer.xyz_digits=7;
+        if(field==6){auto model=ledger->model;model.outer_xy_growth=Length(std::nextafter(.01,1.));
+            const auto changed=capture_material_sequence(ledger->records,model,ledger->revision,ledger->source_fingerprint);REQUIRE(changed.snapshot);ledger=changed.snapshot;
+        }
+        const auto material=prepare_material_motion({"",ledger});REQUIRE(material.snapshot);
+        const auto source=prepare_simulation_motion(inputs.scene,material,inputs.clearance);INFO(source.reason);REQUIRE(source.snapshot);
+        const auto motion=plan_linear_motion(source,inputs.motion);INFO(motion.reason);REQUIRE(motion.snapshot);
+        const auto bytes=serialize_linear_candidate(motion,inputs.serializer);INFO(bytes.reason);REQUIRE(bytes.snapshot);
+        // All identities/revisions are unchanged; actual values decide equality.
+        REQUIRE_FALSE(fixture.job.snapshot->native_inputs->matches_candidate(*bytes.snapshot,[]{}));
+        const auto refused=capture_guarded_native_plan(*fixture.job.task,fixture.hatches.snapshot,fixture.laid(),bytes,{},fixture.departure.snapshot);
+        INFO(field << ' ' << refused.reason);REQUIRE_FALSE(refused.snapshot);REQUIRE(refused.reason=="NATIVE_JOB_PLAN_INPUT_MISMATCH");
+    }
+    const auto lineage=fixture.capture();INFO(lineage.reason);REQUIRE(lineage.snapshot);
+    const auto bound=bind_guarded_candidate(fixture.print,*fixture.job.task,fixture.bytes,{},lineage.snapshot);INFO(bound.reason);REQUIRE(bound.snapshot);
+    for(int field=0;field<7;++field){auto replay=original.replay;
+        if(field==0)++replay.policy_id;
+        if(field==1)++replay.revision;
+        if(field==2)replay.max_nominal_delta_mm3=std::nextafter(replay.max_nominal_delta_mm3,1.);
+        if(field==3)replay.max_total_nominal_delta_mm3=std::nextafter(replay.max_total_nominal_delta_mm3,1.);
+        if(field==4)replay.max_filament_delta_mm=std::nextafter(replay.max_filament_delta_mm,1.);
+        if(field==5)replay.relative_dose_error=std::nextafter(replay.relative_dose_error,1.);
+        if(field==6)replay.absolute_dose_error_mm3=std::nextafter(0.,1.);
+        const auto report=verify_guarded_candidate_report(bound,replay);
+        REQUIRE_FALSE(report.snapshot);REQUIRE(report.reason=="NATIVE_JOB_REPLAY_INPUT_MISMATCH");
+    }
+    auto replay=original.replay;LinearCandidateLimits limits;limits.cancelled=[&]{replay.policy_id=0;return false;};
+    const auto report=verify_guarded_candidate_report(bound,replay,limits);INFO(report.reason);REQUIRE(report.snapshot);REQUIRE(replay.policy_id==0);
+    REQUIRE_FALSE(report.snapshot->export_allowed);REQUIRE(report.snapshot->overall_status==nptop_verify::RateStatus::Unknown);
+    REQUIRE(std::count_if(report.snapshot->checks.begin(),report.snapshot->checks.end(),[](const auto &c){return c.status==nptop_verify::RateStatus::Pass && c.execution==GuardedCheckExecution::Run;})==4);
+}
+TEST_CASE("B13 typed candidate binding cannot omit the protected native lineage", "[Nonplanar][B13][NativeJobInputs]")
+{
+    NativeDepartureFixture fixture;const auto refused=bind_guarded_candidate(fixture.print,*fixture.job.task,fixture.bytes);
+    REQUIRE_FALSE(refused.snapshot);REQUIRE(refused.reason=="NATIVE_JOB_BINDING_REQUIRES_LINEAGE");
+    REQUIRE_FALSE(fixture.job.task->is_current());REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Unknown);
 }
 TEST_CASE("B13 native departure rejects equal content from a different material motion or job owner", "[Nonplanar][B13][JobNativeDeparture]")
 {

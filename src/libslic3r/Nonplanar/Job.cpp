@@ -1,4 +1,5 @@
 #include "Job.hpp"
+#include "NativeJobInputs.hpp"
 #include "Canonical.hpp"
 #include "Contracts.hpp"
 #include "StlImport.hpp"
@@ -92,10 +93,15 @@ void GuardedJobOwner::publish(const GuardedJobTask &task)
     if(validity)validity->store(false,std::memory_order_release);
     validity=task.validity;validity->store(true,std::memory_order_release);
 }
-GuardedJobResult begin_guarded_job(Print &print,uint64_t job_id,const std::vector<JobResource> &requested,const GuardedJobLimits &requested_limits,JobSoftwareMode software_mode)
+GuardedJobResult begin_guarded_job(Print &print,uint64_t job_id,const std::vector<JobResource> &requested,const GuardedJobLimits &requested_limits,
+    JobSoftwareMode software_mode,const NativeJobInputsRequest *requested_native)
 {
     GuardedJobResult result;GuardedJobLimits limits;const auto started=std::chrono::steady_clock::now();
     std::shared_ptr<GuardedJobOwner> owner;std::shared_ptr<const NativeInputSnapshot> input,executed;std::shared_ptr<const PrintConfigSnapshot> settings;uint64_t attempt=0;
+    const auto fail=[&](const char *reason){
+        result.snapshot.reset();result.task.reset();result.reason=reason;
+        if(owner){std::scoped_lock<std::mutex> lock(print.state_mutex());if(owner->attempt==attempt){owner->snapshot.reset();owner->phase=GuardedJobPhase::Unknown;}}
+    };
     try {
         {
             std::scoped_lock<std::mutex> lock(print.state_mutex());
@@ -116,15 +122,28 @@ GuardedJobResult begin_guarded_job(Print &print,uint64_t job_id,const std::vecto
         limits=requested_limits;
         require(software_mode==JobSoftwareMode::Declared || software_mode==JobSoftwareMode::CompiledInputs,"UNKNOWN_JOB_SOFTWARE_MODE");
         require(limits.timeout.count()>0 && limits.timeout.count()<=1000,"INVALID_JOB_CAPTURE_LIMIT");
-        require(requested.size()<=size_t(software_mode==JobSoftwareMode::CompiledInputs?255:256),"JOB_RESOURCE_COUNT_LIMIT");size_t total=0;
+        require(!requested_native || software_mode==JobSoftwareMode::CompiledInputs,"NATIVE_JOB_REQUIRES_COMPILED_INPUTS");
+        require(requested.size()<=size_t(requested_native ? 249 : software_mode==JobSoftwareMode::CompiledInputs ? 255 : 256),"JOB_RESOURCE_COUNT_LIMIT");size_t total=0;
         for(const auto &r:requested){require(!r.name.empty() && r.name.size()<=4096,"JOB_RESOURCE_NAME_LIMIT");require(!r.bytes.empty() && r.bytes.size()<=32*1024*1024-total,"JOB_RESOURCE_BYTE_LIMIT");total+=r.bytes.size();}
         auto resources=requested; // Own all caller bytes before cancellation/freshness callbacks.
+        std::unique_ptr<NativeJobInputsRequest> native_request;
+        if(requested_native){
+            require(requested_native->scene.head.size()<=64 && requested_native->scene.obstacles.size()<=10000,"NATIVE_JOB_INPUT_SIZE_LIMIT");
+            for(const auto &r:resources)require(r.kind==JobResourceKind::SourceFile,"DUPLICATE_NATIVE_JOB_RESOURCE_KIND");
+            native_request=std::make_unique<NativeJobInputsRequest>(*requested_native);
+        }
         const auto stop=[&]{require(!limits.cancelled || !limits.cancelled(),"JOB_CANCELLED");require(std::chrono::steady_clock::now()-started<limits.timeout,"JOB_CAPTURE_DEADLINE");};stop();
+        std::shared_ptr<const NativeJobInputsSnapshot> native_inputs;
+        if(native_request){
+            native_inputs=capture_native_job_inputs(std::move(*native_request),stop);stop();
+            for(const auto &r:native_inputs->resources){require(r.bytes.size()<=32*1024*1024-total,"JOB_RESOURCE_BYTE_LIMIT");total+=r.bytes.size();resources.push_back(r);}
+        }
         std::shared_ptr<const CompiledBuildInputs> software;
         if(software_mode==JobSoftwareMode::CompiledInputs){
             for(const auto &resource:resources)require(resource.kind!=JobResourceKind::Software,"DUPLICATE_JOB_RESOURCE_KIND");
             software=compiled_build_inputs();stop();
             require(software->canonical_json.size()<=32*1024*1024-total,"JOB_RESOURCE_BYTE_LIMIT");
+            total+=software->canonical_json.size();
             resources.push_back({JobResourceKind::Software,"compiled-build-inputs-v1",software->canonical_json});
         }
         auto input_view=identity_view(input->canonical_json);stop();
@@ -145,7 +164,7 @@ GuardedJobResult begin_guarded_job(Print &print,uint64_t job_id,const std::vecto
         for(const auto &object:input->objects)for(const auto &volume:object.volumes)if(!volume.source_file.empty())require(sources.count(volume.source_file),"MISSING_JOB_SOURCE_FILE_BYTES");
         writer.append("],\"schema\":1}");auto json=writer.take();auto hash=sha256_bytes(json);stop();
         auto snapshot=std::shared_ptr<const GuardedJobSnapshot>(new GuardedJobSnapshot(job_id,settings->input_revision,input,executed,settings,
-            std::move(input_view),std::move(executed_view),std::move(settings_view),std::move(owned),std::move(software),std::move(json),std::move(hash)));stop();
+            std::move(input_view),std::move(executed_view),std::move(settings_view),std::move(owned),std::move(software),std::move(native_inputs),std::move(json),std::move(hash)));stop();
         {
             std::scoped_lock<std::mutex> lock(print.state_mutex());
             require(print.m_nonplanar_job==owner && owner->attempt==attempt && !owner->exhausted && native_current(print,*snapshot),"STALE_JOB_CAPTURE");
@@ -153,7 +172,8 @@ GuardedJobResult begin_guarded_job(Print &print,uint64_t job_id,const std::vecto
             require(std::chrono::steady_clock::now()-started<limits.timeout,"JOB_CAPTURE_DEADLINE");
             owner->snapshot=snapshot;owner->phase=GuardedJobPhase::Analyzing;owner->publish(*token);result.snapshot=std::move(snapshot);result.task=std::move(token);
         }
-    }catch(const std::exception &e){result.snapshot.reset();result.task.reset();result.reason=e.what();if(owner){std::scoped_lock<std::mutex> lock(print.state_mutex());if(owner->attempt==attempt){owner->snapshot.reset();owner->phase=GuardedJobPhase::Unknown;}}}
+    }catch(const std::exception &e){fail(*e.what() ? e.what() : "JOB_CAPTURE_EXCEPTION_WITHOUT_REASON");}
+    catch(...){fail("JOB_CAPTURE_UNKNOWN_EXCEPTION");}
     return result;
 }
 GuardedJobResult advance_guarded_job(Print &print,const GuardedJobTask &task,GuardedJobPhase next)

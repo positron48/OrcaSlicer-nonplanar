@@ -1,0 +1,573 @@
+[
+  {
+    "evidence": "baseline-capture.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/capture_baselines.py",
+      "--label",
+      "B13-native-inputs-final-off-zaa"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:20:36.219772+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 1.94
+  },
+  {
+    "evidence": "baseline-compare.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/compare_baselines.py",
+      "tests/nonplanar/data/stock-v2.4.2",
+      "build/nonplanar-evidence/B13-native-inputs-final-off-zaa",
+      "--allow-nptop-off-default"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:22:22.510101+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.259
+  },
+  {
+    "evidence": "build-input-oracle.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/build_inputs_oracle.py",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/compiled-build-inputs.json",
+      "--job-report",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/native-lineage-report.json",
+      "--job-report",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/native-departure-report.json",
+      "--job-report",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-candidates/native-job-report.json"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:19:50.646906+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 8.155
+  },
+  {
+    "evidence": "build1.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "nonplanar_tests",
+      "fff_print_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j6"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:06:31.513485+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 570.036
+  },
+  {
+    "evidence": "build2.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "nonplanar_tests",
+      "fff_print_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j6"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:16:23.243808+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 22.567
+  },
+  {
+    "evidence": "build3-unchanged.txt.json",
+    "command": [
+      "cmake",
+      "--build",
+      "build/arm64",
+      "--config",
+      "Release",
+      "--target",
+      "nonplanar_tests",
+      "fff_print_tests",
+      "nonplanar_rate_audit",
+      "OrcaSlicer",
+      "-j6"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:20:01.509727+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 13.236
+  },
+  {
+    "evidence": "candidate-report-failed-material-oracle.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/candidate-report-failed-material.json"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:19:50.650278+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.046
+  },
+  {
+    "evidence": "candidate-report-invalid-material-oracle.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/candidate-report-invalid-material.json"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:19:50.648381+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.047
+  },
+  {
+    "evidence": "candidate-report-oracle.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/candidate-report.json"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:19:50.646974+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.048
+  },
+  {
+    "evidence": "compiler.txt.json",
+    "command": [
+      "clang++",
+      "--version"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:18:35.792845+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.011
+  },
+  {
+    "evidence": "ctest1.txt.json",
+    "command": [
+      "env",
+      "NPTOP_JOB_EVIDENCE_DIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs/ctest1-jobs",
+      "NPTOP_CANDIDATE_EVIDENCE_DIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs/ctest1-candidates",
+      "python3",
+      "scripts/nonplanar/ctest_gate.py",
+      "--build-dir",
+      "build/arm64",
+      "--output-dir",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1",
+      "--target-executable",
+      "nonplanar_tests",
+      "--target-executable",
+      "fff_print_tests"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:17:26.397347+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 113.384
+  },
+  {
+    "evidence": "diff-check.txt.json",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:22:22.510368+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.08
+  },
+  {
+    "evidence": "focus1.txt.json",
+    "command": [
+      "build/arm64/tests/fff_print/Release/fff_print_tests.app/Contents/MacOS/fff_print_tests",
+      "[NativeJobInputs]",
+      "--order",
+      "rand",
+      "--rng-seed",
+      "1648739313",
+      "--warn",
+      "NoAssertions",
+      "--reporter",
+      "junit",
+      "--out",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs/focus1.xml"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:17:01.673982+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 1.906
+  },
+  {
+    "evidence": "job-artifact-oracle.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_artifact_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/bound-candidate.json"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:19:50.646986+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.044
+  },
+  {
+    "evidence": "job-context-oracle.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_context_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/native-job.json"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:19:50.646933+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.049
+  },
+  {
+    "evidence": "native-departure-report-inputs-oracle.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/native_job_inputs_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/native-departure-report.json"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:19:50.654812+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.187
+  },
+  {
+    "evidence": "native-departure-report-oracle.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/native-departure-report.json"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:19:50.652690+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.182
+  },
+  {
+    "evidence": "native-lineage-report-inputs-oracle.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/native_job_inputs_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/native-lineage-report.json"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:19:50.654222+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.136
+  },
+  {
+    "evidence": "native-lineage-report-oracle.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-jobs/native-lineage-report.json"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:19:50.651420+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.131
+  },
+  {
+    "evidence": "native-report-oracle.txt.json",
+    "command": [
+      "python3",
+      "scripts/nonplanar/job_report_oracle.py",
+      "--input",
+      "build/nonplanar-evidence/B13-native-inputs/ctest1-candidates/native-job-report.json"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:19:50.646948+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.049
+  },
+  {
+    "evidence": "package.txt.json",
+    "command": [
+      "python3",
+      "docs/nonplanar/scripts/validate_package.py"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:18:36.215624+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.071
+  },
+  {
+    "evidence": "source-audit.txt.json",
+    "command": [
+      "python3",
+      "docs/nonplanar/scripts/audit_orca_checkout.py",
+      "--repo",
+      "."
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:18:35.879212+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.284
+  },
+  {
+    "evidence": "yaml.txt.json",
+    "command": [
+      "ruby",
+      "-ryaml",
+      "-e",
+      "YAML.load_file(\".github/workflows/nonplanar-native.yml\"); puts \"PASS_WORKFLOW_YAML\""
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+    "started_utc": "2026-10-03T03:18:36.363347+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.081
+  },
+  {
+    "evidence": "baselines-final/flat_block-off/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/flat_block-off/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/flat_block-off/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-off.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/flat_block-off/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/flat_block-off/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/flat_block-off",
+    "started_utc": "2026-10-03T03:20:36.346249+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 1.067
+  },
+  {
+    "evidence": "baselines-final/flat_block-zaa/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/flat_block-zaa/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/flat_block-zaa/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-zaa.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/flat_block-zaa/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/flat_block-zaa/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/flat_block.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/flat_block-zaa",
+    "started_utc": "2026-10-03T03:20:37.451696+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.087
+  },
+  {
+    "evidence": "baselines-final/shallow_sphere-off/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/shallow_sphere-off/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/shallow_sphere-off/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-off.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/shallow_sphere-off/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/shallow_sphere-off/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/shallow_sphere.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/shallow_sphere-off",
+    "started_utc": "2026-10-03T03:20:37.862570+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.122
+  },
+  {
+    "evidence": "baselines-final/shallow_sphere-zaa/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/shallow_sphere-zaa/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/shallow_sphere-zaa/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-zaa.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/shallow_sphere-zaa/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/shallow_sphere-zaa/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/shallow_sphere.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/shallow_sphere-zaa",
+    "started_utc": "2026-10-03T03:20:38.022739+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.125
+  },
+  {
+    "evidence": "baselines-final/wedge_5deg-off/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/wedge_5deg-off/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/wedge_5deg-off/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-off.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/wedge_5deg-off/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/wedge_5deg-off/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/wedge_5deg.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/wedge_5deg-off",
+    "started_utc": "2026-10-03T03:20:37.579557+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.102
+  },
+  {
+    "evidence": "baselines-final/wedge_5deg-zaa/run.log.json",
+    "command": [
+      "env",
+      "TMPDIR=/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/wedge_5deg-zaa/tmp/",
+      "sandbox-exec",
+      "-f",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/offline.sb",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/Release/OrcaSlicer.app/Contents/MacOS/OrcaSlicer",
+      "--datadir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/wedge_5deg-zaa/data",
+      "--debug",
+      "2",
+      "--load-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/machine.json;/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/process-zaa.json",
+      "--load-filaments",
+      "/Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/data/baseline/filament.json",
+      "--arrange",
+      "1",
+      "--orient",
+      "0",
+      "--outputdir",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/wedge_5deg-zaa/output",
+      "--export-settings",
+      "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/wedge_5deg-zaa/resolved.json",
+      "--slice",
+      "0",
+      "/Users/antonfilatov/www/my/orca-nonplanar/docs/nonplanar/fixtures/models/wedge_5deg.stl"
+    ],
+    "cwd": "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B13-native-inputs-final-off-zaa/wedge_5deg-zaa",
+    "started_utc": "2026-10-03T03:20:37.721952+00:00",
+    "status": "COMPLETED",
+    "exit_code": 0,
+    "elapsed_seconds": 0.101
+  }
+]

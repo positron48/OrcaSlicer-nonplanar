@@ -1,4 +1,5 @@
 #include "JobNative.hpp"
+#include "NativeJobInputs.hpp"
 #include "Canonical.hpp"
 #include "Interval.hpp"
 #include "StlImport.hpp"
@@ -150,6 +151,7 @@ GuardedNativeBodyResult analyze_guarded_native_body(const GuardedJobTask &reques
         NativeGuard guard(task,limits,GuardedJobPhase::Analyzing,started);guard.poll();
         require(request.millimeters_declared,"NATIVE_JOB_SOURCE_UNITS_UNKNOWN");
         require(Vec3d(request.material.plate_origin.x(),request.material.plate_origin.y(),request.material.plate_origin.z())==task.snapshot->settings->plate_origin_mm,"NATIVE_JOB_PHYSICAL_ORIGIN_BINDING");
+        require(!task.snapshot->native_inputs || task.snapshot->native_inputs->matches_body(request.material),"NATIVE_JOB_BODY_INPUT_MISMATCH");
         const auto source=std::find_if(task.snapshot->resources.begin(),task.snapshot->resources.end(),[&](const auto &resource){return resource.kind==JobResourceKind::SourceFile && resource.name==volume.source_file;});
         require(source!=task.snapshot->resources.end(),"NATIVE_JOB_SOURCE_BYTES_MISSING");
         const auto input=guarded_slicing_input(*task.snapshot);guard.poll();
@@ -216,6 +218,7 @@ GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &reques
             assembly->body->completed_records==body->records.size() && assembly->body->current_progress==0,"NATIVE_JOB_COMPLETE_BODY_REQUIRED");
         require(assembly->material->completed_records==assembly->material->sequence->records.size() && assembly->material->current_progress==0,"NATIVE_JOB_COMPLETE_ASSEMBLY_REQUIRED");
         require(candidate && plan && candidate->plan==plan && sha256_bytes(candidate->bytes)==candidate->sha256,"NATIVE_JOB_CANDIDATE_PARENT");
+        require(!task.snapshot->native_inputs || task.snapshot->native_inputs->matches_candidate(*candidate,[&]{guard.poll();}),"NATIVE_JOB_PLAN_INPUT_MISMATCH");
         if(departure){
             require(departure->material==assembly && departure->before->source==assembly->source,"NATIVE_JOB_DEPARTURE_MATERIAL_OWNER");
             require(plan->source==departure->route->planned,"NATIVE_JOB_DEPARTURE_MOTION_OWNER");

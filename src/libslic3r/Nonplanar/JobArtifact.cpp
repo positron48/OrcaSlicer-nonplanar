@@ -1,5 +1,6 @@
 #include "JobArtifact.hpp"
 #include "JobNative.hpp"
+#include "NativeJobInputs.hpp"
 #include "Canonical.hpp"
 #include "StlImport.hpp"
 #include "Interval.hpp"
@@ -22,6 +23,10 @@ GuardedCandidateBindingResult bind_guarded_candidate(Print &print,const GuardedJ
         const auto stop=[&]{require(!limits.cancelled || !limits.cancelled(),"JOB_BINDING_CANCELLED");require(task.is_current(),"STALE_JOB_BINDING_TASK");require(std::chrono::steady_clock::now()-started<limits.timeout,"JOB_BINDING_DEADLINE");};stop();
         require(task.phase==GuardedJobPhase::Serializing,"JOB_BINDING_REQUIRES_SERIALIZING");
         require(candidate && candidate->plan==plan,"MISSING_JOB_CANDIDATE");
+        if(task.snapshot->native_inputs){
+            require(bool(native),"NATIVE_JOB_BINDING_REQUIRES_LINEAGE");
+            require(task.snapshot->native_inputs->matches_candidate(*candidate,stop),"NATIVE_JOB_CANDIDATE_INPUT_MISMATCH");
+        }
         if(native)require(native->candidate==candidate && native->hatches->body->job==task.snapshot && native->hatches->body->attempt==task.attempt &&
             sha256_bytes(native->canonical_json)==native->sha256,"JOB_NATIVE_LINEAGE_BINDING");
         require(!candidate->bytes.empty() && candidate->bytes.size()<=32*1024*1024,"JOB_CANDIDATE_BYTE_LIMIT");
@@ -128,6 +133,7 @@ GuardedCandidateReportResult verify_guarded_candidate_report(const GuardedCandid
             }catch(...){stopped=std::current_exception();throw;}
         };
         guard();require(candidate.evaluations<=limits.max_evaluations,"JOB_REPORT_WORK_LIMIT");result.evaluations=candidate.evaluations;
+        require(!binding->job->native_inputs || binding->job->native_inputs->matches_replay(options),"NATIVE_JOB_REPLAY_INPUT_MISMATCH");guard();
         const auto charge=[&](size_t count){require(result.evaluations<=limits.max_evaluations && count<=limits.max_evaluations-result.evaluations,"JOB_REPORT_WORK_LIMIT");result.evaluations+=count;};
         charge(20);check_candidate_manifest(*binding);guard();
         std::vector<GuardedReportCheck> checks;for(const auto &id:guarded_mandatory_checks())checks.push_back({id,nptop_verify::RateStatus::Unknown,GuardedCheckExecution::NotRun,"Full job proof is not implemented: "+id});
