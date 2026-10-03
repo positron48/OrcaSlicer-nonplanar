@@ -53,7 +53,7 @@ bool native_current(const Print &print,const GuardedJobSnapshot &job)
     // Caller holds the owning Print's state mutex and serializes native edits.
     const auto settings=capture_print_config(print);
     const auto executed=capture_native_input(print.model(),print.full_print_config());
-    return settings && settings->input_revision==job.input_revision && settings->input_fingerprint==job.input->fingerprint &&
+    return (!job.software || job.software==compiled_build_inputs()) && settings && settings->input_revision==job.input_revision && settings->input_fingerprint==job.input->fingerprint &&
         settings->fingerprint()==job.settings->fingerprint() && executed && executed->fingerprint==job.executed_input->fingerprint;
 }
 }
@@ -92,7 +92,7 @@ void GuardedJobOwner::publish(const GuardedJobTask &task)
     if(validity)validity->store(false,std::memory_order_release);
     validity=task.validity;validity->store(true,std::memory_order_release);
 }
-GuardedJobResult begin_guarded_job(Print &print,uint64_t job_id,const std::vector<JobResource> &requested,const GuardedJobLimits &requested_limits)
+GuardedJobResult begin_guarded_job(Print &print,uint64_t job_id,const std::vector<JobResource> &requested,const GuardedJobLimits &requested_limits,JobSoftwareMode software_mode)
 {
     GuardedJobResult result;GuardedJobLimits limits;const auto started=std::chrono::steady_clock::now();
     std::shared_ptr<GuardedJobOwner> owner;std::shared_ptr<const NativeInputSnapshot> input,executed;std::shared_ptr<const PrintConfigSnapshot> settings;uint64_t attempt=0;
@@ -114,11 +114,19 @@ GuardedJobResult begin_guarded_job(Print &print,uint64_t job_id,const std::vecto
             executed=capture_native_input(print.model(),print.full_print_config());require(bool(executed),"MISSING_JOB_EXECUTED_INPUT");
         }
         limits=requested_limits;
+        require(software_mode==JobSoftwareMode::Declared || software_mode==JobSoftwareMode::CompiledInputs,"UNKNOWN_JOB_SOFTWARE_MODE");
         require(limits.timeout.count()>0 && limits.timeout.count()<=1000,"INVALID_JOB_CAPTURE_LIMIT");
-        require(requested.size()<=256,"JOB_RESOURCE_COUNT_LIMIT");size_t total=0;
+        require(requested.size()<=size_t(software_mode==JobSoftwareMode::CompiledInputs?255:256),"JOB_RESOURCE_COUNT_LIMIT");size_t total=0;
         for(const auto &r:requested){require(!r.name.empty() && r.name.size()<=4096,"JOB_RESOURCE_NAME_LIMIT");require(!r.bytes.empty() && r.bytes.size()<=32*1024*1024-total,"JOB_RESOURCE_BYTE_LIMIT");total+=r.bytes.size();}
         auto resources=requested; // Own all caller bytes before cancellation/freshness callbacks.
         const auto stop=[&]{require(!limits.cancelled || !limits.cancelled(),"JOB_CANCELLED");require(std::chrono::steady_clock::now()-started<limits.timeout,"JOB_CAPTURE_DEADLINE");};stop();
+        std::shared_ptr<const CompiledBuildInputs> software;
+        if(software_mode==JobSoftwareMode::CompiledInputs){
+            for(const auto &resource:resources)require(resource.kind!=JobResourceKind::Software,"DUPLICATE_JOB_RESOURCE_KIND");
+            software=compiled_build_inputs();stop();
+            require(software->canonical_json.size()<=32*1024*1024-total,"JOB_RESOURCE_BYTE_LIMIT");
+            resources.push_back({JobResourceKind::Software,"compiled-build-inputs-v1",software->canonical_json});
+        }
         auto input_view=identity_view(input->canonical_json);stop();
         auto executed_view=identity_view(executed->canonical_json);stop();
         auto settings_view=identity_view(settings->canonical_json(),input_view.fingerprint);stop();
@@ -137,7 +145,7 @@ GuardedJobResult begin_guarded_job(Print &print,uint64_t job_id,const std::vecto
         for(const auto &object:input->objects)for(const auto &volume:object.volumes)if(!volume.source_file.empty())require(sources.count(volume.source_file),"MISSING_JOB_SOURCE_FILE_BYTES");
         writer.append("],\"schema\":1}");auto json=writer.take();auto hash=sha256_bytes(json);stop();
         auto snapshot=std::shared_ptr<const GuardedJobSnapshot>(new GuardedJobSnapshot(job_id,settings->input_revision,input,executed,settings,
-            std::move(input_view),std::move(executed_view),std::move(settings_view),std::move(owned),std::move(json),std::move(hash)));stop();
+            std::move(input_view),std::move(executed_view),std::move(settings_view),std::move(owned),std::move(software),std::move(json),std::move(hash)));stop();
         {
             std::scoped_lock<std::mutex> lock(print.state_mutex());
             require(print.m_nonplanar_job==owner && owner->attempt==attempt && !owner->exhausted && native_current(print,*snapshot),"STALE_JOB_CAPTURE");

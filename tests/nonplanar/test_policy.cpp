@@ -2839,15 +2839,15 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         }
         boost::nowide::ofstream mesh_trace((dir/"native-partition-meshes.json").string());REQUIRE(mesh_trace.good());mesh_trace<<meshes.dump(2)<<'\n';mesh_trace.close();REQUIRE(mesh_trace.good());
         // Bind/replay this actual native candidate in a new owned host attempt.
-        // Its opaque resources and source-to-plan relation remain unqualified.
+        // Other declared resources and the source-to-plan relation remain unqualified.
         const auto &source=*captured_body.partition->placement->native_input;
         Model report_model;const auto &source_file=source.objects.front().volumes.front().source_file;
         REQUIRE(load_stl(source_file.c_str(),&report_model));report_model.objects.front()->add_instance()->set_offset(Vec3d(20,20,0));
         REQUIRE(capture_native_input(report_model,config)->fingerprint==source.fingerprint);
         Print report_print;report_print.is_BBL_printer()=false;report_print.apply(report_model,config);
-        std::vector<JobResource> resources;for(int i=1;i<=7;++i)resources.push_back({JobResourceKind(i),"simulation-"+std::to_string(i),"explicit unconfirmed resource"});
+        std::vector<JobResource> resources;for(int i=1;i<=6;++i)resources.push_back({JobResourceKind(i),"simulation-"+std::to_string(i),"explicit unconfirmed resource"});
         resources.push_back({JobResourceKind::SourceFile,source_file,captured_body.partition->placement->centered->source->bytes});
-        auto job=begin_guarded_job(report_print,87,resources);INFO(job.reason);REQUIRE(job.task);
+        auto job=begin_guarded_job(report_print,87,resources,{},JobSoftwareMode::CompiledInputs);INFO(job.reason);REQUIRE(job.task);REQUIRE(job.snapshot->software==compiled_build_inputs());
         job=advance_guarded_job(report_print,*job.task,GuardedJobPhase::Planning);REQUIRE(job.task);
         job=advance_guarded_job(report_print,*job.task,GuardedJobPhase::Serializing);REQUIRE(job.task);
         const auto binding=bind_guarded_candidate(report_print,*job.task,candidate);INFO(binding.reason);REQUIRE(binding.task);
@@ -3106,10 +3106,10 @@ TEST_CASE("B07 native first-hatch union measures rounded overlap rather than sum
 }
 
 namespace {
-std::vector<JobResource> job_resources()
+std::vector<JobResource> job_resources(JobSoftwareMode mode=JobSoftwareMode::Declared)
 {
     std::vector<JobResource> resources;
-    for(int i=int(JobResourceKind::Toolhead);i<=int(JobResourceKind::Software);++i)
+    for(int i=int(JobResourceKind::Toolhead);i<=int(mode==JobSoftwareMode::CompiledInputs?JobResourceKind::Algorithms:JobResourceKind::Software);++i)
         resources.push_back({JobResourceKind(i),"fixture-"+std::to_string(i),"{\"synthetic\":true,\"resource\":"+std::to_string(i)+"}"});
     return resources;
 }
@@ -3117,6 +3117,70 @@ void job_model(Model &model)
 {
     auto *object=model.add_object();object->add_volume(make_cube(8,8,4));object->add_instance()->set_offset(Vec3d(20,20,0));
 }
+}
+TEST_CASE("B13 compiled build inventory owns current source hashes and declared context", "[Nonplanar][B13][BuildInputs]")
+{
+    static_assert(!std::is_aggregate_v<CompiledBuildInputs>);
+    static_assert(!std::is_constructible_v<CompiledBuildInputs,std::string,std::string,size_t>);
+    const auto source=compiled_build_inputs();REQUIRE(source);REQUIRE(source==compiled_build_inputs());
+    REQUIRE(source->sha256==sha256_bytes(source->canonical_json));
+    const auto value=nlohmann::json::parse(source->canonical_json);
+    REQUIRE(value.dump()==source->canonical_json);REQUIRE(value.at("scope")=="build-input-inventory");
+    REQUIRE(source->file_count==value.at("files").size());REQUIRE(source->file_count>1000);
+    REQUIRE(value.at("build").at("CMAKE_CXX_COMPILER_ID").get<std::string>().size()>0);
+    REQUIRE(value.at("build").at("CMAKE_CXX_COMPILER_VERSION").get<std::string>().size()>0);
+    const auto root=boost::filesystem::path(__FILE__).parent_path().parent_path().parent_path();
+    for(const auto *name:{"src/libslic3r/Nonplanar/BuildInputs.cpp","src/libslic3r/Nonplanar/Job.cpp",
+            "src/libslic3r/CMakeLists.txt","cmake/modules/GenerateNonplanarBuildInputs.cmake","docs/nonplanar/upstream/orca.lock.json"}){
+        boost::nowide::ifstream stream((root/name).string(),std::ios::binary);REQUIRE(stream.good());
+        const std::string bytes{std::istreambuf_iterator<char>(stream),std::istreambuf_iterator<char>()};
+        const auto found=std::find_if(value.at("files").begin(),value.at("files").end(),[&](const auto &file){return file[0]==name;});
+        REQUIRE(found!=value.at("files").end());REQUIRE((*found)[1]==sha256_bytes(bytes));
+    }
+    if(const char *output=std::getenv("NPTOP_JOB_EVIDENCE_DIR")){
+        const auto dir=boost::filesystem::path(output);boost::filesystem::create_directories(dir);
+        boost::nowide::ofstream inventory((dir/"compiled-build-inputs.json").string(),std::ios::binary);
+        inventory<<source->canonical_json;inventory.close();REQUIRE(inventory.good());
+    }
+}
+TEST_CASE("B13 native job inserts protected compiled inventory and rejects overrides", "[Nonplanar][B13][BuildInputs][JobContext]")
+{
+    Model model;job_model(model);auto config=eligible();Print print;print.apply(model,config);
+    auto resources=job_resources(JobSoftwareMode::CompiledInputs);const auto originals=resources;
+    GuardedJobLimits limits;limits.cancelled=[&]{resources.clear();limits.timeout=std::chrono::milliseconds(0);return false;};
+    const auto job=begin_guarded_job(print,89,resources,limits,JobSoftwareMode::CompiledInputs);INFO(job.reason);REQUIRE(job.task);
+    REQUIRE(job.snapshot->software==compiled_build_inputs());REQUIRE(job.snapshot->resources.size()==7);
+    const auto &resource=job.snapshot->resources.back();REQUIRE(resource.kind==JobResourceKind::Software);
+    REQUIRE(resource.name=="compiled-build-inputs-v1");REQUIRE(resource.bytes==job.snapshot->software->canonical_json);
+    REQUIRE(resource.sha256==job.snapshot->software->sha256);
+    const auto changed=begin_guarded_job(print,89,job_resources());REQUIRE(changed.task);REQUIRE_FALSE(changed.snapshot->software);
+    REQUIRE(changed.snapshot->fingerprint!=job.snapshot->fingerprint);REQUIRE_FALSE(job.task->is_current());
+    auto reversed=originals;std::reverse(reversed.begin(),reversed.end());
+    const auto same=begin_guarded_job(print,89,reversed,{},JobSoftwareMode::CompiledInputs);REQUIRE(same.task);
+    REQUIRE(same.snapshot->fingerprint==job.snapshot->fingerprint);
+    auto forged=originals;forged.push_back({JobResourceKind::Software,"compiled-build-inputs-v1",resource.bytes});
+    const auto rejected=begin_guarded_job(print,89,forged,{},JobSoftwareMode::CompiledInputs);
+    REQUIRE_FALSE(rejected.snapshot);REQUIRE(rejected.reason=="DUPLICATE_JOB_RESOURCE_KIND");REQUIRE_FALSE(same.task->is_current());
+    REQUIRE_FALSE(guarded_job_status(print).snapshot);
+    for(const auto mode:{JobSoftwareMode(-1),JobSoftwareMode(2)}){
+        const auto invalid=begin_guarded_job(print,89,originals,{},mode);REQUIRE_FALSE(invalid.snapshot);REQUIRE(invalid.reason=="UNKNOWN_JOB_SOFTWARE_MODE");
+    }
+}
+TEST_CASE("B13 compiled job cancellation and late native edits retain original root guard", "[Nonplanar][B13][BuildInputs][JobContext]")
+{
+    Model model;job_model(model);auto config=eligible();Print print;print.apply(model,config);
+    const auto resources=job_resources(JobSoftwareMode::CompiledInputs);
+    GuardedJobLimits limits;size_t calls=0;limits.cancelled=[&]{++calls;return false;};
+    const auto job=begin_guarded_job(print,90,resources,limits,JobSoftwareMode::CompiledInputs);INFO(job.reason);REQUIRE(job.task);const auto last=calls;
+    calls=0;limits.cancelled=[&]{return ++calls==last;};
+    const auto cancelled=begin_guarded_job(print,90,resources,limits,JobSoftwareMode::CompiledInputs);
+    REQUIRE_FALSE(cancelled.snapshot);REQUIRE(cancelled.reason=="JOB_CANCELLED");REQUIRE_FALSE(job.task->is_current());
+    calls=0;limits.cancelled=[&]{if(++calls==last){config.set_key_value("layer_height",new ConfigOptionFloat(.21));print.apply(model,config);}return false;};
+    const auto stale=begin_guarded_job(print,90,resources,limits,JobSoftwareMode::CompiledInputs);
+    REQUIRE_FALSE(stale.snapshot);REQUIRE(stale.reason=="STALE_JOB_CAPTURE");REQUIRE_FALSE(guarded_job_status(print).snapshot);
+    config.set_deserialize_strict("nptop_mode","off");print.apply(model,config);
+    limits.cancelled=[] {FAIL("OFF must bypass compiled software capture");return false;};
+    REQUIRE_FALSE(begin_guarded_job(print,0,{},limits,JobSoftwareMode::CompiledInputs).snapshot);
 }
 TEST_CASE("B13 immutable native job binds every exact resource and preserves owned inputs", "[Nonplanar][B13][JobContext]")
 {
@@ -3251,7 +3315,7 @@ struct NativeJobFixture {
     Model model;
     DynamicPrintConfig config=planar_body_config();
     Print print;
-    std::vector<JobResource> resources=job_resources();
+    std::vector<JobResource> resources=job_resources(JobSoftwareMode::CompiledInputs);
     NativeJobFixture()
     {
         const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/affine-wedge-1-in-16.stl";
@@ -3262,7 +3326,7 @@ struct NativeJobFixture {
         resources.push_back({JobResourceKind::SourceFile,model.objects.front()->volumes.front()->source.input_file,file.source->bytes});
         print.apply(model,config);
     }
-    GuardedJobResult begin(){auto result=begin_guarded_job(print,88,resources);INFO(result.reason);REQUIRE(result.task);return result;}
+    GuardedJobResult begin(){auto result=begin_guarded_job(print,88,resources,{},JobSoftwareMode::CompiledInputs);INFO(result.reason);REQUIRE(result.task);REQUIRE(result.snapshot->software==compiled_build_inputs());return result;}
 };
 GuardedNativeBodyRequest native_job_body_request()
 {

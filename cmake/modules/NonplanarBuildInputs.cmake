@@ -1,0 +1,143 @@
+# An inventory embedded in libslic3r, not a certificate of the linked program.
+# Run at every build: timestamps and the configure-time Git label are insufficient.
+function(nonplanar_build_inputs target source)
+    # A separate object gives CMake's portable, configuration-specific object
+    # path. The generator can invalidate this one consumer on content changes,
+    # even with Make versions that compare mtimes only to the nearest second.
+    set(consumer "${target}_build_input_code")
+    add_library(${consumer} OBJECT "${source}")
+    foreach(property INCLUDE_DIRECTORIES COMPILE_DEFINITIONS COMPILE_OPTIONS
+            CXX_STANDARD CXX_STANDARD_REQUIRED CXX_EXTENSIONS POSITION_INDEPENDENT_CODE)
+        get_target_property(value ${target} ${property})
+        if(NOT value STREQUAL "value-NOTFOUND")
+            set_target_properties(${consumer} PROPERTIES ${property} "${value}")
+        endif()
+    endforeach()
+    get_target_property(dependencies ${target} LINK_LIBRARIES)
+    if(dependencies)
+        # libnest2d links back to libslic3r. The inventory unit uses no nesting
+        # headers/symbols; carrying that static-library cycle into an object
+        # library would create an invalid CMake dependency cycle.
+        list(REMOVE_ITEM dependencies libnest2d)
+        target_link_libraries(${consumer} PRIVATE ${dependencies})
+    endif()
+    if(MSVC)
+        # Preserve the generated UTF-8 path bytes regardless of the host ACP.
+        target_compile_options(${consumer} PRIVATE /utf-8)
+    endif()
+    get_target_property(sources ${target} SOURCES)
+    list(REMOVE_ITEM sources "${source}")
+    set_target_properties(${target} PROPERTIES SOURCES "${sources}")
+    target_sources(${target} PRIVATE $<TARGET_OBJECTS:${consumer}>)
+    file(GLOB_RECURSE inputs LIST_DIRECTORIES false CONFIGURE_DEPENDS
+        RELATIVE "${CMAKE_SOURCE_DIR}"
+        "${CMAKE_SOURCE_DIR}/src/*" "${CMAKE_SOURCE_DIR}/deps_src/*"
+        "${CMAKE_SOURCE_DIR}/resources/*" "${CMAKE_SOURCE_DIR}/cmake/*"
+        "${CMAKE_SOURCE_DIR}/deps/*.cmake" "${CMAKE_SOURCE_DIR}/deps/CMakeLists.txt")
+    list(FILTER inputs EXCLUDE REGEX "(^|/)(build|DL_CACHE|\\.git)(/|$)|(^|/)\\.DS_Store$")
+    file(GLOB root_inputs RELATIVE "${CMAKE_SOURCE_DIR}" CONFIGURE_DEPENDS
+        "${CMAKE_SOURCE_DIR}/build*.sh" "${CMAKE_SOURCE_DIR}/build*.bat"
+        "${CMAKE_SOURCE_DIR}/build*.ps1")
+    list(APPEND inputs ${root_inputs} CMakeLists.txt version.inc docs/nonplanar/upstream/orca.lock.json)
+    list(REMOVE_DUPLICATES inputs)
+    list(SORT inputs)
+    set(output "${CMAKE_CURRENT_BINARY_DIR}/nonplanar-build-inputs")
+    set_property(GLOBAL PROPERTY NPTOP_BUILD_INPUT_OUTPUT "${output}")
+    set_property(GLOBAL PROPERTY NPTOP_BUILD_INPUT_PARENT "${target}")
+    file(MAKE_DIRECTORY "${output}")
+    string(REPLACE ";" "\n" input_lines "${inputs}")
+    file(WRITE "${output}/files.txt" "${input_lines}\n")
+    set(context "")
+    foreach(key CMAKE_CXX_COMPILER_ID CMAKE_CXX_COMPILER_VERSION CMAKE_CXX_FLAGS
+            CMAKE_GENERATOR CMAKE_SYSTEM_NAME CMAKE_SYSTEM_PROCESSOR CMAKE_VERSION)
+        if("${${key}}" MATCHES "\\]=\\]")
+            message(FATAL_ERROR "Unsupported delimiter in build context ${key}")
+        endif()
+        string(APPEND context "set(${key} [=[${${key}}]=])\n")
+    endforeach()
+    string(APPEND context "set(configuration [=[$<CONFIG>]=])\n")
+    foreach(config ${CMAKE_CONFIGURATION_TYPES} ${CMAKE_BUILD_TYPE})
+        string(TOUPPER "${config}" upper_config)
+        string(APPEND context "set(flags_${config} [=[${CMAKE_CXX_FLAGS_${upper_config}}]=])\n")
+    endforeach()
+    # These are declared target properties, not a complete resolved compile/link graph.
+    string(APPEND context "set(target_options [=[$<TARGET_PROPERTY:${target},COMPILE_OPTIONS>]=])\n")
+    string(APPEND context "set(target_definitions [=[$<TARGET_PROPERTY:${target},COMPILE_DEFINITIONS>]=])\n")
+    string(APPEND context "set(inventory_options [=[$<TARGET_PROPERTY:${consumer},COMPILE_OPTIONS>]=])\n")
+    string(APPEND context "set(inventory_objects [=[$<TARGET_OBJECTS:${consumer}>]=])\n")
+    string(APPEND context "set(inventory_build_root [=[${CMAKE_BINARY_DIR}]=])\n")
+    file(GENERATE OUTPUT "${output}/$<CONFIG>/context.cmake" CONTENT "${context}")
+    set(configurations ${CMAKE_CONFIGURATION_TYPES})
+    if(NOT configurations)
+        set(configurations "${CMAKE_BUILD_TYPE}")
+        if(NOT configurations)
+            set(configurations "NoConfig")
+        endif()
+    endif()
+    set(byproducts "")
+    set(headers "")
+    foreach(config ${configurations})
+        set(config_path "${config}")
+        if(config STREQUAL "NoConfig")
+            set(config_path "")
+        endif()
+        list(APPEND headers "${output}/${config_path}/NonplanarBuildInputsData.hpp")
+        list(APPEND byproducts "${output}/${config_path}/NonplanarBuildInputsData.hpp" "${output}/${config_path}/inventory.json")
+    endforeach()
+    string(REPLACE ";" "|" configurations_arg "${configurations}")
+    add_custom_target(nonplanar_build_inputs
+        COMMAND "${CMAKE_COMMAND}" "-DNPTOP_SOURCE_ROOT=${CMAKE_SOURCE_DIR}"
+            "-DNPTOP_OUTPUT=${output}" "-DNPTOP_CONFIGURATIONS=${configurations_arg}"
+            -P "${CMAKE_SOURCE_DIR}/cmake/modules/GenerateNonplanarBuildInputs.cmake"
+        BYPRODUCTS ${byproducts} VERBATIM)
+    add_dependencies(${consumer} nonplanar_build_inputs)
+    add_dependencies(${target} ${consumer})
+    target_include_directories(${consumer} PRIVATE "${output}/$<CONFIG>")
+    set_source_files_properties(${headers} PROPERTIES GENERATED TRUE)
+    target_sources(${consumer} PRIVATE ${headers})
+    set_source_files_properties(${source} PROPERTIES SKIP_PRECOMPILE_HEADERS ON OBJECT_DEPENDS "${headers}")
+endfunction()
+
+# Called after all build targets exist. Invalidate build outputs as well as the
+# single inventory object: coarse Make timestamps can otherwise skip relinking.
+# Imported/system targets are absent from BUILDSYSTEM_TARGETS.
+function(nonplanar_build_input_artifacts directory)
+    get_property(targets DIRECTORY "${directory}" PROPERTY BUILDSYSTEM_TARGETS)
+    get_property(children DIRECTORY "${directory}" PROPERTY SUBDIRECTORIES)
+    foreach(child ${children})
+        nonplanar_build_input_artifacts("${child}")
+    endforeach()
+    set_property(GLOBAL APPEND PROPERTY NPTOP_BUILD_INPUT_TARGETS ${targets})
+    if(directory STREQUAL CMAKE_SOURCE_DIR)
+        get_property(output GLOBAL PROPERTY NPTOP_BUILD_INPUT_OUTPUT)
+        get_property(targets GLOBAL PROPERTY NPTOP_BUILD_INPUT_TARGETS)
+        get_property(consumers GLOBAL PROPERTY NPTOP_BUILD_INPUT_PARENT)
+        set(changed TRUE)
+        while(changed)
+            set(changed FALSE)
+            foreach(target ${targets})
+                if(target IN_LIST consumers)
+                    continue()
+                endif()
+                get_target_property(links ${target} LINK_LIBRARIES)
+                get_target_property(interface ${target} INTERFACE_LINK_LIBRARIES)
+                foreach(dependency ${consumers})
+                    if("${links};${interface}" MATCHES "(^|[;:<>])${dependency}([;:<>]|$)")
+                        list(APPEND consumers "${target}")
+                        set(changed TRUE)
+                        break()
+                    endif()
+                endforeach()
+            endforeach()
+        endwhile()
+        set(artifacts "")
+        foreach(target ${consumers})
+            get_target_property(type ${target} TYPE)
+            if(type MATCHES "^(EXECUTABLE|STATIC_LIBRARY|SHARED_LIBRARY|MODULE_LIBRARY)$")
+                list(APPEND artifacts "$<TARGET_FILE:${target}>")
+            endif()
+        endforeach()
+        file(GENERATE OUTPUT "${output}/$<CONFIG>/artifacts.cmake"
+            CONTENT "set(inventory_artifacts [=[${artifacts}]=])\n")
+    endif()
+endfunction()

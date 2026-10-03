@@ -43,6 +43,7 @@ jobs:
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/source-audit.log -- python3 docs/nonplanar/scripts/audit_orca_checkout.py --repo .
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/package.log -- python3 docs/nonplanar/scripts/validate_package.py
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/gmp-contract.log -- python3 scripts/nonplanar/test_gmp_build_contract.py
+          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/build-input-generator.log -- python3 scripts/nonplanar/test_build_inputs.py -v
       - name: System dependencies on disposable runner
         run: sudo ./build_linux.sh -ur
       - name: Identify exact dependency source and runner environment
@@ -86,6 +87,7 @@ jobs:
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/tests.log -- env NPTOP_JOB_EVIDENCE_DIR=${{ github.workspace }}/build/nonplanar-evidence/linux/job-fixtures NPTOP_CANDIDATE_EVIDENCE_DIR=${{ github.workspace }}/build/nonplanar-evidence/linux/candidate-fixtures python3 scripts/nonplanar/ctest_gate.py --build-dir build --output-dir build/nonplanar-evidence/linux/ctest --target-executable nonplanar_tests --target-executable fff_print_tests
       - name: Independently check native job and candidate identities
         run: |
+          python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/build-input-oracle.log -- python3 scripts/nonplanar/build_inputs_oracle.py build/nonplanar-evidence/linux/job-fixtures/compiled-build-inputs.json --job-report build/nonplanar-evidence/linux/job-fixtures/native-lineage-report.json --job-report build/nonplanar-evidence/linux/job-fixtures/native-departure-report.json --job-report build/nonplanar-evidence/linux/candidate-fixtures/native-job-report.json
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/job-context-oracle.log -- python3 scripts/nonplanar/job_context_oracle.py --input build/nonplanar-evidence/linux/job-fixtures/native-job.json
           python3 scripts/nonplanar/run_logged.py --output build/nonplanar-evidence/linux/job-artifact-oracle.log -- python3 scripts/nonplanar/job_artifact_oracle.py --input build/nonplanar-evidence/linux/job-fixtures/bound-candidate.json
           for name in candidate-report candidate-report-invalid-material candidate-report-failed-material native-lineage-report native-departure-report; do

@@ -15,6 +15,23 @@ revision resolves with the included Git command.
 
 ## Current checkpoint — 2026-10-03
 
+`B13-build-inputs.md` and ADR-0088 add a private library-owned build input
+inventory and bind its exact bytes into native job software resources. CMake
+hashes 18,285 source/resource/build files every build; unchanged output stays
+unchanged. Eight generator tests cover preserved mtimes, UTF-8, direct/static/
+transitive/cyclic consumers, untouched independent targets and build-tree-only
+invalidation. Focus 10/230, CTest 453/453, nine independent identity oracles and
+six fresh strict OFF/ZAA pairs pass. Fifty of 51 parent candidate files are exact;
+only the software-bound report changes, with the same blocked mandatory registry.
+Final 2205-record candidate remains exact. This inventory does not qualify reused
+objects, complete flags/linkage/dependencies/runtime resources or full software
+identity. Fixed 17 remains 4 PASS/RUN + 13 UNKNOWN/NOT_RUN; full B01–B15 active,
+export BLOCK. Next: complete source/resource-to-plan binding, software provenance,
+qualified contact/seams/full fill and whole job/GUI/publication; B14/B15 remain.
+Linux new source awaits its own run; Windows/full GUI/physical and independent
+review remain pending. Standard U1 head / 0.4 mm nozzle known; no firmware or
+material-brand questionnaire gates software implementation.
+
 `B04-partition-order.md` and ADR-0087 fix the actual derived mesh representation:
 exact XYZ vertex order, winding-preserving cyclic face indices and oriented face
 order replace unstable CGAL descriptor iteration. Original/reservation/source

@@ -25,6 +25,8 @@ set(lisbslic3r_sources
     Nonplanar/GCodeAdapter.hpp
     Nonplanar/Job.cpp
     Nonplanar/Job.hpp
+    Nonplanar/BuildInputs.cpp
+    Nonplanar/BuildInputs.hpp
     Nonplanar/JobArtifact.cpp
     Nonplanar/JobArtifact.hpp
     Nonplanar/JobNative.cpp
@@ -534,6 +536,7 @@ add_library(libslic3r STATIC ${lisbslic3r_sources}
     "${CMAKE_CURRENT_BINARY_DIR}/libslic3r_version.h"
     ${OpenVDBUtils_SOURCES})
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${lisbslic3r_sources})
+include(NonplanarBuildInputs)
 
 if (SLIC3R_STATIC)
     set(CGAL_Boost_USE_STATIC_LIBS ON CACHE BOOL "" FORCE)
@@ -691,3 +694,5 @@ endif()
 if (SLIC3R_PCH AND NOT SLIC3R_SYNTAXONLY)
     add_precompiled_header(libslic3r pchheader.hpp FORCEINCLUDE)
 endif ()
+
+nonplanar_build_inputs(libslic3r Nonplanar/BuildInputs.cpp)

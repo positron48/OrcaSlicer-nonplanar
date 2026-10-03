@@ -963,3 +963,7 @@ set (CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE.txt) # must also in
 set(CPACK_WIX_UPGRADE_GUID "058245e8-20e0-4a95-9ab7-1acfe17ad511")
 set(CPACK_GENERATOR NSIS)
 include(CPack)
+
+if(TARGET libslic3r_build_input_code)
+    nonplanar_build_input_artifacts("${CMAKE_SOURCE_DIR}")
+endif()
