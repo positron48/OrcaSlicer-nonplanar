@@ -2957,6 +2957,93 @@ MaterialFillResult reconcile_material_fill(const MaterialIntegralResult &request
     catch (const std::exception &e) {result.reason="MATERIAL_FILL_NUMERIC_FAILURE: "+std::string(e.what());}
     return result;
 }
+CompleteMaterialFillResult measure_complete_material_fill(const MaterialFillResult &requested,const MaterialFillLimits &requested_limits)
+{
+    const auto local=requested.snapshot;const auto limits=requested_limits;
+    const auto started=std::chrono::steady_clock::now();CompleteMaterialFillResult result;
+    try {
+        detail::require_interval_environment();
+        if(!local || !local->target || !local->occupied || !local->occupied->source || !local->occupied->source->sequence ||
+            !limits.max_cells || limits.max_cells>65535 || !limits.max_evaluations || limits.max_evaluations>2000000 ||
+            !limits.max_depth || limits.max_depth>32 || !valid_timeout(limits.timeout) || limits.maximum_interval_width.value()<=0)
+            reject("INVALID_COMPLETE_MATERIAL_FILL");
+        const auto cursor=local->occupied->source;const auto &sequence=*cursor->sequence;
+        const auto poll=[&]{stop(limits,sequence.revision,started);};
+        const auto work=[&]{if(++result.evaluations>limits.max_evaluations)reject("COMPLETE_MATERIAL_FILL_WORK_LIMIT");poll();};work();
+        if(sequence.records.size()>200000 || cursor->completed_records>sequence.records.size() ||
+            !std::isfinite(cursor->current_progress) || cursor->current_progress<0 || cursor->current_progress>1 ||
+            (cursor->completed_records==sequence.records.size() && cursor->current_progress!=0))reject("INVALID_COMPLETE_MATERIAL_PREFIX");
+        const auto &box=local->occupied->domain;
+        std::array<double,3> lo{box.min.x(),box.min.y(),box.min.z()},hi{box.max.x(),box.max.y(),box.max.z()};
+        const size_t active=cursor->completed_records+(cursor->current_progress>0);
+        for(size_t i=0;i<active;++i) {
+            work();const auto &row=sequence.records[i];if(!row.bead)continue;
+            const auto &m=row.motion;const auto &b=*row.bead;const auto fraction=Exact(i<cursor->completed_records ? 1 : cursor->current_progress);
+            std::array<Interval,3> end{Interval(0),Interval(0),Interval(0)};
+            const std::array<double,3> start{m.start.x(),m.start.y(),m.start.z()},last{m.end.x(),m.end.y(),m.end.z()};
+            for(size_t axis=0;axis<3;++axis)end[axis]=exact_interval(Exact(start[axis])+(Exact(last[axis])-Exact(start[axis]))*fraction);
+            const auto gap=exact_interval(Exact(b.gap_begin_mm)+(Exact(b.gap_end_mm)-Exact(b.gap_begin_mm))*fraction);
+            const auto height=detail::minimum(Interval(b.gap_begin_mm),gap);
+            const auto length=detail::root(length_squared(row));
+            const auto area=Interval(std::get<Deposition>(m.payload).volume.value())/length;
+            const auto half=section_width(area,Interval(height.lo,std::max(b.gap_begin_mm,gap.hi)),b.kind)/Interval(2);
+            // Nominal geometry only. Do not inflate this volume with Upper
+            // growth, numerical uncertainty or an unlaid future endpoint.
+            const double gx=m.start.y()==m.end.y() ? 0 : (absolute(Interval(m.end.y())-Interval(m.start.y()))/length*half).hi;
+            const double gy=m.start.x()==m.end.x() ? 0 : (absolute(Interval(m.end.x())-Interval(m.start.x()))/length*half).hi;
+            const std::array<Interval,3> minimum{
+                detail::minimum(Interval(start[0]),end[0])-Interval(gx),
+                detail::minimum(Interval(start[1]),end[1])-Interval(gy),
+                detail::minimum(Interval(start[2])-Interval(b.gap_begin_mm),end[2]-gap)};
+            const std::array<Interval,3> maximum{
+                detail::maximum(Interval(start[0]),end[0])+Interval(gx),
+                detail::maximum(Interval(start[1]),end[1])+Interval(gy),detail::maximum(Interval(start[2]),end[2])};
+            for(size_t axis=0;axis<3;++axis){lo[axis]=std::min(lo[axis],minimum[axis].lo);hi[axis]=std::max(hi[axis],maximum[axis].hi);}
+        }
+        const SceneBox outer{{lo[0],lo[1],lo[2]},{hi[0],hi[1],hi[2]}};
+        for(double coordinate_value : lo)coordinate(coordinate_value);for(double coordinate_value : hi)coordinate(coordinate_value);
+        const std::array<double,3> inner_lo{box.min.x(),box.min.y(),box.min.z()},inner_hi{box.max.x(),box.max.y(),box.max.z()};
+        std::vector<SceneBox> domains;
+        // Peel two slabs per axis. Each remaining axis uses the original
+        // inner extent, so interiors are disjoint including mixed XY/Z spill.
+        for(size_t axis=0;axis<3;++axis) {
+            for(bool below : {true,false}) {
+                auto a=lo,b=hi;
+                for(size_t previous=0;previous<axis;++previous){a[previous]=inner_lo[previous];b[previous]=inner_hi[previous];}
+                if(below)b[axis]=inner_lo[axis];else a[axis]=inner_hi[axis];
+                if(a[axis]<b[axis])domains.push_back({{a[0],a[1],a[2]},{b[0],b[1],b[2]}});
+            }
+        }
+        std::vector<std::shared_ptr<const MaterialUnionSnapshot>> exterior;
+        auto occupied=interval(local->occupied->union_volume_mm3),amount=interval(local->occupied->individual_volume_mm3);
+        auto repeated=interval(local->occupied->repeated_volume_mm3),outside=interval(local->outside_target_mm3);Interval external(0);
+        double width=0;for(const auto v:{occupied,amount,repeated,outside})width=std::max(width,(Interval(v.hi)-Interval(v.lo)).hi);
+        const double available=(Interval(limits.maximum_interval_width.value())-Interval(width)).lo;
+        if(!domains.empty() && available<=0)reject("COMPLETE_MATERIAL_FILL_INPUT_PRECISION");
+        for(const auto &domain:domains) {
+            work();if(result.cells>=limits.max_cells || result.evaluations>=limits.max_evaluations)reject("COMPLETE_MATERIAL_FILL_WORK_LIMIT");
+            MaterialUnionLimits remaining=limits;remaining.max_cells-=result.cells;remaining.max_evaluations-=result.evaluations;
+            remaining.maximum_interval_width=Volume(available/16);
+            remaining.timeout=limits.timeout-std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now()-started);
+            remaining.cancelled=[&]{poll();return false;};remaining.is_current={};
+            const auto measured=integrate_material_union({cursor},domain,remaining);
+            result.cells+=measured.cells;result.evaluations+=measured.evaluations;poll();
+            if(!measured.snapshot)throw Rejection(measured.reason);
+            const auto &part=*measured.snapshot;
+            occupied=occupied+interval(part.union_volume_mm3);amount=amount+interval(part.individual_volume_mm3);
+            repeated=repeated+interval(part.repeated_volume_mm3);external=external+interval(part.union_volume_mm3);
+            outside=outside+interval(part.union_volume_mm3);exterior.push_back(measured.snapshot);
+        }
+        for(const auto v:{occupied,amount,repeated,external,outside})
+            if((Interval(v.hi)-Interval(v.lo)).hi>limits.maximum_interval_width.value())reject("COMPLETE_MATERIAL_FILL_PRECISION_LIMIT");
+        const auto nonnegative=[](Interval v){return ScalarBounds{std::max(0.,v.lo),std::max(0.,v.hi)};};
+        work();result.snapshot=std::shared_ptr<const CompleteMaterialFillSnapshot>(new CompleteMaterialFillSnapshot(local,outer,std::move(exterior),
+            nonnegative(occupied),nonnegative(amount),nonnegative(repeated),nonnegative(external),nonnegative(outside),result.cells,result.evaluations));
+        poll();result.reason="BOUNDED_COMPLETE_NOMINAL_TARGET_DEFICIT_XY_Z_SPILL_AND_MULTIPLICITY_ONLY";
+    } catch(const Rejection &e){result.snapshot.reset();result.reason=e.what();}
+    catch(const std::exception &e){result.snapshot.reset();result.reason="COMPLETE_MATERIAL_FILL_NUMERIC_FAILURE: "+std::string(e.what());}
+    return result;
+}
 MaterialVoidResult classify_material_voids(const MaterialFillResult &requested,const MaterialFillLimits &requested_limits)
 {
     const auto source=requested.snapshot;const auto limits=requested_limits;
@@ -3237,6 +3324,7 @@ bool valid_first_hatch_layer_limits(const FirstHatchLayerLimits &l)
 }
 struct FirstCandidateMeasurement {
     std::shared_ptr<const MaterialFillSnapshot> fill;
+    std::shared_ptr<const CompleteMaterialFillSnapshot> complete;
     ScalarBounds target,delivered;
     double error,numeric;
     size_t roofs,cells;
@@ -3317,7 +3405,12 @@ FirstCandidateMeasurement measure_first_candidate(const std::shared_ptr<const Af
     fill.maximum_interval_width=limits.volumes.maximum_interval_width;
     const auto measured=reconcile_material_fill(stack->first_pass,occupied,fill);
     if (!measured.snapshot) throw Rejection(measured.reason);charge(measured.evaluations);cells+=measured.cells;
-    poll();return {measured.snapshot,bounds(target),bounds(delivered),error,numeric,roofs,cells};
+    if (cells>=limits.max_cells) reject("FIRST_HATCH_LAYER_CELL_LIMIT");
+    fill.max_cells=std::min(limits.volumes.max_cells,limits.max_cells-cells);
+    fill.max_evaluations=std::min(limits.volumes.max_evaluations,limits.max_evaluations-work);fill.timeout=limits.volumes.timeout-elapsed();
+    const auto complete=measure_complete_material_fill(measured,fill);
+    if (!complete.snapshot) throw Rejection(complete.reason);charge(complete.evaluations);cells+=complete.cells;
+    poll();return {measured.snapshot,complete.snapshot,bounds(target),bounds(delivered),error,numeric,roofs,cells};
 }
 
 }
@@ -3687,7 +3780,7 @@ FirstContourResult plan_first_contour(const AffineHatchResult &requested,const F
         };poll();size_t work=0;std::vector<size_t> replaced;
         auto edges=FirstHatchBeadSnapshot::construct_first_paths(source,policy,limits,false,started,work,replaced);
         const auto measured=measure_first_candidate(source,edges,box,limits,started,work);
-        if (measured.fill->outside_target_mm3.upper>policy.maximum_outside_target.value()) reject("FIRST_CONTOUR_OUTSIDE_TARGET_LIMIT");
+        if (measured.complete->outside_target_mm3.upper>policy.maximum_outside_target.value()) reject("FIRST_CONTOUR_OUTSIDE_TARGET_LIMIT");
         if (measured.fill->covered_target_mm3.lower<=0) reject("FIRST_CONTOUR_NO_POSITIVE_COVERAGE");
         poll();auto snapshot=std::shared_ptr<const FirstContourSnapshot>(new FirstContourSnapshot(source,policy,std::move(edges),measured.fill,
             measured.target,measured.delivered,measured.error,measured.numeric,measured.roofs,measured.cells,work));
@@ -3715,9 +3808,9 @@ FirstCapResult plan_first_cap(const AffineHatchResult &requested,const FirstCont
         };poll();size_t work=0;std::vector<size_t> replaced;
         auto paths=FirstHatchBeadSnapshot::construct_first_paths(source,policy,limits,true,started,work,replaced);
         const auto measured=measure_first_candidate(source,paths,box,limits,started,work);
-        if (measured.fill->outside_target_mm3.upper>policy.maximum_outside_target.value()) reject("FIRST_CAP_OUTSIDE_TARGET_LIMIT");
+        if (measured.complete->outside_target_mm3.upper>policy.maximum_outside_target.value()) reject("FIRST_CAP_OUTSIDE_TARGET_LIMIT");
         if (measured.fill->covered_target_mm3.lower<=0) reject("FIRST_CAP_NO_POSITIVE_COVERAGE");
-        poll();auto snapshot=std::shared_ptr<const FirstCapSnapshot>(new FirstCapSnapshot(source,policy,std::move(paths),std::move(replaced),measured.fill,
+        poll();auto snapshot=std::shared_ptr<const FirstCapSnapshot>(new FirstCapSnapshot(source,policy,std::move(paths),std::move(replaced),measured.fill,measured.complete,
             measured.target,measured.delivered,measured.error,measured.numeric,measured.roofs,measured.cells,work));
         poll();return {"BOUNDED_FIRST_CONTOUR_AND_INTERIOR_HATCH_CANDIDATE_WITH_MEASURED_JOINT_FILL_ONLY",std::move(snapshot)};
     } catch (const Rejection &e) {return {e.what(),{}};}
@@ -3761,7 +3854,7 @@ FirstCapReplanResult replan_first_cap_ends(const FirstCapResult &requested,const
             }
         }
         const auto measured=measure_first_candidate(source,paths,before->fill->occupied->domain,limits,started,work);
-        if (measured.fill->outside_target_mm3.upper>std::min(before->policy.maximum_outside_target.value(),policy.maximum_outside_target.value()))
+        if (measured.complete->outside_target_mm3.upper>std::min(before->policy.maximum_outside_target.value(),policy.maximum_outside_target.value()))
             reject("FIRST_CAP_REPLAN_OUTSIDE_TARGET_LIMIT");
         const auto gain=interval(measured.fill->covered_target_mm3)-interval(before->fill->covered_target_mm3);
         const auto reduction=interval(before->fill->missing_target_mm3)-interval(measured.fill->missing_target_mm3);
@@ -3769,7 +3862,7 @@ FirstCapReplanResult replan_first_cap_ends(const FirstCapResult &requested,const
         const auto amount=interval(measured.fill->occupied->individual_volume_mm3)-interval(before->fill->occupied->individual_volume_mm3);
         const auto repeated=interval(measured.fill->occupied->repeated_volume_mm3)-interval(before->fill->occupied->repeated_volume_mm3);
         poll();auto after=std::shared_ptr<const FirstCapSnapshot>(new FirstCapSnapshot(source,before->policy,std::move(paths),std::move(replaced),
-            measured.fill,measured.target,measured.delivered,measured.error,measured.numeric,measured.roofs,measured.cells,work,FirstCapHatchExtent::BoundaryBand));
+            measured.fill,measured.complete,measured.target,measured.delivered,measured.error,measured.numeric,measured.roofs,measured.cells,work,FirstCapHatchExtent::BoundaryBand));
         poll();auto snapshot=std::shared_ptr<const FirstCapReplanSnapshot>(new FirstCapReplanSnapshot(before,after,policy,bounds(gain),bounds(reduction),
             bounds(amount),bounds(repeated),measured.cells,work));
         poll();return {"BOUNDED_WHOLE_FIRST_CAP_END_REPLAN_WITH_MEASURED_FILL_GAIN_ONLY",std::move(snapshot)};
@@ -3886,9 +3979,9 @@ FirstCapWidthReplanResult replan_first_cap_width(const FirstCapResult &requested
         const auto missing=interval(measured.fill->missing_target_mm3)-interval(before->fill->missing_target_mm3);
         if (commanded.lo<policy.minimum_repeated_reduction.value() || repeated.lo<policy.minimum_repeated_reduction.value()) reject("FIRST_CAP_WIDTH_REPLAN_INSUFFICIENT_REDUCTION");
         if (covered.lo<-policy.maximum_covered_loss.value() || missing.hi>policy.maximum_covered_loss.value()) reject("FIRST_CAP_WIDTH_REPLAN_COVERAGE_LOSS");
-        if (measured.fill->outside_target_mm3.upper>std::min(before->policy.maximum_outside_target.value(),policy.maximum_outside_target.value())) reject("FIRST_CAP_WIDTH_REPLAN_OUTSIDE_TARGET_LIMIT");
+        if (measured.complete->outside_target_mm3.upper>std::min(before->policy.maximum_outside_target.value(),policy.maximum_outside_target.value())) reject("FIRST_CAP_WIDTH_REPLAN_OUTSIDE_TARGET_LIMIT");
         poll();auto after=std::shared_ptr<const FirstCapSnapshot>(new FirstCapSnapshot(source,before->policy,std::move(paths),before->replaced_boundary_lines,
-            measured.fill,measured.target,measured.delivered,measured.error,measured.numeric,measured.roofs,measured.cells,work,before->hatch_extent));
+            measured.fill,measured.complete,measured.target,measured.delivered,measured.error,measured.numeric,measured.roofs,measured.cells,work,before->hatch_extent));
         poll();auto snapshot=std::shared_ptr<const FirstCapWidthReplanSnapshot>(new FirstCapWidthReplanSnapshot(before,after,width,policy,
             bounds(commanded),bounds(repeated),bounds(covered),bounds(missing),measured.cells,work));
         poll();return {"BOUNDED_CENTRAL_FIRST_CAP_WIDTH_REPLAN_WITH_MEASURED_EXCESS_REDUCTION_ONLY",std::move(snapshot)};

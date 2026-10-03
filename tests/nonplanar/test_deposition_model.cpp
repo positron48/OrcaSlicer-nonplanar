@@ -1157,6 +1157,12 @@ MaterialUnionResult flat_fill_union(double top,double fraction=1)
     auto result=integrate_material_union(state.nominal,{{1,-.4,.7},{3,.4,1.6}});
     INFO(result.reason);REQUIRE(result.snapshot);return result;
 }
+MaterialIntegralResult complete_fill_target()
+{
+    const auto state=material_at(captured({bead(1,0,{0,0,1},{10,0,1},4,.5,.5,BeadSectionKind::Rectangle)}),1,0);
+    auto target=integrate_material_first_pass(state.lower,{{1,-.5,3,.5},1.25,1.25,1.25},.875,{VerticalGap(.1),VerticalGap(.4),Length(0)});
+    INFO(target.reason);REQUIRE(target.proof);return target;
+}
 }
 TEST_CASE("B07 target fill separates equal-total underfill from material outside the cap", "[Nonplanar][B07][MaterialFill]")
 {
@@ -1170,6 +1176,138 @@ TEST_CASE("B07 target fill separates equal-total underfill from material outside
     REQUIRE(fit.snapshot->below_roof_mm3.upper==0);
     REQUIRE(fit.snapshot->missing_target_mm3.lower>.15);REQUIRE(fit.snapshot->outside_target_mm3.lower>.15);
     REQUIRE(fit.snapshot->target==target.proof);REQUIRE(fit.snapshot->occupied==material.snapshot);
+}
+TEST_CASE("B07 complete target accounting includes every exterior nominal bead instead of clipping away XY spill", "[Nonplanar][B07][CompleteMaterialFill]")
+{
+    STATIC_REQUIRE_FALSE(std::is_aggregate<CompleteMaterialFillSnapshot>::value);
+    STATIC_REQUIRE(complete_material_fill_contract_version==1);
+    const auto target=complete_fill_target();const SceneBox domain{{1,-.5,.5},{3,.5,2}};
+    for(double start : {0.,1.}) {
+        const double end=start==0 ? 4 : 3;
+        const auto row=bead(1,0,{start,0,1.25},{end,0,1.25},1,.25,.25,BeadSectionKind::Rectangle);
+        const auto state=material_at(captured({row}),1,0);
+        const auto occupied=integrate_material_union(state.nominal,domain);REQUIRE(occupied.snapshot);
+        const auto local=reconcile_material_fill(target,occupied);REQUIRE(local.snapshot);
+        const auto result=measure_complete_material_fill(local);INFO(result.reason);REQUIRE(result.snapshot);
+        const auto &fill=*result.snapshot;
+        volume_contains(fill.union_volume_mm3,(end-start)*.25L);
+        volume_contains(fill.individual_volume_mm3,(end-start)*.25L);
+        volume_contains(fill.repeated_volume_mm3,0);
+        volume_contains(fill.local->covered_target_mm3,.5L);
+        volume_contains(fill.local->missing_target_mm3,0);
+        volume_contains(fill.outside_target_mm3,start==0 ? .5L : 0.L);
+        REQUIRE(fill.local->occupied->source==state.nominal.snapshot);
+        for(const auto &proof:fill.exterior)REQUIRE(proof->source==state.nominal.snapshot);
+        if(start==0){REQUIRE(fill.local->outside_target_mm3.upper<.001);REQUIRE(fill.outside_target_mm3.lower>.31);}
+    }
+}
+TEST_CASE("B07 complete fill partitions mixed XYZ spill and triple occupancy without counting overlaps twice", "[Nonplanar][B07][CompleteMaterialFill]")
+{
+    const auto target=complete_fill_target();const SceneBox domain{{1,-.5,.5},{3,.5,2}};
+    // Independent rectangular prism: [0,4] x [-1,1] x [0,4].
+    // Its volume is 32, intersection with the local box is 3, and
+    // intersection with the original target is .5. All six slabs are used.
+    auto first=bead(1,0,{0,0,4},{4,0,4},2,4,4,BeadSectionKind::Rectangle);
+    const MaterialRecord back{{2,1,0,{4,0,4},{0,0,4},Speed(10),Acceleration(100),Travel{}},{}};
+    auto second=first;second.motion.event_id=3;second.motion.sequence_index=2;
+    auto again=back;again.motion.event_id=4;again.motion.sequence_index=3;
+    auto third=first;third.motion.event_id=5;third.motion.sequence_index=4;
+    const auto state=material_at(captured({first,back,second,again,third}),5,0);
+    const auto occupied=integrate_material_union(state.nominal,domain);INFO(occupied.reason);REQUIRE(occupied.snapshot);
+    const auto local=reconcile_material_fill(target,occupied);INFO(local.reason);REQUIRE(local.snapshot);
+    const auto result=measure_complete_material_fill(local);INFO(result.reason);REQUIRE(result.snapshot);
+    const auto &fill=*result.snapshot;REQUIRE(fill.exterior.size()==6);
+    volume_contains(fill.union_volume_mm3,32);volume_contains(fill.individual_volume_mm3,96);
+    volume_contains(fill.repeated_volume_mm3,64);volume_contains(fill.outside_domain_mm3,29);
+    volume_contains(fill.outside_target_mm3,31.5L);volume_contains(fill.local->covered_target_mm3,.5L);
+    volume_contains(fill.local->missing_target_mm3,0);
+    long double partition=0;
+    const auto box_volume=[](const SceneBox &b) {return (static_cast<long double>(b.max.x())-b.min.x())*
+        (static_cast<long double>(b.max.y())-b.min.y())*(static_cast<long double>(b.max.z())-b.min.z());};
+    partition=box_volume(domain);
+    for(size_t i=0;i<fill.exterior.size();++i){
+        const auto &a=fill.exterior[i]->domain;partition+=box_volume(a);
+        REQUIRE(fill.exterior[i]->source==state.nominal.snapshot);
+        for(size_t j=0;j<i;++j){const auto &b=fill.exterior[j]->domain;
+            REQUIRE((a.max.x()<=b.min.x() || b.max.x()<=a.min.x() || a.max.y()<=b.min.y() ||
+                b.max.y()<=a.min.y() || a.max.z()<=b.min.z() || b.max.z()<=a.min.z()));}
+    }
+    REQUIRE(std::abs(partition-box_volume(fill.outer_domain))<1e-12L);
+}
+TEST_CASE("B07 complete fill retains current finite fronts and excludes future and Upper growth", "[Nonplanar][B07][CompleteMaterialFill]")
+{
+    const auto target=complete_fill_target();const SceneBox domain{{1,-.5,.5},{3,.5,2}};
+    for(bool along_x:{true,false})for(bool reverse:{false,true}){
+        const auto point=[&](double q,double z){return along_x ? PhysicalPosition(q,0,z) : PhysicalPosition(2,q,z);};
+        const double begin=reverse ? 4 : -4,end=-begin;
+        const auto first=bead(1,0,point(begin,1.25),point(end,1.25),1,.25,.25,BeadSectionKind::Rectangle);
+        const auto future=bead(2,1,first.motion.end,point(end+1,8),1,.25,.25,BeadSectionKind::Rectangle);
+        const auto sequence=captured({first,future},model(.5,.01));
+        for(double progress:{0.,.25,.5,1.}){
+            const auto state=material_at(sequence,0,progress);REQUIRE(state.nominal.snapshot);
+            const auto occupied=integrate_material_union(state.nominal,domain);REQUIRE(occupied.snapshot);
+            const auto local=reconcile_material_fill(target,occupied);REQUIRE(local.snapshot);
+            const auto result=measure_complete_material_fill(local);INFO(result.reason);REQUIRE(result.snapshot);
+            const auto &fill=*result.snapshot;
+            volume_contains(fill.union_volume_mm3,2*progress);volume_contains(fill.individual_volume_mm3,2*progress);
+            volume_contains(fill.repeated_volume_mm3,0);
+            REQUIRE(fill.outer_domain.max.z()==domain.max.z()); // No future z=8, no Upper .5 inflation.
+            REQUIRE(fill.local==local.snapshot);
+            if(progress==0){REQUIRE(fill.exterior.empty());volume_contains(fill.outside_target_mm3,0);}
+            else REQUIRE(fill.exterior.size()>=1);
+        }
+    }
+}
+TEST_CASE("B07 complete affine diagonal rounded fill encloses the original constant-flux dose", "[Nonplanar][B07][CompleteMaterialFill]")
+{
+    const auto target=complete_fill_target();const SceneBox domain{{1,-.5,.5},{3,.5,2}};
+    const auto clipped=material_at(captured({bead(1,0,{0,0,1.25},{3,4,3},1,.25,.375,BeadSectionKind::Rectangle)}),0,.25);
+    const auto unavailable=integrate_material_union(clipped.nominal,domain);
+    REQUIRE_FALSE(unavailable.snapshot);REQUIRE(unavailable.reason=="MATERIAL_UNION_CELL_LIMIT");
+    // Keep that original clipped-cell refusal. A separate diagonal wholly
+    // outside the local XY box can certify its complete finite flux volume.
+    for(bool reverse:{false,true})for(auto kind:{BeadSectionKind::Rectangle,BeadSectionKind::RoundedRectangle}){
+        const auto a=reverse ? PhysicalPosition(-7,4,3) : PhysicalPosition(-10,0,1.25);
+        const auto b=reverse ? PhysicalPosition(-10,0,1.25) : PhysicalPosition(-7,4,3);
+        const auto row=bead(1,0,a,b,1,reverse ? .375 : .25,reverse ? .25 : .375,kind);
+        const auto sequence=captured({row});const long double amount=std::get<Deposition>(row.motion.payload).volume.value();
+        for(double progress:{.25,1.}){
+            const auto state=material_at(sequence,0,progress);
+            const auto occupied=integrate_material_union(state.nominal,domain);INFO(occupied.reason);REQUIRE(occupied.snapshot);
+            const auto local=reconcile_material_fill(target,occupied);INFO(local.reason);REQUIRE(local.snapshot);
+            MaterialFillLimits limits;limits.max_evaluations=2000000;limits.timeout=std::chrono::seconds(5);
+            const auto result=measure_complete_material_fill(local,limits);INFO(result.reason);REQUIRE(result.snapshot);
+            const auto &fill=*result.snapshot;volume_contains(fill.union_volume_mm3,amount*progress);
+            volume_contains(fill.individual_volume_mm3,amount*progress);volume_contains(fill.repeated_volume_mm3,0);
+            REQUIRE(fill.local==local.snapshot);REQUIRE(fill.exterior.size()<=6);
+        }
+    }
+}
+TEST_CASE("B07 complete fill captures protected inputs and refuses exhausted stale cancelled and late publication", "[Nonplanar][B07][CompleteMaterialFill]")
+{
+    const auto state=material_at(captured({bead(1,0,{0,0,1.25},{4,0,1.25},1,.25,.25,BeadSectionKind::Rectangle)}),1,0);
+    const auto occupied=integrate_material_union(state.nominal,{{1,-.5,.5},{3,.5,2}});REQUIRE(occupied.snapshot);
+    auto local=reconcile_material_fill(complete_fill_target(),occupied);REQUIRE(local.snapshot);const auto original=local.snapshot;
+    MaterialFillLimits limits;size_t calls=0;
+    limits.cancelled=[&]{++calls;local.snapshot.reset();limits.max_evaluations=1;return false;};
+    const auto success=measure_complete_material_fill(local,limits);INFO(success.reason);REQUIRE(success.snapshot);
+    REQUIRE(success.snapshot->local==original);REQUIRE(success.cells>0);const size_t publication_calls=calls;
+    local.snapshot=original;limits={};limits.max_evaluations=success.evaluations;
+    REQUIRE(measure_complete_material_fill(local,limits).snapshot);
+    limits.max_evaluations=success.evaluations-1;REQUIRE_FALSE(measure_complete_material_fill(local,limits).snapshot);
+    limits={};limits.max_cells=success.cells;REQUIRE(measure_complete_material_fill(local,limits).snapshot);
+    limits.max_cells=success.cells-1;REQUIRE_FALSE(measure_complete_material_fill(local,limits).snapshot);
+    limits={};limits.maximum_interval_width=Volume(1e-20);REQUIRE_FALSE(measure_complete_material_fill(local,limits).snapshot);
+    limits={};limits.max_cells=0;REQUIRE_FALSE(measure_complete_material_fill(local,limits).snapshot);
+    limits={};limits.cancelled=[] {return true;};REQUIRE_FALSE(measure_complete_material_fill(local,limits).snapshot);
+    limits={};limits.is_current=[](uint64_t revision){REQUIRE(revision==23);return false;};REQUIRE_FALSE(measure_complete_material_fill(local,limits).snapshot);
+    limits={};limits.timeout=std::chrono::milliseconds(1);limits.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};
+    REQUIRE_FALSE(measure_complete_material_fill(local,limits).snapshot);
+    limits={};calls=0;limits.cancelled=[&]{return ++calls==publication_calls;};REQUIRE_FALSE(measure_complete_material_fill(local,limits).snapshot);
+    limits={};limits.cancelled=[]()->bool {throw std::runtime_error("test callback");};REQUIRE_FALSE(measure_complete_material_fill(local,limits).snapshot);
+    limits={};limits.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};const auto rounding=measure_complete_material_fill(local,limits);
+    REQUIRE(std::fesetround(FE_TONEAREST)==0);REQUIRE_FALSE(rounding.snapshot);
+    REQUIRE_FALSE(measure_complete_material_fill({}).snapshot);
 }
 TEST_CASE("B07 exact fill current fraction and below-roof spill retain separate geometric measures", "[Nonplanar][B07][MaterialFill]")
 {
@@ -2120,6 +2258,8 @@ TEST_CASE("B07 first cap replaces boundary hatches and measures contour plus int
         const auto &cap=*result.snapshot;const auto &lines=source->passes.front().lines;
         REQUIRE(cap.source==source);REQUIRE(cap.paths.size()==lines.size()+2);REQUIRE((cap.replaced_boundary_lines==std::vector<size_t>{0,lines.size()-1}));
         REQUIRE(cap.fill->target==source->source->first_pass.proof);REQUIRE(cap.global_volume_error_mm3<=.001);
+        REQUIRE(cap.complete_fill);REQUIRE(cap.complete_fill->local==cap.fill);
+        REQUIRE(cap.complete_fill->outside_target_mm3.upper<=.001);
         REQUIRE(cap.fill->covered_target_mm3.lower>0);REQUIRE(cap.fill->missing_target_mm3.lower>0);REQUIRE(cap.fill->outside_target_mm3.upper<=.001);
         using Amount=boost::multiprecision::cpp_bin_float_quad;Amount sum=0;
         const bool x=direction==HatchDirection::AlongX;
@@ -2770,7 +2910,7 @@ std::pair<CapAmount,CapAmount> independent_flat_union(const std::vector<Material
 
 TEST_CASE("B07 first cap end replan preserves contours and replaces the whole prospective ledger", "[Nonplanar][B07][FirstCapEndReplan]")
 {
-    STATIC_REQUIRE(first_cap_contract_version==3);
+    STATIC_REQUIRE(first_cap_contract_version==4);
     STATIC_REQUIRE(first_cap_replan_contract_version==1);
     STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapReplanSnapshot>::value);
     const SceneBox box{{1,-.8,.7},{3,.8,1.84}};
@@ -2955,7 +3095,7 @@ TEST_CASE("B07 affine triple multiplicity encloses the independently integrated 
 
 TEST_CASE("B07 central cap width replan preserves geometry contour and extended ends", "[Nonplanar][B07][FirstCapWidthReplan]")
 {
-    STATIC_REQUIRE(first_cap_contract_version==3);
+    STATIC_REQUIRE(first_cap_contract_version==4);
     STATIC_REQUIRE(first_cap_width_replan_contract_version==1);
     STATIC_REQUIRE_FALSE(std::is_aggregate<FirstCapWidthReplanSnapshot>::value);
     using Q=CapAmount;

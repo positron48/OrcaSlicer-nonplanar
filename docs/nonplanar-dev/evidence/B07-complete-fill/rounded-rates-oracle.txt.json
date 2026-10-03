@@ -1,0 +1,19 @@
+{
+  "command": [
+    "python3",
+    "scripts/nonplanar/rounded_rates_oracle.py",
+    "--fixtures",
+    "build/nonplanar-evidence/B07-complete-fill/final-jobs",
+    "--parent-report",
+    "docs/nonplanar-dev/evidence/B14-later-controller/final-jobs/native-later-rate-refusal-report.json.gz",
+    "--executable",
+    "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+    "--output-dir",
+    "build/nonplanar-evidence/B07-complete-fill/rounded-audit"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-03T14:20:47.345416+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 0.494
+}

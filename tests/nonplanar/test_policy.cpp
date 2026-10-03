@@ -2323,6 +2323,9 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     INFO(first_cap.reason);REQUIRE(first_cap.snapshot);const auto &cap=*first_cap.snapshot;
     REQUIRE(cap.paths.size()==5);REQUIRE(cap.paths.back()->line_index==1);REQUIRE((cap.replaced_boundary_lines==std::vector<size_t>{0,2}));
     REQUIRE(cap.source==wide_hatches.snapshot->hatches);REQUIRE(cap.fill->target==cap.source->source->first_pass.proof);
+    REQUIRE(cap.complete_fill);REQUIRE(cap.complete_fill->local==cap.fill);
+    REQUIRE(cap.complete_fill->exterior.empty());
+    REQUIRE(cap.complete_fill->outside_domain_mm3.lower==0);REQUIRE(cap.complete_fill->outside_domain_mm3.upper==0);
     LayerAmount cap_sum=0;size_t cap_packets=0;
     for (size_t i=0;i<cap.paths.size();++i) {
         const auto &path=*cap.paths[i];REQUIRE(path.line_index.has_value()==(i>=4));REQUIRE(path.roof_domain==FirstHatchRoofDomain::FiniteWidth);
@@ -2333,6 +2336,7 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         for (const auto &p : path.pieces) {REQUIRE(p.nominal_width.value()==.4);cap_sum+=p.volume.value();++cap_packets;}
     }
     contains(cap.deposited_volume_mm3,cap_sum);contains(cap.fill->occupied->individual_volume_mm3,cap_sum);
+    contains(cap.complete_fill->individual_volume_mm3,cap_sum);
     REQUIRE(cap.fill->occupied->repeated_volume_mm3.lower>0);REQUIRE(cap.fill->covered_target_mm3.lower>0);REQUIRE(cap.fill->missing_target_mm3.lower>0);
     REQUIRE(cap.fill->outside_target_mm3.upper<=.001);REQUIRE(cap.global_volume_error_mm3<=layer_limits.beads.packets.maximum_volume_error.value());
     INFO("native combined first cap paths=" << cap.paths.size() << " packets=" << cap_packets << " amount=[" << cap.deposited_volume_mm3.lower << ',' << cap.deposited_volume_mm3.upper <<
@@ -2427,6 +2431,7 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
         "] cells=" << cap_replan.snapshot->cells << " work=" << cap_replan.snapshot->evaluations);
     REQUIRE(cap_replan.snapshot->before==first_cap.snapshot);REQUIRE(extended.source==cap.source);
     REQUIRE(extended.fill->target==cap.fill->target);REQUIRE(extended.hatch_extent==FirstCapHatchExtent::BoundaryBand);
+    REQUIRE(extended.complete_fill);REQUIRE(extended.complete_fill->local==extended.fill);
     REQUIRE(cap.hatch_extent==FirstCapHatchExtent::ContourCentres);REQUIRE(cap_packets==161);
     REQUIRE(extended.fill->occupied->source->sequence!=cap.fill->occupied->source->sequence);
     LayerAmount extended_amount=0;size_t extended_packets=0;
@@ -2483,6 +2488,7 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     REQUIRE_FALSE(too_narrow_interface.snapshot);REQUIRE(too_narrow_interface.reason=="FIRST_CAP_INTERFACE_FLAT_FLOOR_TOO_NARROW");
     const auto cap_width=replan_first_cap_width(extended_result,WidthXY(.38),{},layer_limits);
     INFO(cap_width.reason);REQUIRE(cap_width.snapshot);const auto &narrow=*cap_width.snapshot->after;
+    REQUIRE(narrow.complete_fill);REQUIRE(narrow.complete_fill->local==narrow.fill);
     REQUIRE(cap_width.snapshot->before==extended_result.snapshot);REQUIRE(narrow.source==extended.source);
     REQUIRE(narrow.fill->target==extended.fill->target);REQUIRE(narrow.hatch_extent==extended.hatch_extent);
     REQUIRE(narrow.policy.width.value()==.4);REQUIRE(narrow.paths.size()==extended.paths.size());
@@ -2792,6 +2798,24 @@ TEST_CASE("B07 native first footprint derives bounded amounts inside an actual f
     // Optional software-evidence output, never a production export path.
     if(const char *directory=std::getenv("NPTOP_CANDIDATE_EVIDENCE_DIR")) {
         const boost::filesystem::path dir(directory);REQUIRE(boost::filesystem::is_directory(dir));
+        const auto range=[](ScalarBounds v){return nlohmann::json::array({v.lower,v.upper});};
+        const auto &complete=*cap.complete_fill;nlohmann::json packets=nlohmann::json::array();
+        for(const auto &path:cap.paths)for(const auto &p:path->pieces)packets.push_back({
+            {"start",{p.start.x(),p.start.y(),p.start.z()}},{"end",{p.end.x(),p.end.y(),p.end.z()}},
+            {"volume",p.volume.value()},{"width",range(p.section.width_mm)},{"gap",{p.section.gap_begin_mm,p.section.gap_end_mm}}});
+        const auto &domain=cap.fill->occupied->domain;
+        const nlohmann::json complete_document={{"schema",complete_material_fill_contract_version},{"first_cap_contract",first_cap_contract_version},
+            {"scope","COMPLETE_NOMINAL_VOLUME_ONLY_NOT_COMPLETE_FILLED_CAP_OR_EXPORT"},{"export","BLOCK"},
+            {"packets",packets},{"domain",{{domain.min.x(),domain.min.y(),domain.min.z()},{domain.max.x(),domain.max.y(),domain.max.z()}}},
+            {"union_mm3",range(complete.union_volume_mm3)},
+            {"individual_mm3",range(complete.individual_volume_mm3)},{"repeated_mm3",range(complete.repeated_volume_mm3)},
+            {"target_mm3",range(cap.fill->target_volume_mm3)},{"covered_mm3",range(cap.fill->covered_target_mm3)},
+            {"missing_mm3",range(cap.fill->missing_target_mm3)},{"local_outside_mm3",range(cap.fill->outside_target_mm3)},
+            {"outside_domain_mm3",range(complete.outside_domain_mm3)},{"outside_target_mm3",range(complete.outside_target_mm3)},
+            {"exterior_parts",complete.exterior.size()},{"cells",complete.cells},{"work",complete.evaluations}};
+        const auto complete_path=dir/"native-complete-fill.json";REQUIRE_FALSE(boost::filesystem::exists(complete_path));
+        boost::nowide::ofstream complete_file(complete_path.string());REQUIRE(complete_file.good());
+        complete_file<<complete_document.dump(2)<<'\n';complete_file.close();REQUIRE(complete_file.good());
         const auto payload=dir/"native-full-stop.candidate.txt";REQUIRE_FALSE(boost::filesystem::exists(payload));
         boost::nowide::ofstream output(payload.string(),std::ios::binary);REQUIRE(output.good());output<<bytes.bytes;output.close();REQUIRE(output.good());
         nlohmann::json mapping=nlohmann::json::array();

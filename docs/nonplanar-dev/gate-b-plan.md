@@ -4,6 +4,21 @@ Active objective: implement the entire B01–B15 scope. A bounded primitive or a
 green unit suite is evidence for its own contract, not completion of a B task.
 The normative backlog, SPEC and acceptance matrix remain unchanged.
 
+`B07-complete-fill.md` and ADR-0099 retain the original protected local fill
+and bound complete active nominal material outside its XY/Z box with disjoint
+union certificates. First-cap contract4 owns that proof; original spill policies
+consume complete spill. Five new cases/433 assertions, CTest491/491, nineteen
+independent checks, thirteen actual CLI cases and six strict OFF/ZAA pairs pass.
+Native original161 packets remain contained and retain real M [.10716664,.10757418]
+mm3 and repeated material. Fifty of51 parent candidates stay exact, one software
+report changes; new complete-fill witness is additive and default2098 SHA stays
+exact. Fixed17 remains4 PASS/RUN +13 UNKNOWN/NOT_RUN, export BLOCK, full B01-B15
+active. Next construct qualified remaining cap/seam volume and complete later
+layers; head/contact/routes/order/whole-job/source/software/physical/publication
+remain open. New Linux/Windows/GUI/physical and independent review pending.
+
+Earlier milestones below retain the scope at their delivery.
+
 `B11-rounded-rates.md` and ADR-0098 correct native full-stop serialization
 against its actual decimal XYZ/E. Only M204/F ceilings decrease; geometry,
 extrusion, order and original limits remain. Original100 later analysis passes
@@ -16,8 +31,6 @@ Fixed17 remains4 PASS/RUN +13 UNKNOWN/NOT_RUN, export BLOCK and full B01-B15
 active. Complete filled caps/contact/seams/head/routes/order/whole-job/source/
 software/physical/publication remain open. New Linux/Windows/GUI/physical and
 independent review pending; standard U1 head/.4 nozzle known.
-
-Earlier milestones below retain the scope at their delivery.
 
 `B14-later-controller.md` and ADR-0097 integrate captured ordered local later
 paths into the common controller, protected native lineage and actual final-byte

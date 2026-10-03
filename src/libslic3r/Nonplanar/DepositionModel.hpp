@@ -644,6 +644,38 @@ struct MaterialFillResult {
 // and union proofs; wrapper fields cannot replace them. Geometric measures only.
 MaterialFillResult reconcile_material_fill(const MaterialIntegralResult &, const MaterialUnionResult &,
                                           const MaterialFillLimits &limits = {});
+inline constexpr unsigned complete_material_fill_contract_version=1;
+struct CompleteMaterialFillResult;
+struct CompleteMaterialFillSnapshot {
+    const std::shared_ptr<const MaterialFillSnapshot> local;
+    const SceneBox outer_domain;
+    // Disjoint exterior boxes plus the original local domain enclose every
+    // active nominal bead. Empty boxes are omitted, never missing material.
+    const std::vector<std::shared_ptr<const MaterialUnionSnapshot>> exterior;
+    const ScalarBounds union_volume_mm3,individual_volume_mm3,repeated_volume_mm3;
+    const ScalarBounds outside_domain_mm3,outside_target_mm3;
+    const size_t cells,evaluations;
+private:
+    CompleteMaterialFillSnapshot(std::shared_ptr<const MaterialFillSnapshot> original,SceneBox box,
+        std::vector<std::shared_ptr<const MaterialUnionSnapshot>> parts,ScalarBounds occupied,ScalarBounds amount,
+        ScalarBounds repeated,ScalarBounds external,ScalarBounds spill,size_t count,size_t work)
+        :local(std::move(original)),outer_domain(box),exterior(std::move(parts)),union_volume_mm3(occupied),
+         individual_volume_mm3(amount),repeated_volume_mm3(repeated),outside_domain_mm3(external),
+         outside_target_mm3(spill),cells(count),evaluations(work){}
+    friend CompleteMaterialFillResult measure_complete_material_fill(const MaterialFillResult &,const MaterialFillLimits &);
+};
+struct CompleteMaterialFillResult {
+    std::string reason;
+    std::shared_ptr<const CompleteMaterialFillSnapshot> snapshot;
+    size_t cells=0,evaluations=0;
+};
+// Retain the protected local target/roof measurement and integrate all active
+// nominal material outside its XY/Z box. Disjoint exterior union certificates
+// account for complete S/U/R and target spill without pairwise double counting.
+// Original target deficit is unchanged; future rows/Upper never create fill.
+// Volume measurement only: no acceptable deficit/excess, seams/support/contact,
+// calibrated delivery, complete cap/job or export permission is inferred.
+CompleteMaterialFillResult measure_complete_material_fill(const MaterialFillResult &,const MaterialFillLimits &limits={});
 inline constexpr unsigned material_void_contract_version=1;
 struct MaterialVoidResult;
 struct MaterialVoidSnapshot {
@@ -854,7 +886,7 @@ struct FirstContourResult {std::string reason;std::shared_ptr<const FirstContour
 FirstContourResult plan_first_contour(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,
     const FirstHatchLayerLimits &limits={});
 
-inline constexpr unsigned first_cap_contract_version=3;
+inline constexpr unsigned first_cap_contract_version=4;
 struct FirstCapSnapshot {
     const std::shared_ptr<const AffineHatchSnapshot> source;
     const FirstContourPolicy policy;
@@ -866,15 +898,17 @@ struct FirstCapSnapshot {
     const std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> paths;
     const std::vector<size_t> replaced_boundary_lines;
     const std::shared_ptr<const MaterialFillSnapshot> fill;
+    const std::shared_ptr<const CompleteMaterialFillSnapshot> complete_fill;
     const ScalarBounds section_target_volume_mm3,deposited_volume_mm3;
     const double global_volume_error_mm3,numerical_error_upper_mm;
     const size_t roof_segments,cells,evaluations;
 private:
     FirstCapSnapshot(std::shared_ptr<const AffineHatchSnapshot> s,FirstContourPolicy p,std::vector<std::shared_ptr<const FirstHatchBeadSnapshot>> paths_,
-        std::vector<size_t> replaced,std::shared_ptr<const MaterialFillSnapshot> f,ScalarBounds target,ScalarBounds amount,double error,double numeric,
+        std::vector<size_t> replaced,std::shared_ptr<const MaterialFillSnapshot> f,std::shared_ptr<const CompleteMaterialFillSnapshot> complete,
+        ScalarBounds target,ScalarBounds amount,double error,double numeric,
         size_t roofs,size_t count,size_t work,FirstCapHatchExtent extent=FirstCapHatchExtent::ContourCentres)
         : source(std::move(s)),policy(p),hatch_extent(extent),paths(std::move(paths_)),replaced_boundary_lines(std::move(replaced)),fill(std::move(f)),
-          section_target_volume_mm3(target),deposited_volume_mm3(amount),global_volume_error_mm3(error),numerical_error_upper_mm(numeric),
+          complete_fill(std::move(complete)),section_target_volume_mm3(target),deposited_volume_mm3(amount),global_volume_error_mm3(error),numerical_error_upper_mm(numeric),
           roof_segments(roofs),cells(count),evaluations(work) {}
     friend FirstCapResult plan_first_cap(const AffineHatchResult &,const FirstContourPolicy &,const SceneBox &,const FirstHatchLayerLimits &);
     friend FirstCapReplanResult replan_first_cap_ends(const FirstCapResult &,const FirstCapReplanPolicy &,const FirstHatchLayerLimits &);

@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "git_parent": "fbc29b5ec83892b307fa8bb9f925927976c0c570",
+  "branch": "feature/nonplanar-bootstrap",
+  "commit": "SELF",
+  "commit_resolution": "git log --diff-filter=A --format=%H -- docs/nonplanar-dev/B07-complete-fill.md",
+  "configured_author": {
+    "name": "Filatov Anton",
+    "email": "positron48@gmail.com"
+  },
+  "patch_files": [
+    ".github/workflows/nonplanar-native.yml",
+    "scripts/nonplanar/complete_fill_oracle.py",
+    "src/libslic3r/Nonplanar/DepositionModel.cpp",
+    "src/libslic3r/Nonplanar/DepositionModel.hpp",
+    "tests/nonplanar/test_deposition_model.cpp",
+    "tests/nonplanar/test_policy.cpp",
+    "docs/nonplanar-dev/B07-complete-fill.md",
+    "docs/nonplanar-dev/B07-complete-fill-review.md",
+    "docs/nonplanar-dev/adr-0099-complete-nominal-fill.md",
+    "docs/nonplanar-dev/README.md",
+    "docs/nonplanar-dev/next-tasks.md",
+    "docs/nonplanar-dev/gate-b-plan.md",
+    "docs/nonplanar-dev/status.json"
+  ],
+  "scope": "COMPLETE_ACTIVE_NOMINAL_TARGET_SPILL_AND_MULTIPLICITY_MEASUREMENT_ONLY",
+  "full_B01_B15": "IN_PROGRESS",
+  "export": "BLOCK"
+}
