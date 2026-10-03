@@ -1053,6 +1053,8 @@ FirstCapMaterialResult append_next_cap_material(const FirstCapMaterialResult &,c
     std::optional<size_t> completed_appended_records={},double current_progress=0,const NextCapMaterialLimits &limits={});
 
 struct NextCapPathRequest {size_t pass_index;RectangleXY footprint;double support_plane_z_mm;};
+// Exact bounded request encoding shared by native capture and job lineage.
+std::string canonical_next_cap_requests(const std::vector<NextCapPathRequest> &,const std::function<void()> &poll={});
 enum class NextCapSequenceStage {Support,Bead,Append};
 struct NextCapSequenceLimits : NextCapMaterialLimits {
     size_t max_cells=65535;

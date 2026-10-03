@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="13" hostname="tbd" time="0.341" timestamp="2026-10-03T12:12:32Z">
+    <properties>
+      <property name="random-seed" value="3761898671"/>
+      <property name="filters" value="[NativeAnalysisLater]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B14 common analysis carries captured ordered later paths through native lineage and final bytes" time="0.000" status="run">
+      <failure message="selected_later.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( selected_later.snapshot )
+with expansion:
+  0
+SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+MATERIAL_RUN_UNION_DEPTH_LIMIT path=0 stage=0 cells=561
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:4534
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

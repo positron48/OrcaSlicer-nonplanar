@@ -80,9 +80,23 @@ def main():
     cases.append(('custom-code-refused', original, changed_config, False, [], False))
     if os.name != 'nt':
         cases.append(('interrupt-native-body', original, config, False, [], True))
+    later_path = fixtures / 'native-later-controller-request.json'
+    if later_path.exists():
+        later = json.loads(later_path.read_text())
+        later_model = root / 'tests/nonplanar/data/affine-wedge-1-in-8000.stl'
+        later_reference = json.loads((fixtures / 'native-later-default-diagnostic.json').read_text())
+        cases.append(('later-complete-blocked', later, config, True, [], False, later_model, later_reference))
+        bad = copy.deepcopy(later)
+        bad['later_paths'].reverse()
+        cases.append(('later-order-refused', bad, config, False, [], False, later_model, later_reference))
+        bad = copy.deepcopy(later)
+        bad['later_paths'].append(bad['later_paths'][-1])
+        cases.append(('later-duplicate-refused', bad, config, False, [], False, later_model, later_reference))
     manifest = {'schema': 1, 'binary_sha256': hashlib.sha256(binary.read_bytes()).hexdigest(), 'cases': [],
                 'scope': 'REAL_ORCA_NATIVE_ANALYSIS_DIAGNOSTICS_ONLY', 'export': 'BLOCK'}
-    for name, request, settings, complete, extra, interrupt in cases:
+    for case in cases:
+        name, request, settings, complete, extra, interrupt = case[:6]
+        selected_model, selected_reference = case[6:] if len(case) == 8 else (model, reference)
         work = evidence / name
         work.mkdir()
         for folder in ['data', 'tmp', 'output']:
@@ -115,7 +129,7 @@ def main():
                    '--load-filaments', configs['filament'], '--arrange', '1', '--orient', '0', '--outputdir', str(work / 'output'),
                    '--filament-map-mode', settings['filament_map_mode'],
                    '--enable-filament-dynamic-map=0', '--has-filament-switcher=0',
-                   '--nptop-analyze', str(request_path), *extra, str(model)]
+                   '--nptop-analyze', str(request_path), *extra, str(selected_model)]
         if name == 'missing-datadir-refused':
             index = command.index('--datadir')
             del command[index:index+2]
@@ -173,9 +187,9 @@ def main():
             if complete:
                 stages = [line.removeprefix('NPTOP_PROGRESS ') for line in (work / 'stderr.txt').read_text().splitlines() if line.startswith('NPTOP_PROGRESS ')]
                 require(stages == ['capture', 'body', 'hatches', 'cap', 'material', 'motion', 'serialize', 'lineage', 'replay', 'admission'], 'All native stages invoked')
-                require(diagnostic['request_sha256'] == reference['request_sha256'], 'Same explicit owned request')
-                require(diagnostic['report']['validation']['gcode_sha256'] == reference['report']['validation']['gcode_sha256'] and
-                        diagnostic['replay'] == reference['replay'], 'Actual CLI candidate and every replay row match the original native fixture')
+                require(diagnostic['request_sha256'] == selected_reference['request_sha256'], 'Same explicit owned request')
+                require(diagnostic['report']['validation']['gcode_sha256'] == selected_reference['report']['validation']['gcode_sha256'] and
+                        diagnostic['replay'] == selected_reference['replay'], 'Actual CLI candidate and every replay row match the original native fixture')
             if interrupt:
                 require(diagnostic['reason'] == 'NATIVE_ANALYSIS_CANCELLED', 'Cooperative signal cancellation')
             if name == 'custom-code-refused':

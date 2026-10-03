@@ -31,11 +31,16 @@ inline void save_job_report(const boost::filesystem::path &path,const GuardedCan
     if(binding.native){const auto &native=*binding.native;const auto &hatches=*native.hatches;const auto &body=*hatches.body;
         record["native"]={{"canonical",native.canonical_json},{"sha256",native.sha256},
             {"hatch_canonical",hatches.canonical_json},{"hatch_sha256",hatches.sha256},{"body_canonical",body.canonical_json},{"body_sha256",body.sha256}};
-        const auto journal=[&](const char *name,const MaterialSequenceSnapshot &sequence){
+        const auto encoded_journal=[](const MaterialSequenceSnapshot &sequence){
             std::vector<std::string> rows;for(size_t i=0;i<sequence.records.size();++i)rows.push_back(sequence.canonical_record(i));
-            record["native"][name]={{"context",sequence.canonical_context()},{"records",rows},{"sha256",sequence.fingerprint()}};
+            return nlohmann::json{{"context",sequence.canonical_context()},{"records",rows},{"sha256",sequence.fingerprint()}};
         };
+        const auto journal=[&](const char *name,const MaterialSequenceSnapshot &sequence){record["native"][name]=encoded_journal(sequence);};
         journal("assembled",*native.assembly->material->sequence);journal("planned",ledger);journal("body",*body.body->material);
+        if(native.later){record["native"]["later_canonical"]=native.later_json;record["native"]["later_sha256"]=native.later_sha256;
+            record["native"]["later_prefixes"]=nlohmann::json::array();
+            for(const auto &path:native.later->paths)record["native"]["later_prefixes"].push_back(encoded_journal(*path->source->source->material->sequence));
+        }
         if(native.departure){
             record["native"]["departure_canonical"]=native.departure_json;record["native"]["departure_sha256"]=native.departure_sha256;
             journal("before",*native.departure->before->material->sequence);journal("routed",*native.departure->route->planned->material->ledger);

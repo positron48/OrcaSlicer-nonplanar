@@ -148,14 +148,91 @@ def departure_lineage(native, plan, journals):
     return routed_context, routed
 
 
+def decoded_number(value):
+    require(type(value) is str and re.fullmatch('[a-f0-9]{16}', value), 'Later binary64')
+    result = struct.unpack('>d', bytes.fromhex(value))[0]
+    require(math.isfinite(result), 'Later finite quantity')
+    return result
+
+
+def decoded_journal(journal, revision):
+    require(set(journal) == {'context', 'records', 'sha256'}, 'Native journal fields')
+    context = parse(journal['context'])
+    require(canonical(context) == journal['context'] and type(context['record_count']) is int and
+            context['record_count'] == len(journal['records']) and type(context['revision']) is int and
+            context['revision'] == revision, 'Native journal context')
+    digest = sha('nptop-material-ledger-v1\0' + journal['context'])
+    rows = []
+    for text in journal['records']:
+        row = parse(text)
+        require(canonical(row) == text, 'Native row canonical identity')
+        digest = sha('nptop-material-record-v1\0' + digest + text)
+        rows.append(row)
+    require(digest == journal['sha256'], 'Native ledger SHA')
+    return context, rows
+
+
+def later_lineage(native, plan, journals, revision):
+    """Independent exact prefix/request/append order; no physical approval."""
+    text, digest = native['later_canonical'], native['later_sha256']
+    require(sha(text) == digest == plan['later_lineage'] and canonical(parse(text)) == text, 'Later identity')
+    later = parse(text)
+    require(set(later) == {'schema', 'scope', 'before_journal', 'after_journal', 'paths', 'requests'} and
+            type(later['schema']) is int and later['schema'] == 1 and
+            later['scope'] == 'owned_ordered_later_path_lineage_only', 'Later registry/version/scope')
+    paths, requests, prefixes = later['paths'], later['requests'], native['later_prefixes']
+    require(type(paths) is list and type(requests) is list and type(prefixes) is list and
+            0 < len(paths) == len(requests) == len(prefixes) <= 4096, 'Later complete program')
+    require(later['before_journal'] == prefixes[0]['sha256'].encode().hex() and
+            later['after_journal'] == native['assembled']['sha256'].encode().hex(), 'Later journal edges')
+    decoded = [decoded_journal(p, revision) for p in prefixes] + [journals['assembled']]
+    require(decoded[0][1][:len(journals['body'][1])] == journals['body'][1] and
+            len(decoded[0][1]) > len(journals['body'][1]), 'Later complete original body/cap')
+    prior_pass = 0
+    hatch = parse(native['hatch_canonical'])['request']
+    width, first_direction = decoded_number(hatch['hatch'][0]), hatch['hatch'][3]
+    for i, (path, request) in enumerate(zip(paths, requests)):
+        require(type(request) is list and len(request) == 6 and type(request[0]) is int and
+                0 < request[0] < hatch['passes'][0] and prior_pass <= request[0] <= prior_pass+1, 'Later original pass order')
+        prior_pass = request[0]
+        lo_x, lo_y, hi_x, hi_y, plane = map(decoded_number, request[1:])
+        require(lo_x < hi_x and lo_y < hi_y, 'Later finite footprint')
+        require(type(path) is list and len(path) == 5 and all(type(v) is int for v in path[:3]), 'Later range types')
+        before_context, before = decoded[i]
+        after_context, after = decoded[i+1]
+        require(path == [request[0], len(before), len(after)-len(before), prefixes[i]['sha256'].encode().hex(),
+                         (prefixes[i+1] if i+1 < len(prefixes) else native['assembled'])['sha256'].encode().hex()], 'Later exact adjacent prefix ranges')
+        require(len(after) > len(before) and after[:len(before)] == before, 'Later retains every actual previous row')
+        require(all(before_context[k] == after_context[k] for k in ['source', 'revision', 'schema']) and
+                before_context['model'][:5] == after_context['model'][:5] and
+                decoded_number(after_context['model'][5]) >= decoded_number(before_context['model'][5]), 'Later preserves source/losses/error budget')
+        added = after[len(before):]
+        deposits = [row for row in added if row['bead'] is not None]
+        require(deposits and all(row['motion'][2] in [0, 1] for row in added), 'Later explicit connector/deposition only')
+        direction = (first_direction + request[0]) % 2
+        for row in deposits:
+            motion = row['motion'];a, b = ([decoded_number(v) for v in motion[j]] for j in [3, 4])
+            require(decoded_number(motion[7][2]) == width and decoded_number(motion[7][1]) > 0, 'Later original fixed width/positive volume')
+            require(all(lo_x <= p[0] <= hi_x and lo_y <= p[1] <= hi_y for p in [a, b]), 'Later actual axis remains in requested footprint')
+            require((a[1] == b[1] and a[0] < b[0]) if direction == 0 else (a[0] == b[0] and a[1] < b[1]), 'Later original alternating direction')
+        maximum = max(row['motion'][0] for row in before)
+        for j, row in enumerate(added):
+            require(row['motion'][0] == maximum+1+j and row['motion'][1] == len(before)+j, 'Later unique IDs and exact order')
+    return journals['assembled']
+
+
 def native_lineage(record, job):
     """Exact dependency identity only; no geometry or material math approval."""
     native = record['native']
     has_departure = 'departure_canonical' in native
+    has_later = 'later_canonical' in native
+    require(not (has_departure and has_later), 'Unsupported combined program')
     native_fields = {'canonical', 'sha256', 'hatch_canonical', 'hatch_sha256', 'body_canonical', 'body_sha256',
                      'body', 'assembled', 'planned'}
     if has_departure:
         native_fields |= {'departure_canonical', 'departure_sha256', 'before', 'routed'}
+    if has_later:
+        native_fields |= {'later_canonical', 'later_sha256', 'later_prefixes'}
     require(set(native) == native_fields, 'Native evidence fields')
     for prefix in ['', 'hatch_', 'body_']:
         text, digest = native[prefix + 'canonical'], native[prefix + 'sha256']
@@ -165,12 +242,15 @@ def native_lineage(record, job):
     fields = {'schema', 'scope', 'job_fingerprint', 'attempt', 'hatch_lineage', 'assembled_journal', 'planned_journal', 'candidate_sha256'}
     if has_departure:
         fields.add('departure_lineage')
+    if has_later:
+        fields.add('later_lineage')
     require(set(plan) == fields, 'Native plan fields')
     require(set(hatch) == {'schema', 'scope', 'body_lineage', 'request', 'geometry'}, 'Native hatch fields')
     require(set(body) == {'schema', 'scope', 'job_fingerprint', 'attempt', 'source_sha256',
                           'slicing_input', 'request', 'body', 'body_material', 'body_journal'}, 'Native body fields')
-    require(type(plan['schema']) is int and plan['schema'] == (2 if has_departure else 1) and
-            plan['scope'] == ('owned_native_body_cap_departure_linear_candidate_lineage_only' if has_departure else
+    require(type(plan['schema']) is int and plan['schema'] == (3 if has_later else 2 if has_departure else 1) and
+            plan['scope'] == ('owned_native_body_cap_later_linear_candidate_lineage_only' if has_later else
+                              'owned_native_body_cap_departure_linear_candidate_lineage_only' if has_departure else
                               'owned_native_body_cap_linear_candidate_lineage_only'), 'Native plan version/scope')
     for document, scope in [(hatch, 'owned_native_affine_hatch_dependency_lineage_only'),
                             (body, 'owned_native_body_dependency_lineage_only')]:
@@ -185,27 +265,15 @@ def native_lineage(record, job):
     require(plan['candidate_sha256'] == record['candidate_sha256'] and plan['planned_journal'] == record['material_journal'], 'Native candidate/journal')
     journals = {}
     for name in ['assembled', 'planned', 'body'] + (['before', 'routed'] if has_departure else []):
-        journal = native[name]
-        require(set(journal) == {'context', 'records', 'sha256'}, 'Native journal fields')
-        context = parse(journal['context'])
-        require(canonical(context) == journal['context'] and type(context['record_count']) is int and
-                context['record_count'] == len(journal['records']) and type(context['revision']) is int and
-                context['revision'] == record['job_revision'], 'Native journal context')
-        digest = sha('nptop-material-ledger-v1\0' + journal['context'])
-        rows = []
-        for text in journal['records']:
-            row = parse(text)
-            require(canonical(row) == text, 'Native row canonical identity')
-            digest = sha('nptop-material-record-v1\0' + digest + text)
-            rows.append(row)
-        require(digest == journal['sha256'], 'Native ledger SHA')
-        journals[name] = (context, rows)
+        journals[name] = decoded_journal(native[name], record['job_revision'])
     require(native['body']['sha256'] == body['body_journal'] and native['assembled']['sha256'] == plan['assembled_journal'] and
             native['planned']['sha256'] == plan['planned_journal'], 'Native ledger dependency')
     require(journals['body'][0]['source'] == body['body'].encode().hex(), 'Native body geometry journal binding')
     original_context, original = journals['assembled']
     if has_departure:
         original_context, original = departure_lineage(native, plan, journals)
+    if has_later:
+        original_context, original = later_lineage(native, plan, journals, record['job_revision'])
     planned_context, planned = journals['planned']
     require(original_context == planned_context and len(original) == len(planned), 'Native planned context')
     require(original[:len(journals['body'][1])] == journals['body'][1] and
@@ -255,8 +323,10 @@ def verify(record):
     }
     if 'native' in record:
         has_departure = 'departure_canonical' in record['native']
-        manifest['schema'] = 3 if has_departure else 2
-        manifest['scope'] = ('owned_native_body_cap_departure_candidate_lineage_only' if has_departure else
+        has_later = 'later_canonical' in record['native']
+        manifest['schema'] = 4 if has_later else 3 if has_departure else 2
+        manifest['scope'] = ('owned_native_body_cap_later_candidate_lineage_only' if has_later else
+                             'owned_native_body_cap_departure_candidate_lineage_only' if has_departure else
                              'owned_native_body_cap_candidate_lineage_only')
         manifest['native_lineage'] = encode(native_lineage(record, job))
     require(parse(record['manifest']) == manifest and canonical(manifest) == record['manifest'], 'Manifest binding')
@@ -291,8 +361,14 @@ def verify(record):
     require(set(replay) == {'records', 'evaluations', 'rate_status', 'rate_reason', 'material_status', 'material_reason'}, 'Replay fields')
     for name in ['rates', 'material']:
         prefix = 'rate' if name == 'rates' else name
-        require(indexed['final_' + name]['status'] == replay[prefix + '_status'] and
-                indexed['final_' + name]['reason'] == replay[prefix + '_reason'], 'Replay check binding')
+        if name == 'material' and replay['rate_status'] != 'PASS':
+            require(replay['material_status'] == 'UNKNOWN' and replay['material_reason'] == '' and
+                    indexed['final_material']['status'] == 'UNKNOWN' and indexed['final_material']['execution'] == 'SKIPPED' and
+                    indexed['final_material']['reason'] == 'Material replay skipped after final-rate refusal.' and
+                    indexed['independent_replay']['reason'] == 'Complete declared journal replay skipped after final-rate refusal.', 'Exact skipped replay after rate refusal')
+        else:
+            require(indexed['final_' + name]['status'] == replay[prefix + '_status'] and
+                    indexed['final_' + name]['reason'] == replay[prefix + '_reason'], 'Replay check binding')
     require(indexed['final_rates']['execution'] == 'RUN', 'Rates execution')
     require(indexed['independent_replay']['status'] == indexed['final_material']['status'] and
             indexed['independent_replay']['execution'] == indexed['final_material']['execution'], 'Journal execution')

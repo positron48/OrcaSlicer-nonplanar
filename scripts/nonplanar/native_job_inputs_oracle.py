@@ -29,7 +29,7 @@ def sha(text):
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 
-def expected_resources():
+def expected_resources(initial_acceleration=100):
     domain = box([-1, -1, -.1], [40, 40, 10])
     head = [[i+1, i, box([-.05, -.05, .5], [.05, .05, .8]), False, False] for i in range(6)]
     motion = [1, 91, 1, 0, False, 0, 1, *domain]
@@ -37,7 +37,7 @@ def expected_resources():
         motion.extend(point(values))
     motion.extend(bits(v) for v in [1.75, 1, 40, 400, 5, 12, 2, 200])
     motion_hash = sha('nptop-linear-motion-policy-v1' + canonical(motion))
-    serializer_hash = sha('nptop-linear-candidate-policy-v1' + canonical([1, 92, 1, bits(100), 6, 9, 6, 6, 3]))
+    serializer_hash = sha('nptop-linear-candidate-policy-v1' + canonical([1, 92, 1, bits(initial_acceleration), 6, 9, 6, 6, 3]))
     values = [
         ('native-toolhead-v1', {'head': head, 'schema': 1, 'tip': [point([0, 0, 0]), bits(.2), bits(.5)]}),
         ('native-scene-v1', {'coverage': [domain, box([-5, -5, -5], [45, 45, 20]), bits(30), True, bits(0)],
@@ -54,9 +54,9 @@ def expected_resources():
             for i, (name, value) in enumerate(values, 1)]
 
 
-def verify_inputs(record):
+def verify_inputs(record, initial_acceleration=100):
     resources = record['native_inputs']
-    require(resources == expected_resources(), 'Exact native typed input vectors')
+    require(resources == expected_resources(initial_acceleration), 'Exact native typed input vectors')
     job = parse(record['job_canonical'])
     roles = [r for r in job['resources'] if 1 <= r[0] <= 6]
     require(roles == [[r['kind'], r['name'].encode().hex(), r['sha256'].encode().hex(), len(r['bytes'].encode())]

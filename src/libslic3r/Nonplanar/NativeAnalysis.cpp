@@ -10,7 +10,8 @@ std::shared_ptr<const NativeAnalysisRequestSnapshot> capture_native_analysis_req
 {
     require(requested.reservation.its.vertices.size()<=15000 && requested.reservation.its.indices.size()<=5000 &&
         requested.reservation.its.properties.size()<=requested.reservation.its.indices.size() &&
-        requested.inputs.scene.head.size()<=64 && requested.inputs.scene.obstacles.size()<=10000,"NATIVE_ANALYSIS_REQUEST_SIZE_LIMIT");
+        requested.inputs.scene.head.size()<=64 && requested.inputs.scene.obstacles.size()<=10000 &&
+        requested.later_paths.size()<=4096,"NATIVE_ANALYSIS_REQUEST_SIZE_LIMIT");
     const auto request=requested;
     const auto inputs=capture_native_job_inputs(request.inputs,[]{});
     detail::CanonicalConfigWriter w;
@@ -26,12 +27,14 @@ std::shared_ptr<const NativeAnalysisRequestSnapshot> capture_native_analysis_req
     w.append(",");w.value(int(request.hatches.first_direction));
     w.append("],\"inputs\":[");first=true;
     for(const auto &r:inputs->resources){if(!first)w.append(",");first=false;w.append("[");w.value(int(r.kind));w.append(",");w.value(r.name);w.append(",");w.value(sha256_bytes(r.bytes));w.append("]");}
-    w.append("],\"millimeters_declared\":");w.value(request.millimeters_declared);
+    w.append("]");
+    if(!request.later_paths.empty()){w.append(",\"later_paths\":");w.append(canonical_next_cap_requests(request.later_paths));}
+    w.append(",\"millimeters_declared\":");w.value(request.millimeters_declared);
     w.append(",\"passes\":[");const auto &p=request.passes.policy;w.append(std::to_string(p.passes));
     for(double v:{p.first_gap.minimum.value(),p.first_gap.maximum.value(),p.first_gap.corner_height_error.value(),p.later_vertical_minimum.value(),
         p.later_vertical_maximum.value(),p.later_normal_minimum.value(),p.later_normal_maximum.value(),p.total_volume_error.value()}){w.append(",");number(v);}
     w.append("],\"patch\":");w.append(std::to_string(request.passes.patch));w.append(",\"reservation\":");w.value(native_mesh_fingerprint(request.reservation.its));
-    w.append(",\"schema\":1,\"support_plane\":");number(request.passes.support_plane_z_mm);w.append("}");
+    w.append(request.later_paths.empty() ? ",\"schema\":1,\"support_plane\":" : ",\"schema\":2,\"support_plane\":");number(request.passes.support_plane_z_mm);w.append("}");
     auto json=w.take();auto hash=sha256_bytes(json);
     return std::shared_ptr<const NativeAnalysisRequestSnapshot>(new NativeAnalysisRequestSnapshot(request,std::move(json),std::move(hash)));
 }
@@ -100,7 +103,13 @@ NativeAnalysisResult run_native_analysis(Print &print,uint64_t id,std::shared_pt
         stage(NativeAnalysisStage::Cap);auto cap_limits=limits.cap;guard.wrap(cap_limits);
         const auto cap=plan_first_cap({"",hatches.snapshot->native->hatches},r.contour,r.fill_region,cap_limits);guard.poll();require(bool(cap.snapshot),cap.reason.c_str());
         stage(NativeAnalysisStage::Material);auto material_limits=limits.material;guard.wrap(material_limits);
-        const auto assembly=reconstruct_first_cap_material(cap,{},0,material_limits);guard.poll();require(bool(assembly.snapshot),assembly.reason.c_str());
+        auto assembly=reconstruct_first_cap_material(cap,{},0,material_limits);guard.poll();require(bool(assembly.snapshot),assembly.reason.c_str());
+        std::shared_ptr<const NextCapSequenceSnapshot> later;
+        if(!r.later_paths.empty()){
+            auto later_limits=limits.later;guard.wrap(later_limits);
+            const auto sequence=plan_next_cap_sequence(assembly,r.later_paths,later_limits);guard.poll();require(bool(sequence.snapshot),sequence.reason.c_str());
+            later=sequence.snapshot;assembly={"",later->after};
+        }
         stage(NativeAnalysisStage::Motion);
         MaterialMotionPreparationLimits preparation;guard.wrap(preparation);
         const auto material=prepare_material_motion({"",assembly.snapshot->material->sequence},preparation);guard.poll();require(bool(material.snapshot),material.reason.c_str());
@@ -111,7 +120,7 @@ NativeAnalysisResult run_native_analysis(Print &print,uint64_t id,std::shared_pt
         advance(GuardedJobPhase::Serializing);stage(NativeAnalysisStage::Serialize);auto candidate_limits=limits.candidate;guard.wrap(candidate_limits);
         const auto candidate=serialize_linear_candidate(motion,r.inputs.serializer,candidate_limits);guard.poll();require(bool(candidate.snapshot),candidate.reason.c_str());
         stage(NativeAnalysisStage::Lineage);GuardedJobLimits binding_limits;guard.wrap(binding_limits);
-        const auto native=capture_guarded_native_plan(*task,hatches.snapshot,assembly,candidate,binding_limits);guard.poll();require(bool(native.snapshot),native.reason.c_str());
+        const auto native=capture_guarded_native_plan(*task,hatches.snapshot,assembly,candidate,binding_limits,{},later);guard.poll();require(bool(native.snapshot),native.reason.c_str());
         // The binder advances its token internally. Its own before/after owner
         // checks remain authoritative while the shared guard enforces time/cancel.
         binding_limits={};guard.wrap(binding_limits,false);

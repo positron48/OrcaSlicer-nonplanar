@@ -41,7 +41,8 @@ GuardedCandidateBindingResult bind_guarded_candidate(Print &print,const GuardedJ
         writer.append(",\"job_fingerprint\":");writer.value(task.snapshot->fingerprint);writer.append(",\"job_id\":");writer.append(std::to_string(task.snapshot->job_id));
         writer.append(",\"material_journal\":");writer.value(journal);writer.append(",\"motion_policy\":");writer.value(plan->policy_fingerprint);
         if(native){writer.append(",\"native_lineage\":");writer.value(native->sha256);}
-        writer.append(native && native->departure ? ",\"schema\":3,\"scope\":\"owned_native_body_cap_departure_candidate_lineage_only\",\"serializer_policy\":" :
+        writer.append(native && native->later ? ",\"schema\":4,\"scope\":\"owned_native_body_cap_later_candidate_lineage_only\",\"serializer_policy\":" :
+            native && native->departure ? ",\"schema\":3,\"scope\":\"owned_native_body_cap_departure_candidate_lineage_only\",\"serializer_policy\":" :
             native ? ",\"schema\":2,\"scope\":\"owned_native_body_cap_candidate_lineage_only\",\"serializer_policy\":" :
             ",\"schema\":1,\"scope\":\"job_context_candidate_byte_identity_only\",\"serializer_policy\":");writer.value(candidate->policy_fingerprint);
         writer.append(",\"source_fingerprint\":");writer.value(ledger.source_fingerprint);writer.append(",\"source_revision\":");writer.append(std::to_string(ledger.revision));writer.append("}");
@@ -94,9 +95,10 @@ void check_candidate_manifest(const GuardedCandidateBindingSnapshot &binding)
     if(binding.native)expected.insert("native_lineage");
     std::set<std::string> keys;require(manifest.is_object(),"JOB_REPORT_MANIFEST_OBJECT");for(auto i=manifest.begin();i!=manifest.end();++i)keys.insert(i.key());require(keys==expected,"JOB_REPORT_MANIFEST_REGISTRY");
     const auto integer=[&](const char *key,uint64_t value){require(manifest.at(key).is_number_unsigned() && manifest.at(key).get<uint64_t>()==value,"JOB_REPORT_MANIFEST_INTEGER_BINDING");};
-    integer("schema",binding.native && binding.native->departure ? guarded_departure_binding_version : binding.native ? 2 : guarded_candidate_binding_version);
+    integer("schema",binding.native && binding.native->later ? 4 : binding.native && binding.native->departure ? guarded_departure_binding_version : binding.native ? 2 : guarded_candidate_binding_version);
     integer("attempt",binding.attempt);integer("job_id",job.job_id);integer("candidate_size",candidate.bytes.size());integer("source_revision",ledger.revision);
-    require(manifest.at("scope")== (binding.native && binding.native->departure ? "owned_native_body_cap_departure_candidate_lineage_only" :
+    require(manifest.at("scope")== (binding.native && binding.native->later ? "owned_native_body_cap_later_candidate_lineage_only" :
+        binding.native && binding.native->departure ? "owned_native_body_cap_departure_candidate_lineage_only" :
         binding.native ? "owned_native_body_cap_candidate_lineage_only" : "job_context_candidate_byte_identity_only"),"JOB_REPORT_MANIFEST_SCOPE");
     if(binding.native){const auto &native=*binding.native;
         require(native.candidate==binding.candidate && native.hatches->body->job==binding.job && native.hatches->body->attempt==binding.attempt &&

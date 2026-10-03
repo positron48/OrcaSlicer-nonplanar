@@ -70,15 +70,20 @@ struct GuardedNativePlanSnapshot {
     const std::shared_ptr<const LinearCandidateSnapshot> candidate;
     const std::shared_ptr<const SimulationCapDepartureSnapshot> departure;
     const std::string departure_json,departure_sha256;
+    const std::shared_ptr<const NextCapSequenceSnapshot> later;
+    const std::string later_json,later_sha256;
     const std::string canonical_json,sha256;
 private:
     GuardedNativePlanSnapshot(std::shared_ptr<const GuardedNativeHatchSnapshot> paths,std::shared_ptr<const FirstCapMaterialSnapshot> material,
         std::shared_ptr<const LinearCandidateSnapshot> bytes,std::string json,std::string hash,
-        std::shared_ptr<const SimulationCapDepartureSnapshot> exit={},std::string exit_json={},std::string exit_hash={})
+        std::shared_ptr<const SimulationCapDepartureSnapshot> exit={},std::string exit_json={},std::string exit_hash={},
+        std::shared_ptr<const NextCapSequenceSnapshot> sequence={},std::string sequence_json={},std::string sequence_hash={})
         :hatches(std::move(paths)),assembly(std::move(material)),candidate(std::move(bytes)),departure(std::move(exit)),
-          departure_json(std::move(exit_json)),departure_sha256(std::move(exit_hash)),canonical_json(std::move(json)),sha256(std::move(hash)){}
+          departure_json(std::move(exit_json)),departure_sha256(std::move(exit_hash)),later(std::move(sequence)),
+          later_json(std::move(sequence_json)),later_sha256(std::move(sequence_hash)),canonical_json(std::move(json)),sha256(std::move(hash)){}
     friend GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &,std::shared_ptr<const GuardedNativeHatchSnapshot>,
-        const FirstCapMaterialResult &,const LinearCandidateResult &,const GuardedJobLimits &,std::shared_ptr<const SimulationCapDepartureSnapshot>);
+        const FirstCapMaterialResult &,const LinearCandidateResult &,const GuardedJobLimits &,std::shared_ptr<const SimulationCapDepartureSnapshot>,
+        std::shared_ptr<const NextCapSequenceSnapshot>);
 };
 struct GuardedNativePlanResult {std::string reason;std::shared_ptr<const GuardedNativePlanSnapshot> snapshot;};
 // Serializing worker checks the actual protected cap parent, complete body and
@@ -89,5 +94,5 @@ struct GuardedNativePlanResult {std::string reason;std::shared_ptr<const Guarded
 // source/target/support/contact/whole-route or final-byte geometry qualification.
 GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &,std::shared_ptr<const GuardedNativeHatchSnapshot>,
     const FirstCapMaterialResult &,const LinearCandidateResult &,const GuardedJobLimits &limits={},
-    std::shared_ptr<const SimulationCapDepartureSnapshot> departure={});
+    std::shared_ptr<const SimulationCapDepartureSnapshot> departure={},std::shared_ptr<const NextCapSequenceSnapshot> later={});
 }

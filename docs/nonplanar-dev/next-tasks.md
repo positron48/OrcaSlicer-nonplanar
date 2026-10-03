@@ -7,6 +7,23 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B14-later-controller.md` and ADR-0097 integrate captured ordered local later
+paths into the common controller, protected native lineage and actual final-byte
+replay. Nonempty request2/native plan3/manifest4 are additive; empty legacy bytes
+and ten progress stages remain. Five new cases/2030 assertions, CTest484/484,
+seventeen independent oracles, thirteen actual CLI cases and six strict OFF/ZAA
+pairs pass. Child/direct/CLI default1760 movements match; fine1756 includes actual
+nonzero later Z. Fifty of51 parent candidates stay exact; default2098 SHA stays
+exact. Fixed17 remains4 PASS/RUN +13 UNKNOWN/NOT_RUN, export BLOCK. Original100
+acceleration remains final-byte FAIL; positive simulation executes40 under Z50.
+Complete captured program/owners are mandatory; omitted or copied material and
+changed requests refuse. This local integration does not prove complete filled
+caps, qualified contact/seams/head/connectors/order/whole-job/source/software/
+physical/publication. Full B01-B15 remains active. New Linux/Windows/GUI/physical
+and independent review pending; standard U1 head/.4 nozzle known.
+
+Earlier milestones below retain the scope at their delivery.
+
 `B07-later-sequence.md` and ADR-0096 add an owned ordered later-path program.
 Each path recomputes support, normal spacing, finite-width roof and dose on the
 actual prefix produced by its predecessor, preserving original width/directions.

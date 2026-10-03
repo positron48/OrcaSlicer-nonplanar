@@ -1,0 +1,21 @@
+{
+  "command": [
+    "cmake",
+    "--build",
+    "build/arm64",
+    "--config",
+    "Release",
+    "--target",
+    "nonplanar_analysis_worker",
+    "nonplanar_tests",
+    "fff_print_tests",
+    "nonplanar_rate_audit",
+    "OrcaSlicer",
+    "-j6"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-03T12:30:24.799935+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 48.055
+}

@@ -136,6 +136,28 @@ std::string departure_identity(const SimulationCapDepartureSnapshot &departure,N
     for(size_t i=0;i<route.source_records.size();++i){if(i%128==0)guard.poll();if(i)w.append(",");w.append(std::to_string(route.source_records[i]));}
     w.append("]}");return w.take();
 }
+std::string later_identity(const NextCapSequenceSnapshot &sequence,NativeGuard &guard)
+{
+    require(sequence.before->later_paths.empty() && !sequence.paths.empty() && sequence.paths.size()==sequence.requests.size() &&
+        sequence.after->later_paths==sequence.paths,"NATIVE_JOB_LATER_COMPLETE_PROGRAM_REQUIRED");
+    const auto requests=canonical_next_cap_requests(sequence.requests,[&]{guard.poll();});
+    detail::CanonicalConfigWriter w;w.append("{\"after_journal\":");w.value(sequence.after->material->sequence->fingerprint());
+    w.append(",\"before_journal\":");w.value(sequence.before->material->sequence->fingerprint());w.append(",\"paths\":[");
+    for(size_t i=0;i<sequence.paths.size();++i){guard.poll();const auto &path=*sequence.paths[i];
+        const auto before=i ? sequence.paths[i]->source->source : sequence.before;
+        const auto after=i+1<sequence.paths.size() ? sequence.paths[i+1]->source->source : sequence.after;
+        require(path.source->source==before && before->source==sequence.before->source && after->source==sequence.before->source &&
+            path.source->pass_index==sequence.requests[i].pass_index && before->later_paths.size()==i && after->later_paths.size()==i+1 &&
+            after->later_paths[i]==sequence.paths[i],"NATIVE_JOB_LATER_PATH_OWNER");
+        for(size_t j=0;j<i;++j){guard.poll();require(before->later_paths[j]==sequence.paths[j] && after->later_paths[j]==sequence.paths[j],"NATIVE_JOB_LATER_PREFIX_OWNER");}
+        const size_t first=before->material->sequence->records.size(),last=after->material->sequence->records.size();
+        require(last>first && last-first>=path.pieces.size(),"NATIVE_JOB_LATER_RECORD_RANGE");
+        if(i)w.append(",");w.append("[");w.append(std::to_string(path.source->pass_index));w.append(",");w.append(std::to_string(first));
+        w.append(",");w.append(std::to_string(last-first));w.append(",");w.value(before->material->sequence->fingerprint());
+        w.append(",");w.value(after->material->sequence->fingerprint());w.append("]");
+    }
+    w.append("],\"requests\":");w.append(requests);w.append(",\"schema\":1,\"scope\":\"owned_ordered_later_path_lineage_only\"}");return w.take();
+}
 }
 GuardedNativeBodyResult analyze_guarded_native_body(const GuardedJobTask &requested_task,const GuardedNativeBodyRequest &requested,
     const GuardedNativeBodyLimits &requested_limits)
@@ -202,7 +224,7 @@ GuardedNativeHatchResult plan_guarded_native_hatches(const GuardedJobTask &reque
 }
 GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &requested_task,std::shared_ptr<const GuardedNativeHatchSnapshot> hatches,
     const FirstCapMaterialResult &requested_assembly,const LinearCandidateResult &requested_candidate,const GuardedJobLimits &requested_limits,
-    std::shared_ptr<const SimulationCapDepartureSnapshot> departure)
+    std::shared_ptr<const SimulationCapDepartureSnapshot> departure,std::shared_ptr<const NextCapSequenceSnapshot> later)
 {
     GuardedNativePlanResult result;const auto started=std::chrono::steady_clock::now();
     try {
@@ -217,6 +239,24 @@ GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &reques
         require(assembly->body->sequence==body && assembly->body_records==body->records.size() &&
             assembly->body->completed_records==body->records.size() && assembly->body->current_progress==0,"NATIVE_JOB_COMPLETE_BODY_REQUIRED");
         require(assembly->material->completed_records==assembly->material->sequence->records.size() && assembly->material->current_progress==0,"NATIVE_JOB_COMPLETE_ASSEMBLY_REQUIRED");
+        require(!(later && departure),"NATIVE_JOB_LATER_DEPARTURE_COMBINATION_UNSUPPORTED");
+        require(later || departure || assembly->later_paths.empty(),"NATIVE_JOB_LATER_PROGRAM_REQUIRED");
+        const auto resource=std::find_if(task.snapshot->resources.begin(),task.snapshot->resources.end(),[](const auto &r){return r.kind==JobResourceKind::SourceFile && r.name=="native-analysis-request-v1";});
+        std::optional<Json> request;
+        if(resource!=task.snapshot->resources.end()){
+            require(resource->bytes.size()<=2*1024*1024,"NATIVE_JOB_LATER_REQUEST_SIZE");size_t nodes=0;
+            request=Json::parse(resource->bytes,[&](int depth,Json::parse_event_t,Json &){
+                require(depth<=8,"NATIVE_JOB_LATER_REQUEST_DEPTH");if(++nodes%128==0)guard.poll();return true;});
+            require(request->at("schema").is_number_unsigned() && (request->at("schema")==1 || request->at("schema")==2),"NATIVE_JOB_REQUEST_VERSION");
+            require(request->at("schema")!=2 || bool(later),"NATIVE_JOB_LATER_PROGRAM_REQUIRED");
+        }
+        std::string later_json,later_hash;
+        if(later){
+            require(later->after==assembly && later->before->source==assembly->source,"NATIVE_JOB_LATER_MATERIAL_OWNER");
+            later_json=later_identity(*later,guard);later_hash=sha256_bytes(later_json);
+            require(bool(request),"NATIVE_JOB_LATER_REQUEST_REQUIRED");
+            require(request->at("schema")==2 && request->at("later_paths")==Json::parse(canonical_next_cap_requests(later->requests,[&]{guard.poll();})),"NATIVE_JOB_LATER_REQUEST_MISMATCH");
+        }
         require(candidate && plan && candidate->plan==plan && sha256_bytes(candidate->bytes)==candidate->sha256,"NATIVE_JOB_CANDIDATE_PARENT");
         require(!task.snapshot->native_inputs || task.snapshot->native_inputs->matches_candidate(*candidate,[&]{guard.poll();}),"NATIVE_JOB_PLAN_INPUT_MISMATCH");
         if(departure){
@@ -233,14 +273,15 @@ GuardedNativePlanResult capture_guarded_native_plan(const GuardedJobTask &reques
             rows[i].motion.speed_limit=limited.speed_limit;rows[i].motion.acceleration_limit=limited.acceleration_limit;}
         const MaterialSequenceSnapshot expected{original.revision,original.source_fingerprint,original.model,std::move(rows),original.geometry};
         require(expected.fingerprint()==planned.fingerprint(),"NATIVE_JOB_MOTION_OUTPUT_JOURNAL");guard.poll();
-        Json document={{"schema",departure ? 2 : 1},{"scope",departure ? "owned_native_body_cap_departure_linear_candidate_lineage_only" : "owned_native_body_cap_linear_candidate_lineage_only"},{"job_fingerprint",task.snapshot->fingerprint},
+        Json document={{"schema",later ? 3 : departure ? 2 : 1},{"scope",later ? "owned_native_body_cap_later_linear_candidate_lineage_only" : departure ? "owned_native_body_cap_departure_linear_candidate_lineage_only" : "owned_native_body_cap_linear_candidate_lineage_only"},{"job_fingerprint",task.snapshot->fingerprint},
             {"attempt",task.attempt},{"hatch_lineage",hatches->sha256},{"assembled_journal",assembly->material->sequence->fingerprint()},
             {"planned_journal",planned.fingerprint()},{"candidate_sha256",candidate->sha256}};
         std::string exit_json,exit_hash;
         if(departure){exit_json=departure_identity(*departure,guard);exit_hash=sha256_bytes(exit_json);document["departure_lineage"]=exit_hash;}
+        if(later)document["later_lineage"]=later_hash;
         auto json=document.dump();auto hash=sha256_bytes(json);guard.poll();
         result.snapshot=std::shared_ptr<const GuardedNativePlanSnapshot>(new GuardedNativePlanSnapshot(hatches,assembly,candidate,std::move(json),std::move(hash),
-            std::move(departure),std::move(exit_json),std::move(exit_hash)));
+            std::move(departure),std::move(exit_json),std::move(exit_hash),std::move(later),std::move(later_json),std::move(later_hash)));
         guard.poll();result.reason="OWNED_NATIVE_PLAN_LINEAGE_FULL_JOB_QUALIFICATION_PENDING";
     }catch(const std::exception &e){result.snapshot.reset();result.reason=*e.what() ? e.what() : "NATIVE_JOB_EXCEPTION_WITHOUT_REASON";}
     catch(...){result.snapshot.reset();result.reason="NATIVE_JOB_UNKNOWN_EXCEPTION";}return result;

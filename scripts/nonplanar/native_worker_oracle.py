@@ -43,8 +43,8 @@ def verify_source(input, record):
     require(input['request_sha256'] == record['analysis_request_sha256'], 'Exact owned request')
 
 
-def verify_result(input, diagnostic, reference, record, host_id):
-    verify_document(input['request'], record)
+def verify_result(input, diagnostic, reference, record, host_id, initial_acceleration=100):
+    verify_document(input['request'], record, initial_acceleration)
     verify_record(record)
     verify_diagnostic(reference, record)
     check_diagnostic(diagnostic, True)
@@ -59,12 +59,12 @@ def verify_result(input, diagnostic, reference, record, host_id):
     require(diagnostic['report']['validation']['export_decision'] == 'BLOCK', 'No export credential')
 
 
-def verify(input, diagnostic, reference, record):
+def verify(input, diagnostic, reference, record, initial_acceleration=100):
     require(set(input) == {'schema', 'host_job', 'software_sha256', 'input_sha256', 'source',
                            'meshes', 'request', 'request_sha256', 'files', 'plate_origin'}, 'Input registry')
     require(input['schema'] == 1 and len(input['host_job']) == 4 and all(type(v) is int and v > 0 for v in input['host_job'][:3]), 'Host ticket')
     verify_source(input, record)
-    verify_result(input, diagnostic, reference, record, input['host_job'][0])
+    verify_result(input, diagnostic, reference, record, input['host_job'][0], initial_acceleration)
 
 
 def main():

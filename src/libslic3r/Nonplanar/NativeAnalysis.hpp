@@ -13,6 +13,7 @@ struct NativeAnalysisRequest {
     AffineHatchPolicy hatches;
     FirstContourPolicy contour;
     SceneBox fill_region;
+    std::vector<NextCapPathRequest> later_paths={};
 };
 struct NativeAnalysisRequestSnapshot {
     const NativeAnalysisRequest values;
@@ -30,6 +31,7 @@ struct NativeAnalysisLimits : GuardedNativeLimits {
     GuardedNativeHatchLimits hatches;
     FirstHatchLayerLimits cap;
     FirstCapMaterialLimits material;
+    NextCapSequenceLimits later;
     LinearMotionPlanLimits motion;
     LinearCandidateLimits candidate;
     std::function<void(NativeAnalysisStage)> progress;

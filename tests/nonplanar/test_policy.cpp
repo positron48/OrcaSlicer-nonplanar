@@ -3332,9 +3332,9 @@ struct NativeSourceFixture {
     DynamicPrintConfig config=planar_body_config();
     std::vector<JobResource> resources;
     NativeJobInputsRequest inputs=native_job_inputs();
-    NativeSourceFixture()
+    explicit NativeSourceFixture(const char *name="affine-wedge-1-in-16.stl")
     {
-        const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/affine-wedge-1-in-16.stl";
+        const auto path=boost::filesystem::path(__FILE__).parent_path()/"data"/name;
         const auto file=capture_stl_file(path.string(),true,1);REQUIRE(file.source);REQUIRE(load_stl(path.string().c_str(),&model));
         model.objects.front()->add_instance()->set_offset(Vec3d(20,20,0));
         config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
@@ -3344,7 +3344,7 @@ struct NativeSourceFixture {
 };
 struct NativeJobFixture : NativeSourceFixture {
     Print print;
-    NativeJobFixture(){print.apply(model,config);}
+    explicit NativeJobFixture(const char *name="affine-wedge-1-in-16.stl"):NativeSourceFixture(name){print.apply(model,config);}
     GuardedJobResult begin(){auto result=begin_guarded_job(print,88,resources,{},JobSoftwareMode::CompiledInputs,&inputs);INFO(result.reason);REQUIRE(result.task);REQUIRE(result.snapshot->software==compiled_build_inputs());return result;}
 };
 GuardedNativeBodyRequest native_job_body_request()
@@ -4508,5 +4508,171 @@ TEST_CASE("B14 native view rejects actual GUI input edits ABA cancellation and r
         REQUIRE(displayed.reason==(mutation==11 ? "VIEW_CANCELLED" : mutation==10 ? "VIEW_STALE_OWNER" : "VIEW_STALE_INPUTS"));
         REQUIRE_FALSE(worker->task->is_current());
         if(mutation==9)REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Analyzing);
+    }
+}
+
+namespace {
+std::pair<NativeAnalysisRequest,NativeAnalysisLimits> native_later_options(NativeJobFixture &fixture)
+{
+    auto options=native_analysis_request(fixture);
+    // Select local requests from the actual owned original surface. The common
+    // controller must reconstruct every proof under its own new attempt.
+    const auto body=analyze_guarded_native_body(*fixture.begin().task,native_job_body_request(),native_job_body_limits());REQUIRE(body.snapshot);
+    const auto hatches=plan_native_affine_hatches({"",body.snapshot->body},options.first.passes,options.first.hatches,options.second.hatches.passes,options.second.hatches.hatches);INFO(hatches.reason);REQUIRE(hatches.snapshot);
+    const auto &stack=*hatches.snapshot->hatches->source;const auto &roi=options.first.passes.footprint;
+    const double x=(roi.min_x+roi.max_x)/2,y=(roi.min_y+roi.max_y)/2;
+    const bool along_x=options.first.hatches.first_direction==HatchDirection::AlongX;
+    const RectangleXY second=along_x ? RectangleXY{x-.205,y-.27,x+.205,y+.27} : RectangleXY{x-.27,y-.205,x+.27,y+.205};
+    const RectangleXY third=along_x ? RectangleXY{x-.04,y-.205,x+.04,y+.205} : RectangleXY{x-.205,y-.04,x+.205,y+.04};
+    const auto plane=[](const AffineCapCell &c,const RectangleXY &r){const auto &a=c.footprint;
+        return c.z00+(c.z10-c.z00)*(r.min_x-a.min_x)/(a.max_x-a.min_x)+(c.z01-c.z00)*(r.min_y-a.min_y)/(a.max_y-a.min_y)-.035;};
+    options.first.later_paths={{1,second,plane(stack.surfaces[0].cell,second)},{2,third,plane(stack.surfaces[1].cell,third)}};
+    options.first.inputs.serializer.initial_acceleration=Acceleration(40);
+    return options;
+}
+}
+
+TEST_CASE("B14 common analysis carries captured ordered later paths through native lineage and final bytes", "[Nonplanar][B14][NativeAnalysisLater]")
+{
+    NativeJobFixture fixture("affine-wedge-1-in-8000.stl");auto options=native_later_options(fixture);
+    // Execution reduction below the declared Z limit. Keep the original 100
+    // declaration as a final-byte refusal: geometry quantization is observable.
+    auto high_acceleration=options.first;high_acceleration.inputs.serializer.initial_acceleration=Acceleration(100);
+    const auto rate_refusal=run_native_analysis(fixture.print,101,capture_native_analysis_request(high_acceleration),fixture.resources,options.second);
+    REQUIRE(rate_refusal.snapshot);REQUIRE_FALSE(rate_refusal.snapshot->report->rates);
+    REQUIRE(nlohmann::json::parse(rate_refusal.snapshot->report->canonical_json).at("replay").at("rate_reason")=="AXIS_ACCELERATION_LIMIT");
+    REQUIRE_FALSE(rate_refusal.snapshot->report->export_allowed);
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(directory)/"native-later-rate-refusal-report.json",{rate_refusal.reason,rate_refusal.snapshot->report,rate_refusal.snapshot->replay_evaluations});
+    const auto input=capture_native_analysis_request(options.first);
+    REQUIRE(nlohmann::json::parse(input->canonical_json).at("schema")==2);
+    const auto document=native_analysis_document(*input);REQUIRE(nlohmann::json::parse(document).at("schema")==2);
+    REQUIRE(parse_native_analysis_document(document)->sha256==input->sha256);
+    const auto result=run_native_analysis(fixture.print,101,input,fixture.resources,options.second);INFO(result.reason<<" stage="<<int(result.stage));REQUIRE(result.snapshot);
+    const auto &p=*result.snapshot->plan;REQUIRE(p.later);REQUIRE(p.later->paths.size()==2);REQUIRE(p.assembly==p.later->after);
+    REQUIRE(p.later->before->later_paths.empty());REQUIRE(p.assembly->later_paths.size()==2);
+    REQUIRE(p.later->paths[1]->path_start.z()!=p.later->paths[1]->path_end.z());
+    const auto &before=*p.later->before->material->sequence,&after=*p.assembly->material->sequence;
+    REQUIRE(after.records.size()>before.records.size());for(size_t i=0;i<before.records.size();++i)REQUIRE(before.canonical_record(i)==after.canonical_record(i));
+    REQUIRE(p.candidate->plan->source->material->ledger->fingerprint()==after.fingerprint());
+    REQUIRE(nlohmann::json::parse(p.canonical_json).at("later_lineage")==p.later_sha256);
+    REQUIRE(result.snapshot->report->rates);
+    REQUIRE(result.snapshot->report->rates->moves.size()==after.records.size());REQUIRE_FALSE(result.snapshot->report->export_allowed);
+    REQUIRE(std::count_if(result.snapshot->report->checks.begin(),result.snapshot->report->checks.end(),[](const auto &c){return c.status==nptop_verify::RateStatus::Pass && c.execution==GuardedCheckExecution::Run;})==4);
+    const auto diagnostic=nlohmann::json::parse(native_analysis_diagnostic(result));bool later_nonzero_z=false;
+    for(size_t i=before.records.size();i<diagnostic.at("replay").size();++i){const auto &row=diagnostic.at("replay")[i];
+        if(row.at("e_mm").get<double>()>0 && row.at("start_mm")[2]!=row.at("end_mm")[2])later_nonzero_z=true;}
+    REQUIRE(later_nonzero_z);
+    REQUIRE(guarded_job_status(fixture.print).phase==GuardedJobPhase::Unknown);
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR")){
+        const auto dir=boost::filesystem::path(directory);
+        test::save_job_report(dir/"native-later-controller-report.json",{result.reason,result.snapshot->report,result.snapshot->replay_evaluations});
+        const auto save=[&](const char *name,const std::string &bytes){const auto path=dir/name;REQUIRE_FALSE(boost::filesystem::exists(path));boost::nowide::ofstream f(path.string(),std::ios::binary);REQUIRE(f.good());f<<bytes;f.close();REQUIRE(f.good());};
+        save("native-later-controller-request.json",document);save("native-later-controller-diagnostic.json",native_analysis_diagnostic(result));
+    }
+}
+
+TEST_CASE("B14 later requests preserve exact capture and reject transport version size type and field mutations", "[Nonplanar][B14][NativeAnalysisLater]")
+{
+    NativeJobFixture fixture("affine-wedge-1-in-8000.stl");auto options=native_later_options(fixture);
+    const auto owned=capture_native_analysis_request(options.first);const auto document=nlohmann::json::parse(native_analysis_document(*owned));
+    for(int field=0;field<7;++field){CAPTURE(field);auto request=options.first;
+        if(field==0)++request.later_paths[0].pass_index;
+        if(field==1)request.later_paths[0].footprint.min_x=std::nextafter(request.later_paths[0].footprint.min_x,100.);
+        if(field==2)request.later_paths[0].footprint.min_y=std::nextafter(request.later_paths[0].footprint.min_y,100.);
+        if(field==3)request.later_paths[0].footprint.max_x=std::nextafter(request.later_paths[0].footprint.max_x,100.);
+        if(field==4)request.later_paths[0].footprint.max_y=std::nextafter(request.later_paths[0].footprint.max_y,100.);
+        if(field==5)request.later_paths[0].support_plane_z_mm=std::nextafter(request.later_paths[0].support_plane_z_mm,100.);
+        if(field==6)std::reverse(request.later_paths.begin(),request.later_paths.end());
+        const auto changed=capture_native_analysis_request(request);REQUIRE(changed->sha256!=owned->sha256);
+        REQUIRE(parse_native_analysis_document(native_analysis_document(*changed))->sha256==changed->sha256);
+    }
+    for(int mode=0;mode<11;++mode){CAPTURE(mode);auto changed=document;
+        if(mode==0)changed["schema"]=1;
+        if(mode==1)changed["schema"]=3;
+        if(mode==2)changed.erase("later_paths");
+        if(mode==3)changed["later_paths"]=nlohmann::json::array();
+        if(mode==4)changed["later_paths"]=nlohmann::json::array();
+        if(mode==4)for(size_t i=0;i<4097;++i)changed["later_paths"].push_back(document["later_paths"][0]);
+        if(mode==5)changed["later_paths"][0][0]=1.5;
+        if(mode==6)changed["later_paths"][0][0]=-1;
+        if(mode==7)changed["later_paths"][0][0]=16;
+        if(mode==8)changed["later_paths"][0][1]=true;
+        if(mode==9)changed["later_paths"][0][1]=nullptr;
+        if(mode==10)changed["later_paths"][0].push_back(0);
+        REQUIRE_THROWS(parse_native_analysis_document(changed.dump()));
+    }
+    auto huge=options.first;huge.later_paths.resize(4097);REQUIRE_THROWS(capture_native_analysis_request(huge));
+    auto nonfinite=options.first;nonfinite.later_paths[0].support_plane_z_mm=std::numeric_limits<double>::infinity();REQUIRE_THROWS(capture_native_analysis_request(nonfinite));
+    options.second.later.progress=[&](size_t,NextCapSequenceStage){options.first.later_paths.clear();};
+    const auto result=run_native_analysis(fixture.print,101,owned,fixture.resources,options.second);INFO(result.reason);REQUIRE(result.snapshot);
+    REQUIRE(options.first.later_paths.empty());REQUIRE(result.snapshot->request==owned);REQUIRE(result.snapshot->plan->later->requests.size()==2);
+}
+
+TEST_CASE("B14 later controller refuses invalid order duplicate unsupported roof and interrupted prefixes without partial publication", "[Nonplanar][B14][NativeAnalysisLater]")
+{
+    NativeJobFixture fixture("affine-wedge-1-in-8000.stl");const auto options=native_later_options(fixture);
+    for(int mode=0;mode<8;++mode){CAPTURE(mode);auto request=options.first;auto limits=options.second;bool cancel=false;
+        if(mode==0)std::reverse(request.later_paths.begin(),request.later_paths.end());
+        if(mode==1)request.later_paths.push_back(request.later_paths.back());
+        if(mode==2)limits.later.max_paths=1;
+        if(mode==3)limits.later.max_cells=1;
+        if(mode==4)limits.later.beads.packets.timeout=std::chrono::milliseconds(0);
+        if(mode==5){limits.cancelled=[&]{return cancel;};limits.later.progress=[&](size_t i,NextCapSequenceStage){if(i==1)cancel=true;};}
+        if(mode==6)limits.later.progress=[&](size_t i,NextCapSequenceStage){if(i==1)fixture.print.set_plate_origin(Vec3d(1,0,0));};
+        if(mode==7)limits.later.progress=[](size_t,NextCapSequenceStage){throw 17;};
+        const auto result=run_native_analysis(fixture.print,101,capture_native_analysis_request(request),fixture.resources,limits);INFO(result.reason);REQUIRE_FALSE(result.snapshot);
+        const auto diagnostic=nlohmann::json::parse(native_analysis_diagnostic(result));REQUIRE(diagnostic.at("report").is_null());REQUIRE(diagnostic.at("replay").empty());REQUIRE(diagnostic.at("export_allowed")==false);
+        REQUIRE_FALSE(result.reason.empty());fixture.print.set_plate_origin(Vec3d::Zero());
+    }
+    NativeJobFixture steep;const auto original=native_later_options(steep);
+    const auto refused=run_native_analysis(steep.print,101,capture_native_analysis_request(original.first),steep.resources,original.second);
+    INFO(refused.reason);REQUIRE_FALSE(refused.snapshot);REQUIRE_FALSE(refused.reason.empty());
+}
+
+TEST_CASE("B14 schema two later requests execute in the isolated child and match actual default controller replay", "[Nonplanar][B14][NativeAnalysisLater]")
+{
+    NativeJobFixture fixture("affine-wedge-1-in-8000.stl");const auto options=native_later_options(fixture);const auto request=capture_native_analysis_request(options.first);
+    const auto worker=native_worker_input(fixture,request);save_worker_evidence("native-later-worker-input.json",worker->bytes);
+    const auto result=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,worker);INFO(result.reason);REQUIRE(result.reason=="WORKER_BLOCKED_DIAGNOSTIC_COMPLETE");REQUIRE(result.progress_stages==10);
+    const auto direct=run_native_analysis(fixture.print,101,request,fixture.resources);INFO(direct.reason);REQUIRE(direct.snapshot);REQUIRE(direct.snapshot->report->rates);
+    const auto reference=nlohmann::json::parse(native_analysis_diagnostic(direct)),child=nlohmann::json::parse(result.diagnostic);
+    REQUIRE(child.at("replay")==reference.at("replay"));REQUIRE(child.at("manifest").at("candidate_sha256")==reference.at("manifest").at("candidate_sha256"));
+    REQUIRE(child.at("export_allowed")==false);REQUIRE(child.at("manifest").at("schema")==4);
+    save_worker_evidence("native-later-worker-diagnostic.json",result.diagnostic);save_worker_evidence("native-later-default-diagnostic.json",reference.dump());
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(directory)/"native-later-default-report.json",{direct.reason,direct.snapshot->report,direct.snapshot->replay_evaluations});
+}
+
+TEST_CASE("B13 native later binding requires the complete captured program and exact owners", "[Nonplanar][B13][NativeAnalysisLater][NativeLaterBinding]")
+{
+    for(int mode=0;mode<4;++mode){CAPTURE(mode);NativeJobFixture fixture("affine-wedge-1-in-8000.stl");const auto options=native_later_options(fixture);
+        auto captured=options.first;if(mode==1)captured.later_paths[0].support_plane_z_mm=std::nextafter(captured.later_paths[0].support_plane_z_mm,10.);
+        if(mode==2)captured.later_paths.clear();
+        const auto input=capture_native_analysis_request(captured);auto resources=fixture.resources;
+        resources.push_back({JobResourceKind::SourceFile,"native-analysis-request-v1",input->canonical_json});
+        if(mode==3){auto unsupported=nlohmann::json::parse(resources.back().bytes);unsupported["schema"]=3;resources.back().bytes=unsupported.dump();}
+        auto job=begin_guarded_job(fixture.print,101,resources,{},JobSoftwareMode::CompiledInputs,&options.first.inputs);REQUIRE(job.task);
+        const auto body=analyze_guarded_native_body(*job.task,native_job_body_request(),native_job_body_limits());REQUIRE(body.snapshot);
+        job=advance_guarded_job(fixture.print,*job.task,GuardedJobPhase::Planning);REQUIRE(job.task);
+        const auto hatches=plan_guarded_native_hatches(*job.task,body.snapshot,options.first.passes,options.first.hatches,options.second.hatches);REQUIRE(hatches.snapshot);
+        const auto cap=plan_first_cap({"",hatches.snapshot->native->hatches},options.first.contour,options.first.fill_region,options.second.cap);REQUIRE(cap.snapshot);
+        const auto before=reconstruct_first_cap_material(cap);REQUIRE(before.snapshot);
+        const auto later=plan_next_cap_sequence(before,options.first.later_paths);INFO(later.reason);REQUIRE(later.snapshot);
+        const auto bytes_for=[&](const FirstCapMaterialResult &assembled){
+            const auto material=prepare_material_motion({"",assembled.snapshot->material->sequence});REQUIRE(material.snapshot);
+            const auto source=prepare_simulation_motion(options.first.inputs.scene,material,options.first.inputs.clearance);REQUIRE(source.snapshot);
+            const auto motion=plan_linear_motion(source,options.first.inputs.motion);REQUIRE(motion.snapshot);
+            const auto bytes=serialize_linear_candidate(motion,options.first.inputs.serializer);REQUIRE(bytes.snapshot);return bytes;
+        };
+        const FirstCapMaterialResult after{"",later.snapshot->after};const auto bytes=bytes_for(after),first_bytes=bytes_for(before);
+        job=advance_guarded_job(fixture.print,*job.task,GuardedJobPhase::Serializing);REQUIRE(job.task);
+        const auto bound=capture_guarded_native_plan(*job.task,hatches.snapshot,after,bytes,{}, {},later.snapshot);
+        if(mode){REQUIRE_FALSE(bound.snapshot);REQUIRE(bound.reason==(mode==3 ? "NATIVE_JOB_REQUEST_VERSION" : "NATIVE_JOB_LATER_REQUEST_MISMATCH"));continue;}
+        INFO(bound.reason);REQUIRE(bound.snapshot);
+        const auto omitted=capture_guarded_native_plan(*job.task,hatches.snapshot,before,first_bytes);INFO(omitted.reason);REQUIRE_FALSE(omitted.snapshot);
+        REQUIRE(omitted.reason=="NATIVE_JOB_LATER_PROGRAM_REQUIRED");
+        const auto unbound=capture_guarded_native_plan(*job.task,hatches.snapshot,after,bytes);REQUIRE_FALSE(unbound.snapshot);REQUIRE(unbound.reason=="NATIVE_JOB_LATER_PROGRAM_REQUIRED");
+        const auto copied=plan_next_cap_sequence(before,options.first.later_paths);REQUIRE(copied.snapshot);
+        REQUIRE(copied.snapshot->after->material->sequence->fingerprint()==later.snapshot->after->material->sequence->fingerprint());
+        const auto foreign=capture_guarded_native_plan(*job.task,hatches.snapshot,after,bytes,{}, {},copied.snapshot);REQUIRE_FALSE(foreign.snapshot);REQUIRE(foreign.reason=="NATIVE_JOB_LATER_MATERIAL_OWNER");
     }
 }

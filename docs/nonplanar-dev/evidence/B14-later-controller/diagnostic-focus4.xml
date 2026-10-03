@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="1755" hostname="tbd" time="0.891" timestamp="2026-10-03T12:15:32Z">
+    <properties>
+      <property name="random-seed" value="2967874095"/>
+      <property name="filters" value="[NativeAnalysisLater]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B14 common analysis carries captured ordered later paths through native lineage and final bytes" time="0.000" status="run">
+      <error message="{Unknown expression after the reported line}">
+FAILED:
+  {Unknown expression after the reported line}
+SIGSEGV - Segmentation violation signal
+SOURCE_BOUND_NATIVE_AFFINE_HATCH_CANDIDATES_ONLY
+ORDERED_LATER_PATHS_RECOMPUTED_ON_ACTUAL_PREFIX_FIXED_WIDTH_ORIGINAL_DIRECTIONS_ONLY path=2 stage=2 cells=6011
+run 1723 1723 bounds 19.251,18.6815,4.19981 to 20.749,19.0817,4.41008
+run 1724 1724 bounds 20.549,18.8816,4.2 to 20.949,19.1295,4.41008
+run 1725 1725 bounds 19.251,18.9295,4.19981 to 20.749,19.3296,4.41008
+run 1726 1726 bounds 19.051,18.8816,4.2 to 19.451,19.1295,4.4099
+run 1728 1728 bounds 19.251,18.8055,4.19981 to 20.749,19.2057,4.41008
+
+NATIVE_ANALYSIS_COMPLETE_EXPORT_BLOCKED stage=9
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:4545
+      </error>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

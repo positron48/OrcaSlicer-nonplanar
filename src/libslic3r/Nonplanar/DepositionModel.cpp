@@ -5004,6 +5004,20 @@ NextCapBeadResult plan_next_cap_bead(const FirstCapNextPassResult &requested,Hat
 }
 
 
+std::string canonical_next_cap_requests(const std::vector<NextCapPathRequest> &paths,const std::function<void()> &poll)
+{
+    require(paths.size()<=4096,"NEXT_CAP_REQUEST_SIZE_LIMIT");detail::CanonicalConfigWriter w;w.append("[");
+    for(size_t i=0;i<paths.size();++i){if(poll)poll();const auto &p=paths[i];if(i)w.append(",");
+        require(p.pass_index<=15,"NEXT_CAP_REQUEST_PASS_DOMAIN");
+        w.append("[");w.append(std::to_string(p.pass_index));
+        for(double v : {p.footprint.min_x,p.footprint.min_y,p.footprint.max_x,p.footprint.max_y,p.support_plane_z_mm}){
+            coordinate(v);w.append(",");w.value(v);
+        }
+        w.append("]");
+    }
+    w.append("]");return w.take();
+}
+
 NextCapSequenceResult plan_next_cap_sequence(const FirstCapMaterialResult &requested,
     const std::vector<NextCapPathRequest> &requested_paths,const NextCapSequenceLimits &requested_limits)
 {

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="28" hostname="tbd" time="0.705" timestamp="2026-10-03T12:28:08Z">
+    <properties>
+      <property name="random-seed" value="3766547922"/>
+      <property name="filters" value="[NativeLaterBinding]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B13 native later binding requires the complete captured program and exact owners" time="0.000" status="run">
+      <failure message="!(omitted.snapshot)" type="REQUIRE_FALSE">
+FAILED:
+  REQUIRE_FALSE( omitted.snapshot )
+with expansion:
+  !0x75c648380
+mode := 0
+ORDERED_LATER_PATHS_RECOMPUTED_ON_ACTUAL_PREFIX_FIXED_WIDTH_ORIGINAL_DIRECTIONS_ONLY
+OWNED_NATIVE_PLAN_LINEAGE_FULL_JOB_QUALIFICATION_PENDING
+OWNED_NATIVE_PLAN_LINEAGE_FULL_JOB_QUALIFICATION_PENDING
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:4670
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

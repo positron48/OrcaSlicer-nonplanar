@@ -16,12 +16,18 @@ def sha(text):
     return hashlib.sha256(text.encode()).hexdigest()
 
 
-def verify_document(document, record):
-    verify_inputs(record)
+def verify_document(document, record, initial_acceleration=100):
+    verify_inputs(record, initial_acceleration)
     verify_request(record)
-    resources = expected_resources()
+    resources = expected_resources(initial_acceleration)
     source = parse(record['analysis_request_canonical'])
-    require(document['schema'] == 1 and document['millimeters_declared'] == source['millimeters_declared'], 'Version/units')
+    require(type(document['schema']) is int and document['schema'] == source['schema'] and
+            document['millimeters_declared'] == source['millimeters_declared'], 'Version/units')
+    if source['schema'] == 2:
+        require(type(document['later_paths']) is list and 0 < len(document['later_paths']) <= 4096 and
+                [[row[0], *[bits(n) for n in row[1:]]] for row in document['later_paths']] == source['later_paths'], 'Exact ordered later paths')
+    else:
+        require('later_paths' not in document, 'Legacy transport has no later paths')
     mesh = document['reservation']
     framed = b'nptop-native-mesh-v1\0' + struct.pack('>Q', len(mesh['vertices_f32_mm']))
     for v in mesh['vertices_f32_mm']:
