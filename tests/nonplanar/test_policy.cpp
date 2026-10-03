@@ -3538,7 +3538,9 @@ template<class Result> void save_final_geometry(const std::string &stem,const np
         for(const auto &l:result.snapshot->leaves){nlohmann::json leaf={{"record",l.record},{"component",l.component},
             {"progress",{l.progress.lower,l.progress.upper}},{"local_min",l.local.min},{"local_max",l.local.max},
             {"world_min",l.world.min},{"world_max",l.world.max},{"outside_annulus",l.outside_annulus}};
-            if constexpr(std::is_same_v<Result,nptop_verify::LinearFormingContactResult>)leaf["forming_contact"]=l.forming_contact;
+            if constexpr(std::is_same_v<Result,nptop_verify::LinearFormingContactResult>){leaf["forming_contact"]=l.forming_contact;
+                if(result.snapshot->contact.version==2)leaf["contact_records"]=l.contact_records;
+            }
             leaves.push_back(std::move(leaf));
         }
         const nlohmann::json proof={{"schema_version",1},{"component_status","PASS"},{"job_status","UNKNOWN"},{"export_allowed",false},
@@ -3681,5 +3683,52 @@ TEST_CASE("B12 independent forming contact retains native contour and adjacent m
                     {"min",w.point.min},{"max",w.point.max},{"material_event",*w.material_event}}}}}};
         const auto path=boost::filesystem::path(directory)/"native-final-forming-contact.refusals.json";REQUIRE_FALSE(boost::filesystem::exists(path));
         boost::nowide::ofstream file(path.string(),std::ios::binary);REQUIRE(file.good());file<<refusal.dump(2)<<'\n';file.close();REQUIRE(file.good());
+    }
+}
+TEST_CASE("B12 final polyline contact checks the entire native contour and refuses older adjacent material", "[Nonplanar][B12][FinalBytePolylineContactNative]")
+{
+    NativeDepartureFixture fixture;const auto &d=*fixture.departure.snapshot;
+    const auto material=verify_linear_candidate_material(fixture.bytes,{93,1,5e-9,.0001,1e-9,.02,0});INFO(material.reason);REQUIRE(material.snapshot);
+    const auto scene=final_geometry_scene(*d.route->planned);
+    nptop_verify::LinearFormingContactModel model;model.version=2;model.min_turn_cosine=0;model.model_id=102;model.revision=1;
+    model.profile_id=scene.profile_id;model.profile_revision=scene.revision;model.material_model_id=material.snapshot->policy.model_id;
+    model.working_radius_mm=.5;model.wake_length_mm=1.05;model.max_top_above_tip_mm=.08;
+    model.gap_min_mm=.1;model.gap_max_mm=.4;model.width_min_mm=.1;model.width_max_mm=.55;model.max_path_gradient=.064;
+    const auto &rows=material.snapshot->declarations;const size_t start=fixture.before.snapshot->runs.front().material->first_record;
+    size_t last=start;while(last<rows.size() && rows[last].kind==nptop_verify::MaterialEventKind::Deposit)++last;
+    REQUIRE(last-start==108);
+    const auto too_deep=nptop_verify::verify_linear_forming_contact_geometry(material.snapshot,start,last-start,scene,model);
+    REQUIRE(too_deep.status==nptop_verify::RateStatus::Unknown);REQUIRE(too_deep.reason=="FINAL_FORMING_CONTACT_TOP_DEPTH_DOMAIN");
+    // The actual affine contour slope is .0625; final decimal segments stay
+    // below .063. Version2 also includes the entire original .010002 margin
+    // in its declared .095 depth domain: .063*1.03 + .014827715 + .010002
+    // < .095 < gap_min. The original .08 domain refusal above remains.
+    model.max_path_gradient=.063;model.wake_length_mm=1.03;model.max_top_above_tip_mm=.095;
+    const auto too_short=nptop_verify::verify_linear_forming_contact_geometry(material.snapshot,start,last-start,scene,model);
+    REQUIRE(too_short.status==nptop_verify::RateStatus::Fail);REQUIRE_FALSE(too_short.snapshot);REQUIRE(too_short.witness);REQUIRE(too_short.unresolved_cell);
+    nptop_test::check_polyline_contact_witness(*material.snapshot,scene,model,start,*too_short.witness);
+    // Both projected margins enter the right-angle disk/strip bound:
+    // sqrt(2)*.5 + .55/2 + 2*.014827715 + 2*.010002 < 1.035.
+    model.wake_length_mm=1.035;
+    const auto closed=nptop_verify::verify_linear_forming_contact_geometry(material.snapshot,start,last-start,scene,model);
+    INFO(closed.reason<<" work="<<closed.evaluations<<" cells="<<closed.cells);REQUIRE(closed.status==nptop_verify::RateStatus::Fail);REQUIRE(closed.witness);REQUIRE(closed.witness->material_event);
+    const auto hit=std::find_if(rows.begin(),rows.end(),[&](const auto &r){return r.event_id==*closed.witness->material_event;});REQUIRE(hit!=rows.end());
+    REQUIRE(size_t(hit-rows.begin())>=start);REQUIRE(size_t(hit-rows.begin())<closed.witness->record);
+    nptop_test::check_polyline_contact_witness(*material.snapshot,scene,model,start,*closed.witness);
+    size_t first=d.before->material->sequence->records.size();while(first<rows.size() && rows[first].kind!=nptop_verify::MaterialEventKind::Deposit)++first;
+    const size_t count=d.bead->pieces.size();const auto formed=nptop_verify::verify_linear_forming_contact_geometry(material.snapshot,first,count,scene,model);
+    INFO(formed.reason);REQUIRE(formed.snapshot);nptop_test::check_final_forming_contact(*formed.snapshot);
+    save_final_geometry("native-final-polyline-contact",*material.snapshot,first,count,scene,formed);
+    if(const char *directory=std::getenv("NPTOP_CANDIDATE_EVIDENCE_DIR")){
+        const auto dir=boost::filesystem::path(directory);const auto save=[&](const std::string &name,const nlohmann::json &j){
+            const auto path=dir/name;REQUIRE_FALSE(boost::filesystem::exists(path));boost::nowide::ofstream f(path.string(),std::ios::binary);REQUIRE(f.good());f<<j.dump(2)<<'\n';f.close();REQUIRE(f.good());};
+        save("native-final-polyline-contact.contour-query.json",nptop_verify::travel_document({start,last-start,scene}));
+        const auto &w=*closed.witness;
+        REQUIRE(closed.unresolved_cell);const auto &u=*closed.unresolved_cell;
+        save("native-final-polyline-contact.old-material-refusal.json",{{"schema_version",1},{"status","FAIL"},{"job_status","UNKNOWN"},{"export_allowed",false},
+            {"first_record",start},{"record_count",last-start},{"reason",closed.reason},{"work",closed.evaluations},{"cells",closed.cells},
+            {"unproved_cell",{{"record",u.record},{"component",u.component},{"progress",{u.progress.lower,u.progress.upper}},
+                {"local_min",u.local.min},{"local_max",u.local.max},{"world_min",u.world.min},{"world_max",u.world.max}}},
+            {"witness",{{"record",w.record},{"component",w.component},{"progress",{w.progress.lower,w.progress.upper}},{"min",w.point.min},{"max",w.point.max},{"material_event",*w.material_event}}}});
     }
 }

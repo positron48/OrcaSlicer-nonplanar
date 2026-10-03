@@ -1,0 +1,19 @@
+{
+  "command": [
+    "python3",
+    "scripts/nonplanar/validate_forming_contact_cli.py",
+    "--model-version",
+    "2",
+    "--executable",
+    "build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+    "--fixture-dir",
+    "build/nonplanar-evidence/B12-forming-contact/material-cli-final/positive",
+    "--output-dir",
+    "build/nonplanar-evidence/B12-forming-polyline/contact-v2-cli1"
+  ],
+  "cwd": "/Users/antonfilatov/www/my/orca-nonplanar",
+  "started_utc": "2026-10-02T23:12:37.070170+00:00",
+  "status": "COMPLETED",
+  "exit_code": 0,
+  "elapsed_seconds": 0.914
+}

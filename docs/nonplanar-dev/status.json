@@ -1240,11 +1240,18 @@
     "B12_forming_contact_ctest": 440,
     "B12_forming_contact_ctest_seconds": 105.015,
     "B12_forming_contact_CLI_cases": 81,
-    "B12_forming_contact_all_CLI_cases": 242
+    "B12_forming_contact_all_CLI_cases": 242,
+    "B12_forming_polyline_new_cases": 4,
+    "B12_forming_polyline_focus_cases": 19,
+    "B12_forming_polyline_focus_assertions": 2077068,
+    "B12_forming_polyline_ctest": 444,
+    "B12_forming_polyline_ctest_seconds": 107.182,
+    "B12_forming_polyline_CLI_cases": 90,
+    "B12_forming_polyline_all_CLI_cases": 332
   },
   "platforms": {
     "macos_arm64": "BUILT_AND_TESTED",
-    "linux_x86_64": "CURRENT_SOURCE_PENDING_AFTER_PUSH_PARENT086DC9F3_PENDING_AT_2153_UTC_OLDER_C2350792_SUCCESS"
+    "linux_x86_64": "CURRENT_SOURCE_PENDING_AFTER_PUSH_PARENTDE7C3C49_PENDING_OBSERVED_2026_10_03_000307_UTC"
   },
   "physical": {
     "machine": "Snapmaker U1",
@@ -1255,10 +1262,10 @@
     "operator_profile": "UNCONFIRMED"
   },
   "gui_coexistence": "PROCESS_COEXISTENCE_OBSERVED_INTERACTIVE_STOCK_NOT_VERIFIED_SIGNATURE_AND_AUTOMATION_LIMITS",
-  "ci": "PARENT086DC9F3_PENDING_OBSERVED_2026_10_02_2153_UTC_NEW_SOURCE_PENDING_AFTER_PUSH",
+  "ci": "CURRENT_SOURCE_PENDING_AFTER_PUSH_PARENTDE7C3C49_PENDING_OBSERVED_2026_10_03_000307_UTC",
   "evidence_directory": "docs/nonplanar-dev/evidence",
   "raw_directory": "build/nonplanar-evidence",
-  "next_step": "Complete legal bounded local deposition contact and fixed-width cap fill/seams from the exact owned native graph; independently verify all earlier/print/prolog/parking/end final-byte head/material/route geometry and actual order. Preserve all original rows/targets/margins/budgets; qualify all17 mandatory domains and source/GUI plate/resources/software/transforms/delivery/filter/order, then Verified and atomic publication/recovery/copied-byte gate for every route. Observe own Linux CI separately. Continue full B01-B15. Standard U1 head/.4 nozzle known; firmware-version/material-brand questions do not block software.",
+  "next_step": "Complete qualified old-support and adjacent-path contact, seams/full fixed-width cap fill, all earlier/printing/prolog/parking/end motions and actual order from the exact owned graph. Qualify all17 mandatory domains and source/GUI plate/resources/software/transforms/delivery/publication, then Verified and atomic publication/recovery/copied-byte gate for every route. Retain strict derived-body dependency differences, separate graph owners and original margins/budgets. Continue full B01-B15. Standard U1 head/.4 nozzle known; firmware-version/material-brand questions do not block software.",
   "A04_evidence": "docs/nonplanar-dev/evidence/A04/source-manifest.json",
   "remote_fork": "https://github.com/positron48/OrcaSlicer-nonplanar",
   "published_branch": "feature/nonplanar-bootstrap",
@@ -1780,6 +1787,216 @@
     "physical": "NOT_RUN_STANDARD_U1_HEAD_NOZZLE0_4_UNCONFIRMED",
     "retained_failures": "TEST_FIRST_LINKER_NATIVE_PARTIAL_CONTOUR_BLOCK_REFUSAL_AND_WRONG_CLI_WITNESS_KEY_CORRECTED_NO_MARGIN_LIMIT_RELAXATION",
     "qualified_contact_support_turns_seams_complete_fill_full_job": "PENDING",
+    "full_B01_B15": "IN_PROGRESS",
+    "guarded_export": "BLOCK"
+  },
+  "B12_forming_polyline_evidence": {
+    "status": "BOUNDED_EXPLICIT_SYNTHETIC_POLYLINE_WORKING_FACE_PATH_AGE_IMPLEMENTED_QUALIFIED_CONTACT_FULL_SCOPE_PENDING",
+    "document": "B12-forming-polyline.md",
+    "review": "B12-forming-polyline-review.md",
+    "adr": "adr-0085-final-byte-polyline-contact-age.md",
+    "manifest": "evidence/B12-forming-polyline/source-manifest.json",
+    "diagnostic_query_version": 1,
+    "diagnostic_contact_versions": [
+      1,
+      2
+    ],
+    "contact_fields": {
+      "v1": 16,
+      "v2": 17
+    },
+    "production_and_previous_formats": "UNCHANGED",
+    "new_cases": 4,
+    "focused_cases": 19,
+    "focused_assertions": 2077068,
+    "ctest": 444,
+    "ctest_failures": 0,
+    "ctest_skips": 0,
+    "gate_wall_seconds": 107.182,
+    "native": {
+      "candidate_sha256": "b8eb15681127c1a8db57ce0aa257326763f16832b82fdafd13ed091c4bd98ef8",
+      "bytes": 128014,
+      "records": 2205,
+      "before_records": 2198,
+      "previous_deposits": 2072,
+      "deposit_records": 4,
+      "head_parts": 6,
+      "cells": 28,
+      "leaves": 28,
+      "contact_leaves": 4,
+      "work": 310089,
+      "refusal": {
+        "cells": 461,
+        "export_allowed": false,
+        "first_record": 2035,
+        "job_status": "UNKNOWN",
+        "reason": "FINAL_DEPOSITION_RIGID_UPPER_OR_STATIC_INTERSECTION",
+        "record_count": 108,
+        "schema_version": 1,
+        "status": "FAIL",
+        "unproved_cell": {
+          "component": 0,
+          "local_max": [
+            -0.2939453125,
+            -0.097900390625,
+            0.0
+          ],
+          "local_min": [
+            -0.294189453125,
+            -0.09814453125,
+            0.0
+          ],
+          "progress": [
+            0.99609375,
+            1.0
+          ],
+          "record": 2093,
+          "world_max": [
+            20.231155539062502,
+            19.041650609375,
+            4.452185429687501
+          ],
+          "world_min": [
+            20.210724546875,
+            19.021402468749997,
+            4.432169999999999
+          ]
+        },
+        "witness": {
+          "component": 0,
+          "material_event": 2077,
+          "max": [
+            20.218105,
+            18.879549,
+            4.439247000000001
+          ],
+          "min": [
+            20.218104999999998,
+            18.879548999999997,
+            4.439247
+          ],
+          "progress": [
+            1.0,
+            1.0
+          ],
+          "record": 2094
+        },
+        "work": 871441
+      }
+    },
+    "native_CLI": {
+      "work": 270344,
+      "wall_seconds": 0.416,
+      "absolute_deadline_ms": 1000,
+      "cells": 28,
+      "leaves": 28,
+      "contact_cells": 4,
+      "contour": "FAIL_OLD_ADJACENT_EVENT2077_RECORD2094_T1_WITH_UNPROVED_EARLIER_CELL",
+      "contour_work": 831696,
+      "contour_cells": 461,
+      "contour_wall_seconds": 0.794
+    },
+    "independent_oracle": "113_BIT_FINAL_TEXT_ACTUAL_ARC_TURN_DOSE_DOMAIN_DISK_STRIP_AGE_FORBIDDEN_PREFIX_OTHER_UPPER_HEAD_STATIC_COMPLETE_PARTITIONS_TRANSLATED_WITNESS_OLD_SOURCE_AGE",
+    "CLI_retained_cases": 242,
+    "CLI_new_cases": 90,
+    "original_native_files_exact": 12,
+    "original_native_files_compared": 19,
+    "source_drift": {
+      "status": "STRICT_IDENTITY_DIFFERENCES_RETAINED_EXACT_DERIVED_BODY_REMAP_DIAGNOSIS_ONLY",
+      "changed_files": [
+        "native-departure-material.json",
+        "native-departure.json",
+        "native-exit-witness.json",
+        "native-job-report.json",
+        "native-material.json",
+        "native-partition-meshes.json",
+        "native-provenance.json"
+      ],
+      "unchanged_original_files": 12,
+      "body_vertex_remap": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        17,
+        16,
+        18,
+        19,
+        20,
+        21
+      ],
+      "vertices": 22,
+      "oriented_triangles": 40,
+      "unchanged_subtrees": "ALL_OTHER_PARTITION_MESHES_PROPERTIES_SOURCE_EXECUTED_CONFIGS_PATHS_AND_NONDEPENDENCY_LEAVES_EXACT",
+      "changed_dependency_paths": {
+        "native-provenance.json": [
+          "/body/guarded_settings",
+          "/body/partition",
+          "/body_material/body",
+          "/body_material/material",
+          "/final_source_fingerprint",
+          "/guarded/input_fingerprint",
+          "/partition/body"
+        ],
+        "native-exit-witness.json": [
+          "/context/source",
+          "/ledger_fingerprint"
+        ],
+        "native-departure-material.json": [
+          "/policy/source_fingerprint"
+        ],
+        "native-material.json": [
+          "/policy/source_fingerprint"
+        ],
+        "native-departure.json": [
+          "/before/context/source",
+          "/before/sha256",
+          "/laid/context/source",
+          "/laid/sha256",
+          "/planned/context/source",
+          "/planned/sha256"
+        ],
+        "native-job-report.json": [
+          "/canonical/manifest_sha256",
+          "/manifest/material_journal",
+          "/manifest/source_fingerprint",
+          "/manifest_sha256",
+          "/material_journal",
+          "/sha256",
+          "/source_fingerprint"
+        ]
+      },
+      "scope": "CGAL_INTERNAL_ORDER_CROSS_PLATFORM_DETERMINISM_FULL_SOURCE_TO_PLAN_BINDING_UNQUALIFIED_NO_RUNTIME_NORMALIZATION_OR_CERTIFICATE_REUSE"
+    },
+    "old_travel_files_exact": 4,
+    "old_deposition_files_exact": 4,
+    "old_v1_contact_files_exact": 6,
+    "material_policy_events": "EXACT_SOURCE_FINGERPRINT_SEPARATE_UNQUALIFIED_OWNERS_NO_NORMALIZATION_OR_REUSE",
+    "OFF_ZAA": "SIX_FRESH_STRICT_PASS",
+    "mandatory_report": {
+      "checks": 17,
+      "pass_run": 4,
+      "unknown_not_run": 13,
+      "export": "BLOCK"
+    },
+    "Linux": "NEW_SOURCE_PENDING_AFTER_PUSH_PARENTDE7C3C49_PENDING_OBSERVED_000307_UTC",
+    "Windows": "NOT_RUN",
+    "GUI": "NOT_RUN_FULL_PIPELINE",
+    "review_status": "SEPARATE_AUTHOR_AUDIT_INDEPENDENT_PENDING",
+    "physical": "NOT_RUN_STANDARD_U1_HEAD_NOZZLE0_4_KNOWN_GEOMETRY_UNCONFIRMED",
+    "qualified_contact_old_support_neighbors_seams_full_fill_full_job": "PENDING",
     "full_B01_B15": "IN_PROGRESS",
     "guarded_export": "BLOCK"
   }

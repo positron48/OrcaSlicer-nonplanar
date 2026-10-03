@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="2" skipped="0" tests="7" hostname="tbd" time="0.002" timestamp="2026-10-02T23:01:58Z">
+    <properties>
+      <property name="random-seed" value="535881175"/>
+      <property name="filters" value="[FinalBytePolylineContact]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B12 polyline old seams and nearby earlier legs remain forbidden" time="0.000" status="run">
+      <failure message="refused.status==RateStatus::Fail" type="REQUIRE">
+FAILED:
+  REQUIRE( refused.status==RateStatus::Fail )
+with expansion:
+  2 == 1
+UNSUPPORTED_FINAL_FORMING_CONTACT_MODEL
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:832
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B12 polyline working contact covers every turn without resetting material age" time="0.000" status="run">
+      <failure message="formed.snapshot" type="REQUIRE">
+FAILED:
+  REQUIRE( formed.snapshot )
+with expansion:
+  0
+UNSUPPORTED_FINAL_FORMING_CONTACT_MODEL
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_final_material.cpp:821
+      </failure>
+    </testcase>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

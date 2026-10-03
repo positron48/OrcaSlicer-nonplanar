@@ -1,0 +1,321 @@
+{
+  "cases": [
+    {
+      "case": "positive",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/positive/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/positive/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/positive/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/positive/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/positive/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "partial-interior",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/partial-interior/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/partial-interior/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/partial-interior/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/partial-interior/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/partial-interior/candidate.txt"
+      ],
+      "exit_code": 0,
+      "component_status": "PASS",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "front",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/front/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/front/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/front/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/front/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/front/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "future",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/future/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/future/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/future/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/future/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/future/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "pause",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/pause/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/pause/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/pause/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/pause/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/pause/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "pressure",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/pressure/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/pressure/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/pressure/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/pressure/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/pressure/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "turn",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/turn/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/turn/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/turn/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/turn/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/turn/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "narrow-dose",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/narrow-dose/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/narrow-dose/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/narrow-dose/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/narrow-dose/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/narrow-dose/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "raised-floor",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/raised-floor/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/raised-floor/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/raised-floor/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/raised-floor/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/raised-floor/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "changed-e",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/changed-e/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/changed-e/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/changed-e/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/changed-e/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/changed-e/candidate.txt"
+      ],
+      "exit_code": 2,
+      "component_status": "FAIL",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "wrong-version",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/wrong-version/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/wrong-version/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/wrong-version/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/wrong-version/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/wrong-version/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "measured-claim",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/measured-claim/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/measured-claim/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/measured-claim/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/measured-claim/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/measured-claim/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "not-synthetic",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/not-synthetic/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/not-synthetic/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/not-synthetic/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/not-synthetic/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/not-synthetic/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "unknown-model",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/unknown-model/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/unknown-model/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/unknown-model/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/unknown-model/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/unknown-model/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "extra-field",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/extra-field/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/extra-field/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/extra-field/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/extra-field/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/extra-field/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "duplicate-key",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/duplicate-key/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/duplicate-key/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/duplicate-key/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/duplicate-key/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/duplicate-key/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "nested-policy",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/nested-policy/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/nested-policy/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/nested-policy/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/nested-policy/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/nested-policy/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "bad-id",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/bad-id/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/bad-id/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/bad-id/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/bad-id/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/bad-id/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "nonlower",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/nonlower/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/nonlower/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/nonlower/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/nonlower/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/nonlower/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "extra-query",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/extra-query/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/extra-query/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/extra-query/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/extra-query/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/extra-query/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    },
+    {
+      "case": "partial-after-end",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-material-joined-cover-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/partial-after-end/rate.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/partial-after-end/material.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/partial-after-end/join.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/partial-after-end/query.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B12-forming-polyline/joined-cli-final/partial-after-end/candidate.txt"
+      ],
+      "exit_code": 3,
+      "component_status": "UNKNOWN",
+      "inputs_unchanged": true
+    }
+  ],
+  "status": "PASS",
+  "scope": "SYNTHETIC_COMMON_RUN_LOWER_ONLY_JOB_EXPORT_BLOCKED"
+}

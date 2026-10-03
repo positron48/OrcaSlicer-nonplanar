@@ -107,6 +107,8 @@ template<class Result,class Verify> int audit_geometry(char **argv,bool depositi
     if(query)report["query"]=travel_document(*query);
     if constexpr(forming){if(contact)report["contact_model"]=forming_contact_document(*contact);
         report["forming_contact_cells"]=result.snapshot ? std::count_if(result.snapshot->leaves.begin(),result.snapshot->leaves.end(),[](const auto &leaf){return leaf.forming_contact;}) : 0;
+        if(result.unresolved_cell){const auto &l=*result.unresolved_cell;report["unproved_cell"]={{"record",l.record},{"component",l.component},{"progress",{l.progress.lower,l.progress.upper}},
+            {"local_min",l.local.min},{"local_max",l.local.max},{"world_min",l.world.min},{"world_max",l.world.max}};}
     }
     if(result.snapshot)report["prefix_completed_records"]=result.snapshot->prefix->completed_records;
     if(result.witness){const auto &w=*result.witness;report["witness"]={{"record",w.record},{"component",w.component},{"progress",{w.progress.lower,w.progress.upper}},

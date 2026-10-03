@@ -1,11 +1,13 @@
 #pragma once
 #include "final_material_oracle.hpp"
 #include <map>
+#include <set>
 namespace nptop_test {
 // Independent 113-bit replay/equations for complete cells and partitions. This
 // restricted reference calls no verifier/planner geometry or broad-phase code.
 struct NoFormingContact {bool operator()(const nptop_verify::LinearTravelLeaf &,size_t) const {return false;}};
-template<class Proof,class Permit=NoFormingContact> void check_final_motion(const Proof &proof,const Permit &permit={})
+struct NoMaterialFrontCut {FinalMaterialHigh operator()(const nptop_verify::LinearTravelLeaf &,size_t,const FinalMaterialHigh &front) const {return front;}};
+template<class Proof,class Permit=NoFormingContact,class Cut=NoMaterialFrontCut> void check_final_motion(const Proof &proof,const Permit &permit={},const Cut &cut={})
 {
  using namespace nptop_verify;using H=FinalMaterialHigh;const auto &m=*proof.source;const auto &s=proof.scene;
  const auto steps=replay_material_steps(m);const H guard("1e-20");
@@ -39,7 +41,8 @@ template<class Proof,class Permit=NoFormingContact> void check_final_motion(cons
   }
   for(const auto &obstacle:s.obstacles){bool outside=false;for(size_t a=0;a<3;++a)outside|=leaf.world.max[a]<obstacle.min[a] || leaf.world.min[a]>obstacle.max[a];REQUIRE(outside);}
   for(const auto &b:beads){
-   if(b.record>leaf.record)continue;const H front=b.record==leaf.record ? H(leaf.progress.upper) : H(1);
+   if(b.record>leaf.record)continue;const H front=cut(leaf,b.record,b.record==leaf.record ? H(leaf.progress.upper) : H(1));
+   if(front<=0)continue;
    if(permit(leaf,b.record))continue;
    if(H(leaf.world.min[2])-z>b.top+guard || H(leaf.world.max[2])+z<b.bottom-guard)continue;
    bool broad=false;for(size_t a=0;a<2;++a)broad|=H(leaf.world.min[a])>std::max(b.step.start[a],b.step.end[a])+b.half+2*xy+guard ||
@@ -82,42 +85,72 @@ inline void check_final_forming_contact(const nptop_verify::LinearFormingContact
 {
  using namespace nptop_verify;using H=FinalMaterialHigh;const auto &m=*proof.source;const auto &c=proof.contact;const auto &s=proof.scene;
  const auto steps=replay_material_steps(m);const H guard("1e-20"),xy=H(m.policy.outer_xy_growth_mm)+H(m.policy.numerical_coordinate_error_mm),z=H(m.policy.outer_z_growth_mm)+H(m.policy.numerical_coordinate_error_mm);
- REQUIRE(c.version==1);REQUIRE(c.model_id);REQUIRE(c.revision);REQUIRE(c.synthetic);REQUIRE_FALSE(c.operator_confirmed_claim);
+ const bool polyline=c.version==2;REQUIRE((c.version==1 || polyline));REQUIRE(c.model_id);REQUIRE(c.revision);REQUIRE(c.synthetic);REQUIRE_FALSE(c.operator_confirmed_claim);
+ if(polyline){REQUIRE(c.min_turn_cosine);REQUIRE(*c.min_turn_cosine>-1);REQUIRE(*c.min_turn_cosine<=1);}else REQUIRE_FALSE(c.min_turn_cosine);
  REQUIRE(c.profile_id==s.profile_id);REQUIRE(c.profile_revision==s.revision);REQUIRE(c.material_model_id==m.policy.model_id);
  for(double v:s.tip_center)REQUIRE(v==0);REQUIRE(c.working_radius_mm>s.opening_radius_mm);REQUIRE(c.working_radius_mm<=s.outer_radius_mm);
  H margin(s.uncertainty_mm);for(double v:s.clearance_mm)margin+=H(v);
  REQUIRE(H(c.wake_length_mm)>=H(c.working_radius_mm)+margin+xy-guard);REQUIRE(c.max_top_above_tip_mm<c.gap_min_mm);
- const auto &origin=steps[proof.first_record];const H ox=origin.end[0]-origin.start[0],oy=origin.end[1]-origin.start[1],pi=acos(H(-1));H total=0;
+ const auto &origin=steps[proof.first_record];const H ox=origin.end[0]-origin.start[0],oy=origin.end[1]-origin.start[1],pi=acos(H(-1));H total=0;std::vector<H> arc,widths;
  for(size_t i=proof.first_record;i<proof.first_record+proof.record_count;++i){const auto &b=steps[i];const auto section=*m.declarations[i].section;
-  const H dx=b.end[0]-b.start[0],dy=b.end[1]-b.start[1],dz=b.end[2]-b.start[2],length=sqrt(dx*dx+dy*dy);total+=length;
-  REQUIRE(abs(ox*dy-oy*dx)<H("1e-28"));REQUIRE(ox*dx+oy*dy>0);REQUIRE(dz*dz<=H(c.max_path_gradient)*H(c.max_path_gradient)*length*length+guard);
+  const H dx=b.end[0]-b.start[0],dy=b.end[1]-b.start[1],dz=b.end[2]-b.start[2],length=sqrt(dx*dx+dy*dy);arc.push_back(total);total+=length;
+  if(!polyline){REQUIRE(abs(ox*dy-oy*dx)<H("1e-28"));REQUIRE(ox*dx+oy*dy>0);}
+  else if(i>proof.first_record){const auto &p=steps[i-1];const H px=p.end[0]-p.start[0],py=p.end[1]-p.start[1];
+   REQUIRE((px*dx+py*dy)/(sqrt(px*px+py*py)*length)>=H(*c.min_turn_cosine)-guard);}
+  REQUIRE(dz*dz<=H(c.max_path_gradient)*H(c.max_path_gradient)*length*length+guard);
   REQUIRE(section.kind==m.declarations[proof.first_record].section->kind);if(i>proof.first_record)REQUIRE(b.start==steps[i-1].end);
   const H lo=std::min(H(section.gap_begin_mm),H(section.gap_end_mm)),hi=std::max(H(section.gap_begin_mm),H(section.gap_end_mm));
   REQUIRE(lo>=H(c.gap_min_mm));REQUIRE(hi<=H(c.gap_max_mm));
   const H nominal=b.e*pi*H(m.rates->policy.filament_diameter)*H(m.rates->policy.filament_diameter)/4/H(m.rates->policy.flow);
   const H amin=(nominal*(1-H(m.policy.relative_dose_error))-H(m.policy.absolute_dose_error_mm3))/length,amax=(nominal*(1+H(m.policy.relative_dose_error))+H(m.policy.absolute_dose_error_mm3))/length;
   const H wmin=amin/hi+(section.kind==MaterialSectionKind::Rectangle ? H(0) : (1-pi/4)*hi),wmax=amax/lo+(section.kind==MaterialSectionKind::Rectangle ? H(0) : (1-pi/4)*lo);
+  widths.push_back(wmax);
   REQUIRE(wmin>=H(c.width_min_mm)-guard);REQUIRE(wmax<=H(c.width_max_mm)+guard);
  }
- REQUIRE(H(c.max_path_gradient)*std::min(total,H(c.wake_length_mm))+z<=H(c.max_top_above_tip_mm)+guard);
- for(const auto &leaf:proof.leaves)if(leaf.forming_contact){REQUIRE(leaf.component==0);REQUIRE_FALSE(leaf.outside_annulus);}
+ REQUIRE(H(c.max_path_gradient)*std::min(total,H(c.wake_length_mm))+z+(polyline ? margin : H(0))<=H(c.max_top_above_tip_mm)+guard);
+ for(const auto &leaf:proof.leaves){
+  if(polyline){REQUIRE(leaf.forming_contact==!leaf.contact_records.empty());std::set<size_t> seen;
+   for(size_t record:leaf.contact_records){REQUIRE(seen.insert(record).second);REQUIRE(record>=proof.first_record);REQUIRE(record<=leaf.record);}
+  }else REQUIRE(leaf.contact_records.empty());
+  if(leaf.forming_contact){REQUIRE(leaf.component==0);REQUIRE_FALSE(leaf.outside_annulus);}
+ }
  const auto permit=[&](const LinearTravelLeaf &base,size_t record){const auto &leaf=static_cast<const LinearFormingContactLeaf&>(base);
   if(!leaf.forming_contact)return false;REQUIRE(leaf.component==0);REQUIRE_FALSE(leaf.outside_annulus);
   if(c.working_radius_mm<s.outer_radius_mm){H far=0;for(size_t a=0;a<2;++a)far+=std::max(H(leaf.local.min[a])*H(leaf.local.min[a]),H(leaf.local.max[a])*H(leaf.local.max[a]));
    REQUIRE(far<=H(c.working_radius_mm)*H(c.working_radius_mm)+guard);}
-  const auto &move=steps[leaf.record];const H dx=move.end[0]-move.start[0],dy=move.end[1]-move.start[1],length=sqrt(dx*dx+dy*dy);H lo(std::numeric_limits<double>::max());
+  if(polyline && std::find(leaf.contact_records.begin(),leaf.contact_records.end(),record)==leaf.contact_records.end())return false;
+  const auto &move=steps[polyline ? record : leaf.record];const H dx=move.end[0]-move.start[0],dy=move.end[1]-move.start[1],length=sqrt(dx*dx+dy*dy);H lo(std::numeric_limits<double>::max());
   for(double x:{leaf.world.min[0],leaf.world.max[0]})for(double y:{leaf.world.min[1],leaf.world.max[1]})
    lo=std::min(lo,(dx*(H(x)-move.start[0])+dy*(H(y)-move.start[1]))/length);
-  REQUIRE(lo-H(leaf.progress.upper)*length-xy>=-H(c.wake_length_mm)-guard);
+  if(polyline){const auto &front=steps[leaf.record];const H fx=front.end[0]-front.start[0],fy=front.end[1]-front.start[1];
+   H center_lo(std::numeric_limits<double>::max()),na=center_lo,nb=-na;
+   for(double t:{leaf.progress.lower,leaf.progress.upper}){const H px=front.start[0]+H(t)*fx-move.start[0],py=front.start[1]+H(t)*fy-move.start[1];
+    center_lo=std::min(center_lo,(dx*px+dy*py)/length);const H n=(dx*py-dy*px)/length;na=std::min(na,n);nb=std::max(nb,n);}
+   const H projected_margin=margin*(abs(dx)+abs(dy))/length;
+   const H cross=na<=0 && nb>=0 ? H(0) : std::min(abs(na),abs(nb));
+   const H distance=std::max(H(0),cross-widths[record-proof.first_record]/2-xy-projected_margin),radius(c.working_radius_mm);
+   if(distance>radius+guard)return true; // independent actual disk/strip exclusion
+   const H chord=sqrt(std::max(H(0),radius*radius-distance*distance));
+   const H source=arc[record-proof.first_record]+std::max({H(0),lo-xy,center_lo-chord-projected_margin-xy});
+   const H current=arc[leaf.record-proof.first_record]+H(leaf.progress.upper)*sqrt(fx*fx+fy*fy);
+   return current-source<=H(c.wake_length_mm)+guard;
+  }else REQUIRE(lo-H(leaf.progress.upper)*length-xy>=-H(c.wake_length_mm)-guard);
   return record>=proof.first_record && record<=leaf.record;
  };
- check_final_motion(proof,permit);
+ const auto cut=[&](const LinearTravelLeaf &base,size_t record,const H &front){const auto &leaf=static_cast<const LinearFormingContactLeaf&>(base);
+  if(!polyline || std::find(leaf.contact_records.begin(),leaf.contact_records.end(),record)==leaf.contact_records.end())return front;
+  const auto &b=steps[record],&move=steps[leaf.record];const H dx=b.end[0]-b.start[0],dy=b.end[1]-b.start[1],mx=move.end[0]-move.start[0],my=move.end[1]-move.start[1];
+  const H current=arc[leaf.record-proof.first_record]+H(leaf.progress.upper)*sqrt(mx*mx+my*my);
+  return std::min(front,std::max(H(0),(current-H(c.wake_length_mm)-arc[record-proof.first_record])/sqrt(dx*dx+dy*dy)));
+ };
+ check_final_motion(proof,permit,cut);
 }
 // Independent section witness check. A complete world enclosure lies in a
 // largest-dose section with one admissible common along/transverse/Z translation. No
 // product membership query and no future/full-end substitution is used.
-inline void check_deposition_witness(const nptop_verify::LinearMaterialSnapshot &m,const nptop_verify::LinearTravelScene &scene,
- const nptop_verify::LinearTravelWitness &w)
+struct NoWitnessAgeRestriction {bool operator()(size_t,const FinalMaterialHigh &,const FinalMaterialHigh &) const {return true;}};
+template<class Forbidden=NoWitnessAgeRestriction> void check_deposition_witness(const nptop_verify::LinearMaterialSnapshot &m,const nptop_verify::LinearTravelScene &scene,
+ const nptop_verify::LinearTravelWitness &w,const Forbidden &forbidden={})
 {
  using namespace nptop_verify;using H=FinalMaterialHigh;const auto steps=replay_material_steps(m);const H guard("1e-20"),t(w.progress.lower);
  REQUIRE(w.progress.lower==w.progress.upper);REQUIRE(w.material_event);REQUIRE(w.component<=scene.head.size());
@@ -137,11 +170,11 @@ inline void check_deposition_witness(const nptop_verify::LinearMaterialSnapshot 
   if(a<-guard || c>front+guard)continue;
   const H ha=h0+dh*a,hb=h0+dh*c,za=b.start[2]+dz*a,zb=b.start[2]+dz*c;
   const H n=std::max(abs(na+transverse*xy),abs(nb+transverse*xy));
-  if(section.kind==MaterialSectionKind::Rectangle)inside|=n<=dose/length/std::max(ha,hb)/2+guard && H(w.point.max[2])+vertical*growth<=std::min(za,zb)+guard &&
+  if(section.kind==MaterialSectionKind::Rectangle)inside|=forbidden(i,a,c) && n<=dose/length/std::max(ha,hb)/2+guard && H(w.point.max[2])+vertical*growth<=std::min(za,zb)+guard &&
     H(w.point.min[2])+vertical*growth>=std::max(za-ha,zb-hb)-guard;
   else {const H core=(dose/length/std::max(ha,hb)-acos(H(-1))*std::max(ha,hb)/4)/2,ca=za-ha/2,cb=zb-hb/2;
    const H lateral=std::max(H(0),n-core),vertical_distance=std::max(abs(H(w.point.min[2])+vertical*growth-std::max(ca,cb)),abs(H(w.point.max[2])+vertical*growth-std::min(ca,cb)));
-   inside|=lateral*lateral+vertical_distance*vertical_distance<=std::min(ha,hb)*std::min(ha,hb)/4+guard;}
+   inside|=forbidden(i,a,c) && lateral*lateral+vertical_distance*vertical_distance<=std::min(ha,hb)*std::min(ha,hb)/4+guard;}
  }
  REQUIRE(inside);
  MaterialRegion local;for(size_t a=0;a<3;++a){const H pose=move.start[a]+t*(move.end[a]-move.start[a]);
@@ -152,5 +185,17 @@ inline void check_deposition_witness(const nptop_verify::LinearMaterialSnapshot 
  if(!w.component){H near=0,far=0;for(size_t a=0;a<2;++a){const H a0=H(local.min[a])-H(scene.tip_center[a]),a1=H(local.max[a])-H(scene.tip_center[a]);
    near+=a0<=0 && a1>=0 ? H(0) : std::min(a0*a0,a1*a1);far+=std::max(a0*a0,a1*a1);}
   REQUIRE(near<=H(scene.outer_radius_mm)*H(scene.outer_radius_mm)+guard);REQUIRE(far>=H(scene.opening_radius_mm)*H(scene.opening_radius_mm)-guard);}
+}
+inline void check_polyline_contact_witness(const nptop_verify::LinearMaterialSnapshot &m,const nptop_verify::LinearTravelScene &s,
+ const nptop_verify::LinearFormingContactModel &model,size_t first,const nptop_verify::LinearTravelWitness &w)
+{
+ using H=FinalMaterialHigh;const auto steps=replay_material_steps(m);std::vector<H> arc;H total=0;
+ for(size_t i=first;i<=w.record;++i){arc.push_back(total);const auto &b=steps[i];const H dx=b.end[0]-b.start[0],dy=b.end[1]-b.start[1];total+=sqrt(dx*dx+dy*dy);}
+ const auto &move=steps[w.record];const H dx=move.end[0]-move.start[0],dy=move.end[1]-move.start[1];
+ const H current=arc[w.record-first]+H(w.progress.lower)*sqrt(dx*dx+dy*dy);
+ const auto old=[&](size_t record,const H &,const H &source_upper){if(w.component || record<first)return true;
+  const auto &b=steps[record];const H bx=b.end[0]-b.start[0],by=b.end[1]-b.start[1];
+  return current-(arc[record-first]+source_upper*sqrt(bx*bx+by*by))>H(model.wake_length_mm)+H("1e-20");};
+ check_deposition_witness(m,s,w,old);
 }
 }

@@ -7,6 +7,24 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B12-forming-polyline.md` and ADR-0085 add explicit version2 contact with
+per-packet cumulative arc age and signed turn bounds. Whole-cell disk/strip and
+forbidden-old-prefix proofs retain every original margin. The full native108-
+packet thin contour is FAIL against older adjacent material (record2094/event2077),
+with an earlier unproved cell retained; no missing cell can publish PASS.
+Prospective4 packets PASS; independent113-bit whole-cell/aged-witness references
+pass. Focus19/2077068, CTest444/444, CLI242+90 and six strict OFF/ZAA pairs pass.
+Old Travel4/Deposit4/v1-contact6 inputs/proofs are exact. Earlier native12/19 files
+are exact;7 explicit dependency differences are localized to derived-body
+vertex16/17 index exchange and corresponding hash paths, with graph owners
+kept separate/unqualified. Fixed17 remains4 PASS/RUN plus13 UNKNOWN/NOT_RUN;
+full B01–B15 active, export BLOCK. Next qualified old-support/adjacent contact,
+seams/full fixed-width fill and all whole-job geometry/order/provenance/publication.
+Linux new source/Windows/full GUI/physical and independent review remain pending.
+Standard U1 head/.4 nozzle known; firmware/material brand do not gate software.
+
+Earlier component records (historical scope):
+
 `B12-forming-contact.md` and ADR-0084 now check a declared synthetic working-face
 model for complete forward collinear final-decimal Deposit runs. Recent-material
 age, full width/gap/gradient/top domain and every other rigid Upper/head/static

@@ -794,3 +794,85 @@ TEST_CASE("B12 forming contact model JSON owns each bound and rejects duplicate 
  auto nested=document;nested["working_radius_mm"]=nlohmann::json{{"value",.5}};REQUIRE_THROWS(parse_forming_contact_document(nested.dump()));
  auto version=document;version["version"]=2;REQUIRE_THROWS(parse_forming_contact_document(version.dump()));
 }
+namespace {
+LinearMaterialResult polyline_material(const std::vector<std::array<double,3>> &points)
+{
+ auto p=material_policy();std::array<double,3> previous{0,0,.5};std::vector<MaterialDeclaration> rows;
+ std::ostringstream bytes;bytes.imbue(std::locale::classic());bytes<<"G90\nM83\nM400\nM204 S4\n"<<std::fixed<<std::setprecision(9);
+ const auto append=[&](std::array<double,3> end,bool deposit){const double length=std::hypot(end[0]-previous[0],end[1]-previous[1]);
+  const double e=deposit ? std::round(.04*length*1e9)/1e9 : 0;
+  bytes<<"G1 X"<<end[0]<<" Y"<<end[1]<<" Z"<<end[2];if(e)bytes<<" E"<<e;bytes<<" F30\nM400\n";
+  const double volume=(High(e)*acos(High(-1))*High("1.75")*High("1.75")/4/High(rate_policy().flow)).convert_to<double>();
+  rows.push_back({uint64_t(rows.size()+1),rows.size(),deposit ? MaterialEventKind::Deposit : MaterialEventKind::Travel,previous,end,volume,0,
+   deposit ? std::optional<MaterialSection>(MaterialSection{MaterialSectionKind::Rectangle,.2,.2}) : std::nullopt});previous=end;};
+ for(const auto &point:points)append(point,true);auto end=previous;end[2]+=.1;append(end,false);end[0]+=4;append(end,true);
+ const auto rates=verify_linear_rates(bytes.str(),{0,0,.5},rate_policy());REQUIRE(rates.snapshot);return reconstruct_linear_material(rates.snapshot,rows,p);
+}
+LinearFormingContactModel polyline_model(const LinearMaterialSnapshot &source,const LinearTravelScene &scene)
+{auto model=forming_model(source,scene);model.version=2;model.min_turn_cosine=0;
+ // Right-angle geometry also includes the old bead's transverse half width:
+ // sqrt(2)*.5 + .55/2 + 2*.0200001 < 1.05 mm, with the original errors.
+ model.wake_length_mm=1.05;model.max_path_gradient=.064;return model;}
+}
+TEST_CASE("B12 polyline working contact covers every turn without resetting material age", "[Nonplanar][B12][FinalBytePolylineContact]")
+{
+ const auto scene=travel_scene();
+ for(const auto &points:std::vector<std::vector<std::array<double,3>>>{{{2,0,.5},{2,2,.5}},{{-2,0,.5},{-2,-2,.5}},
+   {{2,0,.54},{2,2,.58},{4,2,.62}},{{1.2,1.6,.5},{-.4,2.8,.5}}}){
+  const auto source=polyline_material(points);REQUIRE(source.snapshot);
+  const auto old=verify_linear_forming_contact_geometry(source.snapshot,0,points.size(),scene,forming_model(*source.snapshot,scene));REQUIRE(old.status==RateStatus::Unknown);
+  const auto formed=verify_linear_forming_contact_geometry(source.snapshot,0,points.size(),scene,polyline_model(*source.snapshot,scene));INFO(formed.reason);REQUIRE(formed.snapshot);
+  REQUIRE(std::any_of(formed.snapshot->leaves.begin(),formed.snapshot->leaves.end(),[](const auto &l){return l.contact_records.size()>1;}));
+  nptop_test::check_final_forming_contact(*formed.snapshot);
+ }
+}
+TEST_CASE("B12 polyline old seams and nearby earlier legs remain forbidden", "[Nonplanar][B12][FinalBytePolylineContact]")
+{
+ const auto scene=travel_scene();
+ const auto corner=polyline_material({{2,0,.5},{2,2,.5}});REQUIRE(corner.snapshot);auto short_wake=polyline_model(*corner.snapshot,scene);short_wake.wake_length_mm=.8;short_wake.max_path_gradient=.08;
+ const auto age=verify_linear_forming_contact_geometry(corner.snapshot,0,2,scene,short_wake);REQUIRE(age.status==RateStatus::Fail);REQUIRE(age.witness);REQUIRE(age.witness->material_event==1);
+ nptop_test::check_polyline_contact_witness(*corner.snapshot,scene,short_wake,0,*age.witness);
+ for(const auto &points:std::vector<std::vector<std::array<double,3>>>{{{2,0,.5},{2,2,.5},{0,2,.5},{0,0,.5}},{{4,0,.5},{4,.3,.5},{0,.3,.5}}}){
+  const auto source=polyline_material(points);REQUIRE(source.snapshot);
+  const auto refused=verify_linear_forming_contact_geometry(source.snapshot,0,points.size(),scene,polyline_model(*source.snapshot,scene));INFO(refused.reason);
+  REQUIRE(refused.status==RateStatus::Fail);REQUIRE(refused.witness);REQUIRE(refused.witness->material_event==1);
+  nptop_test::check_polyline_contact_witness(*source.snapshot,scene,polyline_model(*source.snapshot,scene),0,*refused.witness);
+ }
+ const auto source=polyline_material({{2,0,.5},{0,0,.5}});REQUIRE(source.snapshot);
+ REQUIRE(verify_linear_forming_contact_geometry(source.snapshot,0,2,scene,polyline_model(*source.snapshot,scene)).status==RateStatus::Unknown);
+ auto margin=scene;margin.clearance_mm[0]=.01;const auto only_unresolved=polyline_material({{4,0,.74},{4,.25,.74},{3.72,.25,.7232}});REQUIRE(only_unresolved.snapshot);
+ auto model=polyline_model(*only_unresolved.snapshot,margin);model.max_top_above_tip_mm=.095;
+ const auto incomplete=verify_linear_forming_contact_geometry(only_unresolved.snapshot,0,3,margin,model);
+ INFO(incomplete.reason);REQUIRE(incomplete.status==RateStatus::Unknown);REQUIRE_FALSE(incomplete.snapshot);REQUIRE_FALSE(incomplete.witness);REQUIRE(incomplete.unresolved_cell);
+}
+TEST_CASE("B12 polyline contact version bounds and publication are explicit and fail closed", "[Nonplanar][B12][FinalBytePolylineContact]")
+{
+ const auto source=polyline_material({{2,0,.5},{2,2,.5}});REQUIRE(source.snapshot);const auto scene=travel_scene();const auto model=polyline_model(*source.snapshot,scene);
+ const auto document=forming_contact_document(model);REQUIRE(document.size()==17);REQUIRE(forming_contact_document(parse_forming_contact_document(document.dump()))==document);
+ for(const auto &item:document.items()){auto missing=document;missing.erase(item.key());REQUIRE_THROWS(parse_forming_contact_document(missing.dump()));
+  auto duplicate=document.dump();duplicate.insert(duplicate.find('\"'+item.key()+'\"'),'\"'+item.key()+"\":"+item.value().dump()+',');REQUIRE_THROWS(parse_forming_contact_document(duplicate));}
+ auto boolean=document;boolean["min_turn_cosine"]=true;REQUIRE_THROWS(parse_forming_contact_document(boolean.dump()));
+ for(int mode=0;mode<7;++mode){auto copy=model;LinearFormingContactLimits limits;
+  if(mode==0)copy.min_turn_cosine.reset();if(mode==1)copy.min_turn_cosine=-1;if(mode==2)copy.min_turn_cosine=1.01;
+  if(mode==3)copy.min_turn_cosine=.01;if(mode==4)copy.version=1;if(mode==5)limits.max_cells=1;
+  if(mode==6)limits.is_contact_current=[](uint64_t,uint64_t){return false;};
+  const auto result=verify_linear_forming_contact_geometry(source.snapshot,0,2,scene,copy,limits);REQUIRE(result.status==RateStatus::Unknown);REQUIRE_FALSE(result.snapshot);REQUIRE_FALSE(result.witness);
+ }
+ size_t calls=0;LinearFormingContactLimits limits;limits.cancelled=[&]{++calls;return false;};
+ const auto positive=verify_linear_forming_contact_geometry(source.snapshot,0,2,scene,model,limits);REQUIRE(positive.snapshot);
+ const auto last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};const auto late=verify_linear_forming_contact_geometry(source.snapshot,0,2,scene,model,limits);
+ REQUIRE(late.status==RateStatus::Unknown);REQUIRE_FALSE(late.snapshot);REQUIRE_FALSE(late.witness);
+ auto caller_model=model;limits.cancelled=[&]{caller_model.min_turn_cosine=1;return false;};
+ const auto captured=verify_linear_forming_contact_geometry(source.snapshot,0,2,scene,caller_model,limits);REQUIRE(captured.snapshot);
+ REQUIRE(captured.snapshot->contact.min_turn_cosine==0);nptop_test::check_final_forming_contact(*captured.snapshot);
+ const auto closed=polyline_material({{2,0,.5},{2,2,.5},{0,2,.5},{0,0,.5}});REQUIRE(closed.snapshot);
+ calls=0;limits.cancelled=[&]{++calls;return false;};const auto negative=verify_linear_forming_contact_geometry(closed.snapshot,0,4,scene,model,limits);
+ REQUIRE(negative.status==RateStatus::Fail);REQUIRE(negative.witness);const auto negative_last=calls;
+ calls=0;limits.cancelled=[&]{return ++calls==negative_last;};const auto late_negative=verify_linear_forming_contact_geometry(closed.snapshot,0,4,scene,model,limits);
+ REQUIRE(late_negative.status==RateStatus::Unknown);REQUIRE_FALSE(late_negative.snapshot);REQUIRE_FALSE(late_negative.witness);
+ const auto obtuse=polyline_material({{2,0,.5},{1,2,.5}});REQUIRE(obtuse.snapshot);auto turning=polyline_model(*obtuse.snapshot,scene);
+ turning.min_turn_cosine=-.6;turning.wake_length_mm=1.6;turning.max_path_gradient=.03;
+ const auto accepted=verify_linear_forming_contact_geometry(obtuse.snapshot,0,2,scene,turning);INFO(accepted.reason);REQUIRE(accepted.snapshot);
+ nptop_test::check_final_forming_contact(*accepted.snapshot);
+ turning.min_turn_cosine=-.4;REQUIRE(verify_linear_forming_contact_geometry(obtuse.snapshot,0,2,scene,turning).status==RateStatus::Unknown);
+}

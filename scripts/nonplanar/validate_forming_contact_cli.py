@@ -7,6 +7,7 @@ p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--executable', type=Path, required=True)
 p.add_argument('--fixture-dir', type=Path, required=True)
 p.add_argument('--output-dir', type=Path, required=True)
+p.add_argument('--model-version', type=int, choices=[1, 2], default=1)
 a = p.parse_args()
 exe, root = a.executable.resolve(), a.output_dir.resolve()
 root.mkdir(parents=True, exist_ok=False)
@@ -33,6 +34,8 @@ contact = {
     'gap_min_mm': .1, 'gap_max_mm': .3, 'width_min_mm': .1,
     'width_max_mm': .55, 'max_path_gradient': .1,
 }
+if a.model_version == 2:
+    contact.update(version=2, min_turn_cosine=0, wake_length_mm=1.05, max_path_gradient=.064)
 cases = [(name, 'PASS') for name in ['complete-two-packets', 'reverse', 'rotated',
          'varying-gap', 'rising', 'descending', 'moving-envelope']]
 cases += [(name, 'FAIL') for name in ['current-head', 'static-tip', 'old-neighbor', 'changed-e']]
@@ -44,6 +47,10 @@ cases += [(name, 'UNKNOWN') for name in ['partial-block', 'skip-first', 'mixed-b
 for key, value in contact.items():
     cases += [(f'missing:{key}', 'UNKNOWN'), (f'duplicate:{key}', 'UNKNOWN')]
     if not isinstance(value, bool): cases.append((f'boolean:{key}', 'UNKNOWN'))
+if a.model_version == 2:
+    cases = [(name, 'PASS' if name == 'turn' else status) for name, status in cases]
+    cases += [('closed-loop', 'FAIL'), ('nearby-leg', 'FAIL'), ('short-corner-wake', 'FAIL'),
+              ('turn-limit', 'UNKNOWN'), ('turn-lower-domain', 'UNKNOWN'), ('turn-upper-domain', 'UNKNOWN')]
 records = []
 for name, status in cases:
     work = root / name.replace(':', '-')
@@ -72,9 +79,17 @@ for name, status in cases:
         append(pose(4), .16)
         append(pose(0), 0)
         first = 2
-    append(pose(2), .08, .2, .22 if name == 'varying-gap' else .2)
-    append([2, 2, .5] if name == 'turn' else pose(0) if name == 'reversal' else pose(4),
-           .08, .22 if name == 'varying-gap' else .2, .24 if name == 'varying-gap' else .2)
+    if name == 'closed-loop':
+        for end in [[2, 0, .5], [2, 2, .5], [0, 2, .5], [0, 0, .5]]: append(end, .08)
+    elif name == 'nearby-leg':
+        append([4, 0, .5], .16)
+        append([4, .3, .5], .012)
+        append([0, .3, .5], .16)
+    else:
+        append(pose(2), .08, .2, .22 if name == 'varying-gap' else .2)
+        append([2, 2, .5] if name in ['turn', 'short-corner-wake', 'turn-limit'] else pose(0) if name == 'reversal' else pose(4),
+               .08, .22 if name == 'varying-gap' else .2, .24 if name == 'varying-gap' else .2)
+    count = len(rows) - first
     # Terminate the maximal Deposit block with real Travel. The later, large
     # Deposit must not become previous material or a negative witness.
     end = list(previous)
@@ -99,8 +114,12 @@ for name, status in cases:
     if name == 'event-contact': rows[first]['contact_model_id'] = 101
     if name == 'nested': c['working_radius_mm'] = {'value': .5}
     if name == 'extra': c['allow_all_material'] = True
-    if name == 'version': c['version'] = 2
-    q = {'version': 1, 'first_record': first, 'record_count': 2, 'scene': s}
+    if name == 'version': c['version'] = a.model_version + 1
+    if name == 'short-corner-wake': c['wake_length_mm'], c['max_path_gradient'] = .8, .08
+    if name == 'turn-limit': c['min_turn_cosine'] = .01
+    if name == 'turn-lower-domain': c['min_turn_cosine'] = -1
+    if name == 'turn-upper-domain': c['min_turn_cosine'] = 1.01
+    q = {'version': 1, 'first_record': first, 'record_count': count, 'scene': s}
     if name == 'partial-block': q['record_count'] = 1
     if name == 'skip-first': q['first_record'], q['record_count'] = 1, 1
     if name == 'mixed-block': q['record_count'] = 3
@@ -128,9 +147,10 @@ for name, status in cases:
     assert run.returncode == {'PASS': 0, 'FAIL': 2, 'UNKNOWN': 3}[status] and report['component_status'] == status, (name, run.returncode, report)
     assert report['component'] == 'final_byte_forming_contact_geometry' and report['job_status'] == 'UNKNOWN' and report['export_allowed'] is False
     if status == 'PASS': assert report['forming_contact_cells'] > 0 and report['leaves'] > 0 and report['prefix_completed_records'] == first
-    if name in ['current-head', 'static-tip', 'old-neighbor']: assert report['witness'] is not None
+    if name in ['current-head', 'static-tip', 'old-neighbor', 'closed-loop', 'nearby-leg', 'short-corner-wake']: assert report['witness'] is not None
     if name == 'current-head': assert report['witness']['component'] == 5
     if name == 'old-neighbor': assert report['witness']['material_event'] == 1
+    if name in ['closed-loop', 'nearby-leg', 'short-corner-wake']: assert report['witness']['material_event'] == 1
     assert before == {f.name: hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
     records.append({'case': name, 'command': cmd, 'exit_code': run.returncode,
                     'component_status': status, 'inputs_unchanged': True})

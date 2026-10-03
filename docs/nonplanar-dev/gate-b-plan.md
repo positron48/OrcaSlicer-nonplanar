@@ -4,14 +4,22 @@ Active objective: implement the entire B01–B15 scope. A bounded primitive or a
 green unit suite is evidence for its own contract, not completion of a B task.
 The normative backlog, SPEC and acceptance matrix remain unchanged.
 
-ADR-0084 / `B12-forming-contact.md` add a bounded independent final-byte recent
-forming-run working-face model. Original rigid scene/material/margins remain;
-only complete forward collinear Deposit runs qualify. Native closed contour
-remains UNKNOWN at turns and adjacent hatch FAIL against the earlier contour;
-prospective nonplanar4-packet run PASS. This declared synthetic assumption does
-not complete qualified support/contact, cap/seam/fill or full job B12. New focus
-15/1975217, CTest440/440, CLI161+81 and six strict OFF/ZAA pass; mandatory17
-retains13 UNKNOWN/NOT_RUN and export BLOCK. Full B01–B15 remains active.
+`B12-forming-polyline.md` and ADR-0085 add explicit version2 contact with
+per-packet cumulative arc age and signed turn bounds. Whole-cell disk/strip and
+forbidden-old-prefix proofs retain every original margin. The full native108-
+packet thin contour is FAIL against older adjacent material (record2094/event2077),
+with an earlier unproved cell retained; no missing cell can publish PASS.
+Prospective4 packets PASS; independent113-bit whole-cell/aged-witness references
+pass. Focus19/2077068, CTest444/444, CLI242+90 and six strict OFF/ZAA pairs pass.
+Old Travel4/Deposit4/v1-contact6 inputs/proofs are exact. Earlier native12/19 files
+are exact;7 explicit dependency differences are localized to derived-body
+vertex16/17 index exchange and corresponding hash paths, with graph owners
+kept separate/unqualified. Fixed17 remains4 PASS/RUN plus13 UNKNOWN/NOT_RUN;
+full B01–B15 active, export BLOCK. Next qualified old-support/adjacent contact,
+seams/full fixed-width fill and all whole-job geometry/order/provenance/publication.
+Linux new source/Windows/full GUI/physical and independent review remain pending.
+Standard U1 head/.4 nozzle known; firmware/material brand do not gate software.
+
 
 | Task | Required deliverable | Current authoritative state | Remaining work |
 |---|---|---|---|
@@ -26,7 +34,7 @@ retains13 UNKNOWN/NOT_RUN and export BLOCK. Full B01–B15 remains active.
 | B09 | Полный порядок без downstream reordering; проверенные переезды | Protected complete lift/transfer/descent with whole head/static/actual prefix and shared limits; exact prospective bead/parent/material owner and native .28 mm departure PASS (ADR-0080), original wide Upper FAIL retained; smaller .2 mm final material replay refuses | Protected departure/origin map is now bound to native job/attempt (ADR-0081); qualify full fixed-width cap fill/contact/access and final-byte geometry, select admissible heights, preserve complete job/downstream order and verify all entry/exit/travel/prolog/parking/end motions. |
 | B10 | Однозначный V→E, full Z/axis/Q bounds, firmware constraints | Protected whole-journal full-stop linear plan; all XYZ/Cartesian-CoreXY drive/E/Q/cross-section/acceleration/pressure/event-rate bounds; exact dose/pose/order preservation; native 2218 rows | Bounded native candidate now expresses stops/global acceleration/dwell; complete final-byte verifier, actual transform/flow/contact and complete cap-volume/job contracts remain. |
 | B11 | Конечный candidate; no double Z/E, no hidden wipe/reset | Protected complete native bytes/hash/policy/event map with explicit XYZ/E/pressure/dwell/full stops; final native 2218 rows | Audited final filters, complete prolog/end motions, native job binding and final geometry/rate/time verification. |
-| B12 | Parser/replay последнего текста, material/limits checks, independent oracles | Independent exact final-byte rates/dose/sections/actual prefixes, whole-region solids/union partitions, synthetic common-run Lower and exact Nominal packet-cut union with analytical/native complete-run gap/Lower anchor proofs; native full support PASS at original budgets, interior PASS/per-event/front refusals retained; independent whole final-decimal Travel block annulus/head/static/actual-prefix Upper geometry and complete partitions (ADR-0082), native three-leg departure PASS at original budgets; maximal whole final-decimal Deposit block rigid head/static/earlier and simultaneous current Upper with complete independent partitions (ADR-0083), native four-packet block PASS at original budgets | General curved/zigzag/stepped coverage/contact/gaps, union volume and delivered-dose qualification, transforms, complete route/job integrity. |
+| B12 | Parser/replay последнего текста, material/limits checks, independent oracles | Independent exact final-byte rates/dose/sections/actual prefixes, whole-region solids/union partitions, synthetic common-run Lower and exact Nominal packet-cut union with analytical/native complete-run gap/Lower anchor proofs; native full support PASS at original budgets, interior PASS/per-event/front refusals retained; independent whole final-decimal Travel block annulus/head/static/actual-prefix Upper geometry and complete partitions (ADR-0082), native three-leg departure PASS at original budgets; maximal whole final-decimal Deposit block rigid head/static/earlier and simultaneous current Upper with complete independent partitions (ADR-0083), native four-packet block PASS at original budgets; explicit polyline version2 per-packet age, signed turns and old-prefix exclusion (ADR-0085); native full contour old-neighbor FAIL independently confirmed | General curved/zigzag/stepped coverage/contact/gaps, union volume and delivered-dose qualification, transforms, complete route/job integrity. |
 | B13 | Нет обхода file/CLI; cancellation/stale, network off, snapshot/hash binding | Owned executed source/placement/partition/native body/material/hatch/selected cap/linear-candidate lineage (optional manifest v2) plus exact protected departure/material/origin-map edge (native plan v2, optional manifest v3; ADR-0081), native/plate/resource attempts; protected actual final-byte rate/material report with fixed 17 mandatory IDs; 13 missing domains stay UNKNOWN/NOT_RUN and block export; native2218-record path and stale/foreign admission exercised | Qualify source-to-plan/resource/software/GUI provenance and all complete mandatory domains; Verified and atomic publication/recovery/copied-byte gate for every route. Derived body indexed representation drift is localized but not qualified. Working phases/component PASS are not certificates. |
 | B14 | Управляемый сквозной путь в Orca, diagnostics и replay по движению | Native diagnostic STL CLI only | Native UI/CLI integrated full pipeline, explained failures, treatment area and final replay preview. |
 | B15 | Измеренный профиль и validated файл; клин/пологий купол; протокол, не автозапуск | Operator record is UNCONFIRMED; physical tests NOT_RUN | Measured installed U1 profile, bed/firmware/material prerequisites, planar reference and observed wedge/dome runs. Operator evidence is mandatory. |
