@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="nonplanar_tests" errors="0" failures="0" skipped="0" tests="100" hostname="tbd" time="0.407" timestamp="2026-10-03T19:10:18Z">
+    <properties>
+      <property name="random-seed" value="1182857072"/>
+      <property name="filters" value="[RoofChord]"/>
+    </properties>
+    <testcase classname="nonplanar_tests.global" name="B07 affine roof chords bound finite paths across rounded shoulders and owner valleys" time="0.192" status="run">
+      <system-out>
+roof chord rows=1 axis=0 segments=22 packets=22 work=274
+roof chord rows=1 axis=1 segments=22 packets=22 work=274
+roof chord rows=3 axis=0 segments=76 packets=84 work=1797
+roof chord rows=3 axis=1 segments=76 packets=84 work=1797
+      </system-out>
+    </testcase>
+    <testcase classname="nonplanar_tests.global" name="B07 roof chords preserve transverse gap and original work packet callback refusals" time="0.215" status="run"/>
+    <system-out>
+roof chord rows=1 axis=0 segments=22 packets=22 work=274
+roof chord rows=1 axis=1 segments=22 packets=22 work=274
+roof chord rows=3 axis=0 segments=76 packets=84 work=1797
+roof chord rows=3 axis=1 segments=76 packets=84 work=1797
+    </system-out>
+    <system-err/>
+  </testsuite>
+</testsuites>

@@ -5003,7 +5003,35 @@ void check_native_hatch_precision(bool transverse)
     REQUIRE(integral.nominal_volume_mm3->lower<=first.prospective_volume_mm3.upper);
     const auto before=plan_first_cap({"",hatches.snapshot->native->hatches},options.first.contour,
         {{roi.min_x,roi.min_y,4.0},{roi.max_x,roi.max_y,4.7}},options.second.cap);
-    REQUIRE_FALSE(before.snapshot);REQUIRE(before.reason==(transverse ? "FIRST_HATCH_ROOF_SEGMENT_LIMIT" : "FIRST_HATCH_ROOF_DEPTH_LIMIT"));
+    REQUIRE_FALSE(before.snapshot);
+    if(transverse) REQUIRE(before.reason.find("MATERIAL_UNION_WORK_LIMIT paths=")==0);
+    else REQUIRE(before.reason=="FIRST_HATCH_ROOF_DEPTH_LIMIT");
+    nlohmann::json chord_paths=nlohmann::json::array();
+    if(transverse) {
+        auto bead_limits=options.second.cap.beads;
+        bead_limits.packets.maximum_volume_error=Volume(options.second.cap.beads.packets.maximum_volume_error.value()/double(first.lines.size()));
+        size_t segments=0,packets=0;double volume_error=0;
+        for(size_t i=0;i<first.lines.size();++i) {
+            const auto plan=plan_first_hatch_footprint_bead({"",native.hatches},i,bead_limits);INFO(plan.reason);REQUIRE(plan.snapshot);
+            const auto &path=*plan.snapshot;REQUIRE(path.source==native.hatches);REQUIRE(path.roof_domain==FirstHatchRoofDomain::FiniteWidth);
+            REQUIRE(path.maximum_gap_error_mm<=bead_limits.maximum_gap_error.value());
+            REQUIRE(path.maximum_width_error_mm<=bead_limits.packets.maximum_width_error.value());
+            REQUIRE(path.total_volume_error_mm3<=bead_limits.packets.maximum_volume_error.value());
+            segments+=path.roof_segments;packets+=path.pieces.size();volume_error+=path.total_volume_error_mm3;
+            nlohmann::json pieces=nlohmann::json::array();
+            for(const auto &p:path.pieces)pieces.push_back({{"start",{p.start.x(),p.start.y(),p.start.z()}},
+                {"end",{p.end.x(),p.end.y(),p.end.z()}},{"gap",{p.section.gap_begin_mm,p.section.gap_end_mm}},
+                {"width",{p.section.width_mm.lower,p.section.width_mm.upper}},{"volume",p.volume.value()}});
+            chord_paths.push_back({{"pieces",pieces},{"target",{path.actual_target_volume_mm3.lower,path.actual_target_volume_mm3.upper}},
+                {"delivered",{path.deposited_volume_mm3.lower,path.deposited_volume_mm3.upper}},
+                {"gap_error",path.maximum_gap_error_mm},{"width_error",path.maximum_width_error_mm},
+                {"volume_error",path.total_volume_error_mm3},{"numeric",path.numerical_error_upper_mm},
+                {"segments",path.roof_segments},{"evaluations",path.evaluations}});
+        }
+        REQUIRE(segments<=options.second.cap.beads.max_roof_segments);
+        REQUIRE(packets<=options.second.cap.beads.packets.max_segments);
+        REQUIRE(volume_error<=options.second.cap.beads.packets.maximum_volume_error.value());
+    }
     if(!transverse) {
         for(int mode=0;mode<5;++mode){auto bad=limits;
             if(mode==0)bad.passes.material.max_cells=1;
@@ -5045,6 +5073,16 @@ void check_native_hatch_precision(bool transverse)
         const auto dir=boost::filesystem::path(directory);boost::filesystem::create_directories(dir);
         boost::nowide::ofstream out((dir/(transverse ? "native-hatch-precision-transverse.json" : "native-hatch-precision-parallel.json")).string());
         REQUIRE(out.good());out<<witness.dump(2)<<'\n';out.close();REQUIRE(out.good());
+        if(transverse) {
+            const nlohmann::json chord={{"schema",1},{"scope","INDIVIDUAL_FINITE_FIRST_HATCH_ROOF_CHORDS_ONLY"},{"export","BLOCK"},
+                {"body_axis",x ? 0 : 1},{"revision",sequence.revision},{"journal",witness.at("journal")},
+                {"footprint",rect(roi)},{"nominal_width",request.second.width.value()},
+                {"limits",{options.second.cap.beads.maximum_gap_error.value(),options.second.cap.beads.packets.maximum_width_error.value(),
+                    options.second.cap.beads.packets.maximum_volume_error.value(),options.second.cap.beads.max_roof_segments,
+                    options.second.cap.beads.packets.max_segments,options.second.cap.beads.max_evaluations}},
+                {"support_plane",request.first.support_plane_z_mm},{"cap_refusal",before.reason},{"paths",chord_paths}};
+            boost::nowide::ofstream trace((dir/"native-roof-chord.json").string());REQUIRE(trace.good());trace<<chord.dump(2)<<'\n';trace.close();REQUIRE(trace.good());
+        }
     }
 }
 }

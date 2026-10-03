@@ -1,0 +1,114 @@
+{
+  "binary_sha256": "8d857e3d2c2ca177c420ed264fe1ef6f6c5687fd2ad99021150fb4a66217a91e",
+  "verification": "NOT_RUN",
+  "runs": [
+    {
+      "model": "flat_block",
+      "mode": "off",
+      "exit_code": 0,
+      "input_sha256": {
+        "docs/nonplanar/fixtures/models/flat_block.stl": "2006064a6ca57fe1da6c1f6a9ae6a0c8abbc4d543de38379f073c47890730b46",
+        "tests/nonplanar/data/baseline/machine.json": "4d8a045436e3f6f179707141a6a7ecac1344346622f10a9297ed5a60cc9af46c",
+        "tests/nonplanar/data/baseline/process-off.json": "49a8dd03c18acd46a2f963d8a521dcf366c463fc4a9734310d3b98ac93e5f06f",
+        "tests/nonplanar/data/baseline/filament.json": "a7782111b44cf9dcea43cb0f3f54ec94bee36d9dcb73b00b84516fd55e419d13"
+      },
+      "files": {
+        "flat_block-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+        "flat_block-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flat_block-off/run.log.json": "201db84af11282877d1b2a3351606dc1c8e481cd139da71c100400befb5dea63",
+        "flat_block-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+        "flat_block-off/output/plate_1.gcode": "f14f62d9add6d4b9d81b541bf538c9534a7927a4bb1ab5580fc3bc8f9fbcfba2"
+      }
+    },
+    {
+      "model": "flat_block",
+      "mode": "zaa",
+      "exit_code": 0,
+      "input_sha256": {
+        "docs/nonplanar/fixtures/models/flat_block.stl": "2006064a6ca57fe1da6c1f6a9ae6a0c8abbc4d543de38379f073c47890730b46",
+        "tests/nonplanar/data/baseline/machine.json": "4d8a045436e3f6f179707141a6a7ecac1344346622f10a9297ed5a60cc9af46c",
+        "tests/nonplanar/data/baseline/process-zaa.json": "14fc8cbc150912ecfb5c826be63326597cb26c2482eefacf4f1416beb76f86d4",
+        "tests/nonplanar/data/baseline/filament.json": "a7782111b44cf9dcea43cb0f3f54ec94bee36d9dcb73b00b84516fd55e419d13"
+      },
+      "files": {
+        "flat_block-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+        "flat_block-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "flat_block-zaa/run.log.json": "3ed173d6b0d3817eaaf4836e9603e6a224ca7fc517cc5a12e39720ef73e9a7b0",
+        "flat_block-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+        "flat_block-zaa/output/plate_1.gcode": "dc2330c0c73ccffe820660a49f18cbda01bfc663043c56267abc3f91dfc052b7"
+      }
+    },
+    {
+      "model": "wedge_5deg",
+      "mode": "off",
+      "exit_code": 0,
+      "input_sha256": {
+        "docs/nonplanar/fixtures/models/wedge_5deg.stl": "18cd080c4ea30ee4800e4efc08c93ed78daddc4a83b5308c9f9766a43f7524a6",
+        "tests/nonplanar/data/baseline/machine.json": "4d8a045436e3f6f179707141a6a7ecac1344346622f10a9297ed5a60cc9af46c",
+        "tests/nonplanar/data/baseline/process-off.json": "49a8dd03c18acd46a2f963d8a521dcf366c463fc4a9734310d3b98ac93e5f06f",
+        "tests/nonplanar/data/baseline/filament.json": "a7782111b44cf9dcea43cb0f3f54ec94bee36d9dcb73b00b84516fd55e419d13"
+      },
+      "files": {
+        "wedge_5deg-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+        "wedge_5deg-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "wedge_5deg-off/run.log.json": "f07cd928f3e48cf8c5c9b9bda755228b16b08c44d576377b808a0e2d0a153eee",
+        "wedge_5deg-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+        "wedge_5deg-off/output/plate_1.gcode": "8b166e0c090403835396d334469247f483424802f67cf13fec9c147c273dc617"
+      }
+    },
+    {
+      "model": "wedge_5deg",
+      "mode": "zaa",
+      "exit_code": 0,
+      "input_sha256": {
+        "docs/nonplanar/fixtures/models/wedge_5deg.stl": "18cd080c4ea30ee4800e4efc08c93ed78daddc4a83b5308c9f9766a43f7524a6",
+        "tests/nonplanar/data/baseline/machine.json": "4d8a045436e3f6f179707141a6a7ecac1344346622f10a9297ed5a60cc9af46c",
+        "tests/nonplanar/data/baseline/process-zaa.json": "14fc8cbc150912ecfb5c826be63326597cb26c2482eefacf4f1416beb76f86d4",
+        "tests/nonplanar/data/baseline/filament.json": "a7782111b44cf9dcea43cb0f3f54ec94bee36d9dcb73b00b84516fd55e419d13"
+      },
+      "files": {
+        "wedge_5deg-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+        "wedge_5deg-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "wedge_5deg-zaa/run.log.json": "9fc897a88890f7de6d354f3cf133858f81548f626ab69c701b74cf82d0a45387",
+        "wedge_5deg-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+        "wedge_5deg-zaa/output/plate_1.gcode": "5182fb8580d8fede6ca3c9f255f4182318ca8468d5615cc7520c4aa3f43c583b"
+      }
+    },
+    {
+      "model": "shallow_sphere",
+      "mode": "off",
+      "exit_code": 0,
+      "input_sha256": {
+        "docs/nonplanar/fixtures/models/shallow_sphere.stl": "d20628c0607c601c447364316c5c158718965de21d3eb41f57efcb02e5126916",
+        "tests/nonplanar/data/baseline/machine.json": "4d8a045436e3f6f179707141a6a7ecac1344346622f10a9297ed5a60cc9af46c",
+        "tests/nonplanar/data/baseline/process-off.json": "49a8dd03c18acd46a2f963d8a521dcf366c463fc4a9734310d3b98ac93e5f06f",
+        "tests/nonplanar/data/baseline/filament.json": "a7782111b44cf9dcea43cb0f3f54ec94bee36d9dcb73b00b84516fd55e419d13"
+      },
+      "files": {
+        "shallow_sphere-off/resolved.json": "a018aad5111ffe4b51e919a08e11539db472f4d331482684a047cdde9761d3d8",
+        "shallow_sphere-off/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "shallow_sphere-off/run.log.json": "fe08f49789003a83cedb43ec050463965790922e6956f06748290b5b839c4dd1",
+        "shallow_sphere-off/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+        "shallow_sphere-off/output/plate_1.gcode": "c94a2b67154ec3dba418093a926f90a9498ea4c36b25f9bf2ad63597d87ba04e"
+      }
+    },
+    {
+      "model": "shallow_sphere",
+      "mode": "zaa",
+      "exit_code": 0,
+      "input_sha256": {
+        "docs/nonplanar/fixtures/models/shallow_sphere.stl": "d20628c0607c601c447364316c5c158718965de21d3eb41f57efcb02e5126916",
+        "tests/nonplanar/data/baseline/machine.json": "4d8a045436e3f6f179707141a6a7ecac1344346622f10a9297ed5a60cc9af46c",
+        "tests/nonplanar/data/baseline/process-zaa.json": "14fc8cbc150912ecfb5c826be63326597cb26c2482eefacf4f1416beb76f86d4",
+        "tests/nonplanar/data/baseline/filament.json": "a7782111b44cf9dcea43cb0f3f54ec94bee36d9dcb73b00b84516fd55e419d13"
+      },
+      "files": {
+        "shallow_sphere-zaa/resolved.json": "2de5cdff06398a48c8f016fc9dbcca4f623bb5581ded0224daa9b2460b8cc7d0",
+        "shallow_sphere-zaa/run.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "shallow_sphere-zaa/run.log.json": "84794e59b89b15bbed1e85da24fc9d5c985f359bd1dc1a364695dc4b768b1280",
+        "shallow_sphere-zaa/00000.log": "b34b84fec20fba1bbf2a97bd7746fb035e56ea41193a9a9d6432913b3bda1ce7",
+        "shallow_sphere-zaa/output/plate_1.gcode": "19aad0aeb1b87579babb3e704088d81ef5322147ae6a5ab1b9213eb6ee78e980"
+      }
+    }
+  ]
+}

@@ -31,7 +31,7 @@ def enclosed(independent, produced):
     require(produced[0] <= independent[0] <= independent[1] <= produced[1], 'Complete independent volume enclosure')
 
 
-def native_rows(document):
+def native_rows(document, minimum_rows=3):
     _, rows = decoded_journal(document['journal'], document['revision'])
     footprint = list(map(Q, document['footprint']))
     axis, plane = document['body_axis'], Q(document['support_plane'])
@@ -63,7 +63,7 @@ def native_rows(document):
                 'Whole finite native butts span selected ROI')
         selected.append((motion[0], a[1 - axis], a[2], h / 2,
                          ((width[0] - h) / 2, (width[1] - h) / 2)))
-    require(len(selected) >= 3, 'Actual shoulders and multiple native rows')
+    require(len(selected) >= minimum_rows, 'Actual constant stadium rows')
     return selected
 
 
@@ -140,7 +140,10 @@ def verify(document, integrate_roof=True):
     coarse = interval(document['coarse_volume'])
     require(bounded[1] - bounded[0] <= producer and coarse[1] - coarse[0] > consumer and
             coarse[1] - coarse[0] <= requested and document['coarse_refusal'] == 'INTEGRAL_STRIP_GLOBAL_PRECISION', 'Coarse certificate cannot refine')
-    require(document['cap_refusal'] == ('FIRST_HATCH_ROOF_SEGMENT_LIMIT' if document['transverse'] else 'FIRST_HATCH_ROOF_DEPTH_LIMIT'), 'Complete cap remains refused')
+    refusal = document['cap_refusal']
+    require((document['transverse'] and (refusal == 'FIRST_HATCH_ROOF_SEGMENT_LIMIT' or
+            refusal.startswith('MATERIAL_UNION_WORK_LIMIT paths='))) or
+            (not document['transverse'] and refusal == 'FIRST_HATCH_ROOF_DEPTH_LIMIT'), 'Complete cap remains refused')
     require(0 < document['cells'] <= document['max_cells'] == 8191 and
             0 < document['evaluations'] <= document['max_evaluations'] == 200000, 'Original producer resource ceilings')
     normal = 1 - document['hatch_axis']

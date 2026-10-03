@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fff_print_tests" errors="0" failures="1" skipped="0" tests="85" hostname="tbd" time="1.883" timestamp="2026-10-03T18:53:12Z">
+    <properties>
+      <property name="random-seed" value="2402288632"/>
+      <property name="filters" value="[NativeHatchPrecision]"/>
+    </properties>
+    <testcase classname="fff_print_tests.global" name="B06 native transverse strips share a refined actual body roof proof" time="0.000" status="run">
+      <failure message="before.reason==(transverse ? &quot;FIRST_HATCH_ROOF_SEGMENT_LIMIT&quot; : &quot;FIRST_HATCH_ROOF_DEPTH_LIMIT&quot;)" type="REQUIRE">
+FAILED:
+  REQUIRE( before.reason==(transverse ? "FIRST_HATCH_ROOF_SEGMENT_LIMIT" : "FIRST_HATCH_ROOF_DEPTH_LIMIT") )
+with expansion:
+  "MATERIAL_UNION_WORK_LIMIT paths=7 packets=1242 cells=4564 work=200000
+  union_width=0.002832"
+  ==
+  "FIRST_HATCH_ROOF_SEGMENT_LIMIT"
+OWNED_NATIVE_BODY_LINEAGE_ONLY
+SOURCE_BOUND_PROSPECTIVE_AFFINE_STACK_ONLY
+OWNED_NATIVE_AFFINE_HATCH_LINEAGE_ONLY
+at /Users/antonfilatov/www/my/orca-nonplanar/tests/nonplanar/test_policy.cpp:5006
+      </failure>
+    </testcase>
+    <testcase classname="fff_print_tests.global" name="B06 native wider body roof is integrated at the selected hatch precision" time="0.978" status="run"/>
+    <system-out/>
+    <system-err/>
+  </testsuite>
+</testsuites>

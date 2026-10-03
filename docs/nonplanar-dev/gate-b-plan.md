@@ -4,6 +4,25 @@ Active objective: implement the entire B01–B15 scope. A bounded primitive or a
 green unit suite is evidence for its own contract, not completion of a B task.
 The normative backlog, SPEC and acceptance matrix remain unchanged.
 
+`B07-roof-chord.md` and ADR-0104 add a certified affine first FiniteWidth
+roof chord where the original constant bound cannot meet its gap/dose budget.
+One whole owner supplies the lower chord; all possible owners bound the upper,
+including overlap valleys. Two new analytical cases plus two retained native
+cases/focus4/226, CTest506/506,24 independent commands,17 actual CLI cases and6
+strict OFF/ZAA pairs pass. Four analytical examples in both axes and five actual
+native prospective paths fit original limits. Exact stationary extrema and
+complete rational dose integrals verify every path;11 mutations reject.
+Original Centerline packets/fill positives remain after the preserved exploratory
+regression was corrected by finite-domain scoping. Complete transverse cap now
+constructs7 paths/1242 packets, then still refuses original union200000 work;
+parallel finite-width ridge still refuses depth. Fifty-four of56 parent files
+stay exact; software report and only cap refusal progress change, two additive
+traces, unselected2098 SHA unchanged. Fixed17 remains4 PASS/RUN +13 UNKNOWN/
+NOT_RUN, export BLOCK, full B IN_PROGRESS. Next complete cap union under original
+budgets, then positive native density/captured program and full fill/layers/
+seams/contact/head/routes/order/whole-job/source/software/physical/publication.
+Independent safety review and new-head platform/GUI/physical proof pending.
+
 `B06-native-hatch-precision.md` and ADR-0103 tighten the combined native parent
 integral before its immutable strip split, under the original consumer/resource
 limits. Two wider native cases/focus2/91, CTest504/504,23 independent checks,

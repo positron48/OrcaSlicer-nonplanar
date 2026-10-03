@@ -7,6 +7,7 @@
 #include <cfenv>
 #include <thread>
 #include <set>
+#include <iostream>
 #include <boost/filesystem.hpp>
 #include <boost/nowide/fstream.hpp>
 #include <nlohmann/json.hpp>
@@ -4040,6 +4041,97 @@ TEST_CASE("B09 cap departure refuses stale parents incomplete resource budgets a
     const auto last=calls;calls=0;limits.cancelled=[&] {return ++calls==last;};
     const auto refused=plan_simulation_cap_departure(f.before,f.bead,f.scene,departure_policy,f.request,limits);
     REQUIRE_FALSE(refused.snapshot);REQUIRE(refused.reason=="CANCELLED");REQUIRE(calls==last);
+}
+
+namespace {
+AffineHatchResult roof_chord_fixture(bool swap,size_t count)
+{
+    const auto point=[&](double x,double y,double z){return swap ? PhysicalPosition{y,x,z} : PhysicalPosition{x,y,z};};
+    std::vector<MaterialRecord> rows;
+    for(size_t i=0;i<count;++i) {
+        const auto a=point(0,double(i),1),b=point(10,double(i),1);
+        if(!rows.empty())rows.push_back({{rows.size()+1,rows.size(),0,rows.back().motion.end,a,Speed(10),Acceleration(100),Travel{}},{}});
+        rows.push_back(bead(rows.size()+1,rows.size(),a,b,count==1 ? 1.6 : 1.06,count==1 ? .6 : .2,count==1 ? .6 : .2));
+    }
+    const auto sequence=captured(std::move(rows));const auto present=material_at(sequence,sequence->records.size(),0);REQUIRE(present.lower.snapshot);
+    const auto roi=count==1 ? RectangleXY{1,-.75,3,.75} : RectangleXY{1,-.25,3,2.25};
+    const RectangleXY rotated=swap ? RectangleXY{roi.min_y,roi.min_x,roi.max_y,roi.max_x} : roi;
+    const auto policy=count==1 ? AffinePassPolicy{4,{VerticalGap(.05),VerticalGap(.28),Length(0)},
+        VerticalGap(.08),VerticalGap(.13),NormalGap(.08),NormalGap(.13),Volume(.001)} :
+        AffinePassPolicy{4,{VerticalGap(.1),VerticalGap(.4),Length(0)},VerticalGap(.14),VerticalGap(.24),NormalGap(.14),NormalGap(.24),Volume(.001)};
+    const double z=count==1 ? 1.43 : 1.78;
+    MaterialIntegralLimits integral;integral.maximum_interval_width=Volume(.0005);integral.max_cells=8191;
+    const auto stack=plan_affine_pass_stack(present.lower,{rotated,z,z,z},count==1 ? .82 : .92,policy,integral);INFO(stack.reason);REQUIRE(stack.snapshot);
+    const auto hatch=plan_affine_hatches(stack,{WidthXY(count==1 ? .3 : .4),Length(count==1 ? .25 : .39),Length(.05),
+        swap ? HatchDirection::AlongX : HatchDirection::AlongY});INFO(hatch.reason);REQUIRE(hatch.snapshot);return hatch;
+}
+}
+TEST_CASE("B07 affine roof chords bound finite paths across rounded shoulders and owner valleys", "[Nonplanar][B07][RoofChord]")
+{
+    nlohmann::json cases=nlohmann::json::array();
+    for(size_t count:{size_t(1),size_t(3)})for(bool swap:{false,true}) {
+        const auto hatch=roof_chord_fixture(swap,count);FirstHatchBeadLimits limits;
+        limits.maximum_gap_error=Length(.0001);limits.packets.maximum_width_error=Length(.002);limits.packets.maximum_volume_error=Volume(.0001);
+        const auto result=plan_first_hatch_footprint_bead(hatch,0,limits);INFO(count<<' '<<swap<<' '<<result.reason);REQUIRE(result.snapshot);
+        const auto &path=*result.snapshot;REQUIRE(path.source==hatch.snapshot);REQUIRE(path.roof_domain==FirstHatchRoofDomain::FiniteWidth);
+        REQUIRE(path.maximum_gap_error_mm<=limits.maximum_gap_error.value());REQUIRE(path.maximum_width_error_mm<=limits.packets.maximum_width_error.value());
+        REQUIRE(path.total_volume_error_mm3<=limits.packets.maximum_volume_error.value());REQUIRE(path.roof_segments<=limits.max_roof_segments);
+        REQUIRE(path.evaluations<=limits.max_evaluations);REQUIRE(path.pieces.size()<=limits.packets.max_segments);
+        bool varying=false;nlohmann::json pieces=nlohmann::json::array();
+        for(const auto &p:path.pieces) {
+            varying|=p.section.gap_begin_mm!=p.section.gap_end_mm;
+            pieces.push_back({{"start",{p.start.x(),p.start.y(),p.start.z()}},{"end",{p.end.x(),p.end.y(),p.end.z()}},
+                {"gap",{p.section.gap_begin_mm,p.section.gap_end_mm}},{"width",{p.section.width_mm.lower,p.section.width_mm.upper}},{"volume",p.volume.value()}});
+        }
+        REQUIRE(varying);
+        const auto &stack=*hatch.snapshot->source;const auto &sequence=*stack.source->sequence;
+        nlohmann::json rows=nlohmann::json::array();for(size_t i=0;i<sequence.records.size();++i)rows.push_back(sequence.canonical_record(i));
+        const auto &r=stack.final_surface.footprint;
+        cases.push_back({{"body_axis",swap ? 1 : 0},{"revision",sequence.revision},
+            {"journal",{{"context",sequence.canonical_context()},{"records",rows},{"sha256",sequence.fingerprint()}}},
+            {"footprint",{r.min_x,r.min_y,r.max_x,r.max_y}},{"nominal_width",hatch.snapshot->policy.width.value()},
+            {"limits",{limits.maximum_gap_error.value(),limits.packets.maximum_width_error.value(),limits.packets.maximum_volume_error.value(),
+                limits.max_roof_segments,limits.packets.max_segments,limits.max_evaluations}},
+            {"support_plane",stack.support_plane_z_mm},{"paths",nlohmann::json::array({{{"pieces",pieces},
+                {"target",{path.actual_target_volume_mm3.lower,path.actual_target_volume_mm3.upper}},
+                {"delivered",{path.deposited_volume_mm3.lower,path.deposited_volume_mm3.upper}},
+                {"gap_error",path.maximum_gap_error_mm},{"width_error",path.maximum_width_error_mm},
+                {"volume_error",path.total_volume_error_mm3},{"numeric",path.numerical_error_upper_mm},
+                {"segments",path.roof_segments},{"evaluations",path.evaluations}}})}});
+        std::cout<<"roof chord rows="<<count<<" axis="<<swap<<" segments="<<path.roof_segments<<" packets="<<path.pieces.size()<<" work="<<path.evaluations<<'\n';
+    }
+    if(const char *directory=std::getenv("NPTOP_CANDIDATE_EVIDENCE_DIR")) {
+        const auto dir=boost::filesystem::path(directory);boost::filesystem::create_directories(dir);
+        boost::nowide::ofstream out((dir/"analytical-roof-chord.json").string());REQUIRE(out.good());
+        out<<nlohmann::json{{"schema",1},{"scope","ANALYTICAL_FINITE_FIRST_HATCH_ROOF_CHORDS_ONLY"},{"export","BLOCK"},{"cases",cases}}.dump(2)<<'\n';
+        out.close();REQUIRE(out.good());
+    }
+}
+TEST_CASE("B07 roof chords preserve transverse gap and original work packet callback refusals", "[Nonplanar][B07][RoofChord]")
+{
+    auto hatch=roof_chord_fixture(false,3);FirstHatchBeadLimits limits;
+    limits.maximum_gap_error=Length(.0001);limits.packets.maximum_width_error=Length(.002);limits.packets.maximum_volume_error=Volume(.0001);
+    for(int mode=0;mode<9;++mode) {
+        auto bad=limits;
+        if(mode==0)bad.max_evaluations=1;if(mode==1)bad.max_roof_segments=1;if(mode==2)bad.packets.max_segments=1;
+        if(mode==3)bad.cancelled=[] {return true;};if(mode==4)bad.is_current=[](uint64_t){return false;};
+        if(mode==5)bad.cancelled=[] {std::fesetround(FE_DOWNWARD);return false;};
+        if(mode==6)bad.cancelled=[]()->bool{throw std::runtime_error("fixture");};
+        if(mode==7){bad.timeout=std::chrono::milliseconds(1);bad.cancelled=[] {std::this_thread::sleep_for(std::chrono::milliseconds(3));return false;};}
+        if(mode==8)bad.packets.maximum_volume_error=Volume(1e-20);
+        const auto result=plan_first_hatch_footprint_bead(hatch,0,bad);if(mode==5)REQUIRE(std::fesetround(FE_TONEAREST)==0);
+        INFO(mode<<' '<<result.reason);REQUIRE_FALSE(result.snapshot);REQUIRE_FALSE(result.reason.empty());
+    }
+    size_t calls=0;limits.cancelled=[&]{++calls;return false;};REQUIRE(plan_first_hatch_footprint_bead(hatch,0,limits).snapshot);
+    const size_t last=calls;calls=0;limits.cancelled=[&]{return ++calls==last;};
+    const auto cancelled=plan_first_hatch_footprint_bead(hatch,0,limits);REQUIRE_FALSE(cancelled.snapshot);REQUIRE(cancelled.reason=="CANCELLED");
+    for(bool swap:{false,true}) {
+        const auto original=roof_chord_fixture(swap,1);const auto parallel=plan_affine_hatches({"",original.snapshot->source},
+            {WidthXY(.3),Length(.25),Length(.05),swap ? HatchDirection::AlongY : HatchDirection::AlongX});REQUIRE(parallel.snapshot);
+        auto bounded=FirstHatchBeadLimits{};bounded.maximum_gap_error=Length(.0001);bounded.packets.maximum_width_error=Length(.002);
+        REQUIRE(plan_first_hatch_bead(parallel,0,bounded).snapshot);
+        const auto transverse=plan_first_hatch_footprint_bead(parallel,0,bounded);REQUIRE_FALSE(transverse.snapshot);REQUIRE(transverse.reason=="FIRST_HATCH_ROOF_DEPTH_LIMIT");
+    }
 }
 
 TEST_CASE("B07 ordered later planner recomputes actual prefixes and follows original alternating directions", "[Nonplanar][B07][NextCapSequence]")

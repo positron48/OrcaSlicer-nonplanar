@@ -1,0 +1,129 @@
+{
+  "status": "PASS",
+  "scope": "NATIVE_DECIMAL_RATES_AND_UNCHANGED_XYZ_E_ONLY",
+  "original_policy": 100,
+  "acceleration": "85.530744",
+  "witness": {
+    "record": 1754,
+    "old_z_acceleration": "50.000000410997415293016249007793220668380293760762316354649187623713990330810691",
+    "new_z_acceleration": "49.999999826412300186192202368000137984566179100819932352705601669339482968411471"
+  },
+  "cases": [
+    {
+      "name": "retuned",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-rates-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B07-roof-chord/rounded-audit-final2/policy.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B07-roof-chord/rounded-audit-final2/retuned.candidate.txt"
+      ],
+      "exit_code": 0,
+      "candidate_sha256": "2fa43ac7f362f9d0ad7f0bfa5f2e550e8ae60945893aecab6408b67d1d2bba3f",
+      "report": {
+        "axis": null,
+        "bytes": 101305,
+        "command_volume_mm3": [
+          3162.926560178213,
+          3162.9265601782135
+        ],
+        "component": "final_byte_linear_rates",
+        "component_status": "PASS",
+        "export_allowed": false,
+        "final_pressure_debt_mm": [
+          0.0,
+          0.0
+        ],
+        "ideal_mechanical_duration_s": [
+          1361.7933831830655,
+          1361.793383183066
+        ],
+        "job_status": "UNKNOWN",
+        "mandatory_checks_pending": [
+          "material",
+          "contact",
+          "support",
+          "dose_uncertainty",
+          "job_integrity",
+          "qualified_profile",
+          "machine_state"
+        ],
+        "nominal_volume_mm3": [
+          3162.926560178213,
+          3162.9265601782135
+        ],
+        "reason": "SYNTHETIC_FINAL_BYTE_LINEAR_RATES_PASS_OTHER_JOB_CHECKS_REQUIRED",
+        "record": null,
+        "records": 1756,
+        "schema_version": 1,
+        "scope": "synthetic_identity_transform_full_stop_rates_and_ideal_mechanical_time_only",
+        "work": 22323
+      }
+    },
+    {
+      "name": "historical",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-rates-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B07-roof-chord/rounded-audit-final2/policy.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B07-roof-chord/rounded-audit-final2/historical.candidate.txt"
+      ],
+      "exit_code": 2,
+      "candidate_sha256": "d3b26e34cbfaaa0b130f235ca9234241b8b6c43466ed23a80a80b29a88ad174a",
+      "report": {
+        "axis": 2,
+        "component": "final_byte_linear_rates",
+        "component_status": "FAIL",
+        "export_allowed": false,
+        "job_status": "UNKNOWN",
+        "mandatory_checks_pending": [
+          "material",
+          "contact",
+          "support",
+          "dose_uncertainty",
+          "job_integrity",
+          "qualified_profile",
+          "machine_state"
+        ],
+        "reason": "AXIS_ACCELERATION_LIMIT",
+        "record": 1754,
+        "schema_version": 1,
+        "scope": "synthetic_identity_transform_full_stop_rates_and_ideal_mechanical_time_only",
+        "work": 22961
+      }
+    },
+    {
+      "name": "restored-unsafe-acceleration",
+      "command": [
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/arm64/src/nonplanar_verify/Release/nonplanar_rate_audit",
+        "--linear-rates-only",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B07-roof-chord/rounded-audit-final2/policy.json",
+        "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B07-roof-chord/rounded-audit-final2/restored-unsafe-acceleration.candidate.txt"
+      ],
+      "exit_code": 2,
+      "candidate_sha256": "c21dd03e3795895c7629ebc7d8c4ae1c2ff9d323b7f87d8add72055225e27524",
+      "report": {
+        "axis": 2,
+        "component": "final_byte_linear_rates",
+        "component_status": "FAIL",
+        "export_allowed": false,
+        "job_status": "UNKNOWN",
+        "mandatory_checks_pending": [
+          "material",
+          "contact",
+          "support",
+          "dose_uncertainty",
+          "job_integrity",
+          "qualified_profile",
+          "machine_state"
+        ],
+        "reason": "AXIS_ACCELERATION_LIMIT",
+        "record": 1754,
+        "schema_version": 1,
+        "scope": "synthetic_identity_transform_full_stop_rates_and_ideal_mechanical_time_only",
+        "work": 22957
+      }
+    }
+  ],
+  "job_status": "UNKNOWN",
+  "export": "BLOCK"
+}

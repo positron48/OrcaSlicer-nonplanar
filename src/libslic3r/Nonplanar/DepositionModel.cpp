@@ -683,6 +683,70 @@ RoofCellBounds nominal_roof_bounds(const MaterialPrefixSnapshot &cursor,const Po
     }
     return {Interval(lower,upper),std::move(active),splitter};
 }
+struct RoofChord {double begin,end,error;};
+template<class Evaluate>
+std::optional<RoofChord> nominal_roof_chord(const MaterialPrefixSnapshot &cursor,const Polygon &polygon,
+    const Polygon &begin,const Polygon &end,PhysicalPosition a,PhysicalPosition b,
+    const std::vector<size_t> &candidates,const Evaluate &evaluate)
+{
+    struct Owner {Interval begin,end;double bow;bool whole;};
+    std::vector<Owner> owners;std::vector<double> ceilings;std::optional<size_t> selected;
+    const auto &sequence=*cursor.sequence;
+    for(size_t i:candidates) {
+        evaluate(6);const auto &row=sequence.records[i];const auto &m=row.motion;const auto &section=*row.bead;
+        const double progress=i<cursor.completed_records ? 1 : cursor.current_progress;
+        const auto projected=project_polygon(row,polygon,Interval(0));
+        if(m.start.z()==m.end.z() && section.gap_begin_mm==section.gap_end_mm) {
+            const auto length=detail::root(length_squared(row)),height=Interval(section.gap_begin_mm);
+            const auto area=Interval(std::get<Deposition>(m.payload).volume.value())/length;
+            const auto whole=nominal_roof(row,projected,progress,area);
+            const auto first=nominal_roof(row,project_polygon(row,begin,Interval(0)),progress,area);
+            const auto last=nominal_roof(row,project_polygon(row,end,Interval(0)),progress,area);
+            std::optional<double> bow;
+            if(section.kind==BeadSectionKind::Rectangle) bow=0;
+            else if(whole && whole->whole_transverse) {
+                const auto radius=height/Interval(2),core=(section_width(area,height,section.kind)-height)/Interval(2);
+                const auto u=detail::maximum(absolute(projected.normal)-core,Interval(0));
+                const auto radicand=square(radius)-square(u);
+                if(u.hi==0) bow=0;
+                else if(radicand.lo>0) {
+                    const auto delta=((Interval(m.start.y())-Interval(m.end.y()))*(Interval(b.x())-Interval(a.x()))+
+                        (Interval(m.end.x())-Interval(m.start.x()))*(Interval(b.y())-Interval(a.y())))/length;
+                    // The constant stadium roof is concave and C1 across its
+                    // flat core. |rho''| <= r²/(r²-u²)^(3/2); a chord's maximum
+                    // upward deviation is K*(delta normal)²/8 at every width offset.
+                    bow=(square(radius)/(radicand*detail::root(radicand))*square(delta)/Interval(8)).hi;
+                }
+            }
+            if(first && last && bow) {
+                owners.push_back({first->height,last->height,*bow,whole && whole->whole_footprint});
+                if(owners.back().whole && (!selected ||
+                    owners.back().begin.lo+owners.back().end.lo>owners[*selected].begin.lo+owners[*selected].end.lo))
+                    selected=owners.size()-1;
+                continue;
+            }
+        }
+        // Partial shoulders or changing Z/h need the original whole-cell
+        // ceiling. They cannot become a chord owner or disappear from its upper bound.
+        evaluate(2);const auto clipped=roof_projection(row,sequence.model,polygon,progress,Representation::Nominal);
+        const auto possible=clipped ? nominal_roof(row,clipped->projected,progress) : std::optional<NominalRoof>{};
+        if(!possible) return {};
+        ceilings.push_back(possible->height.hi);
+    }
+    if(!selected) return {};
+    const auto &owner=owners[*selected];
+    const double first=(owner.begin.lo+owner.begin.hi)/2,last=(owner.end.lo+owner.end.hi)/2;
+    double error=std::max({0.,(Interval(first)-Interval(owner.begin.lo)).hi,(Interval(last)-Interval(owner.end.lo)).hi});
+    // One whole owner supplies the lower affine chord. Each possible owner
+    // separately supplies an upper chord plus bow; never join different lower
+    // endpoint owners through a valley in the maximum material roof.
+    for(const auto &possible:owners) {
+        evaluate();error=std::max({error,(Interval(possible.begin.hi)-Interval(first)+Interval(possible.bow)).hi,
+            (Interval(possible.end.hi)-Interval(last)+Interval(possible.bow)).hi});
+    }
+    for(double ceiling:ceilings) {evaluate();error=std::max(error,(Interval(ceiling)-Interval(std::min(first,last))).hi);}
+    return RoofChord{first,last,error};
+}
 std::pair<Interval,Interval> affine_integral(const Polygon &polygon, const AffineCapCell &cell, Exact *exact_area=nullptr)
 {
     const bool flat=cell.z00==cell.z10 && cell.z00==cell.z01;
@@ -1586,7 +1650,7 @@ MaterialBeadData derive_material_bead(const std::shared_ptr<const MaterialPrefix
         // It is a lower bound on the nominal roof, never its actual value.
         if (candidates.empty() || lower>upper) reject("FIRST_HATCH_INCONSISTENT_NOMINAL_ROOF");
         const Interval roof(lower,upper);const double middle=(lower+upper)/2;
-        const double h0=node.a.point.z()-middle,h1=node.b.point.z()-middle;
+        double h0=node.a.point.z()-middle,h1=node.b.point.z()-middle;
         const auto bottom0=Interval(node.a.point.z())-Interval(h0),bottom1=Interval(node.b.point.z())-Interval(h1);
         const Interval bottom(std::min(bottom0.lo,bottom1.lo),std::max(bottom0.hi,bottom1.hi));
         const auto gap_difference=bottom-roof;
@@ -1594,6 +1658,23 @@ MaterialBeadData derive_material_bead(const std::shared_ptr<const MaterialPrefix
         if (gap_policy) gap_error=(Interval(gap_error)+Interval(gap_policy->corner_height_error.value())).hi;
         const auto fraction=exact_interval(node.end-node.begin);
         const double budget=(Interval(limits.packets.maximum_volume_error.value())*fraction).lo;
+        const auto length=detail::root(length_squared(node.a.point,node.b.point));
+        const auto uncertainty=length*Interval(gap_error)*(Interval(line.width.value())+
+            Interval(2)*correction*(Interval(std::max(h0,h1))+Interval(gap_error)));
+        // Improve only the finite-footprint planner. The legacy centerline
+        // diagnostic retains its constant-roof packets and downstream fill proofs.
+        if(domain==FirstHatchRoofDomain::FiniteWidth && !raise_floor && !gap_policy &&
+            (gap_error>limits.maximum_gap_error.value() || uncertainty.hi>budget)) {
+            const auto chord=nominal_roof_chord(*cursor,footprint(node.a.point,node.b.point),
+                footprint(node.a.point,node.a.point),footprint(node.b.point,node.b.point),node.a.point,node.b.point,candidates,evaluate);
+            if(chord) {
+                const double first=node.a.point.z()-chord->begin,last=node.b.point.z()-chord->end;
+                const auto da=Interval(node.a.point.z())-Interval(first)-Interval(chord->begin);
+                const auto db=Interval(node.b.point.z())-Interval(last)-Interval(chord->end);
+                const double error=(Interval(chord->error)+Interval(std::max({std::abs(da.lo),std::abs(da.hi),std::abs(db.lo),std::abs(db.hi)}))).hi;
+                if(error<gap_error) {h0=first;h1=last;gap_error=error;}
+            }
+        }
         bool accepted=false;FixedWidthBeadResult packets;Interval target(0);double width_error=0;
         if (h0>0 && h1>0 && std::max(h0,h1)<line.width.value() && gap_error<=limits.maximum_gap_error.value()) {
             auto packet_limits=limits.packets;
