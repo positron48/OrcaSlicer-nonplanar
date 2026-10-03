@@ -3,7 +3,6 @@
 #include "Plater.hpp"
 #include "wxExtensions.hpp"
 #include "Jobs/Worker.hpp"
-#include "libslic3r/Print.hpp"
 #include "libslic3r/Nonplanar/NativeAnalysisView.hpp"
 #include "libslic3r/Nonplanar/StlFile.hpp"
 #include <boost/filesystem/path.hpp>
@@ -28,20 +27,14 @@ namespace {
 using namespace nptop;
 using Json = nlohmann::json;
 struct AnalysisRun {
-    Model model;
-    DynamicPrintConfig config;
-    int plate;
-    Vec3d origin;
     uint64_t revision;
     std::shared_ptr<const NativeAnalysisViewInput> input;
-    std::unique_ptr<Print> print;
-    std::shared_ptr<const GuardedJobTask> task;
+    std::shared_ptr<const NativeAnalysisViewTask> task;
     NativeAnalysisWorkerResult result;
     std::atomic<bool> cancelled{false};
     std::atomic<int> stage{-1};
-    AnalysisRun(const Model &m, NativeAnalysisHostState state, uint64_t r,
-        std::shared_ptr<const NativeAnalysisViewInput> i)
-        : model(m), config(std::move(state.config)), plate(state.plate), origin(state.origin), revision(r), input(std::move(i)) {}
+    AnalysisRun(std::shared_ptr<const NativeAnalysisViewTask> t)
+        : revision(t->revision), input(t->input), task(std::move(t)) {}
     void process(Job::Ctl &ctl, const std::string &executable)
     {
         const auto started = std::chrono::steady_clock::now();
@@ -49,15 +42,10 @@ struct AnalysisRun {
         const auto remaining = [&] { return std::chrono::milliseconds(30000) -
             std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - started); };
         try {
-            config.set_key_value("nptop_mode", new ConfigOptionString(input->mode));
-            if (const auto conflict = input_policy_conflict(model, config)) {
-                result.reason = "VIEW_POLICY_REFUSED:" + conflict->key; return;
-            }
-            std::vector<JobResource> files{{JobResourceKind::SourceFile, "native-analysis-json-v1", input->editing_bytes},
-                {JobResourceKind::SourceFile, "native-analysis-request-v1", input->request->canonical_json}};
+            std::vector<JobResource> files{{JobResourceKind::SourceFile, "native-analysis-json-v1", input->editing_bytes}};
             std::set<std::string> paths;
-            for (const auto *object : model.objects) for (const auto *volume : object->volumes)
-                if (!volume->source.input_file.empty()) paths.insert(volume->source.input_file);
+            for (const auto &object : input->source->objects) for (const auto &volume : object.volumes)
+                if (!volume.source_file.empty()) paths.insert(volume.source_file);
             require(paths.size() <= 247, "VIEW_SOURCE_COUNT");
             size_t bytes = input->editing_bytes.size() + input->request->canonical_json.size();
             for (const auto &path : paths) {
@@ -69,25 +57,7 @@ struct AnalysisRun {
                 bytes += source.source->bytes.size(); files.push_back({JobResourceKind::SourceFile, path, source.source->bytes});
             }
             require(!cancelled_now() && remaining().count() > 0, "VIEW_CANCELLED_OR_TIMEOUT");
-            print = std::make_unique<Print>(); print->set_plate_index(plate); print->set_plate_origin(origin);
-            print->apply(model, config);
-            // Report the actual engine override responsible for a refusal.
-            // Do not display imported hook bodies or accept weaker settings.
-            const auto settings = capture_print_config(*print);
-            require(bool(settings), "VIEW_PRINT_CONFIG_REFUSED");
-            const auto policy = resolve_policy(settings->resolved_print_config, settings->object_count, settings->instance_count);
-            if (!policy.conflicts.empty()) {
-                result.reason = "VIEW_CONFIG_POLICY_REFUSED:" + policy.conflicts.front().key; return;
-            }
-            for (const auto &region : settings->regions) if (!region.policy.conflicts.empty()) {
-                result.reason = "VIEW_REGION_POLICY_REFUSED:" + region.policy.conflicts.front().key; return;
-            }
-            GuardedJobLimits capture; capture.cancelled = cancelled_now;
-            capture.timeout = std::min(remaining(), std::chrono::milliseconds(1000));
-            const auto job = begin_guarded_job(*print, revision, files, capture, JobSoftwareMode::CompiledInputs, &input->request->values.inputs);
-            result.reason = job.reason; task = job.task;
-            if (!task) return;
-            const auto worker = capture_native_analysis_worker_input(task, input->request);
+            const auto worker = capture_native_analysis_worker_input(task, files);
             NativeAnalysisWorkerOptions limits; limits.cancelled = cancelled_now; limits.timeout = remaining();
             limits.progress = [&](NativeAnalysisStage s) {
                 stage.store(int(s), std::memory_order_relaxed);
@@ -151,6 +121,7 @@ class NativeAnalysisDialog : public DPIDialog {
     unsigned m_ticks = 0;
     bool m_close_pending = false;
     std::shared_ptr<AnalysisRun> m_run;
+    NativeAnalysisViewOwner m_owner;
     std::shared_ptr<const NativeAnalysisViewInput> m_displayed;
     std::vector<std::array<double, 2>> m_times;
 public:
@@ -233,11 +204,12 @@ private:
     void edited()
     {
         if (m_revision == std::numeric_limits<uint64_t>::max()) { m_start->Disable(); cancel(); return; }
-        ++m_revision; if (m_run) m_run->cancelled.store(true, std::memory_order_relaxed);
+        ++m_revision; m_owner.invalidate(); if (m_run) m_run->cancelled.store(true, std::memory_order_relaxed);
         clear_display(); m_status->SetLabel("Editing — previous analysis invalidated");
     }
     void cancel()
     {
+        m_owner.invalidate();
         if (m_run) { m_run->cancelled.store(true, std::memory_order_relaxed); m_status->SetLabel("Cancelling analysis…"); }
         clear_display();
     }
@@ -250,7 +222,7 @@ private:
         clear_display();
         try {
             auto state = m_capture(); const auto input = capture(state);
-            m_run = std::make_shared<AnalysisRun>(m_plater.model(), std::move(state), m_revision, input);
+            m_run = std::make_shared<AnalysisRun>(begin_native_analysis_view(m_owner,input,m_revision));
             const auto executable = (boost::filesystem::path(wxStandardPaths::Get().GetExecutablePath().ToUTF8().data()).parent_path() /
                 NPTOP_BUNDLED_ANALYSIS_WORKER).string();
             const auto run = m_run; wxWeakRef<NativeAnalysisDialog> self(this);
@@ -259,20 +231,19 @@ private:
                 [run, self](bool cancelled, std::exception_ptr &exception) {
                     if (exception) { run->result = {"VIEW_BACKGROUND_EXCEPTION", {}}; exception = nullptr; }
                     if (self) self->finish(run, cancelled);
-                    else if (run->task) stop_guarded_job(*run->print, *run->task, GuardedJobPhase::Cancelled);
                 });
-            if (!queued) { m_run.reset(); m_status->SetLabel("Analysis queue refused"); return; }
+            if (!queued) { m_owner.invalidate(); m_run.reset(); m_status->SetLabel("Analysis queue refused"); return; }
             m_start->Disable(); m_cancel->Enable(); m_status->SetLabel("Analyzing — export blocked");
-        } catch (const std::exception &) { m_run.reset(); m_status->SetLabel("Analysis inputs refused — check JSON, model and current plate"); }
-        catch (...) { m_run.reset(); m_status->SetLabel("Analysis input exception"); }
+        } catch (const std::exception &) { m_owner.invalidate(); m_run.reset(); m_status->SetLabel("Analysis inputs refused — check JSON, model and current plate"); }
+        catch (...) { m_owner.invalidate(); m_run.reset(); m_status->SetLabel("Analysis input exception"); }
     }
     void finish(const std::shared_ptr<AnalysisRun> &run, bool cancelled)
     {
         if (m_run != run) return;
         std::shared_ptr<const NativeAnalysisViewInput> current;
         try { current = capture(m_capture()); } catch (...) {}
-        if (run->task) run->result = finish_native_analysis_view(*run->print, *run->task, *run->input, current.get(),
-            run->revision, m_revision, cancelled || run->cancelled.load(std::memory_order_relaxed), std::move(run->result));
+        if (run->task) run->result = finish_native_analysis_view(m_owner, *run->task, current.get(),
+            m_revision, cancelled || run->cancelled.load(std::memory_order_relaxed), std::move(run->result));
         else if (cancelled || run->cancelled.load(std::memory_order_relaxed)) run->result = {"VIEW_CANCELLED", {}};
         clear_display(); m_status->SetLabel(wxString::FromUTF8(run->result.reason) + " — export blocked");
         if (!run->result.diagnostic.empty()) {

@@ -1,0 +1,6 @@
+(version 1)
+(allow default)
+(deny network*)
+(deny file-write*)
+(allow file-write* (subpath "/Users/antonfilatov/www/my/orca-nonplanar/build/nonplanar-evidence/B14-source-worker/cli/oversized-request"))
+(allow file-write* (literal "/dev/null"))

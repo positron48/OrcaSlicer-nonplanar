@@ -1,4 +1,5 @@
 #include "NativeAnalysisWorker.hpp"
+#include "NativeAnalysisView.hpp"
 #include "Canonical.hpp"
 #include "../Print.hpp"
 #include <nlohmann/json.hpp>
@@ -130,7 +131,25 @@ struct Decoder {
         }
     }
 };
+Json meshes(const NativeInputSnapshot &source)
+{
+    Json result=Json::array();
+    for(const auto &o:source.objects){Json volumes=Json::array();for(const auto &v:o.volumes){require(v.material_id.empty(),"WORKER_REFERENCED_MATERIAL_REFUSED");Json annotations=Json::array();
+        for(const auto &data:v.annotations){Json rows=Json::array();for(const auto &r:data.triangles_to_split)rows.push_back({r.triangle_idx,r.bitstream_start_idx});annotations.push_back({rows,data.bitstream,data.used_states});}
+        volumes.push_back({{"mesh",native_mesh_document(v.mesh)},{"annotations",std::move(annotations)}});}result.push_back(std::move(volumes));}
+    return result;
 }
+Json document(unsigned version,const char *host,const Json &ticket,const NativeInputSnapshot &source,
+    const JobIdentityView &identity,const NativeAnalysisRequestSnapshot &request,Json files,const Vec3d &origin,const std::string &software)
+{
+    Json result={{"schema",version},{"software_sha256",software},{"input_sha256",identity.fingerprint},
+        {"source",Json::parse(identity.canonical_json)},{"meshes",meshes(source)},{"request",Json::parse(native_analysis_document(request))},
+        {"request_sha256",request.sha256},{"files",std::move(files)},{"plate_origin",{origin.x(),origin.y(),origin.z()}}};
+    result[host]=ticket;return result;
+}
+}
+bool NativeAnalysisWorkerInput::is_current() const
+{return task ? task->is_current() : view_task && view_task->is_current();}
 std::shared_ptr<const NativeAnalysisWorkerInput> capture_native_analysis_worker_input(
     std::shared_ptr<const GuardedJobTask> task,std::shared_ptr<const NativeAnalysisRequestSnapshot> request)
 {
@@ -142,30 +161,59 @@ std::shared_ptr<const NativeAnalysisWorkerInput> capture_native_analysis_worker_
     size_t file_bytes=0;for(const auto &r:job.resources)if(r.kind==JobResourceKind::SourceFile && r.name!="native-analysis-request-v1"){
         require(r.bytes.size()<=native_analysis_worker_byte_limit/2-file_bytes,"WORKER_FILE_BYTE_LIMIT");file_bytes+=r.bytes.size();}
     for(const auto &r:job.resources)if(r.kind==JobResourceKind::SourceFile){if(r.name=="native-analysis-request-v1"){require(r.bytes==request->canonical_json,"WORKER_REQUEST_BINDING");bound=true;}else files.push_back({r.name,hex(r.bytes)});}
-    require(bound,"WORKER_REQUEST_NOT_BOUND");const auto source=job.input;Json meshes=Json::array();
-    for(const auto &o:source->objects){Json volumes=Json::array();for(const auto &v:o.volumes){require(v.material_id.empty(),"WORKER_REFERENCED_MATERIAL_REFUSED");Json mesh=native_mesh_document(v.mesh);Json annotations=Json::array();
-        for(const auto &data:v.annotations){Json rows=Json::array();for(const auto &r:data.triangles_to_split)rows.push_back({r.triangle_idx,r.bitstream_start_idx});annotations.push_back({rows,data.bitstream,data.used_states});}
-        volumes.push_back({{"mesh",std::move(mesh)},{"annotations",std::move(annotations)}});}meshes.push_back(std::move(volumes));}
-    Json document={{"schema",native_analysis_worker_protocol},{"host_job",{job.job_id,job.input_revision,task->attempt,job.fingerprint}},
-        {"software_sha256",job.software->sha256},{"input_sha256",job.input_identity.fingerprint},{"source",Json::parse(job.input_identity.canonical_json)},{"meshes",meshes},
-        {"request",Json::parse(native_analysis_document(*request))},{"request_sha256",request->sha256},{"files",files},{"plate_origin",{job.settings->plate_origin_mm.x(),job.settings->plate_origin_mm.y(),job.settings->plate_origin_mm.z()}}};
-    auto bytes=document.dump();require(bytes.size()<=native_analysis_worker_byte_limit && task->is_current(),"WORKER_INPUT_LIMIT_OR_STALE");
-    return std::shared_ptr<const NativeAnalysisWorkerInput>(new NativeAnalysisWorkerInput(std::move(task),std::move(bytes),job.input_identity.fingerprint,request->sha256));
+    require(bound,"WORKER_REQUEST_NOT_BOUND");const Json ticket={job.job_id,job.input_revision,task->attempt,job.fingerprint};
+    auto bytes=document(1,"host_job",ticket,*job.input,job.input_identity,*request,std::move(files),job.settings->plate_origin_mm,job.software->sha256).dump();
+    require(bytes.size()<=native_analysis_worker_byte_limit && task->is_current(),"WORKER_INPUT_LIMIT_OR_STALE");
+    return std::shared_ptr<const NativeAnalysisWorkerInput>(new NativeAnalysisWorkerInput(std::move(task),{},1,job.job_id,"host_job",ticket.dump(),job.software->sha256,std::move(bytes),job.input_identity.fingerprint,request->sha256));
+}
+std::shared_ptr<const NativeAnalysisWorkerInput> capture_native_analysis_worker_input(
+    std::shared_ptr<const NativeAnalysisViewTask> task,const std::vector<JobResource> &source_files)
+{
+    require(task && task->is_current(),"WORKER_CURRENT_VIEW_REQUIRED");const auto &view=*task->input;
+    require(source_files.size()<=247,"WORKER_FILE_COUNT");size_t total=0;bool editing=false;std::set<std::string> names;Json files=Json::array();
+    for(const auto &file:source_files){require(file.kind==JobResourceKind::SourceFile && !file.name.empty() && file.name.size()<=4096 &&
+        file.name!="native-analysis-request-v1" && names.insert(file.name).second,"WORKER_SOURCE_FILE_REGISTRY");
+        if(file.name=="native-analysis-json-v1"){require(file.bytes==view.editing_bytes,"WORKER_EDITING_BYTES_BINDING");editing=true;}
+        require(!file.bytes.empty() && file.bytes.size()<=native_analysis_worker_byte_limit/2-total,"WORKER_FILE_BYTE_LIMIT");total+=file.bytes.size();files.push_back({file.name,hex(file.bytes)});}
+    require(editing,"WORKER_EDITING_BYTES_REQUIRED");
+    for(const auto &o:view.source->objects)for(const auto &v:o.volumes)require(v.source_file.empty() || names.count(v.source_file),"WORKER_MISSING_SOURCE_FILE");
+    const auto identity=guarded_source_identity(*view.source);const auto software=compiled_build_inputs();
+    const Json ticket={task->revision,task->attempt,view.identity_sha256};
+    auto bytes=document(2,"host_view",ticket,*view.source,identity,*view.request,std::move(files),view.plate_origin,software->sha256).dump();
+    require(bytes.size()<=native_analysis_worker_byte_limit && task->is_current(),"WORKER_INPUT_LIMIT_OR_STALE");
+    return std::shared_ptr<const NativeAnalysisWorkerInput>(new NativeAnalysisWorkerInput({},std::move(task),2,ticket[0].get<uint64_t>(),"host_view",ticket.dump(),software->sha256,std::move(bytes),identity.fingerprint,view.request->sha256));
 }
 std::string execute_native_analysis_worker(const std::string &bytes,const std::function<void(NativeAnalysisStage)> &progress)
 {
     require(bytes.size()<=native_analysis_worker_byte_limit,"WORKER_INPUT_BYTE_LIMIT");std::vector<std::set<std::string>> objects;
     const auto j=Json::parse(bytes,[&](int depth,Json::parse_event_t event,Json &v){require(depth<=16,"WORKER_INPUT_DEPTH");if(event==Json::parse_event_t::object_start)objects.emplace_back();if(event==Json::parse_event_t::key)require(objects.back().insert(v.get<std::string>()).second,"WORKER_DUPLICATE_KEY");if(event==Json::parse_event_t::object_end)objects.pop_back();return true;});
-    keys(j,{"schema","host_job","software_sha256","input_sha256","source","meshes","request","request_sha256","files","plate_origin"});require(natural(j.at("schema"))==native_analysis_worker_protocol && j.at("software_sha256")==compiled_build_inputs()->sha256,"WORKER_SOFTWARE_BINDING");count(j.at("host_job"),4);
+    const auto version=natural(j.at("schema"));require(version==1 || version==2,"WORKER_PROTOCOL_VERSION");const char *host=version==1 ? "host_job" : "host_view";
+    keys(j,{"schema",host,"software_sha256","input_sha256","source","meshes","request","request_sha256","files","plate_origin"});require(j.at("software_sha256")==compiled_build_inputs()->sha256,"WORKER_SOFTWARE_BINDING");count(j.at(host),version==1 ? 4 : 3);
+    require(natural(j.at(host)[0]) && natural(j.at(host)[1]),"WORKER_HOST_IDENTITY");
     Decoder decoder;Model model;auto config=decoder.config(j.at("source").at("config"));decoder.model(j.at("source"),j.at("meshes"),model);
     const auto source=capture_native_input(model,config);require(source && source->canonical_json==j.at("source").dump() && source->fingerprint==j.at("input_sha256"),"WORKER_EXACT_SOURCE_RECONSTRUCTION");
     const auto request=parse_native_analysis_document(j.at("request").dump());require(request->sha256==j.at("request_sha256"),"WORKER_REQUEST_HASH");std::vector<JobResource> files;
     require(j.at("files").is_array() && j.at("files").size()<=247,"WORKER_FILE_COUNT");for(const auto &f:j.at("files")){count(f,2);require(f[0].is_string(),"WORKER_FILE_NAME");files.push_back({JobResourceKind::SourceFile,f[0].get<std::string>(),unhex(f[1])});}
     const auto &origin=j.at("plate_origin");count(origin,3);Vec3d position;for(int axis=0;axis<3;++axis){require(origin[axis].is_number() && std::isfinite(origin[axis].get<double>()),"WORKER_PLATE_ORIGIN");position[axis]=origin[axis].get<double>();}
-    Print print;print.set_plate_index(model.curr_plate_index);print.set_plate_origin(position);print.apply(model,config);NativeAnalysisLimits limits;limits.progress=progress;
-    const auto result=run_native_analysis(print,natural(j.at("host_job")[0]),request,files,limits);
-    return Json{{"schema",native_analysis_worker_protocol},{"host_job",j.at("host_job")},{"input_payload_sha256",sha256_bytes(bytes)},
+    NativeAnalysisResult result;NativeAnalysisLimits limits;limits.progress=progress;
+    if(version==2){
+        if(progress)progress(NativeAnalysisStage::Capture);
+        limits.progress=[&](NativeAnalysisStage stage){if(stage!=NativeAnalysisStage::Capture && progress)progress(stage);};
+    }
+    if(version==2)if(const auto conflict=input_policy_conflict(model,config))result.reason="VIEW_POLICY_REFUSED:"+conflict->key;
+    if(result.reason.empty()){
+        Print print;print.set_plate_index(model.curr_plate_index);print.set_plate_origin(position);print.apply(model,config);
+        if(version==2){
+            const auto settings=capture_print_config(print);require(bool(settings),"WORKER_PRINT_CONFIG_REFUSED");
+            const auto policy=resolve_policy(settings->resolved_print_config,settings->object_count,settings->instance_count);
+            if(!policy.conflicts.empty())result.reason="VIEW_CONFIG_POLICY_REFUSED:"+policy.conflicts.front().key;
+            for(const auto &region:settings->regions)if(result.reason.empty() && !region.policy.conflicts.empty())result.reason="VIEW_REGION_POLICY_REFUSED:"+region.policy.conflicts.front().key;
+        }
+        if(result.reason.empty())result=run_native_analysis(print,natural(j.at(host)[0]),request,files,limits);
+    }
+    Json response={{"schema",version},{"input_payload_sha256",sha256_bytes(bytes)},
         {"input_sha256",source->fingerprint},{"request_sha256",request->sha256},{"software_sha256",compiled_build_inputs()->sha256},
-        {"diagnostic",Json::parse(native_analysis_diagnostic(result))},{"peak_rss_bytes","00000000000000000000"}}.dump();
+        {"diagnostic",Json::parse(native_analysis_diagnostic(result))},{"peak_rss_bytes","00000000000000000000"}};
+    response[host]=j.at(host);return response.dump();
 }
 }

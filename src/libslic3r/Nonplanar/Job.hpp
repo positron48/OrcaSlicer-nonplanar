@@ -17,6 +17,9 @@ struct NativeJobInputsSnapshot;
 // Publishable identity views omit only explicit transport/timestamp/log options.
 // Original snapshots remain exact in memory; do not persist their raw settings.
 struct JobIdentityView {const std::string canonical_json,fingerprint;};
+// The same fixed omission registry used by GuardedJobSnapshot; no Print apply
+// or qualification. Original owned source remains exact and private.
+JobIdentityView guarded_source_identity(const NativeInputSnapshot &);
 struct GuardedJobSnapshot {
     const uint64_t job_id,input_revision;
     const std::shared_ptr<const NativeInputSnapshot> input,executed_input;

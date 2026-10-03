@@ -50,11 +50,11 @@ class Child {
     void terminate_wait() noexcept
     {std::error_code ec;if(value.running(ec))value.terminate(ec);value.wait(ec);}
 public:
-    Child(process::child child,std::shared_ptr<const GuardedJobTask> task,
+    Child(process::child child,std::shared_ptr<const NativeAnalysisWorkerInput> input,
         std::chrono::steady_clock::time_point deadline,uint64_t cap,fs::path output,fs::path progress)
         :value(std::move(child))
     {
-        try {monitor=std::thread([this,task=std::move(task),deadline,cap,output=std::move(output),progress=std::move(progress)] {
+        try {monitor=std::thread([this,input=std::move(input),deadline,cap,output=std::move(output),progress=std::move(progress)] {
             try {
                 std::unique_lock<std::mutex> lock(mutex);
                 std::chrono::steady_clock::time_point missing_rss{};
@@ -62,7 +62,7 @@ public:
                     std::error_code ec;
                     if(!value.running(ec)){if(ec)failure="WORKER_PROCESS_FAILED";return;}
                     const auto now=std::chrono::steady_clock::now();
-                    if(!task->is_current())failure="WORKER_STALE_HOST_TASK";
+                    if(!input->is_current())failure="WORKER_STALE_HOST_TASK";
                     else if(now>=deadline)failure="WORKER_DEADLINE";
                     else {
                         const auto rss=resident(value);
@@ -121,7 +121,7 @@ void diagnostic(const Json &j,const NativeAnalysisWorkerInput &input)
     const auto &report=j.at("report"),&manifest=j.at("manifest");require(sha256_bytes(report.dump())==j.at("report_sha256") && sha256_bytes(manifest.dump())==j.at("manifest_sha256") && report.at("manifest_sha256")==j.at("manifest_sha256"),"WORKER_REPORT_BINDING");
     const auto &job=j.at("job");exact_keys(job,{"id","revision","fingerprint","canonical"});const auto canonical=job.at("canonical").get<std::string>();const auto identity=parse(canonical);
     const auto encoded=[](const std::string &s){std::string out;for(unsigned char c:s){out.push_back("0123456789abcdef"[c>>4]);out.push_back("0123456789abcdef"[c&15]);}return out;};
-    require(job.at("id")==input.task->snapshot->job_id && sha256_bytes(canonical)==job.at("fingerprint") && identity.at("native_input")==encoded(input.input_fingerprint) &&
+    require(job.at("id")==input.job_id && sha256_bytes(canonical)==job.at("fingerprint") && identity.at("native_input")==encoded(input.input_fingerprint) &&
         manifest.at("job_fingerprint")==encoded(job.at("fingerprint").get<std::string>()) && report.at("job_fingerprint")==job.at("fingerprint"),"WORKER_CHILD_JOB_BINDING");
     const auto &validation=report.at("validation");require(validation.at("export_decision")=="BLOCK" && validation.at("checks").size()==17 && report.at("replay").at("records")==j.at("replay").size(),"WORKER_MANDATORY_GATE");
     const auto &registry=guarded_mandatory_checks();require((validation.at("overall_status")=="UNKNOWN" || validation.at("overall_status")=="FAIL") && validation.at("mandatory_check_ids")==registry,"WORKER_CHECK_REGISTRY");
@@ -148,7 +148,7 @@ NativeAnalysisWorkerResult run_native_analysis_worker(const std::string &executa
     const NativeAnalysisWorkerOptions &requested)
 {
     const auto options=requested;const auto started=std::chrono::steady_clock::now();NativeAnalysisWorkerResult result;
-    const auto check=[&]{require(input && input->task->is_current(),"WORKER_STALE_HOST_TASK");bool cancelled=false;
+    const auto check=[&]{require(input && input->is_current(),"WORKER_STALE_HOST_TASK");bool cancelled=false;
         try{if(options.cancelled)cancelled=options.cancelled();}catch(...){require(false,"WORKER_PROTOCOL_OR_CALLBACK_FAILURE");}
         require(!cancelled,"WORKER_CANCELLED");require(std::chrono::steady_clock::now()-started<options.timeout,"WORKER_DEADLINE");};
     try{
@@ -156,7 +156,7 @@ NativeAnalysisWorkerResult run_native_analysis_worker(const std::string &executa
         require(fs::path(executable).is_absolute() && fs::is_regular_file(executable),"WORKER_EXECUTABLE");
         Workspace workspace;const auto source=workspace.path/"input.json",output=workspace.path/"report.json",progress=workspace.path/"progress.txt";
         {boost::nowide::ofstream file(source.string(),std::ios::binary);file.write(input->bytes.data(),std::streamsize(input->bytes.size()));file.close();require(bool(file),"WORKER_INPUT_WRITE");}
-        check();Child child{process::child(executable,std::vector<std::string>{"--resident-cap",std::to_string(options.max_peak_rss_bytes)},process::std_in<source.string(),process::std_out>output.string(),process::std_err>progress.string(),process::start_dir=workspace.path.string()),input->task,started+options.timeout,options.max_peak_rss_bytes,output,progress};
+        check();Child child{process::child(executable,std::vector<std::string>{"--resident-cap",std::to_string(options.max_peak_rss_bytes)},process::std_in<source.string(),process::std_out>output.string(),process::std_err>progress.string(),process::start_dir=workspace.path.string()),input,started+options.timeout,options.max_peak_rss_bytes,output,progress};
         const auto supervised_check=[&]{child.check(result.peak_rss_bytes);check();};
         const auto stages=[&]{const auto records=read(progress,10);require(records.size()>=result.progress_stages,"WORKER_PROGRESS_TRUNCATED");
             for(size_t index=result.progress_stages;index<records.size();++index){supervised_check();require(records[index]=='0'+int(index),"WORKER_PROGRESS_SEQUENCE");result.progress_stages=index+1;
@@ -164,9 +164,9 @@ NativeAnalysisWorkerResult run_native_analysis_worker(const std::string &executa
         std::error_code ec;
         while(child.running(ec)){supervised_check();stages();std::this_thread::sleep_for(std::chrono::milliseconds(5));}
         supervised_check();require(!ec && child.exit_code()==0,"WORKER_PROCESS_FAILED");stages();
-        const auto report=parse(read(output,native_analysis_worker_byte_limit));exact_keys(report,{"schema","host_job","input_payload_sha256","input_sha256","request_sha256","software_sha256","diagnostic","peak_rss_bytes"});
-        const auto &job=*input->task->snapshot;require(report.at("schema").is_number_unsigned() && report.at("schema")==native_analysis_worker_protocol && report.at("host_job")==Json::array({job.job_id,job.input_revision,input->task->attempt,job.fingerprint}) &&
-            report.at("input_payload_sha256")==input->sha256 && report.at("input_sha256")==input->input_fingerprint && report.at("request_sha256")==input->request_sha256 && report.at("software_sha256")==job.software->sha256,"WORKER_REPORT_IDENTITY");
+        const auto report=parse(read(output,native_analysis_worker_byte_limit));exact_keys(report,{"schema",input->host_field.c_str(),"input_payload_sha256","input_sha256","request_sha256","software_sha256","diagnostic","peak_rss_bytes"});
+        require(report.at("schema").is_number_unsigned() && report.at("schema")==input->protocol && report.at(input->host_field)==parse(input->host_identity) &&
+            report.at("input_payload_sha256")==input->sha256 && report.at("input_sha256")==input->input_fingerprint && report.at("request_sha256")==input->request_sha256 && report.at("software_sha256")==input->software_sha256,"WORKER_REPORT_IDENTITY");
         const auto rss=report.at("peak_rss_bytes").get<std::string>();uint64_t peak=0;const auto parsed=std::from_chars(rss.data(),rss.data()+rss.size(),peak);
         require(rss.size()==20 && parsed.ec==std::errc{} && parsed.ptr==rss.data()+rss.size() && peak && peak<=UINT64_MAX-65536,"WORKER_PEAK_MEMORY");result.peak_rss_bytes=std::max(result.peak_rss_bytes,peak+65536);require(result.peak_rss_bytes<=options.max_peak_rss_bytes,"WORKER_MEMORY_BUDGET");
         const auto &value=report.at("diagnostic");diagnostic(value,*input);require(!value.at("completed").get<bool>() || (result.progress_stages==10 && value.at("request_sha256")==input->request_sha256),"WORKER_COMPLETED_IDENTITY");supervised_check();

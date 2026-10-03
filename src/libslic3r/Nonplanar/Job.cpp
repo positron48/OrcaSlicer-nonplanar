@@ -64,6 +64,8 @@ ResolvedConfigSnapshot guarded_slicing_config(const ResolvedConfigSnapshot &sour
     for(const auto &key:source.keys())if(!non_slicing_options().count(key))config.set_key_value(key,source.option(key)->clone());
     return ResolvedConfigSnapshot(config);
 }
+JobIdentityView guarded_source_identity(const NativeInputSnapshot &source)
+{return identity_view(source.canonical_json);}
 std::shared_ptr<const NativeInputSnapshot> guarded_slicing_input(const GuardedJobSnapshot &job)
 {
     const auto &source=*job.input;auto objects=source.objects;auto materials=source.materials;
@@ -146,7 +148,7 @@ GuardedJobResult begin_guarded_job(Print &print,uint64_t job_id,const std::vecto
             total+=software->canonical_json.size();
             resources.push_back({JobResourceKind::Software,"compiled-build-inputs-v1",software->canonical_json});
         }
-        auto input_view=identity_view(input->canonical_json);stop();
+        auto input_view=guarded_source_identity(*input);stop();
         auto executed_view=identity_view(executed->canonical_json);stop();
         auto settings_view=identity_view(settings->canonical_json(),input_view.fingerprint);stop();
         std::sort(resources.begin(),resources.end(),[](const JobResource &a,const JobResource &b){return std::tie(a.kind,a.name)<std::tie(b.kind,b.name);});

@@ -7,6 +7,20 @@ They do not qualify the physical printer. Gate A remains open.
 
 Next software tasks, in dependency order:
 
+`B14-source-worker.md` and ADR-0095 move analysis Print.apply from the GUI host
+into the supervised child. The host owns captured source and a revocable display
+attempt; protocol2 host_view is additive to legacy1 and cannot authorize export.
+Exact editor/source/software binding and original policy checks remain. Focus
+17/9476, CTest 475/475, sixteen independent oracles, ten actual CLI cases and six
+strict OFF/ZAA pairs pass; 50/51 parent candidate files stay exact. Default2098
+movements retain their SHA. Fixed17 stays 4 PASS/RUN +13 UNKNOWN/NOT_RUN, export
+BLOCK; full B01-B15 active. Fresh isolated bundle probes pass. New-source GUI
+runtime is NOT_RUN because native UI reports the Mac locked; unlock requested.
+Previous GUI observations remain historical. Next: actual new GUI qualification,
+hard parent/child memory/process containment and complete source/import/3MF,
+domain UI, cap/contact/seams/whole-job/order/geometry/software/publication. Linux
+new-head, Windows/physical tests and independent review remain pending.
+
 `B14-native-watchdog.md` and ADR-0094 remove the callback-dependent gap in
 native child supervision. A dedicated monitor terminates the same process on
 root deadline, sampled RSS, report/progress byte bounds or stale atomic task,

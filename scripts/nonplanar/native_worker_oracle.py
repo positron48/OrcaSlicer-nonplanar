@@ -28,10 +28,7 @@ def mesh_sha(mesh):
     return hashlib.sha256(data).hexdigest()
 
 
-def verify(input, diagnostic, reference, record):
-    require(set(input) == {'schema', 'host_job', 'software_sha256', 'input_sha256', 'source',
-                           'meshes', 'request', 'request_sha256', 'files', 'plate_origin'}, 'Input registry')
-    require(input['schema'] == 1 and len(input['host_job']) == 4 and all(type(v) is int and v > 0 for v in input['host_job'][:3]), 'Host ticket')
+def verify_source(input, record):
     require(input['input_sha256'] == sha(canonical(input['source'])), 'Exact canonical source hash')
     require(len(input['source']['objects']) == len(input['meshes']), 'Object count')
     for object, meshes in zip(input['source']['objects'], input['meshes']):
@@ -44,6 +41,9 @@ def verify(input, diagnostic, reference, record):
     body = parse(record['native']['body_canonical'])
     require(body['slicing_input'] == input['input_sha256'], 'Actual executed source includes matrices/config/annotations')
     require(input['request_sha256'] == record['analysis_request_sha256'], 'Exact owned request')
+
+
+def verify_result(input, diagnostic, reference, record, host_id):
     verify_document(input['request'], record)
     verify_record(record)
     verify_diagnostic(reference, record)
@@ -52,11 +52,19 @@ def verify(input, diagnostic, reference, record):
             sha(canonical(diagnostic['manifest'])) == diagnostic['manifest_sha256'] and
             sha(diagnostic['job']['canonical']) == diagnostic['job']['fingerprint'], 'Child actual identities')
     job = parse(diagnostic['job']['canonical'])
-    require(job['native_input'] == input['input_sha256'].encode().hex() and diagnostic['job']['id'] == input['host_job'][0], 'Child source/host ticket')
+    require(job['native_input'] == input['input_sha256'].encode().hex() and diagnostic['job']['id'] == host_id, 'Child source/host ticket')
     require(diagnostic['request_sha256'] == input['request_sha256'] and
             diagnostic['replay'] == reference['replay'] and
             diagnostic['manifest']['candidate_sha256'] == record['candidate_sha256'].encode().hex(), 'All actual final decimal movements/byte ranges')
     require(diagnostic['report']['validation']['export_decision'] == 'BLOCK', 'No export credential')
+
+
+def verify(input, diagnostic, reference, record):
+    require(set(input) == {'schema', 'host_job', 'software_sha256', 'input_sha256', 'source',
+                           'meshes', 'request', 'request_sha256', 'files', 'plate_origin'}, 'Input registry')
+    require(input['schema'] == 1 and len(input['host_job']) == 4 and all(type(v) is int and v > 0 for v in input['host_job'][:3]), 'Host ticket')
+    verify_source(input, record)
+    verify_result(input, diagnostic, reference, record, input['host_job'][0])
 
 
 def main():

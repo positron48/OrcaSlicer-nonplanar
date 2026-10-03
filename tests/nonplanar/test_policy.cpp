@@ -3327,13 +3327,12 @@ TEST_CASE("B13 publishable identity excludes transport credentials and retains e
 
 namespace {
 NativeJobInputsRequest native_job_inputs();
-struct NativeJobFixture {
+struct NativeSourceFixture {
     Model model;
     DynamicPrintConfig config=planar_body_config();
-    Print print;
     std::vector<JobResource> resources;
     NativeJobInputsRequest inputs=native_job_inputs();
-    NativeJobFixture()
+    NativeSourceFixture()
     {
         const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/affine-wedge-1-in-16.stl";
         const auto file=capture_stl_file(path.string(),true,1);REQUIRE(file.source);REQUIRE(load_stl(path.string().c_str(),&model));
@@ -3341,8 +3340,11 @@ struct NativeJobFixture {
         config.set_deserialize_strict({{"infill_direction",0},{"solid_infill_direction",0},
             {"internal_solid_infill_line_width",1.0},{"top_surface_line_width",1.0}});
         resources.push_back({JobResourceKind::SourceFile,model.objects.front()->volumes.front()->source.input_file,file.source->bytes});
-        print.apply(model,config);
     }
+};
+struct NativeJobFixture : NativeSourceFixture {
+    Print print;
+    NativeJobFixture(){print.apply(model,config);}
     GuardedJobResult begin(){auto result=begin_guarded_job(print,88,resources,{},JobSoftwareMode::CompiledInputs,&inputs);INFO(result.reason);REQUIRE(result.task);REQUIRE(result.snapshot->software==compiled_build_inputs());return result;}
 };
 GuardedNativeBodyRequest native_job_body_request()
@@ -4336,6 +4338,127 @@ TEST_CASE("B14 watchdog stops children during blocked progress callbacks", "[Non
         if(std::string(scenario)=="stale"){fixture.config.set_key_value("layer_height",new ConfigOptionFloat(.2));fixture.print.apply(fixture.model,fixture.config);}
     }
     save_worker_evidence("native-watchdog-observations.json",observations.dump());
+}
+
+namespace {
+std::string source_view_request()
+{
+    const auto path=boost::filesystem::path(__FILE__).parent_path()/"data/native-source-analysis-request-v1.json";
+    boost::nowide::ifstream file(path.string());REQUIRE(file.good());
+    return std::string(std::istreambuf_iterator<char>(file),{});
+}
+}
+TEST_CASE("B14 source view prepares real Print only in child and adopts once without a host Print", "[Nonplanar][B14][NativeAnalysisSource]")
+{
+    static_assert(!std::is_aggregate_v<NativeAnalysisViewTask>);
+    NativeSourceFixture fixture;NativeAnalysisViewOwner owner;const auto bytes=source_view_request();
+    fixture.config.set_key_value("printhost_apikey",new ConfigOptionString("private-source-view-key"));
+    const auto input=capture_native_analysis_view_input(fixture.model,fixture.config,0,Vec3d::Zero(),"safe_hybrid",bytes);
+    const auto task=begin_native_analysis_view(owner,input,101);
+    auto files=fixture.resources;files.push_back({JobResourceKind::SourceFile,"native-analysis-json-v1",bytes});
+    const auto worker=capture_native_analysis_worker_input(task,files);
+    REQUIRE_FALSE(worker->task);REQUIRE(worker->view_task==task);REQUIRE(worker->protocol==2);REQUIRE(worker->is_current());
+    REQUIRE(worker->bytes.find("private-source-view-key")==std::string::npos);
+    REQUIRE(worker->bytes.find("707269766174652d736f757263652d766965772d6b6579")==std::string::npos);
+    save_worker_evidence("native-source-input.json",worker->bytes);
+    save_worker_evidence("native-source-owner.json",nlohmann::json({{"host_view",{task->revision,task->attempt,input->identity_sha256}},
+        {"editing_sha256",sha256_bytes(bytes)},{"source_sha256",input->source_sha256}}).dump());
+    const auto result=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,worker);INFO(result.reason);
+    REQUIRE(result.reason=="WORKER_BLOCKED_DIAGNOSTIC_COMPLETE");REQUIRE(result.progress_stages==10);
+    const auto diagnostic=nlohmann::json::parse(result.diagnostic);REQUIRE(diagnostic.at("replay").size()==2098);
+    REQUIRE(diagnostic.at("report").at("validation").at("export_decision")=="BLOCK");REQUIRE_FALSE(diagnostic.contains("candidate_bytes"));
+    save_worker_evidence("native-source-diagnostic.json",result.diagnostic);
+    const auto current=capture_native_analysis_view_input(fixture.model,fixture.config,0,Vec3d::Zero(),"safe_hybrid",bytes);
+    const auto displayed=finish_native_analysis_view(owner,*task,current.get(),101,false,result);
+    REQUIRE(displayed.diagnostic==result.diagnostic);REQUIRE_FALSE(task->is_current());REQUIRE_FALSE(worker->is_current());
+    REQUIRE(finish_native_analysis_view(owner,*task,current.get(),101,false,result).diagnostic.empty());
+    // A separate native reference is created only after the source-only path
+    // completed. The GUI host path above has no Print instance at all.
+    Print reference;reference.apply(fixture.model,fixture.config);
+    const auto direct=run_native_analysis(reference,101,input->request,files);INFO(direct.reason);REQUIRE(direct.snapshot);
+    const auto expected=nlohmann::json::parse(native_analysis_diagnostic(direct));
+    REQUIRE(diagnostic.at("replay")==expected.at("replay"));REQUIRE(diagnostic.at("manifest").at("candidate_sha256")==expected.at("manifest").at("candidate_sha256"));
+    save_worker_evidence("native-source-reference-diagnostic.json",expected.dump());
+    if(const char *directory=std::getenv("NPTOP_JOB_EVIDENCE_DIR"))test::save_job_report(boost::filesystem::path(directory)/"native-source-reference-report.json",
+        {direct.reason,direct.snapshot->report,direct.snapshot->replay_evaluations});
+}
+TEST_CASE("B14 source view replacement invalid edits cancellation and foreign owners cannot display", "[Nonplanar][B14][NativeAnalysisSource]")
+{
+    NativeSourceFixture fixture;NativeAnalysisViewOwner owner,foreign;const auto bytes=source_view_request();
+    const auto input=capture_native_analysis_view_input(fixture.model,fixture.config,0,Vec3d::Zero(),"safe_hybrid",bytes);
+    auto old=begin_native_analysis_view(owner,input,7);const auto next=begin_native_analysis_view(owner,input,7);
+    REQUIRE_FALSE(old->is_current());REQUIRE(next->is_current());REQUIRE(next->attempt==old->attempt+1);
+    NativeAnalysisWorkerResult result{"WORKER_BLOCKED_DIAGNOSTIC_COMPLETE","unqualified-display"};
+    REQUIRE(finish_native_analysis_view(owner,*old,input.get(),7,false,result).diagnostic.empty());REQUIRE(next->is_current());
+    REQUIRE(finish_native_analysis_view(foreign,*next,input.get(),7,false,result).diagnostic.empty());REQUIRE(next->is_current());
+    REQUIRE_THROWS(begin_native_analysis_view(owner,{},7));REQUIRE_FALSE(next->is_current());
+    {
+        const auto task=begin_native_analysis_view(owner,input,8);auto files=fixture.resources;
+        REQUIRE_THROWS_WITH(capture_native_analysis_worker_input(task,files),"WORKER_EDITING_BYTES_REQUIRED");
+        files.push_back({JobResourceKind::SourceFile,"native-analysis-json-v1",bytes+' '});
+        REQUIRE_THROWS_WITH(capture_native_analysis_worker_input(task,files),"WORKER_EDITING_BYTES_BINDING");
+    }
+    for(int mutation=0;mutation<6;++mutation){
+        CAPTURE(mutation);const auto task=begin_native_analysis_view(owner,input,8);
+        auto config=fixture.config;auto text=bytes;Vec3d origin=Vec3d::Zero();std::string mode="safe_hybrid";
+        if(mutation==0)config.set_key_value("layer_height",new ConfigOptionFloat(std::nextafter(.2,1.)));
+        if(mutation==1)text+=' ';
+        if(mutation==2)origin.x()=-0.;
+        if(mutation==3)mode="strict_nonplanar";
+        const auto current=capture_native_analysis_view_input(fixture.model,config,0,origin,mode,text);
+        const auto refused=finish_native_analysis_view(owner,*task,current.get(),mutation==4 ? 9 : 8,mutation==5,result);
+        REQUIRE(refused.diagnostic.empty());REQUIRE_FALSE(task->is_current());
+    }
+    const auto task=begin_native_analysis_view(owner,input,9);auto files=fixture.resources;
+    files.push_back({JobResourceKind::Software,"forged-software","fake"});REQUIRE_THROWS(capture_native_analysis_worker_input(task,files));
+    owner.invalidate();REQUIRE_FALSE(task->is_current());REQUIRE_THROWS(capture_native_analysis_worker_input(task,fixture.resources));
+}
+TEST_CASE("B14 source worker rejects malformed snapshots and cancels at the child capture stage", "[Nonplanar][B14][NativeAnalysisSource]")
+{
+    NativeSourceFixture fixture;NativeAnalysisViewOwner owner;const auto bytes=source_view_request();
+    const auto input=capture_native_analysis_view_input(fixture.model,fixture.config,0,Vec3d::Zero(),"safe_hybrid",bytes);
+    auto files=fixture.resources;files.push_back({JobResourceKind::SourceFile,"native-analysis-json-v1",bytes});
+    const auto task=begin_native_analysis_view(owner,input,101);const auto worker=capture_native_analysis_worker_input(task,files);
+    const auto original=nlohmann::json::parse(worker->bytes);
+    for(int field=0;field<7;++field){auto j=original;CAPTURE(field);
+        if(field==0)j["schema"]=1;
+        if(field==1)j["host_view"][0]=0;
+        if(field==2)j["source"]["objects"][0]["instances"][0][0][0]="3ff0000000000001";
+        if(field==3)j["meshes"][0][0]["mesh"]["vertices_f32_mm"][0][0]=.1;
+        if(field==4)j["meshes"][0][0]["annotations"][0][1]={true};
+        if(field==5)j["request_sha256"]="wrong";
+        if(field==6)j["software_sha256"]="wrong";
+        REQUIRE_THROWS(execute_native_analysis_worker(j.dump(),{}));
+    }
+    for(int mode=0;mode<3;++mode){CAPTURE(mode);const auto current=begin_native_analysis_view(owner,input,101);
+        const auto active=capture_native_analysis_worker_input(current,files);NativeAnalysisWorkerOptions limits;bool cancelled=false;
+        limits.cancelled=[&]{return cancelled;};limits.progress=[&](NativeAnalysisStage stage){if(stage!=NativeAnalysisStage::Capture)return;
+            if(mode==0)cancelled=true;
+            else if(mode==1)owner.invalidate();
+            else (void)begin_native_analysis_view(owner,input,101);};
+        const auto result=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,active,limits);INFO(result.reason);
+        REQUIRE(result.diagnostic.empty());REQUIRE(result.progress_stages==1);
+        REQUIRE(result.reason==(mode==0 ? "WORKER_CANCELLED" : "WORKER_STALE_HOST_TASK"));
+    }
+}
+TEST_CASE("B14 source worker retains original source policy and units refusals without partial replay", "[Nonplanar][B14][NativeAnalysisSource]")
+{
+    NativeSourceFixture fixture;NativeAnalysisViewOwner owner;const auto bytes=source_view_request();
+    for(int mode=0;mode<3;++mode){CAPTURE(mode);auto config=fixture.config;auto text=bytes;std::string reason;
+        if(mode==0){config.set_key_value("machine_start_gcode",new ConfigOptionString("private-unsafe-hook"));reason="VIEW_POLICY_REFUSED:machine_start_gcode";}
+        if(mode==1){config.set_key_value("enable_prime_tower",new ConfigOptionBool(true));reason="VIEW_POLICY_REFUSED:enable_prime_tower";}
+        if(mode==2){auto j=nlohmann::json::parse(bytes);j["millimeters_declared"]=false;text=j.dump();reason="UNITS_NOT_CONFIRMED";}
+        const auto input=capture_native_analysis_view_input(fixture.model,config,0,Vec3d::Zero(),"safe_hybrid",text);
+        auto files=fixture.resources;files.push_back({JobResourceKind::SourceFile,"native-analysis-json-v1",text});
+        const auto task=begin_native_analysis_view(owner,input,101);
+        const auto result=run_native_analysis_worker(NPTOP_ANALYSIS_WORKER_PATH,capture_native_analysis_worker_input(task,files));INFO(result.reason);
+        REQUIRE(result.reason=="WORKER_ANALYSIS_REFUSED");const auto diagnostic=nlohmann::json::parse(result.diagnostic);
+        if(mode<2)REQUIRE(diagnostic.at("reason")==reason);
+        else REQUIRE_THAT(diagnostic.at("reason").get<std::string>(),Catch::Matchers::ContainsSubstring("UNIT"));
+        REQUIRE(result.progress_stages==size_t(mode==2 ? 2 : 1));REQUIRE(diagnostic.at("report").is_null());REQUIRE(diagnostic.at("replay").empty());
+        REQUIRE(diagnostic.at("export_allowed")==false);REQUIRE(result.diagnostic.find("private-unsafe-hook")==std::string::npos);
+        save_worker_evidence(mode==0 ? "native-source-hook-refusal.json" : mode==1 ? "native-source-policy-refusal.json" : "native-source-units-refusal.json",result.diagnostic);
+    }
 }
 
 TEST_CASE("B14 native view adopts actual worker replay only once and remains Unknown", "[Nonplanar][B14][NativeAnalysisView]")

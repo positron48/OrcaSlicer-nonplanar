@@ -3,20 +3,35 @@
 
 namespace Slic3r::nptop {
 inline constexpr unsigned native_analysis_worker_protocol=1;
+inline constexpr unsigned native_analysis_source_protocol=2;
 inline constexpr size_t native_analysis_worker_byte_limit=32*1024*1024;
+struct NativeAnalysisViewTask;
 struct NativeAnalysisWorkerInput {
     const std::shared_ptr<const GuardedJobTask> task;
+    const std::shared_ptr<const NativeAnalysisViewTask> view_task;
+    const unsigned protocol;
+    const uint64_t job_id;
+    const std::string host_field,host_identity,software_sha256;
     const std::string bytes,sha256,input_fingerprint,request_sha256;
+    bool is_current() const;
 private:
-    NativeAnalysisWorkerInput(std::shared_ptr<const GuardedJobTask> owner,std::string payload,std::string source,std::string request)
-        :task(std::move(owner)),bytes(std::move(payload)),sha256(sha256_bytes(bytes)),input_fingerprint(std::move(source)),request_sha256(std::move(request)){}
+    NativeAnalysisWorkerInput(std::shared_ptr<const GuardedJobTask> owner,std::shared_ptr<const NativeAnalysisViewTask> view,
+        unsigned version,uint64_t id,std::string field,std::string identity,std::string software,std::string payload,std::string source,std::string request)
+        :task(std::move(owner)),view_task(std::move(view)),protocol(version),job_id(id),host_field(std::move(field)),host_identity(std::move(identity)),software_sha256(std::move(software)),
+          bytes(std::move(payload)),sha256(sha256_bytes(bytes)),input_fingerprint(std::move(source)),request_sha256(std::move(request)){}
     friend std::shared_ptr<const NativeAnalysisWorkerInput> capture_native_analysis_worker_input(
         std::shared_ptr<const GuardedJobTask>,std::shared_ptr<const NativeAnalysisRequestSnapshot>);
+    friend std::shared_ptr<const NativeAnalysisWorkerInput> capture_native_analysis_worker_input(
+        std::shared_ptr<const NativeAnalysisViewTask>,const std::vector<JobResource> &);
 };
 // Called under the host's existing Model/Print serialization. Consumes only
 // captured source and a request already bound into the current host job.
 std::shared_ptr<const NativeAnalysisWorkerInput> capture_native_analysis_worker_input(
     std::shared_ptr<const GuardedJobTask>,std::shared_ptr<const NativeAnalysisRequestSnapshot>);
+// Source-only GUI path. No parent Print construction/apply or native proof
+// snapshot. The child independently prepares Print and all resolved policies.
+std::shared_ptr<const NativeAnalysisWorkerInput> capture_native_analysis_worker_input(
+    std::shared_ptr<const NativeAnalysisViewTask>,const std::vector<JobResource> &source_files);
 struct NativeAnalysisWorkerOptions {
     std::chrono::milliseconds timeout{30000};
     uint64_t max_peak_rss_bytes=512*1024*1024;

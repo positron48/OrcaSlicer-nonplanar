@@ -1,6 +1,7 @@
 #include "NativeAnalysisView.hpp"
 #include "Canonical.hpp"
 #include "../Print.hpp"
+#include <limits>
 
 namespace Slic3r::nptop {
 std::shared_ptr<const NativeAnalysisViewInput> capture_native_analysis_view_input(
@@ -20,7 +21,7 @@ std::shared_ptr<const NativeAnalysisViewInput> capture_native_analysis_view_inpu
     identity.value(original_mode ? original_mode->serialize() : std::string()); identity.append(",");
     identity.value(origin); identity.append(","); identity.value(sha256_bytes(bytes)); identity.append("]");
     return std::shared_ptr<const NativeAnalysisViewInput>(new NativeAnalysisViewInput(
-        request, mode, bytes, source->fingerprint, sha256_bytes(identity.take())));
+        request, source, origin, mode, bytes, sha256_bytes(identity.take())));
 }
 NativeAnalysisWorkerResult finish_native_analysis_view(Print &print, const GuardedJobTask &task,
     const NativeAnalysisViewInput &input, const NativeAnalysisViewInput *current,
@@ -43,6 +44,31 @@ NativeAnalysisWorkerResult finish_native_analysis_view(Print &print, const Guard
     }
     if (result.reason != "WORKER_BLOCKED_DIAGNOSTIC_COMPLETE" && result.reason != "WORKER_ANALYSIS_REFUSED")
         result.diagnostic.clear();
+    return result;
+}
+void NativeAnalysisViewOwner::invalidate()
+{
+    if(current)current->validity.store(false,std::memory_order_release);
+    current.reset();
+}
+std::shared_ptr<const NativeAnalysisViewTask> begin_native_analysis_view(
+    NativeAnalysisViewOwner &owner,std::shared_ptr<const NativeAnalysisViewInput> input,uint64_t revision)
+{
+    owner.invalidate();
+    require(owner.attempt!=std::numeric_limits<uint64_t>::max(),"VIEW_ATTEMPT_EXHAUSTED");++owner.attempt;
+    require(input && input->source && revision,"VIEW_CURRENT_SOURCE_REQUIRED");
+    owner.current=std::shared_ptr<const NativeAnalysisViewTask>(new NativeAnalysisViewTask(std::move(input),revision,owner.attempt));
+    return owner.current;
+}
+NativeAnalysisWorkerResult finish_native_analysis_view(NativeAnalysisViewOwner &owner,const NativeAnalysisViewTask &task,
+    const NativeAnalysisViewInput *current,uint64_t revision,bool cancelled,NativeAnalysisWorkerResult result)
+{
+    const bool owned=owner.current.get()==&task;
+    const bool fresh=owned && task.is_current() && revision==task.revision && revision && current &&
+        current->identity_sha256==task.input->identity_sha256;
+    if(owned)owner.invalidate();
+    if(cancelled || !fresh){result.diagnostic.clear();result.reason=cancelled ? "VIEW_CANCELLED" : owned ? "VIEW_STALE_INPUTS" : "VIEW_STALE_OWNER";}
+    else if(result.reason!="WORKER_BLOCKED_DIAGNOSTIC_COMPLETE" && result.reason!="WORKER_ANALYSIS_REFUSED")result.diagnostic.clear();
     return result;
 }
 }
